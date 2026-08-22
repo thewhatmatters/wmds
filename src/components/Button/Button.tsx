@@ -17,11 +17,13 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   loading?: boolean;
-  /** Shorthand for `startSlot` — pass Lucide or any SVG/icon node. */
+  /** Shorthand for `startSlot` — Lucide or any icon node. Prefer `startSlot` for arbitrary content. */
   icon?: ReactNode;
-  /** Shorthand for `endSlot` — count (`3`) or label (`"New"`). Custom nodes use `endSlot`. */
+  /** Shorthand for `endSlot` — count (`3`) or label (`"New"`). Prefer `endSlot` for arbitrary content. */
   badge?: ReactNode;
+  /** Content-agnostic leading slot — image, icon, spinner replacement, or any node. */
   startSlot?: ReactNode;
+  /** Content-agnostic trailing slot — badge, icon, or any node. */
   endSlot?: ReactNode;
   children: ReactNode;
 }

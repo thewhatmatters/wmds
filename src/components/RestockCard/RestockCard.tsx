@@ -1,4 +1,13 @@
+import { Badge } from "../Badge/Badge";
 import { Button } from "../Button/Button";
+
+function MediaCircle({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="flex size-3.5 shrink-0 items-center justify-center overflow-hidden rounded-full bg-bg p-[1px] outline outline-1 -outline-offset-1 outline-[color-mix(in_srgb,var(--color-fg)_10%,transparent)] [&>img]:size-full [&>img]:object-contain">
+      {children}
+    </span>
+  );
+}
 
 function SignalBars({
   strength,
@@ -38,7 +47,21 @@ export function RestockCard({ onAlternatives, onAccepted }: RestockCardProps) {
           Want me to place this restock order?
         </h2>
         <p className="text-sm font-normal leading-[1.5] text-muted">
-          Reorder waffle cones from Cone King with lead time 7 days.
+          Reorder waffle cones from{" "}
+          <Badge
+            variant="neutral"
+            startSlot={
+              <MediaCircle>
+                <img src="/brands/cone-king.svg" alt="" />
+              </MediaCircle>
+            }
+          >
+            Cone King
+          </Badge>{" "}
+          with lead time{" "}
+          <Badge variant="success" className="mx-[length:var(--spacing-0)] align-middle">
+            7 days
+          </Badge>
         </p>
       </header>
 
@@ -56,7 +79,9 @@ export function RestockCard({ onAlternatives, onAccepted }: RestockCardProps) {
           <span className="min-w-0 flex-1 text-sm leading-[1.5] text-fg">
             Switch to Vanilla Madagascar
           </span>
-          <span className="shrink-0 text-sm leading-[1.5] text-muted">Needs review</span>
+          <Badge variant="warning" className="shrink-0">
+            Needs review
+          </Badge>
         </button>
         <button
           type="button"
@@ -66,7 +91,9 @@ export function RestockCard({ onAlternatives, onAccepted }: RestockCardProps) {
           <span className="min-w-0 flex-1 text-sm leading-[1.5] text-fg">
             Full restock across every SKU
           </span>
-          <span className="shrink-0 text-sm leading-[1.5] text-muted">No signal</span>
+          <Badge variant="neutral" className="shrink-0">
+            No signal
+          </Badge>
         </button>
       </section>
 

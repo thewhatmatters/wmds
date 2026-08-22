@@ -1,6 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { ChevronRight } from "lucide-react";
 import { Button } from "../Button/Button";
 import { Badge, type BadgeVariant } from "./Badge";
+
+function MediaCircle({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="flex size-3.5 shrink-0 items-center justify-center overflow-hidden rounded-full bg-bg p-[1px] outline outline-1 -outline-offset-1 outline-[color-mix(in_srgb,var(--color-fg)_10%,transparent)] [&>img]:size-full [&>img]:object-contain [&>svg]:size-2.5 [&>svg]:shrink-0 [&>svg]:stroke-current">
+      {children}
+    </span>
+  );
+}
 
 const semanticVariants: BadgeVariant[] = [
   "neutral",
@@ -20,6 +29,8 @@ const meta = {
     appearance: { control: "select", options: ["label", "count"] },
     label: { control: "text" },
     children: { control: false },
+    startSlot: { control: false },
+    endSlot: { control: false },
   },
   args: {
     label: "Badge",
@@ -33,7 +44,7 @@ const meta = {
         component:
           "Short status, count, or category label — inspired by [Astryx Badge](https://astryx.atmeta.com/components/Badge). " +
           "WMDS ships **semantic variants** only (`neutral`, `info`, `success`, `warning`, `destructive`); decorative palette tags (blue, purple, …) are intentionally omitted. " +
-          "Use `appearance=\"count\"` for numeric pills.",
+          "Use `appearance=\"count\"` for numeric pills. Use `startSlot` / `endSlot` for content-agnostic leading or trailing media (images, icons, initials).",
       },
     },
   },
@@ -141,6 +152,88 @@ export const Sizes: Story = {
       </Badge>
     </div>
   ),
+};
+
+export const Slots: Story = {
+  name: "Slots — start / end",
+  render: () => (
+    <div className="flex flex-wrap items-center gap-3">
+      <Badge
+        variant="neutral"
+        startSlot={
+          <MediaCircle>
+            <img src="/brands/cone-king.svg" alt="" className="size-full object-contain" />
+          </MediaCircle>
+        }
+      >
+        Cone King
+      </Badge>
+      <Badge
+        variant="info"
+        endSlot={
+          <MediaCircle>
+            <ChevronRight strokeWidth={2} />
+          </MediaCircle>
+        }
+      >
+        View details
+      </Badge>
+      <Badge
+        variant="neutral"
+        startSlot={
+          <MediaCircle>
+            <img src="/brands/cone-king.svg" alt="" className="size-full object-contain" />
+          </MediaCircle>
+        }
+        endSlot={
+          <MediaCircle>
+            <ChevronRight strokeWidth={2} />
+          </MediaCircle>
+        }
+      >
+        Both slots
+      </Badge>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Content-agnostic `startSlot` and `endSlot` — pass images, icons, initials, or any node. " +
+          "Neutral variant with a slot uses inline chip padding.",
+      },
+    },
+  },
+};
+
+export const InlineInProse: Story = {
+  name: "Inline in prose",
+  render: () => (
+    <p className="max-w-sm text-sm leading-[1.5] text-muted">
+      Reorder waffle cones from{" "}
+      <Badge
+        variant="neutral"
+        startSlot={
+          <MediaCircle>
+            <img src="/brands/cone-king.svg" alt="" className="size-full object-contain" />
+          </MediaCircle>
+        }
+      >
+        Cone King
+      </Badge>{" "}
+      with lead time{" "}
+      <Badge variant="success" className="mx-[length:var(--spacing-0)] align-middle">
+        7 days
+      </Badge>
+    </p>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: "Inline entity chip (`startSlot`) and semantic value pill — restock agent card pattern.",
+      },
+    },
+  },
 };
 
 export const OnButton: Story = {

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Badge } from "../Badge/Badge";
 import { RestockCard } from "./RestockCard";
 
 const meta = {
@@ -25,4 +26,43 @@ export const Default: Story = {
     onAlternatives: () => {},
     onAccepted: () => {},
   },
+};
+
+/** Chip (startSlot) + plain pill directly adjacent — compare height alignment. */
+export const InlineBadges: Story = {
+  name: "Inline badges (chip + pill)",
+  render: () => (
+    <div className="flex max-w-[380px] flex-col gap-4 rounded-lg bg-surface p-4 shadow-md">
+      <p className="text-xs font-medium uppercase tracking-wider text-muted">Side by side</p>
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge
+          variant="neutral"
+          startSlot={
+            <span className="flex size-3.5 shrink-0 items-center justify-center overflow-hidden rounded-full bg-bg p-[1px] outline outline-1 -outline-offset-1 outline-[color-mix(in_srgb,var(--color-fg)_10%,transparent)]">
+              <img src="/brands/cone-king.svg" alt="" className="size-full object-contain" />
+            </span>
+          }
+        >
+          Cone King
+        </Badge>
+        <Badge variant="success">7 days</Badge>
+      </div>
+      <p className="text-xs font-medium uppercase tracking-wider text-muted">In prose (card body)</p>
+      <p className="text-sm font-normal leading-[1.5] text-muted">
+        Reorder waffle cones from{" "}
+        <Badge
+          variant="neutral"
+          startSlot={
+            <span className="flex size-3.5 shrink-0 items-center justify-center overflow-hidden rounded-full bg-bg p-[1px] outline outline-1 -outline-offset-1 outline-[color-mix(in_srgb,var(--color-fg)_10%,transparent)]">
+              <img src="/brands/cone-king.svg" alt="" className="size-full object-contain" />
+            </span>
+          }
+        >
+          Cone King
+        </Badge>{" "}
+        with lead time{" "}
+        <Badge variant="success" className="align-middle">7 days</Badge>
+      </p>
+    </div>
+  ),
 };

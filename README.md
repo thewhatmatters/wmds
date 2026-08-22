@@ -25,7 +25,7 @@ When you update a token in Paper and sync `tokens.css`, every component updates.
 
 ## Icons
 
-WMDS does **not** bundle an icon library. Components accept icons as React nodes via `icon`, `startSlot`, or `endSlot` — any SVG works; styling uses `stroke-current` / `text-inherit` so icons follow button foreground color.
+WMDS does **not** bundle an icon library. Components accept arbitrary React nodes via **`startSlot`** / **`endSlot`** (or Button shorthands `icon` / `badge`). Any SVG, image, or initials work; icons typically use `stroke-current` / `text-inherit` so they follow foreground color.
 
 **Recommended:** [Lucide](https://lucide.dev) for What Matters apps and Storybook demos. Install in the **consumer app**, not as a WMDS runtime dependency:
 
@@ -88,7 +88,7 @@ No MCP or server required at runtime — just npm.
 |------|----------|----------|
 | **Foundation** | **Semantic colors — light** / **Dark mode — semantic colors** | Swatch boards + Theme tab |
 | **Components** | **Buttons** | Variants (incl. success), sizes, states, matrix, loading — all token-bound |
-| **Components** | **Badges** | Semantic variants, status labels, count pills |
+| **Components** | **Badges** | Semantic variants, status/count pills, `startSlot` / `endSlot` (inline chips) |
 | **Components** | **Cards** | Variants, elevation, padding, composed slots |
 | **Components** | **Restock card** | DS specimen — proves target agent UI is token-generatable (not a shipped component) |
 | **Components** | **Restock card (reference)** | Original inspiration — user cleanup |
@@ -106,9 +106,26 @@ Paper = visual spec. Storybook = interactive code. Sync is manual/agent-driven (
 
 | Component | Storybook path | Status |
 |-----------|----------------|--------|
-| **Button** | `Components / Button` | 7 variants × 4 sizes (xs–lg); slots: `icon` / `badge` (pass Lucide or any SVG) |
+| **Button** | `Components / Button` | 7 variants × 4 sizes (xs–lg); `startSlot` / `endSlot` (or `icon` / `badge` shorthands) |
 | **Card** | `Components / Card` | Variants, elevation, padding, compound slots |
-| **Badge** | `Components / Badge` | Semantic variants, label + count appearances (Astryx-aligned) |
+| **Badge** | `Components / Badge` | Semantic variants; label + count; **`startSlot` / `endSlot`** for inline chips in prose |
+
+### Badge inline chips
+
+When a badge has a **`startSlot`** or **`endSlot`**, it switches to **chip layout** (separate from plain label padding):
+
+- **14px** circular media (`size-3.5`) + **1px** vertical padding + **3px** gap — matches plain pill height (~18px with border)
+- Neutral + slot → secondary chip chrome (raised hairline)
+- Slot content is **content-agnostic** — logo, Lucide icon, initials; compose at the call site (no `VendorChip` export)
+
+```tsx
+<Badge variant="neutral" startSlot={<MediaCircle><img src="…" alt="" /></MediaCircle>}>
+  Cone King
+</Badge>
+<Badge variant="success">7 days</Badge>
+```
+
+See `Examples / Restock agent card → Inline badges` for chip + plain pill side by side.
 
 ## Examples (not exported)
 

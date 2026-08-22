@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Download, Pencil, Plus, Trash2 } from "lucide-react";
+import { Badge } from "../Badge/Badge";
 import { Button, type ButtonVariant } from "./Button";
 
 const variants: ButtonVariant[] = [
@@ -45,7 +46,7 @@ const meta = {
       description: {
         component:
           "WMDS button — token-driven colors, real `:hover` / `:active` / `:focus-visible` / `disabled` states. " +
-          "Optional `icon` / `badge` shorthands (or `startSlot` / `endSlot`) for composition. Icons via [Lucide](https://lucide.dev). " +
+          "Optional `icon` / `badge` shorthands, or content-agnostic `startSlot` / `endSlot` for composition. Icons via [Lucide](https://lucide.dev). " +
           "Use the **Controls** panel or interact in the canvas (hover, click, Tab to focus).",
       },
     },
@@ -241,6 +242,43 @@ export const WithTrailingBadge: Story = {
       </Button>
       <Button variant="ghost" badge="New">
         Updates
+      </Button>
+    </div>
+  ),
+};
+
+export const WithStartAndEndSlots: Story = {
+  name: "Slots — startSlot / endSlot",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Explicit slots accept any node — circular media, icons, or custom markup. " +
+          "`icon` and `badge` are optional shorthands when you do not need full control.",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex flex-wrap items-center gap-3">
+      <Button
+        variant="secondary"
+        startSlot={
+          <span className="flex size-4 shrink-0 items-center justify-center overflow-hidden rounded-full bg-bg outline outline-1 -outline-offset-1 outline-[color-mix(in_srgb,var(--color-fg)_10%,transparent)]">
+            <img src="/brands/cone-king.svg" alt="" className="size-full object-contain" />
+          </span>
+        }
+      >
+        Cone King
+      </Button>
+      <Button
+        variant="primary"
+        endSlot={
+          <Badge variant="neutral" appearance="count" className="bg-primary-foreground/15 text-primary-foreground">
+            3
+          </Badge>
+        }
+      >
+        Inbox
       </Button>
     </div>
   ),
