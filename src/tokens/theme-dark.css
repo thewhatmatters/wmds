@@ -1,0 +1,52 @@
+/**
+ * Maps parallel -dark tokens onto semantic names for preview/runtime.
+ * Values live in tokens.css; this file only aliases — no raw hex here.
+ */
+[data-wmds-theme="dark"] {
+  --color-bg: var(--color-bg-dark);
+  --color-fg: var(--color-fg-dark);
+  --color-muted: var(--color-muted-dark);
+  --color-border: var(--color-border-dark);
+  --color-surface: var(--color-surface-dark);
+
+  --color-primary: var(--color-primary-dark);
+  --color-primary-foreground: var(--color-primary-foreground-dark);
+  --color-primary-hover: var(--color-primary-hover-dark);
+  --color-primary-active: var(--color-primary-active-dark);
+
+  --color-secondary: var(--color-secondary-dark);
+  --color-secondary-foreground: var(--color-secondary-foreground-dark);
+  --color-secondary-hover: var(--color-secondary-hover-dark);
+  --color-secondary-active: var(--color-secondary-active-dark);
+
+  --color-ghost-foreground: var(--color-ghost-foreground-dark);
+  --color-ghost-hover: var(--color-ghost-hover-dark);
+  --color-ghost-active: var(--color-ghost-active-dark);
+
+  --color-destructive: var(--color-destructive-dark);
+  --color-destructive-foreground: var(--color-destructive-foreground-dark);
+  --color-destructive-hover: var(--color-destructive-hover-dark);
+  --color-destructive-active: var(--color-destructive-active-dark);
+
+  --color-success: var(--color-success-dark);
+  --color-success-foreground: var(--color-success-foreground-dark);
+  --color-success-hover: var(--color-success-hover-dark);
+  --color-success-active: var(--color-success-active-dark);
+
+  --color-warning: var(--color-warning-dark);
+  --color-warning-foreground: var(--color-warning-foreground-dark);
+  --color-warning-hover: var(--color-warning-hover-dark);
+  --color-warning-active: var(--color-warning-active-dark);
+
+  --color-info: var(--color-info-dark);
+  --color-info-foreground: var(--color-info-foreground-dark);
+  --color-info-hover: var(--color-info-hover-dark);
+  --color-info-active: var(--color-info-active-dark);
+
+  --color-focus-ring: var(--color-focus-ring-dark);
+
+  --shadow-sm: var(--shadow-sm-dark);
+  --shadow-md: var(--shadow-md-dark);
+  --shadow-raised: var(--shadow-raised-dark);
+  --shadow-inset-highlight: var(--shadow-inset-highlight-dark);
+}

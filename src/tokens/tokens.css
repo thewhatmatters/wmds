@@ -1,0 +1,161 @@
+/**
+ * Design tokens — canonical names match Paper Theme tab / MCP create_tokens.
+ * Sync: copy from Paper Theme tab, or agent pull via get_tokens.
+ *
+ * Light: --color-{role}
+ * Dark:   --color-{role}-dark  (parallel tokens; Storybook maps via [data-wmds-theme="dark"])
+ */
+:root {
+  /* ── Light · neutrals ── */
+  --color-bg: #fafaf8;
+  --color-fg: #1c1b19;
+  --color-muted: #6b685f;
+  --color-border: #e4e1da;
+  --color-surface: #f0eee8;
+
+  /* ── Light · brand / actions ── */
+  --color-primary: #39485c;
+  --color-primary-foreground: #fafaf8;
+  --color-primary-hover: #2d3a4a;
+  --color-primary-active: #243040;
+
+  --color-secondary: #f0eee8;
+  --color-secondary-foreground: #1c1b19;
+  --color-secondary-hover: #e4e1da;
+  --color-secondary-active: #d8d4cb;
+
+  --color-ghost-foreground: #39485c;
+  --color-ghost-hover: rgba(57, 72, 92, 0.08);
+  --color-ghost-active: rgba(57, 72, 92, 0.14);
+
+  --color-destructive: #b42318;
+  --color-destructive-foreground: #fafaf8;
+  --color-destructive-hover: #912018;
+  --color-destructive-active: #7a1a13;
+
+  --color-success: #3cbb72;
+  --color-success-foreground: #fafaf8;
+  --color-success-hover: #35a966;
+  --color-success-active: #2d9158;
+
+  --color-warning: #b54708;
+  --color-warning-foreground: #fafaf8;
+  --color-warning-hover: #93370d;
+  --color-warning-active: #7a2e0e;
+
+  --color-info: #175cd3;
+  --color-info-foreground: #fafaf8;
+  --color-info-hover: #134cc0;
+  --color-info-active: #1040a3;
+
+  --color-focus-ring: rgba(57, 72, 92, 0.45);
+
+  /* ── Light · shadows ── */
+  --shadow-sm: 0 1px 2px rgb(28 27 25 / 8%);
+  --shadow-md: 0 0 0 1px var(--color-border), 0 1px 2px rgb(28 27 25 / 6%),
+    0 2px 6px rgb(28 27 25 / 4%);
+  --shadow-raised: 0 0 0 1px var(--color-border), 0 1px 2px rgb(28 27 25 / 8%);
+  --shadow-inset-highlight: inset 0 1px 0 rgb(255 255 255 / 14%);
+
+  /* ── Dark · neutrals ── */
+  --color-bg-dark: #18191b;
+  --color-fg-dark: #f2f3f4;
+  --color-muted-dark: #a5a8ad;
+  --color-border-dark: #2e3033;
+  --color-surface-dark: #232427;
+
+  /* ── Dark · brand / actions ── */
+  --color-primary-dark: #5a6d85;
+  --color-primary-foreground-dark: #fafaf8;
+  --color-primary-hover-dark: #667892;
+  --color-primary-active-dark: #4d6178;
+
+  --color-secondary-dark: #2a2b2e;
+  --color-secondary-foreground-dark: #f2f3f4;
+  --color-secondary-hover-dark: #323338;
+  --color-secondary-active-dark: #3a3b40;
+
+  --color-ghost-foreground-dark: #f2f3f4;
+  --color-ghost-hover-dark: rgba(255, 255, 255, 0.08);
+  --color-ghost-active-dark: rgba(255, 255, 255, 0.14);
+
+  --color-destructive-dark: #d92d20;
+  --color-destructive-foreground-dark: #fafaf8;
+  --color-destructive-hover-dark: #b42318;
+  --color-destructive-active-dark: #912018;
+
+  --color-success-dark: #3cbb72;
+  --color-success-foreground-dark: #fafaf8;
+  --color-success-hover-dark: #35a966;
+  --color-success-active-dark: #2d9158;
+
+  --color-warning-dark: #dc6803;
+  --color-warning-foreground-dark: #fafaf8;
+  --color-warning-hover-dark: #b54708;
+  --color-warning-active-dark: #93370d;
+
+  --color-info-dark: #2e90fa;
+  --color-info-foreground-dark: #fafaf8;
+  --color-info-hover-dark: #175cd3;
+  --color-info-active-dark: #134cc0;
+
+  --color-focus-ring-dark: rgba(242, 243, 244, 0.35);
+
+  /* ── Dark · shadows ── */
+  --shadow-sm-dark: 0 1px 2px rgb(0 0 0 / 30%);
+  --shadow-md-dark: 0 0 0 1px rgb(255 255 255 / 11%), 0 1px 2px rgb(0 0 0 / 20%),
+    0 2px 6px rgb(0 0 0 / 20%);
+  --shadow-raised-dark: 0 0 0 1px rgb(255 255 255 / 10%), 0 1px 2px rgb(0 0 0 / 30%);
+  --shadow-inset-highlight-dark: inset 0 1px 0 rgb(255 255 255 / 14%);
+
+  /* Typography — shared across themes */
+  --font-family-sans: "IBM Plex Sans", system-ui, sans-serif;
+  --font-family-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+
+  --line-height-xs: 16px;
+  --line-height-sm: 20px;
+  --line-height-base: 24px;
+  --line-height-lg: 28px;
+  --line-height-xl: 28px;
+  --line-height-2xl: 32px;
+  --line-height-3xl: 36px;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0em;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --letter-spacing-widest: 0.1em;
+
+  --spacing-1: 4px;
+  --spacing-1-5: 6px;
+  --spacing-2: 8px;
+  --spacing-2-5: 10px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-7: 28px;
+  --spacing-8: 32px;
+  --spacing-9: 36px;
+  --spacing-10: 40px;
+  --spacing-11: 44px;
+  --spacing-12: 48px;
+
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-full: 9999px;
+}
