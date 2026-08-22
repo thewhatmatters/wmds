@@ -8,5 +8,3 @@ export type {
   CardSectionProps,
   CardVariant,
 } from "./components/Card/Card";
-export { RestockCard } from "./components/RestockCard/RestockCard";
-export type { RestockCardProps } from "./components/RestockCard/RestockCard";

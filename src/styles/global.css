@@ -106,6 +106,12 @@
   --shadow-inset-highlight: var(--shadow-inset-highlight);
   --shadow-drop-sm: var(--shadow-drop-sm);
   --shadow-drop-md: var(--shadow-drop-md);
+
+  --duration-instant: var(--duration-instant);
+  --duration-fast: var(--duration-fast);
+  --duration-base: var(--duration-base);
+  --duration-slow: var(--duration-slow);
+  --duration-slower: var(--duration-slower);
 }
 
 *,
@@ -125,4 +131,14 @@ body {
 /* Storybook canvas — preview decorator fills the iframe; root must not shrink to story width */
 #storybook-root {
   width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -29,7 +29,7 @@ export interface RestockCardProps {
   onAccepted?: () => void;
 }
 
-/** Agent restock prompt — light mode, WMDS tokens only. */
+/** Agent restock prompt — design-system specimen (Storybook + Paper proof), not a public export. */
 export function RestockCard({ onAlternatives, onAccepted }: RestockCardProps) {
   return (
     <article className="flex w-full max-w-[380px] flex-col rounded-lg bg-surface font-sans shadow-md">

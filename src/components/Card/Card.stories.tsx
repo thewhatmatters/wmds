@@ -142,7 +142,7 @@ export const Composition: Story = {
     docs: {
       description: {
         story:
-          "Divided card with header, body, and footer — the pattern RestockCard uses. Root `padding=\"none\"` lets dividers span edge to edge.",
+          "Divided card with header, body, and footer — same structure as the Restock agent specimen. Root `padding=\"none\"` lets dividers span edge to edge.",
       },
     },
   },

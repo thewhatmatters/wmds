@@ -88,16 +88,30 @@ No MCP or server required at runtime — just npm.
 |------|----------|----------|
 | **Foundation** | **Semantic colors — light** / **Dark mode — semantic colors** | Swatch boards + Theme tab |
 | **Components** | **Buttons** | Variants (incl. success), sizes, states, matrix, loading — all token-bound |
-| **Components** | **Restock card** | Token-bound light recreation (Paper + Storybook) |
+| **Components** | **Restock card** | DS specimen — proves target agent UI is token-generatable (not a shipped component) |
 | **Components** | **Restock card (reference)** | Original inspiration — user cleanup |
 
 Paper = visual spec. Storybook = interactive code. Sync is manual/agent-driven (`get_jsx` on a frame → refine `Button.tsx`).
+
+## Components vs examples
+
+| Kind | Storybook | Exported from package |
+|------|-----------|------------------------|
+| **Components** | `Components/*` | Yes (`src/index.ts`) |
+| **Examples** | `Examples/*` | No — specimens that validate tokens + composition against a target UI |
 
 ## Components
 
 | Component | Storybook path | Status |
 |-----------|----------------|--------|
 | **Button** | `Components / Button` | 7 variants × 4 sizes (xs–lg); slots: `icon` / `badge` (pass Lucide or any SVG) |
+| **Card** | `Components / Card` | Variants, elevation, padding, compound slots |
+
+## Examples (not exported)
+
+| Specimen | Storybook path | Purpose |
+|----------|----------------|---------|
+| **Restock agent card** | `Examples / Restock agent card` | Target agent prompt UI — confirms WMDS can reproduce it with tokens + Button |
 
 Preview locally:
 

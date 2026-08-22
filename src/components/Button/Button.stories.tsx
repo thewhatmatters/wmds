@@ -125,7 +125,7 @@ export const InteractiveStates: Story = {
     docs: {
       description: {
         story:
-          "Hover and click buttons below. Press **Tab** to move focus and see the focus ring (`--color-focus-ring`). " +
+          "Hover and click buttons below — **hold** click to see press scale (`--motion-press-scale`). Press **Tab** to move focus and see the focus ring (`--color-focus-ring`). " +
           "Disabled and loading rows are non-interactive.",
       },
     },

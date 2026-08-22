@@ -61,14 +61,14 @@ export const typographyStyles: TypographyStyle[] = [
     label: "Subheading",
     description: "Card titles, compact headings",
     className: "text-sm font-semibold leading-[var(--line-height-sm)] tracking-normal text-fg",
-    usedIn: ["Card.Header", "RestockCard title"],
+    usedIn: ["Card.Header", "Restock agent specimen title"],
   },
   {
     role: "body",
     label: "Body",
     description: "Default reading text and descriptions",
     className: "text-sm font-normal leading-[var(--line-height-sm)] tracking-normal text-fg",
-    usedIn: ["Card.Body", "RestockCard description"],
+    usedIn: ["Card.Body", "Restock agent specimen description"],
   },
   {
     role: "ui-label",
@@ -90,7 +90,7 @@ export const typographyStyles: TypographyStyle[] = [
     description: "Section eyebrows, all-caps labels",
     className:
       "text-xs font-medium uppercase leading-[var(--line-height-xs)] tracking-wider text-muted",
-    usedIn: ["RestockCard “Other options”", "Card section labels"],
+    usedIn: ["Restock agent specimen “Other options”", "Card section labels"],
   },
 ];
 

@@ -50,7 +50,7 @@ export const shadowElevations: ShadowToken[] = [
       "0 0 0 1px var(--color-border), 0 1px 2px rgb(28 27 25 / 6%), 0 2px 6px rgb(28 27 25 / 4%)",
     role: "Default card elevation",
     tailwind: "shadow-md",
-    usedIn: ["Card default", "RestockCard"],
+    usedIn: ["Card default", "Restock agent specimen"],
     paperPattern:
       "border: 1px solid var(--color-border); box-shadow: 0 1px 2px rgb(28 27 25 / 6%), 0 2px 6px rgb(28 27 25 / 4%)",
   },
