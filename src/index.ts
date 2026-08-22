@@ -1,4 +1,12 @@
 export { Button } from "./components/Button/Button";
 export type { ButtonProps, ButtonSize, ButtonVariant } from "./components/Button/Button";
+export { Card } from "./components/Card/Card";
+export type {
+  CardElevation,
+  CardPadding,
+  CardProps,
+  CardSectionProps,
+  CardVariant,
+} from "./components/Card/Card";
 export { RestockCard } from "./components/RestockCard/RestockCard";
 export type { RestockCardProps } from "./components/RestockCard/RestockCard";

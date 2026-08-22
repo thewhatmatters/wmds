@@ -13,11 +13,11 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "lucide-react": "^1.33.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "lucide-react": "^1.33.0",
     "@chromatic-com/storybook": "latest",
     "@storybook/addon-a11y": "^10.5.10",
     "@storybook/addon-docs": "^10.5.10",

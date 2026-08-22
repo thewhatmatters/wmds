@@ -17,7 +17,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   loading?: boolean;
-  /** Shorthand for `startSlot` — Lucide or any SVG/icon node. */
+  /** Shorthand for `startSlot` — pass Lucide or any SVG/icon node. */
   icon?: ReactNode;
   /** Shorthand for `endSlot` — count (`3`) or label (`"New"`). Custom nodes use `endSlot`. */
   badge?: ReactNode;
@@ -69,7 +69,10 @@ function cn(...parts: Array<string | false | undefined>) {
 function ButtonIcon({ size, children }: { size: ButtonSize; children: ReactNode }) {
   return (
     <span
-      className={cn("inline-flex shrink-0 [&>svg]:size-full", iconSizeClasses[size])}
+      className={cn(
+        "inline-flex shrink-0 text-inherit [&>svg]:size-full [&>svg]:shrink-0 [&>svg]:stroke-current",
+        iconSizeClasses[size],
+      )}
       aria-hidden
     >
       {children}

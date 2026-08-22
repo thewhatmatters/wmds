@@ -23,6 +23,25 @@ Paper tokens.css  →  @theme bridge  →  bg-primary in Button.tsx
 
 When you update a token in Paper and sync `tokens.css`, every component updates. Tailwind is plumbing, not the design source.
 
+## Icons
+
+WMDS does **not** bundle an icon library. Components accept icons as React nodes via `icon`, `startSlot`, or `endSlot` — any SVG works; styling uses `stroke-current` / `text-inherit` so icons follow button foreground color.
+
+**Recommended:** [Lucide](https://lucide.dev) for What Matters apps and Storybook demos. Install in the **consumer app**, not as a WMDS runtime dependency:
+
+```bash
+npm install lucide-react
+```
+
+```tsx
+import { Plus } from "lucide-react";
+import { Button } from "@whatmatters/wmds";
+
+<Button icon={<Plus strokeWidth={2} />}>New item</Button>
+```
+
+Storybook uses `lucide-react` as a **devDependency** for examples only. Paper uses inline SVG paths for the same Lucide shapes — no npm coupling in the design file.
+
 ## Commands
 
 ```bash
@@ -78,7 +97,7 @@ Paper = visual spec. Storybook = interactive code. Sync is manual/agent-driven (
 
 | Component | Storybook path | Status |
 |-----------|----------------|--------|
-| **Button** | `Components / Button` | 7 variants × 4 sizes (xs–lg); slots: `icon` / `badge` (Lucide in Storybook) |
+| **Button** | `Components / Button` | 7 variants × 4 sizes (xs–lg); slots: `icon` / `badge` (pass Lucide or any SVG) |
 
 Preview locally:
 

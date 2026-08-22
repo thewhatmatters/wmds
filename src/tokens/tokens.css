@@ -50,11 +50,12 @@
 
   --color-focus-ring: rgba(57, 72, 92, 0.45);
 
-  /* ── Light · shadows ── */
-  --shadow-sm: 0 1px 2px rgb(28 27 25 / 8%);
-  --shadow-md: 0 0 0 1px var(--color-border), 0 1px 2px rgb(28 27 25 / 6%),
-    0 2px 6px rgb(28 27 25 / 4%);
-  --shadow-raised: 0 0 0 1px var(--color-border), 0 1px 2px rgb(28 27 25 / 8%);
+  /* ── Light · shadows (primitives → semantic) ── */
+  --shadow-drop-sm: 0 1px 2px rgb(28 27 25 / 8%);
+  --shadow-drop-md: 0 1px 2px rgb(28 27 25 / 6%), 0 2px 6px rgb(28 27 25 / 4%);
+  --shadow-sm: var(--shadow-drop-sm);
+  --shadow-md: 0 0 0 1px var(--color-border), var(--shadow-drop-md);
+  --shadow-raised: 0 0 0 1px var(--color-border), var(--shadow-drop-sm);
   --shadow-inset-highlight: inset 0 1px 0 rgb(255 255 255 / 14%);
 
   /* ── Dark · neutrals ── */
@@ -101,24 +102,25 @@
 
   --color-focus-ring-dark: rgba(242, 243, 244, 0.35);
 
-  /* ── Dark · shadows ── */
-  --shadow-sm-dark: 0 1px 2px rgb(0 0 0 / 30%);
-  --shadow-md-dark: 0 0 0 1px rgb(255 255 255 / 11%), 0 1px 2px rgb(0 0 0 / 20%),
-    0 2px 6px rgb(0 0 0 / 20%);
-  --shadow-raised-dark: 0 0 0 1px rgb(255 255 255 / 10%), 0 1px 2px rgb(0 0 0 / 30%);
+  /* ── Dark · shadows (primitives → semantic) ── */
+  --shadow-drop-sm-dark: 0 1px 2px rgb(0 0 0 / 30%);
+  --shadow-drop-md-dark: 0 1px 2px rgb(0 0 0 / 20%), 0 2px 6px rgb(0 0 0 / 20%);
+  --shadow-sm-dark: var(--shadow-drop-sm-dark);
+  --shadow-md-dark: 0 0 0 1px rgb(255 255 255 / 11%), var(--shadow-drop-md-dark);
+  --shadow-raised-dark: 0 0 0 1px rgb(255 255 255 / 10%), var(--shadow-drop-sm-dark);
   --shadow-inset-highlight-dark: inset 0 1px 0 rgb(255 255 255 / 14%);
 
   /* Typography — shared across themes */
   --font-family-sans: "IBM Plex Sans", system-ui, sans-serif;
   --font-family-mono: "IBM Plex Mono", ui-monospace, monospace;
 
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-base: 16px;
+  --font-size-xs: 12px; /* caption, fine print, overlines */
+  --font-size-sm: 14px; /* body, UI labels, subheadings */
+  --font-size-base: 16px; /* body default, button lg */
   --font-size-lg: 18px;
-  --font-size-xl: 20px;
-  --font-size-2xl: 24px;
-  --font-size-3xl: 30px;
+  --font-size-xl: 20px; /* section headings */
+  --font-size-2xl: 24px; /* page headings */
+  --font-size-3xl: 30px; /* display */
 
   --line-height-xs: 16px;
   --line-height-sm: 20px;
@@ -140,6 +142,7 @@
   --letter-spacing-wider: 0.05em;
   --letter-spacing-widest: 0.1em;
 
+  --spacing-0: 0;
   --spacing-1: 4px;
   --spacing-1-5: 6px;
   --spacing-2: 8px;

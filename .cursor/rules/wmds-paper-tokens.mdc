@@ -12,8 +12,12 @@ When creating or editing components in **Paper** (write_html, update_styles, dup
 3. **Add before use**: if a value is missing, add the token in Paper **and** `src/tokens/tokens.css` before styling nodes — **except color tokens** (see below).
 4. **New color tokens — ask first**: before proposing or creating any new `--color-*` token, **stop and present the suggestion to the user** (name, value, role, which components would use it). Do not call `create_tokens`, edit `tokens.css`, or wire components until they approve.
 5. **Naming**: follow existing WMDS patterns — `--color-primary`, `--color-destructive`, `--color-success`, `--color-warning`, `--color-info`; `--shadow-sm`, `--shadow-md`, `--shadow-raised`, `--shadow-inset-highlight`. Dark parallels: `--{role}-dark` suffix (e.g. `--color-bg-dark`, `--shadow-md-dark`).
-6. **Shadows in Paper**: Theme tokens (`--shadow-*`) work in code via `var()`, but Paper MCP **does not persist** `box-shadow: var(--shadow-*)` — apply **resolved literal** values that match `tokens.css` (e.g. `0 1px 2px rgb(28 27 25 / 8%)` for `--shadow-sm`). Composite tokens that reference `--color-border` must inline that color too (`#E4E1DA` in light mode).
-7. **Verify**: after building, spot-check Theme tab + `get_computed_styles` — resolved values should show `var(...)` for colors/type/spacing; shadows should show a non-empty `boxShadow` string.
+6. **Shadows in Paper**: Paper does **not** persist `box-shadow: var(--shadow-*)` — the property is dropped entirely. Use this split instead:
+   - **Hairline** (md / raised): `border: 1px solid var(--color-border)` — never `#E4E1DA` in box-shadow
+   - **Drop layer**: literal value from `--shadow-drop-sm` or `--shadow-drop-md` in `tokens.css` (must stay in sync)
+   - **Inset**: literal matching `--shadow-inset-highlight`
+   - Name layers with the semantic token (`Card/elevation-md`, `Button/shadow-raised`) so the intent is visible in the layer tree
+7. **Verify**: after building, spot-check Theme tab + `get_computed_styles` — colors/spacing via `var(...)`; shadows show border token + drop literal (not raw `#E4E1DA` hairlines in box-shadow).
 
 **Buttons:** size comes from `paddingBlock` + `paddingInline` + typography — never set a fixed `height` on button frames in Paper.
 
