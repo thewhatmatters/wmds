@@ -1,4 +1,4 @@
-import type { Preview, ReactRenderer } from "@storybook/react-vite";
+import type { Preview } from "@storybook/react-vite";
 import "../src/styles/global.css";
 
 const preview: Preview = {
@@ -19,16 +19,17 @@ const preview: Preview = {
   },
   decorators: [
     (Story, { globals, viewMode, parameters }) => {
-      const centered = viewMode === "story" && parameters.layout === "centered";
+      const padded = parameters.layout === "padded";
+
       return (
         <div
           data-wmds-theme={globals.theme === "dark" ? "dark" : undefined}
           className={[
             "bg-bg text-fg font-sans w-full",
             viewMode === "story"
-              ? centered
-                ? "flex min-h-[100vh] items-center justify-center p-6"
-                : "min-h-[100vh] p-6"
+              ? padded
+                ? "min-h-[100svh] p-6"
+                : "flex min-h-[100svh] w-full items-center justify-center p-6"
               : "p-4",
           ].join(" ")}
         >
@@ -38,6 +39,7 @@ const preview: Preview = {
     },
   ],
   parameters: {
+    /** Decorator owns centering — avoid Storybook's `centered` layout (shrinks canvas to content width). */
     layout: "fullscreen",
     controls: {
       matchers: {

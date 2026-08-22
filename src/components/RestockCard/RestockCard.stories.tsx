@@ -6,7 +6,6 @@ const meta = {
   component: RestockCard,
   tags: ["autodocs"],
   parameters: {
-    layout: "centered",
     docs: {
       description: {
         component:

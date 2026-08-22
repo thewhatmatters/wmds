@@ -28,7 +28,6 @@ const meta = {
     children: sampleBody,
   },
   parameters: {
-    layout: "centered",
     docs: {
       description: {
         component:
