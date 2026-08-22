@@ -10,7 +10,8 @@ const meta = {
     docs: {
       description: {
         component:
-          "**Design-system specimen — not a shipped component.** Recreates a target agent UI (restock prompt) using WMDS tokens and primitives only, to prove the system can generate real product surfaces. " +
+          "**Design-system specimen — not a shipped component.** Recreates a target agent UI (restock prompt) using WMDS tokens and primitives only. " +
+          "Alternatives drawer uses grid `0fr → 1fr` expand with `--duration-slower` and `--ease-out-expo`; body copy crossfades on option change. " +
           "If this pattern ships later, it would likely compose `Card`, `Button`, and extracted list-row pieces — not import this file as-is.",
       },
     },
@@ -20,11 +21,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Token-bound light-mode recreation — compare with the Paper artboard and reference frame. */
-export const Default: Story = {
+/** Collapsed by default — click Alternatives to expand the drawer. */
+export const Default: Story = {};
+
+/** Drawer pre-opened for visual review. */
+export const AlternativesOpen: Story = {
+  name: "Alternatives open",
   args: {
-    onAlternatives: () => {},
-    onAccepted: () => {},
+    defaultOpen: true,
   },
 };
 
@@ -32,7 +36,7 @@ export const Default: Story = {
 export const InlineBadges: Story = {
   name: "Inline badges (chip + pill)",
   render: () => (
-    <div className="flex max-w-[380px] flex-col gap-4 rounded-lg bg-surface p-4 shadow-md">
+    <div className="flex max-w-[440px] flex-col gap-4 rounded-lg bg-surface p-4 shadow-md">
       <p className="text-xs font-medium uppercase tracking-wider text-muted">Side by side</p>
       <div className="flex flex-wrap items-center gap-2">
         <Badge

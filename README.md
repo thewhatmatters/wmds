@@ -89,8 +89,10 @@ No MCP or server required at runtime — just npm.
 | **Foundation** | **Semantic colors — light** / **Dark mode — semantic colors** | Swatch boards + Theme tab |
 | **Components** | **Buttons** | Variants (incl. success), sizes, states, matrix, loading — all token-bound |
 | **Components** | **Badges** | Semantic variants, status/count pills, `startSlot` / `endSlot` (inline chips) |
-| **Components** | **Cards** | Variants, elevation, padding, composed slots |
-| **Components** | **Restock card** | DS specimen — proves target agent UI is token-generatable (not a shipped component) |
+| **Components** | **Cards** | Variants, elevation, padding; `Header`/`Footer` section borders |
+| **Components** | **Restock card** | Collapsed default (440px) — agent prompt specimen |
+| **Components** | **Restock card / alternatives open** | Expanded drawer state (static) |
+| **Components** | **Context chunks** | RAG chunk list with file attachment chips |
 | **Components** | **Restock card (reference)** | Original inspiration — user cleanup |
 
 Paper = visual spec. Storybook = interactive code. Sync is manual/agent-driven (`get_jsx` on a frame → refine `Button.tsx`).
@@ -107,7 +109,7 @@ Paper = visual spec. Storybook = interactive code. Sync is manual/agent-driven (
 | Component | Storybook path | Status |
 |-----------|----------------|--------|
 | **Button** | `Components / Button` | 7 variants × 4 sizes (xs–lg); `startSlot` / `endSlot` (or `icon` / `badge` shorthands) |
-| **Card** | `Components / Card` | Variants, elevation, padding, compound slots |
+| **Card** | `Components / Card` | Variants, elevation, padding; `Header`/`Footer` section borders |
 | **Badge** | `Components / Badge` | Semantic variants; label + count; **`startSlot` / `endSlot`** for inline chips in prose |
 
 ### Badge inline chips
@@ -127,11 +129,26 @@ When a badge has a **`startSlot`** or **`endSlot`**, it switches to **chip layou
 
 See `Examples / Restock agent card → Inline badges` for chip + plain pill side by side.
 
+### Card section borders
+
+With `padding="none"`, **`Card.Header`** includes `border-b` and **`Card.Footer`** includes `border-t` — edge-to-edge dividers without a manual `Card.Divider` between header and body. Use **`Card.Divider`** only for extra splits inside the body.
+
+### Motion (specimens)
+
+Motion tokens live in `tokens.css` (`--duration-*`, `--ease-out-expo`, `--motion-press-scale`). Specimens use:
+
+- **Expand drawer** — CSS grid `0fr → 1fr` + opacity (`--duration-slower`, `--ease-out-expo`)
+- **Body swap** — `.animate-fade-in` (`--duration-base`) on recommendation copy
+- **Button press** — `scale(var(--motion-press-scale))` on `:active`
+
+`prefers-reduced-motion` collapses transitions globally in `global.css`.
+
 ## Examples (not exported)
 
 | Specimen | Storybook path | Purpose |
 |----------|----------------|---------|
-| **Restock agent card** | `Examples / Restock agent card` | Target agent prompt UI — confirms WMDS can reproduce it with tokens + Button |
+| **Restock agent card** | `Examples / Restock agent card` | Interactive agent prompt — collapsed default, expandable alternatives drawer, option switching |
+| **Context chunks** | `Examples / Context chunks` | RAG chunk list — Card section borders + Badge file attachment rows |
 
 Preview locally:
 

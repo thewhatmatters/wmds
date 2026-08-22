@@ -54,7 +54,7 @@ const sectionPaddingClasses: Record<
   none: {
     block: "px-[length:var(--spacing-3)] py-[length:var(--spacing-2)]",
     header:
-      "flex flex-col gap-[length:var(--spacing-1-5)] px-[length:var(--spacing-3)] pt-[length:var(--spacing-3)] pb-[length:var(--spacing-2)]",
+      "flex flex-col gap-[length:var(--spacing-1-5)] border-b border-border px-[length:var(--spacing-3)] pt-[length:var(--spacing-3)] pb-[length:var(--spacing-2)]",
     body: "px-[length:var(--spacing-3)] py-[length:var(--spacing-2)]",
     footer:
       "flex items-center justify-between gap-[length:var(--spacing-3)] border-t border-border px-[length:var(--spacing-3)] py-[length:var(--spacing-2)]",
@@ -62,7 +62,7 @@ const sectionPaddingClasses: Record<
   sm: {
     block: "px-[length:var(--spacing-3)] py-[length:var(--spacing-2)]",
     header:
-      "flex flex-col gap-[length:var(--spacing-2)] px-[length:var(--spacing-3)] pt-[length:var(--spacing-3)] pb-[length:var(--spacing-2)]",
+      "flex flex-col gap-[length:var(--spacing-2)] border-b border-border px-[length:var(--spacing-3)] pt-[length:var(--spacing-3)] pb-[length:var(--spacing-2)]",
     body: "px-[length:var(--spacing-3)] py-[length:var(--spacing-2)]",
     footer:
       "flex items-center justify-between gap-[length:var(--spacing-3)] border-t border-border px-[length:var(--spacing-3)] py-[length:var(--spacing-2)]",
@@ -70,7 +70,7 @@ const sectionPaddingClasses: Record<
   md: {
     block: "px-[length:var(--spacing-4)] py-[length:var(--spacing-3)]",
     header:
-      "flex flex-col gap-[length:var(--spacing-2)] px-[length:var(--spacing-4)] pt-[length:var(--spacing-4)] pb-[length:var(--spacing-3)]",
+      "flex flex-col gap-[length:var(--spacing-2)] border-b border-border px-[length:var(--spacing-4)] pt-[length:var(--spacing-4)] pb-[length:var(--spacing-3)]",
     body: "px-[length:var(--spacing-4)] py-[length:var(--spacing-3)]",
     footer:
       "flex items-center justify-between gap-[length:var(--spacing-4)] border-t border-border px-[length:var(--spacing-4)] py-[length:var(--spacing-3)]",
@@ -78,7 +78,7 @@ const sectionPaddingClasses: Record<
   lg: {
     block: "px-[length:var(--spacing-6)] py-[length:var(--spacing-4)]",
     header:
-      "flex flex-col gap-[length:var(--spacing-2)] px-[length:var(--spacing-6)] pt-[length:var(--spacing-6)] pb-[length:var(--spacing-4)]",
+      "flex flex-col gap-[length:var(--spacing-2)] border-b border-border px-[length:var(--spacing-6)] pt-[length:var(--spacing-6)] pb-[length:var(--spacing-4)]",
     body: "px-[length:var(--spacing-6)] py-[length:var(--spacing-4)]",
     footer:
       "flex items-center justify-between gap-[length:var(--spacing-4)] border-t border-border px-[length:var(--spacing-6)] py-[length:var(--spacing-4)]",

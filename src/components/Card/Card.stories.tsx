@@ -32,7 +32,9 @@ const meta = {
       description: {
         component:
           "WMDS card — token-driven surface, border, shadow, and spacing. " +
-          "Compose with `Card.Header`, `Card.Body`, `Card.Footer`, and `Card.Divider` for divided layouts (set `padding=\"none\"` on the root). " +
+          "Compose with `Card.Header`, `Card.Body`, `Card.Footer`, and optional `Card.Divider`. " +
+          "Set `padding=\"none\"` on the root for edge-to-edge divided layouts. " +
+          "`Card.Header` and `Card.Footer` include section borders (`border-b` / `border-t`); use `Card.Divider` for extra splits inside the body. " +
           "Elevation maps to `--shadow-*` tokens, similar to Astryx's graded `elevation` prop.",
       },
     },
@@ -119,7 +121,6 @@ export const Padding: Story = {
               <Card.Header>
                 <p className="text-xs font-medium uppercase tracking-wider text-muted">{padding}</p>
               </Card.Header>
-              <Card.Divider />
               <Card.Body>
                 <p className="text-sm text-muted">Section padding when root is `none`.</p>
               </Card.Body>
@@ -142,7 +143,7 @@ export const Composition: Story = {
     docs: {
       description: {
         story:
-          "Divided card with header, body, and footer — same structure as the Restock agent specimen. Root `padding=\"none\"` lets dividers span edge to edge.",
+          "Divided card with header, body, and footer — section borders on header and footer. Root `padding=\"none\"` lets borders span edge to edge.",
       },
     },
   },
@@ -156,7 +157,6 @@ export const Composition: Story = {
           Reorder waffle cones from Cone King with lead time 7 days.
         </p>
       </Card.Header>
-      <Card.Divider />
       <Card.Body>
         <p className="text-xs font-medium uppercase tracking-wider text-muted">Other options</p>
         <p className="mt-2 text-sm">Switch to Vanilla Madagascar</p>
