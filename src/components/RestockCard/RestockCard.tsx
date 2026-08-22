@@ -76,7 +76,7 @@ export function RestockCard({ onAlternatives, onAccepted }: RestockCardProps) {
           <span className="text-sm leading-[1.5] text-muted">High confidence</span>
         </div>
         <div className="flex shrink-0 gap-2">
-          <Button variant="secondary" size="xs" onClick={onAlternatives}>
+          <Button variant="secondary" size="xs" badge={2} onClick={onAlternatives}>
             Alternatives
           </Button>
           <Button variant="success" size="xs" onClick={onAccepted}>

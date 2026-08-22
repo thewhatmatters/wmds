@@ -88,6 +88,8 @@ No MCP or server required at runtime — just npm.
 |------|----------|----------|
 | **Foundation** | **Semantic colors — light** / **Dark mode — semantic colors** | Swatch boards + Theme tab |
 | **Components** | **Buttons** | Variants (incl. success), sizes, states, matrix, loading — all token-bound |
+| **Components** | **Badges** | Semantic variants, status labels, count pills |
+| **Components** | **Cards** | Variants, elevation, padding, composed slots |
 | **Components** | **Restock card** | DS specimen — proves target agent UI is token-generatable (not a shipped component) |
 | **Components** | **Restock card (reference)** | Original inspiration — user cleanup |
 
@@ -106,6 +108,7 @@ Paper = visual spec. Storybook = interactive code. Sync is manual/agent-driven (
 |-----------|----------------|--------|
 | **Button** | `Components / Button` | 7 variants × 4 sizes (xs–lg); slots: `icon` / `badge` (pass Lucide or any SVG) |
 | **Card** | `Components / Card` | Variants, elevation, padding, compound slots |
+| **Badge** | `Components / Badge` | Semantic variants, label + count appearances (Astryx-aligned) |
 
 ## Examples (not exported)
 
