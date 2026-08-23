@@ -15,3 +15,7 @@ _Avoid_: DataTable, grid component
 **Examples**:
 Storybook-only specimens under `src/examples/` that compose exported components against target UI patterns — never added to `src/index.ts`.
 _Avoid_: demo components, sample pages, specimens folder
+
+**MoreMenu**:
+Public overflow-menu module — kebab trigger preset over an internal portaled panel with viewport-aware positioning.
+_Avoid_: DropdownMenu, overflow menu component

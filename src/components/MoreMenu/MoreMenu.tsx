@@ -1,56 +1,22 @@
 "use client";
 
-import type { ReactNode, Ref } from "react";
 import { MoreVertical } from "lucide-react";
-import type { IconButtonSize, IconButtonVariant } from "../IconButton/IconButton";
-import {
-  DropdownMenu,
-  type DropdownMenuAlignment,
-  type DropdownMenuOption,
-  type DropdownMenuPlacement,
-} from "./DropdownMenu";
+import { MoreMenuPanel } from "./MoreMenuPanel";
+import type { MoreMenuProps } from "./types";
 
 export type {
-  DropdownMenuAlignment as MoreMenuAlignment,
-  DropdownMenuDividerData as MoreMenuDivider,
-  DropdownMenuItemData as MoreMenuItem,
-  DropdownMenuOption as MoreMenuOption,
-  DropdownMenuPlacement as MoreMenuPlacement,
-  DropdownMenuSection as MoreMenuSection,
-} from "./DropdownMenu";
-
-export interface MoreMenuProps {
-  /** Menu entries — actions, dividers, and sections (Astryx `items` shape). */
-  items: DropdownMenuOption[];
-  /**
-   * Accessible label for the icon trigger — always used as `aria-label`.
-   * @default "More options"
-   */
-  label?: string;
-  /** Trigger visual variant. @default "ghost" */
-  variant?: IconButtonVariant;
-  /** Trigger size. @default "md" */
-  size?: IconButtonSize;
-  /** Override the default kebab icon. */
-  icon?: ReactNode;
-  /** Disable the trigger. */
-  disabled?: boolean;
-  /** Menu position relative to the trigger. @default "below" */
-  placement?: DropdownMenuPlacement;
-  /** Menu alignment along the placement axis. @default "end" */
-  alignment?: DropdownMenuAlignment;
-  /** Controlled open state. */
-  open?: boolean;
-  /** Fired when menu visibility changes. */
-  onOpenChange?: (open: boolean) => void;
-  className?: string;
-  ref?: Ref<HTMLButtonElement>;
-  "data-testid"?: string;
-}
+  MoreMenuAlignment,
+  MoreMenuDivider,
+  MoreMenuItem,
+  MoreMenuOption,
+  MoreMenuPlacement,
+  MoreMenuProps,
+  MoreMenuSection,
+} from "./types";
 
 /**
- * Overflow menu with an icon-only trigger — thin wrapper around {@link DropdownMenu}
- * following [Astryx MoreMenu](https://astryx.atmeta.com/components/MoreMenu).
+ * Overflow menu with an icon-only trigger — [Astryx MoreMenu](https://astryx.atmeta.com/components/MoreMenu).
+ * Default kebab trigger; positioning, portal, and keyboard live in the internal panel module.
  */
 export function MoreMenu({
   items,
@@ -68,7 +34,7 @@ export function MoreMenu({
   "data-testid": testId,
 }: MoreMenuProps) {
   return (
-    <DropdownMenu
+    <MoreMenuPanel
       className={className}
       data-testid={testId}
       items={items}

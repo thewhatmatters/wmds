@@ -8,83 +8,36 @@ import {
   useRef,
   useState,
   type CSSProperties,
-  type ReactNode,
   type Ref,
 } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../../lib/cn";
-import { IconButton, type IconButtonSize, type IconButtonVariant } from "../IconButton/IconButton";
-
-export type DropdownMenuPlacement = "below" | "above";
-export type DropdownMenuAlignment = "start" | "end";
-
-export interface DropdownMenuItemData {
-  id?: string;
-  label: ReactNode;
-  onClick?: () => void;
-  icon?: ReactNode;
-  disabled?: boolean;
-  description?: ReactNode;
-  endContent?: ReactNode;
-  variant?: "default" | "destructive";
-}
-
-export interface DropdownMenuDividerData {
-  type: "divider";
-}
-
-export interface DropdownMenuSection {
-  type: "section";
-  id?: string;
-  title?: string;
-  items: DropdownMenuItemData[];
-}
-
-export type DropdownMenuOption =
-  | DropdownMenuItemData
-  | DropdownMenuDividerData
-  | DropdownMenuSection;
-
-export interface DropdownMenuTriggerProps {
-  label: string;
-  icon: ReactNode;
-  variant: IconButtonVariant;
-  size: IconButtonSize;
-  disabled?: boolean;
-  ref?: Ref<HTMLButtonElement>;
-}
-
-export interface DropdownMenuProps {
-  items: DropdownMenuOption[];
-  trigger: DropdownMenuTriggerProps;
-  placement?: DropdownMenuPlacement;
-  alignment?: DropdownMenuAlignment;
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  className?: string;
-  "data-testid"?: string;
-}
+import { IconButton } from "../IconButton/IconButton";
+import { resolveMenuPosition } from "./moreMenuLayout";
+import type {
+  MoreMenuItem,
+  MoreMenuOption,
+  MoreMenuPanelProps,
+  MoreMenuSection,
+} from "./types";
 
 interface MenuPosition {
   top: number;
   left: number;
-  placement: DropdownMenuPlacement;
-  alignment: DropdownMenuAlignment;
+  placement: MoreMenuPanelProps["placement"];
+  alignment: MoreMenuPanelProps["alignment"];
   ready: boolean;
 }
 
-const MENU_GAP_PX = 4;
-const VIEWPORT_PADDING_PX = 8;
-
-function isDivider(option: DropdownMenuOption): option is DropdownMenuDividerData {
+function isDivider(option: MoreMenuOption): option is { type: "divider" } {
   return "type" in option && option.type === "divider";
 }
 
-function isSection(option: DropdownMenuOption): option is DropdownMenuSection {
+function isSection(option: MoreMenuOption): option is MoreMenuSection {
   return "type" in option && option.type === "section";
 }
 
-function itemKey(option: DropdownMenuItemData, index: number): string {
+function itemKey(option: MoreMenuItem, index: number): string {
   return option.id ?? `item-${index}`;
 }
 
@@ -97,65 +50,6 @@ function mergeRefs<T>(...refs: Array<Ref<T> | undefined>) {
   return (value: T | null) => {
     for (const ref of refs) assignRef(ref, value);
   };
-}
-
-function resolveMenuPosition(
-  triggerRect: DOMRect,
-  menuRect: DOMRect,
-  preferredPlacement: DropdownMenuPlacement,
-  preferredAlignment: DropdownMenuAlignment,
-): Omit<MenuPosition, "ready"> {
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
-
-  const spaceBelow = viewportHeight - triggerRect.bottom - VIEWPORT_PADDING_PX;
-  const spaceAbove = triggerRect.top - VIEWPORT_PADDING_PX;
-
-  let placement = preferredPlacement;
-  if (
-    placement === "below" &&
-    menuRect.height + MENU_GAP_PX > spaceBelow &&
-    spaceAbove > spaceBelow
-  ) {
-    placement = "above";
-  } else if (
-    placement === "above" &&
-    menuRect.height + MENU_GAP_PX > spaceAbove &&
-    spaceBelow > spaceAbove
-  ) {
-    placement = "below";
-  }
-
-  const menuWidth = menuRect.width;
-  const alignStartLeft = triggerRect.left;
-  const alignEndLeft = triggerRect.right - menuWidth;
-  const startOverflow = alignStartLeft + menuWidth + VIEWPORT_PADDING_PX - viewportWidth;
-  const endOverflow = VIEWPORT_PADDING_PX - alignEndLeft;
-
-  let alignment = preferredAlignment;
-  if (alignment === "end" && endOverflow > 0 && startOverflow <= 0) {
-    alignment = "start";
-  } else if (alignment === "start" && startOverflow > 0 && endOverflow <= 0) {
-    alignment = "end";
-  }
-
-  let top =
-    placement === "below"
-      ? triggerRect.bottom + MENU_GAP_PX
-      : triggerRect.top - menuRect.height - MENU_GAP_PX;
-
-  let left = alignment === "start" ? alignStartLeft : alignEndLeft;
-
-  left = Math.max(
-    VIEWPORT_PADDING_PX,
-    Math.min(left, viewportWidth - menuWidth - VIEWPORT_PADDING_PX),
-  );
-  top = Math.max(
-    VIEWPORT_PADDING_PX,
-    Math.min(top, viewportHeight - menuRect.height - VIEWPORT_PADDING_PX),
-  );
-
-  return { top, left, placement, alignment };
 }
 
 function readThemeFromTrigger(trigger: HTMLButtonElement | null): string | undefined {
@@ -174,8 +68,8 @@ function MenuItemButton({
   onSelect,
   itemRef,
 }: {
-  item: DropdownMenuItemData;
-  onSelect: (item: DropdownMenuItemData) => void;
+  item: MoreMenuItem;
+  onSelect: (item: MoreMenuItem) => void;
   itemRef?: (node: HTMLButtonElement | null) => void;
 }) {
   const destructive = item.variant === "destructive";
@@ -221,8 +115,8 @@ function MenuItemButton({
   );
 }
 
-function flattenFocusableItems(options: DropdownMenuOption[]): DropdownMenuItemData[] {
-  const items: DropdownMenuItemData[] = [];
+function flattenFocusableItems(options: MoreMenuOption[]): MoreMenuItem[] {
+  const items: MoreMenuItem[] = [];
   for (const option of options) {
     if (isDivider(option)) continue;
     if (isSection(option)) {
@@ -234,7 +128,8 @@ function flattenFocusableItems(options: DropdownMenuOption[]): DropdownMenuItemD
   return items;
 }
 
-export function DropdownMenu({
+/** Portaled menu panel + trigger wiring — internal to the MoreMenu module. */
+export function MoreMenuPanel({
   items,
   trigger,
   placement = "below",
@@ -243,7 +138,7 @@ export function DropdownMenu({
   onOpenChange,
   className,
   "data-testid": testId,
-}: DropdownMenuProps) {
+}: MoreMenuPanelProps) {
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -287,7 +182,7 @@ export function DropdownMenu({
   );
 
   const handleSelect = useCallback(
-    (item: DropdownMenuItemData) => {
+    (item: MoreMenuItem) => {
       if (item.disabled) return;
       item.onClick?.();
       closeMenu(false);
@@ -305,6 +200,7 @@ export function DropdownMenu({
     const resolved = resolveMenuPosition(
       triggerEl.getBoundingClientRect(),
       menuEl.getBoundingClientRect(),
+      { width: window.innerWidth, height: window.innerHeight },
       placement,
       alignment,
     );
