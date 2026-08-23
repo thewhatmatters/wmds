@@ -1,6 +1,19 @@
 # WMDS — What Matters Design System
 
-Paper is the visual source of truth. This repo holds the **runnable** version: CSS tokens + React components + Storybook for interactive states.
+**Paper** is the token lab and design playground. **Storybook** is the canonical component catalog and interaction truth. This repo holds the runnable layer: `tokens.css` + React components + Storybook.
+
+## Paper vs Storybook
+
+| | **Paper** | **Storybook** |
+|--|-----------|----------------|
+| **Role** | Token lab + playground for mockups and pre-code exploration | Shipped component catalog — all states, behavior, API |
+| **Source of truth for** | Design tokens, type, shadows, motion; visual language | Components, props, hover/focus/motion, exports |
+| **Keep in sync?** | Foundation ↔ `tokens.css` — yes | Code — always current |
+| **Component artboards** | Reference + exploration only — **not** a mirror of every story | Full matrix — this is the record |
+
+**Workflow:** When vibe-coding a feature, compose mockups in Paper using patterns that match components already in Storybook (Button, Table, Chip, Tab, etc.) — all nodes token-bound. That gives a visible target before implementing the real screen in code. Use `get_jsx` on a frame when promoting layout to React; verify behavior in Storybook.
+
+Do **not** maintain a 1:1 Paper artboard for every Storybook story. Update Paper when designing something **new** or revisiting visual spec — not after every code polish.
 
 ## Stack
 
@@ -52,14 +65,14 @@ npm run build       # typecheck + production build
 
 ## Paper → code workflow
 
-1. Design tokens + button matrix in Paper (static state frames for reference)
-2. Sync tokens: copy Theme tab → `src/tokens/tokens.css`, or ask Cursor + Paper MCP to `get_tokens`
-3. Export layout: `get_jsx` on a button frame → refine into `Button.tsx`
-4. Verify states in Storybook (hover, active, focus, disabled)
+1. **Tokens** — define or change in Paper Theme tab → sync to `src/tokens/tokens.css` (`get_tokens` or manual copy)
+2. **New primitive** — sketch in Paper (token-bound) → `get_jsx` → implement component → stories in Storybook
+3. **New feature / screen** — mock up in Paper composing existing Storybook patterns → implement in app or Examples story → optional: leave mockup frame or discard after ship
+4. **Verify** — interactive states (hover, focus, motion, portals) in Storybook only; Paper stays static
 
-### Paper components must use tokens
+### Paper playground rules
 
-Paper is where we **prove** the design system works. When building or populating any component frame:
+Paper is where we **prove** tokens and **preview** compositions. When building mockups or populating frames:
 
 - Use **`var(--token-name)`** for every color, font, size, spacing, radius, and shadow — never raw `#hex`, `px`, or font names in node styles.
 - **Create the token first** (`create_tokens` + `tokens.css`) if it does not exist yet — **color tokens require your review before creation** (agent will propose name, value, and usage; wait for approval)
@@ -84,6 +97,8 @@ No MCP or server required at runtime — just npm.
 
 ## Paper file (WMDS)
 
+Reference frames and specimens — not an exhaustive catalog (see Storybook for that). **Foundation** pages stay synced with `tokens.css`. **Components** / **Examples** pages hold key references and active mockups.
+
 | Page | Artboard | Contents |
 |------|----------|----------|
 | **Foundation** | **Semantic colors — light** / **Semantic colors — dark** | Swatch boards + Theme tab |
@@ -102,7 +117,7 @@ No MCP or server required at runtime — just npm.
 | **Examples** | **Context chunks** | RAG chunk card + file attachment badges |
 | **Examples** | **Restock agent card** | Collapsed agent prompt card (440px) |
 
-Paper = visual spec. Storybook = interactive code. Sync is manual/agent-driven (`get_jsx` on a frame → refine component).
+Foundation ↔ `tokens.css`. Mockups compose Storybook-known patterns. Full component record lives in Storybook (`Components/*`, `Examples/*`).
 
 ## Components vs examples
 

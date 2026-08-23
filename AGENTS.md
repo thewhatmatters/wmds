@@ -1,7 +1,11 @@
 # WMDS — agent notes
 
-Paper is the visual source of truth. This repo is the runnable layer: tokens,
-React components, Storybook.
+## Paper vs Storybook
+
+- **Paper** — token lab + design playground. Foundation (Theme tab) syncs with `src/tokens/tokens.css`. Use Paper to mock up features by composing layouts that match components already in Storybook — token-bound nodes only (see `.cursor/rules/wmds-paper-tokens.mdc`).
+- **Storybook** — canonical component catalog: props, states, motion, exports. Source of truth for shipped primitives.
+- **Do not** mirror every Storybook story as a Paper artboard. Update Paper for new design work or token changes; verify interaction in Storybook.
+- **Promote to code:** `get_jsx` on a mockup frame → refine into React; add or extend stories — not the other way around by default.
 
 ## Component order
 
