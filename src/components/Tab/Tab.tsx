@@ -13,6 +13,13 @@ import {
   type RefObject,
 } from "react";
 import { cn } from "../../lib/cn";
+import {
+  CountPill,
+  horizontalScrollClasses,
+  segmentedDisabledClasses,
+  segmentedFocusRingClasses,
+  segmentedLeadingIconClasses,
+} from "../../lib/segmentedControl";
 
 export interface TabGroupProps<T extends string = string>
   extends HTMLAttributes<HTMLDivElement> {
@@ -137,19 +144,6 @@ function handleTabListKeyDown(event: KeyboardEvent<HTMLDivElement>) {
   }
 }
 
-function TabCount({ active, count }: { active: boolean; count: number }) {
-  return (
-    <span
-      className={cn(
-        "rounded px-[length:var(--spacing-1)] text-[10.5px] leading-none tabular-nums",
-        active ? "bg-secondary text-muted" : "text-muted",
-      )}
-    >
-      {count.toLocaleString("en-US")}
-    </span>
-  );
-}
-
 function TabRoot({
   value,
   icon,
@@ -180,8 +174,8 @@ function TabRoot({
         "relative z-[1] inline-flex shrink-0 items-center gap-[length:var(--spacing-1-5)] rounded-full whitespace-nowrap",
         "border border-transparent px-[length:var(--spacing-2)] py-[2px] text-[11.5px] font-medium leading-[1.5]",
         "transition-[color,background-color] duration-[length:var(--duration-base)] ease-[var(--ease-standard)]",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-        "disabled:pointer-events-none disabled:opacity-50",
+        segmentedFocusRingClasses,
+        segmentedDisabledClasses,
         isSelected ? "text-fg" : "text-muted hover:bg-ghost-hover hover:text-fg",
         className,
       )}
@@ -192,15 +186,12 @@ function TabRoot({
       {...props}
     >
       {icon ? (
-        <span
-          className="inline-flex size-3.5 shrink-0 text-inherit [&>svg]:size-full [&>svg]:shrink-0 [&>svg]:stroke-current"
-          aria-hidden
-        >
+        <span className={segmentedLeadingIconClasses} aria-hidden>
           {icon}
         </span>
       ) : null}
       <span>{children}</span>
-      {count != null ? <TabCount active={isSelected} count={count} /> : null}
+      {count != null ? <CountPill active={isSelected} count={count} /> : null}
       {endContent ? <span className="inline-flex shrink-0 items-center">{endContent}</span> : null}
     </button>
   );
@@ -223,11 +214,7 @@ function TabGroup<T extends string = string>({
       value={{ value, onValueChange: onValueChange as (value: string) => void }}
     >
       <div
-        className={cn(
-          "inline-flex max-w-full overflow-x-auto p-[2px]",
-          "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-          className,
-        )}
+        className={cn("inline-flex max-w-full p-[2px]", horizontalScrollClasses, className)}
       >
         <div
           ref={tablistRef}

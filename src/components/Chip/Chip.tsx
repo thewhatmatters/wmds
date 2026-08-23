@@ -7,6 +7,12 @@ import {
   type ReactNode,
 } from "react";
 import { cn } from "../../lib/cn";
+import {
+  CountPill,
+  horizontalScrollClasses,
+  segmentedDisabledClasses,
+  segmentedFocusRingClasses,
+} from "../../lib/segmentedControl";
 import { StatusDot, type StatusDotVariant } from "../StatusDot/StatusDot";
 
 export type ChipDotVariant = StatusDotVariant;
@@ -42,19 +48,6 @@ const ChipGroupContext = createContext<{
 
 function useChipGroup() {
   return useContext(ChipGroupContext);
-}
-
-function ChipCount({ active, count }: { active: boolean; count: number }) {
-  return (
-    <span
-      className={cn(
-        "rounded px-[length:var(--spacing-1)] text-[10.5px] leading-none tabular-nums",
-        active ? "bg-secondary text-muted" : "text-muted",
-      )}
-    >
-      {count.toLocaleString("en-US")}
-    </span>
-  );
 }
 
 function ChipRoot({
@@ -94,8 +87,8 @@ function ChipRoot({
         "inline-flex h-[26px] shrink-0 items-center gap-[length:var(--spacing-1-5)] rounded-full",
         "px-[length:var(--spacing-2-5)] text-xs font-medium leading-none",
         "transition-[background-color,box-shadow,color] duration-[length:var(--duration-base)] ease-[var(--ease-standard)]",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-        "disabled:pointer-events-none disabled:opacity-50",
+        segmentedFocusRingClasses,
+        segmentedDisabledClasses,
         isPressed
           ? "bg-surface text-fg shadow-raised"
           : "text-muted hover:bg-ghost-hover",
@@ -106,7 +99,7 @@ function ChipRoot({
     >
       {leading}
       {children}
-      {count != null ? <ChipCount active={isPressed} count={count} /> : null}
+      {count != null ? <CountPill active={isPressed} count={count} /> : null}
     </button>
   );
 }
@@ -127,8 +120,8 @@ function ChipGroup<T extends string = string>({
         role="toolbar"
         aria-label={ariaLabel}
         className={cn(
-          "-mx-[length:var(--spacing-1)] flex items-center gap-[length:var(--spacing-1)] overflow-x-auto px-[length:var(--spacing-1)] py-[length:var(--spacing-1)]",
-          "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+          "-mx-[length:var(--spacing-1)] flex items-center gap-[length:var(--spacing-1)] px-[length:var(--spacing-1)] py-[length:var(--spacing-1)]",
+          horizontalScrollClasses,
           className,
         )}
         {...props}

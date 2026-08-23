@@ -19,3 +19,7 @@ _Avoid_: demo components, sample pages, specimens folder
 **MoreMenu**:
 Public overflow-menu module — kebab trigger preset over an internal portaled panel with viewport-aware positioning.
 _Avoid_: DropdownMenu, overflow menu component
+
+**CountPill**:
+Shared trailing numeric badge in Tab and Chip segments — not a standalone exported component.
+_Avoid_: count badge, pill count
