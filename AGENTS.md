@@ -7,6 +7,11 @@
 - **Do not** mirror every Storybook story as a Paper artboard. Update Paper for new design work or token changes; verify interaction in Storybook.
 - **Promote to code:** `get_jsx` on a mockup frame → refine into React; add or extend stories — not the other way around by default.
 
+## Examples vs components
+
+- **Components** — `src/components/{Name}/`; exported from `src/index.ts`; Storybook `Components/{Name}`.
+- **Examples** — `src/examples/{Name}/`; Storybook-only specimens (`Examples/{Name}`); **never** add to `src/index.ts`. Compose imported primitives; used to validate tokens + real UI patterns.
+
 ## Component order
 
 Keep **alphabetical (A→Z)** everywhere components are listed:

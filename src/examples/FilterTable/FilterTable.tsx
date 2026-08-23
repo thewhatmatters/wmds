@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Badge } from "../Badge/Badge";
-import { Chip } from "../Chip/Chip";
-import { Table } from "../Table/Table";
+import { Badge } from "../../components/Badge/Badge";
+import { Chip } from "../../components/Chip/Chip";
+import { Table } from "../../components/Table/Table";
 
 type Status = "todo" | "progress" | "done";
 

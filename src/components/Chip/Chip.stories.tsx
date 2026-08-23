@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { useState } from "react";
-import { FilterTable } from "../FilterTable/FilterTable";
+import { FilterTable } from "../../examples/FilterTable/FilterTable";
 import { Chip } from "../Chip/Chip";
 
 const meta = {

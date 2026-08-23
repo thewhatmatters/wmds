@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { Badge } from "../Badge/Badge";
-import { Button, type ButtonVariant } from "../Button/Button";
+import { Badge } from "../../components/Badge/Badge";
+import { Button, type ButtonVariant } from "../../components/Button/Button";
 
 function MediaCircle({ children }: { children: React.ReactNode }) {
   return (

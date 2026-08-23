@@ -1,6 +1,6 @@
 import { AlignLeft, ArrowUpRight } from "lucide-react";
-import { Badge } from "../Badge/Badge";
-import { Card } from "../Card/Card";
+import { Badge } from "../../components/Badge/Badge";
+import { Card } from "../../components/Card/Card";
 
 type FileKind = "pdf" | "csv";
 

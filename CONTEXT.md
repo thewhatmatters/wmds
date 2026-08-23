@@ -11,3 +11,7 @@ _Avoid_: sticky engine, table utils, layout helpers
 **Table**:
 Compound scrollable data grid with optional frozen columns, filter-row collapse, and surface chrome — the public seam consumers import from `@whatmatters/wmds`.
 _Avoid_: DataTable, grid component
+
+**Examples**:
+Storybook-only specimens under `src/examples/` that compose exported components against target UI patterns — never added to `src/index.ts`.
+_Avoid_: demo components, sample pages, specimens folder

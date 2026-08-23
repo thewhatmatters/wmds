@@ -121,10 +121,10 @@ Foundation ↔ `tokens.css`. Mockups compose Storybook-known patterns. Full comp
 
 ## Components vs examples
 
-| Kind | Storybook | Exported from package |
-|------|-----------|------------------------|
-| **Components** | `Components/*` | Yes (`src/index.ts`) |
-| **Examples** | `Examples/*` | No — specimens that validate tokens + composition against a target UI |
+| Kind | Source | Storybook | Exported from package |
+|------|--------|-----------|------------------------|
+| **Components** | `src/components/{Name}/` | `Components/*` | Yes (`src/index.ts`) |
+| **Examples** | `src/examples/{Name}/` | `Examples/*` | No — specimens that validate tokens + composition against a target UI |
 
 ## Components
 
@@ -191,6 +191,8 @@ Motion tokens live in `tokens.css` (`--duration-*`, `--ease-out-expo`, `--motion
 Horizontal scroll uses **sticky-column box-shadows** (`.wmds-table-scroll-shadow-start` / `-end`) or scroller inset shadows when no sticky columns — not gradient overlays (alignment + bleed-through issues in practice).
 
 ## Examples (not exported)
+
+Source: `src/examples/` — Storybook specimens only; not in `src/index.ts`.
 
 | Specimen | Storybook path | Purpose |
 |----------|----------------|---------|
