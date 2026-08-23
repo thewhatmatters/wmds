@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect } from "storybook/test";
 import { useState } from "react";
 import { FilterTable } from "../FilterTable/FilterTable";
 import { Chip } from "../Chip/Chip";
@@ -6,7 +7,7 @@ import { Chip } from "../Chip/Chip";
 const meta = {
   title: "Components/Chip",
   component: Chip,
-  tags: ["autodocs"],
+  tags: ["autodocs", "ai-generated"],
   args: {
     children: "Chip",
   },
@@ -45,6 +46,11 @@ export const Playground: Story = {
         </Chip>
       </Chip.Group>
     );
+  },
+  play: async ({ canvas, userEvent }) => {
+    const todo = canvas.getByRole("button", { name: /to do/i });
+    await userEvent.click(todo);
+    await expect(todo).toHaveAttribute("aria-pressed", "true");
   },
 };
 

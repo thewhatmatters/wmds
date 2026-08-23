@@ -15,7 +15,7 @@ const variants: IconButtonVariant[] = [
 const meta = {
   title: "Components/IconButton",
   component: IconButton,
-  tags: ["autodocs"],
+  tags: ["autodocs", "ai-generated"],
   argTypes: {
     variant: { control: "select", options: variants },
     size: { control: "select", options: ["xs", "sm", "md", "lg"] },

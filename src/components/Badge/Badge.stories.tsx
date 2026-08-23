@@ -22,7 +22,7 @@ const semanticVariants: BadgeVariant[] = [
 const meta = {
   title: "Components/Badge",
   component: Badge,
-  tags: ["autodocs"],
+  tags: ["autodocs", "ai-generated"],
   argTypes: {
     variant: { control: "select", options: semanticVariants },
     size: { control: "select", options: ["sm", "md"] },

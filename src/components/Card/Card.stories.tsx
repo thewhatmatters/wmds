@@ -13,7 +13,7 @@ const sampleBody =
 const meta = {
   title: "Components/Card",
   component: Card,
-  tags: ["autodocs"],
+  tags: ["autodocs", "ai-generated"],
   argTypes: {
     variant: { control: "select", options: variants },
     elevation: { control: "select", options: elevations },

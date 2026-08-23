@@ -8,7 +8,7 @@ import { Table } from "./Table";
 const meta = {
   title: "Components/Table",
   component: Table,
-  tags: ["autodocs"],
+  tags: ["autodocs", "ai-generated"],
   args: {
     variant: "surface",
     density: "default",

@@ -1,6 +1,7 @@
 "use client";
 
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect } from "storybook/test";
 import { useState } from "react";
 import { Badge } from "../Badge/Badge";
 import { StatusDot } from "../StatusDot/StatusDot";
@@ -9,7 +10,7 @@ import { Tab } from "./Tab";
 
 const meta = {
   title: "Components/Tab",
-  tags: ["autodocs"],
+  tags: ["autodocs", "ai-generated"],
   parameters: {
     docs: {
       description: {
@@ -36,6 +37,12 @@ export const Playground: Story = {
         <Tab value="coding">Coding</Tab>
       </Tab.Group>
     );
+  },
+  play: async ({ canvas, userEvent }) => {
+    const reasoning = canvas.getByRole("tab", { name: /reasoning/i });
+    await expect(reasoning).toHaveAttribute("aria-selected", "false");
+    await userEvent.click(reasoning);
+    await expect(reasoning).toHaveAttribute("aria-selected", "true");
   },
 };
 

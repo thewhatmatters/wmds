@@ -4,7 +4,7 @@ import { FilterTable } from "./FilterTable";
 const meta = {
   title: "Examples/Filter table",
   component: FilterTable,
-  tags: ["autodocs"],
+  tags: ["autodocs", "ai-generated"],
   parameters: {
     docs: {
       description: {

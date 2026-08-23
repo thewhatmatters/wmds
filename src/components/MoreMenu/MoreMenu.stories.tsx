@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, within } from "storybook/test";
 import { Copy, Pencil, Share2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { MoreMenu } from "./MoreMenu";
@@ -6,7 +7,7 @@ import { MoreMenu } from "./MoreMenu";
 const meta = {
   title: "Components/MoreMenu",
   component: MoreMenu,
-  tags: ["autodocs"],
+  tags: ["autodocs", "ai-generated"],
   argTypes: {
     variant: { control: "select", options: ["primary", "secondary", "ghost", "destructive"] },
     size: { control: "select", options: ["xs", "sm", "md", "lg"] },
@@ -46,7 +47,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Playground: Story = {};
+export const Playground: Story = {
+  play: async ({ canvas, userEvent, canvasElement }) => {
+    const trigger = canvas.getByRole("button", { name: /more options/i });
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await userEvent.click(trigger);
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await expect(within(canvasElement.ownerDocument.body).getByRole("menu")).toBeVisible();
+  },
+};
 
 export const WithDescriptions: Story = {
   args: {

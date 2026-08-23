@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect } from "storybook/test";
 import { Download, Pencil, Plus, Trash2 } from "lucide-react";
-import { Badge } from "../Badge/Badge";
+import { ButtonBadge } from "./ButtonBadge";
 import { Button, type ButtonVariant } from "./Button";
 
 const variants: ButtonVariant[] = [
@@ -16,7 +17,7 @@ const variants: ButtonVariant[] = [
 const meta = {
   title: "Components/Button",
   component: Button,
-  tags: ["autodocs"],
+  tags: ["autodocs", "ai-generated"],
   argTypes: {
     variant: {
       control: "select",
@@ -62,6 +63,15 @@ export const Primary: Story = {
   args: { variant: "primary", children: "Primary" },
 };
 
+/** Proves global CSS loaded — primary uses `--color-primary` (#39485c). */
+export const CssCheck: Story = {
+  args: { variant: "primary", children: "Submit" },
+  play: async ({ canvas }) => {
+    const button = canvas.getByRole("button", { name: /submit/i });
+    await expect(getComputedStyle(button).backgroundColor).toBe("rgb(57, 72, 92)");
+  },
+};
+
 export const Secondary: Story = {
   args: { variant: "secondary", children: "Secondary" },
 };
@@ -88,6 +98,9 @@ export const Info: Story = {
 
 export const Disabled: Story = {
   args: { variant: "primary", children: "Disabled", disabled: true },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole("button", { name: /disabled/i })).toBeDisabled();
+  },
 };
 
 export const Loading: Story = {
@@ -254,7 +267,8 @@ export const WithStartAndEndSlots: Story = {
       description: {
         story:
           "Explicit slots accept any node — circular media, icons, or custom markup. " +
-          "`icon` and `badge` are optional shorthands when you do not need full control.",
+          "`icon` and `badge` are optional shorthands when you do not need full control. " +
+          "For counts in `endSlot`, use **`ButtonBadge`** (or `badge={n}`) — not ad-hoc `Badge` colors on primary.",
       },
     },
   },
@@ -270,14 +284,7 @@ export const WithStartAndEndSlots: Story = {
       >
         Cone King
       </Button>
-      <Button
-        variant="primary"
-        endSlot={
-          <Badge variant="neutral" appearance="count" className="bg-primary-foreground/15 text-primary-foreground">
-            3
-          </Badge>
-        }
-      >
+      <Button variant="primary" endSlot={<ButtonBadge value={3} />}>
         Inbox
       </Button>
     </div>

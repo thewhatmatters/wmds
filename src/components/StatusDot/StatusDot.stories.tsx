@@ -9,7 +9,7 @@ const variants: StatusDotVariant[] = ["neutral", "info", "success", "warning", "
 const meta = {
   title: "Components/StatusDot",
   component: StatusDot,
-  tags: ["autodocs"],
+  tags: ["autodocs", "ai-generated"],
   argTypes: {
     variant: { control: "select", options: variants },
     pulsing: { control: "boolean" },

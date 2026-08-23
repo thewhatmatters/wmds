@@ -10,7 +10,9 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test:unit": "vitest --project unit run",
+    "test:storybook": "vitest --project storybook run"
   },
   "dependencies": {
     "react": "^19.2.8",

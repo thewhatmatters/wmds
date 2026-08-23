@@ -10,6 +10,18 @@ import {
   type TdHTMLAttributes,
   type ThHTMLAttributes,
 } from "react";
+import {
+  buildColumnTemplate,
+  computeScrollEdge,
+  computeStickyCounts,
+  computeStickyOffsets,
+  stickyScrollShadowClass,
+  stickyStyles,
+  type ScrollEdgeState,
+  type StickyCounts,
+  type StickyOffsets,
+  type StickySide,
+} from "./tableLayout";
 
 export type TableVariant = "surface" | "plain";
 export type TableDensity = "compact" | "default";
@@ -60,14 +72,9 @@ export interface TableCellProps
   minWidth?: number | string;
 }
 
-interface StickyOffsets {
-  start: number[];
-  end: number[];
-}
-
 interface TableLayoutMetrics {
   stickyOffsets: StickyOffsets;
-  stickyCounts: { start: number; end: number };
+  stickyCounts: StickyCounts;
   columnTemplate: string | null;
 }
 
@@ -132,55 +139,11 @@ function toMinWidth(value?: number | string) {
   return typeof value === "number" ? `${value}px` : value;
 }
 
-function buildColumnTemplate(widths: number[]) {
-  if (widths.length === 0) return null;
-  return widths.map((width) => `${width}px`).join(" ");
-}
-
-function computeStickyOffsets(
-  headerRow: Element,
-  columnWidths: number[],
-): StickyOffsets {
-  const headerCells = Array.from(headerRow.querySelectorAll<HTMLElement>("th"));
-  if (headerCells.length === 0) return { start: [], end: [] };
-
-  const widths =
-    columnWidths.length === headerCells.length
-      ? columnWidths
-      : headerCells.map((cell) => cell.getBoundingClientRect().width);
-
-  const startIndices = headerCells
-    .map((cell, index) => (cell.dataset.sticky === "start" ? index : -1))
-    .filter((index) => index >= 0);
-
-  const endIndices = headerCells
-    .map((cell, index) => (cell.dataset.sticky === "end" ? index : -1))
-    .filter((index) => index >= 0)
-    .reverse();
-
-  let cumulative = 0;
-  const start = startIndices.map((index) => {
-    const offset = cumulative;
-    cumulative += widths[index] ?? 0;
-    return offset;
+function readStickyByColumn(headerRow: Element): Array<StickySide | undefined> {
+  return Array.from(headerRow.querySelectorAll<HTMLElement>("th")).map((cell) => {
+    const sticky = cell.dataset.sticky;
+    return sticky === "start" || sticky === "end" ? sticky : undefined;
   });
-
-  cumulative = 0;
-  const end = endIndices.map((index) => {
-    const offset = cumulative;
-    cumulative += widths[index] ?? 0;
-    return offset;
-  });
-
-  return { start, end };
-}
-
-function computeStickyCounts(headerRow: Element): { start: number; end: number } {
-  const headerCells = Array.from(headerRow.querySelectorAll<HTMLElement>("th"));
-  return {
-    start: headerCells.filter((cell) => cell.dataset.sticky === "start").length,
-    end: headerCells.filter((cell) => cell.dataset.sticky === "end").length,
-  };
 }
 
 function useMeasureTableLayout(tableRef: RefObject<HTMLTableElement | null>) {
@@ -207,14 +170,15 @@ function useMeasureTableLayout(tableRef: RefObject<HTMLTableElement | null>) {
 
       const headerCells = Array.from(headerRow.querySelectorAll<HTMLElement>("th"));
       const measuredWidths = headerCells.map((cell) => cell.getBoundingClientRect().width);
+      const stickyByColumn = readStickyByColumn(headerRow);
       const columnTemplate = buildColumnTemplate(measuredWidths);
 
       if (columnTemplate) {
         table.style.setProperty("--wmds-table-column-template", columnTemplate);
       }
 
-      const stickyOffsets = computeStickyOffsets(headerRow, measuredWidths);
-      const stickyCounts = computeStickyCounts(headerRow);
+      const stickyOffsets = computeStickyOffsets(measuredWidths, stickyByColumn);
+      const stickyCounts = computeStickyCounts(stickyByColumn);
       setMetrics({ stickyOffsets, stickyCounts, columnTemplate });
     };
 
@@ -232,11 +196,6 @@ function useMeasureTableLayout(tableRef: RefObject<HTMLTableElement | null>) {
   return metrics;
 }
 
-interface ScrollEdgeState {
-  canScrollStart: boolean;
-  canScrollEnd: boolean;
-}
-
 function useScrollEdgeState(scrollerRef: RefObject<HTMLDivElement | null>): ScrollEdgeState {
   const [state, setState] = useState<ScrollEdgeState>({
     canScrollStart: false,
@@ -249,11 +208,7 @@ function useScrollEdgeState(scrollerRef: RefObject<HTMLDivElement | null>): Scro
 
     const update = () => {
       const { scrollLeft, clientWidth, scrollWidth } = scroller;
-      const hasOverflow = scrollWidth - clientWidth > 1;
-      setState({
-        canScrollStart: hasOverflow && scrollLeft > 1,
-        canScrollEnd: hasOverflow && scrollLeft + clientWidth < scrollWidth - 1,
-      });
+      setState(computeScrollEdge(scrollLeft, clientWidth, scrollWidth));
     };
 
     update();
@@ -271,42 +226,6 @@ function useScrollEdgeState(scrollerRef: RefObject<HTMLDivElement | null>): Scro
   }, [scrollerRef]);
 
   return state;
-}
-
-function stickyScrollShadowClass(
-  sticky: TableSticky | undefined,
-  stickyIndex: number | undefined,
-  stickyCounts: { start: number; end: number },
-  scrollEdge: ScrollEdgeState,
-) {
-  if (
-    sticky === "start" &&
-    stickyIndex != null &&
-    stickyIndex === stickyCounts.start - 1 &&
-    scrollEdge.canScrollStart
-  ) {
-    return "wmds-table-scroll-shadow-start";
-  }
-
-  if (sticky === "end" && stickyIndex === 0 && scrollEdge.canScrollEnd) {
-    return "wmds-table-scroll-shadow-end";
-  }
-
-  return false;
-}
-
-function stickyStyles(
-  sticky: TableSticky | undefined,
-  stickyIndex: number | undefined,
-  offsets: StickyOffsets,
-) {
-  if (sticky == null || stickyIndex == null) return undefined;
-
-  if (sticky === "start") {
-    return { left: offsets.start[stickyIndex] ?? 0 };
-  }
-
-  return { right: offsets.end[stickyIndex] ?? 0 };
 }
 
 function cellPaddingClasses(density: TableDensity) {
