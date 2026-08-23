@@ -1,9 +1,9 @@
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { cn } from "../../lib/cn";
 import { ButtonIcon } from "../Button/ButtonIcon";
+import { ButtonSpinner } from "../Button/ButtonSpinner";
 import {
   buttonBaseClasses,
-  buttonIconSizeClasses,
   buttonVariantClasses,
   iconButtonSizeClasses,
   type ButtonVariant,
@@ -66,17 +66,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
       data-size={size}
       {...props}
     >
-      {loading ? (
-        <span
-          className={cn(
-            "animate-spin shrink-0 rounded-full border-2 border-current border-r-transparent",
-            buttonIconSizeClasses[size],
-          )}
-          aria-hidden
-        />
-      ) : (
-        <ButtonIcon size={size}>{icon}</ButtonIcon>
-      )}
+      {loading ? <ButtonSpinner size={size} /> : <ButtonIcon size={size}>{icon}</ButtonIcon>}
     </button>
   );
 });

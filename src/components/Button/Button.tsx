@@ -2,6 +2,7 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "../../lib/cn";
 import { ButtonBadge, isBadgeShorthand } from "./ButtonBadge";
 import { ButtonIcon } from "./ButtonIcon";
+import { ButtonSpinner } from "./ButtonSpinner";
 import {
   buttonBaseClasses,
   buttonSizeClasses,
@@ -49,7 +50,6 @@ export function Button({
   ...props
 }: ButtonProps) {
   const isDisabled = disabled || loading;
-  const spinnerSize = size === "xs" ? "size-3.5" : "size-4";
 
   const resolvedStart =
     !loading && startSlot != null
@@ -78,17 +78,7 @@ export function Button({
       data-size={size}
       {...props}
     >
-      {loading ? (
-        <span
-          className={cn(
-            "animate-spin shrink-0 rounded-full border-2 border-current border-r-transparent",
-            spinnerSize,
-          )}
-          aria-hidden
-        />
-      ) : (
-        resolvedStart
-      )}
+      {loading ? <ButtonSpinner size={size} /> : resolvedStart}
       <span>{children}</span>
       {resolvedEnd}
     </button>

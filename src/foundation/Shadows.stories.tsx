@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { shadowElevations, shadowPrimitives } from "./shadows";
+import { typographyClass } from "./typography";
 
 function ShadowsReference() {
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-12 font-sans">
       <header className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight text-fg">Shadows</h1>
-        <p className="text-sm leading-[var(--line-height-sm)] text-muted">
+        <h1 className={typographyClass("page-heading")}>Shadows</h1>
+        <p className={`${typographyClass("body")} text-muted`}>
           Elevation tokens for depth and control surfaces. In code, use Tailwind{" "}
           <code className="rounded bg-surface px-1 py-0.5 text-xs">shadow-*</code> utilities.
           Hairlines reference{" "}
@@ -15,7 +16,7 @@ function ShadowsReference() {
       </header>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-xs font-medium uppercase tracking-wider text-muted">Elevations</h2>
+        <h2 className={typographyClass("overline")}>Elevations</h2>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {shadowElevations.map((shadow) => (
             <div key={shadow.token} className="flex flex-col gap-2">
@@ -31,11 +32,11 @@ function ShadowsReference() {
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-xs font-medium uppercase tracking-wider text-muted">In context</h2>
+        <h2 className={typographyClass("overline")}>In context</h2>
         <div className="flex flex-wrap items-start gap-6">
           <div className="w-64 rounded-lg bg-surface p-4 shadow-md">
-            <p className="text-sm font-semibold text-fg">Card · shadow-md</p>
-            <p className="mt-1 text-sm text-muted">Default card elevation</p>
+            <p className={typographyClass("subheading")}>Card · shadow-md</p>
+            <p className={`mt-1 ${typographyClass("body")} text-muted`}>Default card elevation</p>
           </div>
           <button
             type="button"
@@ -53,7 +54,7 @@ function ShadowsReference() {
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-xs font-medium uppercase tracking-wider text-muted">Token table</h2>
+        <h2 className={typographyClass("overline")}>Token table</h2>
         <div className="overflow-hidden rounded-lg border border-border">
           {[...shadowElevations, ...shadowPrimitives].map((shadow) => (
             <div

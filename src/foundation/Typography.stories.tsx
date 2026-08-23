@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   fontFamilies,
   typeScale,
+  typographyClass,
   typographyStyles,
 } from "./typography";
 
@@ -9,8 +10,8 @@ function TypographyReference() {
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-12 font-sans">
       <header className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight text-fg">Typography</h1>
-        <p className="text-sm leading-[var(--line-height-sm)] text-muted">
+        <h1 className={typographyClass("page-heading")}>Typography</h1>
+        <p className={`${typographyClass("body")} text-muted`}>
           WMDS type scale and semantic roles. Sizes map to{" "}
           <code className="rounded bg-surface px-1 py-0.5 text-xs">--font-size-*</code> tokens;
           roles combine size, weight, tracking, and color for common UI patterns.
@@ -18,7 +19,7 @@ function TypographyReference() {
       </header>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-xs font-medium uppercase tracking-wider text-muted">Type scale</h2>
+        <h2 className={typographyClass("overline")}>Type scale</h2>
         <div className="overflow-hidden rounded-lg border border-border">
           <div className="grid grid-cols-[4rem_4rem_4rem_1fr] gap-x-4 border-b border-border bg-surface px-4 py-2 text-xs font-medium tracking-wider text-muted uppercase">
             <span>Token</span>
@@ -49,9 +50,7 @@ function TypographyReference() {
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-xs font-medium uppercase tracking-wider text-muted">
-          Semantic roles
-        </h2>
+        <h2 className={typographyClass("overline")}>Semantic roles</h2>
         <div className="flex flex-col gap-6">
           {typographyStyles.map((style) => (
             <article
@@ -77,7 +76,7 @@ function TypographyReference() {
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-xs font-medium uppercase tracking-wider text-muted">Font families</h2>
+        <h2 className={typographyClass("overline")}>Font families</h2>
         <div className="flex flex-col gap-4">
           {fontFamilies.map((family) => (
             <div key={family.token} className="rounded-lg border border-border p-4">

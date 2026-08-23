@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "../components/Button/Button";
 import { motionDurations, motionEasing, motionFeedback } from "./motion";
+import { typographyClass } from "./typography";
 
 function MotionReference() {
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-12 font-sans">
       <header className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight text-fg">Motion</h1>
-        <p className="text-sm leading-[var(--line-height-sm)] text-muted">
+        <h1 className={typographyClass("page-heading")}>Motion</h1>
+        <p className={`${typographyClass("body")} text-muted`}>
           Duration and easing tokens for interactive feedback. Motion values are theme-agnostic —
           same rhythm in light and dark. Sound is intentionally <strong>not</strong> in WMDS; apps
           opt in at the root if needed.
@@ -15,7 +16,7 @@ function MotionReference() {
       </header>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-xs font-medium uppercase tracking-wider text-muted">Durations</h2>
+        <h2 className={typographyClass("overline")}>Durations</h2>
         <table className="w-full border-collapse text-sm">
           <thead>
             <tr className="border-b border-border text-left text-muted">
@@ -37,7 +38,7 @@ function MotionReference() {
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-xs font-medium uppercase tracking-wider text-muted">Easing</h2>
+        <h2 className={typographyClass("overline")}>Easing</h2>
         <table className="w-full border-collapse text-sm">
           <thead>
             <tr className="border-b border-border text-left text-muted">
@@ -59,7 +60,7 @@ function MotionReference() {
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-xs font-medium uppercase tracking-wider text-muted">Press feedback</h2>
+        <h2 className={typographyClass("overline")}>Press feedback</h2>
         <table className="w-full border-collapse text-sm">
           <thead>
             <tr className="border-b border-border text-left text-muted">
@@ -78,7 +79,7 @@ function MotionReference() {
             ))}
           </tbody>
         </table>
-        <p className="text-sm text-muted">
+        <p className={`${typographyClass("body")} text-muted`}>
           Click and hold any button below — scale uses{" "}
           <code className="rounded bg-surface px-1 py-0.5 text-xs">--motion-press-scale</code> over{" "}
           <code className="rounded bg-surface px-1 py-0.5 text-xs">--duration-fast</code>.
