@@ -3,6 +3,16 @@
 Paper is the visual source of truth. This repo is the runnable layer: tokens,
 React components, Storybook.
 
+## Component order
+
+Keep **alphabetical (A→Z)** everywhere components are listed:
+
+- `src/index.ts` exports (comment at top of file)
+- Storybook sidebar — `Components/{Name}` titles; `.storybook/preview.tsx` uses `storySort: { method: "alphabetical-by-kind", order: ["Foundation", "Components", "Examples"] }`
+- README component + examples tables
+
+When adding a component, insert it in sort order — do not append to the end.
+
 <!-- wire-vault:start -->
 ## Knowledge vault — project layer
 

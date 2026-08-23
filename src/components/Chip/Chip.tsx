@@ -1,0 +1,147 @@
+import {
+  createContext,
+  useContext,
+  type ButtonHTMLAttributes,
+  type HTMLAttributes,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
+import { StatusDot, type StatusDotVariant } from "../StatusDot/StatusDot";
+
+export type ChipDotVariant = StatusDotVariant;
+
+export interface ChipGroupProps<T extends string = string>
+  extends HTMLAttributes<HTMLDivElement> {
+  /** Currently selected chip value. */
+  value: T;
+  onValueChange: (value: T) => void;
+  /** Accessible name for the filter chip toolbar. */
+  "aria-label": string;
+  children: ReactNode;
+}
+
+export interface ChipProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /** Selection value — required when rendered inside `Chip.Group`. */
+  value?: string;
+  /** Standalone pressed state — omit when using `Chip.Group`. */
+  pressed?: boolean;
+  /** Trailing count pill. */
+  count?: number;
+  /** Semantic status dot before the label. Ignored when `startSlot` is set. */
+  dot?: ChipDotVariant;
+  /** Arbitrary leading slot — icon, avatar, or custom dot. */
+  startSlot?: ReactNode;
+  children: ReactNode;
+}
+
+const ChipGroupContext = createContext<{
+  value: string;
+  onValueChange: (value: string) => void;
+} | null>(null);
+
+function cn(...parts: Array<string | false | undefined>) {
+  return parts.filter(Boolean).join(" ");
+}
+
+function useChipGroup() {
+  return useContext(ChipGroupContext);
+}
+
+function ChipCount({ active, count }: { active: boolean; count: number }) {
+  return (
+    <span
+      className={cn(
+        "rounded px-[length:var(--spacing-1)] text-[10.5px] leading-none tabular-nums",
+        active ? "bg-secondary text-muted" : "text-muted",
+      )}
+    >
+      {count.toLocaleString("en-US")}
+    </span>
+  );
+}
+
+function ChipRoot({
+  value,
+  pressed,
+  count,
+  dot,
+  startSlot,
+  className,
+  children,
+  onClick,
+  type = "button",
+  ...props
+}: ChipProps) {
+  const group = useChipGroup();
+  const inGroup = group != null;
+
+  if (inGroup && value == null) {
+    throw new Error("Chip inside Chip.Group requires a `value` prop.");
+  }
+
+  const isPressed = inGroup ? group.value === value : Boolean(pressed);
+  const leading = startSlot ?? (dot != null ? <StatusDot variant={dot} decorative /> : null);
+
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    if (inGroup && value != null) {
+      group.onValueChange(value);
+    }
+    onClick?.(event);
+  };
+
+  return (
+    <button
+      type={type}
+      aria-pressed={isPressed}
+      className={cn(
+        "inline-flex h-[26px] shrink-0 items-center gap-[length:var(--spacing-1-5)] rounded-full",
+        "px-[length:var(--spacing-2-5)] text-xs font-medium leading-none",
+        "transition-[background-color,box-shadow,color] duration-[length:var(--duration-base)] ease-[var(--ease-standard)]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+        "disabled:pointer-events-none disabled:opacity-50",
+        isPressed
+          ? "bg-surface text-fg shadow-raised"
+          : "text-muted hover:bg-ghost-hover",
+        className,
+      )}
+      onClick={handleClick}
+      {...props}
+    >
+      {leading}
+      {children}
+      {count != null ? <ChipCount active={isPressed} count={count} /> : null}
+    </button>
+  );
+}
+
+function ChipGroup<T extends string = string>({
+  value,
+  onValueChange,
+  className,
+  children,
+  "aria-label": ariaLabel,
+  ...props
+}: ChipGroupProps<T>) {
+  return (
+    <ChipGroupContext.Provider
+      value={{ value, onValueChange: onValueChange as (value: string) => void }}
+    >
+      <div
+        role="toolbar"
+        aria-label={ariaLabel}
+        className={cn(
+          "-mx-[length:var(--spacing-1)] flex items-center gap-[length:var(--spacing-1)] overflow-x-auto px-[length:var(--spacing-1)] py-[length:var(--spacing-1)]",
+          "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+          className,
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    </ChipGroupContext.Provider>
+  );
+}
+
+export const Chip = Object.assign(ChipRoot, {
+  Group: ChipGroup,
+});

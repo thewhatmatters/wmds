@@ -1,17 +1,30 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { ButtonBadge, isBadgeShorthand } from "./ButtonBadge";
+import {
+  buttonBaseClasses,
+  buttonIconSizeClasses,
+  buttonSizeClasses,
+  buttonVariantClasses,
+  cn,
+  type ButtonSize,
+  type ButtonVariant,
+} from "./buttonStyles";
 
-export type ButtonVariant =
-  | "primary"
-  | "secondary"
-  | "ghost"
-  | "destructive"
-  | "success"
-  | "warning"
-  | "info";
+export type { ButtonSize, ButtonVariant } from "./buttonStyles";
 
-/** Height comes from padding + typography — no fixed height. */
-export type ButtonSize = "xs" | "sm" | "md" | "lg";
+function ButtonIcon({ size, children }: { size: ButtonSize; children: ReactNode }) {
+  return (
+    <span
+      className={cn(
+        "inline-flex shrink-0 text-inherit [&>svg]:size-full [&>svg]:shrink-0 [&>svg]:stroke-current",
+        buttonIconSizeClasses[size],
+      )}
+      aria-hidden
+    >
+      {children}
+    </span>
+  );
+}
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -26,62 +39,6 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Content-agnostic trailing slot — badge, icon, or any node. */
   endSlot?: ReactNode;
   children: ReactNode;
-}
-
-const baseClasses =
-  "inline-flex items-center justify-center gap-2 rounded-md font-sans font-medium tracking-normal " +
-  "transition-[color,transform] duration-[length:var(--duration-fast)] ease-[var(--ease-standard)] " +
-  "enabled:active:scale-[var(--motion-press-scale)] " +
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg " +
-  "disabled:pointer-events-none disabled:opacity-50";
-
-const variantClasses: Record<ButtonVariant, string> = {
-  primary:
-    "bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-active",
-  secondary:
-    "bg-secondary text-secondary-foreground shadow-raised hover:bg-secondary-hover active:bg-secondary-active",
-  ghost:
-    "bg-transparent text-ghost-foreground hover:bg-ghost-hover active:bg-ghost-active",
-  destructive:
-    "bg-destructive text-destructive-foreground hover:bg-destructive-hover active:bg-destructive-active",
-  success:
-    "bg-success text-success-foreground shadow-inset-highlight hover:bg-success-hover active:bg-success-active",
-  warning:
-    "bg-warning text-warning-foreground hover:bg-warning-hover active:bg-warning-active",
-  info: "bg-info text-info-foreground hover:bg-info-hover active:bg-info-active",
-};
-
-/** py + text line-height ≈ visual height (xs ~28px, sm ~32px, md ~40px, lg ~48px). */
-const sizeClasses: Record<ButtonSize, string> = {
-  xs: "px-[length:var(--spacing-3)] py-[length:var(--spacing-1)] text-sm leading-[var(--line-height-sm)]",
-  sm: "px-[length:var(--spacing-3)] py-[length:var(--spacing-1-5)] text-sm leading-[var(--line-height-sm)]",
-  md: "px-[length:var(--spacing-4)] py-[length:var(--spacing-2-5)] text-sm leading-[var(--line-height-sm)]",
-  lg: "px-[length:var(--spacing-6)] py-[length:var(--spacing-3)] text-base leading-[var(--line-height-base)]",
-};
-
-const iconSizeClasses: Record<ButtonSize, string> = {
-  xs: "size-3.5",
-  sm: "size-4",
-  md: "size-4",
-  lg: "size-[1.125rem]",
-};
-
-function cn(...parts: Array<string | false | undefined>) {
-  return parts.filter(Boolean).join(" ");
-}
-
-function ButtonIcon({ size, children }: { size: ButtonSize; children: ReactNode }) {
-  return (
-    <span
-      className={cn(
-        "inline-flex shrink-0 text-inherit [&>svg]:size-full [&>svg]:shrink-0 [&>svg]:stroke-current",
-        iconSizeClasses[size],
-      )}
-      aria-hidden
-    >
-      {children}
-    </span>
-  );
 }
 
 function resolveEndSlot(endSlot: ReactNode | undefined, badge: ReactNode | undefined): ReactNode {
@@ -122,7 +79,13 @@ export function Button({
   return (
     <button
       type={type}
-      className={cn(baseClasses, variantClasses[variant], sizeClasses[size], className)}
+      className={cn(
+        buttonBaseClasses,
+        buttonVariantClasses[variant],
+        buttonSizeClasses[size],
+        "gap-2 rounded-md",
+        className,
+      )}
       disabled={isDisabled}
       aria-busy={loading || undefined}
       data-variant={variant}

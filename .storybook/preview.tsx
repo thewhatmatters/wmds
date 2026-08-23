@@ -39,6 +39,13 @@ const preview: Preview = {
     },
   ],
   parameters: {
+    options: {
+      /** Foundation → Components → Examples; components A→Z by kind (title). */
+      storySort: {
+        method: "alphabetical-by-kind",
+        order: ["Foundation", "Components", "Examples"],
+      },
+    },
     /** Decorator owns centering — avoid Storybook's `centered` layout (shrinks canvas to content width). */
     layout: "fullscreen",
     controls: {

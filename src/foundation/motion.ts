@@ -35,7 +35,7 @@ export const motionDurations: MotionToken[] = [
     token: "--duration-slower",
     value: "300ms",
     role: "Panel / drawer expand",
-    usedIn: ["Agent card alternatives drawer (product reference)"],
+    usedIn: ["Agent card alternatives drawer (product reference)", "Filter table row collapse", "Tab sliding indicator"],
   },
 ];
 
@@ -50,7 +50,7 @@ export const motionEasing: MotionToken[] = [
     token: "--ease-out-expo",
     value: "cubic-bezier(0.16, 1, 0.3, 1)",
     role: "Decelerating reveal — drawers, height animations",
-    usedIn: ["Agent card alternatives drawer (product reference)"],
+    usedIn: ["Agent card alternatives drawer (product reference)", "Filter table row collapse", "Tab sliding indicator"],
   },
 ];
 

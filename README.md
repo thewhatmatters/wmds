@@ -108,9 +108,29 @@ Paper = visual spec. Storybook = interactive code. Sync is manual/agent-driven (
 
 | Component | Storybook path | Status |
 |-----------|----------------|--------|
+| **Badge** | `Components / Badge` | Semantic variants; label + count; **`startSlot` / `endSlot`** for inline chips in prose |
 | **Button** | `Components / Button` | 7 variants × 4 sizes (xs–lg); `startSlot` / `endSlot` (or `icon` / `badge` shorthands) |
 | **Card** | `Components / Card` | Variants, elevation, padding; `Header`/`Footer` section borders |
-| **Badge** | `Components / Badge` | Semantic variants; label + count; **`startSlot` / `endSlot`** for inline chips in prose |
+| **Chip** | `Components / Chip` | Interactive filter toggles; `Chip.Group`; optional dot + count |
+| **IconButton** | `Components / IconButton` | Icon-only; required `label` + `icon`; square hit targets |
+| **MoreMenu** | `Components / MoreMenu` | Overflow kebab menu; closed `items` API (actions, dividers, sections) |
+| **StatusDot** | `Components / StatusDot` | 8px semantic status indicator; use in Badge/Chip or standalone with `label` |
+| **Tab** | `Components / Tab` | Segmented **`Tab.Group`** track + selectable **`Tab`** items (view switching) |
+| **Table** | `Components / Table` | Compound table; sticky columns; collapsible rows |
+
+**Order:** keep this table, `src/index.ts` exports, and Storybook `Components/*` titles alphabetically sorted (A→Z).
+
+### Tab vs Chip
+
+Both can sit above a table in the same toolbar slot — different semantics:
+
+| | **Tab** (`Tab.Group`) | **Chip** (`Chip.Group`) |
+|--|------------------------|-------------------------|
+| **Role** | View switching (`role="tablist"`) | Row filter toggles (`aria-pressed`) |
+| **Chrome** | Shared pill track + sliding active indicator | Individual raised pills, no shared track |
+| **Trailing count** | `count={n}` — compact inline pill | `count={n}` on `Chip` |
+
+See `Examples / Filter table` (chips) and `Components / Tab → With table` (tabs).
 
 ### Badge inline chips
 
@@ -140,15 +160,21 @@ Motion tokens live in `tokens.css` (`--duration-*`, `--ease-out-expo`, `--motion
 - **Expand drawer** — CSS grid `0fr → 1fr` + opacity (`--duration-slower`, `--ease-out-expo`)
 - **Body swap** — `.animate-fade-in` (`--duration-base`) on recommendation copy
 - **Button press** — `scale(var(--motion-press-scale))` on `:active`
+- **Tab indicator** — measured sliding surface pill behind segments (`--duration-slower`, `--ease-out-expo`); respects `prefers-reduced-motion`
 
 `prefers-reduced-motion` collapses transitions globally in `global.css`.
+
+### Table scroll edge cues
+
+Horizontal scroll uses **sticky-column box-shadows** (`.wmds-table-scroll-shadow-start` / `-end`) or scroller inset shadows when no sticky columns — not gradient overlays (alignment + bleed-through issues in practice).
 
 ## Examples (not exported)
 
 | Specimen | Storybook path | Purpose |
 |----------|----------------|---------|
-| **Restock agent card** | `Examples / Restock agent card` | Interactive agent prompt — collapsed default, expandable alternatives drawer, option switching |
 | **Context chunks** | `Examples / Context chunks` | RAG chunk list — Card section borders + Badge file attachment rows |
+| **Filter table** | `Examples / Filter table` | Chip filters + Table with animated row collapse |
+| **Restock agent card** | `Examples / Restock agent card` | Interactive agent prompt — collapsed default, expandable alternatives drawer, option switching |
 
 Preview locally:
 
@@ -162,7 +188,6 @@ Open **Components → Button → Interactive states** to hover, click, and Tab t
 
 Stay on **agent + Paper MCP** for now. Revisit creating a `sync-wmds-tokens` (or similar) skill when **any** of these become true:
 
-- 5+ components exist in Paper **and** code
 - Token or font changes need to propagate to **consumer app repos**
 - You want a **`verify-tokens` CLI** in CI (Paper ↔ `tokens.css` drift)
 - Someone other than you runs sync workflows and keeps missing steps (Google Fonts import, Paper Theme tab, etc.)
