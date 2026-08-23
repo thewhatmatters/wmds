@@ -15,7 +15,7 @@ export type ButtonSize = "xs" | "sm" | "md" | "lg";
 export type IconButtonSize = ButtonSize;
 
 export const buttonBaseClasses =
-  "inline-flex items-center justify-center font-sans font-medium tracking-normal " +
+  "inline-flex cursor-pointer items-center justify-center font-sans font-medium tracking-normal " +
   "transition-[color,transform] " +
   motionTransition("fast") +
   " " +

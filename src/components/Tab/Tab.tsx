@@ -23,8 +23,16 @@ import {
   horizontalScrollClasses,
   segmentedDisabledClasses,
   segmentedFocusRingClasses,
-  segmentedLeadingIconClasses,
 } from "../../lib/segmentedControl";
+import {
+  tabIconOnlyPaddingClasses,
+  tabLeadingIconSizeClasses,
+  tabSegmentSizeClasses,
+  tabTrackSizeClasses,
+  type TabSize,
+} from "./tabStyles";
+
+export type { TabSize };
 
 export interface TabGroupProps<T extends string = string>
   extends HTMLAttributes<HTMLDivElement> {
@@ -35,6 +43,8 @@ export interface TabGroupProps<T extends string = string>
   "aria-label": string;
   /** `equal` — fixed-width segments (layout switchers); default sizes to label content. */
   layout?: "auto" | "equal";
+  /** Segment density — `xs` (default) through `md`. */
+  size?: TabSize;
   children: ReactNode;
 }
 
@@ -59,6 +69,7 @@ const TabGroupContext = createContext<{
   commitSelection: (value: string) => void;
   setHoveredValue: (value: string | null) => void;
   layout: "auto" | "equal";
+  size: TabSize;
 } | null>(null);
 
 /** Matches `--duration-slower` — active pill slide when committing a selection. */
@@ -215,14 +226,15 @@ function TabRoot({
       disabled={disabled}
       data-value={value}
       className={cn(
-        "relative z-[2] inline-flex shrink-0 items-center gap-[length:var(--spacing-1-5)] rounded-full whitespace-nowrap",
-        "border border-transparent px-[length:var(--spacing-2)] py-[2px] text-[11.5px] font-medium leading-[1.5]",
+        "relative z-[2] inline-flex shrink-0 items-center rounded-full whitespace-nowrap",
+        "border border-transparent font-medium",
         "transition-[color]",
         motionTransition("base"),
         segmentedFocusRingClasses,
         segmentedDisabledClasses,
+        tabSegmentSizeClasses[group.size],
         group.layout === "equal" && "min-w-0 flex-1 justify-center",
-        iconOnly && "px-[length:var(--spacing-2)]",
+        iconOnly && tabIconOnlyPaddingClasses[group.size],
         isSelected ? "text-fg" : "text-muted",
         className,
       )}
@@ -234,7 +246,7 @@ function TabRoot({
       }}
     >
       {icon ? (
-        <span className={segmentedLeadingIconClasses} aria-hidden>
+        <span className={tabLeadingIconSizeClasses[group.size]} aria-hidden>
           {icon}
         </span>
       ) : null}
@@ -253,6 +265,7 @@ function TabGroup<T extends string = string>({
   value,
   onValueChange,
   layout = "auto",
+  size = "xs",
   className,
   children,
   "aria-label": ariaLabel,
@@ -321,6 +334,7 @@ function TabGroup<T extends string = string>({
         commitSelection,
         setHoveredValue,
         layout,
+        size,
       }}
     >
       <div
@@ -332,7 +346,8 @@ function TabGroup<T extends string = string>({
           role="tablist"
           aria-label={ariaLabel}
           className={cn(
-            "relative items-center gap-[2px] rounded-full bg-secondary p-[2px]",
+            "relative items-center rounded-full bg-secondary",
+            tabTrackSizeClasses[size],
             layout === "equal" ? "grid w-full" : "inline-flex w-max flex-nowrap",
           )}
           style={{
@@ -352,8 +367,8 @@ function TabGroup<T extends string = string>({
             <span
               aria-hidden
               className={cn(
-                "pointer-events-none absolute rounded-full border border-border bg-surface",
-                isSelecting ? "z-[2]" : "z-0",
+                "pointer-events-none absolute z-[1] rounded-full border border-border bg-surface",
+                isSelecting && "z-[2]",
                 slideTransition,
               )}
               style={{
@@ -368,7 +383,7 @@ function TabGroup<T extends string = string>({
             <span
               aria-hidden
               className={cn(
-                "pointer-events-none absolute z-[1] rounded-full border border-transparent bg-secondary-hover",
+                "pointer-events-none absolute z-0 rounded-full border border-transparent bg-secondary-hover",
                 slideTransition,
                 previewOpacityClass,
               )}

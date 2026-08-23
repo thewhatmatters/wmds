@@ -6,7 +6,7 @@ export const segmentedFocusRingClasses =
 
 /** Shared disabled treatment for Tab and Chip segment buttons. */
 export const segmentedDisabledClasses =
-  "disabled:pointer-events-none disabled:opacity-50";
+  "cursor-pointer disabled:pointer-events-none disabled:opacity-50";
 
 /** Hide scrollbars on horizontal chip/tab toolbars. Pair with layout classes on the scroller. */
 export const horizontalScrollClasses =

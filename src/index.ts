@@ -37,7 +37,7 @@ export type {
 export { StatusDot } from "./components/StatusDot/StatusDot";
 export type { StatusDotProps, StatusDotVariant } from "./components/StatusDot/StatusDot";
 export { Tab } from "./components/Tab/Tab";
-export type { TabGroupProps, TabProps } from "./components/Tab/Tab";
+export type { TabGroupProps, TabProps, TabSize } from "./components/Tab/Tab";
 export { Table } from "./components/Table/Table";
 export type {
   TableAlign,

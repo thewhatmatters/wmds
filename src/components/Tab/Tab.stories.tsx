@@ -65,6 +65,7 @@ export const LayoutSwitcher: Story = {
         aria-label="Layout"
         className="w-[216px]"
         layout="equal"
+        size="xs"
         value={value}
         onValueChange={setValue}
       >
@@ -85,6 +86,40 @@ export const LayoutSwitcher: Story = {
     await userEvent.click(grid);
     await expect(grid).toHaveAttribute("aria-selected", "true");
   },
+};
+
+const tabSizes = ["xs", "sm", "md"] as const;
+
+export const Sizes: Story = {
+  name: "Sizes",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`Tab.Group` **`size`** — `xs` (dense agent toolbar, default), `sm` (Chip-aligned ~26px), `md` (roomier panel headers).",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex flex-col gap-6 font-sans">
+      {tabSizes.map((size) => (
+        <div key={size} className="flex flex-col gap-2">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted">{size}</p>
+          <Tab.Group
+            aria-label={`Agent views ${size}`}
+            size={size}
+            value="steps"
+            onValueChange={() => undefined}
+          >
+            <Tab value="steps">Steps</Tab>
+            <Tab value="reasoning">Reasoning</Tab>
+            <Tab value="search">Search</Tab>
+            <Tab value="coding">Coding</Tab>
+          </Tab.Group>
+        </div>
+      ))}
+    </div>
+  ),
 };
 
 export const WithEndContent: Story = {

@@ -137,7 +137,7 @@ Foundation ↔ `tokens.css`. Mockups compose Storybook-known patterns. Full comp
 | **IconButton** | `Components / IconButton` | Icon-only; required `label` + `icon`; square hit targets |
 | **MoreMenu** | `Components / MoreMenu` | Overflow kebab menu; closed `items` API (actions, dividers, sections) |
 | **StatusDot** | `Components / StatusDot` | 8px semantic status indicator; use in Badge/Chip or standalone with `label` |
-| **Tab** | `Components / Tab` | Segmented **`Tab.Group`** + **`Tab`**; `layout="equal"` + `iconOnly` for view switchers; hover preview morphs into active on click |
+| **Tab** | `Components / Tab` | Segmented **`Tab.Group`** + **`Tab`**; **`size`** `xs` \| `sm` \| `md`; `layout="equal"` + `iconOnly` view switchers; hover preview morphs into active on click |
 | **Table** | `Components / Table` | Compound table; sticky columns; collapsible rows |
 
 **Order:** keep this table, `src/index.ts` exports, and Storybook `Components/*` titles alphabetically sorted (A→Z).
