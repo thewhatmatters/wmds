@@ -1,6 +1,7 @@
 "use client";
 
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { LayoutGrid, LayoutList, Rows3 } from "lucide-react";
 import { expect } from "storybook/test";
 import { useState } from "react";
 import { Badge } from "../Badge/Badge";
@@ -16,7 +17,7 @@ const meta = {
       description: {
         component:
           "Segmented tab control from Paper **Tab group** — shared pill **`Tab.Group`** track with raised **`Tab`** segments. " +
-          "The active segment uses a sliding surface pill (`--duration-slower`, `--ease-out-expo`). " +
+          "The active segment uses a raised surface pill; hover previews with a softer secondary-hover pill that slides under the same motion tokens. " +
           "Use for view switching (Steps / Reasoning / …). For filter toggles above tables, prefer **`Chip.Group`** — same density, no shared track, `aria-pressed` semantics.",
       },
     },
@@ -43,6 +44,46 @@ export const Playground: Story = {
     await expect(reasoning).toHaveAttribute("aria-selected", "false");
     await userEvent.click(reasoning);
     await expect(reasoning).toHaveAttribute("aria-selected", "true");
+  },
+};
+
+export const LayoutSwitcher: Story = {
+  name: "Layout switcher (icon-only)",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Icon-only **view switcher** — same `Tab.Group` track and sliding indicator as labeled tabs. " +
+          "Use `layout=\"equal\"` for fixed segment widths (list / stack / grid layouts).",
+      },
+    },
+  },
+  render: () => {
+    const [value, setValue] = useState("list");
+    return (
+      <Tab.Group
+        aria-label="Layout"
+        className="w-[216px]"
+        layout="equal"
+        value={value}
+        onValueChange={setValue}
+      >
+        <Tab value="list" icon={<LayoutList strokeWidth={2} />} iconOnly aria-label="List view">
+          List
+        </Tab>
+        <Tab value="stack" icon={<Rows3 strokeWidth={2} />} iconOnly aria-label="Stack view">
+          Stack
+        </Tab>
+        <Tab value="grid" icon={<LayoutGrid strokeWidth={2} />} iconOnly aria-label="Grid view">
+          Grid
+        </Tab>
+      </Tab.Group>
+    );
+  },
+  play: async ({ canvas, userEvent }) => {
+    const grid = canvas.getByRole("tab", { name: /grid view/i });
+    await userEvent.click(grid);
+    await expect(grid).toHaveAttribute("aria-selected", "true");
   },
 };
 

@@ -1,11 +1,15 @@
 "use client";
 
 import {
+  Children,
   createContext,
+  isValidElement,
   useContext,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
+  type PointerEvent,
   type ButtonHTMLAttributes,
   type HTMLAttributes,
   type KeyboardEvent,
@@ -29,6 +33,8 @@ export interface TabGroupProps<T extends string = string>
   onValueChange: (value: T) => void;
   /** Accessible name for the tab list. */
   "aria-label": string;
+  /** `equal` — fixed-width segments (layout switchers); default sizes to label content. */
+  layout?: "auto" | "equal";
   children: ReactNode;
 }
 
@@ -37,17 +43,26 @@ export interface TabProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   value: string;
   /** Optional icon before the label. */
   icon?: ReactNode;
+  /** Icon-only segment — requires `icon` and an accessible name (`aria-label` or `children`). */
+  iconOnly?: boolean;
   /** Trailing count — compact pill matching `Chip` counts. */
   count?: number;
   /** Optional trailing content — StatusDot, custom nodes (prefer `count` for numbers). */
   endContent?: ReactNode;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 const TabGroupContext = createContext<{
   value: string;
+  hoveredValue: string | null;
   onValueChange: (value: string) => void;
+  commitSelection: (value: string) => void;
+  setHoveredValue: (value: string | null) => void;
+  layout: "auto" | "equal";
 } | null>(null);
+
+/** Matches `--duration-slower` — active pill slide when committing a selection. */
+const SELECTION_SLIDE_MS = 300;
 
 function useTabGroup() {
   return useContext(TabGroupContext);
@@ -60,12 +75,9 @@ type IndicatorRect = {
   height: number;
 };
 
-function measureSelectedTab(tablist: HTMLElement): IndicatorRect | null {
-  const selected = tablist.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]');
-  if (selected == null) return null;
-
+function measureTab(tablist: HTMLElement, tab: HTMLElement): IndicatorRect {
   const listRect = tablist.getBoundingClientRect();
-  const tabRect = selected.getBoundingClientRect();
+  const tabRect = tab.getBoundingClientRect();
 
   return {
     left: tabRect.left - listRect.left,
@@ -75,19 +87,39 @@ function measureSelectedTab(tablist: HTMLElement): IndicatorRect | null {
   };
 }
 
+function measureTabByValue(tablist: HTMLElement, tabValue: string): IndicatorRect | null {
+  const tab = tablist.querySelector<HTMLElement>(
+    `[role="tab"][data-value="${tabValue}"]:not(:disabled)`,
+  );
+  if (tab == null) return null;
+
+  return measureTab(tablist, tab);
+}
+
+function measureSelectedTab(tablist: HTMLElement): IndicatorRect | null {
+  const selected = tablist.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]');
+  if (selected == null) return null;
+
+  return measureTab(tablist, selected);
+}
+
 function useSlidingIndicator(
+  hoveredValue: string | null,
   value: string,
   tablistRef: RefObject<HTMLDivElement | null>,
 ) {
-  const [indicator, setIndicator] = useState<IndicatorRect | null>(null);
+  const [activeIndicator, setActiveIndicator] = useState<IndicatorRect | null>(null);
+  const [previewIndicator, setPreviewIndicator] = useState<IndicatorRect | null>(null);
   const [animate, setAnimate] = useState(false);
+  const previewTarget = hoveredValue ?? value;
 
   useLayoutEffect(() => {
     const tablist = tablistRef.current;
     if (tablist == null) return;
 
     const update = () => {
-      setIndicator(measureSelectedTab(tablist));
+      setActiveIndicator(measureSelectedTab(tablist));
+      setPreviewIndicator(measureTabByValue(tablist, previewTarget));
     };
 
     update();
@@ -103,9 +135,9 @@ function useSlidingIndicator(
     }
 
     return () => resizeObserver.disconnect();
-  }, [animate, tablistRef, value]);
+  }, [animate, previewTarget, tablistRef, value]);
 
-  return { indicator, animate };
+  return { activeIndicator, previewIndicator, animate };
 }
 
 function focusTabAt(root: HTMLElement, index: number) {
@@ -148,6 +180,7 @@ function handleTabListKeyDown(event: KeyboardEvent<HTMLDivElement>) {
 function TabRoot({
   value,
   icon,
+  iconOnly = false,
   count,
   endContent,
   className,
@@ -155,11 +188,19 @@ function TabRoot({
   disabled,
   onClick,
   type = "button",
+  "aria-label": ariaLabel,
   ...props
 }: TabProps) {
   const group = useTabGroup();
   if (group == null) {
     throw new Error("Tab must be rendered inside Tab.Group.");
+  }
+
+  if (iconOnly && icon == null) {
+    throw new Error("Tab with iconOnly requires an icon.");
+  }
+  if (iconOnly && ariaLabel == null && children == null) {
+    throw new Error("Tab with iconOnly requires aria-label or children for an accessible name.");
   }
 
   const isSelected = group.value === value;
@@ -169,30 +210,39 @@ function TabRoot({
       type={type}
       role="tab"
       aria-selected={isSelected}
+      aria-label={iconOnly ? ariaLabel : undefined}
       tabIndex={isSelected ? 0 : -1}
       disabled={disabled}
+      data-value={value}
       className={cn(
-        "relative z-[1] inline-flex shrink-0 items-center gap-[length:var(--spacing-1-5)] rounded-full whitespace-nowrap",
+        "relative z-[2] inline-flex shrink-0 items-center gap-[length:var(--spacing-1-5)] rounded-full whitespace-nowrap",
         "border border-transparent px-[length:var(--spacing-2)] py-[2px] text-[11.5px] font-medium leading-[1.5]",
-        "transition-[color,background-color]",
+        "transition-[color]",
         motionTransition("base"),
         segmentedFocusRingClasses,
         segmentedDisabledClasses,
-        isSelected ? "text-fg" : "text-muted hover:bg-ghost-hover hover:text-fg",
+        group.layout === "equal" && "min-w-0 flex-1 justify-center",
+        iconOnly && "px-[length:var(--spacing-2)]",
+        isSelected ? "text-fg" : "text-muted",
         className,
       )}
+      {...props}
       onClick={(event) => {
+        group.commitSelection(value);
         group.onValueChange(value);
         onClick?.(event);
       }}
-      {...props}
     >
       {icon ? (
         <span className={segmentedLeadingIconClasses} aria-hidden>
           {icon}
         </span>
       ) : null}
-      <span>{children}</span>
+      {iconOnly ? (
+        children != null ? <span className="sr-only">{children}</span> : null
+      ) : (
+        <span>{children}</span>
+      )}
       {count != null ? <CountPill active={isSelected} count={count} /> : null}
       {endContent ? <span className="inline-flex shrink-0 items-center">{endContent}</span> : null}
     </button>
@@ -202,49 +252,131 @@ function TabRoot({
 function TabGroup<T extends string = string>({
   value,
   onValueChange,
+  layout = "auto",
   className,
   children,
   "aria-label": ariaLabel,
   onKeyDown,
+  style,
   ...props
 }: TabGroupProps<T>) {
   const tablistRef = useRef<HTMLDivElement>(null);
-  const { indicator, animate } = useSlidingIndicator(value, tablistRef);
+  const [hoveredValue, setHoveredValue] = useState<string | null>(null);
+  const [selectionTransition, setSelectionTransition] = useState<string | null>(null);
+  const [previewFadingOut, setPreviewFadingOut] = useState(false);
+  const { activeIndicator, previewIndicator, animate } = useSlidingIndicator(
+    hoveredValue,
+    value,
+    tablistRef,
+  );
+
+  const slideTransition = animate
+    ? `transition-[left,width,height,top,opacity,background-color,border-color] ${motionTransition("slower", "out-expo")}`
+    : "";
+
+  const isSelecting = selectionTransition != null;
+  const previewLayerVisible =
+    hoveredValue != null &&
+    (hoveredValue !== value || previewFadingOut || isSelecting);
+  const previewOpacityClass = previewFadingOut
+    ? "opacity-0"
+    : hoveredValue != null && hoveredValue !== value
+      ? "opacity-100"
+      : "opacity-0";
+
+  const commitSelection = (next: string) => {
+    setSelectionTransition(next);
+    setPreviewFadingOut(false);
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => setPreviewFadingOut(true));
+    });
+  };
+
+  useEffect(() => {
+    if (!previewFadingOut) return;
+
+    const timer = window.setTimeout(() => {
+      setPreviewFadingOut(false);
+      setSelectionTransition(null);
+    }, SELECTION_SLIDE_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [previewFadingOut]);
+
+  const handleTablistPointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    const tab = (event.target as HTMLElement).closest<HTMLElement>('[role="tab"]:not(:disabled)');
+    const tabValue = tab?.dataset.value;
+    if (tabValue != null) {
+      setHoveredValue(tabValue);
+    }
+  };
+  const segmentCount = Children.toArray(children).filter(isValidElement).length;
 
   return (
     <TabGroupContext.Provider
-      value={{ value, onValueChange: onValueChange as (value: string) => void }}
+      value={{
+        value,
+        hoveredValue,
+        onValueChange: onValueChange as (value: string) => void,
+        commitSelection,
+        setHoveredValue,
+        layout,
+      }}
     >
       <div
         className={cn("inline-flex max-w-full p-[2px]", horizontalScrollClasses, className)}
+        onMouseLeave={() => setHoveredValue(null)}
       >
         <div
           ref={tablistRef}
           role="tablist"
           aria-label={ariaLabel}
           className={cn(
-            "relative inline-flex w-max flex-nowrap items-center gap-[2px] rounded-full",
-            "bg-secondary p-[2px]",
+            "relative items-center gap-[2px] rounded-full bg-secondary p-[2px]",
+            layout === "equal" ? "grid w-full" : "inline-flex w-max flex-nowrap",
           )}
+          style={{
+            ...style,
+            ...(layout === "equal"
+              ? { gridTemplateColumns: `repeat(${segmentCount}, minmax(0, 1fr))` }
+              : undefined),
+          }}
           onKeyDown={(event) => {
             handleTabListKeyDown(event);
             onKeyDown?.(event);
           }}
+          onPointerMove={handleTablistPointerMove}
           {...props}
         >
-          {indicator != null ? (
+          {activeIndicator != null ? (
             <span
               aria-hidden
               className={cn(
-                "pointer-events-none absolute z-0 rounded-full border border-border bg-surface",
-                animate &&
-                  `transition-[left,width,height,top] ${motionTransition("slower", "out-expo")}`,
+                "pointer-events-none absolute rounded-full border border-border bg-surface",
+                isSelecting ? "z-[2]" : "z-0",
+                slideTransition,
               )}
               style={{
-                left: indicator.left,
-                top: indicator.top,
-                width: indicator.width,
-                height: indicator.height,
+                left: activeIndicator.left,
+                top: activeIndicator.top,
+                width: activeIndicator.width,
+                height: activeIndicator.height,
+              }}
+            />
+          ) : null}
+          {previewLayerVisible && previewIndicator != null ? (
+            <span
+              aria-hidden
+              className={cn(
+                "pointer-events-none absolute z-[1] rounded-full border border-transparent bg-secondary-hover",
+                slideTransition,
+                previewOpacityClass,
+              )}
+              style={{
+                left: previewIndicator.left,
+                top: previewIndicator.top,
+                width: previewIndicator.width,
+                height: previewIndicator.height,
               }}
             />
           ) : null}

@@ -32,7 +32,7 @@ Paper's MCP `get_jsx` exports Tailwind classes by default. We map **your** Paper
 Paper tokens.css  →  @theme bridge  →  bg-primary in Button.tsx
 ```
 
-**Color modes:** light tokens use `--color-{role}`; dark parallels use `--color-{role}-dark`. Storybook’s **Theme** toolbar sets `data-wmds-theme="dark"`, which maps dark tokens onto the same semantic names via `src/tokens/theme-dark.css` — components stay unchanged.
+**Color modes:** light tokens use `--color-{role}`; dark parallels use `--color-{role}-dark`. Storybook’s **Theme** toolbar sets `data-wmds-theme="dark"`, which maps dark tokens onto the same semantic names via `src/tokens/theme-dark.css` — components stay unchanged. Light neutrals (`--color-bg`, `--color-surface`, borders, secondary steps) are a cool white/grey ramp; dark neutrals are black/grey.
 
 When you update a token in Paper and sync `tokens.css`, every component updates. Tailwind is plumbing, not the design source.
 
@@ -137,7 +137,7 @@ Foundation ↔ `tokens.css`. Mockups compose Storybook-known patterns. Full comp
 | **IconButton** | `Components / IconButton` | Icon-only; required `label` + `icon`; square hit targets |
 | **MoreMenu** | `Components / MoreMenu` | Overflow kebab menu; closed `items` API (actions, dividers, sections) |
 | **StatusDot** | `Components / StatusDot` | 8px semantic status indicator; use in Badge/Chip or standalone with `label` |
-| **Tab** | `Components / Tab` | Segmented **`Tab.Group`** track + selectable **`Tab`** items (view switching) |
+| **Tab** | `Components / Tab` | Segmented **`Tab.Group`** + **`Tab`**; `layout="equal"` + `iconOnly` for view switchers; hover preview morphs into active on click |
 | **Table** | `Components / Table` | Compound table; sticky columns; collapsible rows |
 
 **Order:** keep this table, `src/index.ts` exports, and Storybook `Components/*` titles alphabetically sorted (A→Z).
@@ -149,10 +149,10 @@ Both can sit above a table in the same toolbar slot — different semantics:
 | | **Tab** (`Tab.Group`) | **Chip** (`Chip.Group`) |
 |--|------------------------|-------------------------|
 | **Role** | View switching (`role="tablist"`) | Row filter toggles (`aria-pressed`) |
-| **Chrome** | Shared pill track + sliding active indicator | Individual raised pills, no shared track |
+| **Chrome** | Shared pill track + sliding active indicator; hover preview crossfades as active slides | Individual raised pills, no shared track |
 | **Trailing count** | `count={n}` — compact inline pill | `count={n}` on `Chip` |
 
-See `Examples / Filter table` (chips) and `Components / Tab → With table` (tabs).
+See `Examples / Filter table` (chips), `Components / Tab → With table` (labeled tabs), and `Components / Tab → Layout switcher (icon-only)`.
 
 ### Badge inline chips
 
@@ -182,7 +182,7 @@ Motion tokens live in `tokens.css` (`--duration-*`, `--ease-out-expo`, `--motion
 - **Expand drawer** — CSS grid `0fr → 1fr` + opacity (`--duration-slower`, `--ease-out-expo`)
 - **Body swap** — `.animate-fade-in` (`--duration-base`) on recommendation copy
 - **Button press** — `scale(var(--motion-press-scale))` on `:active`
-- **Tab indicator** — measured sliding surface pill behind segments (`--duration-slower`, `--ease-out-expo`); respects `prefers-reduced-motion`
+- **Tab indicator** — active surface pill stays on selection; a secondary-hover preview slides on hover and crossfades out as active travels on click (`--duration-slower`, `--ease-out-expo`); respects `prefers-reduced-motion`
 
 `prefers-reduced-motion` collapses transitions globally in `global.css`.
 

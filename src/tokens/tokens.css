@@ -6,53 +6,53 @@
  * Dark:   --color-{role}-dark  (parallel tokens; Storybook maps via [data-wmds-theme="dark"])
  */
 :root {
-  /* ── Light · neutrals ── */
-  --color-bg: #fafaf8;
-  --color-fg: #1c1b19;
-  --color-muted: #6b685f;
-  --color-border: #e4e1da;
-  --color-surface: #f0eee8;
+  /* ── Light · neutrals (cool white / grey ramp) ── */
+  --color-bg: #fafafa;
+  --color-fg: #18181b;
+  --color-muted: #71717a;
+  --color-border: #e4e4e7;
+  --color-surface: #f4f4f5;
 
   /* ── Light · brand / actions ── */
   --color-primary: #39485c;
-  --color-primary-foreground: #fafaf8;
+  --color-primary-foreground: #fafafa;
   --color-primary-hover: #2d3a4a;
   --color-primary-active: #243040;
 
-  --color-secondary: #f0eee8;
-  --color-secondary-foreground: #1c1b19;
-  --color-secondary-hover: #e4e1da;
-  --color-secondary-active: #d8d4cb;
+  --color-secondary: #f4f4f5;
+  --color-secondary-foreground: #18181b;
+  --color-secondary-hover: #eaeaea;
+  --color-secondary-active: #e0e0e3;
 
   --color-ghost-foreground: #39485c;
   --color-ghost-hover: rgba(57, 72, 92, 0.08);
   --color-ghost-active: rgba(57, 72, 92, 0.14);
 
   --color-destructive: #b42318;
-  --color-destructive-foreground: #fafaf8;
+  --color-destructive-foreground: #fafafa;
   --color-destructive-hover: #912018;
   --color-destructive-active: #7a1a13;
 
   --color-success: #3cbb72;
-  --color-success-foreground: #fafaf8;
+  --color-success-foreground: #fafafa;
   --color-success-hover: #35a966;
   --color-success-active: #2d9158;
 
   --color-warning: #b54708;
-  --color-warning-foreground: #fafaf8;
+  --color-warning-foreground: #fafafa;
   --color-warning-hover: #93370d;
   --color-warning-active: #7a2e0e;
 
   --color-info: #175cd3;
-  --color-info-foreground: #fafaf8;
+  --color-info-foreground: #fafafa;
   --color-info-hover: #134cc0;
   --color-info-active: #1040a3;
 
   --color-focus-ring: rgba(57, 72, 92, 0.45);
 
   /* ── Light · shadows (primitives → semantic) ── */
-  --shadow-drop-sm: 0 1px 2px rgb(28 27 25 / 8%);
-  --shadow-drop-md: 0 1px 2px rgb(28 27 25 / 6%), 0 2px 6px rgb(28 27 25 / 4%);
+  --shadow-drop-sm: 0 1px 2px rgb(0 0 0 / 8%);
+  --shadow-drop-md: 0 1px 2px rgb(0 0 0 / 6%), 0 2px 6px rgb(0 0 0 / 4%);
   --shadow-sm: var(--shadow-drop-sm);
   --shadow-md: 0 0 0 1px var(--color-border), var(--shadow-drop-md);
   --shadow-raised: 0 0 0 1px var(--color-border), var(--shadow-drop-sm);

@@ -12,18 +12,18 @@ export interface ShadowToken {
 export const shadowPrimitives: ShadowToken[] = [
   {
     token: "--shadow-drop-sm",
-    value: "0 1px 2px rgb(28 27 25 / 8%)",
+    value: "0 1px 2px rgb(0 0 0 / 8%)",
     role: "Subtle drop — no hairline",
     usedIn: ["Composes --shadow-sm", "Paper: box-shadow literal"],
-    paperPattern: "box-shadow: 0 1px 2px rgb(28 27 25 / 8%)",
+    paperPattern: "box-shadow: 0 1px 2px rgb(0 0 0 / 8%)",
   },
   {
     token: "--shadow-drop-md",
-    value: "0 1px 2px rgb(28 27 25 / 6%), 0 2px 6px rgb(28 27 25 / 4%)",
+    value: "0 1px 2px rgb(0 0 0 / 6%), 0 2px 6px rgb(0 0 0 / 4%)",
     role: "Card depth drop layers",
     usedIn: ["Composes --shadow-md (with hairline)"],
     paperPattern:
-      "border: 1px solid var(--color-border); box-shadow: 0 1px 2px rgb(28 27 25 / 6%), 0 2px 6px rgb(28 27 25 / 4%)",
+      "border: 1px solid var(--color-border); box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 2px 6px rgb(0 0 0 / 4%)",
   },
   {
     token: "--shadow-inset-highlight",
@@ -38,30 +38,30 @@ export const shadowPrimitives: ShadowToken[] = [
 export const shadowElevations: ShadowToken[] = [
   {
     token: "--shadow-sm",
-    value: "0 1px 2px rgb(28 27 25 / 8%)",
+    value: "0 1px 2px rgb(0 0 0 / 8%)",
     role: "Subtle lift",
     tailwind: "shadow-sm",
     usedIn: ["Card elevation sm"],
-    paperPattern: "box-shadow: 0 1px 2px rgb(28 27 25 / 8%)",
+    paperPattern: "box-shadow: 0 1px 2px rgb(0 0 0 / 8%)",
   },
   {
     token: "--shadow-md",
     value:
-      "0 0 0 1px var(--color-border), 0 1px 2px rgb(28 27 25 / 6%), 0 2px 6px rgb(28 27 25 / 4%)",
+      "0 0 0 1px var(--color-border), 0 1px 2px rgb(0 0 0 / 6%), 0 2px 6px rgb(0 0 0 / 4%)",
     role: "Default card elevation",
     tailwind: "shadow-md",
     usedIn: ["Card default", "Restock agent specimen"],
     paperPattern:
-      "border: 1px solid var(--color-border); box-shadow: 0 1px 2px rgb(28 27 25 / 6%), 0 2px 6px rgb(28 27 25 / 4%)",
+      "border: 1px solid var(--color-border); box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 2px 6px rgb(0 0 0 / 4%)",
   },
   {
     token: "--shadow-raised",
-    value: "0 0 0 1px var(--color-border), 0 1px 2px rgb(28 27 25 / 8%)",
+    value: "0 0 0 1px var(--color-border), 0 1px 2px rgb(0 0 0 / 8%)",
     role: "Raised control — secondary buttons",
     tailwind: "shadow-raised",
     usedIn: ["Button secondary"],
     paperPattern:
-      "border: 1px solid var(--color-border); box-shadow: 0 1px 2px rgb(28 27 25 / 8%)",
+      "border: 1px solid var(--color-border); box-shadow: 0 1px 2px rgb(0 0 0 / 8%)",
   },
 ];
 
