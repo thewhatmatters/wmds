@@ -1,9 +1,9 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "../../lib/cn";
 import { ButtonBadge, isBadgeShorthand } from "./ButtonBadge";
+import { ButtonIcon } from "./ButtonIcon";
 import {
   buttonBaseClasses,
-  buttonIconSizeClasses,
   buttonSizeClasses,
   buttonVariantClasses,
   type ButtonSize,
@@ -11,20 +11,6 @@ import {
 } from "./buttonStyles";
 
 export type { ButtonSize, ButtonVariant } from "./buttonStyles";
-
-function ButtonIcon({ size, children }: { size: ButtonSize; children: ReactNode }) {
-  return (
-    <span
-      className={cn(
-        "inline-flex shrink-0 text-inherit [&>svg]:size-full [&>svg]:shrink-0 [&>svg]:stroke-current",
-        buttonIconSizeClasses[size],
-      )}
-      aria-hidden
-    >
-      {children}
-    </span>
-  );
-}
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;

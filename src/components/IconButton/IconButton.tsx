@@ -1,5 +1,6 @@
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { cn } from "../../lib/cn";
+import { ButtonIcon } from "../Button/ButtonIcon";
 import {
   buttonBaseClasses,
   buttonIconSizeClasses,
@@ -8,20 +9,6 @@ import {
   type ButtonVariant,
   type IconButtonSize,
 } from "../Button/buttonStyles";
-
-function ButtonIcon({ size, children }: { size: IconButtonSize; children: ReactNode }) {
-  return (
-    <span
-      className={cn(
-        "inline-flex shrink-0 text-inherit [&>svg]:size-full [&>svg]:shrink-0 [&>svg]:stroke-current",
-        buttonIconSizeClasses[size],
-      )}
-      aria-hidden
-    >
-      {children}
-    </span>
-  );
-}
 
 export type { ButtonVariant as IconButtonVariant, IconButtonSize };
 
