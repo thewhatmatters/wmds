@@ -11,6 +11,7 @@
 
 - **Components** — `src/components/{Name}/`; exported from `src/index.ts`; Storybook `Components/{Name}`.
 - **Examples** — `src/examples/{Name}/`; Storybook-only specimens (`Examples/{Name}`); **never** add to `src/index.ts`. Compose imported primitives; used to validate tokens + real UI patterns.
+- **Lib** — `src/lib/` holds internal utilities shared across components (e.g. `cn`); not exported from `src/index.ts`.
 
 ## Component order
 

@@ -22,6 +22,7 @@ import {
   type StickyOffsets,
   type StickySide,
 } from "./tableLayout";
+import { cn } from "../../lib/cn";
 
 export type TableVariant = "surface" | "plain";
 export type TableDensity = "compact" | "default";
@@ -101,10 +102,6 @@ const ScrollEdgeContext = createContext({
   canScrollEnd: false,
   stickyCounts: { start: 0, end: 0 },
 });
-
-function cn(...parts: Array<string | false | undefined>) {
-  return parts.filter(Boolean).join(" ");
-}
 
 function useTableContext() {
   return useContext(TableContext);

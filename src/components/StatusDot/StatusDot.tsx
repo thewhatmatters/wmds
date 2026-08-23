@@ -1,4 +1,5 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import { cn } from "../../lib/cn";
 
 export type StatusDotVariant = "neutral" | "info" | "success" | "warning" | "destructive";
 
@@ -26,10 +27,6 @@ const variantClasses: Record<StatusDotVariant, string> = {
   warning: "bg-warning text-warning-foreground",
   destructive: "bg-destructive text-destructive-foreground",
 };
-
-function cn(...parts: Array<string | false | undefined>) {
-  return parts.filter(Boolean).join(" ");
-}
 
 /**
  * Small semantic status indicator — [Astryx StatusDot](https://astryx.atmeta.com/components/StatusDot).

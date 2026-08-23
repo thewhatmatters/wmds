@@ -4,6 +4,7 @@ import {
   type HTMLAttributes,
   type ReactNode,
 } from "react";
+import { cn } from "../../lib/cn";
 
 export type CardVariant = "surface" | "outlined" | "ghost";
 export type CardElevation = "none" | "sm" | "md" | "raised";
@@ -84,10 +85,6 @@ const sectionPaddingClasses: Record<
       "flex items-center justify-between gap-[length:var(--spacing-4)] border-t border-border px-[length:var(--spacing-6)] py-[length:var(--spacing-4)]",
   },
 };
-
-function cn(...parts: Array<string | false | undefined>) {
-  return parts.filter(Boolean).join(" ");
-}
 
 function useCardPadding() {
   return useContext(CardPaddingContext);

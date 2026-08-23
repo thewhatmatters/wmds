@@ -12,6 +12,7 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
+import { cn } from "../../lib/cn";
 
 export interface TabGroupProps<T extends string = string>
   extends HTMLAttributes<HTMLDivElement> {
@@ -39,10 +40,6 @@ const TabGroupContext = createContext<{
   value: string;
   onValueChange: (value: string) => void;
 } | null>(null);
-
-function cn(...parts: Array<string | false | undefined>) {
-  return parts.filter(Boolean).join(" ");
-}
 
 function useTabGroup() {
   return useContext(TabGroupContext);

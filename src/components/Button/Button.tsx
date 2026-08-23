@@ -1,11 +1,11 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { cn } from "../../lib/cn";
 import { ButtonBadge, isBadgeShorthand } from "./ButtonBadge";
 import {
   buttonBaseClasses,
   buttonIconSizeClasses,
   buttonSizeClasses,
   buttonVariantClasses,
-  cn,
   type ButtonSize,
   type ButtonVariant,
 } from "./buttonStyles";

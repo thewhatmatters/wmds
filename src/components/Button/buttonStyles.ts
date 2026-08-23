@@ -57,7 +57,3 @@ export const iconButtonSizeClasses: Record<IconButtonSize, string> = {
   md: "size-10",
   lg: "size-12",
 };
-
-export function cn(...parts: Array<string | false | undefined>) {
-  return parts.filter(Boolean).join(" ");
-}

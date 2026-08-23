@@ -1,9 +1,9 @@
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { cn } from "../../lib/cn";
 import {
   buttonBaseClasses,
   buttonIconSizeClasses,
   buttonVariantClasses,
-  cn,
   iconButtonSizeClasses,
   type ButtonVariant,
   type IconButtonSize,

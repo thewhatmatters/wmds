@@ -6,6 +6,7 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
+import { cn } from "../../lib/cn";
 import { StatusDot, type StatusDotVariant } from "../StatusDot/StatusDot";
 
 export type ChipDotVariant = StatusDotVariant;
@@ -38,10 +39,6 @@ const ChipGroupContext = createContext<{
   value: string;
   onValueChange: (value: string) => void;
 } | null>(null);
-
-function cn(...parts: Array<string | false | undefined>) {
-  return parts.filter(Boolean).join(" ");
-}
 
 function useChipGroup() {
   return useContext(ChipGroupContext);

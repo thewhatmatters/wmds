@@ -12,7 +12,7 @@ import {
   type Ref,
 } from "react";
 import { createPortal } from "react-dom";
-import { cn } from "../Button/buttonStyles";
+import { cn } from "../../lib/cn";
 import { IconButton, type IconButtonSize, type IconButtonVariant } from "../IconButton/IconButton";
 
 export type DropdownMenuPlacement = "below" | "above";

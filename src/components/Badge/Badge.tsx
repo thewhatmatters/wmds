@@ -1,4 +1,5 @@
 import type { HTMLAttributes, ReactNode } from "react";
+import { cn } from "../../lib/cn";
 
 /** Semantic roles — maps Astryx `error` → `destructive`. Decorative palette variants are out of scope for WMDS. */
 export type BadgeVariant = "neutral" | "info" | "success" | "warning" | "destructive";
@@ -55,10 +56,6 @@ const countSizeClasses: Record<BadgeSize, string> = {
   sm: "min-h-[1.125rem] min-w-[1.125rem] rounded-full px-[length:var(--spacing-1)] text-xs leading-none tabular-nums",
   md: "min-h-[1.25rem] min-w-[1.25rem] rounded-full px-[length:var(--spacing-1)] text-sm leading-none tabular-nums",
 };
-
-function cn(...parts: Array<string | false | undefined>) {
-  return parts.filter(Boolean).join(" ");
-}
 
 export function Badge({
   label,
