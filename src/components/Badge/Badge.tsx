@@ -34,8 +34,8 @@ const labelSizeClasses: Record<BadgeSize, string> = {
 
 /** Inline chip — slot + label; padding is per-side, not label `px`. */
 const chipSizeClasses: Record<BadgeSize, string> = {
-  sm: "rounded-full py-[1px] text-xs leading-none gap-[3px]",
-  md: "rounded-full py-[length:var(--spacing-1)] text-sm leading-none gap-[length:var(--spacing-1)]",
+  sm: "h-4 rounded-full py-0 text-xs leading-none gap-[3px]",
+  md: "h-5 rounded-full py-0 text-sm leading-none gap-[length:var(--spacing-1)]",
 };
 
 const countSizeClasses: Record<BadgeSize, string> = {
@@ -69,7 +69,7 @@ export function Badge({
           : isChip
             ? chipSizeClasses[size]
             : labelSizeClasses[size],
-        isChip && "mx-[length:var(--spacing-0)] align-middle",
+        isChip && "mx-[length:var(--spacing-0)] relative -top-px align-baseline",
         isChip && hasStart && (size === "sm" ? "pl-[2px]" : "pl-[length:var(--spacing-1)]"),
         isChip && !hasStart && "pl-[length:var(--spacing-1-5)]",
         isChip && hasEnd && (size === "sm" ? "pr-[2px]" : "pr-[length:var(--spacing-1)]"),

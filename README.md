@@ -80,20 +80,23 @@ Paper is where we **prove** tokens and **preview** compositions. When building m
 
 See `.cursor/rules/wmds-paper-tokens.mdc` for agent enforcement.
 
-## Consuming from other apps (later)
+## Consuming in other apps
 
-Publish as `@whatmatters/design-system` (or install from GitHub). Other repos:
+WMDS is an **optional** dependency — use it only where you want this design language. See **[CONSUMING.md](./CONSUMING.md)** for install, styles, dark mode, and examples.
+
+Quick start:
 
 ```bash
-npm install @whatmatters/design-system
+cd wmds && npm run build          # in this repo first
+cd your-app && npm install ../wmds
 ```
 
 ```tsx
-import { Button } from "@whatmatters/design-system";
-import "@whatmatters/design-system/tokens.css";
+import "@whatmatters/wmds/styles.css";
+import { Button, Card, List } from "@whatmatters/wmds";
 ```
 
-No MCP or server required at runtime — just npm.
+Package exports: `@whatmatters/wmds`, `@whatmatters/wmds/styles.css`, `@whatmatters/wmds/tokens.css`.
 
 ## Paper file (WMDS)
 
@@ -108,10 +111,13 @@ Reference frames and specimens — not an exhaustive catalog (see Storybook for 
 | **Components** | **Buttons** | Variants (incl. success), sizes, states, matrix, loading — all token-bound |
 | **Components** | **Badges** | Semantic variants, status/count pills, `startSlot` / `endSlot` (inline chips) |
 | **Components** | **Cards** | Variants, elevation, padding; `Header`/`Footer` section borders |
+| **Components** | **Carousel** | Insights-style title + count + prev/next slides |
+| **Components** | **Chart** | Area hero/compact + sparkline; `chartTheme` helpers |
 | **Components** | **Tab group** | Segmented control — agent views + end content (StatusDot, count) |
 | **Components** | **Chips** | Filter toolbar + standalone pressed/count states |
 | **Components** | **Table** | Surface variant, sticky start/end, row hover, filter composition |
 | **Components** | **StatusDot** | 8px semantic variants |
+| **Components** | **StatusRing** | 24px count ring + active sweep |
 | **Components** | **IconButton & MoreMenu** | Square hit targets + open dropdown panel |
 | **Examples** | **Filter table** | Chip filters + table specimen (Storybook-only) |
 | **Examples** | **Context chunks** | RAG chunk card + file attachment badges |
@@ -133,10 +139,14 @@ Foundation ↔ `tokens.css`. Mockups compose Storybook-known patterns. Full comp
 | **Badge** | `Components / Badge` | Semantic variants; label + count; **`startSlot` / `endSlot`** for inline chips in prose |
 | **Button** | `Components / Button` | 7 variants × 4 sizes (xs–lg); `startSlot` / `endSlot` (or `icon` / `badge` shorthands) |
 | **Card** | `Components / Card` | Variants, elevation, padding; `Header`/`Footer` section borders |
+| **Carousel** | `Components / Carousel` | Title + count + prev/next; compose slides with inline **`Badge`** / **`StatusDot`** / mono figures |
+| **Chart** | `Components / Chart` | **`Chart.Area`** hero/compact + **`Chart.Sparkline`**; token theme via `chartTheme` / `resolveChartTone` (peer: **`recharts`**) |
 | **Chip** | `Components / Chip` | Interactive filter toggles; `Chip.Group`; optional dot + count |
 | **IconButton** | `Components / IconButton` | Icon-only; required `label` + `icon`; square hit targets |
+| **List** | `Components / List` | Stacked row layout; **`contained`** (Card dividers) or **`separated`** chips; expandable **`ItemPanel`** (detail width aligns to header meta — chevron lane reserved) |
 | **MoreMenu** | `Components / MoreMenu` | Overflow kebab menu; closed `items` API (actions, dividers, sections) |
 | **StatusDot** | `Components / StatusDot` | 8px semantic status indicator; use in Badge/Chip or standalone with `label` |
+| **StatusRing** | `Components / StatusRing` | 24px count ring; clockwise arc sweep when **`active`** (default when **`count > 0`**) |
 | **Tab** | `Components / Tab` | Segmented **`Tab.Group`** + **`Tab`**; **`size`** `xs` \| `sm` \| `md`; `layout="equal"` + `iconOnly` view switchers; hover preview morphs into active on click |
 | **Table** | `Components / Table` | Compound table; sticky columns; collapsible rows |
 
@@ -175,6 +185,8 @@ See `Examples / Restock agent card → Inline badges` for chip + plain pill side
 
 With `padding="none"`, **`Card.Header`** includes `border-b` and **`Card.Footer`** includes `border-t` — edge-to-edge dividers without a manual `Card.Divider` between header and body. Use **`Card.Divider`** only for extra splits inside the body.
 
+Pair **`Card padding="none"`** + **`List variant="contained"`** for grouped ledger rows (portfolio breakdown, settings lists). Use **`List.ItemRow`** for static lines; **`List.ItemButton`** + **`List.ItemPanel`** for disclosure rows.
+
 ### Motion (specimens)
 
 Motion tokens live in `tokens.css` (`--duration-*`, `--ease-out-expo`, `--motion-press-scale`). Specimens use:
@@ -199,6 +211,7 @@ Source: `src/examples/` — Storybook specimens only; not in `src/index.ts`.
 | **Context chunks** | `Examples / Context chunks` | RAG chunk list — Card section borders + Badge file attachment rows |
 | **Filter table** | `Examples / Filter table` | Chip filters + Table with animated row collapse |
 | **Restock agent card** | `Examples / Restock agent card` | Interactive agent prompt — collapsed default, expandable alternatives drawer, option switching |
+| **Task rows** | `Examples / Task rows` | Agent task list — `List` + `Card` + `Badge`; staged expand / fail / resolve motion |
 
 Preview locally:
 

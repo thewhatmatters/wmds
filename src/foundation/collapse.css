@@ -1,0 +1,24 @@
+/** Shared height-collapse motion — List panels, Table filter rows. */
+.motion-collapse {
+  display: grid;
+  transition:
+    grid-template-rows var(--duration-slower) var(--ease-out-expo),
+    opacity var(--duration-slower) var(--ease-out-expo);
+}
+
+.motion-collapse[data-visible="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.motion-collapse[data-visible="false"] {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-collapse {
+    transition-duration: 0.01ms !important;
+  }
+}

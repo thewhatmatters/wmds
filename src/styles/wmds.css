@@ -1,13 +1,19 @@
+/**
+ * Consumer entry — import once in your app (e.g. layout.tsx / globals.css).
+ * Provides tokens, Tailwind @theme bridge, component utilities, and motion keyframes.
+ */
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
+
+@source "../components/**/*.{ts,tsx}";
+@source "../lib/**/*.{ts,tsx}";
+
 @import "../tokens/tokens.css";
 @import "../tokens/theme-dark.css";
+@import "../foundation/collapse.css";
+@import "../components/Table/table.css";
 @import "../components/Chart/chart.css";
 
-/**
- * Bridge Paper/CSS tokens → Tailwind utilities (bg-primary, px-3, rounded-md, …).
- * Paper owns values in tokens.css; Tailwind is the authoring layer in components.
- */
 @theme inline {
   --color-bg: var(--color-bg);
   --color-fg: var(--color-fg);
@@ -114,25 +120,6 @@
   --duration-slow: var(--duration-slow);
   --duration-slower: var(--duration-slower);
   --ease-out-expo: var(--ease-out-expo);
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: var(--font-family-sans);
-  background: var(--color-bg);
-  color: var(--color-fg);
-  -webkit-font-smoothing: antialiased;
-}
-
-/* Storybook canvas — preview decorator fills the iframe; root must not shrink to story width */
-#storybook-root {
-  width: 100%;
 }
 
 @keyframes fade-in {

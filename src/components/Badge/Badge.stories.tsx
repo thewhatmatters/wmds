@@ -222,7 +222,7 @@ export const InlineInProse: Story = {
         Cone King
       </Badge>{" "}
       with lead time{" "}
-      <Badge variant="success" className="mx-[length:var(--spacing-0)] align-middle">
+      <Badge variant="success" className="mx-[length:var(--spacing-0)]">
         7 days
       </Badge>
     </p>

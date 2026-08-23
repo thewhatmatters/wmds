@@ -1,0 +1,17 @@
+/** Subtle editor-style dot grid for chart surfaces — token-bound. */
+.wmds-chart-grid {
+  background-color: var(--color-bg);
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-fg) 8%, transparent) 0.85px,
+    transparent 1px
+  );
+  background-size: 14px 14px;
+  background-position: center;
+}
+
+[data-wmds-theme="dark"] .wmds-chart-grid {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-fg) 12%, transparent) 0.85px,
+    transparent 1px
+  );
+}
