@@ -1,4 +1,6 @@
 
+import { motionTransition, pressScaleClass } from "../../foundation/motion";
+
 export type ButtonVariant =
   | "primary"
   | "secondary"
@@ -14,8 +16,11 @@ export type IconButtonSize = ButtonSize;
 
 export const buttonBaseClasses =
   "inline-flex items-center justify-center font-sans font-medium tracking-normal " +
-  "transition-[color,transform] duration-[length:var(--duration-fast)] ease-[var(--ease-standard)] " +
-  "enabled:active:scale-[var(--motion-press-scale)] " +
+  "transition-[color,transform] " +
+  motionTransition("fast") +
+  " " +
+  pressScaleClass +
+  " " +
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg " +
   "disabled:pointer-events-none disabled:opacity-50";
 

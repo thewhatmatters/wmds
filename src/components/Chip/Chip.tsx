@@ -6,6 +6,7 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
+import { motionTransition } from "../../foundation/motion";
 import { cn } from "../../lib/cn";
 import {
   CountPill,
@@ -86,7 +87,8 @@ function ChipRoot({
       className={cn(
         "inline-flex h-[26px] shrink-0 items-center gap-[length:var(--spacing-1-5)] rounded-full",
         "px-[length:var(--spacing-2-5)] text-xs font-medium leading-none",
-        "transition-[background-color,box-shadow,color] duration-[length:var(--duration-base)] ease-[var(--ease-standard)]",
+        "transition-[background-color,box-shadow,color]",
+        motionTransition("base"),
         segmentedFocusRingClasses,
         segmentedDisabledClasses,
         isPressed

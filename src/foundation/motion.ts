@@ -62,3 +62,29 @@ export const motionFeedback: MotionToken[] = [
     usedIn: ["Button :active (enabled only)", "Matches product RecommendationCard button feel"],
   },
 ];
+
+export type MotionDuration = "instant" | "fast" | "base" | "slow" | "slower";
+export type MotionEase = "standard" | "out-expo";
+
+const motionDurationClasses: Record<MotionDuration, string> = {
+  instant: "duration-[length:var(--duration-instant)]",
+  fast: "duration-[length:var(--duration-fast)]",
+  base: "duration-[length:var(--duration-base)]",
+  slow: "duration-[length:var(--duration-slow)]",
+  slower: "duration-[length:var(--duration-slower)]",
+};
+
+const motionEaseClasses: Record<MotionEase, string> = {
+  standard: "ease-[var(--ease-standard)]",
+  "out-expo": "ease-[var(--ease-out-expo)]",
+};
+
+/** Duration + easing utility classes for transitions. */
+export function motionTransition(
+  duration: MotionDuration,
+  ease: MotionEase = "standard",
+): string {
+  return `${motionDurationClasses[duration]} ${motionEaseClasses[ease]}`;
+}
+
+export const pressScaleClass = "enabled:active:scale-[var(--motion-press-scale)]";

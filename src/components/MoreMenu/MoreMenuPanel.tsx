@@ -11,7 +11,13 @@ import {
   type Ref,
 } from "react";
 import { createPortal } from "react-dom";
+import { motionTransition } from "../../foundation/motion";
+import { typographyClass } from "../../foundation/typography";
 import { cn } from "../../lib/cn";
+import {
+  semanticMenuDestructiveDescriptionClasses,
+  semanticMenuDestructiveItemClasses,
+} from "../../lib/semanticVariants";
 import { IconButton } from "../IconButton/IconButton";
 import { resolveMenuPosition } from "./moreMenuLayout";
 import type {
@@ -59,7 +65,7 @@ function readThemeFromTrigger(trigger: HTMLButtonElement | null): string | undef
 const menuItemClasses =
   "flex w-full items-center gap-2 rounded-md px-[length:var(--spacing-2)] py-[length:var(--spacing-1-5)] " +
   "text-left text-sm leading-[var(--line-height-sm)] text-fg outline-none " +
-  "transition-colors duration-[length:var(--duration-instant)] ease-[var(--ease-standard)] " +
+  `transition-colors ${motionTransition("instant")} ` +
   "hover:bg-secondary-hover focus-visible:bg-secondary-hover " +
   "disabled:pointer-events-none disabled:opacity-50";
 
@@ -83,7 +89,7 @@ function MenuItemButton({
       disabled={item.disabled}
       className={cn(
         menuItemClasses,
-        destructive && "text-destructive hover:bg-destructive/10 focus-visible:bg-destructive/10",
+        destructive && semanticMenuDestructiveItemClasses,
       )}
       onClick={() => onSelect(item)}
     >
@@ -101,7 +107,7 @@ function MenuItemButton({
           <span
             className={cn(
               "block truncate text-xs",
-              destructive ? "text-destructive/80" : "text-muted",
+              destructive ? semanticMenuDestructiveDescriptionClasses : "text-muted",
             )}
           >
             {item.description}
@@ -301,7 +307,7 @@ export function MoreMenuPanel({
           return (
             <div key={option.id ?? `section-${index}`} role="group" aria-label={option.title}>
               {option.title ? (
-                <p className="px-[length:var(--spacing-2)] pb-[length:var(--spacing-1)] pt-[length:var(--spacing-1)] text-xs font-medium uppercase tracking-wider text-muted">
+                <p className={cn("px-[length:var(--spacing-2)] pb-[length:var(--spacing-1)] pt-[length:var(--spacing-1)]", typographyClass("overline"))}>
                   {option.title}
                 </p>
               ) : null}

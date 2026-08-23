@@ -12,6 +12,7 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
+import { motionTransition } from "../../foundation/motion";
 import { cn } from "../../lib/cn";
 import {
   CountPill,
@@ -173,7 +174,8 @@ function TabRoot({
       className={cn(
         "relative z-[1] inline-flex shrink-0 items-center gap-[length:var(--spacing-1-5)] rounded-full whitespace-nowrap",
         "border border-transparent px-[length:var(--spacing-2)] py-[2px] text-[11.5px] font-medium leading-[1.5]",
-        "transition-[color,background-color] duration-[length:var(--duration-base)] ease-[var(--ease-standard)]",
+        "transition-[color,background-color]",
+        motionTransition("base"),
         segmentedFocusRingClasses,
         segmentedDisabledClasses,
         isSelected ? "text-fg" : "text-muted hover:bg-ghost-hover hover:text-fg",
@@ -236,7 +238,7 @@ function TabGroup<T extends string = string>({
               className={cn(
                 "pointer-events-none absolute z-0 rounded-full border border-border bg-surface",
                 animate &&
-                  "transition-[left,width,height,top] duration-[length:var(--duration-slower)] ease-[var(--ease-out-expo)]",
+                  `transition-[left,width,height,top] ${motionTransition("slower", "out-expo")}`,
               )}
               style={{
                 left: indicator.left,

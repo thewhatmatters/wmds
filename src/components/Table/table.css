@@ -1,0 +1,51 @@
+/** Table-specific styles — row collapse motion + scroll-edge shadows. */
+.motion-collapse {
+  display: grid;
+  transition:
+    grid-template-rows var(--duration-slower) var(--ease-out-expo),
+    opacity var(--duration-slower) var(--ease-out-expo);
+}
+
+.motion-collapse[data-visible="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.motion-collapse[data-visible="false"] {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.wmds-table-scroll-shadow-start {
+  transition: box-shadow var(--duration-fast) var(--ease-standard);
+  box-shadow: 4px 0 8px -2px color-mix(in srgb, var(--color-fg) 16%, transparent);
+}
+
+.wmds-table-scroll-shadow-end {
+  transition: box-shadow var(--duration-fast) var(--ease-standard);
+  box-shadow: -4px 0 8px -2px color-mix(in srgb, var(--color-fg) 16%, transparent);
+}
+
+.wmds-table-scroller-shadow-start {
+  transition: box-shadow var(--duration-fast) var(--ease-standard);
+  box-shadow: inset 8px 0 8px -8px color-mix(in srgb, var(--color-fg) 12%, transparent);
+}
+
+.wmds-table-scroller-shadow-end {
+  transition: box-shadow var(--duration-fast) var(--ease-standard);
+  box-shadow: inset -8px 0 8px -8px color-mix(in srgb, var(--color-fg) 12%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-collapse {
+    transition-duration: 0.01ms !important;
+  }
+
+  .wmds-table-scroll-shadow-start,
+  .wmds-table-scroll-shadow-end,
+  .wmds-table-scroller-shadow-start,
+  .wmds-table-scroller-shadow-end {
+    transition-duration: 0.01ms !important;
+  }
+}

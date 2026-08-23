@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { typographyClass } from "../../foundation/typography";
 import { Badge } from "../../components/Badge/Badge";
 import { Button, type ButtonVariant } from "../../components/Button/Button";
 
@@ -142,7 +143,7 @@ export function RestockCard({
   return (
     <article className="flex w-full max-w-[440px] flex-col overflow-hidden rounded-lg bg-surface font-sans shadow-md">
       <header className="flex flex-col gap-2 p-4 pb-3">
-        <h2 className="text-sm font-semibold leading-[1.5] tracking-normal text-fg">
+        <h2 className={typographyClass("subheading")}>
           Want me to place this restock order?
         </h2>
         <p
@@ -162,7 +163,7 @@ export function RestockCard({
       >
         <div className="overflow-hidden">
           <section className="border-t border-border bg-surface px-2 py-2">
-            <p className="px-1.5 pb-1 text-xs font-medium uppercase tracking-wider text-muted">
+            <p className={`px-1.5 pb-1 ${typographyClass("overline")}`}>
               Other options
             </p>
             <div className="flex flex-col gap-0.5">

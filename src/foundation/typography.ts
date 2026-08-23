@@ -108,3 +108,12 @@ export const fontFamilies = [
     usage: "Code, IDs, numeric data",
   },
 ] as const;
+
+/** Tailwind classes per semantic typography role — single source for components and Storybook. */
+export const typographyRoleClasses = Object.fromEntries(
+  typographyStyles.map((style) => [style.role, style.className]),
+) as Record<TypographyRole, string>;
+
+export function typographyClass(role: TypographyRole): string {
+  return typographyRoleClasses[role];
+}

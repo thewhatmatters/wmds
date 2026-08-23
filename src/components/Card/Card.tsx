@@ -5,6 +5,7 @@ import {
   type ReactNode,
 } from "react";
 import { cn } from "../../lib/cn";
+import { shadowElevationClass } from "../../foundation/shadows";
 
 export type CardVariant = "surface" | "outlined" | "ghost";
 export type CardElevation = "none" | "sm" | "md" | "raised";
@@ -35,10 +36,10 @@ const variantClasses: Record<CardVariant, string> = {
 };
 
 const elevationClasses: Record<CardElevation, string> = {
-  none: "",
-  sm: "shadow-sm",
-  md: "shadow-md",
-  raised: "shadow-raised",
+  none: shadowElevationClass("none"),
+  sm: shadowElevationClass("sm"),
+  md: shadowElevationClass("md"),
+  raised: shadowElevationClass("raised"),
 };
 
 const rootPaddingClasses: Record<CardPadding, string> = {

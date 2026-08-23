@@ -1,7 +1,8 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { cn } from "../../lib/cn";
+import { semanticStatusDotClasses, type SemanticVariant } from "../../lib/semanticVariants";
 
-export type StatusDotVariant = "neutral" | "info" | "success" | "warning" | "destructive";
+export type StatusDotVariant = SemanticVariant;
 
 type StatusDotBaseProps = {
   variant: StatusDotVariant;
@@ -20,13 +21,7 @@ export type StatusDotProps = StatusDotBaseProps &
     | { decorative?: false; label: string }
   );
 
-const variantClasses: Record<StatusDotVariant, string> = {
-  neutral: "bg-muted text-surface",
-  info: "bg-info text-info-foreground",
-  success: "bg-success text-success-foreground",
-  warning: "bg-warning text-warning-foreground",
-  destructive: "bg-destructive text-destructive-foreground",
-};
+const variantClasses = semanticStatusDotClasses;
 
 /**
  * Small semantic status indicator — [Astryx StatusDot](https://astryx.atmeta.com/components/StatusDot).

@@ -1,8 +1,8 @@
 import type { HTMLAttributes, ReactNode } from "react";
 import { cn } from "../../lib/cn";
+import { semanticBadgeClasses, type SemanticVariant } from "../../lib/semanticVariants";
 
-/** Semantic roles — maps Astryx `error` → `destructive`. Decorative palette variants are out of scope for WMDS. */
-export type BadgeVariant = "neutral" | "info" | "success" | "warning" | "destructive";
+export type BadgeVariant = SemanticVariant;
 
 export type BadgeSize = "sm" | "md";
 
@@ -25,21 +25,7 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 const baseClasses =
   "inline-flex shrink-0 items-center justify-center font-sans font-medium tracking-normal";
 
-const variantClasses: Record<BadgeVariant, string> = {
-  neutral: "border border-border bg-surface text-muted",
-  info:
-    "border border-[color-mix(in_srgb,var(--color-info)_30%,var(--color-border))] " +
-    "bg-[color-mix(in_srgb,var(--color-info)_12%,var(--color-surface))] text-info",
-  success:
-    "border border-[color-mix(in_srgb,var(--color-success)_30%,var(--color-border))] " +
-    "bg-[color-mix(in_srgb,var(--color-success)_12%,var(--color-surface))] text-success",
-  warning:
-    "border border-[color-mix(in_srgb,var(--color-warning)_30%,var(--color-border))] " +
-    "bg-[color-mix(in_srgb,var(--color-warning)_12%,var(--color-surface))] text-warning",
-  destructive:
-    "border border-[color-mix(in_srgb,var(--color-destructive)_30%,var(--color-border))] " +
-    "bg-[color-mix(in_srgb,var(--color-destructive)_12%,var(--color-surface))] text-destructive",
-};
+const variantClasses = semanticBadgeClasses;
 
 const labelSizeClasses: Record<BadgeSize, string> = {
   sm: "rounded-full px-[length:var(--spacing-1-5)] py-[length:var(--spacing-0)] text-xs leading-[var(--line-height-xs)]",

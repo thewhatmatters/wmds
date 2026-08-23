@@ -1,4 +1,5 @@
 import { AlignLeft, ArrowUpRight } from "lucide-react";
+import { typographyClass } from "../../foundation/typography";
 import { Badge } from "../../components/Badge/Badge";
 import { Card } from "../../components/Card/Card";
 
@@ -106,7 +107,7 @@ export function ContextChunks({
   return (
     <section className="flex w-full max-w-md flex-col gap-[length:var(--spacing-3)] font-sans">
       <div className="flex items-center gap-[length:var(--spacing-2)]">
-        <h2 className="text-sm font-semibold leading-[var(--line-height-sm)] text-fg">
+        <h2 className={typographyClass("subheading")}>
           {heading}
         </h2>
         <Badge variant="neutral" appearance="count">

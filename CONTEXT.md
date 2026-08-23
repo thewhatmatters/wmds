@@ -23,3 +23,7 @@ _Avoid_: DropdownMenu, overflow menu component
 **CountPill**:
 Shared trailing numeric badge in Tab and Chip segments — not a standalone exported component.
 _Avoid_: count badge, pill count
+
+**Semantic variant**:
+Shared palette role (`neutral`, `info`, `success`, `warning`, `destructive`) — class maps in `semanticVariants.ts` for Badge, StatusDot, and menu destructive rows.
+_Avoid_: color role, variant enum

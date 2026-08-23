@@ -11,7 +11,8 @@
 
 - **Components** — `src/components/{Name}/`; exported from `src/index.ts`; Storybook `Components/{Name}`.
 - **Examples** — `src/examples/{Name}/`; Storybook-only specimens (`Examples/{Name}`); **never** add to `src/index.ts`. Compose imported primitives; used to validate tokens + real UI patterns.
-- **Lib** — `src/lib/` holds internal utilities shared across components (e.g. `cn`, `CountPill` / segmented-control presentation); not exported from `src/index.ts`.
+- **Lib** — `src/lib/` holds internal utilities (`cn`, `CountPill`, `semanticVariants`); not exported from `src/index.ts`.
+- **Foundation** — `src/foundation/` catalogs tokens and exposes consumable class helpers (`typographyClass`, `motionTransition`, `shadowElevationClass`) that components import.
 - **MoreMenu module** — `types.ts` + `moreMenuLayout.ts` (pure positioning) + internal `MoreMenuPanel.tsx`; only `MoreMenu` is exported from `src/index.ts`.
 
 ## Component order

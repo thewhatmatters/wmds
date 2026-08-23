@@ -64,3 +64,17 @@ export const shadowElevations: ShadowToken[] = [
       "border: 1px solid var(--color-border); box-shadow: 0 1px 2px rgb(28 27 25 / 8%)",
   },
 ];
+
+export type ShadowElevation = "none" | "sm" | "md" | "raised";
+
+/** Semantic elevation tailwind classes — mirrors shadowElevations catalog. */
+export const shadowElevationClasses: Record<ShadowElevation, string> = {
+  none: "",
+  sm: "shadow-sm",
+  md: "shadow-md",
+  raised: "shadow-raised",
+};
+
+export function shadowElevationClass(elevation: ShadowElevation): string {
+  return shadowElevationClasses[elevation];
+}
