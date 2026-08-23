@@ -413,8 +413,7 @@ function TableRow({
   };
 
   const rowClassName = cn(
-    "group border-b border-border last:border-0",
-    "transition-colors duration-[length:var(--duration-instant)] hover:bg-secondary-hover",
+    "group border-b border-border last:border-0 hover:bg-secondary-hover",
     className,
   );
 
@@ -539,8 +538,11 @@ function TableCell({
     align === "end" && "text-right",
     align === "center" && "text-center",
     numeric && "tabular-nums",
-    variant === "surface" && "bg-surface group-hover:bg-secondary-hover",
-    sticky != null && "sticky z-10 group-hover:bg-secondary-hover",
+    sticky != null && "sticky z-10",
+    sticky != null &&
+      variant === "surface" &&
+      "bg-surface group-hover:bg-secondary-hover",
+    sticky != null && variant === "plain" && "bg-bg group-hover:bg-secondary-hover",
     sticky === "start" && "border-r border-border",
     sticky === "end" && "border-l border-border",
     stickyScrollShadowClass(sticky, stickyIndex, stickyCounts, scrollEdge),

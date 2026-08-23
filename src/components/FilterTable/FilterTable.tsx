@@ -68,14 +68,18 @@ export function FilterTable() {
 
             return (
               <Table.Row key={row.task} visible={shown} colSpan={COLUMN_COUNT}>
-                <Table.Cell className="max-w-[10rem] truncate font-medium">{row.task}</Table.Cell>
+                <Table.Cell className="font-medium">
+                  <span className="block max-w-[10rem] truncate">{row.task}</span>
+                </Table.Cell>
                 <Table.Cell numeric className="text-muted">
                   {row.date}
                 </Table.Cell>
                 <Table.Cell>
                   <Badge variant={pill.variant}>{pill.label}</Badge>
                 </Table.Cell>
-                <Table.Cell className="max-w-[9rem] truncate text-muted">{row.owner}</Table.Cell>
+                <Table.Cell className="text-muted">
+                  <span className="block max-w-[9rem] truncate">{row.owner}</span>
+                </Table.Cell>
               </Table.Row>
             );
           })}

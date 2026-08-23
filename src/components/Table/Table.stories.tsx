@@ -22,7 +22,8 @@ const meta = {
           "Horizontal overflow shows edge shadows on sticky columns (or scroller inset when no sticky cols) — `--color-fg` mix works in light and dark. " +
           "Offsets are measured from the header row and update on resize. " +
           "For animated filter rows, pass **`visible`** + **`colSpan`** on **`Table.Row`** (see **`Examples / Filter table`**) — header stays static while rows collapse via **`.motion-collapse`**. " +
-          "**Cell content** is compositional — pass text, **`Badge`** (status labels), **`Button`** / **`MoreMenu`** (actions), or any React node inside **`Table.Cell`**. Use **`Chip`** for filter bars above the table, not inside cells.",
+          "**Cell content** is compositional — pass text, **`Badge`** (status labels), **`Button`** / **`MoreMenu`** (actions), or any React node inside **`Table.Cell`**. Use **`Chip`** for filter bars above the table, not inside cells. " +
+          "For truncation, put **`max-w-* truncate`** on an inner **`span`**, not on **`Table.Cell`** — width constraints on `<td>` leave gaps where row hover bleeds through.",
       },
     },
   },
@@ -64,14 +65,18 @@ export const Playground: Story = {
           const pill = statusBadge[row.status];
           return (
             <Table.Row key={row.task}>
-              <Table.Cell className="max-w-[12rem] truncate font-medium">{row.task}</Table.Cell>
+              <Table.Cell className="font-medium">
+                <span className="block max-w-[12rem] truncate">{row.task}</span>
+              </Table.Cell>
               <Table.Cell numeric className="text-muted">
                 {row.date}
               </Table.Cell>
               <Table.Cell>
                 <Badge variant={pill.variant}>{pill.label}</Badge>
               </Table.Cell>
-              <Table.Cell className="max-w-[9rem] truncate text-muted">{row.owner}</Table.Cell>
+              <Table.Cell className="text-muted">
+                <span className="block max-w-[9rem] truncate">{row.owner}</span>
+              </Table.Cell>
             </Table.Row>
           );
         })}
@@ -117,7 +122,9 @@ export const CellContent: Story = {
 
           return (
             <Table.Row key={row.task}>
-              <Table.Cell className="max-w-[12rem] truncate font-medium">{row.task}</Table.Cell>
+              <Table.Cell className="font-medium">
+                <span className="block max-w-[12rem] truncate">{row.task}</span>
+              </Table.Cell>
               <Table.Cell align="end" numeric>
                 {120}
               </Table.Cell>
@@ -189,8 +196,8 @@ export const StickyStartAndEnd: Story = {
             const pill = statusBadge[row.status];
             return (
               <Table.Row key={row.task}>
-                <Table.Cell sticky="start" className="max-w-[10rem] truncate font-medium">
-                  {row.task}
+                <Table.Cell sticky="start" className="font-medium">
+                  <span className="block max-w-[10rem] truncate">{row.task}</span>
                 </Table.Cell>
                 <Table.Cell numeric className="text-muted">
                   {row.date}
@@ -198,7 +205,9 @@ export const StickyStartAndEnd: Story = {
                 <Table.Cell>
                   <Badge variant={pill.variant}>{pill.label}</Badge>
                 </Table.Cell>
-                <Table.Cell className="max-w-[8rem] truncate text-muted">{row.owner}</Table.Cell>
+                <Table.Cell className="text-muted">
+                  <span className="block max-w-[8rem] truncate">{row.owner}</span>
+                </Table.Cell>
                 <Table.Cell align="end" numeric className="text-muted">
                   ${(420 + index * 37).toLocaleString()}
                 </Table.Cell>
@@ -284,8 +293,8 @@ export const StickyMultipleStart: Story = {
             <Table.Cell sticky="start" className="font-medium">
               {row.symbol}
             </Table.Cell>
-            <Table.Cell sticky="start" className="min-w-0 truncate text-muted">
-              {row.name}
+            <Table.Cell sticky="start" className="text-muted">
+              <span className="block min-w-0 truncate">{row.name}</span>
             </Table.Cell>
             <Table.Cell align="end" numeric>
               {row.qty}

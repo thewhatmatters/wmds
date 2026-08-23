@@ -86,16 +86,23 @@ No MCP or server required at runtime — just npm.
 
 | Page | Artboard | Contents |
 |------|----------|----------|
-| **Foundation** | **Semantic colors — light** / **Dark mode — semantic colors** | Swatch boards + Theme tab |
+| **Foundation** | **Semantic colors — light** / **Semantic colors — dark** | Swatch boards + Theme tab |
+| **Foundation** | **Shadows — light** | Elevation shadow specimens |
+| **Foundation** | **Typography** | Type scale |
+| **Foundation** | **Motion** | Duration, easing, press-scale token reference |
 | **Components** | **Buttons** | Variants (incl. success), sizes, states, matrix, loading — all token-bound |
 | **Components** | **Badges** | Semantic variants, status/count pills, `startSlot` / `endSlot` (inline chips) |
 | **Components** | **Cards** | Variants, elevation, padding; `Header`/`Footer` section borders |
-| **Components** | **Restock card** | Collapsed default (440px) — agent prompt specimen |
-| **Components** | **Restock card / alternatives open** | Expanded drawer state (static) |
-| **Components** | **Context chunks** | RAG chunk list with file attachment chips |
-| **Components** | **Restock card (reference)** | Original inspiration — user cleanup |
+| **Components** | **Tab group** | Segmented control — agent views + end content (StatusDot, count) |
+| **Components** | **Chips** | Filter toolbar + standalone pressed/count states |
+| **Components** | **Table** | Surface variant, sticky start/end, row hover, filter composition |
+| **Components** | **StatusDot** | 8px semantic variants |
+| **Components** | **IconButton & MoreMenu** | Square hit targets + open dropdown panel |
+| **Examples** | **Filter table** | Chip filters + table specimen (Storybook-only) |
+| **Examples** | **Context chunks** | RAG chunk card + file attachment badges |
+| **Examples** | **Restock agent card** | Collapsed agent prompt card (440px) |
 
-Paper = visual spec. Storybook = interactive code. Sync is manual/agent-driven (`get_jsx` on a frame → refine `Button.tsx`).
+Paper = visual spec. Storybook = interactive code. Sync is manual/agent-driven (`get_jsx` on a frame → refine component).
 
 ## Components vs examples
 
