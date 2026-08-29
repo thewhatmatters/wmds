@@ -1,0 +1,67 @@
+/**
+ * WMDS color sheet — semantic roles only. No shade ramps.
+ * Light defaults on :root; dark swaps the same names under [data-theme="dark"].
+ * Tints / hover: color-mix(in oklch, var(--color-primary) 12%, var(--color-bg))
+ */
+:root {
+  /* Neutrals */
+  --color-bg: #fafafa;
+  --color-surface: #f4f4f5;
+  --color-fg: #18181b;
+  --color-muted: #71717a;
+  --color-border: #e4e4e7;
+
+  /* Brand / actions */
+  --color-primary: #39485c;
+  --color-primary-foreground: #fafafa;
+  --color-accent: #39485c;
+  --color-accent-foreground: #fafafa;
+
+  --color-secondary: #f4f4f5;
+  --color-secondary-foreground: #18181b;
+
+  --color-destructive: #b42318;
+  --color-destructive-foreground: #fafafa;
+  --color-success: #3cbb72;
+  --color-success-foreground: #fafafa;
+  --color-warning: #b54708;
+  --color-warning-foreground: #fafafa;
+  --color-info: #175cd3;
+  --color-info-foreground: #fafafa;
+
+  --color-focus-ring: rgb(57 72 92 / 45%);
+
+  /* Shadow primitives (referenced by @theme semantic shadows) */
+  --shadow-drop-sm: 0 1px 2px rgb(0 0 0 / 8%);
+  --shadow-drop-md: 0 1px 2px rgb(0 0 0 / 6%), 0 2px 6px rgb(0 0 0 / 4%);
+}
+
+[data-theme="dark"] {
+  --color-bg: #18191b;
+  --color-surface: #232427;
+  --color-fg: #f2f3f4;
+  --color-muted: #a5a8ad;
+  --color-border: #2e3033;
+
+  --color-primary: #5a6d85;
+  --color-primary-foreground: #fafaf8;
+  --color-accent: #5a6d85;
+  --color-accent-foreground: #fafaf8;
+
+  --color-secondary: #2a2b2e;
+  --color-secondary-foreground: #f2f3f4;
+
+  --color-destructive: #d92d20;
+  --color-destructive-foreground: #fafaf8;
+  --color-success: #3cbb72;
+  --color-success-foreground: #fafaf8;
+  --color-warning: #dc6803;
+  --color-warning-foreground: #fafaf8;
+  --color-info: #2e90fa;
+  --color-info-foreground: #fafaf8;
+
+  --color-focus-ring: rgb(242 243 244 / 35%);
+
+  --shadow-drop-sm: 0 1px 2px rgb(0 0 0 / 30%);
+  --shadow-drop-md: 0 1px 2px rgb(0 0 0 / 20%), 0 2px 6px rgb(0 0 0 / 20%);
+}

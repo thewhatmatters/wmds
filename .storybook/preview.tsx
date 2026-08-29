@@ -1,4 +1,6 @@
 import type { Preview } from "@storybook/react-vite";
+import { MotionConfig } from "motion/react";
+import { storybookViewports } from "../src/lib/viewports";
 import "../src/styles/global.css";
 
 const preview: Preview = {
@@ -22,30 +24,40 @@ const preview: Preview = {
       const padded = parameters.layout === "padded";
 
       return (
-        <div
-          data-wmds-theme={globals.theme === "dark" ? "dark" : undefined}
-          className={[
-            "bg-bg text-fg font-sans w-full",
-            viewMode === "story"
-              ? padded
-                ? "min-h-[100svh] p-6"
-                : "flex min-h-[100svh] w-full items-center justify-center p-6"
-              : "p-4",
-          ].join(" ")}
-        >
-          <Story />
-        </div>
+        <MotionConfig reducedMotion="user">
+          <div
+            data-theme={globals.theme === "dark" ? "dark" : undefined}
+            className={[
+              "bg-bg text-fg font-sans w-full",
+              viewMode === "story"
+                ? padded
+                  ? "min-h-[100svh] p-6"
+                  : "flex min-h-[100svh] w-full items-center justify-center p-6"
+                : "p-4",
+            ].join(" ")}
+          >
+            <Story />
+          </div>
+        </MotionConfig>
       );
     },
   ],
   parameters: {
     options: {
-      /** Foundation → Components → Examples; components A→Z by kind (title). */
+      /** Introduction → Foundation → Atoms → Molecules → Organisms → Examples. */
       storySort: {
         method: "alphabetical-by-kind",
-        order: ["Foundation", "Components", "Examples"],
+        order: [
+          "Introduction",
+          "Foundation",
+          "Atoms",
+          "Molecules",
+          "Organisms",
+          "Examples",
+        ],
       },
     },
+    /** Mobile-first — default Storybook viewport is Mobile (390px). Use toolbar to check tablet/desktop. */
     /** Decorator owns centering — avoid Storybook's `centered` layout (shrinks canvas to content width). */
     layout: "fullscreen",
     controls: {
@@ -57,6 +69,12 @@ const preview: Preview = {
     a11y: {
       test: "todo",
     },
+    viewport: {
+      viewports: storybookViewports,
+    },
+  },
+  initialGlobals: {
+    viewport: { value: "mobile", isRotated: false },
   },
 };
 

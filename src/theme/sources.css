@@ -1,0 +1,36 @@
+/**
+ * Tailwind content manifest — single list for Storybook (Vite) and package CLI build.
+ * Add a glob here when a new top-level src/ layer ships utilities.
+ */
+@source "../components/**/*.{ts,tsx}";
+@source "../examples/**/*.{ts,tsx}";
+@source "../lib/**/*.{ts,tsx}";
+@source "../foundation/**/*.{ts,tsx,mdx}";
+
+@source inline(
+  "duration-instant",
+  "duration-fast",
+  "duration-base",
+  "duration-slow",
+  "duration-slower",
+  "ease-standard",
+  "ease-out-expo",
+  "enabled:active:scale-[var(--motion-press-scale)]",
+  "bg-primary-hover",
+  "bg-primary-active",
+  "bg-secondary-hover",
+  "bg-secondary-active",
+  "bg-ghost-hover",
+  "bg-ghost-active",
+  "bg-destructive-hover",
+  "bg-destructive-active",
+  "bg-success-hover",
+  "bg-success-active",
+  "bg-warning-hover",
+  "bg-warning-active",
+  "bg-info-hover",
+  "bg-info-active",
+  "hover:bg-primary-hover",
+  "hover:bg-secondary-hover",
+  "hover:bg-ghost-hover"
+);

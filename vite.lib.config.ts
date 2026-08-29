@@ -18,7 +18,15 @@ export default defineConfig({
     outDir: "dist",
     emptyOutDir: false,
     rollupOptions: {
-      external: ["react", "react-dom", "react/jsx-runtime", "recharts"],
+      external: [
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        "motion",
+        "motion/react",
+        "recharts",
+        "lucide-react",
+      ],
       output: {
         preserveModules: false,
       },

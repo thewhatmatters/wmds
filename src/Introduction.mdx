@@ -1,0 +1,221 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Introduction" />
+
+export function DocTable({ rows }) {
+  return (
+    <table className="mb-6 w-full max-w-3xl border-collapse text-sm">
+      <thead>
+        <tr className="border-b border-border text-left text-muted">
+          <th className="py-2 pr-4 font-medium">Piece</th>
+          <th className="py-2 font-medium">Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(([piece, role]) => (
+          <tr key={piece} className="border-b border-border/60 align-top">
+            <td className="py-2 pr-4 font-mono text-xs text-fg">{piece}</td>
+            <td className="py-2 text-fg">{role}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+export function TokenTable({ rows }) {
+  return (
+    <table className="mb-6 w-full max-w-3xl border-collapse text-sm">
+      <thead>
+        <tr className="border-b border-border text-left text-muted">
+          <th className="py-2 pr-4 font-medium">Token</th>
+          <th className="py-2 pr-4 font-medium">Value</th>
+          <th className="py-2 font-medium">Use</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(([token, value, use]) => (
+          <tr key={token} className="border-b border-border/60 align-top">
+            <td className="py-2 pr-4 font-mono text-xs">{token}</td>
+            <td className="py-2 pr-4 font-mono text-xs text-muted">{value}</td>
+            <td className="py-2 text-fg">{use}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+# WhatMatters Design System (WMDS)
+
+WMDS is our Tailwind v4 theme and Storybook catalog. **Storybook is canonical** — tokens, motion, and components are specified here first; Paper is for mockups only.
+
+## Stack
+
+<DocTable
+  rows={[
+    ["src/theme/colors.css", "Base semantic color roles"],
+    ["src/theme/stateColors.css", "Hover/active states via color-mix"],
+    ["src/theme/theme.css", "Tailwind @theme bridge — import once in apps"],
+    ["src/theme/sources.css", "Tailwind content manifest for Storybook + package CSS"],
+    ["src/lib/motion.ts", "Motion adapter — reads Theme CSS vars"],
+    ["Storybook", "Source of truth: Foundation → Components → Examples"],
+  ]}
+/>
+
+## Dark mode
+
+```html
+<html data-theme="dark">
+```
+
+Same utility names (`bg-bg`, `text-fg`, …) — values swap in `colors.css` and `stateColors.css`.
+
+## Pattern-first (not utility-first)
+
+WMDS is **not** a utility-class-first design system. Tailwind v4 is the **engine** — tokens, package CSS, component internals. **App engineers consume patterns**, not a catalog of classes to mix freely.
+
+<DocTable
+  rows={[
+    ["Components + props", "Button (role, status, icon, count), Badge, StatusDot"],
+    ["Storybook Examples", "Approved compositions — copy the pattern, don't re-style with utilities"],
+    ["Theme import", "Page shell + dark mode — not per-widget color classes"],
+    ["Layout utilities OK", "gap, grid, flex, max-w between components — not button/badge look-alikes"],
+  ]}
+/>
+
+Full decision: **`docs/adr/0004-pattern-first-not-utility-first.md`**.
+
+## Authoring rules (building WMDS)
+
+1. **Patterns over utilities** — export components with typed props; centralize classes in `*Styles.ts` / `semanticVariants.ts`.
+2. **Storybook is the contract** — Usage, Anatomy, Best practices, named Examples per component.
+3. **Interaction states** — `hover:bg-primary-hover` etc. live in Theme; components reference stable utility names internally.
+4. **Simple motion → CSS** — `transition` + `motionTransition()` from `src/lib/motion.ts`.
+5. **Complex motion → Motion** — gestures, layout, enter/exit via [`motion/react`](https://motion.dev/docs/react) + `motionTransitionProp()`.
+6. **Always respect reduced motion** — see below.
+7. **Lucide icons only** — import from `lucide-react` until further notice. Browse [lucide.dev/icons](https://lucide.dev/icons/). Not bundled — consuming apps install the peer dep.
+
+## Motion strategy
+
+Two layers: CSS tokens for simple effects; Motion for gestures, layout, and enter/exit.
+
+### Layer 1 — CSS tokens
+
+<TokenTable
+  rows={[
+    ["--duration-instant", "100ms", "Row hover, micro feedback"],
+    ["--duration-fast", "150ms", "Press scale"],
+    ["--duration-base", "200ms", "Color / opacity crossfades"],
+    ["--duration-slower", "300ms", "Drawers, tab indicator"],
+    ["--ease-out-expo", "cubic-bezier(0.16, 1, 0.3, 1)", "Decelerating reveals"],
+    ["--motion-press-scale", "0.98", "Button press shrink"],
+  ]}
+/>
+
+```tsx
+className={`transition-colors ${motionTransition("fast")}`}
+```
+
+### Layer 2 — Motion for React
+
+```bash
+npm install motion
+```
+
+```tsx
+import { motion } from "motion/react";
+import { motionTransitionProp } from "@whatmatters/wmds";
+
+<motion.button
+  whileHover={{ scale: 1.02 }}
+  whileTap={{ scale: 0.98 }}
+  transition={motionTransitionProp("fast")}
+/>
+```
+
+**Use Motion for:** gestures, `layout` / `layoutId`, `AnimatePresence`, springs, scroll-linked animation.
+
+**Stay on CSS for:** single-property `:hover` / `:focus` changes.
+
+See **Foundation → Motion** for live demos.
+
+## Accessibility — reduced motion
+
+Storybook wraps stories in `<MotionConfig reducedMotion="user">`. `global.css` also short-circuits CSS transitions when the OS prefers reduced motion.
+
+For bespoke cases, use `useReducedMotion()` from `motion/react`.
+
+## Atomic design
+
+WMDS follows [Brad Frost's atomic design](https://atomicdesign.bradfrost.com/) for component composition. **Dependency flows one way** — never import up-tier.
+
+<DocTable
+  rows={[
+    ["Atoms", "src/components/atoms/ — Button, Input, Badge…"],
+    ["Molecules", "src/components/molecules/ — Field, Search, Select…"],
+    ["Organisms", "src/components/organisms/ — Table, Tab, Card…"],
+    ["Examples", "src/examples/ — templates & pages (Storybook only)"],
+  ]}
+/>
+
+**Rules**
+
+1. Atoms import only `lib/`, Theme, and peers (`lucide-react`, `motion`) — no other WMDS components.
+2. Molecules compose atoms; organisms compose molecules + atoms.
+3. Examples compose organisms — never imported by components.
+4. Storybook titles: `Atoms/Button`, `Molecules/Field`, `Organisms/Table`, `Examples/…`.
+
+Planned catalog: **`src/package.manifest.ts`** → `atomicExports`. Full decision: **`docs/adr/0002-atomic-design.md`**.
+
+## Responsive (mobile-first)
+
+Every atom, molecule, organism, and example must work on **mobile, tablet, and desktop**. Design unprefixed styles for mobile; add **`sm:`**, **`md:`**, **`lg:`** to scale up — not desktop-first `max-*` overrides.
+
+<DocTable
+  rows={[
+    ["Mobile (default)", "Unprefixed utilities — 0 to 639px"],
+    ["sm:", "640px+ — large phone / small tablet"],
+    ["md:", "768px+ — tablet"],
+    ["lg:", "1024px+ — desktop"],
+  ]}
+/>
+
+**Rules:** min **44×44px** touch targets on atoms; no hover-only actions; tables scroll horizontally or reflow on mobile; review in Storybook at **Mobile / Tablet / Desktop** viewports (default canvas = Mobile).
+
+Reference: **`src/lib/viewports.ts`**, **Foundation → Breakpoints**, **`docs/adr/0003-responsive-mobile-first.md`**.
+
+## Project layout
+
+```
+src/
+  theme/                  colors, stateColors, theme, sources, fonts
+  lib/                    motion, typography, tableLayout, shared helpers
+  foundation/             Storybook token specimens
+  components/
+    atoms/                smallest UI units (exported)
+    molecules/            atom groups (exported)
+    organisms/            UI sections (exported)
+  examples/               templates / pages (Storybook only)
+  package.manifest.ts     export + atomic catalog
+```
+
+## Commands
+
+```bash
+npm install
+npm run storybook   # http://localhost:6006
+npm run build       # dist/theme.css + dist/styles.css
+```
+
+## Next reads
+
+- **Foundation → Colors** — roles and interaction states
+- **Foundation → Motion** — durations, easing, live demos
+- **Foundation → Icons** — Lucide usage and sizing
+- **Foundation → Typography** — roles and letter spacing
+- **Foundation → Breakpoints** — mobile-first scale and viewports
+- **`docs/adr/0003-responsive-mobile-first.md`** — responsive rules per tier
+- **`docs/adr/0004-pattern-first-not-utility-first.md`** — components + props, not utility soup
+- **`CONSUMING.md`** — wiring the theme in other apps
+- **[Motion docs](https://motion.dev/docs/react)** — API reference

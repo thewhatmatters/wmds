@@ -16,7 +16,10 @@ execSync(
   { cwd: root, stdio: "inherit" },
 );
 
-copyFileSync(path.join(root, "src/tokens/tokens.css"), path.join(dist, "tokens.css"));
-copyFileSync(path.join(root, "src/tokens/theme-dark.css"), path.join(dist, "theme-dark.css"));
+copyFileSync(path.join(root, "src/theme/theme.css"), path.join(dist, "theme.css"));
+copyFileSync(path.join(root, "src/theme/colors.css"), path.join(dist, "colors.css"));
+copyFileSync(path.join(root, "src/theme/stateColors.css"), path.join(dist, "stateColors.css"));
+
+execSync("node scripts/validate-manifest.mjs", { cwd: root, stdio: "inherit" });
 
 console.log("Built @whatmatters/wmds → dist/");

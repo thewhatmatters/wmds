@@ -1,0 +1,80 @@
+/**
+ * WMDS theme — canonical design-system entry.
+ * Color: colors.css (base roles) + stateColors.css (hover/active derivations).
+ * Import once: @import "@whatmatters/wmds/theme.css";
+ */
+@import "tailwindcss";
+@import "./fonts.css";
+@import "./colors.css";
+@import "./stateColors.css";
+@import "./sources.css";
+
+@theme inline {
+  --color-*: initial;
+
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-fg: var(--color-fg);
+  --color-muted: var(--color-muted);
+  --color-border: var(--color-border);
+
+  --color-primary: var(--color-primary);
+  --color-primary-foreground: var(--color-primary-foreground);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-active: var(--color-primary-active);
+  --color-accent: var(--color-accent);
+  --color-accent-foreground: var(--color-accent-foreground);
+
+  --color-secondary: var(--color-secondary);
+  --color-secondary-foreground: var(--color-secondary-foreground);
+  --color-secondary-hover: var(--color-secondary-hover);
+  --color-secondary-active: var(--color-secondary-active);
+
+  --color-ghost-foreground: var(--color-ghost-foreground);
+  --color-ghost-hover: var(--color-ghost-hover);
+  --color-ghost-active: var(--color-ghost-active);
+
+  --color-destructive: var(--color-destructive);
+  --color-destructive-foreground: var(--color-destructive-foreground);
+  --color-destructive-hover: var(--color-destructive-hover);
+  --color-destructive-active: var(--color-destructive-active);
+
+  --color-success: var(--color-success);
+  --color-success-foreground: var(--color-success-foreground);
+  --color-success-hover: var(--color-success-hover);
+  --color-success-active: var(--color-success-active);
+
+  --color-warning: var(--color-warning);
+  --color-warning-foreground: var(--color-warning-foreground);
+  --color-warning-hover: var(--color-warning-hover);
+  --color-warning-active: var(--color-warning-active);
+
+  --color-info: var(--color-info);
+  --color-info-foreground: var(--color-info-foreground);
+  --color-info-hover: var(--color-info-hover);
+  --color-info-active: var(--color-info-active);
+
+  --color-focus-ring: var(--color-focus-ring);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  /* Semantic shadows — raised = hairline border + drop */
+  --shadow-sm: var(--shadow-drop-sm);
+  --shadow-raised: 0 0 0 1px var(--color-border), var(--shadow-drop-sm);
+  --shadow-inset-highlight: inset 0 1px 0 rgb(255 255 255 / 14%);
+
+  --duration-instant: 100ms;
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 280ms;
+  --duration-slower: 300ms;
+  --ease-standard: ease-out;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-press-scale: 0.98;
+}
+
+[data-theme="dark"] {
+  --shadow-raised: 0 0 0 1px rgb(255 255 255 / 10%), var(--shadow-drop-sm);
+  --shadow-inset-highlight: inset 0 1px 0 rgb(255 255 255 / 14%);
+}

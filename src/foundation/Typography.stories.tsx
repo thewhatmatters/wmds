@@ -1,118 +1,147 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   fontFamilies,
-  typeScale,
+  trackingRules,
   typographyClass,
   typographyStyles,
-} from "./typography";
+} from "../lib/typography";
 
-function TypographyReference() {
-  return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-12 font-sans">
-      <header className="flex flex-col gap-2">
-        <h1 className={typographyClass("page-heading")}>Typography</h1>
-        <p className={`${typographyClass("body")} text-muted`}>
-          WMDS type scale and semantic roles. Sizes map to{" "}
-          <code className="rounded bg-surface px-1 py-0.5 text-xs">--font-size-*</code> tokens;
-          roles combine size, weight, tracking, and color for common UI patterns.
-        </p>
-      </header>
-
-      <section className="flex flex-col gap-4">
-        <h2 className={typographyClass("overline")}>Type scale</h2>
-        <div className="overflow-hidden rounded-lg border border-border">
-          <div className="grid grid-cols-[4rem_4rem_4rem_1fr] gap-x-4 border-b border-border bg-surface px-4 py-2 text-xs font-medium tracking-wider text-muted uppercase">
-            <span>Token</span>
-            <span>Size</span>
-            <span>Line</span>
-            <span>Sample</span>
-          </div>
-          {typeScale.map((step) => (
-            <div
-              key={step.token}
-              className="grid grid-cols-[4rem_4rem_4rem_1fr] items-baseline gap-x-4 border-b border-border px-4 py-3 last:border-b-0"
-            >
-              <span className="font-mono text-xs text-muted">{step.token}</span>
-              <span className="text-xs text-muted">{step.size}</span>
-              <span className="text-xs text-muted">{step.lineHeight}</span>
-              <span
-                className="text-fg"
-                style={{
-                  fontSize: `var(--font-size-${step.token})`,
-                  lineHeight: `var(--line-height-${step.token})`,
-                }}
-              >
-                {step.sample}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="flex flex-col gap-4">
-        <h2 className={typographyClass("overline")}>Semantic roles</h2>
-        <div className="flex flex-col gap-6">
-          {typographyStyles.map((style) => (
-            <article
-              key={style.role}
-              className="flex flex-col gap-2 border-b border-border pb-6 last:border-b-0"
-            >
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span className={style.className}>{style.label}</span>
-                <span className="font-mono text-xs text-muted">{style.role}</span>
-              </div>
-              <p className="text-xs leading-[var(--line-height-xs)] text-muted">
-                {style.description}
-              </p>
-              <p className="font-mono text-xs leading-[var(--line-height-xs)] text-muted/80">
-                {style.className}
-              </p>
-              <p className="text-xs text-muted">
-                <span className="font-medium text-fg">Used in:</span> {style.usedIn.join(", ")}
-              </p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="flex flex-col gap-4">
-        <h2 className={typographyClass("overline")}>Font families</h2>
-        <div className="flex flex-col gap-4">
-          {fontFamilies.map((family) => (
-            <div key={family.token} className="rounded-lg border border-border p-4">
-              <p
-                className="text-lg font-medium text-fg"
-                style={{ fontFamily: family.css }}
-              >
-                {family.name}
-              </p>
-              <p className="mt-1 text-xs text-muted">{family.usage}</p>
-              <p className="mt-2 font-mono text-xs text-muted">{family.css}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-    </div>
-  );
-}
+const scale: Array<{ step: string; className: string }> = [
+  { step: "xs", className: "text-xs" },
+  { step: "sm", className: "text-sm" },
+  { step: "base", className: "text-base" },
+  { step: "lg", className: "text-lg" },
+  { step: "xl", className: "text-xl" },
+  { step: "2xl", className: "text-2xl" },
+  { step: "3xl", className: "text-3xl" },
+];
 
 const meta = {
   title: "Foundation/Typography",
-  component: TypographyReference,
   tags: ["autodocs"],
   parameters: {
-    layout: "padded",
     docs: {
       description: {
         component:
-          "Reference for the WMDS type scale (`--font-size-*` / `--line-height-*`) and semantic text roles. " +
-          "Roles are Tailwind compositions — not separate tokens — so components stay token-bound while usage stays readable.",
+          "Tailwind v4 type scale via **`@theme`**. Body UI defaults to **`text-sm`**; headings use **`text-lg`** and up. " +
+          "Font families: **Geist Sans** (`font-sans`), **Geist Mono** (`font-mono`) — **`src/theme/fonts.css`**. " +
+          "Letter spacing is assigned through **semantic roles** in **`src/lib/typography.ts`** — use **`typographyClass()`**, not raw **`tracking-*`** in components.",
       },
     },
   },
-} satisfies Meta<typeof TypographyReference>;
+} satisfies Meta;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Reference: Story = {};
+export const Scale: Story = {
+  render: () => (
+    <div className="flex max-w-xl flex-col gap-4 font-sans">
+      {scale.map(({ step, className }) => (
+        <p key={step} className={`${className} text-fg`}>
+          text-{step} — The quick brown fox
+        </p>
+      ))}
+      <p className="font-mono text-sm text-muted">font-mono — 0123456789 ABCD</p>
+    </div>
+  ),
+};
+
+export const Weights: Story = {
+  render: () => (
+    <div className="flex flex-col gap-2 text-sm text-fg">
+      <p className="font-normal">font-normal (400)</p>
+      <p className="font-medium">font-medium (500)</p>
+      <p className="font-semibold">font-semibold (600)</p>
+      <p className="font-bold">font-bold (700)</p>
+    </div>
+  ),
+};
+
+export const Roles: Story = {
+  render: () => (
+    <div className="flex max-w-2xl flex-col gap-8 font-sans">
+      <p className="text-sm text-muted">
+        Import roles via{" "}
+        <code className="font-mono text-xs text-fg">typographyClass(&quot;body&quot;)</code> — tracking
+        is included. Do not add <code className="font-mono text-xs text-fg">tracking-*</code> in
+        components.
+      </p>
+      {typographyStyles.map(({ role, label, description, className, trackingClass, sample }) => (
+        <div key={role} className="flex flex-col gap-1.5 border-b border-border pb-6 last:border-0">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span className="font-mono text-xs text-muted">{role}</span>
+            <span className="text-sm font-medium text-fg">{label}</span>
+            <span className="font-mono text-xs text-muted">{trackingClass}</span>
+          </div>
+          <p className="text-xs text-muted">{description}</p>
+          <p className={className}>{sample}</p>
+          <p className="font-mono text-[11px] text-muted">
+            typographyClass(&quot;{role}&quot;)
+          </p>
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const LetterSpacing: Story = {
+  name: "Letter spacing",
+  render: () => (
+    <div className="flex max-w-2xl flex-col gap-6 font-sans">
+      <p className="text-sm text-muted">
+        Three tracking values for the whole system — assigned only through typography roles.
+      </p>
+      <table className="w-full border-collapse text-sm">
+        <thead>
+          <tr className="border-b border-border text-left text-muted">
+            <th className="py-2 pr-4 font-medium">Rule</th>
+            <th className="py-2 pr-4 font-medium">Utility</th>
+            <th className="py-2 font-medium">When</th>
+          </tr>
+        </thead>
+        <tbody>
+          {trackingRules.map(({ tracking, utility, rule }) => (
+            <tr key={tracking} className="border-b border-border/60 align-top">
+              <td className="py-2 pr-4 font-mono text-xs">{tracking}</td>
+              <td className="py-2 pr-4 font-mono text-xs text-muted">{utility}</td>
+              <td className="py-2 text-fg">{rule}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div className="flex flex-col gap-4">
+        <p className="text-2xl font-semibold tracking-tight text-fg">
+          tracking-tight — Page heading sample
+        </p>
+        <p className="text-sm tracking-normal text-fg">
+          tracking-normal — Body and UI label sample text at text-sm
+        </p>
+        <p className="text-xs font-medium uppercase tracking-wider text-muted">
+          tracking-wider — Overline sample
+        </p>
+        <p className="font-mono text-sm text-muted">
+          font-mono — no tracking override (0123456789)
+        </p>
+      </div>
+      <p className={typographyClass("overline")}>typographyClass(&quot;overline&quot;)</p>
+    </div>
+  ),
+};
+
+export const FontFamilies: Story = {
+  name: "Font families",
+  render: () => (
+    <div className="flex max-w-xl flex-col gap-4">
+      {fontFamilies.map(({ name, tailwind, css, usage }) => (
+        <div key={name} className="flex flex-col gap-1 border-b border-border pb-4 last:border-0">
+          <span className="text-sm font-medium text-fg">{name}</span>
+          <span className="font-mono text-xs text-muted">
+            {tailwind} · {css}
+          </span>
+          <span className="text-xs text-muted">{usage}</span>
+        </div>
+      ))}
+    </div>
+  ),
+};

@@ -1,29 +1,47 @@
 # WMDS — agent notes
 
-## Paper vs Storybook
+- **Brand:** **WhatMatters** (joined) — never "What Matters" in copy or docs.
 
-- **Paper** — token lab + design playground. Foundation (Theme tab) syncs with `src/tokens/tokens.css`. Use Paper to mock up features by composing layouts that match components already in Storybook — token-bound nodes only (see `.cursor/rules/wmds-paper-tokens.mdc`).
-- **Storybook** — canonical component catalog: props, states, motion, exports. Source of truth for shipped primitives.
-- **Do not** mirror every Storybook story as a Paper artboard. Update Paper for new design work or token changes; verify interaction in Storybook.
-- **Promote to code:** `get_jsx` on a mockup frame → refine into React; add or extend stories — not the other way around by default.
+## Storybook-first
 
-## Examples vs components
+- **Storybook** is the canonical catalog — Foundation tokens, then Components as they are rebuilt.
+- **Theme** lives in `src/theme/` — `colors.css` (semantic roles) + `theme.css` (Tailwind `@theme` bridge). Storybook is the source of truth, not Paper.
+- **Dark mode:** `[data-theme="dark"]` on `<html>` or any ancestor — same token names, swapped values in `colors.css`.
+- **Authoring (WMDS repo):** **Pattern-first** — ship **components + props + Storybook examples**, not utility recipes for apps. Tailwind utilities belong **inside** `*Styles.ts` / component files. See **ADR-0004**.
+- **Consuming apps:** use exported components and typed props; `className` for layout only — not re-theming. Page layout utilities (`gap`, `grid`, `max-w`) are fine between components.
+- **Theme tokens:** semantic roles in **`src/theme/colors.css`**; interaction states in **`src/theme/stateColors.css`**. Shades via `color-mix`, not ramp tokens.
+- **Motion:** CSS tokens + `motionTransition()` for simple effects; **`motion/react`** for gestures, layout, `AnimatePresence`. Import helpers from **`src/lib/motion.ts`** (reads Theme CSS vars). Storybook wraps `<MotionConfig reducedMotion="user">`.
+- **Icons:** **[Lucide](https://lucide.dev/icons/) only** until further notice — import from **`lucide-react`** in components, stories, and examples. Peer dep, not bundled; use `stroke-current` / `ButtonIcon` for sizing. See **Foundation → Icons**.
+- **Button:** pill-only; four **roles** (`primary`, `secondary`, `ghost`, `destructive`). Patterns: action, `icon`, `count`, `status` morph — mutually exclusive. No slots. [Motion reference](https://motion.dev/examples/react-multi-state-badge).
+- **Badge:** solid semantic fills ([Astryx Badge](https://astryx.atmeta.com/components/Badge)). Patterns: label, `count`, `icon` — mutually exclusive where documented. No slots; no StatusDot inside Badge.
+- **StatusDot:** fixed 8px semantic dot ([Astryx StatusDot](https://astryx.atmeta.com/components/StatusDot)). Patterns: standalone (`label`), `besideLabel`, optional `pulsing`. Not inside Badge.
+- **Layers:** Theme → **lib** → Components → Examples. Foundation = Storybook specimens only. Tailwind scan list = **`src/theme/sources.css`**. Package exports tracked in **`src/package.manifest.ts`**.
+- **Responsive:** **Mobile-first** — unprefixed utilities = mobile; `sm:` / `md:` / `lg:` scale up. Review at Mobile (390px), Tablet (768px), Desktop (1280px). Atoms: min **44×44px** touch targets. No hover-only core actions. See **ADR-0003** and **Foundation → Breakpoints**.
 
-- **Components** — `src/components/{Name}/`; exported from `src/index.ts`; Storybook `Components/{Name}`.
-- **Examples** — `src/examples/{Name}/`; Storybook-only specimens (`Examples/{Name}`); **never** add to `src/index.ts`. Compose imported primitives; used to validate tokens + real UI patterns.
-- **Lib** — `src/lib/` holds internal utilities (`cn`, `CountPill`, `semanticVariants`); not exported from `src/index.ts`.
-- **Foundation** — `src/foundation/` catalogs tokens and exposes consumable class helpers (`typographyClass`, `motionTransition`, `shadowElevationClass`) that components import.
-- **MoreMenu module** — `types.ts` + `moreMenuLayout.ts` (pure positioning) + internal `MoreMenuPanel.tsx`; only `MoreMenu` is exported from `src/index.ts`.
+## Paper
 
-## Component order
+- Paper may stay installed for mockups/reference — it does **not** own tokens and is not synced to `theme.css`.
 
-Keep **alphabetical (A→Z)** everywhere components are listed:
+## Components (atomic design — rebuild in progress)
 
-- `src/index.ts` exports (comment at top of file)
-- Storybook sidebar — `Components/{Name}` titles; `.storybook/preview.tsx` uses `storySort: { method: "alphabetical-by-kind", order: ["Foundation", "Components", "Examples"] }`
-- README component + examples tables
+Brad Frost tiers under **`src/components/`**:
 
-When adding a component, insert it in sort order — do not append to the end.
+| Tier | Path | Storybook title | Export |
+|------|------|-----------------|--------|
+| Atoms | `atoms/{Name}/` | `Atoms/{Name}` | Yes |
+| Molecules | `molecules/{Name}/` | `Molecules/{Name}` | Yes |
+| Organisms | `organisms/{Name}/` | `Organisms/{Name}` | Yes |
+| Templates/pages | `examples/{Name}/` | `Examples/{Name}` | No |
+
+**Import rules:** atoms ← molecules ← organisms ← examples. Atoms never import other components.
+
+**Catalog** — see `src/package.manifest.ts` → `atomicExports`. Reclassify via ADR only.
+
+When adding a component: create folder in the correct tier, match Storybook title prefix, add to manifest, export from `src/index.ts` alphabetically within tier. Document **Usage → Anatomy → Best practices → Examples** — the story is the contract (ADR-0004).
+
+## Examples
+
+- **`src/examples/{Name}/`** — Storybook-only; never in `src/index.ts`.
 
 <!-- wire-vault:start -->
 ## Knowledge vault — project layer

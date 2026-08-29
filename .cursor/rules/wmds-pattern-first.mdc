@@ -1,0 +1,23 @@
+---
+description: WMDS is pattern-first — components and Storybook specs, not utility-class soup
+alwaysApply: true
+---
+
+# Pattern-first (not utility-first)
+
+WMDS ≠ “use Tailwind however you want.” Tailwind powers **component internals** and **page layout**; **components + props + Examples** are the product API.
+
+## Consuming apps
+
+- Use exported components and **named patterns** — `Button` `role`, `status`, `icon`, `count` (mutually exclusive where documented).
+- Copy **Examples** and Storybook stories for flows; do not re-create the same UI with raw `bg-*` / `text-*` classes.
+- `className` on a component is for **layout** (width, margin), not for inventing new variants or colors.
+- New visual language → new/extended component + Storybook spec (+ ADR if tier or token changes).
+
+## Building WMDS (this repo)
+
+- Put class recipes in **`*Styles.ts`** / **`semanticVariants.ts`** — not scattered one-offs in stories.
+- Foundation stories document **tokens**; component stories document **patterns** (Usage → Anatomy → Best practices → Examples).
+- Do not document “compose with utilities” as the primary path for app engineers.
+
+See **`docs/adr/0004-pattern-first-not-utility-first.md`**.

@@ -1,0 +1,11 @@
+/**
+ * Geist — swap families here; components use --font-sans / --font-mono via @theme.
+ * Requires @fontsource-variable/geist + geist-mono (devDependency).
+ */
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+:root {
+  --font-sans: "Geist Variable", "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
+}
