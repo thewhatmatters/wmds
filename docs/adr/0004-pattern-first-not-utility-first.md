@@ -23,7 +23,7 @@ WhatMatters needs **designed, named patterns** with narrow extension points — 
 ### Prescribed patterns are the contract
 
 1. **Storybook is canonical** — if a UI pattern is not an **Atom**, **Molecule**, **Organism**, or documented **Example**, it is not approved for product UI yet.
-2. **Props over classes** — consumers configure via typed props (`Button` `role`, `status`, `count`; `Badge` `variant`, `count`, `icon`; `StatusDot` `variant`, `label`, `besideLabel`, `pulsing`). No generic slots.
+2. **Props over classes** — consumers configure via typed props (`Button` `role`, `status`, `count`; `IconButton` `icon`, `aria-label`, `fab`, `loading`; `Badge` `variant`, `count`, `icon`; `StatusDot` `variant`, `label`, `besideLabel`, `pulsing`). No generic slots.
 3. **New visuals need a pattern** — a new look (e.g. a seventh button variant) requires a component/API change and Storybook spec, not local Tailwind in an app repo.
 4. **Examples are templates** — `src/examples/` shows how to compose organisms for real flows; copy the pattern, don’t re-style with utilities.
 

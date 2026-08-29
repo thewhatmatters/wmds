@@ -11,6 +11,12 @@ export {
   defaultStatusLabels,
   getNextButtonStatus,
 } from "./components/atoms/Button/Button";
+export {
+  IconButton,
+  type IconButtonLayoutClassName,
+  type IconButtonProps,
+  type IconButtonSize,
+} from "./components/atoms/IconButton/IconButton";
 export { StatusDot, statusDotVariants, type StatusDotLayoutClassName, type StatusDotProps, type StatusDotVariant } from "./components/atoms/StatusDot/StatusDot";
 export { cn } from "./lib/cn";
 export {

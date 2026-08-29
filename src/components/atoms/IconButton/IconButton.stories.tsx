@@ -1,0 +1,180 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
+import { Pencil, Plus, Settings, Trash2, Wrench } from "lucide-react";
+import { IconButton, buttonRoles } from "./IconButton";
+
+const meta = {
+  title: "Atoms/IconButton",
+  component: IconButton,
+  tags: ["autodocs"],
+  argTypes: {
+    role: { control: "select", options: [...buttonRoles] },
+    size: { control: "select", options: ["xs", "sm", "md", "lg"] },
+    fab: { control: "boolean" },
+    loading: { control: "boolean" },
+    disabled: { control: "boolean" },
+    icon: { control: false },
+    onClick: { action: "clicked" },
+  },
+  args: {
+    "aria-label": "Settings",
+    role: "ghost",
+    size: "md",
+    fab: false,
+    loading: false,
+    disabled: false,
+    icon: <Settings strokeWidth={2} />,
+  },
+  parameters: {
+    docs: {
+      description: {
+        component: `
+## Usage
+
+**Four prescribed patterns** — icon only, no visible text. If the action is not obvious from the icon, use **Button** with a label instead.
+
+| Pattern | Props |
+|---------|--------|
+| **Toolbar** | \`role="ghost"\` (default) + \`aria-label\` |
+| **FAB** | \`fab\` + \`aria-label\` |
+| **With tooltip** | \`title\` (defaults to \`aria-label\`) |
+| **Async** | \`loading\` + \`aria-label\` |
+
+Inspired by [Astryx IconButton](https://astryx.atmeta.com/components/IconButton). Circular hit target; \`md\` = 44×44px (ADR-0003).
+
+## Best practices
+
+- **Do** make \`aria-label\` specific — "Delete conversation", not just "Delete".
+- **Do** set \`title\` when the icon alone is ambiguous for sighted users.
+- **Do** use \`ghost\` in dense toolbars.
+- **Don't** use IconButton when the action needs visible text — use \`Button\`.
+        `.trim(),
+      },
+    },
+  },
+} satisfies Meta<typeof IconButton>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Toolbar: Story = {
+  name: "Pattern — toolbar",
+  parameters: {
+    docs: {
+      description: {
+        story: "Ghost icon buttons in a compact action row — default role for dense UI.",
+      },
+    },
+  },
+  render: () => (
+    <div className="inline-flex items-center gap-1 rounded-lg border border-border bg-surface p-1">
+      <IconButton icon={<Pencil strokeWidth={2} />} aria-label="Edit item" title="Edit item" />
+      <IconButton icon={<Trash2 strokeWidth={2} />} aria-label="Delete conversation" title="Delete conversation" role="ghost" />
+      <IconButton icon={<Settings strokeWidth={2} />} aria-label="Open settings" title="Settings" />
+    </div>
+  ),
+};
+
+export const Fab: Story = {
+  name: "Pattern — FAB",
+  parameters: {
+    docs: {
+      description: {
+        story: "Floating action button — primary fill with elevated shadow.",
+      },
+    },
+    layout: "centered",
+  },
+  render: () => (
+    <IconButton
+      fab
+      icon={<Plus strokeWidth={2.5} />}
+      aria-label="Create item"
+      title="Create item"
+    />
+  ),
+};
+
+export const WithTooltip: Story = {
+  name: "Pattern — with tooltip",
+  parameters: {
+    docs: {
+      description: {
+        story: "`title` provides a native tooltip on hover — use when the icon needs a sighted hint.",
+      },
+    },
+  },
+  args: {
+    icon: <Wrench strokeWidth={2} />,
+    "aria-label": "Configure workspace",
+    title: "Configure workspace",
+    role: "secondary",
+  },
+};
+
+export const AsyncLoading: Story = {
+  name: "Pattern — async",
+  parameters: {
+    docs: {
+      description: {
+        story: "Spinner replaces icon while an action is in flight.",
+      },
+    },
+  },
+  render: function AsyncIconButton() {
+    const [loading, setLoading] = useState(false);
+
+    return (
+      <IconButton
+        icon={<Trash2 strokeWidth={2} />}
+        aria-label="Delete conversation"
+        title="Delete conversation"
+        role="destructive"
+        loading={loading}
+        onClick={() => {
+          setLoading(true);
+          window.setTimeout(() => setLoading(false), 1500);
+        }}
+      />
+    );
+  },
+};
+
+export const Roles: Story = {
+  name: "Reference — roles",
+  render: () => (
+    <div className="flex flex-wrap items-center gap-3">
+      <IconButton icon={<Settings strokeWidth={2} />} aria-label="Primary settings" role="primary" />
+      <IconButton icon={<Settings strokeWidth={2} />} aria-label="Secondary settings" role="secondary" />
+      <IconButton icon={<Settings strokeWidth={2} />} aria-label="Ghost settings" role="ghost" />
+      <IconButton icon={<Trash2 strokeWidth={2} />} aria-label="Delete conversation" role="destructive" />
+    </div>
+  ),
+};
+
+export const Sizes: Story = {
+  name: "Reference — sizes",
+  parameters: {
+    docs: {
+      description: {
+        story: "`md` meets the 44×44px touch target minimum.",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex flex-wrap items-end gap-3">
+      <IconButton size="xs" icon={<Plus strokeWidth={2} />} aria-label="Extra small add" />
+      <IconButton size="sm" icon={<Plus strokeWidth={2} />} aria-label="Small add" />
+      <IconButton size="md" icon={<Plus strokeWidth={2} />} aria-label="Medium add" />
+      <IconButton size="lg" icon={<Plus strokeWidth={2} />} aria-label="Large add" />
+    </div>
+  ),
+};
+
+export const Disabled: Story = {
+  name: "Reference — disabled",
+  args: {
+    disabled: true,
+    "aria-label": "Unavailable action",
+  },
+};

@@ -7,12 +7,13 @@ WMDS is **not** utility-class-first. You do **not** build product UI by composin
 **Do this:**
 
 ```tsx
-import { Button, Badge, StatusDot } from "@whatmatters/wmds";
+import { Button, Badge, IconButton, StatusDot } from "@whatmatters/wmds";
 import "@whatmatters/wmds/styles.css";
 
 <Button status={status}>Submit</Button>
 <Button role="secondary" count={3}>Inbox</Button>
 <Button role="primary" icon={<Plus strokeWidth={2} />}>New item</Button>
+<IconButton icon={<Settings strokeWidth={2} />} aria-label="Open settings" title="Settings" />
 <Badge variant="success">Online</Badge>
 <span className="inline-flex items-center gap-1.5">
   <StatusDot variant="success" besideLabel />
@@ -79,6 +80,7 @@ Import from the package — configure via **props**, not utility strings:
 ```tsx
 import {
   Button,
+  IconButton,
   Badge,
   StatusDot,
   buttonRoles,
@@ -91,6 +93,7 @@ import {
 | Component | Key props | Storybook |
 |-----------|-----------|-----------|
 | `Button` | `role`, `size`, `status`, `icon`, `count` | Atoms/Button — copy a **Pattern** story |
+| `IconButton` | `icon`, `aria-label`, `role`, `size`, `fab`, `loading`, `title` | Atoms/IconButton — copy a **Pattern** story |
 | `Badge` | `variant`, `size`, `count`, `icon` | Atoms/Badge — copy a **Pattern** story |
 | `StatusDot` | `variant`, `label`, `besideLabel`, `pulsing` | Atoms/StatusDot — copy a **Pattern** story |
 
