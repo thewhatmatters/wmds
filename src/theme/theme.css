@@ -59,8 +59,9 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 
-  /* Semantic shadows — raised = hairline border + drop */
+  /* Semantic shadows — raised = hairline border + drop; hairline = inset labels (chips) */
   --shadow-sm: var(--shadow-drop-sm);
+  --shadow-hairline: 0 0 0 1px var(--color-border);
   --shadow-raised: 0 0 0 1px var(--color-border), var(--shadow-drop-sm);
   --shadow-inset-highlight: inset 0 1px 0 rgb(255 255 255 / 14%);
 
@@ -75,6 +76,7 @@
 }
 
 [data-theme="dark"] {
+  --shadow-hairline: 0 0 0 1px rgb(255 255 255 / 10%);
   --shadow-raised: 0 0 0 1px rgb(255 255 255 / 10%), var(--shadow-drop-sm);
   --shadow-inset-highlight: inset 0 1px 0 rgb(255 255 255 / 14%);
 }

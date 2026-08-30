@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
+  focusRingTransitionClasses,
   motionFeedback,
   motionTransition,
   motionTransitionProp,
@@ -17,7 +18,7 @@ const meta = {
       description: {
         component:
           "Duration and easing tokens in **`theme.css`**. Prefer **CSS `transition`** for simple effects; use **[Motion](https://motion.dev/docs/react)** for gestures, layout, and enter/exit. " +
-          "Helpers in **`src/lib/motion.ts`**: `motionTransition()` (Tailwind classes), `motionTransitionProp()` (Motion `transition` — reads Theme CSS vars). " +
+          "Helpers in **`src/lib/motion.ts`**: `motionTransition()` (Tailwind classes), `focusRingTransitionClasses` (focus ring fade), `motionTransitionProp()` (Motion `transition` — reads Theme CSS vars). " +
           "Respect **`prefers-reduced-motion`** — Storybook uses `<MotionConfig reducedMotion=\"user\">`.",
       },
     },
@@ -132,6 +133,26 @@ export const PressScale: Story = {
     >
       Hover for color · hold click for scale
     </button>
+  ),
+};
+
+export const FocusRingFade: Story = {
+  name: "Focus ring fade",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`focusRingTransitionClasses` — **`slow`** (280ms) box-shadow fade for Tailwind rings. Used on Input, Button, Chip, Tab.",
+      },
+    },
+  },
+  render: () => (
+    <input
+      type="text"
+      aria-label="Focus ring specimen"
+      placeholder="Tab to focus — ring fades in"
+      className={`h-11 w-full max-w-xs rounded-lg border border-border bg-surface px-3 text-sm text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg ${focusRingTransitionClasses}`}
+    />
   ),
 };
 

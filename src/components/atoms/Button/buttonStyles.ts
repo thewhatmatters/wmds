@@ -14,8 +14,8 @@ export const buttonPillClass = "rounded-full";
 
 export const buttonBaseClasses =
   "inline-flex cursor-pointer items-center justify-center font-sans font-medium tracking-normal " +
-  "transition-[color,transform] " +
-  motionTransition("fast") +
+  "transition-[color,transform,box-shadow,border-color,outline-color] " +
+  motionTransition("base") +
   " " +
   pressScaleClass +
   " " +

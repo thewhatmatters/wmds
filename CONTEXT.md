@@ -19,10 +19,10 @@ Shared implementation behind component seams — `cn`, `motion`, `collapse.css`,
 Smallest UI units — Button, Input, Badge, etc. Import only `lib/` + Theme. Storybook: **`Atoms/{Name}`**. Exported.
 
 **Molecules** (`src/components/molecules/`):
-Simple groups of atoms — Field, Search, Select, etc. Storybook: **`Molecules/{Name}`**. Exported.
+Modular composed units — Field, List, Card, Chip, Search, etc. May compose atoms and other molecules. Storybook: **`Molecules/{Name}`**. Exported.
 
 **Organisms** (`src/components/organisms/`):
-Distinct UI sections — Table, Tab, Card, etc. Storybook: **`Organisms/{Name}`**. Exported.
+Section-scale UI — Table, Tab, MoreMenu, etc. Storybook: **`Organisms/{Name}`**. Exported.
 
 **Examples** (`src/examples/`):
 Templates and pages — Storybook-only compositions. Storybook: **`Examples/{Name}`**. Never exported.
@@ -49,10 +49,10 @@ Atoms → Molecules → Organisms (components — strict import direction)
 Examples (templates / pages)
 ```
 
-See `docs/adr/0001-layer-architecture.md`, `docs/adr/0002-atomic-design.md`, `docs/adr/0003-responsive-mobile-first.md`, and `docs/adr/0004-pattern-first-not-utility-first.md`.
+See `docs/adr/0001-layer-architecture.md`, `docs/adr/0002-atomic-design.md`, `docs/adr/0003-responsive-mobile-first.md`, `docs/adr/0004-pattern-first-not-utility-first.md`, `docs/adr/0005-list-card-as-molecules.md`, and `docs/adr/0006-input-architecture.md`.
 
 ## Farmer Market refresh
 
 Designer-driven harvest list for [farmermarket.us](https://farmermarket.us): **`docs/farmermarket-component-roadmap.md`**.
 
-Order: Chip → Input → List → Card (Button + IconButton shipped). New composite: **Find pill** (collapsed → ZIP field → committed ×).
+Order: Chip → Input → List → Card (Button + IconButton shipped). Find pill = Example composition (Button → Input → Chip). List + Card = molecules per ADR-0005.

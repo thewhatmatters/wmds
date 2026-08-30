@@ -1,6 +1,7 @@
 import type { ReactElement, ReactNode } from "react";
 import { X } from "lucide-react";
 import { cn } from "../../../lib/cn";
+import { focusRingTransitionClasses } from "../../../lib/motion";
 import { CountPill, segmentedDisabledClasses, segmentedFocusRingClasses } from "../../../lib/segmentedControl";
 import { useChipFilterGroup } from "./ChipFilterGroup";
 import { ChipIcon } from "./ChipIcon";
@@ -176,6 +177,7 @@ export function Chip({
           className={cn(
             chipRemoveButtonClasses[size],
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-1 focus-visible:ring-offset-surface",
+            focusRingTransitionClasses,
           )}
           aria-label={`Remove ${label}`}
           disabled={disabled}

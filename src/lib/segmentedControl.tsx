@@ -1,8 +1,10 @@
 import { cn } from "./cn";
+import { focusRingTransitionClasses } from "./motion";
 
 /** Shared focus ring for Tab and Chip segment buttons. */
 export const segmentedFocusRingClasses =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg";
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg " +
+  focusRingTransitionClasses;
 
 /** Shared disabled treatment for Tab and Chip segment buttons. */
 export const segmentedDisabledClasses =

@@ -69,7 +69,7 @@ export const motionDurations: MotionToken[] = [
     token: "--duration-slow",
     value: "280ms",
     role: "Structural reveals",
-    usedIn: ["Marquee-style reveals"],
+    usedIn: ["Focus rings", "Marquee-style reveals"],
   },
   {
     token: "--duration-slower",
@@ -170,6 +170,13 @@ export function motionTransition(
 ): string {
   return `${motionDurationClasses[duration]} ${motionEaseClasses[ease]}`;
 }
+
+/**
+ * Focus ring + shell border fade — Tailwind rings use box-shadow.
+ * `slow` keeps focus from popping instantly; pair with focus/focus-within ring utilities.
+ */
+export const focusRingTransitionClasses =
+  `transition-[box-shadow,border-color,outline-color] ${motionTransition("slow")}`;
 
 export const pressScaleClass = "enabled:active:scale-[var(--motion-press-scale)]";
 

@@ -153,8 +153,8 @@ WMDS follows [Brad Frost's atomic design](https://atomicdesign.bradfrost.com/) f
 <DocTable
   rows={[
     ["Atoms", "src/components/atoms/ — Button, Input, Badge…"],
-    ["Molecules", "src/components/molecules/ — Field, Search, Select…"],
-    ["Organisms", "src/components/organisms/ — Table, Tab, Card…"],
+    ["Molecules", "src/components/molecules/ — Card, Chip, Field, List…"],
+    ["Organisms", "src/components/organisms/ — Table, Tab, MoreMenu…"],
     ["Examples", "src/examples/ — templates & pages (Storybook only)"],
   ]}
 />
@@ -162,11 +162,11 @@ WMDS follows [Brad Frost's atomic design](https://atomicdesign.bradfrost.com/) f
 **Rules**
 
 1. Atoms import only `lib/`, Theme, and peers (`lucide-react`, `motion`) — no other WMDS components.
-2. Molecules compose atoms; organisms compose molecules + atoms.
-3. Examples compose organisms — never imported by components.
-4. Storybook titles: `Atoms/Button`, `Molecules/Field`, `Organisms/Table`, `Examples/…`.
+2. Molecules compose atoms and other molecules; organisms compose molecules + atoms.
+3. Examples compose lower tiers — never imported by components.
+4. Storybook titles: `Atoms/Button`, `Molecules/List`, `Organisms/Table`, `Examples/…`.
 
-Planned catalog: **`src/package.manifest.ts`** → `atomicExports`. Full decision: **`docs/adr/0002-atomic-design.md`**.
+Planned catalog: **`src/package.manifest.ts`** → `atomicExports`. **`docs/adr/0002-atomic-design.md`**; List/Card: **ADR-0005**; inputs: **ADR-0006**.
 
 ## Responsive (mobile-first)
 

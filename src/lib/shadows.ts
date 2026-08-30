@@ -55,11 +55,19 @@ export const shadowElevations: ShadowToken[] = [
       "border: 1px solid var(--color-border); box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 2px 6px rgb(0 0 0 / 4%)",
   },
   {
+    token: "--shadow-hairline",
+    value: "0 0 0 1px var(--color-border)",
+    role: "Crisp inset shell — hairline only, no drop",
+    tailwind: "shadow-hairline",
+    usedIn: ["Chip selected", "Chip removable"],
+    paperPattern: "border: 1px solid var(--color-border)",
+  },
+  {
     token: "--shadow-raised",
     value: "0 0 0 1px var(--color-border), 0 1px 2px rgb(0 0 0 / 8%)",
     role: "Raised control — secondary buttons",
     tailwind: "shadow-raised",
-    usedIn: ["Button secondary"],
+    usedIn: ["Button secondary", "Badge neutral"],
     paperPattern:
       "border: 1px solid var(--color-border); box-shadow: 0 1px 2px rgb(0 0 0 / 8%)",
   },

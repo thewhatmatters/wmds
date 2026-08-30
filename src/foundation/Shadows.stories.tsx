@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const shadows: Array<{ name: string; className: string }> = [
   { name: "shadow-sm", className: "shadow-sm" },
+  { name: "shadow-hairline", className: "shadow-hairline" },
   { name: "shadow-raised", className: "shadow-raised" },
   { name: "shadow-inset-highlight", className: "shadow-inset-highlight" },
 ];
@@ -13,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Semantic shadow names in **`src/theme/theme.css`**. **`shadow-raised`** = 1px **`border-border`** hairline + drop — use for chips and icon buttons.",
+          "Semantic shadow names in **`src/theme/theme.css`**. **`shadow-hairline`** = crisp 1px edge (chips). **`shadow-raised`** = hairline + drop (secondary buttons, badges).",
       },
     },
   },

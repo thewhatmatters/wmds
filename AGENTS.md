@@ -16,6 +16,8 @@
 - **IconButton:** circular icon-only control ([Astryx IconButton](https://astryx.atmeta.com/components/IconButton)). Patterns: toolbar (ghost), `fab`, `loading`, `title` tooltip. **`aria-label` required** — use `Button` when text is needed.
 - **Badge:** solid semantic fills ([Astryx Badge](https://astryx.atmeta.com/components/Badge)). Patterns: label, `count`, `icon` — mutually exclusive where documented. No slots; no StatusDot inside Badge.
 - **Chip:** filter/toggle molecule. Patterns: **multi-select filter** (`ChipFilterGroup` + `value`), single-select group, standalone `selected`, **removable** (`onRemove`), **read-only**. Sizes `sm` | `md` | `lg`. Optional `icon`, `count` — not with `onRemove`. No slots.
+- **Card:** [Astryx Card](https://astryx.atmeta.com/components/Card) layout — `Card.Header`, `Card.Body`, `Card.Footer`, optional `Card.Divider`. **Simple** (`padding="md"`) or **layout** (`padding="none"` + sections). Default **`shape="flush"`** for panel/sidebar inset — no card radius; use **`shape="rounded"`** standalone only. No elevation prop — panel owns chrome. Variants `surface` | `outlined` | `ghost`.
+- **Input:** `shape="rounded"` (default, Astryx forms) | `shape="pill"` (standalone); FM hero with inset button → **Search** molecule. Optional leading `icon`; trailing `endBadge` or status / `loading`. See **ADR-0006**.
 - **StatusDot:** fixed 8px semantic dot ([Astryx StatusDot](https://astryx.atmeta.com/components/StatusDot)). Patterns: standalone (`label`), `besideLabel`, optional `pulsing`. Not inside Badge.
 - **Layers:** Theme → **lib** → Components → Examples. Foundation = Storybook specimens only. Tailwind scan list = **`src/theme/sources.css`**. Package exports tracked in **`src/package.manifest.ts`**.
 - **Responsive:** **Mobile-first** — unprefixed utilities = mobile; `sm:` / `md:` / `lg:` scale up. Review at Mobile (390px), Tablet (768px), Desktop (1280px). Atoms: min **44×44px** touch targets. No hover-only core actions. See **ADR-0003** and **Foundation → Breakpoints**.
@@ -35,11 +37,11 @@ Brad Frost tiers under **`src/components/`**:
 | Organisms | `organisms/{Name}/` | `Organisms/{Name}` | Yes |
 | Templates/pages | `examples/{Name}/` | `Examples/{Name}` | No |
 
-**Import rules:** atoms ← molecules ← organisms ← examples. Atoms never import other components.
+**Import rules:** atoms ← molecules ← organisms ← examples. Molecules may compose other molecules (e.g. List row + Chip). Atoms never import other components.
 
-**Catalog** — see `src/package.manifest.ts` → `atomicExports`. Reclassify via ADR only.
+**Catalog** — see `src/package.manifest.ts` → `atomicExports`. Reclassify via ADR only. **List** and **Card** are molecules (ADR-0005).
 
-**Farmer Market refresh** — designer harvest order and Find pill composite: **`docs/farmermarket-component-roadmap.md`**. Target FM first; restyle shipped atoms, then Chip → Input → List → Card.
+**Farmer Market refresh** — designer harvest order: **`docs/farmermarket-component-roadmap.md`**. Target FM first; restyle shipped atoms, then Input → List → Card.
 
 When adding a component: create folder in the correct tier, match Storybook title prefix, add to manifest, export from `src/index.ts` alphabetically within tier. Document **Usage → Anatomy → Best practices → Examples** — the story is the contract (ADR-0004).
 

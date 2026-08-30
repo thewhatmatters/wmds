@@ -7,7 +7,7 @@ export type ChipSize = (typeof chipSizes)[number];
 export const chipBaseClasses =
   "inline-flex shrink-0 items-center justify-center rounded-full font-sans font-medium tracking-normal " +
   "transition-[background-color,box-shadow,color] " +
-  motionTransition("base");
+  motionTransition("slow");
 
 export const chipSizeClasses: Record<ChipSize, string> = {
   sm: "h-7 gap-1 px-2.5 text-xs leading-none",
@@ -27,12 +27,13 @@ export const chipIconSizeClasses: Record<ChipSize, string> = {
   lg: "size-4 shrink-0 stroke-current",
 };
 
-export const chipSelectedClasses = "bg-surface text-fg shadow-raised";
+export const chipSelectedClasses = "bg-surface text-fg shadow-hairline";
 
 export const chipUnselectedClasses = "text-muted hover:bg-ghost-hover";
 
+/** Read-only labels — border only; no drop (sits flush in panels and cards). */
 export const chipReadOnlyClasses =
-  "border border-border bg-secondary text-secondary-foreground shadow-raised";
+  "border border-border bg-secondary text-secondary-foreground";
 
 /** Removable shell — same height/typography as filter chips; trailing inset for dismiss. */
 export const chipRemovableGapClasses: Record<ChipSize, string> = {

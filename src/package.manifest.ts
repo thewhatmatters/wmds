@@ -13,17 +13,9 @@ const atoms = [
   "TextArea",
 ] as const;
 
-const molecules = ["Chip", "Field", "Pagination", "Search", "Select"] as const;
+const molecules = ["Card", "Chip", "Field", "List", "Pagination", "Search", "Select"] as const;
 
-const organisms = [
-  "Card",
-  "Carousel",
-  "Chart",
-  "List",
-  "MoreMenu",
-  "Tab",
-  "Table",
-] as const;
+const organisms = ["Carousel", "Chart", "MoreMenu", "Tab", "Table"] as const;
 
 export const packageManifest = {
   /** Modules exported from src/index.ts today. */
@@ -31,6 +23,7 @@ export const packageManifest = {
     { name: "cn", path: "./lib/cn" },
     { name: "motionTransition", path: "./lib/motion", reexport: "motionTransition" },
     { name: "motionTransitionProp", path: "./lib/motion", reexport: "motionTransitionProp" },
+    { name: "focusRingTransitionClasses", path: "./lib/motion", reexport: "focusRingTransitionClasses" },
     { name: "pressScaleClass", path: "./lib/motion", reexport: "pressScaleClass" },
   ] as const,
 
