@@ -154,7 +154,7 @@ import { MapPin, X } from "lucide-react";
   <ContentRail
     aria-label="Market results"
     position="end"
-    width="md"
+    width="sm"
     header={
       <>
         <Input

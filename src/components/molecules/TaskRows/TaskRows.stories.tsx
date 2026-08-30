@@ -30,7 +30,7 @@ Expandable **rows** inside cards — leading icon or status badge, label, meta, 
 | Pattern | Composition |
 |---------|-------------|
 | **FM market detail** | **Card** \`variant="outlined"\` + \`TaskRows variant="capsule"\` + \`icon\` |
-| **FM directions** | \`Detail variant="button" label="Apple Maps"\` — standard **Button** \`secondary\` |
+| **FM directions** | \`Detail variant="button" label="Apple Maps"\` — standard **Button** \`secondary\`; one line, no wrap |
 | **FM services** | \`icon={<Tags />}\` + \`detailsLayout="chips"\` + read-only **Chip** children |
 | **Progress list** | \`variant="list"\` or \`capsule\` + \`status="done" \| "running" \| …\` |
 | **Controlled expand** | \`open\` + \`onOpenChange\` on \`TaskRows.Item\` |
@@ -53,7 +53,7 @@ TaskRows
 - **Do** use **Card** \`outlined\` + \`TaskRows variant="capsule"\` — separated pill rows inside the card body.
 - **Do** use \`icon\` + \`status="none"\` for FM expandable rows — directions, services, hours.
 - **Do** use read-only **Chip** inside \`detailsLayout="chips"\` for SNAP, dogs, etc.
-- **Do** use \`TaskRows.Detail\` with \`onPress\` for FM Apple Maps / Google Maps deep links.
+- **Do** use \`TaskRows.Detail\` with \`onPress\` for FM Apple Maps / Google Maps deep links — labels stay on one line (do not wrap).
 - **Don't** use \`status="done"\` on FM rows — that's for agent task progress, not market detail.
 - **Don't** swap the whole card body for one action — expand in place instead.
 - **Don't** use for browse lists — **List** remains the market picker in **ContentRail**.
@@ -74,7 +74,7 @@ export const FarmerMarketDetail: Story = {
     const [servicesOpen, setServicesOpen] = useState(false);
 
     return (
-      <div className="max-w-sm bg-body p-4">
+      <div className="w-max bg-body p-4">
         <Card variant="outlined" shape="rounded" padding="none">
           <Card.Header>
             <div className="flex items-start justify-between gap-3">
@@ -197,7 +197,7 @@ export const WithPrimaryAction: Story = {
     const [directionsOpen, setDirectionsOpen] = useState(false);
 
     return (
-      <div className="max-w-sm p-4">
+      <div className="w-max p-4">
         <Card variant="surface" shape="rounded">
           <Card.Header>
             <div className="flex items-start justify-between gap-3">
