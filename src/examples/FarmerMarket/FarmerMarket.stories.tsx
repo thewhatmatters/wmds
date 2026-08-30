@@ -336,7 +336,7 @@ export const FindPill: Story = {
     docs: {
       description: {
         story:
-          "Shared `layoutId=\"fm-find-shell\"` morphs the primary **Find** pill into the **Search** shell — same pattern as [Motion Create Button](https://motion.dev/examples/react-create-button). Inner field fades in on a staggered spring.",
+          "Find grows into ZIP + Use my location — [Create Button](https://motion.dev/examples/react-create-button) shared-shell `layoutId`, clip-path reveal. No inner fade. Find does not smear. Hover rolls the label.",
       },
     },
   },
