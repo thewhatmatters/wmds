@@ -202,7 +202,7 @@ Copy `src/examples/FarmerMarket/MarketDetailCard.tsx` into the FM app. Map your 
 **B — Compose from exports**  
 Follow **Molecules/TaskRows → Pattern — FM market detail**: `Card variant="outlined" shape="rounded"` + `TaskRows variant="capsule"` with directions (`detailsLayout="actions"`) and services (`detailsLayout="chips"`).
 
-Mount overlay inside your map component — Storybook demo positions bottom-left on `md:`+; your map library owns placement.
+Mount overlay inside your map component — Storybook demo positions top-right with 16px inset (`p-4`); your map library owns placement. Card width is content-sized (not a 360 lock) so Apple Maps / Google Maps stay on one line.
 
 ### 4. What stays in the app
 

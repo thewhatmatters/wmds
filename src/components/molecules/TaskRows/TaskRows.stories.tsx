@@ -70,7 +70,7 @@ type Story = StoryObj<typeof meta>;
 export const FarmerMarketDetail: Story = {
   name: "Pattern — FM market detail",
   render: function FarmerMarketDetailDemo() {
-    const [directionsOpen, setDirectionsOpen] = useState(false);
+    const [directionsOpen, setDirectionsOpen] = useState(true);
     const [servicesOpen, setServicesOpen] = useState(false);
 
     return (

@@ -120,7 +120,7 @@ function MapCanvas({
         <div className="size-48 rounded-full border border-border-emphasized md:size-72" />
       </div>
       {overlay ? (
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex justify-center p-4 md:inset-x-auto md:bottom-6 md:left-6 md:justify-start">
+        <div className="pointer-events-none absolute top-0 right-0 z-10 flex justify-end p-4">
           <div className="pointer-events-auto w-max max-w-full">{overlay}</div>
         </div>
       ) : (
