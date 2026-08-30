@@ -12,6 +12,7 @@ import {
   cardDividerClasses,
   cardLayoutShellClasses,
   cardLayoutShellShapeClasses,
+  cardOverflowClasses,
   cardRootPaddingClasses,
   cardSectionPaddingClasses,
   cardShapeClasses,
@@ -69,7 +70,12 @@ function CardRoot({
           cardBaseClasses,
           isLayout
             ? cn(cardLayoutShellClasses, cardLayoutShellShapeClasses[shape])
-            : cn(cardShapeClasses[shape], cardVariantClasses[variant], cardRootPaddingClasses[padding]),
+            : cn(
+                cardOverflowClasses,
+                cardShapeClasses[shape],
+                cardVariantClasses[variant],
+                cardRootPaddingClasses[padding],
+              ),
           className,
         )}
         data-shape={shape}

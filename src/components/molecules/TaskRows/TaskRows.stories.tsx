@@ -32,7 +32,7 @@ Expandable **rows** inside cards — leading icon or status badge, label, meta, 
 | **FM market detail** | **Card** \`shape="rounded"\` + \`TaskRows variant="capsule"\` + \`icon\` |
 | **FM directions** | \`Detail variant="button" label="Apple Maps"\` — standard **Button** \`secondary\`; one line, no wrap |
 | **FM services** | \`icon={<Tags />}\` + \`detailsLayout="chips"\` + read-only **Chip** children |
-| **Progress list** | \`variant="list"\` or \`capsule\` + \`status="done" \| "running" \| …\` |
+| **Progress list** | \`variant="list"\` + \`inset\` inside **Card.Body** — \`status="done" \| "running" \| …\` |
 | **Controlled expand** | \`open\` + \`onOpenChange\` on \`TaskRows.Item\` |
 
 ## Anatomy
@@ -51,6 +51,7 @@ TaskRows
 ## Best practices
 
 - **Do** use **Card** + \`TaskRows variant="capsule"\` — pill rows inside the inset body well.
+- **Do** put hours, address, and meta copy in **Card.Header** — not inside the inset (4px gutter is for rows only).
 - **Do** use \`icon\` + \`status="none"\` for FM expandable rows — directions, services, hours.
 - **Do** use read-only **Chip** inside \`detailsLayout="chips"\` for SNAP, dogs, etc.
 - **Do** use \`TaskRows.Detail\` with \`onPress\` for FM Apple Maps / Google Maps deep links — labels stay on one line (do not wrap).
@@ -172,6 +173,65 @@ export const StatusList: Story = {
   ),
 };
 
+export const CardWithStatusRows: Story = {
+  name: "Pattern — card + status rows",
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        story:
+          "Layout **Card** (white shell, gray inset well) with **TaskRows variant=\"list\"** — agent / progress flows with done, running, pending, failed.",
+      },
+    },
+  },
+  render: () => (
+    <Card padding="none" className="max-w-md">
+      <Card.Header>
+        <div className="flex items-center justify-between gap-3">
+          <h2 className={cardTitleClasses}>Restock run</h2>
+          <span className={cardBodyTextClasses + " text-muted tabular-nums"}>Step 2 of 4</span>
+        </div>
+      </Card.Header>
+      <Card.Body>
+        <TaskRows variant="list" inset>
+          <TaskRows.Item
+            label="Verified vendor records"
+            meta="12 suppliers"
+            status="done"
+            defaultOpen
+          >
+            <TaskRows.Detail label="Matched tax and contact IDs" meta="12/12" />
+            <TaskRows.Detail label="Flagged stale records" meta="0" />
+          </TaskRows.Item>
+          <TaskRows.Item
+            label="Build reorder task list"
+            meta="7 SKUs"
+            status="running"
+            step={2}
+            defaultOpen
+          >
+            <TaskRows.Detail label="Reading POS export" meta="3 files" />
+            <TaskRows.Detail label="Scoring stockout risk" meta="68%" />
+          </TaskRows.Item>
+          <TaskRows.Item label="Draft supplier emails" meta="2 messages" status="pending" step={3}>
+            <TaskRows.Detail label="Cone supplier follow-up" meta="draft" />
+            <TaskRows.Detail label="Pistachio reorder note" meta="draft" />
+          </TaskRows.Item>
+          <TaskRows.Item label="Sync market hours" meta="1 source" status="failed">
+            <TaskRows.Detail label="USDA API timeout" meta="retry" />
+          </TaskRows.Item>
+        </TaskRows>
+      </Card.Body>
+      <Card.Footer>
+        <span className={cardBodyTextClasses + " text-muted"}>2 complete · 1 running</span>
+        <Button role="primary" size="sm">
+          Continue
+        </Button>
+      </Card.Footer>
+    </Card>
+  ),
+};
+
 export const Capsules: Story = {
   name: "Pattern — capsules",
   args: {
@@ -193,6 +253,14 @@ export const Capsules: Story = {
 
 export const WithPrimaryAction: Story = {
   name: "Example — card + rows + footer",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Hours and address live in **Card.Header** (shell padding). **Card.Body** inset is for **TaskRows** only — 4px inner gutter.",
+      },
+    },
+  },
   render: function CardComposeDemo() {
     const [directionsOpen, setDirectionsOpen] = useState(false);
 
@@ -204,6 +272,7 @@ export const WithPrimaryAction: Story = {
               <div>
                 <h2 className={cardTitleClasses}>SFC Farmers&apos; Market Downtown</h2>
                 <p className={cardBodyTextClasses}>422 Guadalupe St</p>
+                <p className={`${cardBodyTextClasses} text-muted`}>Saturdays · 9am – 1pm</p>
               </div>
               <IconButton
                 icon={<X strokeWidth={2} />}
@@ -214,8 +283,7 @@ export const WithPrimaryAction: Story = {
               />
             </div>
           </Card.Header>
-          <Card.Body className="flex flex-col gap-3">
-            <p className={cardBodyTextClasses}>Saturdays · 9am – 1pm</p>
+          <Card.Body>
             <TaskRows variant="capsule">
               <TaskRows.Item
                 label="Get directions"

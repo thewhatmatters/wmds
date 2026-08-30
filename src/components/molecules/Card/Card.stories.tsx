@@ -51,7 +51,7 @@ Default \`shape="rounded"\` — \`rounded-2xl shadow-md\` on the shell. Use \`sh
 \`\`\`
 Card (bg-surface shell, p-4, gap-3)
 ├── Card.Header   — title, metadata (on shell)
-├── Card.Body     — bg-body rounded-xl inset well
+├── Card.Body     — \`bg-body\` (#f8f8f8) inset well — **TaskRows only** (4px inner padding)
 └── Card.Footer   — status, actions (on shell)
 \`\`\`
 

@@ -13,7 +13,9 @@ export const cardPaddings = ["none", "md", "lg"] as const;
 export type CardPadding = (typeof cardPaddings)[number];
 
 /** Default rounded — layout cards float with shell radius + shadow; use flush when parent owns chrome. */
-export const cardBaseClasses = "flex w-full flex-col overflow-hidden font-sans text-fg";
+export const cardBaseClasses = "flex w-full flex-col font-sans text-fg";
+
+export const cardOverflowClasses = "overflow-hidden";
 
 export const cardShapeClasses: Record<CardShape, string> = {
   flush: "rounded-none",
@@ -45,8 +47,9 @@ export const cardLayoutShellShapeClasses: Record<CardShape, string> = {
 
 export const cardLayoutHeaderClasses = "flex flex-col gap-1.5";
 
-/** Inset content well — muted surface recessed inside the white shell. */
-export const cardLayoutBodyWellClasses = "rounded-xl bg-body p-3";
+/** Inset well — `bg-body` (#f8f8f8); 4px inner gutter; radius tracks TaskRows capsules. */
+export const cardLayoutBodyWellClasses =
+  "rounded-[calc(1.375rem+4px)] bg-body p-[4px]";
 
 export const cardLayoutFooterClasses = "flex items-center justify-between gap-3";
 
