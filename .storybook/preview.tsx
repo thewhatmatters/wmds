@@ -18,10 +18,31 @@ const preview: Preview = {
         dynamicTitle: true,
       },
     },
+    viewport: {
+      description: "WMDS viewport tier — matches Tailwind breakpoints in src/lib/viewports.ts",
+      toolbar: {
+        title: "Viewport",
+        icon: "mobile",
+        items: [
+          { value: "mobile", title: "Mobile (390px)", icon: "mobile" },
+          { value: "tablet", title: "Tablet (768px)", icon: "tablet" },
+          { value: "desktop", title: "Desktop (1280px)", icon: "desktop" },
+        ],
+        dynamicTitle: true,
+      },
+    },
   },
   decorators: [
     (Story, { globals, viewMode, parameters }) => {
-      const padded = parameters.layout === "padded";
+      const layout = parameters.layout as string | undefined;
+      const isFullscreen = layout === "fullscreen";
+      const isPadded = layout === "padded";
+
+      const storyShellClass = isFullscreen
+        ? "min-h-[100svh] w-full"
+        : isPadded
+          ? "min-h-[100svh] w-full p-6"
+          : "flex min-h-[100svh] w-full items-center justify-center p-6";
 
       return (
         <MotionConfig reducedMotion="user">
@@ -29,11 +50,7 @@ const preview: Preview = {
             data-theme={globals.theme === "dark" ? "dark" : undefined}
             className={[
               "bg-body text-fg font-sans w-full",
-              viewMode === "story"
-                ? padded
-                  ? "min-h-[100svh] p-6"
-                  : "flex min-h-[100svh] w-full items-center justify-center p-6"
-                : "p-4",
+              viewMode === "story" ? storyShellClass : isFullscreen ? "min-h-[100svh] w-full" : "p-4",
             ].join(" ")}
           >
             <Story />
@@ -70,7 +87,7 @@ const preview: Preview = {
       test: "todo",
     },
     viewport: {
-      viewports: storybookViewports,
+      options: storybookViewports,
     },
   },
   initialGlobals: {

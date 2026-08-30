@@ -42,7 +42,19 @@ export {
   type ChipSize,
 } from "./components/molecules/Chip/Chip";
 export {
+  ContentRail,
+  contentRailBodyClasses,
+  contentRailHeaderClasses,
+  contentRailWidths,
+  type ContentRailLayoutClassName,
+  type ContentRailPosition,
+  type ContentRailProps,
+  type ContentRailSectionProps,
+  type ContentRailWidth,
+} from "./components/molecules/ContentRail/ContentRail";
+export {
   Card,
+  cardAddressClasses,
   cardBodyTextClasses,
   cardPaddings,
   cardShapes,
@@ -75,6 +87,22 @@ export {
   type SearchProps,
   type SearchSize,
 } from "./components/molecules/Search/Search";
+export {
+  TaskRows,
+  taskRowStatuses,
+  taskRowsDetailLayouts,
+  taskRowsDetailVariants,
+  taskRowsVariants,
+  type TaskRowStatus,
+  type TaskRowsDetailLayout,
+  type TaskRowsDetailProps,
+  type TaskRowsDetailVariant,
+  type TaskRowsItemProps,
+  type TaskRowsLabels,
+  type TaskRowsLayoutClassName,
+  type TaskRowsProps,
+  type TaskRowsVariant,
+} from "./components/molecules/TaskRows/TaskRows";
 export { cn } from "./lib/cn";
 export {
   focusRingTransitionClasses,

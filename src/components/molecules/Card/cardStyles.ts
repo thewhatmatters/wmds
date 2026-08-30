@@ -37,24 +37,28 @@ export const cardSectionPaddingClasses: Record<
   { header: string; body: string; footer: string }
 > = {
   none: {
-    header: "flex flex-col gap-1.5 border-b border-border-emphasized px-4 pb-3 pt-4",
+    header: "flex flex-col gap-1.5 border-b border-border px-4 pb-3 pt-4",
     body: "px-4 py-3",
-    footer: "flex items-center justify-between gap-3 border-t border-border-emphasized px-4 py-3",
+    footer: "flex items-center justify-between gap-3 border-t border-border px-4 py-3",
   },
   md: {
-    header: "flex flex-col gap-2 border-b border-border-emphasized px-4 pb-3 pt-4",
+    header: "flex flex-col gap-2 border-b border-border px-4 pb-3 pt-4",
     body: "px-4 py-3",
-    footer: "flex items-center justify-between gap-4 border-t border-border-emphasized px-4 py-3",
+    footer: "flex items-center justify-between gap-4 border-t border-border px-4 py-3",
   },
   lg: {
-    header: "flex flex-col gap-2 border-b border-border-emphasized px-6 pb-4 pt-6",
+    header: "flex flex-col gap-2 border-b border-border px-6 pb-4 pt-6",
     body: "px-6 py-4",
-    footer: "flex items-center justify-between gap-4 border-t border-border-emphasized px-6 py-4",
+    footer: "flex items-center justify-between gap-4 border-t border-border px-6 py-4",
   },
 };
 
 export const cardTitleClasses = typographyClass("subheading");
 
 export const cardBodyTextClasses = typographyClass("body");
+
+/** Street + city/state/ZIP — one block; tighter line spacing than header `gap-1.5`. */
+export const cardAddressClasses =
+  `${typographyClass("body")} flex flex-col gap-0 leading-snug`;
 
 export const cardDividerClasses = "m-0 border-0 border-t border-border";

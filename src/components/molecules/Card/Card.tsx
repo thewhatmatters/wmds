@@ -6,6 +6,7 @@ import {
 } from "react";
 import { cn } from "../../../lib/cn";
 import {
+  cardAddressClasses,
   cardBaseClasses,
   cardBodyTextClasses,
   cardDividerClasses,
@@ -119,4 +120,4 @@ export const Card = Object.assign(CardRoot, {
   Divider: CardDivider,
 });
 
-export { cardBodyTextClasses, cardTitleClasses };
+export { cardAddressClasses, cardBodyTextClasses, cardTitleClasses };

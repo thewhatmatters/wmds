@@ -33,14 +33,38 @@ npm run build       # dist/theme.css + dist/styles.css
 
 ## Status
 
-Components were cleared for a rebuild. **Atoms** (Button, Badge, StatusDot, …) ship with typed props and Storybook specs. **Introduction** + **Foundation** + **Examples** define how to compose — see [ADR-0004](docs/adr/0004-pattern-first-not-utility-first.md).
+**Shipped (exported from `@whatmatters/wmds`):**
+
+| Tier | Components |
+|------|------------|
+| Atoms | `Badge`, `Button`, `IconButton`, `Input`, `StatusDot` |
+| Molecules | `Card`, `Chip`, `ChipFilterGroup`, `ContentRail`, `List`, `Search`, `TaskRows` |
+
+**Storybook-only:** `Examples/FarmerMarket` — browse layout + map overlay wiring. Copy patterns into the app; Examples are not package exports.
 
 **Motion:** CSS tokens for simple transitions; [`motion/react`](https://motion.dev/docs/react) for gestures, layout, and enter/exit. Helpers in **`src/lib/motion.ts`** (reads Theme CSS vars).
 
 **Architecture:** Theme → lib → Atoms → Molecules → Organisms → Examples. **Pattern-first** for consumers ([ADR-0004](docs/adr/0004-pattern-first-not-utility-first.md)). **Mobile-first** on all tiers ([ADR-0003](docs/adr/0003-responsive-mobile-first.md)). See ADR-0001, ADR-0002.
 
+## Farmer Market integration
+
+The [farmermarket.us](https://farmermarket.us) harvest is **complete** in WMDS. Engineers wire exported primitives into the existing app stack — see **`CONSUMING.md`** for install, styles, and copy-paste patterns.
+
+| App region | WMDS primitive | Notes |
+|------------|----------------|-------|
+| Map canvas | App-owned map library | WMDS does not ship map positioning |
+| Map overlay | `Card` + `TaskRows` | Copy **`MarketDetailCard`** from `src/examples/FarmerMarket/` or compose from **Molecules/TaskRows → Pattern — FM market detail** |
+| List rail | `ContentRail` + `Input` + `ChipFilterGroup` + `List` | **Examples/FarmerMarket → Browse** |
+| Page chrome / nav | App-owned | Not in WMDS |
+
+```bash
+npm run storybook   # Examples/FarmerMarket — Browse, Detail, Find morph
+```
+
+Roadmap: **`docs/farmermarket-component-roadmap.md`**
+
 ## Paper
 
 Paper may stay installed for mockups — it does **not** own tokens. Design follows Storybook.
 
-See **`CONSUMING.md`** for using the theme in other apps.
+See **`CONSUMING.md`** for using WMDS in other apps.

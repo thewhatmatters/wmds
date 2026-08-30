@@ -1,4 +1,4 @@
-import type { Transition } from "motion/react";
+import type { Transition, Variants } from "motion/react";
 
 /** Motion token reference for Foundation docs — values resolved from Theme CSS vars. */
 export interface MotionToken {
@@ -113,7 +113,7 @@ export const motionDurations: MotionToken[] = [
     token: "--duration-medium",
     value: "410ms",
     role: "Panels, expand/collapse, layout morph",
-    usedIn: ["FindMorph", "Validation band", "motion-collapse"],
+    usedIn: ["FindMorph", "Validation band", "motion-collapse", "Panel reveal"],
   },
   {
     token: "--duration-medium-max",
@@ -239,6 +239,47 @@ export function motionTransitionProp(
     ease: readMotionEase(ease, root),
   };
 }
+
+/** Medium-tier transition — panel / secondary column reveal. */
+export function motionPanelRevealTransition(root?: Element | null): Transition {
+  return motionTransitionProp("medium", "standard", root);
+}
+
+/** Slide + fade from inline-start — tablet+ sub-nav beside rail. */
+export const motionPanelRevealFromStart: Variants = {
+  hidden: { opacity: 0, x: -12 },
+  visible: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -8 },
+};
+
+/** Slide + fade from block-start — mobile sub-nav below header. */
+export const motionPanelRevealFromTop: Variants = {
+  hidden: { opacity: 0, y: -8 },
+  visible: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -4 },
+};
+
+/** Sub-nav list container — stagger children on pane enter. */
+export const motionSubNavListVariants: Variants = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.04, delayChildren: 0.08 },
+  },
+};
+
+/** Sub-nav row — micro slide on stagger enter. */
+export const motionSubNavItemVariants: Variants = {
+  hidden: { opacity: 0, x: -6 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: motionDurationFallbackMs.fast / 1000,
+      ease: ASTRYX_EASE_STANDARD,
+    },
+  },
+};
 
 /** Resolve live token values for Foundation docs (browser only). */
 export function resolveMotionTokenValues(root: Element | null = typeof document !== "undefined"

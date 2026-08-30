@@ -130,7 +130,7 @@ export const typographyStyles: TypographyStyle[] = [
     tracking: "tight",
     trackingClass: "tracking-tight",
     sample: "Find a market",
-    usedIn: ["App shell (future)", "FM page title"],
+    usedIn: ["FM page title", "Page headings"],
   },
   {
     role: "section-heading",

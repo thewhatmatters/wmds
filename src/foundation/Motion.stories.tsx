@@ -4,6 +4,10 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   focusRingTransitionClasses,
   motionFeedback,
+  motionPanelRevealFromStart,
+  motionPanelRevealTransition,
+  motionSubNavItemVariants,
+  motionSubNavListVariants,
   motionTransition,
   motionTransitionProp,
   pressScaleClass,
@@ -199,6 +203,71 @@ export const EnterExit: Story = {
   },
 };
 
+export const PanelReveal: Story = {
+  name: "Panel reveal",
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        story:
+          "`motionPanelRevealFromStart` / `motionPanelRevealFromTop` + `motionPanelRevealTransition()` — secondary column slide + fade. Medium tier; rows stagger on **fast**.",
+      },
+    },
+  },
+  render: function PanelRevealDemo() {
+    const [visible, setVisible] = useState(true);
+
+    return (
+      <div className="flex flex-col items-start gap-4">
+        <button
+          type="button"
+          className="rounded-md border border-border bg-surface px-3 py-1.5 text-sm text-fg hover:bg-secondary"
+          onClick={() => setVisible((v) => !v)}
+        >
+          {visible ? "Hide panel" : "Show panel"}
+        </button>
+        <div className="flex h-48 w-full max-w-md overflow-hidden rounded-lg border border-border bg-body">
+          <div className="flex w-16 shrink-0 flex-col items-center gap-2 border-r border-border bg-surface py-3">
+            <span className="size-8 rounded-lg bg-secondary" />
+            <span className="size-8 rounded-lg bg-accent-muted" />
+          </div>
+          <AnimatePresence mode="wait">
+            {visible ? (
+              <motion.aside
+                key="subnav"
+                className="flex w-44 flex-col gap-1 border-r border-border bg-surface p-2"
+                variants={motionPanelRevealFromStart}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={motionPanelRevealTransition()}
+              >
+                <motion.ul
+                  className="m-0 flex list-none flex-col gap-0.5 p-0"
+                  variants={motionSubNavListVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  {["Overview", "Color", "Motion"].map((label) => (
+                    <motion.li
+                      key={label}
+                      variants={motionSubNavItemVariants}
+                      className="rounded-lg px-2 py-1.5 text-sm text-fg"
+                    >
+                      {label}
+                    </motion.li>
+                  ))}
+                </motion.ul>
+              </motion.aside>
+            ) : null}
+          </AnimatePresence>
+          <div className="flex flex-1 items-start p-3 text-sm text-muted">Main</div>
+        </div>
+      </div>
+    );
+  },
+};
+
 export const LayoutAnimation: Story = {
   name: "Layout animation",
   render: function LayoutDemo() {
@@ -243,6 +312,7 @@ export const Principles: Story = {
         <h3 className="mb-2 font-medium">Animate (medium / slow)</h3>
         <ul className="list-disc space-y-1 pl-5 text-muted">
           <li>Panels, dialogs, collapsible sections opening</li>
+          <li>Secondary panel reveal (`motionPanelRevealFromStart`)</li>
           <li>Find pill morphing into Search</li>
           <li>Validation band appearing under Input</li>
         </ul>

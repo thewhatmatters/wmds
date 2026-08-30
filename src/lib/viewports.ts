@@ -69,5 +69,43 @@ export const storybookViewports = {
   },
 };
 
+export type StorybookViewportTier = keyof typeof storybookViewports;
+
+/**
+ * Lock a story to a WMDS viewport tier (Storybook 10 globals API).
+ * Iframe matches breakpoint width; toolbar cannot override.
+ * @see https://storybook.js.org/docs/essentials/viewport
+ */
+export function lockedViewportGlobals(tier: StorybookViewportTier) {
+  return {
+    viewport: {
+      value: tier,
+      isRotated: false,
+    },
+  } as const;
+}
+
+/** Story spread — locked viewport + WMDS options catalog + docs iframe (not inline). */
+export function lockedViewportStory(tier: StorybookViewportTier) {
+  const preset = storybookViewports[tier];
+
+  return {
+    globals: lockedViewportGlobals(tier),
+    parameters: {
+      layout: "fullscreen" as const,
+      viewport: {
+        options: storybookViewports,
+      },
+      docs: {
+        story: {
+          /** Inline docs use the browser viewport — Tailwind `md:` never fires. Iframe + globals locks width. */
+          inline: false,
+          iframeHeight: preset.styles.height,
+        },
+      },
+    },
+  } as const;
+}
+
 /** Minimum touch target — WCAG 2.5.5 target size (Level AAA); use for atoms on mobile. */
 export const minTouchTargetPx = 44;
