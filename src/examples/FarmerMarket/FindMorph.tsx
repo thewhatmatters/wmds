@@ -124,11 +124,17 @@ function FindCollapsedButton({
   onExpand: () => void;
 }) {
   const [active, setActive] = useState(false);
+  const [labelHidden, setLabelHidden] = useState(false);
+  const expandFrame = useRef(0);
   const activeRef = useRef(false);
   const animating = useRef(false);
   const pending = useRef<boolean | null>(null);
   const hovered = useRef(false);
   const focused = useRef(false);
+
+  useEffect(() => {
+    return () => cancelAnimationFrame(expandFrame.current);
+  }, []);
 
   const updateActive = (next: boolean) => {
     activeRef.current = next;
@@ -168,7 +174,16 @@ function FindCollapsedButton({
       type="button"
       layoutId="fm-find-shell"
       transition={transition}
-      onClick={onExpand}
+      onClick={() => {
+        if (reduceMotion) {
+          onExpand();
+          return;
+        }
+        setLabelHidden(true);
+        expandFrame.current = requestAnimationFrame(() => {
+          expandFrame.current = requestAnimationFrame(() => onExpand());
+        });
+      }}
       onHoverStart={() => {
         hovered.current = true;
         requestActive(true);
@@ -195,16 +210,18 @@ function FindCollapsedButton({
         "w-full overflow-hidden sm:w-auto",
       )}
     >
-      <FindRollingLabel
-        active={active}
-        reduceMotion={reduceMotion}
-        onAnimationComplete={completeAnimation}
-      />
+      {labelHidden ? null : (
+        <FindRollingLabel
+          active={active}
+          reduceMotion={reduceMotion}
+          onAnimationComplete={completeAnimation}
+        />
+      )}
     </motion.button>
   );
 }
 
-/** Rolling Find label — Motion rolling-text button. No `layoutId` (scaleX smear). */
+/** Rolling Find label — y-roll only. No `layout`, no `layoutId` (smear). */
 function FindRollingLabel({
   active,
   reduceMotion,
@@ -215,7 +232,7 @@ function FindRollingLabel({
   onAnimationComplete: () => void;
 }) {
   return (
-    <motion.span layout className="relative inline-block overflow-hidden leading-none">
+    <span className="relative inline-block overflow-hidden leading-none">
       <motion.span
         className="block whitespace-nowrap"
         variants={rollOut}
@@ -238,6 +255,6 @@ function FindRollingLabel({
           Find
         </motion.span>
       )}
-    </motion.span>
+    </span>
   );
 }
