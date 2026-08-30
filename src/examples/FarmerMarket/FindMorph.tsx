@@ -4,7 +4,6 @@ import {
   motion,
   MotionConfig,
   useReducedMotion,
-  type Transition,
 } from "motion/react";
 import {
   buttonBaseClasses,
@@ -25,6 +24,7 @@ export const findMorphSpring = {
 
 const CLIP_CLOSED = "inset(0% 50% 0% 50% round 999px)";
 const CLIP_OPEN = "inset(0% 0% 0% 0% round 999px)";
+const CLIP_HIDE = "inset(0 0 100% 0)";
 
 const rollOut = {
   rest: { y: "0%" },
@@ -47,7 +47,8 @@ export interface FindMorphProps {
 
 /**
  * Farmer Market hero Find — Create Button: shared `layoutId` shell, clip-path
- * reveal of ZIP + Use my location. Example-only; not exported from the package.
+ * reveal of ZIP + Use my location. Find word is clipped/hidden — no `layout`.
+ * Example-only; not exported from the package.
  */
 export function FindMorph({
   expanded,
@@ -74,26 +75,26 @@ export function FindMorph({
   return (
     <MotionConfig reducedMotion="user" transition={transition}>
       <div className={cn("relative w-full max-w-lg", className)}>
-        <AnimatePresence initial={false}>
-          {!expanded ? (
-            <FindCollapsedButton
-              reduceMotion={Boolean(reduceMotion)}
-              transition={transition}
-              onExpand={onExpand}
-            />
-          ) : (
-            <motion.div
-              key="fm-find-expanded"
-              layoutId="fm-find-shell"
-              transition={transition}
-              style={{ borderRadius: 999 }}
-              className="w-full overflow-hidden will-change-transform"
-            >
+        <motion.div
+          layout
+          layoutId="fm-find-shell"
+          transition={transition}
+          style={{ borderRadius: 999 }}
+          className={cn("overflow-hidden", expanded ? "w-full" : "w-full sm:w-auto")}
+        >
+          <AnimatePresence initial={false}>
+            {!expanded ? (
+              <FindCollapsedControl
+                key="fm-find-label"
+                reduceMotion={Boolean(reduceMotion)}
+                onExpand={onExpand}
+              />
+            ) : (
               <motion.div
+                key="fm-find-search"
                 className="w-full"
                 initial={reduceMotion ? { clipPath: CLIP_OPEN } : { clipPath: CLIP_CLOSED }}
                 animate={{ clipPath: CLIP_OPEN }}
-                exit={reduceMotion ? { clipPath: CLIP_OPEN } : { clipPath: CLIP_CLOSED }}
                 transition={transition}
               >
                 <Search
@@ -106,35 +107,27 @@ export function FindMorph({
                   onAction={onUseLocation}
                 />
               </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </MotionConfig>
   );
 }
 
-function FindCollapsedButton({
+function FindCollapsedControl({
   reduceMotion,
-  transition,
   onExpand,
 }: {
   reduceMotion: boolean;
-  transition: Transition;
   onExpand: () => void;
 }) {
   const [active, setActive] = useState(false);
-  const [labelHidden, setLabelHidden] = useState(false);
-  const expandFrame = useRef(0);
   const activeRef = useRef(false);
   const animating = useRef(false);
   const pending = useRef<boolean | null>(null);
   const hovered = useRef(false);
   const focused = useRef(false);
-
-  useEffect(() => {
-    return () => cancelAnimationFrame(expandFrame.current);
-  }, []);
 
   const updateActive = (next: boolean) => {
     activeRef.current = next;
@@ -170,20 +163,16 @@ function FindCollapsedButton({
 
   return (
     <motion.button
-      key="fm-find-collapsed"
       type="button"
-      layoutId="fm-find-shell"
-      transition={transition}
-      onClick={() => {
-        if (reduceMotion) {
-          onExpand();
-          return;
-        }
-        setLabelHidden(true);
-        expandFrame.current = requestAnimationFrame(() => {
-          expandFrame.current = requestAnimationFrame(() => onExpand());
-        });
-      }}
+      aria-label="Find"
+      className={cn(
+        buttonBaseClasses,
+        buttonPillClass,
+        buttonRoleClasses.primary,
+        buttonSizeClasses.md,
+        "w-full",
+      )}
+      onClick={onExpand}
       onHoverStart={() => {
         hovered.current = true;
         requestActive(true);
@@ -200,28 +189,20 @@ function FindCollapsedButton({
         focused.current = false;
         requestActive(hovered.current);
       }}
-      aria-label="Find"
-      style={{ borderRadius: 999 }}
-      className={cn(
-        buttonBaseClasses,
-        buttonPillClass,
-        buttonRoleClasses.primary,
-        buttonSizeClasses.md,
-        "w-full overflow-hidden sm:w-auto",
-      )}
+      initial={false}
+      exit={{ clipPath: CLIP_HIDE }}
+      transition={{ duration: 0 }}
     >
-      {labelHidden ? null : (
-        <FindRollingLabel
-          active={active}
-          reduceMotion={reduceMotion}
-          onAnimationComplete={completeAnimation}
-        />
-      )}
+      <FindRollingLabel
+        active={active}
+        reduceMotion={reduceMotion}
+        onAnimationComplete={completeAnimation}
+      />
     </motion.button>
   );
 }
 
-/** Rolling Find label — y-roll only. No `layout`, no `layoutId` (smear). */
+/** Rolling Find label — y-roll only. No `layout`, no `layoutId`. */
 function FindRollingLabel({
   active,
   reduceMotion,
