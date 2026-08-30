@@ -28,7 +28,7 @@ const preview: Preview = {
           <div
             data-theme={globals.theme === "dark" ? "dark" : undefined}
             className={[
-              "bg-bg text-fg font-sans w-full",
+              "bg-body text-fg font-sans w-full",
               viewMode === "story"
                 ? padded
                   ? "min-h-[100svh] p-6"

@@ -10,7 +10,7 @@ export type StatusPaint = {
 const roleIdlePaint: Record<ButtonRole, StatusPaint> = {
   primary: {
     backgroundColor: "var(--color-primary)",
-    color: "var(--color-primary-foreground)",
+    color: "var(--color-on-primary)",
   },
   secondary: {
     backgroundColor: "var(--color-secondary)",
@@ -21,8 +21,8 @@ const roleIdlePaint: Record<ButtonRole, StatusPaint> = {
     color: "var(--color-ghost-foreground)",
   },
   destructive: {
-    backgroundColor: "var(--color-destructive)",
-    color: "var(--color-destructive-foreground)",
+    backgroundColor: "var(--color-error)",
+    color: "var(--color-on-error)",
   },
 };
 
@@ -33,11 +33,11 @@ const statusPaint: Record<Exclude<ButtonStatus, "idle">, StatusPaint> = {
   },
   success: {
     backgroundColor: "var(--color-success)",
-    color: "var(--color-success-foreground)",
+    color: "var(--color-on-success)",
   },
   error: {
-    backgroundColor: "var(--color-destructive)",
-    color: "var(--color-destructive-foreground)",
+    backgroundColor: "var(--color-error)",
+    color: "var(--color-on-error)",
   },
 };
 

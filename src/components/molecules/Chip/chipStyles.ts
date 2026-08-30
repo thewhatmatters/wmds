@@ -7,7 +7,7 @@ export type ChipSize = (typeof chipSizes)[number];
 export const chipBaseClasses =
   "inline-flex shrink-0 items-center justify-center rounded-full font-sans font-medium tracking-normal " +
   "transition-[background-color,box-shadow,color] " +
-  motionTransition("slow");
+  motionTransition("fast");
 
 export const chipSizeClasses: Record<ChipSize, string> = {
   sm: "h-7 gap-1 px-2.5 text-xs leading-none",

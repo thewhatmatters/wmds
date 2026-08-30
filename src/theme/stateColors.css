@@ -1,21 +1,21 @@
 /**
- * Interaction state colors — derived from base roles in colors.css via color-mix.
- * Components use stable utility names: hover:bg-primary-hover, active:bg-primary-active, etc.
+ * Interaction state colors — derived from base roles in colors.css.
+ * Overlay tints follow Astryx; primary/destructive use color-mix for hover/active.
  */
 :root {
-  --color-ghost-foreground: var(--color-primary);
+  --color-ghost-foreground: var(--color-text-accent);
 
   --color-primary-hover: color-mix(in oklch, var(--color-primary) 82%, black);
   --color-primary-active: color-mix(in oklch, var(--color-primary) 68%, black);
 
-  --color-secondary-hover: color-mix(in oklch, var(--color-secondary) 88%, var(--color-fg));
-  --color-secondary-active: color-mix(in oklch, var(--color-secondary) 76%, var(--color-fg));
+  --color-secondary-hover: var(--color-overlay-hover);
+  --color-secondary-active: var(--color-overlay-pressed);
 
-  --color-ghost-hover: color-mix(in oklch, var(--color-ghost-foreground) 8%, transparent);
-  --color-ghost-active: color-mix(in oklch, var(--color-ghost-foreground) 14%, transparent);
+  --color-ghost-hover: var(--color-overlay-hover);
+  --color-ghost-active: var(--color-overlay-pressed);
 
-  --color-destructive-hover: color-mix(in oklch, var(--color-destructive) 82%, black);
-  --color-destructive-active: color-mix(in oklch, var(--color-destructive) 68%, black);
+  --color-error-hover: color-mix(in oklch, var(--color-error) 82%, black);
+  --color-error-active: color-mix(in oklch, var(--color-error) 68%, black);
 
   --color-success-hover: color-mix(in oklch, var(--color-success) 88%, black);
   --color-success-active: color-mix(in oklch, var(--color-success) 76%, black);
@@ -25,22 +25,27 @@
 
   --color-info-hover: color-mix(in oklch, var(--color-info) 82%, black);
   --color-info-active: color-mix(in oklch, var(--color-info) 68%, black);
+
+  /* Validation focus rings — semantic, not Tailwind opacity modifiers */
+  --color-error-focus-ring: color-mix(in oklch, var(--color-error) 50%, transparent);
+  --color-warning-focus-ring: color-mix(in oklch, var(--color-warning) 30%, transparent);
+  --color-success-focus-ring: color-mix(in oklch, var(--color-success) 30%, transparent);
 }
 
 [data-theme="dark"] {
-  --color-ghost-foreground: var(--color-fg);
+  --color-ghost-foreground: var(--color-text-primary);
 
   --color-primary-hover: color-mix(in oklch, var(--color-primary) 112%, white);
   --color-primary-active: color-mix(in oklch, var(--color-primary) 92%, black);
 
-  --color-secondary-hover: color-mix(in oklch, var(--color-secondary) 108%, white);
-  --color-secondary-active: color-mix(in oklch, var(--color-secondary) 116%, white);
+  --color-secondary-hover: var(--color-overlay-hover);
+  --color-secondary-active: var(--color-overlay-pressed);
 
-  --color-ghost-hover: color-mix(in oklch, var(--color-ghost-foreground) 8%, transparent);
-  --color-ghost-active: color-mix(in oklch, var(--color-ghost-foreground) 14%, transparent);
+  --color-ghost-hover: var(--color-overlay-hover);
+  --color-ghost-active: var(--color-overlay-pressed);
 
-  --color-destructive-hover: color-mix(in oklch, var(--color-destructive) 108%, white);
-  --color-destructive-active: color-mix(in oklch, var(--color-destructive) 88%, black);
+  --color-error-hover: color-mix(in oklch, var(--color-error) 108%, white);
+  --color-error-active: color-mix(in oklch, var(--color-error) 88%, black);
 
   --color-success-hover: color-mix(in oklch, var(--color-success) 108%, white);
   --color-success-active: color-mix(in oklch, var(--color-success) 88%, black);
@@ -50,4 +55,8 @@
 
   --color-info-hover: color-mix(in oklch, var(--color-info) 108%, white);
   --color-info-active: color-mix(in oklch, var(--color-info) 88%, black);
+
+  --color-error-focus-ring: color-mix(in oklch, var(--color-error) 50%, transparent);
+  --color-warning-focus-ring: color-mix(in oklch, var(--color-warning) 30%, transparent);
+  --color-success-focus-ring: color-mix(in oklch, var(--color-success) 30%, transparent);
 }

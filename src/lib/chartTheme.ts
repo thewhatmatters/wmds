@@ -27,8 +27,8 @@ export type ChartAreaPreset = {
 /** Token-backed stroke/fill colors per tone. */
 export const chartColorTokens: Record<ChartTone, { stroke: string; fill: string }> = {
   neutral: {
-    stroke: "var(--color-fg)",
-    fill: "var(--color-fg)",
+    stroke: "var(--color-text-primary)",
+    fill: "var(--color-text-primary)",
   },
   primary: {
     stroke: "var(--color-primary)",
@@ -39,8 +39,8 @@ export const chartColorTokens: Record<ChartTone, { stroke: string; fill: string 
     fill: "var(--color-success)",
   },
   destructive: {
-    stroke: "var(--color-destructive)",
-    fill: "var(--color-destructive)",
+    stroke: "var(--color-error)",
+    fill: "var(--color-error)",
   },
 };
 
@@ -49,18 +49,18 @@ export const chartUiTokens = {
   axis: "var(--color-muted)",
   cursor: "var(--color-border)",
   placeholder: "var(--color-border)",
-  tooltipBg: "var(--color-bg)",
+  tooltipBg: "var(--color-background-body)",
   tooltipBorder: "var(--color-border)",
-  tooltipFg: "var(--color-fg)",
-  tooltipMuted: "var(--color-muted)",
+  tooltipFg: "var(--color-text-primary)",
+  tooltipMuted: "var(--color-text-secondary)",
 } as const;
 
 /** Dot-grid canvas — apply class `wmds-chart-grid` or use `Chart` with `showGrid`. */
 export const chartGrid = {
   className: "wmds-chart-grid",
   size: "14px",
-  dot: "color-mix(in srgb, var(--color-fg) 8%, transparent)",
-  dotDark: "color-mix(in srgb, var(--color-fg) 12%, transparent)",
+  dot: "color-mix(in srgb, var(--color-text-primary) 8%, transparent)",
+  dotDark: "color-mix(in srgb, var(--color-text-primary) 12%, transparent)",
 } as const;
 
 export const chartMargins: Record<ChartVariant, ChartMargins> = {

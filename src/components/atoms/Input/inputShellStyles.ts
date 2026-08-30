@@ -19,7 +19,7 @@ export type InputMessagePosition = (typeof inputMessagePositions)[number];
 
 /** Input shell — text + focus ring share one eased fade (`slow` ≈ 280ms). */
 export const inputShellTransitionClasses =
-  `transition-[color,background-color,box-shadow,border-color,outline-color] ${motionTransition("slow")}`;
+  `transition-[color,background-color,box-shadow,border-color,outline-color] ${motionTransition("fast")}`;
 
 export const inputBaseClasses =
   "w-full min-w-0 bg-surface font-sans font-normal tracking-normal text-fg " +
@@ -28,23 +28,23 @@ export const inputBaseClasses =
 
 /** Solo shell — ring sits on the input with page offset. */
 export const inputSoloFocusRingBaseClasses =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg";
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-body";
 
 export const inputSoloFocusRingColorClasses = {
   default: "focus-visible:ring-focus-ring",
-  error: "focus-visible:ring-destructive/50",
-  warning: "focus-visible:ring-warning/30",
-  success: "focus-visible:ring-success/30",
+  error: "focus-visible:ring-error-focus-ring",
+  warning: "focus-visible:ring-warning-focus-ring",
+  success: "focus-visible:ring-success-focus-ring",
 } as const;
 
 /** Focus ring on compound validation shell ([Astryx ChatComposer](https://astryx.atmeta.com/components/ChatComposer)). */
 export const inputCompoundShellFocusRingClasses: Record<InputStatus, string> = {
   error:
-    "focus-within:outline-none focus-within:ring-2 focus-within:ring-destructive/50 focus-within:ring-offset-2 focus-within:ring-offset-bg",
+    "focus-within:outline-none focus-within:ring-2 focus-within:ring-error-focus-ring focus-within:ring-offset-2 focus-within:ring-offset-body",
   warning:
-    "focus-within:outline-none focus-within:ring-2 focus-within:ring-warning/30 focus-within:ring-offset-2 focus-within:ring-offset-bg",
+    "focus-within:outline-none focus-within:ring-2 focus-within:ring-warning-focus-ring focus-within:ring-offset-2 focus-within:ring-offset-body",
   success:
-    "focus-within:outline-none focus-within:ring-2 focus-within:ring-success/30 focus-within:ring-offset-2 focus-within:ring-offset-bg",
+    "focus-within:outline-none focus-within:ring-2 focus-within:ring-success-focus-ring focus-within:ring-offset-2 focus-within:ring-offset-body",
 };
 
 /** @deprecated Use {@link inputCompoundShellFocusRingClasses}. */
@@ -87,7 +87,7 @@ export const inputSoloRadiusClasses: Record<InputShape, Record<InputSize, string
 };
 
 export const inputStatusShellClasses: Record<InputStatus, string> = {
-  error: "border-destructive",
+  error: "border-error",
   warning: "border-warning",
   success: "border-success",
 };
@@ -173,7 +173,7 @@ export function inputCompoundInnerFieldClassesFor(
   messagePosition: InputMessagePosition,
 ): string {
   return cn(
-    "relative z-10 flex w-full items-center border bg-bg shadow-sm",
+    "relative z-10 flex w-full items-center border bg-surface shadow-sm",
     inputSoloRadiusClasses[shape][size],
     inputStatusShellClasses[status],
     inputCompoundShellFocusRingClasses[status],
@@ -212,9 +212,9 @@ export function inputStatusBannerClassesFor(
 }
 
 const inputStatusBannerSurfaceClasses: Record<InputStatus, string> = {
-  error: "bg-destructive/10 text-destructive",
-  warning: "bg-warning/12 text-warning",
-  success: "bg-success/10 text-success",
+  error: "bg-error-muted text-error",
+  warning: "bg-warning-muted text-warning",
+  success: "bg-success-muted text-success",
 };
 
 /** @deprecated Use {@link inputStatusBannerClassesFor}. */
@@ -253,8 +253,8 @@ export const inputCompoundOuterPaddingClasses: Record<InputSize, string> = {
 
 /** @deprecated Use {@link inputCompoundFieldClassesFor}. */
 export const inputCompoundInnerClasses: Record<InputShape, string> = {
-  rounded: "relative flex w-full items-center rounded-lg border bg-bg",
-  pill: "relative flex w-full items-center rounded-full border bg-bg",
+  rounded: "relative flex w-full items-center rounded-lg border bg-surface",
+  pill: "relative flex w-full items-center rounded-full border bg-surface",
 };
 
 /** @deprecated Use {@link inputStatusShellClasses}. */
@@ -262,7 +262,7 @@ export const inputCompoundInnerBorderClasses: Record<InputStatus, string> = inpu
 
 /** @deprecated Status copy lives in {@link inputStatusBannerClasses}. */
 export const inputCompoundFooterClasses: Record<InputStatus, string> = {
-  error: "text-xs leading-snug text-destructive",
+  error: "text-xs leading-snug text-error",
   warning: "text-xs leading-snug text-warning",
   success: "text-xs leading-snug text-success",
 };
@@ -348,7 +348,7 @@ export const inputSpinnerSizeClasses: Record<InputSize, string> = {
 };
 
 export const inputStatusIconClasses: Record<InputStatus, string> = {
-  error: "text-destructive",
+  error: "text-error",
   warning: "text-warning",
   success: "text-success",
 };

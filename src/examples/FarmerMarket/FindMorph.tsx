@@ -8,11 +8,10 @@ import {
 } from "../../components/atoms/Button/buttonStyles";
 import { Search } from "../../components/molecules/Search/Search";
 import { cn } from "../../lib/cn";
+import { motionTransitionProp } from "../../lib/motion";
 
-/** FM Find expand — spring matched to [Motion Create Button](https://motion.dev/examples/react-create-button). */
-export const findMorphSpring = { stiffness: 240, damping: 23 } as const;
-
-export const findMorphContentSpring = { stiffness: 500, damping: 35 } as const;
+/** Inner content fade — fast tier, staggered after shell morph. */
+export const findMorphContentTransition = motionTransitionProp("fast");
 
 export interface FindMorphProps {
   expanded: boolean;
@@ -48,12 +47,7 @@ export function FindMorph({
   }, [expanded]);
 
   return (
-    <MotionConfig
-      transition={{
-        type: "spring",
-        ...findMorphSpring,
-      }}
-    >
+    <MotionConfig transition={motionTransitionProp("medium")}>
       <div className={cn("relative w-full max-w-lg", className)}>
         <AnimatePresence mode="popLayout" initial={false}>
           {!expanded ? (
@@ -86,8 +80,7 @@ export function FindMorph({
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.96 }}
                 transition={{
-                  type: "spring",
-                  ...findMorphContentSpring,
+                  ...findMorphContentTransition,
                   delay: 0.05,
                 }}
               >

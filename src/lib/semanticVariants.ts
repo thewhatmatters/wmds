@@ -2,6 +2,6 @@
 export type SemanticVariant = "neutral" | "info" | "success" | "warning" | "destructive";
 
 export const semanticMenuDestructiveItemClasses =
-  "text-destructive hover:bg-destructive/10 focus-visible:bg-destructive/10";
+  "text-error hover:bg-error-muted focus-visible:bg-error-muted";
 
-export const semanticMenuDestructiveDescriptionClasses = "text-destructive/80";
+export const semanticMenuDestructiveDescriptionClasses = "text-error";

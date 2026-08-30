@@ -2,8 +2,8 @@
 .motion-collapse {
   display: grid;
   transition:
-    grid-template-rows var(--duration-slower) var(--ease-out-expo),
-    opacity var(--duration-slower) var(--ease-out-expo);
+    grid-template-rows var(--duration-medium) var(--ease-standard),
+    opacity var(--duration-medium) var(--ease-standard);
 }
 
 .motion-collapse[data-visible="true"] {

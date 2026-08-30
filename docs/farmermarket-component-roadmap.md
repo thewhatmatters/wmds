@@ -10,8 +10,25 @@ Designer harvest order (running list — update status as components ship):
 | 1 | **Chip** | Molecule | SNAP (already `wmds-chip`), Open today, Saturday, Dogs, Viewing pill | **Shipped** — multi-select filters, sizes sm/md/lg, removable + read-only |
 | 2 | **Button** + **IconButton** | Atoms | Find, Use my location, GO, Get directions, Close, × clear | **Shipped** — restyle against FM as needed |
 | 3 | **Input** | Atom | ZIP or city search | **Shipped** — bare default, optional label; see ADR-0006 |
-| 4 | **List** | Molecule | Market rows — name, street, miles, SNAP booth | Pending |
+| 4 | **List** | Molecule | Market rows — name, street, miles, SNAP booth | **Shipped** — stacked/split rows, dividers, selectable |
 | 5 | **Card** | Molecule | 360° open card / panel inset detail | **Shipped** — flush default, Header/Body/Footer |
+| 6 | **Application shell** | Organism | Page chrome — header, nav slots, main content well | Pending |
+
+## Application shell (organism — post-List)
+
+Reusable **page frame** for Farmer Market and other WhatMatters apps — not page-specific wiring in Examples.
+
+| Region | FM use | Notes |
+|--------|--------|--------|
+| **Header** | Brand + page title (`page-heading`) | Mobile-first; sticky optional |
+| **Main** | Browse flow slot (`children`) | `bg-body`; max-width container at `md:`+ |
+| **Nav** (later) | Bottom tab or sidebar | Defer until FM routes beyond browse |
+
+**Ship after List** — shell wraps list + detail; **`Examples/FarmerMarket`** promotes into shell once the organism exists.
+
+**Tier:** Organism (`Organisms/ApplicationShell`) — section-scale chrome with typed slots, not utilities in apps. See **ADR-0002**.
+
+**Typography:** `page-heading` role reserved for shell titles (`src/lib/typography.ts`).
 
 ## Input spec (ADR-0006)
 
@@ -42,6 +59,7 @@ Spec in **`Examples/FarmerMarket`** (page flow) or thin **`Search`** molecule on
 - **Chip before Find pill** — SNAP and filter tags share the same primitive.
 - **Input is the blocker** for search / Find pill / ZIP entry. Architecture: **ADR-0006** — individual components, optional `label` on `Input`, shared `inputShellStyles.ts`.
 - **List row anatomy** — leading content, primary line (name), secondary (street), trailing (miles, SNAP Chip).
+- **Application shell** — organism after List; FM Example nests browse flow inside shell main slot.
 - **List + Card are molecules** — modular, reusable across layouts; page composition lives in Examples. See **ADR-0005**.
 - **Button + IconButton** — verify FM-specific copy and layouts in Storybook against live FM screens during restyle pass.
 

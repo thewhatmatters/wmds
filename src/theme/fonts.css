@@ -1,6 +1,7 @@
 /**
- * Geist — swap families here; components use --font-sans / --font-mono via @theme.
+ * Geist — swap families here; components use --font-family-* via typography tokens.
  * Requires @fontsource-variable/geist + geist-mono (devDependency).
+ * Reference: https://astryx.atmeta.com/docs/typography
  */
 @import "@fontsource-variable/geist";
 @import "@fontsource-variable/geist-mono";
@@ -8,4 +9,8 @@
 :root {
   --font-sans: "Geist Variable", "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
+
+  --font-family-body: var(--font-sans);
+  --font-family-heading: var(--font-sans);
+  --font-family-code: var(--font-mono);
 }

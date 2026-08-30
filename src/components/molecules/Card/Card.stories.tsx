@@ -114,7 +114,7 @@ export const PanelInset: Story = {
     },
   },
   render: () => (
-    <div className="w-full max-w-sm overflow-hidden rounded-lg border border-border bg-bg shadow-raised">
+    <div className="w-full max-w-sm overflow-hidden rounded-lg border border-border bg-body shadow-raised">
       <div className="border-b border-border px-4 py-3">
         <p className="text-sm font-medium text-fg">Market detail</p>
       </div>

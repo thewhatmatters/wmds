@@ -33,7 +33,7 @@ export const Scale: Story = {
       </thead>
       <tbody>
         {breakpoints.map(({ prefix, minWidth, label }) => (
-          <tr key={prefix} className="border-b border-border/60">
+          <tr key={prefix} className="border-b border-border-emphasized">
             <td className="py-2 pr-4 font-mono text-xs">{prefix}</td>
             <td className="py-2 pr-4 font-mono text-xs text-muted">{minWidth}</td>
             <td className="py-2 text-fg">{label}</td>

@@ -15,7 +15,7 @@ const atoms = [
 
 const molecules = ["Card", "Chip", "Field", "List", "Pagination", "Search", "Select"] as const;
 
-const organisms = ["Carousel", "Chart", "MoreMenu", "Tab", "Table"] as const;
+const organisms = ["ApplicationShell", "Carousel", "Chart", "MoreMenu", "Tab", "Table"] as const;
 
 export const packageManifest = {
   /** Modules exported from src/index.ts today. */

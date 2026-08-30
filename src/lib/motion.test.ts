@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  ASTRYX_EASE_STANDARD,
   motionDurationFallbackMs,
   parseCubicBezier,
   parseDurationSeconds,
@@ -9,8 +10,8 @@ import {
 
 describe("parseDurationSeconds", () => {
   it("parses ms values", () => {
-    expect(parseDurationSeconds("150ms")).toBe(0.15);
-    expect(parseDurationSeconds(" 300ms ")).toBe(0.3);
+    expect(parseDurationSeconds("175ms")).toBe(0.175);
+    expect(parseDurationSeconds(" 410ms ")).toBe(0.41);
   });
 
   it("parses s values", () => {
@@ -23,8 +24,8 @@ describe("parseDurationSeconds", () => {
 });
 
 describe("parseCubicBezier", () => {
-  it("parses theme expo curve", () => {
-    expect(parseCubicBezier("cubic-bezier(0.16, 1, 0.3, 1)")).toEqual([0.16, 1, 0.3, 1]);
+  it("parses Astryx standard curve", () => {
+    expect(parseCubicBezier("cubic-bezier(0.24, 1, 0.4, 1)")).toEqual(ASTRYX_EASE_STANDARD);
   });
 });
 
@@ -33,15 +34,14 @@ describe("readMotionDurationSeconds", () => {
     expect(readMotionDurationSeconds("fast", null)).toBe(
       motionDurationFallbackMs.fast / 1000,
     );
+    expect(readMotionDurationSeconds("medium", null)).toBe(
+      motionDurationFallbackMs.medium / 1000,
+    );
   });
 });
 
 describe("readMotionEase", () => {
-  it("falls back to expo bezier without a root element", () => {
-    expect(readMotionEase("out-expo", null)).toEqual([0.16, 1, 0.3, 1]);
-  });
-
-  it("falls back to ease-out curve for standard without a root element", () => {
-    expect(readMotionEase("standard", null)).toEqual([0, 0, 0.2, 1]);
+  it("falls back to Astryx standard bezier without a root element", () => {
+    expect(readMotionEase("standard", null)).toEqual(ASTRYX_EASE_STANDARD);
   });
 });

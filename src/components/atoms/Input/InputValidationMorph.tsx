@@ -25,8 +25,8 @@ import {
   inputTrailingInsetPositionClasses,
 } from "./inputShellStyles";
 
-/** Spring for status band reveal — structural, matches ChatComposer expand feel. */
-export const inputValidationMorphSpring = { stiffness: 400, damping: 32 } as const;
+/** Medium-tier band reveal — structural spatial change (Astryx). */
+export const inputValidationMorphTransition = motionTransitionProp("medium");
 
 /**
  * Storybook specimen — clean pill field morphs into error + jointed status band.
@@ -43,12 +43,7 @@ export function InputValidationMorphDemo() {
   };
 
   return (
-    <MotionConfig
-      transition={{
-        type: "spring",
-        ...inputValidationMorphSpring,
-      }}
-    >
+    <MotionConfig transition={inputValidationMorphTransition}>
       <div className="flex w-full max-w-md flex-col gap-4">
         <div className={inputFieldStackClasses}>
           <label htmlFor={controlId} className={typographyClass("ui-label")}>
@@ -57,7 +52,7 @@ export function InputValidationMorphDemo() {
           <div className={inputCompoundShellClassesFor("pill", "md", "error")}>
             <div
               className={cn(
-                "relative z-10 flex w-full items-center border bg-bg shadow-sm",
+                "relative z-10 flex w-full items-center border bg-surface shadow-sm",
                 inputSoloRadiusClasses.pill.md,
                 inputShellTransitionClasses,
                 showError
@@ -110,7 +105,7 @@ export function InputValidationMorphDemo() {
                   initial={{ opacity: 0, y: -10, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -10, scale: 0.98 }}
-                  transition={motionTransitionProp("slow", "out-expo")}
+                  transition={motionTransitionProp("medium")}
                   className="w-full"
                 >
                   <InputStatusBanner

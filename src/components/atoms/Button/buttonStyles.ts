@@ -15,11 +15,11 @@ export const buttonPillClass = "rounded-full";
 export const buttonBaseClasses =
   "inline-flex cursor-pointer items-center justify-center font-sans font-medium tracking-normal " +
   "transition-[color,transform,box-shadow,border-color,outline-color] " +
-  motionTransition("base") +
+  motionTransition("fast") +
   " " +
   pressScaleClass +
   " " +
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg " +
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body " +
   "disabled:pointer-events-none disabled:opacity-50";
 
 export const buttonRoleClasses: Record<ButtonRole, string> = {
@@ -30,7 +30,7 @@ export const buttonRoleClasses: Record<ButtonRole, string> = {
   ghost:
     "bg-transparent text-ghost-foreground hover:bg-ghost-hover active:bg-ghost-active",
   destructive:
-    "bg-destructive text-destructive-foreground hover:bg-destructive-hover active:bg-destructive-active",
+    "bg-error text-on-error hover:bg-error-hover active:bg-error-active",
 };
 
 /** Horizontal padding per size — md = 20px (`px-5`). Shared by action and status modes. */

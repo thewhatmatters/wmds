@@ -18,6 +18,8 @@ execSync(
 
 copyFileSync(path.join(root, "src/theme/theme.css"), path.join(dist, "theme.css"));
 copyFileSync(path.join(root, "src/theme/colors.css"), path.join(dist, "colors.css"));
+copyFileSync(path.join(root, "src/theme/motion.css"), path.join(dist, "motion.css"));
+copyFileSync(path.join(root, "src/theme/typography.css"), path.join(dist, "typography.css"));
 copyFileSync(path.join(root, "src/theme/stateColors.css"), path.join(dist, "stateColors.css"));
 
 execSync("node scripts/validate-manifest.mjs", { cwd: root, stdio: "inherit" });

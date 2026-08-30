@@ -17,6 +17,8 @@
     "./styles.css": "./dist/styles.css",
     "./theme.css": "./dist/theme.css",
     "./colors.css": "./dist/colors.css",
+    "./motion.css": "./dist/motion.css",
+    "./typography.css": "./dist/typography.css",
     "./stateColors.css": "./dist/stateColors.css",
     "./package.json": "./package.json"
   },

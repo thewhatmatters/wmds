@@ -17,9 +17,11 @@ const meta = {
     docs: {
       description: {
         component:
-          "Duration and easing tokens in **`theme.css`**. Prefer **CSS `transition`** for simple effects; use **[Motion](https://motion.dev/docs/react)** for gestures, layout, and enter/exit. " +
-          "Helpers in **`src/lib/motion.ts`**: `motionTransition()` (Tailwind classes), `focusRingTransitionClasses` (focus ring fade), `motionTransitionProp()` (Motion `transition` — reads Theme CSS vars). " +
-          "Respect **`prefers-reduced-motion`** — Storybook uses `<MotionConfig reducedMotion=\"user\">`.",
+          "Astryx-aligned duration and easing tokens in **`src/theme/motion.css`**. " +
+          "Prefer **CSS `transition`** + `motionTransition()` for hovers and color; use **[Motion](https://motion.dev/docs/react)** for layout and enter/exit. " +
+          "Reference: [Astryx Motion](https://astryx.atmeta.com/docs/motion). " +
+          "**Fast** — high-frequency (hover, focus). **Medium** — spatial change (panels, collapse). **Slow** — rare hero transitions. " +
+          "Storybook wraps `<MotionConfig reducedMotion=\"user\">`.",
       },
     },
   },
@@ -44,7 +46,7 @@ function TokenTable({
       </thead>
       <tbody>
         {rows.map(({ token, value, role }) => (
-          <tr key={token} className="border-b border-border/60">
+          <tr key={token} className="border-b border-border-emphasized">
             <td className="py-2 pr-4 font-mono text-xs">{token}</td>
             <td className="py-2 pr-4 font-mono text-xs text-muted">{value}</td>
             <td className="py-2 text-fg">{role}</td>
@@ -77,12 +79,6 @@ export const Tokens: Story = {
   },
 };
 
-const durationVar: Record<"fast" | "base" | "slower", string> = {
-  fast: "var(--duration-fast)",
-  base: "var(--duration-base)",
-  slower: "var(--duration-slower)",
-};
-
 export const CssTransitions: Story = {
   name: "CSS transitions",
   parameters: {
@@ -90,21 +86,21 @@ export const CssTransitions: Story = {
     docs: {
       description: {
         story:
-          "Hover each track — same distance, different **`--duration-*`** token. " +
-          "**`prefers-reduced-motion`** disables the animation globally in Storybook.",
+          "Hover each track — same distance, different Astryx tier. " +
+          "High-frequency hovers belong on **fast**; layout shifts use **medium**.",
       },
     },
   },
   render: () => (
     <div className="flex w-full max-w-lg flex-col gap-6">
       <p className="text-sm text-muted">
-        Hover each row — the bar travels the same distance; only the duration changes.
+        Hover each row — the bar travels the same distance; only the duration tier changes.
       </p>
       {(
         [
-          ["fast", "150ms", "--duration-fast"],
-          ["base", "200ms", "--duration-base"],
-          ["slower", "300ms", "--duration-slower"],
+          ["fast", "175ms", "--duration-fast"],
+          ["medium", "410ms", "--duration-medium"],
+          ["medium-max", "550ms", "--duration-medium-max"],
         ] as const
       ).map(([duration, label, token]) => (
         <div key={duration} className="group flex flex-col gap-1.5">
@@ -114,8 +110,7 @@ export const CssTransitions: Story = {
           </div>
           <div className="relative h-10 overflow-hidden rounded-lg border border-border bg-surface">
             <div
-              className="absolute inset-y-0 left-0 w-1/4 rounded-md bg-primary transition-[width] ease-[var(--ease-out-expo)] group-hover:w-full"
-              style={{ transitionDuration: durationVar[duration] }}
+              className={`absolute inset-y-0 left-0 w-1/4 rounded-md bg-primary transition-[width] ease-standard group-hover:w-full ${motionTransition(duration)}`}
             />
           </div>
         </div>
@@ -142,7 +137,7 @@ export const FocusRingFade: Story = {
     docs: {
       description: {
         story:
-          "`focusRingTransitionClasses` — **`slow`** (280ms) box-shadow fade for Tailwind rings. Used on Input, Button, Chip, Tab.",
+          "`focusRingTransitionClasses` — **fast** (175ms) box-shadow fade. Astryx: focus must not lag behind the user.",
       },
     },
   },
@@ -151,7 +146,7 @@ export const FocusRingFade: Story = {
       type="text"
       aria-label="Focus ring specimen"
       placeholder="Tab to focus — ring fades in"
-      className={`h-11 w-full max-w-xs rounded-lg border border-border bg-surface px-3 text-sm text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg ${focusRingTransitionClasses}`}
+      className={`h-11 w-full max-w-xs rounded-lg border border-border bg-surface px-3 text-sm text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body ${focusRingTransitionClasses}`}
     />
   ),
 };
@@ -193,9 +188,9 @@ export const EnterExit: Story = {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              transition={motionTransitionProp("base", "out-expo")}
+              transition={motionTransitionProp("medium")}
             >
-              Drawer-style enter/exit using WMDS tokens.
+              Panel enter/exit — medium tier for spatial change.
             </motion.div>
           ) : null}
         </AnimatePresence>
@@ -215,7 +210,7 @@ export const LayoutAnimation: Story = {
         layout
         className="overflow-hidden rounded-lg bg-primary px-4 py-2 text-left text-sm text-primary-foreground"
         onClick={() => setExpanded((e) => !e)}
-        transition={motionTransitionProp("slower", "out-expo")}
+        transition={motionTransitionProp("medium")}
       >
         <motion.span layout="position" className="block font-medium">
           {expanded ? "Collapse" : "Expand"}
@@ -228,7 +223,7 @@ export const LayoutAnimation: Story = {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={motionTransitionProp("base")}
+              transition={motionTransitionProp("fast")}
               className="mt-2 text-primary-foreground/80"
             >
               Layout prop animates size and position when content changes.
@@ -238,4 +233,36 @@ export const LayoutAnimation: Story = {
       </motion.button>
     );
   },
+};
+
+export const Principles: Story = {
+  name: "When motion helps vs hurts",
+  render: () => (
+    <div className="flex max-w-2xl flex-col gap-4 text-sm text-fg">
+      <section>
+        <h3 className="mb-2 font-medium">Animate (medium / slow)</h3>
+        <ul className="list-disc space-y-1 pl-5 text-muted">
+          <li>Panels, dialogs, collapsible sections opening</li>
+          <li>Find pill morphing into Search</li>
+          <li>Validation band appearing under Input</li>
+        </ul>
+      </section>
+      <section>
+        <h3 className="mb-2 font-medium">Keep fast (fast tier)</h3>
+        <ul className="list-disc space-y-1 pl-5 text-muted">
+          <li>Button hover and press</li>
+          <li>Chip filter toggle</li>
+          <li>List row highlight</li>
+          <li>Focus rings</li>
+        </ul>
+      </section>
+      <section>
+        <h3 className="mb-2 font-medium">Do not delay interaction</h3>
+        <p className="text-muted">
+          Motion completes before or without blocking the next action. Honor{" "}
+          <code className="font-mono text-xs">prefers-reduced-motion</code>.
+        </p>
+      </section>
+    </div>
+  ),
 };

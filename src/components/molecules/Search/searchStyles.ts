@@ -5,8 +5,8 @@ export const searchSizes = ["sm", "md"] as const;
 export type SearchSize = (typeof searchSizes)[number];
 
 const searchShellBaseClasses =
-  "flex w-full items-center rounded-full border border-border bg-bg " +
-  "focus-within:outline-none focus-within:ring-2 focus-within:ring-focus-ring focus-within:ring-offset-2 focus-within:ring-offset-bg " +
+  "flex w-full items-center rounded-full border border-border bg-surface " +
+  "focus-within:outline-none focus-within:ring-2 focus-within:ring-focus-ring focus-within:ring-offset-2 focus-within:ring-offset-body " +
   focusRingTransitionClasses;
 
 /** FM hero pill — fixed outer height; py/pr/pl inset the trailing button from the curve. */

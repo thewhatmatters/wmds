@@ -6,10 +6,12 @@ Tailwind v4 theme + **pattern-first** Storybook catalog. **Storybook is canonica
 
 | Piece | Role |
 |-------|------|
-| **`src/theme/colors.css`** | Semantic color roles (light `:root` + `[data-theme="dark"]`) |
+| **`src/theme/colors.css`** | Astryx-aligned semantic roles (light `:root` + `[data-theme="dark"]`) — see **ADR-0007** |
 | **`src/theme/theme.css`** | Tailwind `@theme` bridge — import once in apps |
 | **`src/theme/fonts.css`** | Geist Sans + Geist Mono |
 | **`src/theme/stateColors.css`** | Hover/active states (`color-mix` from base roles) |
+| **`src/theme/typography.css`** | Astryx geometric scale + `type-*` semantic utilities — see **ADR-0009** |
+| **`src/theme/motion.css`** | Astryx-aligned duration/easing tiers — see **ADR-0008** |
 | **`src/lib/motion.ts`** | Motion adapter — CSS vars → Tailwind + Motion |
 | **Storybook** | Token catalog + component specs (start at **Introduction**) |
 
@@ -19,7 +21,7 @@ Tailwind v4 theme + **pattern-first** Storybook catalog. **Storybook is canonica
 <html data-theme="dark">
 ```
 
-Same utility names (`bg-bg`, `text-fg`, …) — only values swap in `colors.css`.
+Same utility names (`bg-body`, `text-fg`, …) — values swap in `colors.css`. Legacy `bg-bg` aliases `body`.
 
 ## Commands
 

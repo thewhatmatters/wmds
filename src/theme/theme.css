@@ -1,63 +1,128 @@
 /**
  * WMDS theme — canonical design-system entry.
- * Color: colors.css (base roles) + stateColors.css (hover/active derivations).
+ * Color: colors.css (Astryx-aligned roles) + stateColors.css (interaction states).
  * Import once: @import "@whatmatters/wmds/theme.css";
  */
 @import "tailwindcss";
 @import "./fonts.css";
 @import "./colors.css";
 @import "./stateColors.css";
+@import "./motion.css";
+@import "./typography.css";
 @import "./sources.css";
 
 @theme inline {
   --color-*: initial;
 
-  --color-bg: var(--color-bg);
-  --color-surface: var(--color-surface);
-  --color-fg: var(--color-fg);
-  --color-muted: var(--color-muted);
-  --color-border: var(--color-border);
+  /* Surface hierarchy */
+  --color-body: var(--color-background-body);
+  --color-surface: var(--color-background-surface);
+  --color-card: var(--color-background-card);
+  --color-popover: var(--color-background-popover);
+  --color-muted-surface: var(--color-background-muted);
 
+  /* Text */
+  --color-fg: var(--color-text-primary);
+  --color-muted: var(--color-text-secondary);
+  --color-disabled: var(--color-text-disabled);
+  --color-fg-accent: var(--color-text-accent);
+
+  /* Accent surfaces */
+  --color-accent: var(--color-accent);
+  --color-accent-muted: var(--color-accent-muted);
+  --color-on-accent: var(--color-on-accent);
+
+  /* Overlays */
+  --color-neutral: var(--color-neutral);
+  --color-overlay: var(--color-overlay);
+  --color-overlay-hover: var(--color-overlay-hover);
+  --color-overlay-pressed: var(--color-overlay-pressed);
+
+  /* Borders */
+  --color-border: var(--color-border);
+  --color-border-emphasized: var(--color-border-emphasized);
+
+  /* Status — error */
+  --color-error: var(--color-error);
+  --color-error-muted: var(--color-error-muted);
+  --color-on-error: var(--color-on-error);
+  --color-error-hover: var(--color-error-hover);
+  --color-error-active: var(--color-error-active);
+  --color-error-focus-ring: var(--color-error-focus-ring);
+
+  /* Status — success */
+  --color-success: var(--color-success);
+  --color-success-muted: var(--color-success-muted);
+  --color-on-success: var(--color-on-success);
+  --color-success-hover: var(--color-success-hover);
+  --color-success-active: var(--color-success-active);
+  --color-success-focus-ring: var(--color-success-focus-ring);
+
+  /* Status — warning */
+  --color-warning: var(--color-warning);
+  --color-warning-muted: var(--color-warning-muted);
+  --color-on-warning: var(--color-on-warning);
+  --color-warning-hover: var(--color-warning-hover);
+  --color-warning-active: var(--color-warning-active);
+  --color-warning-focus-ring: var(--color-warning-focus-ring);
+
+  /* Info */
+  --color-info: var(--color-info);
+  --color-info-muted: var(--color-info-muted);
+  --color-on-info: var(--color-on-info);
+  --color-info-hover: var(--color-info-hover);
+  --color-info-active: var(--color-info-active);
+
+  /* Brand / primary */
   --color-primary: var(--color-primary);
-  --color-primary-foreground: var(--color-primary-foreground);
+  --color-primary-foreground: var(--color-on-primary);
   --color-primary-hover: var(--color-primary-hover);
   --color-primary-active: var(--color-primary-active);
-  --color-accent: var(--color-accent);
-  --color-accent-foreground: var(--color-accent-foreground);
 
-  --color-secondary: var(--color-secondary);
-  --color-secondary-foreground: var(--color-secondary-foreground);
+  /* Secondary (maps to accent-muted — raised neutral control) */
+  --color-secondary: var(--color-accent-muted);
+  --color-secondary-foreground: var(--color-text-primary);
   --color-secondary-hover: var(--color-secondary-hover);
   --color-secondary-active: var(--color-secondary-active);
 
+  /* Ghost */
   --color-ghost-foreground: var(--color-ghost-foreground);
   --color-ghost-hover: var(--color-ghost-hover);
   --color-ghost-active: var(--color-ghost-active);
 
-  --color-destructive: var(--color-destructive);
-  --color-destructive-foreground: var(--color-destructive-foreground);
-  --color-destructive-hover: var(--color-destructive-hover);
-  --color-destructive-active: var(--color-destructive-active);
+  /* Legacy aliases — prefer error/success/warning tokens in new code */
+  --color-destructive: var(--color-error);
+  --color-destructive-foreground: var(--color-on-error);
+  --color-destructive-muted: var(--color-error-muted);
+  --color-destructive-hover: var(--color-error-hover);
+  --color-destructive-active: var(--color-error-active);
+  --color-success-foreground: var(--color-on-success);
+  --color-warning-foreground: var(--color-on-warning);
+  --color-info-foreground: var(--color-on-info);
+  --color-accent-foreground: var(--color-on-accent);
 
-  --color-success: var(--color-success);
-  --color-success-foreground: var(--color-success-foreground);
-  --color-success-hover: var(--color-success-hover);
-  --color-success-active: var(--color-success-active);
-
-  --color-warning: var(--color-warning);
-  --color-warning-foreground: var(--color-warning-foreground);
-  --color-warning-hover: var(--color-warning-hover);
-  --color-warning-active: var(--color-warning-active);
-
-  --color-info: var(--color-info);
-  --color-info-foreground: var(--color-info-foreground);
-  --color-info-hover: var(--color-info-hover);
-  --color-info-active: var(--color-info-active);
+  /* Legacy bg alias */
+  --color-bg: var(--color-background-body);
 
   --color-focus-ring: var(--color-focus-ring);
 
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
+  --font-sans: var(--font-family-body);
+  --font-mono: var(--font-family-code);
+
+  /* Tailwind text-* bridge — preserves legacy utility sizes until atoms migrate to type-* (ADR-0009). */
+  --text-xs: var(--font-size-sm);
+  --text-sm: var(--font-size-base);
+  --text-base: 1rem;
+  --text-lg: var(--font-size-xl);
+  --text-xl: var(--font-size-2xl);
+  --text-2xl: var(--font-size-3xl);
+  --text-3xl: var(--font-size-4xl);
+  --text-4xl: var(--font-size-5xl);
+
+  --font-weight-normal: var(--font-weight-normal);
+  --font-weight-medium: var(--font-weight-medium);
+  --font-weight-semibold: var(--font-weight-semibold);
+  --font-weight-bold: var(--font-weight-bold);
 
   /* Semantic shadows — raised = hairline border + drop; hairline = inset labels (chips) */
   --shadow-sm: var(--shadow-drop-sm);
@@ -65,18 +130,26 @@
   --shadow-raised: 0 0 0 1px var(--color-border), var(--shadow-drop-sm);
   --shadow-inset-highlight: inset 0 1px 0 rgb(255 255 255 / 14%);
 
-  --duration-instant: 100ms;
-  --duration-fast: 150ms;
-  --duration-base: 200ms;
-  --duration-slow: 280ms;
-  --duration-slower: 300ms;
-  --ease-standard: ease-out;
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --motion-press-scale: 0.98;
+  /* Motion — Astryx tiers (see motion.css) */
+  --duration-fast-min: var(--duration-fast-min);
+  --duration-fast: var(--duration-fast);
+  --duration-fast-max: var(--duration-fast-max);
+  --duration-medium-min: var(--duration-medium-min);
+  --duration-medium: var(--duration-medium);
+  --duration-medium-max: var(--duration-medium-max);
+  --duration-slow-min: var(--duration-slow-min);
+  --duration-slow: var(--duration-slow);
+  --duration-slow-max: var(--duration-slow-max);
+  --ease-standard: var(--ease-standard);
+  --motion-press-scale: var(--motion-press-scale);
+
+  /* Legacy duration aliases */
+  --duration-instant: var(--duration-instant);
+  --duration-base: var(--duration-base);
+  --duration-slower: var(--duration-slower);
+  --ease-out-expo: var(--ease-out-expo);
 }
 
 [data-theme="dark"] {
-  --shadow-hairline: 0 0 0 1px rgb(255 255 255 / 10%);
-  --shadow-raised: 0 0 0 1px rgb(255 255 255 / 10%), var(--shadow-drop-sm);
   --shadow-inset-highlight: inset 0 1px 0 rgb(255 255 255 / 14%);
 }

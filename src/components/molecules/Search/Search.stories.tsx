@@ -34,7 +34,7 @@ Farmer Market hero search — one **pill shell** with inset action (matches live
 | **Find collapsed** | \`Button\` "Find" only — see **Examples/FarmerMarket** |
 | **Find committed** | removable \`Chip\` — Example flow |
 
-**Shell:** \`bg-bg\` pill, \`h-11\` with \`py-1.5 pr-1.5\` inset — inner track is \`h-8\`; input and button share that height (solo Input \`md\` is \`h-11\` and must not be used inline).
+**Shell:** \`bg-surface\` pill on \`bg-body\` page, \`h-11\` with \`py-1.5 pr-1.5\` inset — inner track is \`h-8\`; input and button share that height (solo Input \`md\` is \`h-11\` and must not be used inline).
 
 ## Best practices
 
@@ -74,12 +74,12 @@ export const OnBeige: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Shell uses `bg-bg` so the pill reads clean on the FM page — not washed-out grey input surface.",
+        story: "White surface pill on gray body — Astryx surface hierarchy.",
       },
     },
   },
   render: (args) => (
-    <div className="w-full max-w-lg rounded-xl bg-bg p-6">
+    <div className="w-full max-w-lg rounded-xl bg-body p-6">
       <Search {...args} />
     </div>
   ),

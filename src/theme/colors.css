@@ -1,33 +1,64 @@
 /**
- * WMDS color sheet — semantic roles only. No shade ramps.
+ * WMDS color sheet — Astryx-aligned semantic roles.
  * Light defaults on :root; dark swaps the same names under [data-theme="dark"].
- * Tints / hover: color-mix(in oklch, var(--color-primary) 12%, var(--color-bg))
+ * Reference: https://astryx.atmeta.com/docs/color
+ *
+ * Surface hierarchy: body → surface → card → popover.
+ * Status roles: error | success | warning (+ *-muted, on-*).
+ * Brand actions: primary / on-primary (WhatMatters — separate from accent).
  */
 :root {
-  /* Neutrals */
-  --color-bg: #fafafa;
-  --color-surface: #f4f4f5;
-  --color-fg: #18181b;
-  --color-muted: #71717a;
-  --color-border: #e4e4e7;
+  /* Surface hierarchy */
+  --color-background-body: #f1f1f1;
+  --color-background-surface: #ffffff;
+  --color-background-card: #ffffff;
+  --color-background-popover: #ffffff;
+  --color-background-muted: #f1f1f1;
 
-  /* Brand / actions */
+  /* Text */
+  --color-text-primary: #171717;
+  --color-text-secondary: #525252;
+  --color-text-disabled: #a3a3a3;
+  --color-text-accent: #262626;
+
+  /* Accent (neutral UI chrome — not brand) */
+  --color-accent: #262626;
+  --color-accent-muted: #f1f1f1;
+  --color-on-accent: #ffffff;
+
+  /* Overlays & neutral fills */
+  --color-neutral: #0000000f;
+  --color-overlay: #00000080;
+  --color-overlay-hover: #0000000d;
+  --color-overlay-pressed: #0000001a;
+
+  /* Borders */
+  --color-border: #00000014;
+  --color-border-emphasized: #d4d4d4;
+
+  /* Status — error */
+  --color-error: #a50c25;
+  --color-error-muted: #facecb;
+  --color-on-error: #ffffff;
+
+  /* Status — success */
+  --color-success: #007004;
+  --color-success-muted: #c5e5c0;
+  --color-on-success: #ffffff;
+
+  /* Status — warning */
+  --color-warning: #745b00;
+  --color-warning-muted: #f8da9d;
+  --color-on-warning: #171717;
+
+  /* Info (WMDS extension — Astryx blue family) */
+  --color-info: #00458c;
+  --color-info-muted: #c4ddfb;
+  --color-on-info: #ffffff;
+
+  /* Brand / primary actions (WhatMatters) */
   --color-primary: #39485c;
-  --color-primary-foreground: #fafafa;
-  --color-accent: #39485c;
-  --color-accent-foreground: #fafafa;
-
-  --color-secondary: #f4f4f5;
-  --color-secondary-foreground: #18181b;
-
-  --color-destructive: #b42318;
-  --color-destructive-foreground: #fafafa;
-  --color-success: #3cbb72;
-  --color-success-foreground: #fafafa;
-  --color-warning: #b54708;
-  --color-warning-foreground: #fafafa;
-  --color-info: #175cd3;
-  --color-info-foreground: #fafafa;
+  --color-on-primary: #fafafa;
 
   --color-focus-ring: rgb(57 72 92 / 45%);
 
@@ -37,28 +68,47 @@
 }
 
 [data-theme="dark"] {
-  --color-bg: #18191b;
-  --color-surface: #232427;
-  --color-fg: #f2f3f4;
-  --color-muted: #a5a8ad;
-  --color-border: #2e3033;
+  --color-background-body: #1b1b1b;
+  --color-background-surface: #262626;
+  --color-background-card: #1b1b1b;
+  --color-background-popover: #1b1b1b;
+  --color-background-muted: #1b1b1b;
+
+  --color-text-primary: #fafafa;
+  --color-text-secondary: #a3a3a3;
+  --color-text-disabled: #525252;
+  --color-text-accent: #ebebeb;
+
+  --color-accent: #ebebeb;
+  --color-accent-muted: #262626;
+  --color-on-accent: #171717;
+
+  --color-neutral: #ffffff1a;
+  --color-overlay: #000000cc;
+  --color-overlay-hover: #ffffff0d;
+  --color-overlay-pressed: #ffffff1a;
+
+  --color-border: #ffffff1a;
+  --color-border-emphasized: #525252;
+
+  --color-error: #ffc6c1;
+  --color-error-muted: #ff9e973d;
+  --color-on-error: #171717;
+
+  --color-success: #9fe59b;
+  --color-success-muted: #84c9803d;
+  --color-on-success: #171717;
+
+  --color-warning: #fdcf4f;
+  --color-warning-muted: #deb4333d;
+  --color-on-warning: #171717;
+
+  --color-info: #9eb7ff;
+  --color-info-muted: #9eb7ff3d;
+  --color-on-info: #171717;
 
   --color-primary: #5a6d85;
-  --color-primary-foreground: #fafaf8;
-  --color-accent: #5a6d85;
-  --color-accent-foreground: #fafaf8;
-
-  --color-secondary: #2a2b2e;
-  --color-secondary-foreground: #f2f3f4;
-
-  --color-destructive: #d92d20;
-  --color-destructive-foreground: #fafaf8;
-  --color-success: #3cbb72;
-  --color-success-foreground: #fafaf8;
-  --color-warning: #dc6803;
-  --color-warning-foreground: #fafaf8;
-  --color-info: #2e90fa;
-  --color-info-foreground: #fafaf8;
+  --color-on-primary: #fafaf8;
 
   --color-focus-ring: rgb(242 243 244 / 35%);
 

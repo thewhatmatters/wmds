@@ -8,89 +8,145 @@ export interface MotionToken {
   usedIn: string[];
 }
 
-export type MotionDuration = "instant" | "fast" | "base" | "slow" | "slower";
-export type MotionEase = "standard" | "out-expo";
+/** Astryx-aligned duration tiers — https://astryx.atmeta.com/docs/motion */
+export type MotionDuration =
+  | "fast-min"
+  | "fast"
+  | "fast-max"
+  | "medium-min"
+  | "medium"
+  | "medium-max"
+  | "slow-min"
+  | "slow"
+  | "slow-max";
 
-const DURATION_CSS_VAR: Record<MotionDuration, string> = {
-  instant: "--duration-instant",
+/** @deprecated Use {@link MotionDuration} tiers. Kept for gradual migration. */
+export type LegacyMotionDuration = "instant" | "base" | "slower";
+
+export type MotionDurationKey = MotionDuration | LegacyMotionDuration;
+
+export type MotionEase = "standard";
+
+/** Astryx standard easing fallback — cubic-bezier(0.24, 1, 0.4, 1) */
+export const ASTRYX_EASE_STANDARD: [number, number, number, number] = [0.24, 1, 0.4, 1];
+
+const DURATION_CSS_VAR: Record<MotionDurationKey, string> = {
+  "fast-min": "--duration-fast-min",
   fast: "--duration-fast",
-  base: "--duration-base",
+  "fast-max": "--duration-fast-max",
+  "medium-min": "--duration-medium-min",
+  medium: "--duration-medium",
+  "medium-max": "--duration-medium-max",
+  "slow-min": "--duration-slow-min",
   slow: "--duration-slow",
+  "slow-max": "--duration-slow-max",
+  instant: "--duration-instant",
+  base: "--duration-base",
   slower: "--duration-slower",
 };
 
 const EASE_CSS_VAR: Record<MotionEase, string> = {
   standard: "--ease-standard",
-  "out-expo": "--ease-out-expo",
 };
 
-/** Fallbacks mirror src/theme/theme.css — used in tests and SSR. */
-export const motionDurationFallbackMs: Record<MotionDuration, number> = {
-  instant: 100,
-  fast: 150,
-  base: 200,
-  slow: 280,
-  slower: 300,
+/** Fallbacks mirror src/theme/motion.css — used in tests and SSR. */
+export const motionDurationFallbackMs: Record<MotionDurationKey, number> = {
+  "fast-min": 130,
+  fast: 175,
+  "fast-max": 230,
+  "medium-min": 310,
+  medium: 410,
+  "medium-max": 550,
+  "slow-min": 730,
+  slow: 975,
+  "slow-max": 1300,
+  instant: 130,
+  base: 310,
+  slower: 550,
 };
 
-const motionDurationClasses: Record<MotionDuration, string> = {
-  instant: "duration-instant",
+const motionDurationClasses: Record<MotionDurationKey, string> = {
+  "fast-min": "duration-fast-min",
   fast: "duration-fast",
-  base: "duration-base",
+  "fast-max": "duration-fast-max",
+  "medium-min": "duration-medium-min",
+  medium: "duration-medium",
+  "medium-max": "duration-medium-max",
+  "slow-min": "duration-slow-min",
   slow: "duration-slow",
+  "slow-max": "duration-slow-max",
+  instant: "duration-instant",
+  base: "duration-base",
   slower: "duration-slower",
 };
 
 const motionEaseClasses: Record<MotionEase, string> = {
   standard: "ease-standard",
-  "out-expo": "ease-out-expo",
 };
 
 export const motionDurations: MotionToken[] = [
   {
-    token: "--duration-instant",
-    value: "100ms",
-    role: "Micro feedback — list row hover, tight UI",
-    usedIn: ["Option rows", "Icon affordances"],
+    token: "--duration-fast-min",
+    value: "130ms",
+    role: "Micro feedback — must not lag behind cursor",
+    usedIn: ["List row hover", "High-frequency highlights"],
   },
   {
     token: "--duration-fast",
-    value: "150ms",
-    role: "Press transform, toggles",
-    usedIn: ["Button active scale"],
+    value: "175ms",
+    role: "Default fast — color, press, focus ring",
+    usedIn: ["Button", "Chip", "Input shell", "Focus rings"],
   },
   {
-    token: "--duration-base",
-    value: "200ms",
-    role: "Color shifts, content crossfade",
-    usedIn: ["Button hover colors", "Body swap fades"],
+    token: "--duration-fast-max",
+    value: "230ms",
+    role: "Upper fast bound",
+    usedIn: ["Toggles", "Selection highlight"],
+  },
+  {
+    token: "--duration-medium-min",
+    value: "310ms",
+    role: "Lower medium bound — small layout shifts",
+    usedIn: ["Enter/exit (compact)"],
+  },
+  {
+    token: "--duration-medium",
+    value: "410ms",
+    role: "Panels, expand/collapse, layout morph",
+    usedIn: ["FindMorph", "Validation band", "motion-collapse"],
+  },
+  {
+    token: "--duration-medium-max",
+    value: "550ms",
+    role: "Upper medium bound — drawer-style reveals",
+    usedIn: ["Layout animation specimens"],
+  },
+  {
+    token: "--duration-slow-min",
+    value: "730ms",
+    role: "Lower slow bound — large spatial change",
+    usedIn: ["Full-screen transitions (rare)"],
   },
   {
     token: "--duration-slow",
-    value: "280ms",
-    role: "Structural reveals",
-    usedIn: ["Focus rings", "Marquee-style reveals"],
+    value: "975ms",
+    role: "Hero transitions — use sparingly",
+    usedIn: ["Marketing/onboarding (if ever)"],
   },
   {
-    token: "--duration-slower",
-    value: "300ms",
-    role: "Panel / drawer expand, layout slides",
-    usedIn: ["Drawers", "Tab indicator", "Row collapse"],
+    token: "--duration-slow-max",
+    value: "1300ms",
+    role: "Upper slow bound",
+    usedIn: ["Reserved"],
   },
 ];
 
 export const motionEasing: MotionToken[] = [
   {
     token: "--ease-standard",
-    value: "ease-out",
-    role: "Default — hover, press, fades",
-    usedIn: ["Button", "Most transitions"],
-  },
-  {
-    token: "--ease-out-expo",
-    value: "cubic-bezier(0.16, 1, 0.3, 1)",
-    role: "Decelerating reveal — drawers, height animations",
-    usedIn: ["Drawer expand", "Tab sliding indicator"],
+    value: "cubic-bezier(0.24, 1, 0.4, 1)",
+    role: "Single default easing — all tiers",
+    usedIn: ["All transitions", "Motion tween props"],
   },
 ];
 
@@ -119,7 +175,7 @@ export function parseDurationSeconds(raw: string): number | undefined {
 
 /** Read a Theme motion duration from CSS custom properties. */
 export function readMotionDurationSeconds(
-  duration: MotionDuration,
+  duration: MotionDurationKey,
   root: Element | null | undefined = typeof document !== "undefined"
     ? document.documentElement
     : null,
@@ -131,7 +187,7 @@ export function readMotionDurationSeconds(
   return parseDurationSeconds(raw) ?? motionDurationFallbackMs[duration] / 1000;
 }
 
-/** Parse `cubic-bezier(0.16, 1, 0.3, 1)` → Motion bezier tuple. */
+/** Parse `cubic-bezier(0.24, 1, 0.4, 1)` → Motion bezier tuple. */
 export function parseCubicBezier(raw: string): [number, number, number, number] | undefined {
   const match = raw.trim().match(/cubic-bezier\(\s*([^)]+)\s*\)/i);
   if (!match) return undefined;
@@ -140,32 +196,24 @@ export function parseCubicBezier(raw: string): [number, number, number, number] 
   return parts as [number, number, number, number];
 }
 
-/** Read easing from Theme CSS — falls back to standard curves. */
+/** Read easing from Theme CSS — Astryx standard curve. */
 export function readMotionEase(
-  ease: MotionEase,
+  ease: MotionEase = "standard",
   root: Element | null | undefined = typeof document !== "undefined"
     ? document.documentElement
     : null,
 ): Transition["ease"] {
-  if (ease === "out-expo") {
-    if (root) {
-      const raw = getComputedStyle(root).getPropertyValue(EASE_CSS_VAR[ease]);
-      const bezier = parseCubicBezier(raw);
-      if (bezier) return bezier;
-    }
-    return [0.16, 1, 0.3, 1];
-  }
-
   if (root) {
-    const raw = getComputedStyle(root).getPropertyValue(EASE_CSS_VAR[ease]).trim();
-    if (raw === "ease-out") return [0, 0, 0.2, 1];
+    const raw = getComputedStyle(root).getPropertyValue(EASE_CSS_VAR[ease]);
+    const bezier = parseCubicBezier(raw);
+    if (bezier) return bezier;
   }
-  return [0, 0, 0.2, 1];
+  return ASTRYX_EASE_STANDARD;
 }
 
 /** Duration + easing utility classes for CSS `transition`. */
 export function motionTransition(
-  duration: MotionDuration,
+  duration: MotionDurationKey,
   ease: MotionEase = "standard",
 ): string {
   return `${motionDurationClasses[duration]} ${motionEaseClasses[ease]}`;
@@ -173,16 +221,16 @@ export function motionTransition(
 
 /**
  * Focus ring + shell border fade — Tailwind rings use box-shadow.
- * `slow` keeps focus from popping instantly; pair with focus/focus-within ring utilities.
+ * `fast` keeps focus from popping instantly without lagging (Astryx: high-frequency = fast tier).
  */
 export const focusRingTransitionClasses =
-  `transition-[box-shadow,border-color,outline-color] ${motionTransition("slow")}`;
+  `transition-[box-shadow,border-color,outline-color] ${motionTransition("fast")}`;
 
 export const pressScaleClass = "enabled:active:scale-[var(--motion-press-scale)]";
 
 /** Map WMDS Theme tokens to a Motion `transition` prop — reads CSS vars at runtime. */
 export function motionTransitionProp(
-  duration: MotionDuration,
+  duration: MotionDurationKey,
   ease: MotionEase = "standard",
   root?: Element | null,
 ): Transition {

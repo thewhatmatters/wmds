@@ -16,10 +16,10 @@ export const badgeBaseClasses =
  */
 export const badgeSolidClasses: Record<BadgeVariant, string> = {
   neutral: "border border-border bg-secondary text-secondary-foreground shadow-raised",
-  info: "bg-info text-info-foreground",
-  success: "bg-success text-success-foreground",
-  warning: "bg-warning text-warning-foreground",
-  destructive: "bg-destructive text-destructive-foreground",
+  info: "bg-info text-on-info",
+  success: "bg-success text-on-success",
+  warning: "bg-warning text-on-warning",
+  destructive: "bg-error text-on-error",
 };
 
 /** Label sizing — text-only and icon patterns share the same padding shell. */
@@ -47,7 +47,7 @@ export const badgeCountSizeClasses: Record<BadgeSize, string> = {
 
 /** Internal — trailing count on secondary/primary buttons. */
 export const badgeOnButtonCountClasses =
-  "border border-transparent bg-bg text-fg shadow-raised";
+  "border border-transparent bg-surface text-fg shadow-raised";
 
 export function isBadgeVariant(value: string): value is BadgeVariant {
   return (badgeVariants as readonly string[]).includes(value);

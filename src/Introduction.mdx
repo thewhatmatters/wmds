@@ -13,7 +13,7 @@ export function DocTable({ rows }) {
       </thead>
       <tbody>
         {rows.map(([piece, role]) => (
-          <tr key={piece} className="border-b border-border/60 align-top">
+          <tr key={piece} className="border-b border-border-emphasized align-top">
             <td className="py-2 pr-4 font-mono text-xs text-fg">{piece}</td>
             <td className="py-2 text-fg">{role}</td>
           </tr>
@@ -35,7 +35,7 @@ export function TokenTable({ rows }) {
       </thead>
       <tbody>
         {rows.map(([token, value, use]) => (
-          <tr key={token} className="border-b border-border/60 align-top">
+          <tr key={token} className="border-b border-border-emphasized align-top">
             <td className="py-2 pr-4 font-mono text-xs">{token}</td>
             <td className="py-2 pr-4 font-mono text-xs text-muted">{value}</td>
             <td className="py-2 text-fg">{use}</td>
@@ -69,7 +69,7 @@ WMDS is our Tailwind v4 theme and Storybook catalog. **Storybook is canonical** 
 <html data-theme="dark">
 ```
 
-Same utility names (`bg-bg`, `text-fg`, …) — values swap in `colors.css` and `stateColors.css`.
+Same utility names (`bg-body`, `text-fg`, …) — values swap in `colors.css` and `stateColors.css`. Legacy `bg-bg` aliases `body`.
 
 ## Pattern-first (not utility-first)
 
@@ -100,15 +100,14 @@ Full decision: **`docs/adr/0004-pattern-first-not-utility-first.md`**.
 
 Two layers: CSS tokens for simple effects; Motion for gestures, layout, and enter/exit.
 
-### Layer 1 — CSS tokens
+### Layer 1 — CSS tokens (Astryx tiers)
 
 <TokenTable
   rows={[
-    ["--duration-instant", "100ms", "Row hover, micro feedback"],
-    ["--duration-fast", "150ms", "Press scale"],
-    ["--duration-base", "200ms", "Color / opacity crossfades"],
-    ["--duration-slower", "300ms", "Drawers, tab indicator"],
-    ["--ease-out-expo", "cubic-bezier(0.16, 1, 0.3, 1)", "Decelerating reveals"],
+    ["--duration-fast", "175ms", "Hover, press, focus, color"],
+    ["--duration-medium", "410ms", "Panels, expand/collapse, layout morph"],
+    ["--duration-slow", "975ms", "Large spatial change (rare)"],
+    ["--ease-standard", "cubic-bezier(0.24, 1, 0.4, 1)", "Single default easing"],
     ["--motion-press-scale", "0.98", "Button press shrink"],
   ]}
 />
@@ -134,11 +133,11 @@ import { motionTransitionProp } from "@whatmatters/wmds";
 />
 ```
 
-**Use Motion for:** gestures, `layout` / `layoutId`, `AnimatePresence`, springs, scroll-linked animation.
+**Use Motion for:** gestures, `layout` / `layoutId`, `AnimatePresence`, layout enter/exit.
 
-**Stay on CSS for:** single-property `:hover` / `:focus` changes.
+**Stay on CSS for:** single-property `:hover` / `:focus` changes (fast tier).
 
-See **Foundation → Motion** for live demos.
+See **Foundation → Motion** and **ADR-0008** for tier guidance.
 
 ## Accessibility — reduced motion
 

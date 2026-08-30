@@ -12,7 +12,7 @@ export const statusDotVariantClasses: Record<StatusDotVariant, string> = {
   info: "bg-info",
   success: "bg-success",
   warning: "bg-warning",
-  destructive: "bg-destructive",
+  destructive: "bg-error",
 };
 
 export const statusDotPulseClass = "animate-status-dot-pulse";

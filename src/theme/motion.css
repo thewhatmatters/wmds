@@ -1,0 +1,35 @@
+/**
+ * WMDS motion sheet — Astryx-aligned duration and easing tokens.
+ * Reference: https://astryx.atmeta.com/docs/motion
+ *
+ * Tier guide:
+ * - fast — hovers, presses, color, focus (high frequency)
+ * - medium — panels, expand/collapse, layout rearrangement
+ * - slow — large spatial transitions (rare)
+ */
+:root {
+  /* Fast tier */
+  --duration-fast-min: 130ms;
+  --duration-fast: 175ms;
+  --duration-fast-max: 230ms;
+
+  /* Medium tier */
+  --duration-medium-min: 310ms;
+  --duration-medium: 410ms;
+  --duration-medium-max: 550ms;
+
+  /* Slow tier */
+  --duration-slow-min: 730ms;
+  --duration-slow: 975ms;
+  --duration-slow-max: 1300ms;
+
+  --ease-standard: cubic-bezier(0.24, 1, 0.4, 1);
+
+  --motion-press-scale: 0.98;
+
+  /* Legacy aliases — prefer fast/medium/slow tiers in new code */
+  --duration-instant: var(--duration-fast-min);
+  --duration-base: var(--duration-medium-min);
+  --duration-slower: var(--duration-medium-max);
+  --ease-out-expo: var(--ease-standard);
+}

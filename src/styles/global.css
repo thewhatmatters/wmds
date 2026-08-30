@@ -10,8 +10,8 @@
 body {
   margin: 0;
   font-family: var(--font-sans);
-  background: var(--color-bg);
-  color: var(--color-fg);
+  background: var(--color-background-body);
+  color: var(--color-text-primary);
   -webkit-font-smoothing: antialiased;
 }
 

@@ -8,6 +8,7 @@ import {
   cardTitleClasses,
 } from "../../components/molecules/Card/Card";
 import { Chip, ChipFilterGroup } from "../../components/molecules/Chip/Chip";
+import { List } from "../../components/molecules/List/List";
 import { cn } from "../../lib/cn";
 import { typographyClass } from "../../lib/typography";
 import { FindMorph } from "./FindMorph";
@@ -30,7 +31,7 @@ Shipped atoms and molecules wired together the way FM consumes them:
 |--------|------------|
 | **Find** | \`FindMorph\` — \`layoutId\` spring morph ([Motion Create Button](https://motion.dev/examples/react-create-button)) |
 | **Filters** | \`ChipFilterGroup\` + \`Chip\` |
-| **Results** | Provisional rows — **List** molecule is next on the roadmap |
+| **Results** | \`List\` + \`List.Item\` — stacked rows, selectable |
 | **Detail** | Flush \`Card\` inset in a panel + read-only \`Chip\` + \`Button\` |
 
 ## Tier note
@@ -89,47 +90,10 @@ function mutedText(className: string) {
   return cn(className, "text-muted");
 }
 
-/** Provisional row — replace with List molecule when #4 on the FM roadmap ships. */
-function MarketRow({
-  market,
-  selected,
-  onSelect,
-}: {
-  market: Market;
-  selected: boolean;
-  onSelect: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onSelect}
-      aria-pressed={selected}
-      className={cn(
-        "flex w-full items-start gap-3 border-b border-border px-4 py-3 text-left transition-colors",
-        "hover:bg-ghost-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-inset",
-        selected && "bg-ghost-hover",
-      )}
-    >
-      <div className="min-w-0 flex-1">
-        <p className={cn(typographyClass("ui-label"), "text-fg")}>{market.name}</p>
-        <p className={cn(typographyClass("caption"), "mt-0.5")}>{market.street}</p>
-      </div>
-      <div className="flex shrink-0 flex-col items-end gap-1.5">
-        <span className={cn(typographyClass("caption"), "tabular-nums")}>{market.miles} mi</span>
-        {market.snap ? (
-          <Chip readOnly size="sm">
-            SNAP
-          </Chip>
-        ) : null}
-      </div>
-    </button>
-  );
-}
-
 function MarketDetailPanel({ market }: { market: Market }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-bg shadow-raised">
-      <div className="border-b border-border px-4 py-3">
+    <div className="overflow-hidden rounded-lg border border-border bg-card shadow-raised">
+      <div className="border-b border-border-emphasized px-4 py-3">
         <p className={typographyClass("ui-label")}>Market detail</p>
       </div>
       <Card variant="surface" shape="flush">
@@ -212,7 +176,7 @@ function FarmerMarketBrowse() {
   });
 
   return (
-    <div className="min-h-[100dvh] bg-bg">
+    <div className="min-h-[100dvh] bg-body">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 p-4 md:gap-6 md:p-6">
         <header className="flex flex-col gap-1">
           <h1 className={typographyClass("section-heading")}>Find a market</h1>
@@ -247,14 +211,26 @@ function FarmerMarketBrowse() {
             className="overflow-hidden rounded-lg border border-border bg-surface"
           >
             {visibleMarkets.length > 0 ? (
-              visibleMarkets.map((market) => (
-                <MarketRow
-                  key={market.id}
-                  market={market}
-                  selected={market.id === selectedId}
-                  onSelect={() => setSelectedId(market.id)}
-                />
-              ))
+              <List variant="ghost" hasDividers>
+                {visibleMarkets.map((market) => (
+                  <List.Item
+                    key={market.id}
+                    layout="stacked"
+                    primary={market.name}
+                    secondary={market.street}
+                    meta={`${market.miles} mi`}
+                    trailing={
+                      market.snap ? (
+                        <Chip readOnly size="sm">
+                          SNAP
+                        </Chip>
+                      ) : undefined
+                    }
+                    selected={market.id === selectedId}
+                    onPress={() => setSelectedId(market.id)}
+                  />
+                ))}
+              </List>
             ) : (
               <p className={cn(typographyClass("body"), "px-4 py-8 text-center text-muted")}>
                 No markets match your filters.
@@ -293,7 +269,7 @@ function FindPillSpecimen() {
   const [expanded, setExpanded] = useState(false);
   const [query, setQuery] = useState("");
   return (
-    <div className="max-w-lg bg-bg p-6">
+    <div className="max-w-lg bg-body p-6">
       <FindHero
         query={query}
         onQueryChange={setQuery}
