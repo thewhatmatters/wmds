@@ -8,12 +8,12 @@
  * Brand actions: primary / on-primary (WhatMatters — separate from accent).
  */
 :root {
-  /* Surface hierarchy */
-  --color-background-body: #f1f1f1;
+  /* Surface hierarchy — body/muted lightened for softer inset wells (test) */
+  --color-background-body: #f8f8f8;
   --color-background-surface: #ffffff;
   --color-background-card: #ffffff;
   --color-background-popover: #ffffff;
-  --color-background-muted: #f1f1f1;
+  --color-background-muted: #f8f8f8;
 
   /* Text */
   --color-text-primary: #171717;
@@ -23,7 +23,7 @@
 
   /* Accent (neutral UI chrome — not brand) */
   --color-accent: #262626;
-  --color-accent-muted: #f1f1f1;
+  --color-accent-muted: #f8f8f8;
   --color-on-accent: #ffffff;
 
   /* Overlays & neutral fills */

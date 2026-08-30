@@ -30,7 +30,7 @@ export const listItemButtonClasses =
   motionTransition("fast") +
   " transition-colors hover:bg-ghost-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-inset disabled:pointer-events-none disabled:opacity-50";
 
-export const listItemSelectedClasses = "bg-ghost-hover";
+export const listItemSelectedClasses = "bg-body";
 
 /** ~8px inset rhythm — Astryx List owns the content line inside Section padding={0}. */
 export const listItemPaddingClasses = "px-4 py-3";

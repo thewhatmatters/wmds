@@ -11,7 +11,7 @@ Designer harvest order (running list — update status as components ship):
 | 2 | **Button** + **IconButton** | Atoms | Find, Use my location, GO, Get directions, Close, × clear | **Shipped** — restyle against FM as needed |
 | 3 | **Input** | Atom | ZIP or city search | **Shipped** — bare default, optional label; see ADR-0006 |
 | 4 | **List** | Molecule | Market rows — name, street, miles, SNAP booth | **Shipped** — stacked/split rows, dividers, selectable |
-| 5 | **Card** | Molecule | 360° open card / panel inset detail | **Shipped** — flush default, Header/Body/Footer |
+| 5 | **Card** | Molecule | Market detail — shell + inset well, TaskRows body | **Shipped** — default `shape="rounded"`, Header/Body/Footer |
 | 6 | **Content rail** | Molecule | Map + market list pane — search/filters header, scrollable **List** body | **Shipped** — primary FM layout primitive |
 | 7 | **TaskRows** | Molecule | Map overlay detail — Get directions, services offered | **Shipped** — `MarketDetailCard` in **Examples/FarmerMarket** |
 

@@ -58,7 +58,7 @@ const meta = {
 | Pattern | Composition |
 |---------|-------------|
 | **Panel tray** | Parent \`rounded-lg border bg-surface\` → \`List variant="surface"\` with \`hasDividers\` |
-| **Selectable row** | \`List.Item\` + \`onPress\` + \`selected\` — \`aria-pressed\`, ghost hover |
+| **Selectable row** | \`List.Item\` + \`onPress\` + \`selected\` — \`aria-pressed\`, \`bg-body\` when selected |
 | **FM browse (stacked)** | \`layout="stacked"\` — name → street → miles; optional trailing \`Chip readOnly\` |
 | **Split row** | \`layout="split"\` — name, street, trailing \`Chip\` left; \`meta\` (miles) right |
 | **Read-only row** | Omit \`onPress\` — static content, no button chrome |

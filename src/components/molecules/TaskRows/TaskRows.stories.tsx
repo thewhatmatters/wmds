@@ -29,7 +29,7 @@ Expandable **rows** inside cards — leading icon or status badge, label, meta, 
 
 | Pattern | Composition |
 |---------|-------------|
-| **FM market detail** | **Card** \`variant="outlined"\` + \`TaskRows variant="capsule"\` + \`icon\` |
+| **FM market detail** | **Card** \`shape="rounded"\` + \`TaskRows variant="capsule"\` + \`icon\` |
 | **FM directions** | \`Detail variant="button" label="Apple Maps"\` — standard **Button** \`secondary\`; one line, no wrap |
 | **FM services** | \`icon={<Tags />}\` + \`detailsLayout="chips"\` + read-only **Chip** children |
 | **Progress list** | \`variant="list"\` or \`capsule\` + \`status="done" \| "running" \| …\` |
@@ -50,7 +50,7 @@ TaskRows
 
 ## Best practices
 
-- **Do** use **Card** \`outlined\` + \`TaskRows variant="capsule"\` — separated pill rows inside the card body.
+- **Do** use **Card** + \`TaskRows variant="capsule"\` — pill rows inside the inset body well.
 - **Do** use \`icon\` + \`status="none"\` for FM expandable rows — directions, services, hours.
 - **Do** use read-only **Chip** inside \`detailsLayout="chips"\` for SNAP, dogs, etc.
 - **Do** use \`TaskRows.Detail\` with \`onPress\` for FM Apple Maps / Google Maps deep links — labels stay on one line (do not wrap).
@@ -75,7 +75,7 @@ export const FarmerMarketDetail: Story = {
 
     return (
       <div className="w-max bg-body p-4">
-        <Card variant="outlined" shape="rounded" padding="none">
+        <Card shape="rounded" padding="none">
           <Card.Header>
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
@@ -94,7 +94,7 @@ export const FarmerMarketDetail: Story = {
               />
             </div>
           </Card.Header>
-          <Card.Body className="px-4 py-3">
+          <Card.Body>
             <TaskRows variant="capsule">
               <TaskRows.Item
                 icon={<MapPin strokeWidth={2} />}
@@ -198,7 +198,7 @@ export const WithPrimaryAction: Story = {
 
     return (
       <div className="w-max p-4">
-        <Card variant="surface" shape="rounded">
+        <Card shape="rounded" padding="none">
           <Card.Header>
             <div className="flex items-start justify-between gap-3">
               <div>

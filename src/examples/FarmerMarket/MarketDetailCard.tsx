@@ -54,7 +54,7 @@ export function MarketDetailCard({ market, onClose, className }: MarketDetailCar
 
   return (
     <div className={cn("w-max max-w-full", className)}>
-      <Card variant="outlined" shape="rounded" padding="none">
+      <Card padding="none">
         <Card.Header>
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
@@ -84,7 +84,7 @@ export function MarketDetailCard({ market, onClose, className }: MarketDetailCar
             )}
           </div>
         </Card.Header>
-        <Card.Body className="px-4 py-3">
+        <Card.Body>
           <TaskRows variant="capsule">
             <TaskRows.Item
               icon={<MapPin strokeWidth={2} />}

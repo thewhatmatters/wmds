@@ -10,6 +10,8 @@ import {
   cardBaseClasses,
   cardBodyTextClasses,
   cardDividerClasses,
+  cardLayoutShellClasses,
+  cardLayoutShellShapeClasses,
   cardRootPaddingClasses,
   cardSectionPaddingClasses,
   cardShapeClasses,
@@ -28,8 +30,9 @@ export type CardLayoutClassName = string;
 
 export interface CardProps extends HTMLAttributes<HTMLElement> {
   children: ReactNode;
-  /** `flush` (default) — inset in panels/sidebars; `rounded` for standalone surfaces. */
+  /** `rounded` (default) — shell + inset well with outer radius/shadow; `flush` when parent owns chrome. */
   shape?: CardShape;
+  /** Applies to simple padded cards only — layout cards use the body/surface shell pattern. */
   variant?: CardVariant;
   /** Root padding. Use `none` with `Card.Header` / `Card.Body` / `Card.Footer`. */
   padding?: CardPadding;
@@ -49,7 +52,7 @@ function useCardPadding() {
 }
 
 function CardRoot({
-  shape = "flush",
+  shape = "rounded",
   variant = "surface",
   padding = "none",
   as: Component = "div",
@@ -57,19 +60,22 @@ function CardRoot({
   children,
   ...props
 }: CardProps) {
+  const isLayout = padding === "none";
+
   return (
     <CardPaddingContext.Provider value={padding}>
       <Component
         className={cn(
           cardBaseClasses,
-          cardShapeClasses[shape],
-          cardVariantClasses[variant],
-          cardRootPaddingClasses[padding],
+          isLayout
+            ? cn(cardLayoutShellClasses, cardLayoutShellShapeClasses[shape])
+            : cn(cardShapeClasses[shape], cardVariantClasses[variant], cardRootPaddingClasses[padding]),
           className,
         )}
         data-shape={shape}
-        data-variant={variant}
+        data-variant={isLayout ? undefined : variant}
         data-padding={padding}
+        data-layout={isLayout ? "shell" : undefined}
         {...props}
       >
         {children}
@@ -111,7 +117,7 @@ function CardDivider({ className, ...props }: HTMLAttributes<HTMLHRElement>) {
 
 /**
  * Content surface — [Astryx Card](https://astryx.atmeta.com/components/Card).
- * Default **flush** (no radius) for panel/sidebar inset; compose with Header, Body, Footer.
+ * Layout cards (`padding="none"`) — white shell, muted inset body well, header/footer on shell.
  */
 export const Card = Object.assign(CardRoot, {
   Header: CardHeader,
