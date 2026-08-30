@@ -32,7 +32,7 @@ Page-level composition for [farmermarket.us](https://farmermarket.us) — **Exam
 | **Page chrome** | App-owned layout (header, nav) — plain viewport flex in the FM app |
 | **Map** | Main canvas (placeholder) — flex-1 beside content rail on \`md:\`+ |
 | **Map overlay** | \`MarketDetailCard\` — mount in map library overlay slot (engineers own placement) |
-| **List rail** | \`ContentRail\` — pill \`Input\` (ZIP) + \`ChipFilterGroup\` header, \`List\` body |
+| **List rail** | \`ContentRail width="sm"\` — pill \`Input\` (ZIP) + \`ChipFilterGroup\` header, \`List\` body |
 | **Rows** | \`List.Item\` stacked — name, street, miles, optional SNAP \`Chip\` |
 
 \`ContentRail\` is the WMDS primitive for map + list. App nav (bottom bar, sidebar) stays in the consuming app.
@@ -120,8 +120,8 @@ function MapCanvas({
         <div className="size-48 rounded-full border border-border-emphasized md:size-72" />
       </div>
       {overlay ? (
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex justify-center p-4 md:inset-x-auto md:bottom-6 md:left-6 md:justify-start">
-          <div className="pointer-events-auto w-full max-w-sm">{overlay}</div>
+        <div className="pointer-events-none absolute top-0 right-0 z-10 flex justify-end p-4">
+          <div className="pointer-events-auto w-max max-w-full">{overlay}</div>
         </div>
       ) : (
         <p className="m-auto px-6 text-center type-supporting text-muted">
@@ -153,7 +153,7 @@ function MarketListRail({
     <ContentRail
       aria-label="Market results"
       position="end"
-      width="md"
+      width="sm"
       header={
         <>
           <Input
@@ -288,7 +288,7 @@ export const DetailOnly: Story = {
     },
   },
   render: () => (
-    <div className="max-w-sm bg-body p-4">
+    <div className="w-max bg-body p-4">
       <MarketDetailCard market={MARKETS[0]} />
     </div>
   ),
@@ -336,7 +336,7 @@ export const FindPill: Story = {
     docs: {
       description: {
         story:
-          "Shared `layoutId=\"fm-find-shell\"` morphs the primary **Find** pill into the **Search** shell — same pattern as [Motion Create Button](https://motion.dev/examples/react-create-button). Inner field fades in on a staggered spring.",
+          "Find grows into ZIP + Use my location — [Create Button](https://motion.dev/examples/react-create-button) shared-shell `layoutId`, clip-path reveal. No inner fade. Find does not smear. Hover rolls the label.",
       },
     },
   },

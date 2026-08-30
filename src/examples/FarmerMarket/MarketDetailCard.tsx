@@ -53,64 +53,66 @@ export function MarketDetailCard({ market, onClose, className }: MarketDetailCar
   const serviceCount = serviceChips.length;
 
   return (
-    <Card variant="outlined" shape="rounded" padding="none" className={cn("max-w-sm", className)}>
-      <Card.Header>
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h2 className={cardTitleClasses}>{market.name}</h2>
-            <div className={cardAddressClasses}>
-              <span>{market.street}</span>
-              {market.cityLine ? <span>{market.cityLine}</span> : null}
+    <div className={cn("w-max max-w-full", className)}>
+      <Card variant="outlined" shape="rounded" padding="none">
+        <Card.Header>
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h2 className={cardTitleClasses}>{market.name}</h2>
+              <div className={cardAddressClasses}>
+                <span>{market.street}</span>
+                {market.cityLine ? <span>{market.cityLine}</span> : null}
+              </div>
             </div>
+            {onClose ? (
+              <IconButton
+                icon={<X strokeWidth={2} />}
+                aria-label="Close market detail"
+                title="Close market detail"
+                role="secondary"
+                size="sm"
+                onClick={onClose}
+              />
+            ) : (
+              <IconButton
+                icon={<X strokeWidth={2} />}
+                aria-label="Close market detail"
+                title="Close market detail"
+                role="secondary"
+                size="sm"
+              />
+            )}
           </div>
-          {onClose ? (
-            <IconButton
-              icon={<X strokeWidth={2} />}
-              aria-label="Close market detail"
-              title="Close market detail"
-              role="secondary"
-              size="sm"
-              onClick={onClose}
-            />
-          ) : (
-            <IconButton
-              icon={<X strokeWidth={2} />}
-              aria-label="Close market detail"
-              title="Close market detail"
-              role="secondary"
-              size="sm"
-            />
-          )}
-        </div>
-      </Card.Header>
-      <Card.Body className="px-4 py-3">
-        <TaskRows variant="capsule">
-          <TaskRows.Item
-            icon={<MapPin strokeWidth={2} />}
-            label="Get directions"
-            meta={`${market.miles} mi`}
-            detailsLayout="actions"
-            detailsLabel="Open in"
-            open={directionsOpen}
-            onOpenChange={setDirectionsOpen}
-          >
-            <TaskRows.Detail variant="button" label="Apple Maps" onPress={() => undefined} />
-            <TaskRows.Detail variant="button" label="Google Maps" onPress={() => undefined} />
-          </TaskRows.Item>
-          {serviceCount > 0 ? (
+        </Card.Header>
+        <Card.Body className="px-4 py-3">
+          <TaskRows variant="capsule">
             <TaskRows.Item
-              icon={<Tags strokeWidth={2} />}
-              label="Services offered"
-              meta={String(serviceCount)}
-              detailsLayout="chips"
-              open={servicesOpen}
-              onOpenChange={setServicesOpen}
+              icon={<MapPin strokeWidth={2} />}
+              label="Get directions"
+              meta={`${market.miles} mi`}
+              detailsLayout="actions"
+              detailsLabel="Open in"
+              open={directionsOpen}
+              onOpenChange={setDirectionsOpen}
             >
-              {serviceChips}
+              <TaskRows.Detail variant="button" label="Apple Maps" onPress={() => undefined} />
+              <TaskRows.Detail variant="button" label="Google Maps" onPress={() => undefined} />
             </TaskRows.Item>
-          ) : null}
-        </TaskRows>
-      </Card.Body>
-    </Card>
+            {serviceCount > 0 ? (
+              <TaskRows.Item
+                icon={<Tags strokeWidth={2} />}
+                label="Services offered"
+                meta={String(serviceCount)}
+                detailsLayout="chips"
+                open={servicesOpen}
+                onOpenChange={setServicesOpen}
+              >
+                {serviceChips}
+              </TaskRows.Item>
+            ) : null}
+          </TaskRows>
+        </Card.Body>
+      </Card>
+    </div>
   );
 }

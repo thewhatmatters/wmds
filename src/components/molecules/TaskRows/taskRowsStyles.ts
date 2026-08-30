@@ -98,8 +98,8 @@ export const taskRowsDetailsExpandOnlyClasses = "flex flex-col pb-4 " + taskRows
 /** Expanded details when row has no status badge — stacked lines. */
 export const taskRowsDetailsPlainClasses = "flex flex-col gap-1.5";
 
-/** Horizontal action buttons — FM map apps, quick choices. */
-export const taskRowsDetailsActionsClasses = "flex w-full flex-row gap-2.5";
+/** Horizontal action buttons — FM map apps, quick choices. One line, equal height, no wrap. */
+export const taskRowsDetailsActionsClasses = "flex w-full flex-nowrap items-stretch gap-2.5";
 
 /** Read-only service tags — FM market detail, display-only Chip children. */
 export const taskRowsDetailsChipsClasses = "flex w-full flex-row flex-wrap gap-2";
@@ -108,7 +108,8 @@ export const taskRowsDetailsLabelClasses = `${typographyClass("caption")} mb-2 t
 
 export const taskRowsDetailsPanelClasses = "flex min-w-0 flex-col";
 
-export const taskRowsDetailButtonClasses = "min-w-0 flex-1";
+/** Fill the row equally; `min-w-0` is omitted so labels cannot wrap (Google / Maps fail). */
+export const taskRowsDetailButtonClasses = "min-w-max flex-1 whitespace-nowrap";
 
 export const taskRowsDetailsRailClasses = "mx-auto h-full w-px bg-border";
 
