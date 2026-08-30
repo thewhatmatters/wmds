@@ -50,3 +50,9 @@ Examples (templates / pages)
 ```
 
 See `docs/adr/0001-layer-architecture.md`, `docs/adr/0002-atomic-design.md`, `docs/adr/0003-responsive-mobile-first.md`, and `docs/adr/0004-pattern-first-not-utility-first.md`.
+
+## Farmer Market refresh
+
+Designer-driven harvest list for [farmermarket.us](https://farmermarket.us): **`docs/farmermarket-component-roadmap.md`**.
+
+Order: Chip → Input → List → Card (Button + IconButton shipped). New composite: **Find pill** (collapsed → ZIP field → committed ×).

@@ -7,7 +7,7 @@ WMDS is **not** utility-class-first. You do **not** build product UI by composin
 **Do this:**
 
 ```tsx
-import { Button, Badge, IconButton, StatusDot } from "@whatmatters/wmds";
+import { Button, Badge, Chip, ChipFilterGroup, IconButton, StatusDot } from "@whatmatters/wmds";
 import "@whatmatters/wmds/styles.css";
 
 <Button status={status}>Submit</Button>
@@ -82,6 +82,8 @@ import {
   Button,
   IconButton,
   Badge,
+  Chip,
+  ChipFilterGroup,
   StatusDot,
   buttonRoles,
   getNextButtonStatus,
@@ -94,6 +96,7 @@ import {
 |-----------|-----------|-----------|
 | `Button` | `role`, `size`, `status`, `icon`, `count` | Atoms/Button — copy a **Pattern** story |
 | `IconButton` | `icon`, `aria-label`, `role`, `size`, `fab`, `loading`, `title` | Atoms/IconButton — copy a **Pattern** story |
+| `Chip` | `size`, `value`, `selected`, `onRemove`, `icon`, `count`, `readOnly` | Molecules/Chip — use `ChipFilterGroup` for multi-select filters |
 | `Badge` | `variant`, `size`, `count`, `icon` | Atoms/Badge — copy a **Pattern** story |
 | `StatusDot` | `variant`, `label`, `besideLabel`, `pulsing` | Atoms/StatusDot — copy a **Pattern** story |
 

@@ -18,6 +18,16 @@ export {
   type IconButtonSize,
 } from "./components/atoms/IconButton/IconButton";
 export { StatusDot, statusDotVariants, type StatusDotLayoutClassName, type StatusDotProps, type StatusDotVariant } from "./components/atoms/StatusDot/StatusDot";
+export {
+  Chip,
+  ChipFilterGroup,
+  chipSizes,
+  type ChipFilterGroupProps,
+  type ChipLayoutClassName,
+  type ChipProps,
+  type ChipSelectionMode,
+  type ChipSize,
+} from "./components/molecules/Chip/Chip";
 export { cn } from "./lib/cn";
 export {
   motionTransition,
