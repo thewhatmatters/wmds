@@ -38,7 +38,7 @@ npm run build       # dist/theme.css + dist/styles.css
 | Tier | Components |
 |------|------------|
 | Atoms | `Badge`, `Button`, `IconButton`, `Input`, `StatusDot` |
-| Molecules | `Card`, `Chip`, `ChipFilterGroup`, `ContentRail`, `List`, `Search`, `TaskRows` |
+| Molecules | `Card`, `Chart`, `Chip`, `ChipFilterGroup`, `ContentRail`, `List`, `Search`, `TaskRows` |
 
 **Storybook-only:** `Examples/FarmerMarket` — browse layout + map overlay wiring. Copy patterns into the app; Examples are not package exports.
 

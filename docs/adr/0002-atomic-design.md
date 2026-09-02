@@ -31,11 +31,11 @@ Foundation and Theme are sub-component layers (tokens, specimens) — not atomic
 
 **Atoms:** Badge, Button, IconButton, Input, TextArea, StatusDot, StatusRing
 
-**Molecules:** Card, Chip, Field, List, Pagination, Search, Select
+**Molecules:** Card, Chart, Chip, Field, List, Pagination, Search, Select
 
-**Organisms:** Carousel, Chart, MoreMenu, Tab, Table
+**Organisms:** Carousel, MoreMenu, Tab, Table
 
-Reclassify only via ADR update — don't bikeshed per PR. **List** and **Card** moved to molecules — see **ADR-0005**.
+Reclassify only via ADR update — don't bikeshed per PR. **List** and **Card** moved to molecules — see **ADR-0005**. **Chart** moved to molecules — see **ADR-0010**.
 
 ### Storybook sidebar
 
@@ -64,3 +64,4 @@ src/components/{tier}/{Name}/
 - ADR-0003 — responsive, mobile-first rules per tier
 - ADR-0005 — List and Card reclassified as molecules
 - ADR-0006 — Input architecture (optional labels, individual components)
+- ADR-0010 — Chart reclassified as a Nivo molecule

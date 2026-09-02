@@ -19,7 +19,7 @@ Shared implementation behind component seams — `cn`, `motion`, `collapse.css`,
 Smallest UI units — Button, Input, Badge, etc. Import only `lib/` + Theme. Storybook: **`Atoms/{Name}`**. Exported.
 
 **Molecules** (`src/components/molecules/`):
-Modular composed units — Field, List, Card, Chip, Search, etc. May compose atoms and other molecules. Storybook: **`Molecules/{Name}`**. Exported.
+Modular composed units — Field, List, Card, Chart, Chip, Search, etc. May compose atoms and other molecules. Storybook: **`Molecules/{Name}`**. Exported.
 
 **Organisms** (`src/components/organisms/`):
 Section-scale UI — Table, Tab, MoreMenu, etc. Storybook: **`Organisms/{Name}`**. Exported.

@@ -20,6 +20,7 @@
 - **ContentRail:** supporting content pane beside a main canvas (map, detail). Patterns: **map + list (FM)** (`position="end"`, `header` slot for search + filters, `List` in body). **Full viewport height** — parent uses `h-[100dvh]` + flex; rail owns sticky header + scrollable body. Fixed width from `md:` — full width on mobile. Page chrome and app nav are app-owned.
 - **TaskRows:** expandable rows inside cards — optional `icon` or status badge, meta, detail panel with left rail. Patterns: **FM market detail** (`Card outlined` + `variant="capsule"`, `icon`, `detailsLayout="actions" | "chips"`); **progress list** (standalone `variant="list"`, `status="done" / "running" / "failed"`).
 - **Card:** [Astryx Card](https://astryx.atmeta.com/components/Card) — `Card.Header`, `Card.Body`, `Card.Footer`. Layout cards (`padding="none"`) use a **white shell + muted inset well** (`bg-body`); header/footer sit on the shell. Default **`shape="rounded"`** (`rounded-2xl shadow-md`) — FM market detail, widgets, map overlays. **`shape="flush"`** only when a parent owns outer chrome. Simple cards: `padding="md"`.
+- **Chart:** one-series 30-day area + line ([`@nivo/line`](https://nivo.rocks/line/)). Theme from WMDS tokens (`accent`, `fg`, `muted`, `surface`). No legend, no vertical grid, monotone curve. Empty/`[]` renders nothing. `className` is layout-only. See **ADR-0010**.
 - **Input:** `shape="rounded"` (default, Astryx forms) | `shape="pill"` (standalone); FM hero with inset button → **Search** molecule. Optional leading `icon`; trailing `endBadge` or status / `loading`. See **ADR-0006**.
 - **StatusDot:** fixed 8px semantic dot ([Astryx StatusDot](https://astryx.atmeta.com/components/StatusDot)). Patterns: standalone (`label`), `besideLabel`, optional `pulsing`. Not inside Badge.
 - **Layers:** Theme → **lib** → Components → Examples. Foundation = Storybook specimens only. Tailwind scan list = **`src/theme/sources.css`**. Package exports tracked in **`src/package.manifest.ts`**.
@@ -42,7 +43,7 @@ Brad Frost tiers under **`src/components/`**:
 
 **Import rules:** atoms ← molecules ← organisms ← examples. Molecules may compose other molecules (e.g. List row + Chip). Atoms never import other components.
 
-**Catalog** — see `src/package.manifest.ts` → `atomicExports`. Reclassify via ADR only. **List** and **Card** are molecules (ADR-0005).
+**Catalog** — see `src/package.manifest.ts` → `atomicExports`. Reclassify via ADR only. **List** and **Card** are molecules (ADR-0005). **Chart** is a molecule (ADR-0010).
 
 **Farmer Market refresh** — designer harvest order: **`docs/farmermarket-component-roadmap.md`**. Target FM first; restyle shipped atoms, then Input → List → Card.
 

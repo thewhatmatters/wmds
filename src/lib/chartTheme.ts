@@ -1,138 +1,105 @@
-/** WMDS chart tokens — map semantic CSS variables to Recharts props. */
+import type { PartialTheme } from "@nivo/theming";
 
-export type ChartTone = "neutral" | "primary" | "success" | "destructive";
-export type ChartVariant = "hero" | "compact" | "sparkline";
+/**
+ * WMDS chart tokens — map semantic CSS variables to Nivo theme + series color.
+ * No Nivo color schemes or hex palettes.
+ */
 
-export type ChartMargins = {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-};
-
-export type ChartGradientStops = {
-  top: string;
-  topOpacity: number;
-  bottom: string;
-  bottomOpacity: number;
-};
-
-export type ChartAreaPreset = {
-  strokeWidth: number;
-  fillOpacity: number;
-  type: "monotone" | "linear" | "step";
-  animation: boolean;
-};
-
-/** Token-backed stroke/fill colors per tone. */
-export const chartColorTokens: Record<ChartTone, { stroke: string; fill: string }> = {
-  neutral: {
-    stroke: "var(--color-text-primary)",
-    fill: "var(--color-text-primary)",
-  },
-  primary: {
-    stroke: "var(--color-primary)",
-    fill: "var(--color-primary)",
-  },
-  success: {
-    stroke: "var(--color-success)",
-    fill: "var(--color-success)",
-  },
-  destructive: {
-    stroke: "var(--color-error)",
-    fill: "var(--color-error)",
-  },
-};
-
-export const chartUiTokens = {
-  grid: "var(--color-border)",
-  axis: "var(--color-muted)",
-  cursor: "var(--color-border)",
-  placeholder: "var(--color-border)",
-  tooltipBg: "var(--color-background-body)",
-  tooltipBorder: "var(--color-border)",
-  tooltipFg: "var(--color-text-primary)",
-  tooltipMuted: "var(--color-text-secondary)",
+export const chartToken = {
+  accent: "var(--color-accent)",
+  fg: "var(--color-fg)",
+  muted: "var(--color-muted)",
+  surface: "var(--color-surface)",
+  border: "var(--color-border)",
+  font: "var(--font-family-body)",
 } as const;
 
-/** Dot-grid canvas — apply class `wmds-chart-grid` or use `Chart` with `showGrid`. */
-export const chartGrid = {
-  className: "wmds-chart-grid",
-  size: "14px",
-  dot: "color-mix(in srgb, var(--color-text-primary) 8%, transparent)",
-  dotDark: "color-mix(in srgb, var(--color-text-primary) 12%, transparent)",
+export const chartSeriesColor = chartToken.accent;
+
+export const chartAreaOpacity = 0.12;
+
+export const chartLineWidth = 2;
+
+export const chartMargins = {
+  top: 8,
+  right: 12,
+  bottom: 28,
+  left: 36,
 } as const;
 
-export const chartMargins: Record<ChartVariant, ChartMargins> = {
-  hero: { top: 8, right: 8, bottom: 0, left: 8 },
-  compact: { top: 6, right: 4, bottom: 0, left: 4 },
-  sparkline: { top: 2, right: 0, bottom: 2, left: 0 },
+/** Quiet Nivo chrome — muted ticks, hairline horizontal grid, token tooltip. */
+export const chartNivoTheme: PartialTheme = {
+  background: "transparent",
+  text: {
+    fill: chartToken.muted,
+    fontFamily: chartToken.font,
+    fontSize: 12,
+  },
+  axis: {
+    domain: {
+      line: { stroke: "transparent" },
+    },
+    ticks: {
+      line: { stroke: "transparent" },
+      text: { fill: chartToken.muted, fontFamily: chartToken.font, fontSize: 12 },
+    },
+    legend: {
+      text: { fill: chartToken.muted },
+    },
+  },
+  grid: {
+    line: { stroke: chartToken.border, strokeWidth: 1 },
+  },
+  crosshair: {
+    line: {
+      stroke: chartToken.border,
+      strokeWidth: 1,
+    },
+  },
+  tooltip: {
+    container: {
+      background: chartToken.surface,
+      color: chartToken.fg,
+      border: `1px solid ${chartToken.border}`,
+      borderRadius: 8,
+      boxShadow: "none",
+      fontFamily: chartToken.font,
+      fontSize: 12,
+    },
+  },
 };
 
-export const chartAreaPresets: Record<ChartVariant, ChartAreaPreset> = {
-  hero: {
-    strokeWidth: 2,
-    fillOpacity: 0.12,
-    type: "monotone",
-    animation: true,
-  },
-  compact: {
-    strokeWidth: 2,
-    fillOpacity: 0.1,
-    type: "monotone",
-    animation: true,
-  },
-  sparkline: {
-    strokeWidth: 1.5,
-    fillOpacity: 0.22,
-    type: "monotone",
-    animation: false,
-  },
+/** One daily point in the 30-day series Pitchkit (and Storybook) pass in. */
+export type ChartPoint = {
+  /** Day on the x-axis — `Date` or ISO date (`YYYY-MM-DD`). */
+  x: Date | string;
+  y: number;
 };
 
-/** Resolve stroke color for a tone. */
-export function chartStroke(tone: ChartTone = "neutral"): string {
-  return chartColorTokens[tone].stroke;
+export function hasChartData(
+  data?: readonly ChartPoint[] | null,
+): data is readonly ChartPoint[] {
+  return Array.isArray(data) && data.some((point) => point != null && Number.isFinite(point.y));
 }
 
-/** Resolve fill color for a tone. */
-export function chartFill(tone: ChartTone = "neutral"): string {
-  return chartColorTokens[tone].fill;
+export function toNivoPoints(data: readonly ChartPoint[]): { x: Date; y: number }[] {
+  return data.flatMap((point) => {
+    if (point == null || !Number.isFinite(point.y)) {
+      return [];
+    }
+    const x = point.x instanceof Date ? point.x : new Date(point.x);
+    if (Number.isNaN(x.getTime())) {
+      return [];
+    }
+    return [{ x, y: point.y }];
+  });
 }
 
-/** Vertical gradient stops for area fills (Recharts linearGradient). */
-export function chartGradientStops(
-  tone: ChartTone = "neutral",
-  variant: ChartVariant = "hero",
-): ChartGradientStops {
-  const color = chartFill(tone);
-  const preset = chartAreaPresets[variant];
-  return {
-    top: color,
-    topOpacity: preset.fillOpacity,
-    bottom: color,
-    bottomOpacity: 0,
-  };
-}
-
-/** Infer success/destructive from first vs last numeric value. */
-export function resolveChartTone(values: (number | null | undefined)[]): ChartTone {
-  const nums = values.filter((value): value is number => value != null && !Number.isNaN(value));
-  if (nums.length < 2) {
-    return "neutral";
-  }
-
-  return nums[nums.length - 1]! >= nums[0]! ? "success" : "destructive";
-}
-
-/** Bundled theme for custom Recharts compositions in consumer apps. */
 export const chartTheme = {
-  colors: chartColorTokens,
-  ui: chartUiTokens,
+  token: chartToken,
+  seriesColor: chartSeriesColor,
+  areaOpacity: chartAreaOpacity,
+  lineWidth: chartLineWidth,
   margins: chartMargins,
-  area: chartAreaPresets,
-  chartStroke,
-  chartFill,
-  chartGradientStops,
-  resolveChartTone,
+  nivo: chartNivoTheme,
 } as const;

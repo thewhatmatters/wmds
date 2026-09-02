@@ -24,7 +24,7 @@ export default defineConfig({
         "react/jsx-runtime",
         "motion",
         "motion/react",
-        "recharts",
+        "@nivo/line",
         "lucide-react",
       ],
       output: {

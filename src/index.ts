@@ -68,6 +68,12 @@ export {
   type CardVariant,
 } from "./components/molecules/Card/Card";
 export {
+  Chart,
+  type ChartLayoutClassName,
+  type ChartPoint,
+  type ChartProps,
+} from "./components/molecules/Chart/Chart";
+export {
   List,
   listItemLayouts,
   listItemMetaClasses,

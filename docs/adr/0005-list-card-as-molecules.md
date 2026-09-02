@@ -39,7 +39,7 @@ Use **molecule** when the component is:
 Use **organism** when the component is:
 
 - Section-scale — multiple sub-regions, toolbar + body, or overlay system
-- Examples: **Table**, **Tab**, **MoreMenu**, **Carousel**, **Chart**
+- Examples: **Table**, **Tab**, **MoreMenu**, **Carousel** (**Chart** is a molecule — **ADR-0010**)
 
 Use **Examples** when the component is:
 
@@ -47,9 +47,9 @@ Use **Examples** when the component is:
 
 ### Updated planned catalog
 
-**Molecules:** Card, Chip, Field, List, Pagination, Search, Select
+**Molecules:** Card, Chart, Chip, Field, List, Pagination, Search, Select
 
-**Organisms:** Carousel, Chart, MoreMenu, Tab, Table
+**Organisms:** Carousel, MoreMenu, Tab, Table
 
 ### Import rules (unchanged)
 
@@ -67,4 +67,5 @@ Molecules may compose atoms and other molecules (e.g. List row trailing `Chip`).
 ## Related
 
 - ADR-0002 — atomic design tiers
+- ADR-0010 — Chart reclassified as a Nivo molecule
 - `docs/farmermarket-component-roadmap.md` — FM harvest order

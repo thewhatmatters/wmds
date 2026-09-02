@@ -13,9 +13,9 @@ const atoms = [
   "TextArea",
 ] as const;
 
-const molecules = ["Accordion", "Card", "Chip", "ContentRail", "Field", "List", "Pagination", "Search", "Select", "TaskRows"] as const;
+const molecules = ["Accordion", "Card", "Chart", "Chip", "ContentRail", "Field", "List", "Pagination", "Search", "Select", "TaskRows"] as const;
 
-const organisms = ["Carousel", "Chart", "MoreMenu", "Tab", "Table"] as const;
+const organisms = ["Carousel", "MoreMenu", "Tab", "Table"] as const;
 
 export const packageManifest = {
   /** Modules exported from src/index.ts today. */
@@ -41,7 +41,7 @@ export const packageManifest = {
     "react/jsx-runtime",
     "motion",
     "motion/react",
-    "recharts",
+    "@nivo/line",
     "lucide-react",
   ] as const,
 

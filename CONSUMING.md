@@ -85,6 +85,7 @@ import {
   IconButton,
   Badge,
   Card,
+  Chart,
   Chip,
   ChipFilterGroup,
   ContentRail,
@@ -109,12 +110,23 @@ import {
 | `Search` | `size`, `placeholder`, `onSubmit` | Molecules/Search — inline input + button row |
 | `List` | `variant`, `hasDividers`, `header` | Molecules/List — `List.Item` with `layout`, `primary`, `secondary`, `meta`, `trailing`, `onPress`, `selected` |
 | `Card` | `variant`, `shape`, `padding` | Molecules/Card — `Card.Header`, `Card.Body`, `Card.Footer`, `Card.Divider` |
+| `Chart` | `data`, `className` (layout) | Molecules/Chart — one 30-day area + line; empty data renders nothing |
 | `ContentRail` | `position`, `width`, `header` | Molecules/ContentRail — map + list pane beside main canvas |
 | `TaskRows` | `variant`, `detailsLayout` | Molecules/TaskRows — expandable rows; **Pattern — FM market detail** |
 | `Badge` | `variant`, `size`, `count`, `icon` | Atoms/Badge — copy a **Pattern** story |
 | `StatusDot` | `variant`, `label`, `besideLabel`, `pulsing` | Atoms/StatusDot — copy a **Pattern** story |
 
 Copy flow patterns from **Examples/** in Storybook when they ship. See **`src/package.manifest.ts`** for the export contract.
+
+Pitchkit Insights plot:
+
+```tsx
+import { Chart } from "@whatmatters/wmds";
+
+<Chart data={insights.points} className="h-48" />
+```
+
+Empty or missing Insights: omit `data` (or pass `[]`) — `Chart` renders nothing. Hide the surrounding Insights chrome in the app.
 
 ## Farmer Market — integrate into your app
 
