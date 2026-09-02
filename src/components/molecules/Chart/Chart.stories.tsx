@@ -77,8 +77,9 @@ export const ThirtyDayArea: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    const svg = canvasElement.querySelector("svg");
-    await expect(svg).toBeTruthy();
+    const chart = canvasElement.querySelector('[role="img"]');
+    await expect(chart).toBeTruthy();
+    await expect(chart?.querySelector("svg")).toBeTruthy();
     await expect(canvasElement.textContent ?? "").not.toMatch(
       /japan|norway|france|germany|transportation/i,
     );
