@@ -58,7 +58,7 @@ export const cardLayoutBodyWellClasses = [
 ].join(" ");
 
 /** Opt-in muted fill — put on the occupant, not on `Card.Body`. */
-export const cardBodyWellClasses = "bg-body";
+export const cardBodyWellClasses = "bg-body p-0.5";
 
 export const cardLayoutFooterClasses = "flex items-center justify-between gap-3";
 

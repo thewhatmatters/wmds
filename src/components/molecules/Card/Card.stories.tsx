@@ -236,7 +236,7 @@ export const BodySlotTaskRowsWell: Story = {
     docs: {
       description: {
         story:
-          "Optional muted well — `cardBodyWellClasses` (`bg-body`) on the **occupant**, not on `Card.Body`. Capsule TaskRows sit in that fill and keep their own pill radius.",
+          "Optional muted well — `cardBodyWellClasses` (`bg-body p-0.5`) on the **occupant**, not on `Card.Body`. Capsule TaskRows sit in that fill and keep their own pill radius.",
       },
     },
   },
