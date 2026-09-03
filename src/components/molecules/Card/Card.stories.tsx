@@ -1,10 +1,11 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Clock, Dog, Globe, MapPin, Tags } from "lucide-react";
+import { Clock, Dog, EllipsisVertical, Globe, MapPin, Tags } from "lucide-react";
 import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
+import { IconButton } from "../../atoms/IconButton/IconButton";
 import { Input } from "../../atoms/Input/Input";
-import { Chip } from "../Chip/Chip";
+import { Chip, ChipFilterGroup } from "../Chip/Chip";
 import { List } from "../List/List";
 import { TaskRows } from "../TaskRows/TaskRows";
 import {
@@ -49,6 +50,7 @@ const meta = {
 | Pattern | Composition |
 |---------|-------------|
 | **Layout** | \`Card padding="none"\` + \`Card.Header\` / \`Card.Body\` / \`Card.Footer\` — default; shell + Body slot (inherits fill) |
+| **Header** | Start: \`title\` + \`subtitle\`. End: kebab \`IconButton\`, chips-as-tabs, Badge |
 | **Body well** | Occupant wrap \`cardBodyWellClasses\` (\`bg-body\`) — optional muted field; TaskRows pills are the example |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
 
@@ -58,7 +60,7 @@ Default \`shape="rounded"\` — \`rounded-2xl shadow-md\` on the shell. Use \`sh
 
 \`\`\`
 Card (bg-surface shell, p-4, gap-3)
-├── Card.Header   — title, metadata (on shell, 16px inset)
+├── Card.Header   — start (title + subtitle) | end (tabs, kebab) — 16px inset
 ├── Card.Body     — slot — 2px outside, square, no fill (inherits shell)
 └── Card.Footer   — status, actions (on shell, 16px inset)
 \`\`\`
@@ -66,6 +68,7 @@ Card (bg-surface shell, p-4, gap-3)
 ## Best practices
 
 - **Do** set \`padding="none"\` when using Header/Body/Footer.
+- **Do** put the heading in \`title\` / \`subtitle\` and actions or tabs in \`end\` — do not hand-roll the header row.
 - **Do** treat \`Card.Body\` as a slot — TaskRows, List, Inputs, or custom UI all belong there.
 - **Do** keep title, address, and meta in **Header**; primary actions in **Footer**.
 - **Do** use default \`shape="rounded"\` — FM market detail, dashboard widgets, map overlays.
@@ -111,12 +114,7 @@ export const Layout: Story = {
   },
   render: () => (
     <Card shape="rounded" className="max-w-lg">
-      <Card.Header>
-        <div className="flex items-center justify-between gap-3">
-          <h2 className={cardTitleClasses}>Meeting Finder</h2>
-          <Badge size="sm">11:00 UTC</Badge>
-        </div>
-      </Card.Header>
+      <Card.Header title="Meeting Finder" end={<Badge size="sm">11:00 UTC</Badge>} />
       <Card.Body>
         <div className="flex min-h-32 items-center justify-center px-4 py-6">
           <p className={mutedText(cardBodyTextClasses)}>
@@ -132,6 +130,64 @@ export const Layout: Story = {
       </Card.Footer>
     </Card>
   ),
+};
+
+export const HeaderEnd: Story = {
+  name: "Pattern — header end",
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        story:
+          "**Header** start is `title` + `subtitle`. **End** holds chips-as-tabs, a kebab `IconButton`, or both.",
+      },
+    },
+  },
+  render: function HeaderEndDemo() {
+    const [view, setView] = useState("overview");
+
+    return (
+      <Card shape="rounded" className="max-w-lg">
+        <Card.Header
+          title="Texas Farmers' Market at Mueller"
+          subtitle="2006 Philomena St. · Austin, TX"
+          end={
+            <>
+              <ChipFilterGroup
+                aria-label="Market detail view"
+                selectionMode="single"
+                value={view}
+                onValueChange={setView}
+              >
+                <Chip value="overview" size="sm">
+                  Overview
+                </Chip>
+                <Chip value="hours" size="sm">
+                  Hours
+                </Chip>
+              </ChipFilterGroup>
+              <IconButton
+                icon={<EllipsisVertical strokeWidth={2} />}
+                aria-label="More market actions"
+                title="More"
+                role="ghost"
+                size="sm"
+              />
+            </>
+          }
+        />
+        <Card.Body>
+          <div className="flex min-h-32 items-center justify-center px-4 py-6">
+            <p className={mutedText(cardBodyTextClasses)}>
+              {view === "overview"
+                ? "Overview — directions, services, and hours"
+                : "Hours — Saturday 9am – 1pm"}
+            </p>
+          </div>
+        </Card.Body>
+      </Card>
+    );
+  },
 };
 
 export const BodySlotList: Story = {
@@ -150,10 +206,7 @@ export const BodySlotList: Story = {
 
     return (
       <Card shape="rounded" className="max-w-lg">
-        <Card.Header>
-          <h2 className={cardTitleClasses}>Nearby markets</h2>
-          <p className={mutedText(cardBodyTextClasses)}>Saturday · within 5 mi</p>
-        </Card.Header>
+        <Card.Header title="Nearby markets" subtitle="Saturday · within 5 mi" />
         <Card.Body>
           <List variant="surface" hasDividers className="overflow-hidden rounded-[1.375rem]">
             <List.Item
@@ -206,10 +259,10 @@ export const BodySlotForm: Story = {
   },
   render: () => (
     <Card shape="rounded" className="max-w-lg">
-      <Card.Header>
-        <h2 className={cardTitleClasses}>Working hours</h2>
-        <p className={mutedText(cardBodyTextClasses)}>Used to score overlapping time zones</p>
-      </Card.Header>
+      <Card.Header
+        title="Working hours"
+        subtitle="Used to score overlapping time zones"
+      />
       <Card.Body>
         <div className="flex flex-col gap-3 p-4">
           <Input
@@ -247,10 +300,10 @@ export const BodySlotTaskRowsWell: Story = {
 
     return (
       <Card shape="rounded" className="max-w-lg">
-        <Card.Header>
-          <h2 className={cardTitleClasses}>Texas Farmers&apos; Market at Mueller</h2>
-          <p className={mutedText(cardBodyTextClasses)}>2006 Philomena St. · Austin, TX</p>
-        </Card.Header>
+        <Card.Header
+          title="Texas Farmers' Market at Mueller"
+          subtitle="2006 Philomena St. · Austin, TX"
+        />
         <Card.Body>
           <div className={cardBodyWellClasses}>
             <TaskRows variant="capsule">

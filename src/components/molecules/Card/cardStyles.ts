@@ -49,7 +49,12 @@ export const cardLayoutShellShapeClasses: Record<CardShape, string> = {
   rounded: "rounded-2xl shadow-md",
 };
 
-export const cardLayoutHeaderClasses = "flex flex-col gap-1.5";
+/** Header row — start (title + subtitle) | end (tabs, kebab, IconButton). */
+export const cardLayoutHeaderClasses = "flex items-start justify-between gap-3";
+
+export const cardLayoutHeaderStartClasses = "flex min-w-0 flex-1 flex-col gap-0.5";
+
+export const cardLayoutHeaderEndClasses = "flex shrink-0 items-center gap-2";
 
 /** Body slot — 2px outside, square, no fill. Occupants own radius and background. */
 export const cardLayoutBodyWellClasses = [
@@ -73,18 +78,20 @@ export const cardSectionPaddingClasses: Record<
     footer: cardLayoutFooterClasses,
   },
   md: {
-    header: "flex flex-col gap-2 border-b border-border px-4 pb-3 pt-4",
+    header: `${cardLayoutHeaderClasses} border-b border-border px-4 pb-3 pt-4`,
     body: "px-4 py-3",
     footer: "flex items-center justify-between gap-4 border-t border-border px-4 py-3",
   },
   lg: {
-    header: "flex flex-col gap-2 border-b border-border px-6 pb-4 pt-6",
+    header: `${cardLayoutHeaderClasses} border-b border-border px-6 pb-4 pt-6`,
     body: "px-6 py-4",
     footer: "flex items-center justify-between gap-4 border-t border-border px-6 py-4",
   },
 };
 
 export const cardTitleClasses = typographyClass("subheading");
+
+export const cardSubtitleClasses = `${typographyClass("caption")} text-muted`;
 
 export const cardBodyTextClasses = typographyClass("body");
 

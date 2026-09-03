@@ -11,14 +11,17 @@ import {
   cardBodyTextClasses,
   cardBodyWellClasses,
   cardDividerClasses,
+  cardLayoutHeaderEndClasses,
+  cardLayoutHeaderStartClasses,
   cardLayoutShellClasses,
   cardLayoutShellShapeClasses,
   cardOverflowClasses,
   cardRootPaddingClasses,
   cardSectionPaddingClasses,
   cardShapeClasses,
-  cardVariantClasses,
+  cardSubtitleClasses,
   cardTitleClasses,
+  cardVariantClasses,
   type CardPadding,
   type CardShape,
   type CardVariant,
@@ -43,8 +46,17 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
 }
 
 export interface CardSectionProps extends HTMLAttributes<HTMLElement> {
-  children: ReactNode;
+  children?: ReactNode;
   className?: CardLayoutClassName;
+}
+
+export interface CardHeaderProps extends Omit<CardSectionProps, "title"> {
+  /** Primary heading in the start slot. */
+  title?: ReactNode;
+  /** Secondary line under the title (address, meta). Strings use caption + muted. */
+  subtitle?: ReactNode;
+  /** End slot — kebab `IconButton`, chips-as-tabs, Badge, etc. */
+  end?: ReactNode;
 }
 
 const CardPaddingContext = createContext<CardPadding>("none");
@@ -91,11 +103,48 @@ function CardRoot({
   );
 }
 
-function CardHeader({ className, children, ...props }: CardSectionProps) {
+function renderHeaderTitle(title: ReactNode) {
+  if (typeof title === "string" || typeof title === "number") {
+    return <h2 className={cardTitleClasses}>{title}</h2>;
+  }
+  return title;
+}
+
+function renderHeaderSubtitle(subtitle: ReactNode) {
+  if (typeof subtitle === "string" || typeof subtitle === "number") {
+    return <p className={cardSubtitleClasses}>{subtitle}</p>;
+  }
+  return subtitle;
+}
+
+function CardHeader({
+  className,
+  children,
+  title,
+  subtitle,
+  end,
+  ...props
+}: CardHeaderProps) {
   const padding = useCardPadding();
+  const hasStructured = title != null || subtitle != null || end != null;
+  const hasStart = title != null || subtitle != null || children != null;
+
   return (
     <header className={cn(cardSectionPaddingClasses[padding].header, className)} {...props}>
-      {children}
+      {hasStructured ? (
+        <>
+          {hasStart ? (
+            <div className={cardLayoutHeaderStartClasses}>
+              {title != null ? renderHeaderTitle(title) : null}
+              {subtitle != null ? renderHeaderSubtitle(subtitle) : null}
+              {children}
+            </div>
+          ) : null}
+          {end != null ? <div className={cardLayoutHeaderEndClasses}>{end}</div> : null}
+        </>
+      ) : (
+        children
+      )}
     </header>
   );
 }
@@ -125,7 +174,8 @@ function CardDivider({ className, ...props }: HTMLAttributes<HTMLHRElement>) {
 
 /**
  * Content surface — [Astryx Card](https://astryx.atmeta.com/components/Card).
- * Layout cards (`padding="none"`) — shell + **Body** slot (2px outside, square, no fill).
+ * Layout cards (`padding="none"`) — shell + **Header** start/end + **Body** slot
+ * (2px outside, square, no fill).
  */
 export const Card = Object.assign(CardRoot, {
   Header: CardHeader,
@@ -138,5 +188,6 @@ export {
   cardAddressClasses,
   cardBodyTextClasses,
   cardBodyWellClasses,
+  cardSubtitleClasses,
   cardTitleClasses,
 };

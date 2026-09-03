@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Dog, MapPin, Tags, X } from "lucide-react";
 import { IconButton } from "../../components/atoms/IconButton/IconButton";
-import { Card, cardAddressClasses, cardTitleClasses } from "../../components/molecules/Card/Card";
+import { Card, cardAddressClasses } from "../../components/molecules/Card/Card";
 import { Chip } from "../../components/molecules/Chip/Chip";
 import { TaskRows } from "../../components/molecules/TaskRows/TaskRows";
 import { cn } from "../../lib/cn";
@@ -55,35 +55,25 @@ export function MarketDetailCard({ market, onClose, className }: MarketDetailCar
   return (
     <div className={cn("w-max max-w-full", className)}>
       <Card padding="none">
-        <Card.Header>
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <h2 className={cardTitleClasses}>{market.name}</h2>
-              <div className={cardAddressClasses}>
-                <span>{market.street}</span>
-                {market.cityLine ? <span>{market.cityLine}</span> : null}
-              </div>
+        <Card.Header
+          title={market.name}
+          subtitle={
+            <div className={cardAddressClasses}>
+              <span>{market.street}</span>
+              {market.cityLine ? <span>{market.cityLine}</span> : null}
             </div>
-            {onClose ? (
-              <IconButton
-                icon={<X strokeWidth={2} />}
-                aria-label="Close market detail"
-                title="Close market detail"
-                role="secondary"
-                size="sm"
-                onClick={onClose}
-              />
-            ) : (
-              <IconButton
-                icon={<X strokeWidth={2} />}
-                aria-label="Close market detail"
-                title="Close market detail"
-                role="secondary"
-                size="sm"
-              />
-            )}
-          </div>
-        </Card.Header>
+          }
+          end={
+            <IconButton
+              icon={<X strokeWidth={2} />}
+              aria-label="Close market detail"
+              title="Close market detail"
+              role="secondary"
+              size="sm"
+              onClick={onClose}
+            />
+          }
+        />
         <Card.Body>
           <TaskRows variant="capsule">
             <TaskRows.Item
