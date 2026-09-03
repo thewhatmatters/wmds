@@ -140,7 +140,7 @@ export const BodySlotList: Story = {
     },
   },
   render: function BodySlotListDemo() {
-    const [selected, setSelected] = useState("downtown");
+    const [selected, setSelected] = useState<string | null>(null);
 
     return (
       <Card shape="rounded" className="max-w-lg">
