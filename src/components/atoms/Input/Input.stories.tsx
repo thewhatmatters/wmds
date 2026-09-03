@@ -6,7 +6,7 @@ import { InputValidationMorphDemo } from "./InputValidationMorph";
 
 /** Keeps docs canvases from stretching the pill edge-to-edge. */
 function InputSpecimen({ children }: { children: ReactNode }) {
-  return <div className="mx-auto w-full max-w-sm px-6 py-4">{children}</div>;
+  return <div className="mx-auto w-full max-w-sm px-8 py-6">{children}</div>;
 }
 
 const meta = {
