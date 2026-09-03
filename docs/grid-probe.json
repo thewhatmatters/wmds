@@ -1,0 +1,37 @@
+{
+  "profile": "app",
+  "skill": "use-grid-system",
+  "tailwind": {
+    "major": 4,
+    "version": "4.3.3",
+    "config": "css-first",
+    "themeEntry": "src/theme/theme.css",
+    "packageEntry": "src/styles/wmds.css",
+    "storybookEntry": "src/styles/global.css"
+  },
+  "spacing": {
+    "token": "--spacing",
+    "value": "0.25rem",
+    "px": 4,
+    "overridden": false,
+    "rescale": false,
+    "note": "Even multiples of --spacing = 8px baseline. grid.css must not set --spacing."
+  },
+  "designMd": {
+    "existed": false,
+    "hadGridSection": false,
+    "seeded": true,
+    "path": "DESIGN.md"
+  },
+  "emit": {
+    "tokens": "src/theme/grid.css",
+    "utilities": ["grid-page", "band"],
+    "leading": "--leading-base",
+    "overlay": "src/lib/GridOverlay.tsx",
+    "overlayContract": "g-key + same content box as grid-page (composed from tailwindcss-react-grid-overlay UX; not the 2021 viewport package)"
+  },
+  "brand": {
+    "keepExisting": true,
+    "gridAccent": "color-mix from --color-primary / --color-info"
+  }
+}

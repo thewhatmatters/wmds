@@ -1,0 +1,182 @@
+/**
+ * WMDS app-profile grid spine — Müller-Brockmann, load-bearing.
+ *
+ * Probe: Tailwind v4 CSS-first; `--spacing` stays 0.25rem (4px).
+ * Do not set `--spacing` here. Even multiples of that base = 8px baseline.
+ *
+ * Profile = app: column-line + baseline; rows are relaxed (no modular field lock).
+ * Overlay + content read the same `--grid-*` / `--leading-base` tokens.
+ */
+
+@theme {
+  /* Geometry — 4-col mobile default; md/lg media queries below raise the count. */
+  --grid-cols: 4;
+  --grid-gutter: calc(var(--grid-baseline) * 2);
+  --grid-margin: calc(var(--grid-baseline) * 2);
+  --grid-baseline: calc(var(--spacing) * 2);
+  --grid-max: 80rem;
+  --grid-pad: var(--leading-base);
+  --grid-row-gap: var(--leading-base);
+
+  /* 3 × 8px baseline. Registers `leading-base` without touching type-* roles. */
+  --leading-base: calc(var(--grid-baseline) * 3);
+}
+
+:root {
+  /* Overlay tints — derived from WMDS brand/info, not a parallel Swiss palette. */
+  --grid-guide-col: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  --grid-guide-edge: color-mix(in srgb, var(--color-primary) 40%, transparent);
+  --grid-guide-base: color-mix(in srgb, var(--color-info) 34%, transparent);
+  --grid-guide-base-min: color-mix(in srgb, var(--color-info) 12%, transparent);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --grid-cols: 8;
+    --grid-gutter: calc(var(--grid-baseline) * 3);
+    --grid-margin: calc(var(--grid-baseline) * 3);
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --grid-cols: 12;
+  }
+}
+
+/**
+ * Page wrap + column tracks. Overlay (`GridOverlay` / `.grid-guides`) MUST be a
+ * child of this box so columns share the same content edges at every width.
+ */
+@utility grid-page {
+  position: relative;
+  display: grid;
+  width: 100%;
+  max-width: var(--grid-max);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+  padding-block: var(--grid-pad);
+  grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  column-gap: var(--grid-gutter);
+  row-gap: var(--grid-row-gap);
+}
+
+/**
+ * Full-width band that re-exposes the parent column lines (subgrid).
+ * Place children with col-start / col-end (column LINE numbers).
+ */
+@utility band {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  column-gap: var(--grid-gutter);
+  row-gap: var(--grid-row-gap);
+  align-items: start;
+}
+
+@supports not (grid-template-columns: subgrid) {
+  .band {
+    grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  }
+}
+
+/* ---- Overlay (same wrap as `.grid-page`; do not position this on the viewport) ---- */
+
+.grid-guides {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--duration-fast) var(--ease-standard),
+    visibility var(--duration-fast) var(--ease-standard);
+}
+
+.grid-guides.is-on,
+.grid-on .grid-guides {
+  opacity: 1;
+  visibility: visible;
+}
+
+.grid-guides-cols {
+  position: absolute;
+  top: var(--grid-pad);
+  right: var(--grid-margin);
+  bottom: var(--grid-pad);
+  left: var(--grid-margin);
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  column-gap: var(--grid-gutter);
+}
+
+/* CSS-only column fields when React has not painted numbered cells. */
+.grid-guides-cols:empty {
+  background: repeating-linear-gradient(
+    to right,
+    var(--grid-guide-col) 0,
+    var(--grid-guide-col)
+      calc((100% - (var(--grid-cols) - 1) * var(--grid-gutter)) / var(--grid-cols)),
+    transparent
+      calc((100% - (var(--grid-cols) - 1) * var(--grid-gutter)) / var(--grid-cols)),
+    transparent
+      calc(
+        (100% - (var(--grid-cols) - 1) * var(--grid-gutter)) / var(--grid-cols) + var(--grid-gutter)
+      )
+  );
+}
+
+.grid-guides-col {
+  display: flex;
+  justify-content: center;
+  background: var(--grid-guide-col);
+  box-shadow: inset 1px 0 0 var(--grid-guide-edge), inset -1px 0 0 var(--grid-guide-edge);
+}
+
+.grid-guides-col-label {
+  margin-top: 0.25rem;
+  font-family: var(--font-family-code);
+  font-size: var(--font-size-xs);
+  line-height: var(--leading-base);
+  color: var(--color-text-secondary);
+}
+
+.grid-guides-baseline {
+  position: absolute;
+  top: var(--grid-pad);
+  right: var(--grid-margin);
+  bottom: var(--grid-pad);
+  left: var(--grid-margin);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--grid-guide-base) 0,
+    var(--grid-guide-base) 1px,
+    transparent 1px,
+    transparent var(--grid-baseline),
+    var(--grid-guide-base-min) var(--grid-baseline),
+    var(--grid-guide-base-min) calc(var(--grid-baseline) + 1px),
+    transparent calc(var(--grid-baseline) + 1px),
+    transparent calc(var(--grid-baseline) * 2),
+    var(--grid-guide-base-min) calc(var(--grid-baseline) * 2),
+    var(--grid-guide-base-min) calc(var(--grid-baseline) * 2 + 1px),
+    transparent calc(var(--grid-baseline) * 2 + 1px),
+    transparent var(--leading-base)
+  );
+}
+
+.grid-guides-margin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--grid-guide-edge);
+}
+
+.grid-guides-margin-start {
+  left: var(--grid-margin);
+}
+
+.grid-guides-margin-end {
+  right: var(--grid-margin);
+}

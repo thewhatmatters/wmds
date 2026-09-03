@@ -26,7 +26,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Tailwind spacing scale (`--spacing: 0.25rem` base). Use **`p-*`**, **`gap-*`**, **`m-*`** utilities directly in components.",
+          "Tailwind spacing scale (`--spacing: 0.25rem` / 4px base — **do not re-scale**). Even multiples = 8px grid baseline (`--grid-baseline`). Use **`p-*`**, **`gap-*`**, **`m-*`** in components; page spine is **Foundation → Grid**.",
       },
     },
   },

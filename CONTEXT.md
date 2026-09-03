@@ -7,13 +7,13 @@ WhatMatters Design System — **pattern-first** component library + Tailwind v4 
 **Brand name:** always **WhatMatters** (joined, no space) in UI copy, docs, and specimens — not "What Matters".
 
 **Theme**:
-`colors.css` (base semantic roles) + `stateColors.css` (hover/active via `color-mix`) + `theme.css` (Tailwind `@theme` bridge) + `sources.css` (Tailwind content manifest). Storybook Foundation stories are canonical — not Paper.
+`colors.css` (base semantic roles) + `stateColors.css` (hover/active via `color-mix`) + `theme.css` (Tailwind `@theme` bridge) + `grid.css` (app-profile `--grid-*` + `grid-page` / `band`) + `sources.css` (Tailwind content manifest). Storybook Foundation stories are canonical — not Paper.
 
 **Foundation**:
 Storybook token specimens only (`src/foundation/*.stories.tsx`, `Introduction.mdx`). No component imports from Foundation.
 
 **lib**:
-Shared implementation behind component seams — `cn`, `motion`, `collapse.css`, `segmentedControl`, `shadows`, `typography`, `chartTheme`, `tableLayout`. Exported sparingly from `src/index.ts`; see `src/package.manifest.ts`.
+Shared implementation behind component seams — `cn`, `motion`, `collapse.css`, `segmentedControl`, `shadows`, `typography`, `chartTheme`, `tableLayout`, `GridOverlay`. Exported sparingly from `src/index.ts`; see `src/package.manifest.ts`.
 
 **Atoms** (`src/components/atoms/`):
 Smallest UI units — Button, Input, Badge, etc. Import only `lib/` + Theme. Storybook: **`Atoms/{Name}`**. Exported.
@@ -49,7 +49,7 @@ Atoms → Molecules → Organisms (components — strict import direction)
 Examples (templates / pages)
 ```
 
-See `docs/adr/0001-layer-architecture.md`, `docs/adr/0002-atomic-design.md`, `docs/adr/0003-responsive-mobile-first.md`, `docs/adr/0004-pattern-first-not-utility-first.md`, `docs/adr/0005-list-card-as-molecules.md`, and `docs/adr/0006-input-architecture.md`.
+See `docs/adr/0001-layer-architecture.md`, `docs/adr/0002-atomic-design.md`, `docs/adr/0003-responsive-mobile-first.md`, `docs/adr/0004-pattern-first-not-utility-first.md`, `docs/adr/0005-list-card-as-molecules.md`, `docs/adr/0006-input-architecture.md`, and `docs/adr/0010-app-grid-spine.md`. **DESIGN.md → Grid** is the agent-facing grid contract.
 
 ## Farmer Market refresh
 

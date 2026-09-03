@@ -13,7 +13,8 @@ WMDS uses Tailwind v4 **internally** for tokens and component CSS. Without expli
 
 - **`colors.css`** — base semantic roles only
 - **`stateColors.css`** — hover/active/ghost derivations via `color-mix`
-- **`theme.css`** — Tailwind `@theme` bridge; imports colors + stateColors + sources
+- **`theme.css`** — Tailwind `@theme` bridge; imports colors + stateColors + typography + grid + sources
+- **`grid.css`** — app-profile `--grid-*`, `--leading-base`, `grid-page` / `band` (ADR-0010)
 - **`sources.css`** — single Tailwind content manifest for Storybook and package CLI
 
 ### lib (`src/lib/`)

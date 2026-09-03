@@ -20,6 +20,7 @@
     "./motion.css": "./dist/motion.css",
     "./typography.css": "./dist/typography.css",
     "./stateColors.css": "./dist/stateColors.css",
+    "./grid.css": "./dist/grid.css",
     "./package.json": "./package.json"
   },
   "sideEffects": [
