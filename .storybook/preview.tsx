@@ -2,6 +2,7 @@ import type { Preview } from "@storybook/react-vite";
 import { MotionConfig } from "motion/react";
 import { storybookViewports } from "../src/lib/viewports";
 import "../src/styles/global.css";
+import "./docs.css";
 
 const preview: Preview = {
   globalTypes: {

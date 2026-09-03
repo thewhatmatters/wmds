@@ -34,7 +34,6 @@ const meta = {
     loading: false,
   },
   parameters: {
-    layout: "padded",
     docs: {
       description: {
         component: `
