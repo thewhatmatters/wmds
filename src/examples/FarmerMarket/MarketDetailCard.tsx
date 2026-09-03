@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Dog, MapPin, Tags, X } from "lucide-react";
 import { IconButton } from "../../components/atoms/IconButton/IconButton";
-import { Card, cardAddressClasses } from "../../components/molecules/Card/Card";
+import { Card, cardAddressClasses, cardTitleClasses } from "../../components/molecules/Card/Card";
 import { Chip } from "../../components/molecules/Chip/Chip";
 import { TaskRows } from "../../components/molecules/TaskRows/TaskRows";
 import { cn } from "../../lib/cn";
@@ -56,12 +56,14 @@ export function MarketDetailCard({ market, onClose, className }: MarketDetailCar
     <div className={cn("w-max max-w-full", className)}>
       <Card padding="none">
         <Card.Header
-          title={market.name}
-          subtitle={
-            <div className={cardAddressClasses}>
-              <span>{market.street}</span>
-              {market.cityLine ? <span>{market.cityLine}</span> : null}
-            </div>
+          start={
+            <>
+              <h2 className={cardTitleClasses}>{market.name}</h2>
+              <div className={cardAddressClasses}>
+                <span>{market.street}</span>
+                {market.cityLine ? <span>{market.cityLine}</span> : null}
+              </div>
+            </>
           }
           end={
             <IconButton

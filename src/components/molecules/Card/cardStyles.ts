@@ -49,7 +49,7 @@ export const cardLayoutShellShapeClasses: Record<CardShape, string> = {
   rounded: "rounded-2xl shadow-md",
 };
 
-/** Header row — start (title + subtitle) | end (tabs, kebab, IconButton). */
+/** Header row — start | end. Occupants decide what lands in each slot. */
 export const cardLayoutHeaderClasses = "flex items-start justify-between gap-3";
 
 export const cardLayoutHeaderStartClasses = "flex min-w-0 flex-1 flex-col gap-0.5";

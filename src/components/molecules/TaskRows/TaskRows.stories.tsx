@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Dog, MapPin, Tags, X } from "lucide-react";
 import { Button } from "../../atoms/Button/Button";
 import { IconButton } from "../../atoms/IconButton/IconButton";
-import { Card, cardAddressClasses, cardBodyTextClasses } from "../Card/Card";
+import { Card, cardAddressClasses, cardBodyTextClasses, cardSubtitleClasses, cardTitleClasses } from "../Card/Card";
 import { Chip } from "../Chip/Chip";
 import { TaskRows } from "./TaskRows";
 
@@ -79,12 +79,14 @@ export const FarmerMarketDetail: Story = {
       <div className="w-max bg-body p-4">
         <Card shape="rounded" padding="none">
           <Card.Header
-            title="Texas Farmers' Market at Mueller"
-            subtitle={
-              <div className={cardAddressClasses}>
-                <span>2006 Philomena St.</span>
-                <span>Austin, TX 78723</span>
-              </div>
+            start={
+              <>
+                <h2 className={cardTitleClasses}>Texas Farmers&apos; Market at Mueller</h2>
+                <div className={cardAddressClasses}>
+                  <span>2006 Philomena St.</span>
+                  <span>Austin, TX 78723</span>
+                </div>
+              </>
             }
             end={
               <IconButton
@@ -188,7 +190,7 @@ export const CardWithStatusRows: Story = {
   render: () => (
     <Card padding="none" className="max-w-md">
       <Card.Header
-        title="Restock run"
+        start={<h2 className={cardTitleClasses}>Restock run</h2>}
         end={
           <span className={cardBodyTextClasses + " text-muted tabular-nums"}>Step 2 of 4</span>
         }
@@ -269,8 +271,13 @@ export const WithPrimaryAction: Story = {
       <div className="w-max p-4">
         <Card shape="rounded" padding="none">
           <Card.Header
-            title="SFC Farmers' Market Downtown"
-            subtitle="422 Guadalupe St"
+            start={
+              <>
+                <h2 className={cardTitleClasses}>SFC Farmers&apos; Market Downtown</h2>
+                <p className={cardSubtitleClasses}>422 Guadalupe St</p>
+                <p className={`${cardBodyTextClasses} text-muted`}>Saturdays · 9am – 1pm</p>
+              </>
+            }
             end={
               <IconButton
                 icon={<X strokeWidth={2} />}
@@ -280,9 +287,7 @@ export const WithPrimaryAction: Story = {
                 size="sm"
               />
             }
-          >
-            <p className={`${cardBodyTextClasses} text-muted`}>Saturdays · 9am – 1pm</p>
-          </Card.Header>
+          />
           <Card.Body>
             <TaskRows variant="capsule">
               <TaskRows.Item

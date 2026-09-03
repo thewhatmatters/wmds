@@ -14,6 +14,7 @@ import {
   cardBodyWellClasses,
   cardPaddings,
   cardShapes,
+  cardSubtitleClasses,
   cardTitleClasses,
   cardVariants,
 } from "./Card";
@@ -50,7 +51,7 @@ const meta = {
 | Pattern | Composition |
 |---------|-------------|
 | **Layout** | \`Card padding="none"\` + \`Card.Header\` / \`Card.Body\` / \`Card.Footer\` — default; shell + Body slot (inherits fill) |
-| **Header** | Start: \`title\` + \`subtitle\`. End: kebab \`IconButton\`, chips-as-tabs, Badge |
+| **Header** | Horizontal \`start\` / \`end\` slots — title + subtitle, kebab, chips-as-tabs, Badge, or any cluster |
 | **Body well** | Occupant wrap \`cardBodyWellClasses\` (\`bg-body\`) — optional muted field; TaskRows pills are the example |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
 
@@ -60,7 +61,7 @@ Default \`shape="rounded"\` — \`rounded-2xl shadow-md\` on the shell. Use \`sh
 
 \`\`\`
 Card (bg-surface shell, p-4, gap-3)
-├── Card.Header   — start (title + subtitle) | end (tabs, kebab) — 16px inset
+├── Card.Header   — start | end slots — 16px inset
 ├── Card.Body     — slot — 2px outside, square, no fill (inherits shell)
 └── Card.Footer   — status, actions (on shell, 16px inset)
 \`\`\`
@@ -68,7 +69,7 @@ Card (bg-surface shell, p-4, gap-3)
 ## Best practices
 
 - **Do** set \`padding="none"\` when using Header/Body/Footer.
-- **Do** put the heading in \`title\` / \`subtitle\` and actions or tabs in \`end\` — do not hand-roll the header row.
+- **Do** put leading copy in \`start\` and trailing actions in \`end\` — do not hand-roll the header row.
 - **Do** treat \`Card.Body\` as a slot — TaskRows, List, Inputs, or custom UI all belong there.
 - **Do** keep title, address, and meta in **Header**; primary actions in **Footer**.
 - **Do** use default \`shape="rounded"\` — FM market detail, dashboard widgets, map overlays.
@@ -114,7 +115,10 @@ export const Layout: Story = {
   },
   render: () => (
     <Card shape="rounded" className="max-w-lg">
-      <Card.Header title="Meeting Finder" end={<Badge size="sm">11:00 UTC</Badge>} />
+      <Card.Header
+        start={<h2 className={cardTitleClasses}>Meeting Finder</h2>}
+        end={<Badge size="sm">11:00 UTC</Badge>}
+      />
       <Card.Body>
         <div className="flex min-h-32 items-center justify-center px-4 py-6">
           <p className={mutedText(cardBodyTextClasses)}>
@@ -132,25 +136,29 @@ export const Layout: Story = {
   ),
 };
 
-export const HeaderEnd: Story = {
-  name: "Pattern — header end",
+export const HeaderSlots: Story = {
+  name: "Pattern — header slots",
   parameters: {
     layout: "padded",
     docs: {
       description: {
         story:
-          "**Header** start is `title` + `subtitle`. **End** holds chips-as-tabs, a kebab `IconButton`, or both.",
+          "**Header** is two horizontal slots. `start` and `end` take any cluster — title + subtitle, chips-as-tabs, kebab `IconButton`, Badge.",
       },
     },
   },
-  render: function HeaderEndDemo() {
+  render: function HeaderSlotsDemo() {
     const [view, setView] = useState("overview");
 
     return (
       <Card shape="rounded" className="max-w-lg">
         <Card.Header
-          title="Texas Farmers' Market at Mueller"
-          subtitle="2006 Philomena St. · Austin, TX"
+          start={
+            <>
+              <h2 className={cardTitleClasses}>Texas Farmers&apos; Market at Mueller</h2>
+              <p className={cardSubtitleClasses}>2006 Philomena St. · Austin, TX</p>
+            </>
+          }
           end={
             <>
               <ChipFilterGroup
@@ -206,7 +214,14 @@ export const BodySlotList: Story = {
 
     return (
       <Card shape="rounded" className="max-w-lg">
-        <Card.Header title="Nearby markets" subtitle="Saturday · within 5 mi" />
+        <Card.Header
+          start={
+            <>
+              <h2 className={cardTitleClasses}>Nearby markets</h2>
+              <p className={cardSubtitleClasses}>Saturday · within 5 mi</p>
+            </>
+          }
+        />
         <Card.Body>
           <List variant="surface" hasDividers className="overflow-hidden rounded-[1.375rem]">
             <List.Item
@@ -260,8 +275,12 @@ export const BodySlotForm: Story = {
   render: () => (
     <Card shape="rounded" className="max-w-lg">
       <Card.Header
-        title="Working hours"
-        subtitle="Used to score overlapping time zones"
+        start={
+          <>
+            <h2 className={cardTitleClasses}>Working hours</h2>
+            <p className={cardSubtitleClasses}>Used to score overlapping time zones</p>
+          </>
+        }
       />
       <Card.Body>
         <div className="flex flex-col gap-3 p-4">
@@ -301,8 +320,12 @@ export const BodySlotTaskRowsWell: Story = {
     return (
       <Card shape="rounded" className="max-w-lg">
         <Card.Header
-          title="Texas Farmers' Market at Mueller"
-          subtitle="2006 Philomena St. · Austin, TX"
+          start={
+            <>
+              <h2 className={cardTitleClasses}>Texas Farmers&apos; Market at Mueller</h2>
+              <p className={cardSubtitleClasses}>2006 Philomena St. · Austin, TX</p>
+            </>
+          }
         />
         <Card.Body>
           <div className={cardBodyWellClasses}>
