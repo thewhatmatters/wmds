@@ -35,10 +35,16 @@ export const cardRootPaddingClasses: Record<CardPadding, string> = {
 };
 
 /**
- * Layout card — header/footer on white shell; Body is the muted inset slot (`bg-body`).
- * Default for `padding="none"` + Header / Body / Footer.
+ * Layout card — header/footer on the shell (`p-4`); Body sits 2px from the
+ * horizontal edges (`-mx-3.5` against that pad). No padding inside the slot.
  */
 export const cardLayoutShellClasses = "gap-3 bg-surface p-4";
+
+/** 16px shell pad − 14px pull = 2px of shell outside the Body slot. */
+export const cardLayoutSlotOutsetXClasses = "-mx-3.5";
+
+/** Concentric with `rounded-2xl` (16px) − 2px outset. */
+export const cardLayoutSlotRadiusClasses = "rounded-[14px]";
 
 export const cardLayoutShellShapeClasses: Record<CardShape, string> = {
   flush: "",
@@ -47,9 +53,12 @@ export const cardLayoutShellShapeClasses: Record<CardShape, string> = {
 
 export const cardLayoutHeaderClasses = "flex flex-col gap-1.5";
 
-/** Inset well — `bg-body`; 4px gutter. Occupants (TaskRows, List, forms) own inner chrome. */
-export const cardLayoutBodyWellClasses =
-  "rounded-[calc(1.375rem+4px)] bg-body p-[4px]";
+/** Body slot — `bg-body` well, 2px outside, no inner pad. Occupants own chrome. */
+export const cardLayoutBodyWellClasses = [
+  cardLayoutSlotOutsetXClasses,
+  "flex min-h-0 flex-col overflow-hidden border border-border bg-body",
+  cardLayoutSlotRadiusClasses,
+].join(" ");
 
 export const cardLayoutFooterClasses = "flex items-center justify-between gap-3";
 

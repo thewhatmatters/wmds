@@ -20,9 +20,9 @@ export type TaskRowsDetailVariant = (typeof taskRowsDetailVariants)[number];
 export const taskRowsRootListClasses =
   "flex w-full flex-col overflow-hidden rounded-lg bg-surface font-sans text-fg shadow-raised";
 
-/** Typical **Card.Body** occupant — white inner panel; radius = outer well − 4px padding. */
+/** Typical **Card.Body** occupant — fills the 14px slot radius. */
 export const taskRowsRootListInsetClasses =
-  "flex w-full flex-col overflow-hidden rounded-[1.375rem] bg-surface font-sans text-fg shadow-none";
+  "flex w-full flex-col overflow-hidden rounded-[14px] bg-surface font-sans text-fg shadow-none";
 
 export const taskRowsRootCapsuleClasses = "flex w-full min-h-0 flex-col gap-[4px] font-sans text-fg";
 
@@ -34,15 +34,15 @@ export const taskRowsItemCapsuleClasses =
   "overflow-hidden bg-surface shadow-raised transition-[border-radius] duration-300 " +
   motionTransition("medium");
 
-/** Collapsed — full pill (h-11 row + 1.375rem ≈ half height). */
-export const taskRowsItemCapsuleClosedClasses = "rounded-[1.375rem]";
+/** Collapsed — matches Card.Body slot radius (14px). */
+export const taskRowsItemCapsuleClosedClasses = "rounded-[14px]";
 
 /**
- * Expanded — keep pill curvature at stack ends; soften inner corners.
- * `first`/`last`/`only` align with **Card** inset well (1.375rem + padding).
+ * Expanded — keep slot curvature at stack ends; soften inner corners.
+ * `first`/`last`/`only` align with the Card.Body well (`rounded-[14px]`).
  */
 export const taskRowsItemCapsuleOpenClasses =
-  "rounded-t-xl rounded-b-xl first:rounded-t-[1.375rem] last:rounded-b-[1.375rem] only:rounded-t-[1.375rem] only:rounded-b-xl";
+  "rounded-t-xl rounded-b-xl first:rounded-t-[14px] last:rounded-b-[14px] only:rounded-t-[14px] only:rounded-b-xl";
 
 export const taskRowsItemHoverClasses = "hover:bg-ghost-hover";
 
