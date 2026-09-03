@@ -62,23 +62,36 @@ const preview: Preview = {
   parameters: {
     options: {
       /**
-       * Introduction → Foundation (designed order) → Atoms → Molecules → Organisms → Examples.
-       * Foundation is spatial system first, then color/type, then supporting tokens, icons last.
-       * Other tiers stay alphabetical.
+       * Introduction → Foundation (designed) → Atoms → Molecules → Organisms → Examples.
+       * Nested `order` is a sibling array after the parent name — not `[parent, [children]]`.
+       * Comparator is the source of truth so Foundation cannot fall back to A–Z.
        */
-      storySort: {
-        method: "alphabetical-by-kind",
-        order: [
-          "Introduction",
-          [
-            "Foundation",
-            ["Grid", "Colors", "Typography", "Spacing", "Shadows", "Motion", "Icons"],
-          ],
-          "Atoms",
-          "Molecules",
-          "Organisms",
-          "Examples",
-        ],
+      storySort: (a, b) => {
+        const tiers = ["Introduction", "Foundation", "Atoms", "Molecules", "Organisms", "Examples"];
+        const foundation = [
+          "Grid",
+          "Colors",
+          "Typography",
+          "Spacing",
+          "Shadows",
+          "Motion",
+          "Icons",
+        ];
+        const rank = (title: string, list: string[]) => {
+          const index = list.indexOf(title);
+          return index === -1 ? list.length : index;
+        };
+        const aTier = a.title.split("/")[0] ?? "";
+        const bTier = b.title.split("/")[0] ?? "";
+        const tierDelta = rank(aTier, tiers) - rank(bTier, tiers);
+        if (tierDelta !== 0) return tierDelta;
+        if (aTier === "Foundation") {
+          const aName = a.title.split("/")[1] ?? "";
+          const bName = b.title.split("/")[1] ?? "";
+          const foundationDelta = rank(aName, foundation) - rank(bName, foundation);
+          if (foundationDelta !== 0) return foundationDelta;
+        }
+        return a.title.localeCompare(b.title, undefined, { numeric: true });
       },
     },
     /** Mobile-first — default Storybook viewport is Mobile (390px). Use toolbar to check tablet/desktop. */
