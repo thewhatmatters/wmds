@@ -35,7 +35,7 @@ export const cardRootPaddingClasses: Record<CardPadding, string> = {
 };
 
 /**
- * Layout card — header/footer on white shell; body is a muted inset well (`bg-body`).
+ * Layout card — header/footer on white shell; Body is the muted inset slot (`bg-body`).
  * Default for `padding="none"` + Header / Body / Footer.
  */
 export const cardLayoutShellClasses = "gap-3 bg-surface p-4";
@@ -47,7 +47,7 @@ export const cardLayoutShellShapeClasses: Record<CardShape, string> = {
 
 export const cardLayoutHeaderClasses = "flex flex-col gap-1.5";
 
-/** Inset well — `bg-body` (#f8f8f8); 4px inner gutter; radius tracks TaskRows capsules. */
+/** Inset well — `bg-body`; 4px gutter. Occupants (TaskRows, List, forms) own inner chrome. */
 export const cardLayoutBodyWellClasses =
   "rounded-[calc(1.375rem+4px)] bg-body p-[4px]";
 

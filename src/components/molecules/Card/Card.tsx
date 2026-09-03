@@ -99,6 +99,7 @@ function CardHeader({ className, children, ...props }: CardSectionProps) {
   );
 }
 
+/** Inset well — composition slot for any supporting content. */
 function CardBody({ className, children, ...props }: CardSectionProps) {
   const padding = useCardPadding();
   return (
@@ -123,7 +124,7 @@ function CardDivider({ className, ...props }: HTMLAttributes<HTMLHRElement>) {
 
 /**
  * Content surface — [Astryx Card](https://astryx.atmeta.com/components/Card).
- * Layout cards (`padding="none"`) — white shell, muted inset body well, header/footer on shell.
+ * Layout cards (`padding="none"`) — white shell, muted inset **Body** slot, header/footer on shell.
  */
 export const Card = Object.assign(CardRoot, {
   Header: CardHeader,

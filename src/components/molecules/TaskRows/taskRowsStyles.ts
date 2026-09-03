@@ -20,7 +20,7 @@ export type TaskRowsDetailVariant = (typeof taskRowsDetailVariants)[number];
 export const taskRowsRootListClasses =
   "flex w-full flex-col overflow-hidden rounded-lg bg-surface font-sans text-fg shadow-raised";
 
-/** Nested in **Card.Body** inset well — white inner panel; radius = outer well − 4px padding. */
+/** Typical **Card.Body** occupant — white inner panel; radius = outer well − 4px padding. */
 export const taskRowsRootListInsetClasses =
   "flex w-full flex-col overflow-hidden rounded-[1.375rem] bg-surface font-sans text-fg shadow-none";
 

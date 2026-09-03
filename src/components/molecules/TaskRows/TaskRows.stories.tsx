@@ -51,7 +51,7 @@ TaskRows
 ## Best practices
 
 - **Do** use **Card** + \`TaskRows variant="capsule"\` — pill rows inside the inset body well.
-- **Do** put hours, address, and meta copy in **Card.Header** — not inside the inset (4px gutter is for rows only).
+- **Do** put hours, address, and meta copy in **Card.Header** — not inside the Body slot (4px gutter is for the occupant).
 - **Do** use \`icon\` + \`status="none"\` for FM expandable rows — directions, services, hours.
 - **Do** use read-only **Chip** inside \`detailsLayout="chips"\` for SNAP, dogs, etc.
 - **Do** use \`TaskRows.Detail\` with \`onPress\` for FM Apple Maps / Google Maps deep links — labels stay on one line (do not wrap).
@@ -257,7 +257,7 @@ export const WithPrimaryAction: Story = {
     docs: {
       description: {
         story:
-          "Hours and address live in **Card.Header** (shell padding). **Card.Body** inset is for **TaskRows** only — 4px inner gutter.",
+          "Hours and address live in **Card.Header** (shell padding). **TaskRows** occupies the **Card.Body** slot — one of several valid occupants.",
       },
     },
   },
