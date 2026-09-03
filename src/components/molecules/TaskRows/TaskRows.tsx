@@ -94,7 +94,7 @@ export interface TaskRowsProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   /** `list` — inset panel with dividers (FM map card). `capsule` — separated rounded rows. */
   variant?: TaskRowsVariant;
-  /** List only — drop outer shell when nested inside **Card** (parent owns surface + border). */
+  /** List only — drop the standalone shell (radius, fill, shadow) inside **Card.Body**. */
   inset?: boolean;
   labels?: Partial<TaskRowsLabels>;
   className?: TaskRowsLayoutClassName;

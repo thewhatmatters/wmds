@@ -20,9 +20,8 @@ export type TaskRowsDetailVariant = (typeof taskRowsDetailVariants)[number];
 export const taskRowsRootListClasses =
   "flex w-full flex-col overflow-hidden rounded-lg bg-surface font-sans text-fg shadow-raised";
 
-/** Typical **Card.Body** occupant — white inner panel; occupant owns radius. */
-export const taskRowsRootListInsetClasses =
-  "flex w-full flex-col overflow-hidden rounded-[1.375rem] bg-surface font-sans text-fg shadow-none";
+/** Nested in **Card.Body** — parent owns surface; slot is square. */
+export const taskRowsRootListInsetClasses = "flex w-full flex-col font-sans text-fg";
 
 export const taskRowsRootCapsuleClasses = "flex w-full min-h-0 flex-col gap-[4px] font-sans text-fg";
 
