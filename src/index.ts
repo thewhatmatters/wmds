@@ -20,13 +20,11 @@ export {
 export {
   Input,
   inputMessagePositions,
-  inputShapes,
   inputSizes,
   inputStatuses,
   type InputLayoutClassName,
   type InputMessagePosition,
   type InputProps,
-  type InputShape,
   type InputSize,
   type InputStatus,
 } from "./components/atoms/Input/Input";

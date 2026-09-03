@@ -55,6 +55,8 @@ Bare control is the **default**. Optional props add field chrome when needed:
 | `size?` | `sm` \| `md` \| `lg` |
 | `placeholder?`, `disabled`, `readOnly`, `name`, `value` / `defaultValue`, `onChange`, … | Standard control props |
 
+**Shape:** pill only — no `shape` prop. Hero search with an inset button is **`Search`**, not a second Input radius.
+
 **Accessibility:** when `label` is omitted, **`aria-label` is required** (dev warn in Storybook — same contract as `IconButton`).
 
 ```tsx

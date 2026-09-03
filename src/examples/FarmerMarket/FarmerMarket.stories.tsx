@@ -157,7 +157,6 @@ function MarketListRail({
       header={
         <>
           <Input
-            shape="pill"
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
             placeholder="ZIP or city"

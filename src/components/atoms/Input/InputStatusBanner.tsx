@@ -4,7 +4,6 @@ import {
   inputStatusBannerClassesFor,
   inputStatusBannerIconClasses,
   type InputMessagePosition,
-  type InputShape,
   type InputSize,
   type InputStatus,
 } from "./inputShellStyles";
@@ -26,14 +25,12 @@ export function InputStatusBanner({
   status,
   message,
   messageId,
-  shape,
   size,
   messagePosition,
 }: {
   status: InputStatus;
   message: string;
   messageId: string;
-  shape: InputShape;
   size: InputSize;
   messagePosition: InputMessagePosition;
 }) {
@@ -41,7 +38,7 @@ export function InputStatusBanner({
     <p
       id={messageId}
       className={cn(
-        inputStatusBannerClassesFor(status, shape, size, messagePosition),
+        inputStatusBannerClassesFor(status, size, messagePosition),
         "text-xs font-normal tracking-normal",
       )}
       role={status === "error" ? "alert" : "status"}
