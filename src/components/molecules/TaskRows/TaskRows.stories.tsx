@@ -20,6 +20,7 @@ const meta = {
     variant: "list",
   },
   parameters: {
+    layout: "padded",
     docs: {
       description: {
         component: `

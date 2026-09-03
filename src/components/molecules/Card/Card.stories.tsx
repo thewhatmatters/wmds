@@ -38,6 +38,7 @@ const meta = {
     as: "div",
   },
   parameters: {
+    layout: "padded",
     docs: {
       description: {
         component: `

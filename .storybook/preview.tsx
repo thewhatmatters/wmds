@@ -2,6 +2,7 @@ import type { Preview } from "@storybook/react-vite";
 import { MotionConfig } from "motion/react";
 import { storybookViewports } from "../src/lib/viewports";
 import "../src/styles/global.css";
+import "./docs.css";
 
 const preview: Preview = {
   globalTypes: {
@@ -36,13 +37,17 @@ const preview: Preview = {
     (Story, { globals, viewMode, parameters }) => {
       const layout = parameters.layout as string | undefined;
       const isFullscreen = layout === "fullscreen";
-      const isPadded = layout === "padded";
 
       const storyShellClass = isFullscreen
         ? "min-h-[100svh] w-full"
-        : isPadded
-          ? "min-h-[100svh] w-full p-6"
-          : "flex min-h-[100svh] w-full items-center justify-center p-6";
+        : "flex min-h-[100svh] w-full items-center justify-center p-6";
+
+      /**
+       * Docs embeds every story in a canvas. `min-h-[100svh]` there turns each
+       * specimen into a full viewport of empty space. Center a compact column
+       * instead; fullscreen page stories still own their height.
+       */
+      const docsShellClass = isFullscreen ? "w-full" : "mx-auto w-full max-w-3xl p-6";
 
       return (
         <MotionConfig reducedMotion="user">
@@ -50,7 +55,7 @@ const preview: Preview = {
             data-theme={globals.theme === "dark" ? "dark" : undefined}
             className={[
               "bg-body text-fg font-sans w-full",
-              viewMode === "story" ? storyShellClass : isFullscreen ? "min-h-[100svh] w-full" : "p-4",
+              viewMode === "docs" ? docsShellClass : storyShellClass,
             ].join(" ")}
           >
             <Story />
