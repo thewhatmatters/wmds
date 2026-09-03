@@ -77,21 +77,23 @@ const preview: Preview = {
           "Motion",
           "Icons",
         ];
-        const rank = (title: string, list: string[]) => {
+        const rank = (title, list) => {
           const index = list.indexOf(title);
           return index === -1 ? list.length : index;
         };
-        const aTier = a.title.split("/")[0] ?? "";
-        const bTier = b.title.split("/")[0] ?? "";
+        const aTitle = a.title ?? "";
+        const bTitle = b.title ?? "";
+        const aTier = aTitle.split("/")[0] ?? "";
+        const bTier = bTitle.split("/")[0] ?? "";
         const tierDelta = rank(aTier, tiers) - rank(bTier, tiers);
         if (tierDelta !== 0) return tierDelta;
         if (aTier === "Foundation") {
-          const aName = a.title.split("/")[1] ?? "";
-          const bName = b.title.split("/")[1] ?? "";
+          const aName = aTitle.split("/")[1] ?? "";
+          const bName = bTitle.split("/")[1] ?? "";
           const foundationDelta = rank(aName, foundation) - rank(bName, foundation);
           if (foundationDelta !== 0) return foundationDelta;
         }
-        return a.title.localeCompare(b.title, undefined, { numeric: true });
+        return aTitle.localeCompare(bTitle, undefined, { numeric: true });
       },
     },
     /** Mobile-first — default Storybook viewport is Mobile (390px). Use toolbar to check tablet/desktop. */
