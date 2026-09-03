@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Clock, Dog, EllipsisVertical, Globe, MapPin, Tags } from "lucide-react";
+import { Clock, EllipsisVertical, Globe } from "lucide-react";
 import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
 import { IconButton } from "../../atoms/IconButton/IconButton";
@@ -11,7 +11,6 @@ import { TaskRows } from "../TaskRows/TaskRows";
 import {
   Card,
   cardBodyTextClasses,
-  cardBodyWellClasses,
   cardPaddings,
   cardShapes,
   cardSubtitleClasses,
@@ -46,13 +45,13 @@ const meta = {
         component: `
 ## Usage
 
-[Astryx Card](https://astryx.atmeta.com/components/Card) — **Header** and **Footer** sit on the shell; **Body** is a square **slot** 2px from the card edges. No default fill, radius, or inner pad — content inherits the shell and owns its own chrome. Optional muted well: wrap the occupant in \`cardBodyWellClasses\` (\`bg-body\`).
+[Astryx Card](https://astryx.atmeta.com/components/Card) — **Header** and **Footer** sit on the shell; **Body** is a square **slot** 2px from the card edges. No default fill, radius, or inner pad — content inherits the shell and owns its own chrome.
 
 | Pattern | Composition |
 |---------|-------------|
 | **Layout** | \`Card padding="none"\` + \`Card.Header\` / \`Card.Body\` / \`Card.Footer\` — default; shell + Body slot (inherits fill) |
 | **Header** | Horizontal \`start\` / \`end\` slots — title + subtitle, kebab, chips-as-tabs, Badge, or any cluster |
-| **Body well** | Occupant wrap \`cardBodyWellClasses\` (\`bg-body\`) — optional muted field; TaskRows pills are the example |
+| **Body slot** | Status rows, List, form, or custom UI — occupant owns chrome |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
 
 Default \`shape="rounded"\` — \`rounded-2xl shadow-md\` on the shell. Use \`shape="flush"\` only when a parent owns outer radius and shadow.
@@ -75,7 +74,7 @@ Card (bg-surface shell, p-4, gap-3)
 - **Do** use default \`shape="rounded"\` — FM market detail, dashboard widgets, map overlays.
 - **Do** use \`shape="flush"\` only when nested inside a parent that already owns radius and shadow.
 - **Don't** restrict the Body to TaskRows — that is one occupant, not the contract.
-- **Don't** put \`bg-body\` on \`Card.Body\` — default is inherit; optional well goes on the occupant (\`cardBodyWellClasses\`).
+- **Don't** put a muted fill on \`Card.Body\` — the slot inherits the shell.
 - **Don't** re-theme the slot with \`className\` — put layout tweaks on the root only.
         `.trim(),
       },
@@ -302,70 +301,63 @@ export const BodySlotForm: Story = {
   ),
 };
 
-export const BodySlotTaskRowsWell: Story = {
-  name: "Example — body well (TaskRows)",
+export const BodySlotStatusRows: Story = {
+  name: "Example — body slot (status rows)",
   parameters: {
     layout: "padded",
     docs: {
       description: {
         story:
-          "Optional muted well — `cardBodyWellClasses` (`bg-body p-0.5`) on the **occupant**, not on `Card.Body`. Capsule TaskRows sit in that fill and keep their own pill radius.",
+          "**TaskRows variant=\"list\"** in the Body slot — inherits the shell. No muted well. Status rows own their chrome.",
       },
     },
   },
-  render: function BodySlotTaskRowsWellDemo() {
-    const [directionsOpen, setDirectionsOpen] = useState(true);
-    const [servicesOpen, setServicesOpen] = useState(false);
-
-    return (
-      <Card shape="rounded" className="max-w-lg">
-        <Card.Header
-          start={
-            <>
-              <h2 className={cardTitleClasses}>Texas Farmers&apos; Market at Mueller</h2>
-              <p className={cardSubtitleClasses}>2006 Philomena St. · Austin, TX</p>
-            </>
-          }
-        />
-        <Card.Body>
-          <div className={cardBodyWellClasses}>
-            <TaskRows variant="capsule">
-              <TaskRows.Item
-                icon={<MapPin strokeWidth={2} />}
-                label="Get directions"
-                meta="0.1 mi"
-                detailsLayout="actions"
-                detailsLabel="Open in"
-                open={directionsOpen}
-                onOpenChange={setDirectionsOpen}
-              >
-                <TaskRows.Detail variant="button" label="Apple Maps" onPress={() => undefined} />
-                <TaskRows.Detail variant="button" label="Google Maps" onPress={() => undefined} />
-              </TaskRows.Item>
-              <TaskRows.Item
-                icon={<Tags strokeWidth={2} />}
-                label="Services offered"
-                meta="3"
-                detailsLayout="chips"
-                open={servicesOpen}
-                onOpenChange={setServicesOpen}
-              >
-                <Chip readOnly size="sm">
-                  SNAP / EBT
-                </Chip>
-                <Chip readOnly size="sm" icon={<Dog strokeWidth={2} />}>
-                  Dogs welcome
-                </Chip>
-                <Chip readOnly size="sm">
-                  Open today
-                </Chip>
-              </TaskRows.Item>
-            </TaskRows>
-          </div>
-        </Card.Body>
-      </Card>
-    );
-  },
+  render: () => (
+    <Card shape="rounded" className="max-w-lg">
+      <Card.Header
+        start={<h2 className={cardTitleClasses}>Restock run</h2>}
+        end={
+          <span className={cardBodyTextClasses + " text-muted tabular-nums"}>Step 2 of 4</span>
+        }
+      />
+      <Card.Body>
+        <TaskRows variant="list" inset>
+          <TaskRows.Item
+            label="Verified vendor records"
+            meta="12 suppliers"
+            status="done"
+            defaultOpen
+          >
+            <TaskRows.Detail label="Matched tax and contact IDs" meta="12/12" />
+            <TaskRows.Detail label="Flagged stale records" meta="0" />
+          </TaskRows.Item>
+          <TaskRows.Item
+            label="Build reorder task list"
+            meta="7 SKUs"
+            status="running"
+            step={2}
+            defaultOpen
+          >
+            <TaskRows.Detail label="Reading POS export" meta="3 files" />
+            <TaskRows.Detail label="Scoring stockout risk" meta="68%" />
+          </TaskRows.Item>
+          <TaskRows.Item label="Draft supplier emails" meta="2 messages" status="pending" step={3}>
+            <TaskRows.Detail label="Cone supplier follow-up" meta="draft" />
+            <TaskRows.Detail label="Pistachio reorder note" meta="draft" />
+          </TaskRows.Item>
+          <TaskRows.Item label="Sync market hours" meta="1 source" status="failed">
+            <TaskRows.Detail label="USDA API timeout" meta="retry" />
+          </TaskRows.Item>
+        </TaskRows>
+      </Card.Body>
+      <Card.Footer>
+        <span className={mutedText(cardBodyTextClasses)}>2 complete · 1 running</span>
+        <Button role="primary" size="sm">
+          Continue
+        </Button>
+      </Card.Footer>
+    </Card>
+  ),
 };
 
 export const RoundedStandalone: Story = {

@@ -51,7 +51,7 @@ TaskRows
 
 ## Best practices
 
-- **Do** use **Card** + \`TaskRows variant="capsule"\` — pill rows inside the inset body well.
+- **Do** use **Card** + \`TaskRows variant="capsule"\` for FM market detail — pills inherit the shell.
 - **Do** put hours, address, and meta copy in **Card.Header** — not inside the Body slot (occupants own inner chrome).
 - **Do** use \`icon\` + \`status="none"\` for FM expandable rows — directions, services, hours.
 - **Do** use read-only **Chip** inside \`detailsLayout="chips"\` for SNAP, dogs, etc.
@@ -183,7 +183,7 @@ export const CardWithStatusRows: Story = {
     docs: {
       description: {
         story:
-          "Layout **Card** (white shell, gray inset well) with **TaskRows variant=\"list\"** — agent / progress flows with done, running, pending, failed.",
+          "Layout **Card** (white shell, Body inherits fill) with **TaskRows variant=\"list\"** — agent / progress flows with done, running, pending, failed.",
       },
     },
   },
