@@ -107,5 +107,91 @@ export function lockedViewportStory(tier: StorybookViewportTier) {
   } as const;
 }
 
+/** One step of the breakpoint ↔ grid contract. `sm:` exists; the column count does not change there. */
+export interface GridBreakpointStep {
+  prefix: string;
+  minWidth: string;
+  minWidthPx: number;
+  cols: number;
+  gutterPx: number;
+  marginPx: number;
+  /** Storybook review viewport that lands on this step, if any. */
+  reviewViewport: StorybookViewportTier | null;
+  label: string;
+}
+
+/**
+ * Breakpoints and `--grid-cols` are the same scale.
+ * Keep in sync with `src/theme/grid.css` media queries — do not invent a second ladder.
+ */
+export const gridScale: readonly GridBreakpointStep[] = [
+  {
+    prefix: "(default)",
+    minWidth: "0",
+    minWidthPx: 0,
+    cols: 4,
+    gutterPx: 16,
+    marginPx: 16,
+    reviewViewport: "mobile",
+    label: "Mobile — 4 columns",
+  },
+  {
+    prefix: "sm:",
+    minWidth: "640px",
+    minWidthPx: 640,
+    cols: 4,
+    gutterPx: 16,
+    marginPx: 16,
+    reviewViewport: null,
+    label: "Large phone — grid does not step",
+  },
+  {
+    prefix: "md:",
+    minWidth: "768px",
+    minWidthPx: 768,
+    cols: 8,
+    gutterPx: 24,
+    marginPx: 24,
+    reviewViewport: "tablet",
+    label: "Tablet — 8 columns",
+  },
+  {
+    prefix: "lg:",
+    minWidth: "1024px",
+    minWidthPx: 1024,
+    cols: 12,
+    gutterPx: 24,
+    marginPx: 24,
+    reviewViewport: "desktop",
+    label: "Desktop — 12 columns",
+  },
+  {
+    prefix: "xl:",
+    minWidth: "1280px",
+    minWidthPx: 1280,
+    cols: 12,
+    gutterPx: 24,
+    marginPx: 24,
+    reviewViewport: null,
+    label: "Wide — still 12 columns",
+  },
+  {
+    prefix: "2xl:",
+    minWidth: "1536px",
+    minWidthPx: 1536,
+    cols: 12,
+    gutterPx: 24,
+    marginPx: 24,
+    reviewViewport: null,
+    label: "Ultra-wide — still 12 columns",
+  },
+];
+
+/** Steps where `--grid-cols` actually changes (must match `grid.css`). */
+export const gridColumnSteps = gridScale.filter((step, index, all) => {
+  const previous = all[index - 1];
+  return !previous || previous.cols !== step.cols;
+});
+
 /** Minimum touch target — WCAG 2.5.5 target size (Level AAA); use for atoms on mobile. */
 export const minTouchTargetPx = 44;

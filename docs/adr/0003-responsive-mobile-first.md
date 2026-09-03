@@ -28,7 +28,7 @@ Use **Tailwind v4 defaults** unless an ADR adds custom `--breakpoint-*` in `@the
 | Wide | `xl:` | 1280px | Wide desktop |
 | Ultra-wide | `2xl:` | 1536px | Large monitors |
 
-Reference: **`src/lib/viewports.ts`** and **Foundation → Breakpoints**.
+Reference: **`src/lib/viewports.ts`** (`gridScale`) and **Foundation → Grid**. Breakpoints and `--grid-cols` are one contract (4 / 8 / 12 at default / `md` / `lg`).
 
 ### Rules for all tiers
 

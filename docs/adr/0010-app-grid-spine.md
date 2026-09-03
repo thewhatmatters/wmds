@@ -16,6 +16,7 @@ WHA-304 asks for a **use-grid-system `--profile=app`** spine: column-line + 8px 
 - **Utilities:** `grid-page` (wrap + columns) and `band` (subgrid; `@supports` fallback repeats `--grid-cols`).
 - **Overlay:** `GridOverlay` is a child of `grid-page`. Press **g**. Same `--grid-*` tokens. Do not mount a viewport overlay (`tailwindcss-react-grid-overlay` as published paints the window — that is the misalignment bug).
 - **Not a product atom.** No Pitchkit layout lock. Design still owns look. Consumers copy `grid-page` / `band` / overlay from WMDS.
+- **Storybook:** **Foundation → Grid** owns the breakpoint × column scale. Do not keep a separate Breakpoints catalog — the two cannot drift.
 
 ## Consequences
 
