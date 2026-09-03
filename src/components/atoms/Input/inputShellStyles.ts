@@ -9,10 +9,6 @@ export const inputStatuses = ["error", "warning", "success"] as const;
 
 export type InputStatus = (typeof inputStatuses)[number];
 
-export const inputShapes = ["rounded", "pill"] as const;
-
-export type InputShape = (typeof inputShapes)[number];
-
 export const inputMessagePositions = ["top", "bottom"] as const;
 
 export type InputMessagePosition = (typeof inputMessagePositions)[number];
@@ -72,18 +68,11 @@ export const inputShellClasses: Record<InputSize, string> = {
   lg: cn(inputShellBorderClasses, inputShellElevationClasses),
 };
 
-/** Solo shell radius — default `rounded` (Astryx forms); `pill` for standalone search fields. */
-export const inputSoloRadiusClasses: Record<InputShape, Record<InputSize, string>> = {
-  rounded: {
-    sm: "rounded-lg",
-    md: "rounded-lg",
-    lg: "rounded-xl",
-  },
-  pill: {
-    sm: "rounded-full",
-    md: "rounded-full",
-    lg: "rounded-full",
-  },
+/** Solo shell — pill only. */
+export const inputSoloRadiusClasses: Record<InputSize, string> = {
+  sm: "rounded-full",
+  md: "rounded-full",
+  lg: "rounded-full",
 };
 
 export const inputStatusShellClasses: Record<InputStatus, string> = {
@@ -92,92 +81,55 @@ export const inputStatusShellClasses: Record<InputStatus, string> = {
   success: "border-success",
 };
 
-/** Compound outer radius — large capsule when `shape="pill"` + message ([Astryx ChatComposer](https://astryx.atmeta.com/components/ChatComposer)). */
-export const inputCompoundOuterRadiusClasses: Record<InputShape, Record<InputSize, string>> = {
-  rounded: {
-    sm: "rounded-lg",
-    md: "rounded-xl",
-    lg: "rounded-xl",
-  },
-  pill: {
-    sm: "rounded-2xl",
-    md: "rounded-[1.375rem]",
-    lg: "rounded-[1.5rem]",
-  },
+/** Compound outer radius — capsule around the pill + message band. */
+export const inputCompoundOuterRadiusClasses: Record<InputSize, string> = {
+  sm: "rounded-2xl",
+  md: "rounded-[1.375rem]",
+  lg: "rounded-[1.5rem]",
 };
 
-/** Banner tucks under the pill equator (~half field height); rounded uses a shallow overlap. */
-export const inputCompoundBannerOverlapBottomClasses: Record<
-  InputShape,
-  Record<InputSize, string>
-> = {
-  rounded: {
-    sm: "-mt-2.5 pt-3.5",
-    md: "-mt-2.5 pt-3.5",
-    lg: "-mt-3 pt-4",
-  },
-  pill: {
-    sm: "-mt-4 pt-6",
-    md: "-mt-[1.375rem] pt-8",
-    lg: "-mt-6 pt-8",
-  },
+/** Banner tucks under the pill equator (~half field height). */
+export const inputCompoundBannerOverlapBottomClasses: Record<InputSize, string> = {
+  sm: "-mt-4 pt-6",
+  md: "-mt-[1.375rem] pt-8",
+  lg: "-mt-6 pt-8",
 };
 
-export const inputCompoundBannerOverlapTopPadClasses: Record<InputShape, Record<InputSize, string>> =
-  {
-    rounded: {
-      sm: "pb-3.5",
-      md: "pb-3.5",
-      lg: "pb-4",
-    },
-    pill: {
-      sm: "pb-6",
-      md: "pb-8",
-      lg: "pb-8",
-    },
-  };
+export const inputCompoundBannerOverlapTopPadClasses: Record<InputSize, string> = {
+  sm: "pb-6",
+  md: "pb-8",
+  lg: "pb-8",
+};
 
-export const inputCompoundFieldOverlapTopClasses: Record<InputShape, Record<InputSize, string>> = {
-  rounded: {
-    sm: "-mt-2.5",
-    md: "-mt-2.5",
-    lg: "-mt-3",
-  },
-  pill: {
-    sm: "-mt-4",
-    md: "-mt-[1.375rem]",
-    lg: "-mt-6",
-  },
+export const inputCompoundFieldOverlapTopClasses: Record<InputSize, string> = {
+  sm: "-mt-4",
+  md: "-mt-[1.375rem]",
+  lg: "-mt-6",
 };
 
 /** @deprecated Use {@link inputCompoundBannerOverlapBottomClasses}. */
-export const inputCompoundBannerOverlapClasses = inputCompoundBannerOverlapBottomClasses.pill.md;
+export const inputCompoundBannerOverlapClasses = inputCompoundBannerOverlapBottomClasses.md;
 
 /** @deprecated Use {@link inputCompoundBannerOverlapTopPadClasses}. */
-export const inputCompoundBannerOverlapTopClasses = inputCompoundBannerOverlapTopPadClasses.pill.md;
+export const inputCompoundBannerOverlapTopClasses = inputCompoundBannerOverlapTopPadClasses.md;
 
 /** Compound stack — field floats above banner; focus ring stays on the field only. */
-export function inputCompoundShellClassesFor(
-  _shape: InputShape,
-  _size: InputSize,
-  _status: InputStatus,
-): string {
+export function inputCompoundShellClassesFor(_size?: InputSize, _status?: InputStatus): string {
   return cn("relative flex w-full flex-col", inputShellTransitionClasses);
 }
 
-/** Inner field — full solo radius on all four corners; owns focus ring when message is set. */
+/** Inner field — full pill radius on all four corners; owns focus ring when message is set. */
 export function inputCompoundInnerFieldClassesFor(
-  shape: InputShape,
   size: InputSize,
   status: InputStatus,
   messagePosition: InputMessagePosition,
 ): string {
   return cn(
     "relative z-10 flex w-full items-center border bg-surface shadow-sm",
-    inputSoloRadiusClasses[shape][size],
+    inputSoloRadiusClasses[size],
     inputStatusShellClasses[status],
     inputCompoundShellFocusRingClasses[status],
-    messagePosition === "top" && inputCompoundFieldOverlapTopClasses[shape][size],
+    messagePosition === "top" && inputCompoundFieldOverlapTopClasses[size],
     inputShellTransitionClasses,
   );
 }
@@ -185,28 +137,22 @@ export function inputCompoundInnerFieldClassesFor(
 /** Tinted status band — layered behind the field; overlap keeps the field's bottom radius visible. */
 export function inputStatusBannerClassesFor(
   status: InputStatus,
-  shape: InputShape,
   size: InputSize,
   messagePosition: InputMessagePosition,
 ): string {
-  const roundedBottom =
-    shape === "pill" ? "rounded-b-[1.375rem]" : "rounded-b-xl";
-  const roundedTop =
-    shape === "pill" ? "rounded-t-[1.375rem]" : "rounded-t-xl";
-
   if (messagePosition === "bottom") {
     return cn(
       "relative z-0 flex w-full items-center gap-2 px-3 pb-3 leading-snug",
-      inputCompoundBannerOverlapBottomClasses[shape][size],
-      roundedBottom,
+      inputCompoundBannerOverlapBottomClasses[size],
+      "rounded-b-[1.375rem]",
       inputStatusBannerSurfaceClasses[status],
     );
   }
 
   return cn(
     "relative z-0 flex w-full items-center gap-2 px-3 pt-2.5 leading-snug",
-    inputCompoundBannerOverlapTopPadClasses[shape][size],
-    roundedTop,
+    inputCompoundBannerOverlapTopPadClasses[size],
+    "rounded-t-[1.375rem]",
     inputStatusBannerSurfaceClasses[status],
   );
 }
@@ -231,17 +177,13 @@ export const inputStatusBannerIconClasses: Record<InputStatus, string> = {
 };
 
 /** @deprecated Use {@link inputCompoundShellClassesFor}. */
-export function inputValidationShellClassesFor(
-  shape: InputShape,
-  size: InputSize,
-  status: InputStatus,
-): string {
-  return inputCompoundShellClassesFor(shape, size, status);
+export function inputValidationShellClassesFor(size: InputSize, status: InputStatus): string {
+  return inputCompoundShellClassesFor(size, status);
 }
 
 /** @deprecated Use {@link inputCompoundShellClassesFor}. */
-export function inputCompoundOuterClassesFor(shape: InputShape, size: InputSize): string {
-  return inputCompoundShellClassesFor(shape, size, "error");
+export function inputCompoundOuterClassesFor(size: InputSize): string {
+  return inputCompoundShellClassesFor(size, "error");
 }
 
 /** @deprecated Nested tray removed. */
@@ -251,11 +193,9 @@ export const inputCompoundOuterPaddingClasses: Record<InputSize, string> = {
   lg: "p-2",
 };
 
-/** @deprecated Use {@link inputCompoundFieldClassesFor}. */
-export const inputCompoundInnerClasses: Record<InputShape, string> = {
-  rounded: "relative flex w-full items-center rounded-lg border bg-surface",
-  pill: "relative flex w-full items-center rounded-full border bg-surface",
-};
+/** @deprecated Use {@link inputCompoundInnerFieldClassesFor}. */
+export const inputCompoundInnerClasses =
+  "relative flex w-full items-center rounded-full border bg-surface";
 
 /** @deprecated Use {@link inputStatusShellClasses}. */
 export const inputCompoundInnerBorderClasses: Record<InputStatus, string> = inputStatusShellClasses;
@@ -268,22 +208,15 @@ export const inputCompoundFooterClasses: Record<InputStatus, string> = {
 };
 
 /** @deprecated Flat compound — use {@link inputCompoundOuterClassesFor}. */
-export const inputCompoundWrapperRadiusClasses: Record<InputShape, Record<InputSize, string>> = {
-  rounded: {
-    sm: "rounded-lg",
-    md: "rounded-lg",
-    lg: "rounded-xl",
-  },
-  pill: {
-    sm: "rounded-t-[1rem] rounded-b-lg",
-    md: "rounded-t-[1.375rem] rounded-b-2xl",
-    lg: "rounded-t-[1.5rem] rounded-b-2xl",
-  },
+export const inputCompoundWrapperRadiusClasses: Record<InputSize, string> = {
+  sm: "rounded-t-[1rem] rounded-b-lg",
+  md: "rounded-t-[1.375rem] rounded-b-2xl",
+  lg: "rounded-t-[1.5rem] rounded-b-2xl",
 };
 
 /** @deprecated Flat compound — use {@link inputCompoundOuterClassesFor}. */
-export function inputCompoundWrapperClassesFor(shape: InputShape, size: InputSize): string {
-  return `overflow-hidden ${inputCompoundWrapperRadiusClasses[shape][size]} ${inputShellTransitionClasses}`;
+export function inputCompoundWrapperClassesFor(size: InputSize): string {
+  return `overflow-hidden ${inputCompoundWrapperRadiusClasses[size]} ${inputShellTransitionClasses}`;
 }
 
 export const inputIconGapClasses: Record<InputSize, string> = {
@@ -357,9 +290,9 @@ export const inputStatusFooterClasses: Record<InputStatus, string> = inputCompou
 
 /** Single shell when input + validation footer attach — border on wrapper only (no shadow-raised stack). */
 export const inputCompoundWrapperClasses: Record<InputSize, string> = {
-  sm: inputCompoundOuterClassesFor("rounded", "sm"),
-  md: inputCompoundOuterClassesFor("rounded", "md"),
-  lg: inputCompoundOuterClassesFor("rounded", "lg"),
+  sm: inputCompoundOuterClassesFor("sm"),
+  md: inputCompoundOuterClassesFor("md"),
+  lg: inputCompoundOuterClassesFor("lg"),
 };
 
 export const inputCompoundStatusBorderClasses: Record<InputStatus, string> = inputCompoundInnerBorderClasses;

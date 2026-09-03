@@ -153,7 +153,7 @@ import {
 | `Button` | `role`, `size`, `status`, `icon`, `count` | Atoms/Button — copy a **Pattern** story |
 | `IconButton` | `icon`, `aria-label`, `role`, `size`, `fab`, `loading`, `title` | Atoms/IconButton — copy a **Pattern** story |
 | `Chip` | `size`, `value`, `selected`, `onRemove`, `icon`, `count`, `readOnly` | Molecules/Chip — use `ChipFilterGroup` for multi-select filters |
-| `Input` | `label`, `description`, `status`, `message`, `loading`, `endBadge`, `icon`, `size`, `shape` | Atoms/Input — Required via `endBadge={<Badge>…</Badge>}` |
+| `Input` | `label`, `description`, `status`, `message`, `loading`, `endBadge`, `icon`, `size` | Atoms/Input — pill shell; Required via `endBadge={<Badge>…</Badge>}` |
 | `Search` | `size`, `placeholder`, `onSubmit` | Molecules/Search — inline input + button row |
 | `List` | `variant`, `hasDividers`, `header` | Molecules/List — `List.Item` with `layout`, `primary`, `secondary`, `meta`, `trailing`, `onPress`, `selected` |
 | `Card` | `variant`, `shape`, `padding` | Molecules/Card — `Card.Header`, `Card.Body`, `Card.Footer`, `Card.Divider` |
@@ -206,7 +206,6 @@ import { MapPin, X } from "lucide-react";
     header={
       <>
         <Input
-          shape="pill"
           placeholder="ZIP or city"
           aria-label="Location"
           icon={<MapPin strokeWidth={2} />}

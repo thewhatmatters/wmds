@@ -35,13 +35,12 @@ import {
   inputTrailingInsetClasses,
   inputTrailingInsetPositionClasses,
   type InputMessagePosition,
-  type InputShape,
   type InputSize,
   type InputStatus,
 } from "./inputShellStyles";
 
-export type { InputMessagePosition, InputShape, InputSize, InputStatus } from "./inputShellStyles";
-export { inputMessagePositions, inputShapes, inputSizes, inputStatuses } from "./inputShellStyles";
+export type { InputMessagePosition, InputSize, InputStatus } from "./inputShellStyles";
+export { inputMessagePositions, inputSizes, inputStatuses } from "./inputShellStyles";
 
 /** Layout-only — not for colors, borders, or typography overrides. */
 export type InputLayoutClassName = string;
@@ -49,8 +48,6 @@ export type InputLayoutClassName = string;
 export interface InputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
   size?: InputSize;
-  /** Shell shape — default `rounded` (Astryx forms). Use `pill` for standalone search fields; {@link Search} owns its own pill shell. */
-  shape?: InputShape;
   /** Optional visible label — omit for bare inputs. No label asterisk; use `endBadge` for Required. */
   label?: string;
   /** Neutral helper below the control — hidden when validation `message` is shown. */
@@ -115,13 +112,12 @@ function resolveTrailingPadding(
 }
 
 /**
- * Single-line text input — Astryx validation patterns (status, message footer, trailing icon).
+ * Single-line pill text input — Astryx validation patterns (status, message footer, trailing icon).
  * Bare by default; optional `label` (ADR-0006). Required fields: `endBadge` + `required`, not asterisks.
  */
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   {
     size = "md",
-    shape = "rounded",
     label,
     description,
     status,
@@ -200,7 +196,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
                       status != null
                         ? cn("border", inputStatusShellClasses[status])
                         : inputShellClasses[size],
-                      inputSoloRadiusClasses[shape][size],
+                      inputSoloRadiusClasses[size],
                       inputSoloFocusRingBaseClasses,
                       status != null
                         ? inputSoloFocusRingColorClasses[status]
@@ -238,7 +234,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         status={status}
         message={message}
         messageId={messageId}
-        shape={shape}
         size={size}
         messagePosition={messagePosition}
       />
@@ -246,9 +241,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 
   const control =
     hasMessage && status != null ? (
-      <div className={inputCompoundShellClassesFor(shape, size, status)}>
+      <div className={inputCompoundShellClassesFor(size, status)}>
         {messagePosition === "top" ? statusBanner : null}
-        <div className={inputCompoundInnerFieldClassesFor(shape, size, status, messagePosition)}>
+        <div className={inputCompoundInnerFieldClassesFor(size, status, messagePosition)}>
           {inputRow}
         </div>
         {messagePosition === "bottom" ? statusBanner : null}

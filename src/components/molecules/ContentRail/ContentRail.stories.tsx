@@ -18,7 +18,7 @@ const meta = {
 | Pattern | Composition |
 |---------|-------------|
 | **Map + list (FM)** | \`h-[100dvh]\` flex row → map \`flex-1\` + \`ContentRail position="end"\` |
-| **Header slot** | \`header={…}\` — sticky chrome; pill \`Input shape="pill"\` + \`ChipFilterGroup\` |
+| **Header slot** | \`header={…}\` — sticky chrome; pill \`Input\` + \`ChipFilterGroup\` |
 | **Overflow** | Rail fills viewport height; \`header\` stays fixed; **body scrolls** (\`overflow-y-auto\`) |
 | **Widths** | \`sm\` (18rem, FM browse) · \`md\` (20rem, default) · \`lg\` (24rem) from \`md:\` — full width on mobile |
 
