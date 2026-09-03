@@ -47,7 +47,8 @@ const meta = {
 
 | Pattern | Composition |
 |---------|-------------|
-| **Layout** | \`Card padding="none"\` + \`Card.Header\` / \`Card.Body\` / \`Card.Footer\` — default; shell + Body slot |
+| **Layout** | \`Card padding="none"\` + \`Card.Header\` / \`Card.Body\` / \`Card.Footer\` — default; shell + Body slot (inherits fill) |
+| **Body well** | Occupant wrap \`cardBodyWellClasses\` (\`bg-body\`) — optional muted field; TaskRows pills are the example |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
 
 Default \`shape="rounded"\` — \`rounded-2xl shadow-md\` on the shell. Use \`shape="flush"\` only when a parent owns outer radius and shadow.
