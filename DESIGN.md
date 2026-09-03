@@ -21,7 +21,7 @@ Do **not** set `--spacing` to 8px on this live project. Re-scaling the spacing s
 
 | Token | Role |
 |-------|------|
-| `--grid-cols` | 4 → 8 (`md`) → 12 (`lg`) |
+| `--grid-cols` | **Same ladder as breakpoints** — 4 (default) → 8 (`md`) → 12 (`lg`). `sm:` does not add columns. |
 | `--grid-gutter` | 16px mobile / 24px `md+` (baseline multiples) |
 | `--grid-margin` | same as gutter |
 | `--grid-baseline` | `calc(var(--spacing) * 2)` |

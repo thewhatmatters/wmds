@@ -23,7 +23,7 @@
 - **Input:** `shape="rounded"` (default, Astryx forms) | `shape="pill"` (standalone); FM hero with inset button → **Search** molecule. Optional leading `icon`; trailing `endBadge` or status / `loading`. See **ADR-0006**.
 - **StatusDot:** fixed 8px semantic dot ([Astryx StatusDot](https://astryx.atmeta.com/components/StatusDot)). Patterns: standalone (`label`), `besideLabel`, optional `pulsing`. Not inside Badge.
 - **Layers:** Theme → **lib** → Components → Examples. Foundation = Storybook specimens only. Tailwind scan list = **`src/theme/sources.css`**. Package exports tracked in **`src/package.manifest.ts`**.
-- **Responsive:** **Mobile-first** — unprefixed utilities = mobile; `sm:` / `md:` / `lg:` scale up. Review at Mobile (390px), Tablet (768px), Desktop (1280px). Atoms: min **44×44px** touch targets. No hover-only core actions. See **ADR-0003** and **Foundation → Breakpoints**.
+- **Responsive:** **Mobile-first** — unprefixed utilities = mobile; `sm:` / `md:` / `lg:` scale up. Review at Mobile (390px), Tablet (768px), Desktop (1280px). Grid columns step on that same scale (4 / 8 / 12). Atoms: min **44×44px** touch targets. No hover-only core actions. See **ADR-0003** and **Foundation → Grid**.
 
 ## Paper
 

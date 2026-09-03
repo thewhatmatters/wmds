@@ -7,6 +7,7 @@ import {
   gridOverlayKeyShouldToggle,
   isEditableGridOverlayTarget,
 } from "./gridOverlay";
+import { gridColumnSteps } from "./viewports";
 
 const gridCss = readFileSync(
   path.join(path.dirname(fileURLToPath(import.meta.url)), "../theme/grid.css"),
@@ -27,6 +28,18 @@ describe("grid.css probe guards", () => {
     expect(gridCss).toMatch(/@utility grid-page/);
     expect(gridCss).toMatch(/@utility band/);
     expect(gridCss).toMatch(/@supports not \(grid-template-columns:\s*subgrid\)/);
+  });
+
+  it("steps columns at the same widths as gridScale (md / lg)", () => {
+    const steps = gridColumnSteps.filter((step) => step.minWidthPx > 0);
+    expect(steps.map((step) => [step.minWidthPx, step.cols])).toEqual([
+      [768, 8],
+      [1024, 12],
+    ]);
+    for (const step of steps) {
+      expect(gridCss).toContain(`@media (min-width: ${step.minWidthPx}px)`);
+      expect(gridCss).toContain(`--grid-cols: ${step.cols};`);
+    }
   });
 });
 

@@ -31,7 +31,7 @@ Templates and pages — Storybook-only compositions. Storybook: **`Examples/{Nam
 Components and Storybook Examples are the consumer API — not ad-hoc utility composition. Tailwind powers component internals and page layout only. See **`docs/adr/0004-pattern-first-not-utility-first.md`**.
 
 **Responsive:**
-Mobile-first by default — unprefixed Tailwind = mobile; scale with `sm:` / `md:` / `lg:`. Every component must work on mobile, tablet, and desktop. See **`docs/adr/0003-responsive-mobile-first.md`** and **Foundation → Breakpoints**.
+Mobile-first by default — unprefixed Tailwind = mobile; scale with `sm:` / `md:` / `lg:`. Grid columns step on that same scale (4 / 8 / 12). Every component must work on mobile, tablet, and desktop. See **`docs/adr/0003-responsive-mobile-first.md`** and **Foundation → Grid**.
 
 ## Dark mode
 

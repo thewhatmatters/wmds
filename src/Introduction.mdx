@@ -174,16 +174,16 @@ Every atom, molecule, organism, and example must work on **mobile, tablet, and d
 
 <DocTable
   rows={[
-    ["Mobile (default)", "Unprefixed utilities — 0 to 639px"],
-    ["sm:", "640px+ — large phone / small tablet"],
-    ["md:", "768px+ — tablet"],
-    ["lg:", "1024px+ — desktop"],
+    ["Mobile (default)", "Unprefixed utilities — 4 columns"],
+    ["sm:", "640px+ — large phone; grid stays 4 columns"],
+    ["md:", "768px+ — tablet — 8 columns"],
+    ["lg:", "1024px+ — desktop — 12 columns"],
   ]}
 />
 
-**Rules:** min **44×44px** touch targets on atoms; no hover-only actions; tables scroll horizontally or reflow on mobile; review in Storybook at **Mobile / Tablet / Desktop** viewports (default canvas = Mobile).
+**Rules:** min **44×44px** touch targets on atoms; no hover-only actions; tables scroll horizontally or reflow on mobile; review in Storybook at **Mobile / Tablet / Desktop** viewports (default canvas = Mobile). Breakpoints and `--grid-cols` are the same scale.
 
-Reference: **`src/lib/viewports.ts`**, **Foundation → Breakpoints**, **`docs/adr/0003-responsive-mobile-first.md`**.
+Reference: **`src/lib/viewports.ts`**, **Foundation → Grid**, **`docs/adr/0003-responsive-mobile-first.md`**.
 
 ## Project layout
 
@@ -210,12 +210,13 @@ npm run build       # dist/theme.css + dist/styles.css
 
 ## Next reads
 
+- **Foundation → Grid** — breakpoint × column scale, `grid-page` + **g** overlay
 - **Foundation → Colors** — roles and interaction states
+- **Foundation → Typography** — roles and letter spacing
+- **Foundation → Spacing** — 4px `--spacing` (do not re-scale; 8px baseline)
+- **Foundation → Shadows** — hairline, raised, inset
 - **Foundation → Motion** — durations, easing, live demos
 - **Foundation → Icons** — Lucide usage and sizing
-- **Foundation → Typography** — roles and letter spacing
-- **Foundation → Breakpoints** — mobile-first scale and viewports
-- **Foundation → Grid** — `grid-page` + `band` + **g** overlay (ADR-0010)
 - **`docs/adr/0003-responsive-mobile-first.md`** — responsive rules per tier
 - **`docs/adr/0004-pattern-first-not-utility-first.md`** — components + props, not utility soup
 - **`CONSUMING.md`** — wiring the theme in other apps

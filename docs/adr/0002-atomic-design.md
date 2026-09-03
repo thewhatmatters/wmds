@@ -39,7 +39,7 @@ Reclassify only via ADR update — don't bikeshed per PR. **List** and **Card** 
 
 ### Storybook sidebar
 
-`Introduction → Foundation → Atoms → Molecules → Organisms → Examples` (alphabetical within each).
+`Introduction → Foundation → Atoms → Molecules → Organisms → Examples`. Foundation is designed order (Grid → Colors → Typography → Spacing → Shadows → Motion → Icons). Other tiers stay alphabetical.
 
 ### File convention per component
 
