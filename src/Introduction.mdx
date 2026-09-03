@@ -57,6 +57,7 @@ WMDS is our Tailwind v4 theme and Storybook catalog. **Storybook is canonical** 
     ["src/theme/colors.css", "Base semantic color roles"],
     ["src/theme/stateColors.css", "Hover/active states via color-mix"],
     ["src/theme/theme.css", "Tailwind @theme bridge — import once in apps"],
+    ["src/theme/grid.css", "App grid spine — --grid-* , grid-page / band, overlay"],
     ["src/theme/sources.css", "Tailwind content manifest for Storybook + package CSS"],
     ["src/lib/motion.ts", "Motion adapter — reads Theme CSS vars"],
     ["Storybook", "Source of truth: Foundation → Components → Examples"],
@@ -80,7 +81,7 @@ WMDS is **not** a utility-class-first design system. Tailwind v4 is the **engine
     ["Components + props", "Button (role, status, icon, count), Badge, StatusDot"],
     ["Storybook Examples", "Approved compositions — copy the pattern, don't re-style with utilities"],
     ["Theme import", "Page shell + dark mode — not per-widget color classes"],
-    ["Layout utilities OK", "gap, grid, flex, max-w between components — not button/badge look-alikes"],
+    ["Layout utilities OK", "grid-page + band (page spine), plus gap / flex between components — not button/badge look-alikes"],
   ]}
 />
 
@@ -188,7 +189,7 @@ Reference: **`src/lib/viewports.ts`**, **Foundation → Breakpoints**, **`docs/a
 
 ```
 src/
-  theme/                  colors, stateColors, theme, sources, fonts
+  theme/                  colors, stateColors, theme, grid, sources, fonts
   lib/                    motion, typography, tableLayout, shared helpers
   foundation/             Storybook token specimens
   components/
@@ -214,6 +215,7 @@ npm run build       # dist/theme.css + dist/styles.css
 - **Foundation → Icons** — Lucide usage and sizing
 - **Foundation → Typography** — roles and letter spacing
 - **Foundation → Breakpoints** — mobile-first scale and viewports
+- **Foundation → Grid** — `grid-page` + `band` + **g** overlay (ADR-0010)
 - **`docs/adr/0003-responsive-mobile-first.md`** — responsive rules per tier
 - **`docs/adr/0004-pattern-first-not-utility-first.md`** — components + props, not utility soup
 - **`CONSUMING.md`** — wiring the theme in other apps

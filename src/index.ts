@@ -104,6 +104,14 @@ export {
   type TaskRowsVariant,
 } from "./components/molecules/TaskRows/TaskRows";
 export { cn } from "./lib/cn";
+export { GridOverlay, type GridOverlayProps } from "./lib/GridOverlay";
+export {
+  GRID_ON_CLASS,
+  gridOverlayKeyShouldToggle,
+  isEditableGridOverlayTarget,
+  readGridColumnCount,
+  setDocumentGridOn,
+} from "./lib/gridOverlay";
 export {
   focusRingTransitionClasses,
   motionTransition,

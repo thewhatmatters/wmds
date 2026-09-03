@@ -11,6 +11,7 @@ Tailwind v4 theme + **pattern-first** Storybook catalog. **Storybook is canonica
 | **`src/theme/fonts.css`** | Geist Sans + Geist Mono |
 | **`src/theme/stateColors.css`** | Hover/active states (`color-mix` from base roles) |
 | **`src/theme/typography.css`** | Astryx geometric scale + `type-*` semantic utilities — see **ADR-0009** |
+| **`src/theme/grid.css`** | App-profile `--grid-*` + `grid-page` / `band` — see **ADR-0010**, **DESIGN.md → Grid** |
 | **`src/theme/motion.css`** | Astryx-aligned duration/easing tiers — see **ADR-0008** |
 | **`src/lib/motion.ts`** | Motion adapter — CSS vars → Tailwind + Motion |
 | **Storybook** | Token catalog + component specs (start at **Introduction**) |

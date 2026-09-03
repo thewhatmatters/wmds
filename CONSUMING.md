@@ -31,7 +31,7 @@ Browse patterns in Storybook under **Examples/** — copy JSX and state wiring i
 <Button startSlot={<img … />} badge="New" variant="success" />
 ```
 
-Use Tailwind in your app for **page layout** (`grid`, `gap`, `max-w`, responsive columns) and spacing **between** WMDS components. Use **`className` on a component** for layout tweaks (width, margin) — not for new variants or colors.
+Use Tailwind in your app for **page layout** and spacing **between** WMDS components. For a consistent page spine, copy **`grid-page` + `band`** (below) — do not invent a Pitchkit layout atom. Use **`className` on a component** for layout tweaks (width, margin) — not for new variants or colors.
 
 New visuals require a WMDS component or Example pattern — see **`docs/adr/0004-pattern-first-not-utility-first.md`**.
 
@@ -74,6 +74,54 @@ Or theme only (if you configure Tailwind yourself):
 ```
 
 Toggle on any ancestor — same token names, values from `colors.css`.
+
+## Grid spine (page layout)
+
+WMDS ships a Müller-Brockmann **app** grid (`--profile=app`): column-line + 8px baseline, relaxed rows. Tokens live in **`src/theme/grid.css`** and are included in `@whatmatters/wmds/styles.css` (and `theme.css` → `grid.css`).
+
+**`--spacing` stays 4px.** Even multiples = 8px baseline. Do not re-scale spacing in the app.
+
+### Tokens (already on `:root` after the style import)
+
+| Token | Meaning |
+|-------|---------|
+| `--grid-cols` | 4 / 8 (`md`) / 12 (`lg`) |
+| `--grid-gutter` / `--grid-margin` | 16px mobile, 24px from `md` |
+| `--grid-baseline` | 8px (`calc(var(--spacing) * 2)`) |
+| `--leading-base` | 24px — also `leading-base` |
+| `--grid-max` | 80rem |
+
+Override on a wrap if a screen needs a different max width (`style={{ "--grid-max": "100%" }}`). Do not fork a second `--grid-*` set in Pitchkit.
+
+### Band classes
+
+```tsx
+import { GridOverlay } from "@whatmatters/wmds";
+
+<div className="grid-page">
+  <GridOverlay />
+  <div className="band">
+    <section className="col-span-full lg:col-span-6">…</section>
+    <aside className="col-span-full lg:col-span-6">…</aside>
+  </div>
+</div>
+```
+
+- **`grid-page`** — wrap + column tracks. Overlay **must** be a child of this box.
+- **`band`** — subgrid of those tracks (`@supports` fallback repeats `--grid-cols`).
+- Place by **column line** (`col-span-*` / `col-start-*`). This is layout, not a new atom.
+
+CSS-only (no React overlay): add `class="grid-on"` on `<html>` and an empty `<div class="grid-guides"><div class="grid-guides-cols"></div><div class="grid-guides-baseline"></div>…</div>` inside `grid-page`. Prefer `GridOverlay` when React is present.
+
+### Overlay (`g`)
+
+`GridOverlay` composes the **`tailwindcss-react-grid-overlay` contract** (press **g**, React, columns) but is **bound to `--grid-*` inside `grid-page`**. The npm package paints a viewport overlay — that drifts from a centered max-width grid. WMDS does not depend on it.
+
+- Press **g** (ignored in inputs). Optional `visible` / `visibleByDefault` / `onVisibleChange`.
+- Mount in Storybook and local demos. Do **not** lock Pitchkit chrome to the overlay.
+- Storybook: **Foundation → Grid**.
+
+Pattern-first: apps **copy this wrap** from WMDS. No Pitchkit `Grid` / `Page` molecule.
 
 ## Components
 
