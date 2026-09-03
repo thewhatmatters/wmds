@@ -9,6 +9,7 @@ import {
   cardAddressClasses,
   cardBaseClasses,
   cardBodyTextClasses,
+  cardBodyWellClasses,
   cardDividerClasses,
   cardLayoutShellClasses,
   cardLayoutShellShapeClasses,
@@ -124,7 +125,7 @@ function CardDivider({ className, ...props }: HTMLAttributes<HTMLHRElement>) {
 
 /**
  * Content surface — [Astryx Card](https://astryx.atmeta.com/components/Card).
- * Layout cards (`padding="none"`) — shell + **Body** slot (2px outside, square; occupants own radius).
+ * Layout cards (`padding="none"`) — shell + **Body** slot (2px outside, square, no fill).
  */
 export const Card = Object.assign(CardRoot, {
   Header: CardHeader,
@@ -133,4 +134,9 @@ export const Card = Object.assign(CardRoot, {
   Divider: CardDivider,
 });
 
-export { cardAddressClasses, cardBodyTextClasses, cardTitleClasses };
+export {
+  cardAddressClasses,
+  cardBodyTextClasses,
+  cardBodyWellClasses,
+  cardTitleClasses,
+};

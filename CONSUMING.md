@@ -156,7 +156,7 @@ import {
 | `Input` | `label`, `description`, `status`, `message`, `loading`, `endBadge`, `icon`, `size`, `shape` | Atoms/Input — Required via `endBadge={<Badge>…</Badge>}` |
 | `Search` | `size`, `placeholder`, `onSubmit` | Molecules/Search — inline input + button row |
 | `List` | `variant`, `hasDividers`, `header` | Molecules/List — `List.Item` with `layout`, `primary`, `secondary`, `meta`, `trailing`, `onPress`, `selected` |
-| `Card` | `variant`, `shape`, `padding` | Molecules/Card — `Card.Header`, **`Card.Body` slot**, `Card.Footer`, `Card.Divider` |
+| `Card` | `variant`, `shape`, `padding` | Molecules/Card — `Card.Header`, **`Card.Body` slot** (no default fill), `Card.Footer`; optional occupant well `cardBodyWellClasses` |
 | `ContentRail` | `position`, `width`, `header` | Molecules/ContentRail — map + list pane beside main canvas |
 | `TaskRows` | `variant`, `detailsLayout` | Molecules/TaskRows — expandable rows; **Pattern — FM market detail** |
 | `Badge` | `variant`, `size`, `count`, `icon` | Atoms/Badge — copy a **Pattern** story |

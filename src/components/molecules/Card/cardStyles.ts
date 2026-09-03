@@ -51,11 +51,14 @@ export const cardLayoutShellShapeClasses: Record<CardShape, string> = {
 
 export const cardLayoutHeaderClasses = "flex flex-col gap-1.5";
 
-/** Body slot — square `bg-body` well, 2px outside, no inner pad or radius. */
+/** Body slot — 2px outside, square, no fill. Occupants own radius and background. */
 export const cardLayoutBodyWellClasses = [
   cardLayoutSlotOutsetXClasses,
-  "flex min-h-0 flex-col bg-body",
+  "flex min-h-0 flex-col",
 ].join(" ");
+
+/** Opt-in muted fill — put on the occupant, not on `Card.Body`. */
+export const cardBodyWellClasses = "bg-body";
 
 export const cardLayoutFooterClasses = "flex items-center justify-between gap-3";
 

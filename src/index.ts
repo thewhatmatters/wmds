@@ -56,6 +56,7 @@ export {
   Card,
   cardAddressClasses,
   cardBodyTextClasses,
+  cardBodyWellClasses,
   cardPaddings,
   cardShapes,
   cardTitleClasses,

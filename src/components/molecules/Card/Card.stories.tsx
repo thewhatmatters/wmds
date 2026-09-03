@@ -1,13 +1,16 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Clock, Globe } from "lucide-react";
+import { Clock, Dog, Globe, MapPin, Tags } from "lucide-react";
 import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
 import { Input } from "../../atoms/Input/Input";
+import { Chip } from "../Chip/Chip";
 import { List } from "../List/List";
+import { TaskRows } from "../TaskRows/TaskRows";
 import {
   Card,
   cardBodyTextClasses,
+  cardBodyWellClasses,
   cardPaddings,
   cardShapes,
   cardTitleClasses,
@@ -40,7 +43,7 @@ const meta = {
         component: `
 ## Usage
 
-[Astryx Card](https://astryx.atmeta.com/components/Card) — **Header** and **Footer** sit on a white shell; **Body** is a muted inset **slot**. Put almost any supporting content in the Body — TaskRows, List, forms, or a custom canvas. The shell does not care what occupies the well.
+[Astryx Card](https://astryx.atmeta.com/components/Card) — **Header** and **Footer** sit on the shell; **Body** is a square **slot** 2px from the card edges. No default fill, radius, or inner pad — content inherits the shell and owns its own chrome. Optional muted well: wrap the occupant in \`cardBodyWellClasses\` (\`bg-body\`).
 
 | Pattern | Composition |
 |---------|-------------|
@@ -54,7 +57,7 @@ Default \`shape="rounded"\` — \`rounded-2xl shadow-md\` on the shell. Use \`sh
 \`\`\`
 Card (bg-surface shell, p-4, gap-3)
 ├── Card.Header   — title, metadata (on shell, 16px inset)
-├── Card.Body     — \`bg-body\` slot — 2px outside, square (occupants own radius)
+├── Card.Body     — slot — 2px outside, square, no fill (inherits shell)
 └── Card.Footer   — status, actions (on shell, 16px inset)
 \`\`\`
 
@@ -66,7 +69,8 @@ Card (bg-surface shell, p-4, gap-3)
 - **Do** use default \`shape="rounded"\` — FM market detail, dashboard widgets, map overlays.
 - **Do** use \`shape="flush"\` only when nested inside a parent that already owns radius and shadow.
 - **Don't** restrict the Body to TaskRows — that is one occupant, not the contract.
-- **Don't** re-theme the inset well with \`className\` — put layout tweaks on the root only.
+- **Don't** put \`bg-body\` on \`Card.Body\` — default is inherit; optional well goes on the occupant (\`cardBodyWellClasses\`).
+- **Don't** re-theme the slot with \`className\` — put layout tweaks on the root only.
         `.trim(),
       },
     },
@@ -99,7 +103,7 @@ export const Layout: Story = {
     docs: {
       description: {
         story:
-          "Default layout card — header/footer on the shell. **Body** is 2px from the card edges, square — occupants own radius. Same structure in dark.",
+          "Default layout card — header/footer on the shell. **Body** is 2px from the card edges, square, no fill — content inherits the shell.",
       },
     },
   },
@@ -135,7 +139,7 @@ export const BodySlotList: Story = {
     docs: {
       description: {
         story:
-          "**List** in the Body slot — same shell as layout Card. List owns row chrome; Card owns the well.",
+          "**List** in the Body slot — inherits the shell. List owns row chrome.",
       },
     },
   },
@@ -194,7 +198,7 @@ export const BodySlotForm: Story = {
     docs: {
       description: {
         story:
-          "Form controls in the Body slot — Inputs and helper copy sit in the well; the footer keeps the action.",
+          "Form controls in the Body slot — inherit the shell; the footer keeps the action.",
       },
     },
   },
@@ -205,7 +209,7 @@ export const BodySlotForm: Story = {
         <p className={mutedText(cardBodyTextClasses)}>Used to score overlapping time zones</p>
       </Card.Header>
       <Card.Body>
-        <div className="flex flex-col gap-3 rounded-[1.375rem] bg-surface p-4">
+        <div className="flex flex-col gap-3 p-4">
           <Input
             label="Home time zone"
             defaultValue="America/Chicago"
@@ -222,6 +226,68 @@ export const BodySlotForm: Story = {
       </Card.Footer>
     </Card>
   ),
+};
+
+export const BodySlotTaskRowsWell: Story = {
+  name: "Example — body well (TaskRows)",
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        story:
+          "Optional muted well — `cardBodyWellClasses` (`bg-body`) on the **occupant**, not on `Card.Body`. Capsule TaskRows sit in that fill and keep their own pill radius.",
+      },
+    },
+  },
+  render: function BodySlotTaskRowsWellDemo() {
+    const [directionsOpen, setDirectionsOpen] = useState(true);
+    const [servicesOpen, setServicesOpen] = useState(false);
+
+    return (
+      <Card shape="rounded" className="max-w-lg">
+        <Card.Header>
+          <h2 className={cardTitleClasses}>Texas Farmers&apos; Market at Mueller</h2>
+          <p className={mutedText(cardBodyTextClasses)}>2006 Philomena St. · Austin, TX</p>
+        </Card.Header>
+        <Card.Body>
+          <div className={cardBodyWellClasses}>
+            <TaskRows variant="capsule">
+              <TaskRows.Item
+                icon={<MapPin strokeWidth={2} />}
+                label="Get directions"
+                meta="0.1 mi"
+                detailsLayout="actions"
+                detailsLabel="Open in"
+                open={directionsOpen}
+                onOpenChange={setDirectionsOpen}
+              >
+                <TaskRows.Detail variant="button" label="Apple Maps" onPress={() => undefined} />
+                <TaskRows.Detail variant="button" label="Google Maps" onPress={() => undefined} />
+              </TaskRows.Item>
+              <TaskRows.Item
+                icon={<Tags strokeWidth={2} />}
+                label="Services offered"
+                meta="3"
+                detailsLayout="chips"
+                open={servicesOpen}
+                onOpenChange={setServicesOpen}
+              >
+                <Chip readOnly size="sm">
+                  SNAP / EBT
+                </Chip>
+                <Chip readOnly size="sm" icon={<Dog strokeWidth={2} />}>
+                  Dogs welcome
+                </Chip>
+                <Chip readOnly size="sm">
+                  Open today
+                </Chip>
+              </TaskRows.Item>
+            </TaskRows>
+          </div>
+        </Card.Body>
+      </Card>
+    );
+  },
 };
 
 export const RoundedStandalone: Story = {
