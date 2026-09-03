@@ -61,12 +61,19 @@ const preview: Preview = {
   ],
   parameters: {
     options: {
-      /** Introduction → Foundation → Atoms → Molecules → Organisms → Examples. */
+      /**
+       * Introduction → Foundation (designed order) → Atoms → Molecules → Organisms → Examples.
+       * Foundation is spatial system first, then color/type, then supporting tokens, icons last.
+       * Other tiers stay alphabetical.
+       */
       storySort: {
         method: "alphabetical-by-kind",
         order: [
           "Introduction",
-          "Foundation",
+          [
+            "Foundation",
+            ["Grid", "Colors", "Typography", "Spacing", "Shadows", "Motion", "Icons"],
+          ],
           "Atoms",
           "Molecules",
           "Organisms",
