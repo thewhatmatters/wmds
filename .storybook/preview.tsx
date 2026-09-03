@@ -2,6 +2,7 @@ import type { Preview } from "@storybook/react-vite";
 import { MotionConfig } from "motion/react";
 import { storybookViewports } from "../src/lib/viewports";
 import "../src/styles/global.css";
+import "./docs.css";
 
 const preview: Preview = {
   globalTypes: {
@@ -41,15 +42,15 @@ const preview: Preview = {
       const storyShellClass = isFullscreen
         ? "min-h-[100svh] w-full"
         : isPadded
-          ? "min-h-[100svh] w-full p-6"
-          : "flex min-h-[100svh] w-full items-center justify-center p-6";
+          ? "min-h-[100svh] w-full p-8"
+          : "flex min-h-[100svh] w-full items-center justify-center p-8";
 
       /**
        * Docs embeds every story in a canvas. `min-h-[100svh]` there turns each
        * specimen into a full viewport of empty space. Fullscreen page stories
        * own their own height; padded/centered stories just need inset.
        */
-      const docsShellClass = isFullscreen ? "w-full" : "w-full p-4";
+      const docsShellClass = isFullscreen ? "w-full" : "w-full p-5";
 
       return (
         <MotionConfig reducedMotion="user">

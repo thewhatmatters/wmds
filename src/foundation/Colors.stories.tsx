@@ -64,7 +64,7 @@ function SwatchGrid({
   sample?: "fill" | "text";
 }) {
   return (
-    <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-3">
+    <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
       {tokens.map(({ name, className }) => (
         <div key={name} className="flex min-w-0 flex-col gap-2">
           <div

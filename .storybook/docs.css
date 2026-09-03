@@ -1,0 +1,7 @@
+/**
+ * Autodocs default is a 1000px column. Widen it so Foundation specimens
+ * can fill the page instead of sitting in a skinny strip.
+ */
+.sbdocs.sbdocs-content {
+  max-width: min(72rem, 100%) !important;
+}

@@ -3,7 +3,6 @@ import {
   astryxTypeScale,
   fontFamilies,
   fontWeights,
-  geometricScale,
   resolveTypographyTokenValues,
   trackingRules,
   typographyClass,
