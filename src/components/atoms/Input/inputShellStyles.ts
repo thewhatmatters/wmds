@@ -19,7 +19,7 @@ export const inputShellTransitionClasses =
 
 export const inputBaseClasses =
   "w-full min-w-0 bg-surface font-sans font-normal tracking-normal text-fg " +
-  "placeholder:text-muted " +
+  "placeholder:text-disabled " +
   inputShellTransitionClasses;
 
 /** Solo shell — ring sits on the input with page offset. */
@@ -299,7 +299,7 @@ export const inputCompoundStatusBorderClasses: Record<InputStatus, string> = inp
 
 /** Input inside validation shell — shell owns border, bg, and focus ring. */
 export const inputAttachedFieldClasses =
-  "w-full min-w-0 bg-transparent font-sans font-normal tracking-normal text-fg placeholder:text-muted " +
+  "w-full min-w-0 bg-transparent font-sans font-normal tracking-normal text-fg placeholder:text-disabled " +
   inputShellTransitionClasses;
 
 export const inputAttachedInputClasses =
