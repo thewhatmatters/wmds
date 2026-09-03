@@ -52,7 +52,8 @@ export const cardLayoutShellShapeClasses: Record<CardShape, string> = {
 /** Header row — start | end. Occupants decide what lands in each slot. */
 export const cardLayoutHeaderClasses = "flex items-start justify-between gap-3";
 
-export const cardLayoutHeaderStartClasses = "flex min-w-0 flex-1 flex-col gap-0.5";
+/** Title + subtitle sit as one block — no flex gap; type leading is snug. */
+export const cardLayoutHeaderStartClasses = "flex min-w-0 flex-1 flex-col gap-0";
 
 export const cardLayoutHeaderEndClasses = "flex shrink-0 items-center gap-2";
 
@@ -89,13 +90,13 @@ export const cardSectionPaddingClasses: Record<
   },
 };
 
-export const cardTitleClasses = typographyClass("subheading");
+export const cardTitleClasses = `${typographyClass("subheading")} leading-snug`;
 
-export const cardSubtitleClasses = `${typographyClass("caption")} text-muted`;
+export const cardSubtitleClasses = `${typographyClass("caption")} leading-snug text-muted`;
 
 export const cardBodyTextClasses = typographyClass("body");
 
-/** Street + city/state/ZIP — one block; tighter line spacing than header `gap-1.5`. */
+/** Street + city/state/ZIP — one block; same tight stack as header title + subtitle. */
 export const cardAddressClasses =
   `${typographyClass("body")} flex flex-col gap-0 leading-snug`;
 
