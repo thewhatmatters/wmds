@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { FoundationSpecimen } from "./FoundationSpecimen";
 
 const widths: Array<{ step: string; className: string }> = [
   { step: "1", className: "w-1" },
@@ -23,6 +24,7 @@ const meta = {
   title: "Foundation/Spacing",
   tags: ["autodocs"],
   parameters: {
+    layout: "padded",
     docs: {
       description: {
         component:
@@ -37,30 +39,30 @@ type Story = StoryObj<typeof meta>;
 
 export const Scale: Story = {
   render: () => (
-    <div className="flex max-w-md flex-col gap-3">
+    <FoundationSpecimen className="flex flex-col gap-3">
       {widths.map(({ step, className }) => (
         <div key={step} className="flex items-center gap-3">
           <span className="w-8 shrink-0 font-mono text-xs text-muted">{step}</span>
           <div className={`h-4 rounded-sm bg-primary ${className}`} />
         </div>
       ))}
-    </div>
+    </FoundationSpecimen>
   ),
 };
 
 export const Gap: Story = {
   render: () => (
-    <div className="flex gap-4">
+    <FoundationSpecimen className="flex gap-4">
       {[1, 2, 3, 4].map((n) => (
         <div key={n} className="size-10 rounded-md bg-surface shadow-raised" />
       ))}
-    </div>
+    </FoundationSpecimen>
   ),
 };
 
 export const Radius: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-4">
+    <FoundationSpecimen className="flex flex-wrap gap-4">
       {radii.map(({ step, className }) => (
         <div
           key={step}
@@ -69,6 +71,6 @@ export const Radius: Story = {
           {step}
         </div>
       ))}
-    </div>
+    </FoundationSpecimen>
   ),
 };

@@ -10,6 +10,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import { FoundationSpecimen } from "./FoundationSpecimen";
 
 /** Matches `buttonIconSizeClasses` in Button — documented here to keep Foundation layer-clean. */
 const buttonIconScale = {
@@ -23,6 +24,7 @@ const meta = {
   title: "Foundation/Icons",
   tags: ["autodocs"],
   parameters: {
+    layout: "padded",
     docs: {
       description: {
         component:
@@ -51,7 +53,7 @@ const sampleIcons = [
 
 export const Usage: Story = {
   render: () => (
-    <div className="flex max-w-lg flex-col gap-4 text-sm text-fg">
+    <FoundationSpecimen className="flex flex-col gap-4 text-sm text-fg">
       <pre className="overflow-x-auto rounded-md border border-border bg-surface p-3 font-mono text-xs">
         {`import { Plus } from "lucide-react";
 
@@ -62,12 +64,13 @@ export const Usage: Story = {
         use <code className="font-mono text-xs">strokeWidth={"{3}"}</code> inside small containers
         like StatusDot.
       </p>
-    </div>
+    </FoundationSpecimen>
   ),
 };
 
 export const Catalog: Story = {
   render: () => (
+    <FoundationSpecimen>
     <ul className="m-0 grid list-none grid-cols-3 gap-3 p-0 sm:grid-cols-4 md:grid-cols-5">
       {sampleIcons.map(({ Icon, label }) => (
         <li
@@ -79,6 +82,7 @@ export const Catalog: Story = {
         </li>
       ))}
     </ul>
+    </FoundationSpecimen>
   ),
 };
 
@@ -93,13 +97,13 @@ export const ButtonScale: Story = {
     },
   },
   render: () => (
-    <div className="flex flex-wrap items-end gap-6">
+    <FoundationSpecimen className="flex flex-wrap items-end gap-6">
       {(Object.keys(buttonIconScale) as Array<keyof typeof buttonIconScale>).map((size) => (
         <div key={size} className="flex flex-col items-center gap-2">
           <Plus className={`stroke-current ${buttonIconScale[size]}`} strokeWidth={2} aria-hidden />
           <span className="font-mono text-xs text-muted">{size}</span>
         </div>
       ))}
-    </div>
+    </FoundationSpecimen>
   ),
 };

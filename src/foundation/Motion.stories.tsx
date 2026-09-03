@@ -13,11 +13,13 @@ import {
   pressScaleClass,
   resolveMotionTokenValues,
 } from "../lib/motion";
+import { FoundationSpecimen } from "./FoundationSpecimen";
 
 const meta = {
   title: "Foundation/Motion",
   tags: ["autodocs"],
   parameters: {
+    layout: "padded",
     docs: {
       description: {
         component:
@@ -40,7 +42,7 @@ function TokenTable({
   rows: Array<{ token: string; value: string; role: string }>;
 }) {
   return (
-    <table className="w-full max-w-3xl border-collapse text-left text-sm">
+    <table className="w-full border-collapse text-left text-sm">
       <thead>
         <tr className="border-b border-border text-muted">
           <th className="py-2 pr-4 font-medium">Token</th>
@@ -65,7 +67,7 @@ export const Tokens: Story = {
   render: () => {
     const { durations, easing } = resolveMotionTokenValues();
     return (
-      <div className="flex max-w-3xl flex-col gap-8">
+      <FoundationSpecimen className="flex flex-col gap-8">
         <section>
           <h3 className="mb-3 text-sm font-medium text-fg">Durations</h3>
           <TokenTable rows={durations} />
@@ -78,7 +80,7 @@ export const Tokens: Story = {
           <h3 className="mb-3 text-sm font-medium text-fg">Press feedback</h3>
           <TokenTable rows={motionFeedback} />
         </section>
-      </div>
+      </FoundationSpecimen>
     );
   },
 };
@@ -96,7 +98,7 @@ export const CssTransitions: Story = {
     },
   },
   render: () => (
-    <div className="flex w-full max-w-lg flex-col gap-6">
+    <FoundationSpecimen className="flex flex-col gap-6">
       <p className="text-sm text-muted">
         Hover each row — the bar travels the same distance; only the duration tier changes.
       </p>
@@ -119,19 +121,21 @@ export const CssTransitions: Story = {
           </div>
         </div>
       ))}
-    </div>
+    </FoundationSpecimen>
   ),
 };
 
 export const PressScale: Story = {
   name: "Press scale (CSS)",
   render: () => (
-    <button
-      type="button"
-      className={`rounded-md bg-primary px-5 py-2.5 text-sm text-primary-foreground transition-[color,transform] hover:bg-primary-hover ${motionTransition("fast")} ${pressScaleClass}`}
-    >
-      Hover for color · hold click for scale
-    </button>
+    <FoundationSpecimen>
+      <button
+        type="button"
+        className={`rounded-md bg-primary px-5 py-2.5 text-sm text-primary-foreground transition-[color,transform] hover:bg-primary-hover ${motionTransition("fast")} ${pressScaleClass}`}
+      >
+        Hover for color · hold click for scale
+      </button>
+    </FoundationSpecimen>
   ),
 };
 
@@ -146,27 +150,31 @@ export const FocusRingFade: Story = {
     },
   },
   render: () => (
-    <input
-      type="text"
-      aria-label="Focus ring specimen"
-      placeholder="Tab to focus — ring fades in"
-      className={`h-11 w-full max-w-xs rounded-lg border border-border bg-surface px-3 text-sm text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body ${focusRingTransitionClasses}`}
-    />
+    <FoundationSpecimen>
+      <input
+        type="text"
+        aria-label="Focus ring specimen"
+        placeholder="Tab to focus — ring fades in"
+        className={`h-11 w-full max-w-xs rounded-lg border border-border bg-surface px-3 text-sm text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body ${focusRingTransitionClasses}`}
+      />
+    </FoundationSpecimen>
   ),
 };
 
 export const MotionGestures: Story = {
   name: "Motion gestures",
   render: () => (
-    <motion.button
-      type="button"
-      className="rounded-md bg-primary px-5 py-2.5 text-sm text-primary-foreground hover:bg-accent"
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      transition={motionTransitionProp("fast")}
-    >
-      whileHover / whileTap
-    </motion.button>
+    <FoundationSpecimen>
+      <motion.button
+        type="button"
+        className="rounded-md bg-primary px-5 py-2.5 text-sm text-primary-foreground hover:bg-accent"
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        transition={motionTransitionProp("fast")}
+      >
+        whileHover / whileTap
+      </motion.button>
+    </FoundationSpecimen>
   ),
 };
 
@@ -176,7 +184,7 @@ export const EnterExit: Story = {
     const [visible, setVisible] = useState(true);
 
     return (
-      <div className="flex flex-col items-start gap-4">
+      <FoundationSpecimen className="flex flex-col items-start gap-4">
         <button
           type="button"
           className="rounded-md border border-border bg-surface px-3 py-1.5 text-sm text-fg hover:bg-secondary"
@@ -198,7 +206,7 @@ export const EnterExit: Story = {
             </motion.div>
           ) : null}
         </AnimatePresence>
-      </div>
+      </FoundationSpecimen>
     );
   },
 };
@@ -218,7 +226,7 @@ export const PanelReveal: Story = {
     const [visible, setVisible] = useState(true);
 
     return (
-      <div className="flex flex-col items-start gap-4">
+      <FoundationSpecimen className="flex flex-col items-start gap-4">
         <button
           type="button"
           className="rounded-md border border-border bg-surface px-3 py-1.5 text-sm text-fg hover:bg-secondary"
@@ -226,7 +234,7 @@ export const PanelReveal: Story = {
         >
           {visible ? "Hide panel" : "Show panel"}
         </button>
-        <div className="flex h-48 w-full max-w-md overflow-hidden rounded-lg border border-border bg-body">
+        <div className="flex h-48 w-full overflow-hidden rounded-lg border border-border bg-body">
           <div className="flex w-16 shrink-0 flex-col items-center gap-2 border-r border-border bg-surface py-3">
             <span className="size-8 rounded-lg bg-secondary" />
             <span className="size-8 rounded-lg bg-accent-muted" />
@@ -263,7 +271,7 @@ export const PanelReveal: Story = {
           </AnimatePresence>
           <div className="flex flex-1 items-start p-3 text-sm text-muted">Main</div>
         </div>
-      </div>
+      </FoundationSpecimen>
     );
   },
 };
@@ -274,7 +282,8 @@ export const LayoutAnimation: Story = {
     const [expanded, setExpanded] = useState(false);
 
     return (
-      <motion.button
+      <FoundationSpecimen>
+        <motion.button
         type="button"
         layout
         className="overflow-hidden rounded-lg bg-primary px-4 py-2 text-left text-sm text-primary-foreground"
@@ -299,7 +308,8 @@ export const LayoutAnimation: Story = {
             </motion.p>
           ) : null}
         </AnimatePresence>
-      </motion.button>
+        </motion.button>
+      </FoundationSpecimen>
     );
   },
 };
@@ -307,7 +317,7 @@ export const LayoutAnimation: Story = {
 export const Principles: Story = {
   name: "When motion helps vs hurts",
   render: () => (
-    <div className="flex max-w-2xl flex-col gap-4 text-sm text-fg">
+    <FoundationSpecimen className="flex flex-col gap-4 text-sm text-fg">
       <section>
         <h3 className="mb-2 font-medium">Animate (medium / slow)</h3>
         <ul className="list-disc space-y-1 pl-5 text-muted">
@@ -333,6 +343,6 @@ export const Principles: Story = {
           <code className="font-mono text-xs">prefers-reduced-motion</code>.
         </p>
       </section>
-    </div>
+    </FoundationSpecimen>
   ),
 };

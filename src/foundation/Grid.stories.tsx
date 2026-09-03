@@ -4,6 +4,7 @@ import { GridOverlay } from "../lib/GridOverlay";
 import { readGridColumnCount } from "../lib/gridOverlay";
 import { typographyClass } from "../lib/typography";
 import { cn } from "../lib/cn";
+import { FoundationSpecimen } from "./FoundationSpecimen";
 import {
   gridColumnSteps,
   gridScale,
@@ -72,7 +73,7 @@ function DemoBlock({
 export const Scale: Story = {
   name: "Breakpoint × column scale",
   render: () => (
-    <div className="flex max-w-3xl flex-col gap-6">
+    <FoundationSpecimen className="flex flex-col gap-6">
       <p className={cn(typographyClass("body"), "text-muted")}>
         Review at Mobile (390), Tablet (768), Desktop (1280) — those three widths are the
         column steps. Other prefixes do not add tracks.
@@ -105,7 +106,7 @@ export const Scale: Story = {
           ))}
         </tbody>
       </table>
-    </div>
+    </FoundationSpecimen>
   ),
 };
 
@@ -189,7 +190,7 @@ export const PageAndBand: Story = {
 export const TouchTarget: Story = {
   name: "Touch target minimum",
   render: () => (
-    <div className="flex flex-col gap-3 text-sm text-fg">
+    <FoundationSpecimen className="flex flex-col gap-3 text-sm text-fg">
       <p className="text-muted">
         Atoms on mobile: minimum {minTouchTargetPx}×{minTouchTargetPx}px hit area (
         <code className="font-mono text-xs">min-h-11 min-w-11</code> or padding equivalent).
@@ -201,6 +202,6 @@ export const TouchTarget: Story = {
       >
         44px min
       </button>
-    </div>
+    </FoundationSpecimen>
   ),
 };

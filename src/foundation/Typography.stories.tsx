@@ -9,11 +9,13 @@ import {
   typographyClass,
   typographyStyles,
 } from "../lib/typography";
+import { FoundationSpecimen } from "./FoundationSpecimen";
 
 const meta = {
   title: "Foundation/Typography",
   tags: ["autodocs"],
   parameters: {
+    layout: "padded",
     docs: {
       description: {
         component:
@@ -33,7 +35,7 @@ export const GeometricScale: Story = {
   render: () => {
     const steps = resolveTypographyTokenValues();
     return (
-      <div className="flex max-w-2xl flex-col gap-3 font-sans">
+      <FoundationSpecimen className="flex flex-col gap-3 font-sans">
         <p className="type-supporting text-muted">
           Raw size ramp — adjust <code className="font-mono text-xs">--type-scale-base</code> and{" "}
           <code className="font-mono text-xs">--type-scale-ratio</code> holistically (Astryx pattern).
@@ -45,27 +47,27 @@ export const GeometricScale: Story = {
             <span className="type-supporting text-muted">{sample}</span>
           </div>
         ))}
-      </div>
+      </FoundationSpecimen>
     );
   },
 };
 
 export const Weights: Story = {
   render: () => (
-    <div className="flex flex-col gap-2">
+    <FoundationSpecimen className="flex flex-col gap-2">
       {fontWeights.map(({ token, value, role }) => (
         <p key={token} className="type-body text-fg" style={{ fontWeight: value }}>
           {token} ({value}) — {role}
         </p>
       ))}
-    </div>
+    </FoundationSpecimen>
   ),
 };
 
 export const AstryxTypeScale: Story = {
   name: "Astryx type scale",
   render: () => (
-    <div className="flex max-w-2xl flex-col gap-6 font-sans">
+    <FoundationSpecimen className="flex flex-col gap-6 font-sans">
       <p className="type-supporting text-muted">
         Semantic triplets — size + weight + line-height composed in <code className="font-mono text-xs">type-*</code> utilities.
       </p>
@@ -81,14 +83,14 @@ export const AstryxTypeScale: Story = {
           <p className={`${utility} text-fg`}>The quick brown fox jumps over the lazy dog</p>
         </div>
       ))}
-    </div>
+    </FoundationSpecimen>
   ),
 };
 
 export const Roles: Story = {
   name: "WMDS roles",
   render: () => (
-    <div className="flex max-w-2xl flex-col gap-8 font-sans">
+    <FoundationSpecimen className="flex flex-col gap-8 font-sans">
       <p className="type-supporting text-muted">
         WMDS roles map to Astryx types — import via{" "}
         <code className="font-mono text-xs text-fg">typographyClass(&quot;body&quot;)</code>.
@@ -108,14 +110,14 @@ export const Roles: Story = {
           </p>
         </div>
       ))}
-    </div>
+    </FoundationSpecimen>
   ),
 };
 
 export const LetterSpacing: Story = {
   name: "Letter spacing",
   render: () => (
-    <div className="flex max-w-2xl flex-col gap-6 font-sans">
+    <FoundationSpecimen className="flex flex-col gap-6 font-sans">
       <p className="type-supporting text-muted">
         Three tracking values — assigned only through typography roles (WMDS extension on Astryx).
       </p>
@@ -143,14 +145,14 @@ export const LetterSpacing: Story = {
         <p className={typographyClass("overline")}>Overline — tracking-wider</p>
         <p className="type-code text-muted">type-code — Geist Mono (0123456789)</p>
       </div>
-    </div>
+    </FoundationSpecimen>
   ),
 };
 
 export const FontFamilies: Story = {
   name: "Font families",
   render: () => (
-    <div className="flex max-w-xl flex-col gap-4">
+    <FoundationSpecimen className="flex flex-col gap-4">
       {fontFamilies.map(({ name, tailwind, css, usage }) => (
         <div key={name} className="flex flex-col gap-1 border-b border-border pb-4 last:border-0">
           <span className="type-label text-fg">{name}</span>
@@ -160,7 +162,7 @@ export const FontFamilies: Story = {
           <span className="type-supporting text-muted">{usage}</span>
         </div>
       ))}
-    </div>
+    </FoundationSpecimen>
   ),
 };
 

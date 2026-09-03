@@ -1,4 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { cn } from "../lib/cn";
+import { typographyClass } from "../lib/typography";
+import { FoundationSpecimen } from "./FoundationSpecimen";
 
 const surfaceTokens = [
   { name: "body", className: "bg-body text-fg" },
@@ -37,6 +40,7 @@ const meta = {
   title: "Foundation/Colors",
   tags: ["autodocs"],
   parameters: {
+    layout: "padded",
     docs: {
       description: {
         component:
@@ -54,17 +58,24 @@ type Story = StoryObj<typeof meta>;
 
 function SwatchGrid({
   tokens,
+  sample = "fill",
 }: {
   tokens: ReadonlyArray<{ name: string; className: string }>;
+  sample?: "fill" | "text";
 }) {
   return (
-    <div className="grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-3">
+    <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-3">
       {tokens.map(({ name, className }) => (
-        <div
-          key={name}
-          className={`flex h-20 flex-col justify-end rounded-lg border border-border p-2 ${className}`}
-        >
-          <span className="font-mono text-xs">{name}</span>
+        <div key={name} className="flex min-w-0 flex-col gap-2">
+          <div
+            className={cn(
+              "flex h-14 w-full items-center rounded-lg border border-border px-3",
+              className,
+            )}
+          >
+            {sample === "text" ? <span className="font-mono text-xs">Aa</span> : null}
+          </div>
+          <span className="truncate font-mono text-xs text-muted">{name}</span>
         </div>
       ))}
     </div>
@@ -74,74 +85,97 @@ function SwatchGrid({
 export const SurfaceHierarchy: Story = {
   name: "Surface hierarchy",
   render: () => (
-    <div className="flex max-w-md flex-col gap-3">
-      <p className="text-sm text-muted">
+    <FoundationSpecimen className="flex flex-col gap-6">
+      <p className={cn(typographyClass("caption"), "text-muted")}>
         Page floor → raised surface → card well. Light mode: gray body, white surface/card.
       </p>
-      <div className="rounded-lg border border-border bg-body p-4">
-        <div className="rounded-lg border border-border bg-surface p-4 shadow-raised">
-          <div className="rounded-lg border border-border-emphasized bg-card p-4">
+      <div className="rounded-2xl border border-border bg-body p-5">
+        <div className="rounded-xl border border-border bg-surface p-5 shadow-raised">
+          <div className="rounded-lg border border-border-emphasized bg-card px-4 py-5">
             <span className="font-mono text-xs text-muted">card on surface on body</span>
           </div>
         </div>
       </div>
       <SwatchGrid tokens={surfaceTokens} />
-    </div>
+    </FoundationSpecimen>
   ),
 };
 
 export const TextRoles: Story = {
   name: "Text roles",
-  render: () => <SwatchGrid tokens={textTokens} />,
+  render: () => (
+    <FoundationSpecimen>
+      <SwatchGrid tokens={textTokens} sample="text" />
+    </FoundationSpecimen>
+  ),
 };
 
 export const ActionRoles: Story = {
   name: "Action & accent",
-  render: () => <SwatchGrid tokens={actionTokens} />,
+  render: () => (
+    <FoundationSpecimen>
+      <SwatchGrid tokens={actionTokens} />
+    </FoundationSpecimen>
+  ),
 };
 
 export const StatusRoles: Story = {
   name: "Status roles",
-  render: () => <SwatchGrid tokens={statusTokens} />,
+  render: () => (
+    <FoundationSpecimen>
+      <SwatchGrid tokens={statusTokens} />
+    </FoundationSpecimen>
+  ),
 };
 
 export const StateColors: Story = {
   name: "Interaction states",
   render: () => (
-    <div className="flex max-w-md flex-col gap-3">
-      <p className="text-sm text-muted">
+    <FoundationSpecimen className="flex flex-col gap-4">
+      <p className={cn(typographyClass("caption"), "text-muted")}>
         Hover each swatch — ghost/secondary use Astryx overlay tints; primary/error use color-mix.
       </p>
-      {(
-        [
-          ["primary", "bg-primary hover:bg-primary-hover active:bg-primary-active text-primary-foreground"],
-          ["secondary", "bg-secondary hover:bg-secondary-hover active:bg-secondary-active text-secondary-foreground shadow-raised"],
-          ["ghost", "bg-transparent text-ghost-foreground hover:bg-ghost-hover active:bg-ghost-active"],
-          ["error", "bg-error hover:bg-error-hover active:bg-error-active text-on-error"],
-        ] as const
-      ).map(([name, className]) => (
-        <button
-          key={name}
-          type="button"
-          className={`rounded-lg border border-border px-4 py-3 text-left text-sm transition-colors ${className}`}
-        >
-          <span className="font-mono text-xs">{name}</span>
-        </button>
-      ))}
-    </div>
+      <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
+        {(
+          [
+            ["primary", "bg-primary hover:bg-primary-hover active:bg-primary-active text-primary-foreground"],
+            ["secondary", "bg-secondary hover:bg-secondary-hover active:bg-secondary-active text-secondary-foreground shadow-raised"],
+            ["ghost", "bg-transparent text-ghost-foreground hover:bg-ghost-hover active:bg-ghost-active"],
+            ["error", "bg-error hover:bg-error-hover active:bg-error-active text-on-error"],
+          ] as const
+        ).map(([name, className]) => (
+          <button
+            key={name}
+            type="button"
+            className={cn(
+              "min-h-11 rounded-lg border border-border px-4 py-3 text-left transition-colors",
+              className,
+            )}
+          >
+            <span className="font-mono text-xs">{name}</span>
+          </button>
+        ))}
+      </div>
+    </FoundationSpecimen>
   ),
 };
 
 export const Borders: Story = {
   name: "Borders",
   render: () => (
-    <div className="flex max-w-md flex-col gap-3">
-      <div className="rounded-lg border border-border bg-surface p-4 text-sm text-fg">
-        <span className="font-mono text-xs text-muted">border-border</span> — default hairline (alpha)
+    <FoundationSpecimen className="flex flex-col gap-3">
+      <div className="rounded-lg border border-border bg-surface px-4 py-3">
+        <p className={cn(typographyClass("caption"), "text-fg")}>
+          <span className="font-mono text-xs text-muted">border-border</span> — default hairline
+          (alpha)
+        </p>
       </div>
-      <div className="rounded-lg border border-border-emphasized bg-surface p-4 text-sm text-fg">
-        <span className="font-mono text-xs text-muted">border-border-emphasized</span> — section dividers
+      <div className="rounded-lg border border-border-emphasized bg-surface px-4 py-3">
+        <p className={cn(typographyClass("caption"), "text-fg")}>
+          <span className="font-mono text-xs text-muted">border-border-emphasized</span> — section
+          dividers
+        </p>
       </div>
-    </div>
+    </FoundationSpecimen>
   ),
 };

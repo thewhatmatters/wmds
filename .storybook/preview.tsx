@@ -44,13 +44,20 @@ const preview: Preview = {
           ? "min-h-[100svh] w-full p-6"
           : "flex min-h-[100svh] w-full items-center justify-center p-6";
 
+      /**
+       * Docs embeds every story in a canvas. `min-h-[100svh]` there turns each
+       * specimen into a full viewport of empty space. Fullscreen page stories
+       * own their own height; padded/centered stories just need inset.
+       */
+      const docsShellClass = isFullscreen ? "w-full" : "w-full p-4";
+
       return (
         <MotionConfig reducedMotion="user">
           <div
             data-theme={globals.theme === "dark" ? "dark" : undefined}
             className={[
               "bg-body text-fg font-sans w-full",
-              viewMode === "story" ? storyShellClass : isFullscreen ? "min-h-[100svh] w-full" : "p-4",
+              viewMode === "docs" ? docsShellClass : storyShellClass,
             ].join(" ")}
           >
             <Story />

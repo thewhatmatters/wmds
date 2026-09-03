@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { FoundationSpecimen } from "./FoundationSpecimen";
 
 const shadows: Array<{ name: string; className: string }> = [
   { name: "shadow-sm", className: "shadow-sm" },
@@ -11,6 +12,7 @@ const meta = {
   title: "Foundation/Shadows",
   tags: ["autodocs"],
   parameters: {
+    layout: "padded",
     docs: {
       description: {
         component:
@@ -25,13 +27,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Semantic: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-6">
+    <FoundationSpecimen className="grid grid-cols-2 gap-6 sm:grid-cols-4">
       {shadows.map(({ name, className }) => (
         <div key={name} className="flex flex-col items-center gap-2">
           <div className={`size-24 rounded-lg bg-surface ${className}`} />
           <span className="font-mono text-xs text-muted">{name}</span>
         </div>
       ))}
-    </div>
+    </FoundationSpecimen>
   ),
 };
