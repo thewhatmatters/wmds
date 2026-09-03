@@ -54,7 +54,7 @@ Default \`shape="rounded"\` — \`rounded-2xl shadow-md\` on the shell. Use \`sh
 \`\`\`
 Card (bg-surface shell, p-4, gap-3)
 ├── Card.Header   — title, metadata (on shell, 16px inset)
-├── Card.Body     — \`bg-body\` slot — 2px outside the well, no inner pad
+├── Card.Body     — \`bg-body\` slot — 2px outside, square (occupants own radius)
 └── Card.Footer   — status, actions (on shell, 16px inset)
 \`\`\`
 
@@ -99,7 +99,7 @@ export const Layout: Story = {
     docs: {
       description: {
         story:
-          "Default layout card — header/footer on the shell. **Body** is 2px from the card edges (no pad inside the slot). Same structure in dark.",
+          "Default layout card — header/footer on the shell. **Body** is 2px from the card edges, square — occupants own radius. Same structure in dark.",
       },
     },
   },
@@ -149,7 +149,7 @@ export const BodySlotList: Story = {
           <p className={mutedText(cardBodyTextClasses)}>Saturday · within 5 mi</p>
         </Card.Header>
         <Card.Body>
-          <List variant="ghost" hasDividers>
+          <List variant="surface" hasDividers className="overflow-hidden rounded-[1.375rem]">
             <List.Item
               layout="stacked"
               primary="SFC Farmers' Market Downtown"
@@ -205,7 +205,7 @@ export const BodySlotForm: Story = {
         <p className={mutedText(cardBodyTextClasses)}>Used to score overlapping time zones</p>
       </Card.Header>
       <Card.Body>
-        <div className="flex flex-col gap-3 p-4">
+        <div className="flex flex-col gap-3 rounded-[1.375rem] bg-surface p-4">
           <Input
             label="Home time zone"
             defaultValue="America/Chicago"
