@@ -34,6 +34,7 @@ const meta = {
     loading: false,
   },
   parameters: {
+    layout: "centered",
     docs: {
       description: {
         component: `
