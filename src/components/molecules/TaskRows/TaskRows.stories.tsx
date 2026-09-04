@@ -58,7 +58,7 @@ TaskRows
 - **Do** use \`TaskRows.Detail\` with \`onPress\` for FM Apple Maps / Google Maps deep links — labels stay on one line (do not wrap).
 - **Don't** use \`status="done"\` on FM rows — that's for agent task progress, not market detail.
 - **Don't** swap the whole card body for one action — expand in place instead.
-- **Don't** use for browse lists — **List** remains the market picker in **ContentRail**.
+- **Don't** use for browse lists — **List** remains the market picker.
 - **Don't** pair \`border\` with \`shadow-raised\` — the shadow token already includes a 1px hairline ring (\`theme.css\`).
         `.trim(),
       },

@@ -40,17 +40,6 @@ export {
   type ChipSize,
 } from "./components/molecules/Chip/Chip";
 export {
-  ContentRail,
-  contentRailBodyClasses,
-  contentRailHeaderClasses,
-  contentRailWidths,
-  type ContentRailLayoutClassName,
-  type ContentRailPosition,
-  type ContentRailProps,
-  type ContentRailSectionProps,
-  type ContentRailWidth,
-} from "./components/molecules/ContentRail/ContentRail";
-export {
   Card,
   cardAddressClasses,
   cardBodyTextClasses,
