@@ -354,7 +354,7 @@ export const Capsules: Story = {
       docs: {
         description: {
           story:
-            "Separated pill rows — **22px** radius when collapsed, **14px** when expanded (`open ? 14 : 22`). Second row starts open.",
+            "Separated pill rows — **22px** radius when collapsed, **14px** when expanded (`open ? 14 : 22`). Row inset **10px** horizontal (`px-2.5`) to match vertical rhythm on the **44px** (`h-11`) trigger. Second row starts open.",
         },
       },
     },

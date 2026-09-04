@@ -37,11 +37,23 @@ export const accordionItemCapsuleClosedClasses = capsuleRowRadiusClass;
 /** Expanded — 14px uniform radius. */
 export const accordionItemCapsuleOpenClasses = capsuleRowOpenRadiusClass;
 
-/** Horizontal inset — matches **Card** section padding (`px-4`). */
+/** List / plain horizontal inset — matches **Card** section padding (`px-4`, 16px). */
 export const accordionInsetXClasses = "px-4";
 
-export const accordionTriggerBaseClasses =
+/**
+ * Capsule horizontal inset — matches implicit vertical inset on `h-11` rows
+ * (44px row − 24px leading slot → 10px top/bottom; `px-2.5` = 10px).
+ */
+export const accordionCapsuleInsetXClasses = "px-2.5";
+
+export const accordionTriggerListClasses =
   "flex h-11 w-full items-center gap-2.5 text-left " + accordionInsetXClasses;
+
+export const accordionTriggerCapsuleClasses =
+  "flex h-11 w-full items-center gap-2.5 text-left " + accordionCapsuleInsetXClasses;
+
+/** @deprecated Use `accordionTriggerListClasses` or `accordionTriggerCapsuleClasses`. */
+export const accordionTriggerBaseClasses = accordionTriggerListClasses;
 
 /** Expandable header — pointer + hover fill on the full trigger band. */
 export const accordionTriggerInteractiveClasses =
@@ -70,5 +82,11 @@ export const accordionChevronOpenClasses = "rotate-180";
 export const accordionPanelInnerClasses = "overflow-hidden";
 
 /** Panel answers — body scale + secondary color (`text-muted`) below primary headers. */
-export const accordionPanelContentClasses =
+export const accordionPanelContentListClasses =
   "type-body text-muted tracking-normal pb-4 pt-0 " + accordionInsetXClasses;
+
+export const accordionPanelContentCapsuleClasses =
+  "type-body text-muted tracking-normal pb-2.5 pt-0 " + accordionCapsuleInsetXClasses;
+
+/** @deprecated Use `accordionPanelContentListClasses` or `accordionPanelContentCapsuleClasses`. */
+export const accordionPanelContentClasses = accordionPanelContentListClasses;

@@ -34,7 +34,7 @@ Hero location search — one **pill shell** with inset action button.
 | **Find collapsed** | \`Button\` "Find" only — parent owns expand |
 | **Find committed** | removable \`Chip\` — app flow |
 
-**Shell:** \`bg-surface\` pill on \`bg-body\` page, \`h-11\` with \`py-1.5 pr-1.5\` inset — inner track is \`h-8\`; input and button share that height (solo Input \`md\` is \`h-11\` and must not be used inline).
+**Shell:** \`bg-surface\` pill on \`bg-body\` page, \`h-11\` with \`p-1 pl-2\` inset — even gutter on the embedded button (top / right / bottom); inner track is \`h-8\`.
 
 ## Best practices
 

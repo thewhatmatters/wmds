@@ -23,15 +23,17 @@ import {
   accordionLabelPlainClasses,
   accordionLabelRowClasses,
   accordionLeadingSlotClasses,
-  accordionPanelContentClasses,
+  accordionPanelContentCapsuleClasses,
+  accordionPanelContentListClasses,
   accordionPanelInnerClasses,
   accordionRootCapsuleClasses,
   accordionRootListClasses,
   accordionRootListInsetClasses,
   accordionRootPlainClasses,
   accordionTrailingClusterClasses,
-  accordionTriggerBaseClasses,
+  accordionTriggerCapsuleClasses,
   accordionTriggerInteractiveClasses,
+  accordionTriggerListClasses,
   type AccordionVariant,
 } from "./accordionStyles";
 
@@ -145,6 +147,11 @@ function AccordionItem({
 
   const labelClasses = variant === "plain" ? accordionLabelPlainClasses : accordionLabelRowClasses;
 
+  const triggerClasses = variant === "capsule" ? accordionTriggerCapsuleClasses : accordionTriggerListClasses;
+
+  const panelContentClasses =
+    variant === "capsule" ? accordionPanelContentCapsuleClasses : accordionPanelContentListClasses;
+
   const trigger = (
     <>
       {leading != null ? <span className={accordionLeadingSlotClasses}>{leading}</span> : null}
@@ -169,7 +176,7 @@ function AccordionItem({
       {expandable ? (
         <button
           type="button"
-          className={cn(accordionTriggerBaseClasses, accordionTriggerInteractiveClasses)}
+          className={cn(triggerClasses, accordionTriggerInteractiveClasses)}
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen(!open)}
@@ -177,13 +184,13 @@ function AccordionItem({
           {trigger}
         </button>
       ) : (
-        <div className={accordionTriggerBaseClasses}>{trigger}</div>
+        <div className={triggerClasses}>{trigger}</div>
       )}
 
       {expandable ? (
         <div className="motion-collapse" data-visible={open ? "true" : "false"}>
           <div id={panelId} className={accordionPanelInnerClasses}>
-            <div className={accordionPanelContentClasses}>{children}</div>
+            <div className={panelContentClasses}>{children}</div>
           </div>
         </div>
       ) : null}

@@ -42,7 +42,7 @@ Accordion
     ├── label — \`body\` (plain) or \`ui-label\` (list / capsule)
     ├── trailing? — \`caption\` for meta; chevron is outside trailing
     ├── chevron (built-in when children present)
-    └── panel — body scale + \`text-muted\` + \`px-4\` inset
+    └── panel — body scale + \`text-muted\` + inset (\`px-4\` list/plain, \`px-2.5\` capsule)
 \`\`\`
 
 ## Best practices
