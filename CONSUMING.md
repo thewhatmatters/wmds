@@ -13,6 +13,10 @@ import "@whatmatters/wmds/styles.css";
 <Button status={status}>Submit</Button>
 <Button role="secondary" count={3}>Inbox</Button>
 <Button role="primary" icon={<Plus strokeWidth={2} />}>New item</Button>
+<Button role="ghost" layout="row" type="button" onClick={…}>
+  <span>Due date</span>
+  <span>Sep 12</span>
+</Button>
 <IconButton icon={<Settings strokeWidth={2} />} aria-label="Open settings" title="Settings" />
 <Badge variant="success">Online</Badge>
 <span className="inline-flex items-center gap-1.5">
@@ -21,7 +25,7 @@ import "@whatmatters/wmds/styles.css";
 </span>
 ```
 
-Browse patterns in Storybook under **Examples/** — copy JSX and state wiring into your app; Examples are not exported from the package.
+Browse patterns in Storybook under **Atoms/**, **Molecules/**, and **Examples/** — copy the named **Pattern** story JSX and state wiring; do not re-style with utilities. Examples are not exported from the package.
 
 **Not this:**
 
@@ -149,18 +153,30 @@ import {
 
 | Component | Key props | Storybook |
 |-----------|-----------|-----------|
-| `Button` | `role`, `size`, `status`, `icon`, `count` | Atoms/Button — copy a **Pattern** story |
+| `Button` | `role`, `layout` (`pill` \| `row`), `size`, `status`, `icon`, `count` | Atoms/Button — copy a **Pattern** story (`row` for flat detail lines) |
 | `IconButton` | `icon`, `aria-label`, `role`, `size`, `fab`, `loading`, `title` | Atoms/IconButton — copy a **Pattern** story |
 | `Chip` | `size`, `value`, `selected`, `onRemove`, `icon`, `count`, `readOnly` | Molecules/Chip — use `ChipFilterGroup` for multi-select filters |
 | `Input` | `label`, `description`, `status`, `message`, `loading`, `endBadge`, `icon`, `size` | Atoms/Input — pill shell; Required via `endBadge={<Badge>…</Badge>}` |
 | `Search` | `size`, `placeholder`, `onSubmit` | Molecules/Search — inline input + button row |
 | `Card` | `variant`, `shape`, `padding` | Molecules/Card — `Card.Header` (`start` | `end`), **`Card.Body` slot** (no default fill), `Card.Footer` |
 | `Accordion` | `variant`, `Accordion.Item` `leading` / `label` / `trailing` / `open` | Molecules/Accordion — FAQ, settings sections |
-| `TaskRows` | `variant`, `status`, `meta`, `detailsLayout` | Molecules/TaskRows — composes **Accordion**; **Pattern — status rows** or **capsules** |
+| `TaskRows` | `variant`, `status`, `meta`, `detailsLayout`, `TaskRows.Detail` | Molecules/TaskRows — **Pattern — status rows**, **capsules**, **action details** (`Detail variant="button"`), **tag chips** (`Chip readOnly size="sm"`), detail lines (`Detail` + `onPress` → `Button layout="row"`) |
 | `Badge` | `variant`, `size`, `emphasis`, `count`, `icon`, `iconOnly` | Atoms/Badge — copy a **Pattern** story |
 | `Status` | `variant`, `tone`, `label`, `besideLabel`, `pulsing`, `active`, `step` | Atoms/Status — `variant="ring"` or `variant="dot"` |
 
 Copy flow patterns from **Examples/** in Storybook when they ship. See **`src/package.manifest.ts`** for the export contract.
+
+### Cluster scale in detail rails
+
+Inside expanded **TaskRows** (and other dense rows), use the **sm / xs** cluster tier so controls sit below row titles — not beside them at default sizes:
+
+| Detail content | Compose |
+|----------------|---------|
+| External app / map actions | `TaskRows.Detail variant="button"` → **Button** `size="xs"` |
+| Tags / attributes | `Chip readOnly size="sm"` in `detailsLayout="chips"` |
+| Label / meta line with tap action | `TaskRows.Detail` + `onPress` → **Button** `layout="row"` `role="ghost"` |
+
+Card headers and filter rails use **sm / md / lg** cluster pairing — see **Foundation → Cluster** and **ADR-0011**.
 
 ## Icons
 

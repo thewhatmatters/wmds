@@ -9,6 +9,7 @@ import { typographyClass } from "../../../lib/typography";
 import { Chip } from "../Chip/Chip";
 import { Card, cardBodyTextClasses, cardTitleClasses } from "../Card/Card";
 import { TaskRows } from "./TaskRows";
+import { storyCopySource, storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 
 const specLabelClasses = cn(typographyClass("ui-label"), "text-[0.8125rem] font-medium text-fg");
 const specMetaClasses = cn(typographyClass("caption"), "text-muted");
@@ -63,6 +64,7 @@ const meta = {
   parameters: {
     wmdsLayout: "padded",
     docs: {
+      ...storyMetaDocsDefaults().docs,
       description: {
         component: `
 ## Usage
@@ -207,6 +209,27 @@ export const Anatomy: Story = {
 
 export const StatusList: Story = {
   name: "Pattern — status rows",
+  parameters: storyCopySource(`
+import { TaskRows } from "@whatmatters/wmds";
+
+<TaskRows variant="list">
+  <TaskRows.Item label="Verified vendor records" meta="12 suppliers" status="done" defaultOpen>
+    <TaskRows.Detail label="Matched tax and contact IDs" meta="12/12" />
+    <TaskRows.Detail label="Flagged stale records" meta="0" />
+  </TaskRows.Item>
+  <TaskRows.Item label="Build reorder task list" meta="7 SKUs" status="running" step={2} defaultOpen>
+    <TaskRows.Detail label="Reading POS export" meta="3 files" />
+    <TaskRows.Detail label="Scoring stockout risk" meta="68%" />
+  </TaskRows.Item>
+  <TaskRows.Item label="Draft supplier emails" meta="2 messages" status="pending" step={3}>
+    <TaskRows.Detail label="Cone supplier follow-up" meta="draft" />
+    <TaskRows.Detail label="Pistachio reorder note" meta="draft" />
+  </TaskRows.Item>
+  <TaskRows.Item label="Sync opening hours" meta="1 source" status="failed">
+    <TaskRows.Detail label="External API timeout" meta="retry" />
+  </TaskRows.Item>
+</TaskRows>
+  `),
   render: () => (
     <div className="max-w-md p-4">
       <TaskRows variant="list">
@@ -237,15 +260,45 @@ export const StatusList: Story = {
 
 export const CardWithStatusRows: Story = {
   name: "Pattern — card + status rows",
-  parameters: {
-    wmdsLayout: "padded",
-    docs: {
-      description: {
-        story:
-          "Optional **Card** wrapper — **TaskRows variant=\"list\"** in **Card.Body** for agent / progress flows.",
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "padded",
+      docs: {
+        description: {
+          story:
+            "Optional **Card** wrapper — **TaskRows variant=\"list\"** in **Card.Body** for agent / progress flows.",
+        },
       },
     },
-  },
+    `
+import { Button, Card, TaskRows } from "@whatmatters/wmds";
+
+<Card padding="none">
+  <Card.Header
+    start={<h2>Restock run</h2>}
+    end={<span>Step 2 of 4</span>}
+  />
+  <Card.Body>
+    <TaskRows variant="list" inset>
+      <TaskRows.Item label="Verified vendor records" meta="12 suppliers" status="done" defaultOpen>
+        <TaskRows.Detail label="Matched tax and contact IDs" meta="12/12" />
+        <TaskRows.Detail label="Flagged stale records" meta="0" />
+      </TaskRows.Item>
+      <TaskRows.Item label="Build reorder task list" meta="7 SKUs" status="running" step={2} defaultOpen>
+        <TaskRows.Detail label="Reading POS export" meta="3 files" />
+        <TaskRows.Detail label="Scoring stockout risk" meta="68%" />
+      </TaskRows.Item>
+    </TaskRows>
+  </Card.Body>
+  <Card.Footer>
+    <span>2 complete · 1 running</span>
+    <Button role="primary" size="sm">
+      Continue
+    </Button>
+  </Card.Footer>
+</Card>
+    `,
+  ),
   render: () => (
     <Card padding="none" className="max-w-md">
       <Card.Header
@@ -296,14 +349,28 @@ export const CardWithStatusRows: Story = {
 
 export const Capsules: Story = {
   name: "Pattern — capsules",
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Separated pill rows — **22px** radius when collapsed, **14px** when expanded (`open ? 14 : 22`). Second row starts open.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Separated pill rows — **22px** radius when collapsed, **14px** when expanded (`open ? 14 : 22`). Second row starts open.",
+        },
       },
     },
-  },
+    `
+import { TaskRows } from "@whatmatters/wmds";
+
+<TaskRows variant="capsule">
+  <TaskRows.Item label="Export vendor CSV" meta="12 rows" status="done">
+    <TaskRows.Detail label="Generated file" meta="vendors.csv" />
+  </TaskRows.Item>
+  <TaskRows.Item label="Refresh POS data" meta="3 files" status="running" step={2} defaultOpen>
+    <TaskRows.Detail label="Reading export" meta="2/3" />
+  </TaskRows.Item>
+</TaskRows>
+    `,
+  ),
   args: {
     variant: "capsule",
   },
@@ -323,14 +390,44 @@ export const Capsules: Story = {
 
 export const ActionDetails: Story = {
   name: "Pattern — action details",
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Expand-only service row — **TaskRows.Detail variant=\"button\"** composes **Button** `size=\"xs\"` for map / external app choices.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Expand-only service row — **TaskRows.Detail variant=\"button\"** composes **Button** `size=\"xs\"` for map / external app choices.",
+        },
       },
     },
-  },
+    `
+import { Apple, MapPin, Map as MapIcon } from "lucide-react";
+import { TaskRows } from "@whatmatters/wmds";
+
+<TaskRows variant="list">
+  <TaskRows.Item
+    label="Cone supplier"
+    meta="0.4 mi"
+    icon={<MapPin strokeWidth={2} />}
+    defaultOpen
+    detailsLabel="Open in"
+    detailsLayout="actions"
+  >
+    <TaskRows.Detail
+      variant="button"
+      label="Apple Maps"
+      icon={<Apple strokeWidth={2} />}
+      onPress={() => openAppleMaps()}
+    />
+    <TaskRows.Detail
+      variant="button"
+      label="Google Maps"
+      icon={<MapIcon strokeWidth={2} />}
+      onPress={() => openGoogleMaps()}
+    />
+  </TaskRows.Item>
+</TaskRows>
+    `,
+  ),
   render: () => (
     <div className="max-w-md p-4">
       <TaskRows variant="list">
@@ -362,13 +459,32 @@ export const ActionDetails: Story = {
 
 export const TagChips: Story = {
   name: "Pattern — tag chips",
-  parameters: {
-    docs: {
-      description: {
-        story: "Read-only **Chip** `size=\"sm\"` in `detailsLayout=\"chips\"` — tags and attributes, not filters.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story: "Read-only **Chip** `size=\"sm\"` in `detailsLayout=\"chips\"` — tags and attributes, not filters.",
+        },
       },
     },
-  },
+    `
+import { Chip, TaskRows } from "@whatmatters/wmds";
+
+<TaskRows variant="list">
+  <TaskRows.Item label="Weekend market booth" meta="Sat–Sun" defaultOpen detailsLayout="chips">
+    <Chip readOnly size="sm">
+      Outdoor
+    </Chip>
+    <Chip readOnly size="sm">
+      Produce
+    </Chip>
+    <Chip readOnly size="sm">
+      Card accepted
+    </Chip>
+  </TaskRows.Item>
+</TaskRows>
+    `,
+  ),
   render: () => (
     <div className="max-w-md p-4">
       <TaskRows variant="list">
@@ -390,13 +506,34 @@ export const TagChips: Story = {
 
 export const CustomSlots: Story = {
   name: "Pattern — custom leading / trailing",
-  parameters: {
-    docs: {
-      description: {
-        story: "`leading` and `trailing` replace default atom composition — any ReactNode.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story: "`leading` and `trailing` replace default atom composition — any ReactNode.",
+        },
       },
     },
-  },
+    `
+import { Badge, Status, TaskRows } from "@whatmatters/wmds";
+
+<TaskRows variant="list">
+  <TaskRows.Item
+    label="Live inventory sync"
+    leading={<Status variant="dot" tone="success" pulsing besideLabel label="Syncing" />}
+    trailing={
+      <Badge variant="info" emphasis="muted">
+        In progress
+      </Badge>
+    }
+    defaultOpen
+  >
+    <TaskRows.Detail label="POS webhook" meta="connected" />
+    <TaskRows.Detail label="Last push" meta="2s ago" />
+  </TaskRows.Item>
+</TaskRows>
+    `,
+  ),
   render: () => (
     <div className="max-w-md p-4">
       <TaskRows variant="list">
@@ -445,12 +582,43 @@ function ControlledExpandDemo() {
 
 export const ControlledExpand: Story = {
   name: "Pattern — controlled expand",
-  parameters: {
-    docs: {
-      description: {
-        story: "Drive expand state from the app — `open` + `onOpenChange` on **TaskRows.Item**.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story: "Drive expand state from the app — `open` + `onOpenChange` on **TaskRows.Item**.",
+        },
       },
     },
-  },
+    `
+import { useState } from "react";
+import { Button, TaskRows } from "@whatmatters/wmds";
+
+function ReorderPanel() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <TaskRows variant="list">
+        <TaskRows.Item
+          label="Reorder recommendations"
+          meta="7 SKUs"
+          status="running"
+          step={2}
+          open={open}
+          onOpenChange={setOpen}
+        >
+          <TaskRows.Detail label="Reading POS export" meta="3 files" />
+          <TaskRows.Detail label="Scoring stockout risk" meta="68%" />
+        </TaskRows.Item>
+      </TaskRows>
+      <Button role="secondary" size="sm" onClick={() => setOpen((value) => !value)}>
+        {open ? "Collapse row" : "Expand row"}
+      </Button>
+    </>
+  );
+}
+    `,
+  ),
   render: () => <ControlledExpandDemo />,
 };

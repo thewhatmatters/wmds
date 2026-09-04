@@ -9,7 +9,9 @@ WMDS ≠ “use Tailwind however you want.” Tailwind powers **component intern
 
 ## Consuming apps
 
-- Use exported components and **named patterns** — `Button` `role`, `status`, `icon`, `count` (mutually exclusive where documented).
+- Use exported components and **named patterns** — copy the matching **Pattern** story in Storybook; do not invent variants.
+- **Button:** `role`, `layout` (`pill` | **`row`** for flat detail/settings lines), `size`, and one of `status` | `icon` | `count` (mutually exclusive where documented).
+- **TaskRows details:** `TaskRows.Detail variant="row"` (composes **`Button layout="row"`**); `variant="button"` in `detailsLayout="actions"` ( **`Button size="xs"`** ); read-only **`Chip size="sm"`** in `detailsLayout="chips"`.
 - Copy **Examples** and Storybook stories for flows; do not re-create the same UI with raw `bg-*` / `text-*` classes.
 - `className` on a component is for **layout** (width, margin), not for inventing new variants or colors.
 - New visual language → new/extended component + Storybook spec (+ ADR if tier or token changes).
@@ -18,6 +20,9 @@ WMDS ≠ “use Tailwind however you want.” Tailwind powers **component intern
 
 - Put class recipes in **`*Styles.ts`** / **`semanticVariants.ts`** — not scattered one-offs in stories.
 - Foundation stories document **tokens**; component stories document **patterns** (Usage → Anatomy → Best practices → Examples).
+- **Storybook Show code** — see **`.cursor/rules/wmds-storybook-copy-source.mdc`**. Off by default; **Pattern — …** stories opt in with **`storyCopySource()`**.
 - Do not document “compose with utilities” as the primary path for app engineers.
+- **Molecules compose atoms** — no raw `<button>`, hand-rolled icons, or semantic fills in molecule TSX. See **`.cursor/rules/wmds-atomic-composition.mdc`**. Run **`npm run validate:composition`** before finishing; **`compositionTrackedOpenGaps`** must stay empty.
+- Need a new affordance? **Extend the atom + Storybook spec first** — then compose it (e.g. **`Button layout="row"`** for detail lines).
 
 See **`docs/adr/0004-pattern-first-not-utility-first.md`**.

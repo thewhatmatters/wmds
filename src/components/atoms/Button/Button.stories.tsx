@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { Button, buttonLayouts, buttonRoles, getNextButtonStatus, type ButtonStatus } from "./Button";
 import { typographyClass } from "../../../lib/typography";
+import { storyCopySource, storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 
 const meta = {
   title: "Atoms/Button",
@@ -28,6 +29,7 @@ const meta = {
   },
   parameters: {
     docs: {
+      ...storyMetaDocsDefaults().docs,
       description: {
         component: `
 ## Usage
@@ -62,16 +64,32 @@ type Story = StoryObj<typeof meta>;
 
 export const MultiStateBadge: Story = {
   name: "Pattern — submit / async",
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Primary pattern for form submit and async actions. Control `status` from parent state after API response.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Primary pattern for form submit and async actions. Control `status` from parent state after API response.",
+        },
       },
+      wmdsLayout: "centered",
+      backgrounds: { default: "dark" },
     },
-    wmdsLayout: "centered",
-    backgrounds: { default: "dark" },
-  },
+    `
+import { useState } from "react";
+import { Button, getNextButtonStatus, type ButtonStatus } from "@whatmatters/wmds";
+
+function SubmitForm() {
+  const [status, setStatus] = useState<ButtonStatus>("idle");
+
+  return (
+    <Button status={status} onClick={() => setStatus(getNextButtonStatus(status))}>
+      Submit
+    </Button>
+  );
+}
+    `,
+  ),
   render: function SubmitPattern() {
     const [status, setStatus] = useState<ButtonStatus>("idle");
 
@@ -88,29 +106,54 @@ export const MultiStateBadge: Story = {
 
 export const PrimaryAction: Story = {
   name: "Pattern — primary action",
+  parameters: storyCopySource(`
+import { Button } from "@whatmatters/wmds";
+
+<Button role="primary">Save changes</Button>
+  `),
   args: { role: "primary", children: "Save changes" },
 };
 
 export const SecondaryAction: Story = {
   name: "Pattern — secondary action",
+  parameters: storyCopySource(`
+import { Button } from "@whatmatters/wmds";
+
+<Button role="secondary">Cancel</Button>
+  `),
   args: { role: "secondary", children: "Cancel" },
 };
 
 export const GhostAction: Story = {
   name: "Pattern — ghost action",
+  parameters: storyCopySource(`
+import { Button } from "@whatmatters/wmds";
+
+<Button role="ghost">Learn more</Button>
+  `),
   args: { role: "ghost", children: "Learn more" },
 };
 
 export const RowLayout: Story = {
   name: "Pattern — row",
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Flat full-width ghost row for detail lines (TaskRows.Detail) and settings lists. Mutually exclusive with `icon`, `count`, and `status`.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Flat full-width ghost row for detail lines (TaskRows.Detail) and settings lists. Mutually exclusive with `icon`, `count`, and `status`.",
+        },
       },
     },
-  },
+    `
+import { Button } from "@whatmatters/wmds";
+
+<Button role="ghost" layout="row" type="button" onClick={() => openDueDatePicker()}>
+  <span>Due date</span>
+  <span>Sep 12</span>
+</Button>
+    `,
+  ),
   render: () => (
     <div className="max-w-md rounded-lg border border-border bg-surface p-3">
       <Button role="ghost" layout="row" type="button" onClick={() => undefined}>
@@ -127,18 +170,33 @@ export const RowLayout: Story = {
 
 export const DestructiveAction: Story = {
   name: "Pattern — destructive action",
+  parameters: storyCopySource(`
+import { Button } from "@whatmatters/wmds";
+
+<Button role="destructive">Delete account</Button>
+  `),
   args: { role: "destructive", children: "Delete account" },
 };
 
 export const WithIcon: Story = {
   name: "Pattern — with icon",
-  parameters: {
-    docs: {
-      description: {
-        story: "Leading Lucide icon reinforces the label. Icon choice is app-specific; sizing is automatic.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story: "Leading Lucide icon reinforces the label. Icon choice is app-specific; sizing is automatic.",
+        },
       },
     },
-  },
+    `
+import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Button } from "@whatmatters/wmds";
+
+<Button role="primary" icon={<Plus strokeWidth={2} />}>
+  New item
+</Button>
+    `,
+  ),
   render: () => (
     <div className="flex flex-wrap items-center gap-3">
       <Button role="primary" icon={<Plus strokeWidth={2} />}>
@@ -156,13 +214,22 @@ export const WithIcon: Story = {
 
 export const WithCount: Story = {
   name: "Pattern — with count",
-  parameters: {
-    docs: {
-      description: {
-        story: "Trailing numeric count for inbox / notification nav actions only.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story: "Trailing numeric count for inbox / notification nav actions only.",
+        },
       },
     },
-  },
+    `
+import { Button } from "@whatmatters/wmds";
+
+<Button role="primary" count={3}>
+  Inbox
+</Button>
+    `,
+  ),
   render: () => (
     <div className="flex flex-wrap items-center gap-3">
       <Button role="primary" count={3}>

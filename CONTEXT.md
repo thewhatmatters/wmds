@@ -30,6 +30,9 @@ Templates and pages — Storybook-only compositions. Storybook: **`Examples/{Nam
 **Pattern-first:**
 Components and Storybook Examples are the consumer API — not ad-hoc utility composition. Tailwind powers component internals and page layout only. See **`docs/adr/0004-pattern-first-not-utility-first.md`**.
 
+**Agents (this repo):**
+Read **`AGENTS.md`** and **`.cursor/rules/`** before authoring. Storybook **Pattern** stories are the contract. Molecules must compose atoms — **`npm run validate:composition`** (see **Foundation → Composition audit**). **`openGaps`** and **`compositionTrackedOpenGaps`** must stay empty.
+
 **Responsive:**
 Mobile-first by default — unprefixed Tailwind = mobile; scale with `sm:` / `md:` / `lg:`. Grid columns step on that same scale (4 / 8 / 12). Every component must work on mobile, tablet, and desktop. See **`docs/adr/0003-responsive-mobile-first.md`** and **Foundation → Grid**.
 

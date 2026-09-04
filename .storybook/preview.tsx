@@ -158,6 +158,12 @@ const preview: Preview = {
     viewport: {
       options: storybookViewports,
     },
+    /** Show code is opt-in — Pattern stories set `storyCopySource()` only. */
+    docs: {
+      source: {
+        disable: true,
+      },
+    },
   },
   initialGlobals: {
     viewport: { value: "mobile", isRotated: false },

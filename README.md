@@ -30,7 +30,10 @@ Same utility names (`bg-body`, `text-fg`, …) — values swap in `colors.css`. 
 npm install
 npm run storybook   # http://localhost:6006 — read Introduction first
 npm run build       # dist/theme.css + dist/styles.css
+npm run validate:composition  # molecules/organisms must compose atoms (CI)
 ```
+
+**Agents:** read **`AGENTS.md`** and **`.cursor/rules/`** before authoring components — Storybook patterns are the contract; `npm run validate:composition` enforces atomic composition.
 
 ## Status
 

@@ -44,5 +44,6 @@ Example: removable **Chip** dismiss → `IconButton inset`, not `chipRemoveButto
 2. Map each piece to an atom or a documented exception in the story **Anatomy**.
 3. If you added a new atom pattern, add or update the atom Storybook story first.
 4. Header / filter / toolbar rows — pick a **cluster tier** (Foundation → Cluster) and pair Chip + IconButton + Button sizes from the canonical table.
+5. Run **`npm run validate:composition`** — **`openGaps`** and **`compositionTrackedOpenGaps`** must stay empty. Documented shells only in **`compositionShellExceptions`** (Accordion, Chip, etc.).
 
 See **`AGENTS.md` → Molecule composition** and **ADR-0002**, **ADR-0011**.

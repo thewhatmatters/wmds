@@ -1,0 +1,35 @@
+---
+description: Storybook Show code is opt-in — Pattern stories only, drop-in app JSX
+globs: "**/*.stories.tsx"
+alwaysApply: false
+---
+
+# Storybook copy source
+
+**Show code is off by default** (`.storybook/preview.tsx` + `storyMetaDocsDefaults()`). Only **Pattern** stories opt in.
+
+## When to show code
+
+| Story kind | Show code? | How |
+|------------|------------|-----|
+| **Pattern — …** | Yes | **`storyCopySource()`** or **`withStoryCopySource()`** |
+| **Anatomy** | No | Rely on default — specimen + slot tables |
+| **Reference — …** | No | Rely on default — visual gallery |
+| **Usage / Best practices** (meta `docs.description.component`) | No | Markdown only — never a story canvas |
+
+## Snippet rules (Pattern stories only)
+
+- **Include imports** — `@whatmatters/wmds`, `lucide-react`, `useState` when needed.
+- **JSX the app pastes** — inside a component `return`, or a small named wrapper when stateful.
+- **No CSF** — never `name`, `parameters`, `render`, `export const …`.
+- **No demo chrome** — no `max-w-md`, `p-4`, specimen borders in the snippet (keep in `render`).
+
+Helpers: **`src/lib/storyCopySource.ts`**.
+
+## Before merge
+
+1. **Pattern** story → **Show code** visible with drop-in snippet.
+2. **Anatomy / Reference** → no **Show code** block.
+3. If CSF or story `render` leaks into docs, fix — you forgot **`storyCopySource()`** or the global default was overridden.
+
+See **`AGENTS.md` → Storybook copy source**.
