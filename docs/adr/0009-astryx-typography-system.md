@@ -70,4 +70,3 @@ WMDS keeps three tracking rules (`tight`, `normal`, `wider`) applied via roles â
 
 - [Astryx Typography](https://astryx.atmeta.com/docs/typography)
 - ADR-0007, ADR-0008 â€” same token methodology for color and motion
-- `docs/farmermarket-component-roadmap.md`

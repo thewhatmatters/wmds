@@ -39,7 +39,7 @@ const meta = {
     loading: false,
   },
   parameters: {
-    layout: "centered",
+    wmdsLayout: "centered",
     docs: {
       description: {
         component: `
@@ -60,9 +60,9 @@ const meta = {
 
 - **Do** use \`status\` + \`message\` for validation feedback — not label asterisks.
 - **Do** mark required fields with \`endBadge={<Badge size="sm">Required</Badge>}\` + native \`required\`.
-- **Do** use bare \`Input\` when placeholder + context is enough (FM ZIP field).
+- **Do** use bare \`Input\` when placeholder + context is enough (ZIP or search field).
 - **Do** set \`aria-label\` when \`label\` is omitted.
-- **Don't** restyle the shell with \`className\` — FM hero search with inset button → **Search** molecule.
+- **Don't** restyle the shell with \`className\` — hero search with inset button → **Search** molecule.
         `.trim(),
       },
     },

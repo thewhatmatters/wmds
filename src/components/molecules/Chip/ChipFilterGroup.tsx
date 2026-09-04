@@ -42,7 +42,7 @@ export type ChipFilterGroupProps =
     });
 
 /**
- * Filter chip toolbar — multi-select by default (Farmer Market filters).
+ * Filter chip toolbar — multi-select by default.
  * Pair with {@link Chip} `value` props inside the group.
  */
 export function ChipFilterGroup(props: ChipFilterGroupProps) {

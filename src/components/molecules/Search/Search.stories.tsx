@@ -26,19 +26,19 @@ const meta = {
         component: `
 ## Usage
 
-Farmer Market hero search — one **pill shell** with inset action (matches live FM expanded Find).
+Hero location search — one **pill shell** with inset action button.
 
 | Pattern | Composition |
 |---------|-------------|
 | **Inline + button** | \`Search\` — \`Input inline\` + trailing \`Button\` |
-| **Find collapsed** | \`Button\` "Find" only — see **Examples/FarmerMarket** |
-| **Find committed** | removable \`Chip\` — Example flow |
+| **Find collapsed** | \`Button\` "Find" only — parent owns expand |
+| **Find committed** | removable \`Chip\` — app flow |
 
 **Shell:** \`bg-surface\` pill on \`bg-body\` page, \`h-11\` with \`py-1.5 pr-1.5\` inset — inner track is \`h-8\`; input and button share that height (solo Input \`md\` is \`h-11\` and must not be used inline).
 
 ## Best practices
 
-- **Do** use for FM ZIP/city + "Use my location" / "GO".
+- **Do** use for ZIP/city + "Use my location" / "GO" search rows.
 - **Do** pair with Example-level expand/collapse from a "Find" trigger.
 - **Don't** use solo bordered \`Input\` beside \`Button\` for this pattern — use \`Search\`.
         `.trim(),

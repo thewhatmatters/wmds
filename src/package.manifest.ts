@@ -26,7 +26,7 @@ export const packageManifest = {
     { name: "focusRingTransitionClasses", path: "./lib/motion", reexport: "focusRingTransitionClasses" },
     { name: "pressScaleClass", path: "./lib/motion", reexport: "pressScaleClass" },
     { name: "GridOverlay", path: "./lib/GridOverlay" },
-    { name: "GRID_ON_CLASS", path: "./lib/gridOverlay", reexport: "GRID_ON_CLASS" },
+    { name: "GRID_ON_CLASS", path: "./lib/gridOverlayUtils", reexport: "GRID_ON_CLASS" },
   ] as const,
 
   /** Atomic tiers — Storybook title must match: Atoms/{Name}, Molecules/{Name}, Organisms/{Name}. */

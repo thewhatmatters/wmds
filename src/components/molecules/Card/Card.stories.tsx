@@ -38,7 +38,7 @@ const meta = {
     as: "div",
   },
   parameters: {
-    layout: "padded",
+    wmdsLayout: "padded",
     docs: {
       description: {
         component: `
@@ -70,7 +70,7 @@ Card (bg-surface shell, p-4, gap-3)
 - **Do** put leading copy in \`start\` and trailing actions in \`end\` — do not hand-roll the header row.
 - **Do** treat \`Card.Body\` as a slot — TaskRows, Inputs, or custom UI all belong there.
 - **Do** keep title, address, and meta in **Header**; primary actions in **Footer**.
-- **Do** use default \`shape="rounded"\` — FM market detail, dashboard widgets, map overlays.
+- **Do** use default \`shape="rounded"\` — detail overlays, dashboard widgets, map overlays.
 - **Do** use \`shape="flush"\` only when nested inside a parent that already owns radius and shadow.
 - **Don't** restrict the Body to TaskRows — that is one occupant, not the contract.
 - **Don't** put a muted fill on \`Card.Body\` — the slot inherits the shell.
@@ -103,7 +103,7 @@ export const Simple: Story = {
 export const Layout: Story = {
   name: "Pattern — layout",
   parameters: {
-    layout: "padded",
+    wmdsLayout: "padded",
     docs: {
       description: {
         story:
@@ -137,7 +137,7 @@ export const Layout: Story = {
 export const HeaderSlots: Story = {
   name: "Pattern — header slots",
   parameters: {
-    layout: "padded",
+    wmdsLayout: "padded",
     docs: {
       description: {
         story:
@@ -199,7 +199,7 @@ export const HeaderSlots: Story = {
 export const BodySlotForm: Story = {
   name: "Pattern — body slot (form)",
   parameters: {
-    layout: "padded",
+    wmdsLayout: "padded",
     docs: {
       description: {
         story:
@@ -240,7 +240,7 @@ export const BodySlotForm: Story = {
 export const BodySlotStatusRows: Story = {
   name: "Example — body slot (status rows)",
   parameters: {
-    layout: "padded",
+    wmdsLayout: "padded",
     docs: {
       description: {
         story:

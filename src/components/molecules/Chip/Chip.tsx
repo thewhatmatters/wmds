@@ -110,7 +110,7 @@ function toggleInGroup(
 
 /**
  * Interactive filter, removable token, or read-only label chip.
- * Pattern-first — use {@link ChipFilterGroup} for multi-select filters (Farmer Market).
+ * Pattern-first — use {@link ChipFilterGroup} for multi-select filters.
  */
 export function Chip({
   children,

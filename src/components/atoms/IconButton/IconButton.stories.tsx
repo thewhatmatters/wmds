@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Pencil, Plus, Settings, Trash2, Wrench } from "lucide-react";
 import { IconButton, buttonRoles } from "./IconButton";
+import { iconButtonToolbarGroupClasses } from "./iconButtonStyles";
 
 const meta = {
   title: "Atoms/IconButton",
@@ -35,7 +36,7 @@ const meta = {
 
 | Pattern | Props |
 |---------|--------|
-| **Toolbar** | \`role="ghost"\` (default) + \`aria-label\` |
+| **Toolbar group** | ghost \`IconButton\`s in the pill shell (\`iconButtonToolbarGroupClasses\`) |
 | **FAB** | \`fab\` + \`aria-label\` |
 | **With tooltip** | \`title\` (defaults to \`aria-label\`) |
 | **Async** | \`loading\` + \`aria-label\` |
@@ -58,16 +59,17 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Toolbar: Story = {
-  name: "Pattern — toolbar",
+  name: "Pattern — toolbar group",
   parameters: {
     docs: {
       description: {
-        story: "Ghost icon buttons in a compact action row — default role for dense UI.",
+        story:
+          "Ghost icon buttons in a pill shell — use for compact action clusters (card headers, row actions). Not a separate molecule yet; copy this pattern or ask for `IconButtonGroup` if it ships in three or more places.",
       },
     },
   },
   render: () => (
-    <div className="inline-flex items-center gap-1 rounded-lg border border-border bg-surface p-1">
+    <div role="toolbar" aria-label="Item actions" className={iconButtonToolbarGroupClasses}>
       <IconButton icon={<Pencil strokeWidth={2} />} aria-label="Edit item" title="Edit item" />
       <IconButton icon={<Trash2 strokeWidth={2} />} aria-label="Delete conversation" title="Delete conversation" role="ghost" />
       <IconButton icon={<Settings strokeWidth={2} />} aria-label="Open settings" title="Settings" />
@@ -83,7 +85,7 @@ export const Fab: Story = {
         story: "Floating action button — primary fill with elevated shadow.",
       },
     },
-    layout: "centered",
+    wmdsLayout: "centered",
   },
   render: () => (
     <IconButton

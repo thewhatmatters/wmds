@@ -86,7 +86,7 @@ export const Tokens: Story = {
 export const CssTransitions: Story = {
   name: "CSS transitions",
   parameters: {
-    layout: "padded",
+    wmdsLayout: "padded",
     docs: {
       description: {
         story:
@@ -206,7 +206,7 @@ export const EnterExit: Story = {
 export const PanelReveal: Story = {
   name: "Panel reveal",
   parameters: {
-    layout: "padded",
+    wmdsLayout: "padded",
     docs: {
       description: {
         story:
