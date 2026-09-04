@@ -38,6 +38,7 @@
     "build-storybook": "storybook build",
     "test:unit": "vitest --project unit run",
     "test:storybook": "vitest --project storybook run",
+    "validate:composition": "vitest --project unit run src/lib/compositionAudit.test.ts",
     "validate:manifest": "node scripts/validate-manifest.mjs"
   },
   "peerDependencies": {
