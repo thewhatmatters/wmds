@@ -322,7 +322,7 @@ export const Principles: Story = {
         <ul className="list-disc space-y-1 pl-5 text-muted">
           <li>Button hover and press</li>
           <li>Chip filter toggle</li>
-          <li>List row highlight</li>
+          <li>Row highlight</li>
           <li>Focus rings</li>
         </ul>
       </section>

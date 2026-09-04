@@ -1,6 +1,6 @@
 # ADR-0005: List and Card as molecules
 
-**Status:** Accepted  
+**Status:** Accepted (Card). List withdrawn from the catalog 2026-09-04.  
 **Date:** 2026-08-29  
 **Amends:** ADR-0002 (planned catalog — List, Card)
 

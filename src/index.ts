@@ -58,19 +58,6 @@ export {
   type CardVariant,
 } from "./components/molecules/Card/Card";
 export {
-  List,
-  listItemLayouts,
-  listItemMetaClasses,
-  listItemPrimaryClasses,
-  listItemSecondaryClasses,
-  listVariants,
-  type ListItemLayout,
-  type ListItemProps,
-  type ListLayoutClassName,
-  type ListProps,
-  type ListVariant,
-} from "./components/molecules/List/List";
-export {
   Search,
   searchSizes,
   type SearchLayoutClassName,

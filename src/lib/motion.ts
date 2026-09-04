@@ -89,7 +89,7 @@ export const motionDurations: MotionToken[] = [
     token: "--duration-fast-min",
     value: "130ms",
     role: "Micro feedback — must not lag behind cursor",
-    usedIn: ["List row hover", "High-frequency highlights"],
+    usedIn: ["Row hover", "High-frequency highlights"],
   },
   {
     token: "--duration-fast",

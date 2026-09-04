@@ -6,7 +6,6 @@ import { Button } from "../../atoms/Button/Button";
 import { IconButton } from "../../atoms/IconButton/IconButton";
 import { Input } from "../../atoms/Input/Input";
 import { Chip, ChipFilterGroup } from "../Chip/Chip";
-import { List } from "../List/List";
 import { TaskRows } from "../TaskRows/TaskRows";
 import {
   Card,
@@ -51,7 +50,7 @@ const meta = {
 |---------|-------------|
 | **Layout** | \`Card padding="none"\` + \`Card.Header\` / \`Card.Body\` / \`Card.Footer\` — default; shell + Body slot (inherits fill) |
 | **Header** | Horizontal \`start\` / \`end\` slots — title + subtitle, kebab, chips-as-tabs, Badge, or any cluster |
-| **Body slot** | Status rows, List, form, or custom UI — occupant owns chrome |
+| **Body slot** | Status rows, form, or custom UI — occupant owns chrome |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
 
 Default \`shape="rounded"\` — \`rounded-2xl shadow-md\` on the shell. Use \`shape="flush"\` only when a parent owns outer radius and shadow.
@@ -69,7 +68,7 @@ Card (bg-surface shell, p-4, gap-3)
 
 - **Do** set \`padding="none"\` when using Header/Body/Footer.
 - **Do** put leading copy in \`start\` and trailing actions in \`end\` — do not hand-roll the header row.
-- **Do** treat \`Card.Body\` as a slot — TaskRows, List, Inputs, or custom UI all belong there.
+- **Do** treat \`Card.Body\` as a slot — TaskRows, Inputs, or custom UI all belong there.
 - **Do** keep title, address, and meta in **Header**; primary actions in **Footer**.
 - **Do** use default \`shape="rounded"\` — FM market detail, dashboard widgets, map overlays.
 - **Do** use \`shape="flush"\` only when nested inside a parent that already owns radius and shadow.
@@ -121,7 +120,7 @@ export const Layout: Story = {
       <Card.Body>
         <div className="flex min-h-32 items-center justify-center px-4 py-6">
           <p className={mutedText(cardBodyTextClasses)}>
-            Body slot — TaskRows, List, form, or custom canvas
+            Body slot — TaskRows, form, or custom canvas
           </p>
         </div>
       </Card.Body>
@@ -192,69 +191,6 @@ export const HeaderSlots: Story = {
             </p>
           </div>
         </Card.Body>
-      </Card>
-    );
-  },
-};
-
-export const BodySlotList: Story = {
-  name: "Pattern — body slot (List)",
-  parameters: {
-    layout: "padded",
-    docs: {
-      description: {
-        story:
-          "**List** in the Body slot — inherits the shell. List owns row chrome.",
-      },
-    },
-  },
-  render: function BodySlotListDemo() {
-    const [selected, setSelected] = useState<string | null>(null);
-
-    return (
-      <Card shape="rounded" className="max-w-lg">
-        <Card.Header
-          start={
-            <>
-              <h2 className={cardTitleClasses}>Nearby markets</h2>
-              <p className={cardSubtitleClasses}>Saturday · within 5 mi</p>
-            </>
-          }
-        />
-        <Card.Body>
-          <List variant="surface" hasDividers className="overflow-hidden rounded-[1.375rem]">
-            <List.Item
-              layout="stacked"
-              primary="SFC Farmers' Market Downtown"
-              secondary="422 Guadalupe St"
-              meta="0.8 mi"
-              selected={selected === "downtown"}
-              onPress={() => setSelected("downtown")}
-            />
-            <List.Item
-              layout="stacked"
-              primary="Triangle Farmers Market"
-              secondary="122 E Main St"
-              meta="2.1 mi"
-              selected={selected === "triangle"}
-              onPress={() => setSelected("triangle")}
-            />
-            <List.Item
-              layout="stacked"
-              primary="Eastside Farm Stand"
-              secondary="1800 E 12th St"
-              meta="3.4 mi"
-              selected={selected === "eastside"}
-              onPress={() => setSelected("eastside")}
-            />
-          </List>
-        </Card.Body>
-        <Card.Footer>
-          <span className={mutedText(cardBodyTextClasses)}>3 results</span>
-          <Button role="secondary" size="sm">
-            View map
-          </Button>
-        </Card.Footer>
       </Card>
     );
   },

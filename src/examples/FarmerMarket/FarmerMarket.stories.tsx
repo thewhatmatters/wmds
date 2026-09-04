@@ -4,7 +4,6 @@ import { MapPin, X } from "lucide-react";
 import { IconButton } from "../../components/atoms/IconButton/IconButton";
 import { Input } from "../../components/atoms/Input/Input";
 import { Chip, ChipFilterGroup } from "../../components/molecules/Chip/Chip";
-import { List } from "../../components/molecules/List/List";
 import { cn } from "../../lib/cn";
 import { typographyClass } from "../../lib/typography";
 import { lockedViewportStory } from "../../lib/viewports";
@@ -31,10 +30,10 @@ Page-level composition for [farmermarket.us](https://farmermarket.us) — **Exam
 | **Page chrome** | App-owned layout (header, nav) — plain viewport flex in the FM app |
 | **Map** | Main canvas (placeholder) — flex-1 beside the list pane on \`md:\`+ |
 | **Map overlay** | \`MarketDetailCard\` — mount in map library overlay slot (engineers own placement) |
-| **List pane** | App-owned aside — pill \`Input\` (ZIP) + \`ChipFilterGroup\` header, \`List\` body |
-| **Rows** | \`List.Item\` stacked — name, street, miles, optional SNAP \`Chip\` |
+| **List pane** | App-owned aside — pill \`Input\` (ZIP) + \`ChipFilterGroup\` + result rows |
+| **Rows** | App-owned buttons — name, street, miles, optional SNAP \`Chip\` |
 
-Page chrome (header, list pane, nav) stays in the consuming app. WMDS ships **List**, **Input**, and **Chip** — not a rail primitive.
+Page chrome (header, list pane, nav) stays in the consuming app. WMDS ships **Input** and **Chip** — not a list or rail primitive.
 
 ## Tier note
 
@@ -183,26 +182,34 @@ function MarketListRail({
       </div>
       <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain">
         {markets.length > 0 ? (
-          <List variant="ghost" hasDividers>
+          <div>
             {markets.map((market) => (
-              <List.Item
+              <button
                 key={market.id}
-                layout="stacked"
-                primary={market.name}
-                secondary={market.street}
-                meta={`${market.miles} mi`}
-                trailing={
-                  market.snap ? (
+                type="button"
+                aria-pressed={market.id === selectedId}
+                onClick={() => onSelect(market.id)}
+                className={cn(
+                  "flex min-h-11 w-full flex-col gap-0.5 border-b border-border px-4 py-3 text-left last:border-b-0",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-inset",
+                  market.id === selectedId ? "bg-body" : "hover:bg-ghost-hover",
+                )}
+              >
+                <span className={typographyClass("ui-label")}>{market.name}</span>
+                <span className={typographyClass("caption")}>{market.street}</span>
+                <span className={`${typographyClass("caption")} tabular-nums`}>
+                  {market.miles} mi
+                </span>
+                {market.snap ? (
+                  <span className="mt-1">
                     <Chip readOnly size="sm">
                       SNAP
                     </Chip>
-                  ) : undefined
-                }
-                selected={market.id === selectedId}
-                onPress={() => onSelect(market.id)}
-              />
+                  </span>
+                ) : null}
+              </button>
             ))}
-          </List>
+          </div>
         ) : (
           <p className={cn(typographyClass("body"), "px-4 py-8 text-center text-muted")}>
             No markets match your filters.
@@ -302,7 +309,7 @@ export const Browse: Story = {
       ...desktopLocked.parameters.docs,
       description: {
         story:
-          "FM browse — map overlay slot shows **MarketDetailCard** when a list row is selected; app-owned pane for ZIP search, filters, and **List** rows.",
+          "FM browse — map overlay slot shows **MarketDetailCard** when a result row is selected; app-owned pane for ZIP search, filters, and result rows.",
       },
     },
   },
