@@ -92,7 +92,7 @@ const TaskRowsContext = createContext<TaskRowsContextValue>({
 
 export interface TaskRowsProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
-  /** `list` — inset panel with dividers (FM map card). `capsule` — separated rounded rows. */
+  /** `list` — inset panel with dividers. `capsule` — separated rounded rows. */
   variant?: TaskRowsVariant;
   /** List only — drop the standalone shell (radius, fill, shadow) inside **Card.Body**. */
   inset?: boolean;
@@ -378,7 +378,7 @@ function TaskRowsItem({
         variant === "list" ? taskRowsItemListClasses : taskRowsItemCapsuleClasses,
         variant === "capsule" &&
           (open ? taskRowsItemCapsuleOpenClasses : taskRowsItemCapsuleClosedClasses),
-        hasDetails && taskRowsItemHoverClasses,
+        variant === "capsule" && hasDetails && taskRowsItemHoverClasses,
         className,
       )}
     >

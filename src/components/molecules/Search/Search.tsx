@@ -31,7 +31,7 @@ export interface SearchProps
 
 /**
  * Inline search pill — bare {@link Input} + inset {@link Button} in one shell.
- * Farmer Market Find expanded state; parent Example owns collapse/expand.
+ * Expanded search row — input + inset action button. Parent owns collapse/expand when morphing.
  */
 export const Search = forwardRef<HTMLInputElement, SearchProps>(function Search(
   {

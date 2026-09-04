@@ -1,10 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useState } from "react";
-import { Dog, MapPin, Tags, X } from "lucide-react";
 import { Button } from "../../atoms/Button/Button";
-import { IconButton } from "../../atoms/IconButton/IconButton";
-import { Card, cardAddressClasses, cardBodyTextClasses, cardSubtitleClasses, cardTitleClasses } from "../Card/Card";
-import { Chip } from "../Chip/Chip";
+import { Card, cardBodyTextClasses, cardTitleClasses } from "../Card/Card";
 import { TaskRows } from "./TaskRows";
 
 const meta = {
@@ -20,20 +16,20 @@ const meta = {
     variant: "list",
   },
   parameters: {
-    layout: "padded",
+    wmdsLayout: "padded",
     docs: {
       description: {
         component: `
 ## Usage
 
-Expandable **rows** inside cards — leading icon or status badge, label, meta, chevron, nested detail. **FM market detail** uses expand-only rows (\`status="none"\`, optional \`icon\`) — not task progress UI.
+Expandable **rows** — leading icon or status badge, label, meta, chevron, nested detail. Use standalone or inside **Card.Body** when the shell needs header/footer.
 
 | Pattern | Composition |
 |---------|-------------|
-| **FM market detail** | **Card** \`shape="rounded"\` + \`TaskRows variant="capsule"\` + \`icon\` |
-| **FM directions** | \`Detail variant="button" label="Apple Maps"\` — standard **Button** \`secondary\`; one line, no wrap |
-| **FM services** | \`icon={<Tags />}\` + \`detailsLayout="chips"\` + read-only **Chip** children |
-| **Progress list** | \`variant="list"\` + \`inset\` inside **Card.Body** — \`status="done" \| "running" \| …\` |
+| **Status rows** | \`variant="list"\` + \`status="done" \| "running" \| …\` |
+| **Capsules** | \`variant="capsule"\` — separated rounded rows (with or without **Card**) |
+| **Action details** | \`detailsLayout="actions"\` + \`TaskRows.Detail variant="button"\` |
+| **Tag chips** | \`detailsLayout="chips"\` + read-only **Chip** children |
 | **Controlled expand** | \`open\` + \`onOpenChange\` on \`TaskRows.Item\` |
 
 ## Anatomy
@@ -51,13 +47,12 @@ TaskRows
 
 ## Best practices
 
-- **Do** use **Card** + \`TaskRows variant="capsule"\` for FM market detail — pills inherit the shell.
-- **Do** put hours, address, and meta copy in **Card.Header** — not inside the Body slot (occupants own inner chrome).
-- **Do** use \`icon\` + \`status="none"\` for FM expandable rows — directions, services, hours.
-- **Do** use read-only **Chip** inside \`detailsLayout="chips"\` for SNAP, dogs, etc.
-- **Do** use \`TaskRows.Detail\` with \`onPress\` for FM Apple Maps / Google Maps deep links — labels stay on one line (do not wrap).
-- **Don't** use \`status="done"\` on FM rows — that's for agent task progress, not market detail.
-- **Don't** swap the whole card body for one action — expand in place instead.
+- **Do** use \`variant="list"\` for agent / progress flows with \`status\`.
+- **Do** use \`variant="capsule"\` for separated expandable rows — standalone or in **Card.Body**.
+- **Do** use \`icon\` + \`status="none"\` for expand-only rows without task status UI.
+- **Do** use read-only **Chip** inside \`detailsLayout="chips"\` for tags and attributes.
+- **Do** use \`TaskRows.Detail\` with \`onPress\` for external actions — labels stay on one line (do not wrap).
+- **Don't** use \`status="done"\` when the row is not a task/progress flow.
 - **Don't** use for browse lists.
 - **Don't** pair \`border\` with \`shadow-raised\` — the shadow token already includes a 1px hairline ring (\`theme.css\`).
         `.trim(),
@@ -68,83 +63,6 @@ TaskRows
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-export const FarmerMarketDetail: Story = {
-  name: "Pattern — FM market detail",
-  render: function FarmerMarketDetailDemo() {
-    const [directionsOpen, setDirectionsOpen] = useState(true);
-    const [servicesOpen, setServicesOpen] = useState(false);
-
-    return (
-      <div className="w-max bg-body p-4">
-        <Card shape="rounded" padding="none">
-          <Card.Header
-            start={
-              <>
-                <h2 className={cardTitleClasses}>Texas Farmers&apos; Market at Mueller</h2>
-                <div className={cardAddressClasses}>
-                  <span>2006 Philomena St.</span>
-                  <span>Austin, TX 78723</span>
-                </div>
-              </>
-            }
-            end={
-              <IconButton
-                icon={<X strokeWidth={2} />}
-                aria-label="Close market detail"
-                title="Close market detail"
-                role="secondary"
-                size="sm"
-              />
-            }
-          />
-          <Card.Body>
-            <TaskRows variant="capsule">
-              <TaskRows.Item
-                icon={<MapPin strokeWidth={2} />}
-                label="Get directions"
-                meta="0.1 mi"
-                detailsLayout="actions"
-                detailsLabel="Open in"
-                open={directionsOpen}
-                onOpenChange={setDirectionsOpen}
-              >
-                <TaskRows.Detail
-                  variant="button"
-                  label="Apple Maps"
-                  onPress={() => window.alert("Open Apple Maps")}
-                />
-                <TaskRows.Detail
-                  variant="button"
-                  label="Google Maps"
-                  onPress={() => window.alert("Open Google Maps")}
-                />
-              </TaskRows.Item>
-              <TaskRows.Item
-                icon={<Tags strokeWidth={2} />}
-                label="Services offered"
-                meta="3"
-                detailsLayout="chips"
-                open={servicesOpen}
-                onOpenChange={setServicesOpen}
-              >
-                <Chip readOnly size="sm">
-                  SNAP / EBT
-                </Chip>
-                <Chip readOnly size="sm" icon={<Dog strokeWidth={2} />}>
-                  Dogs welcome
-                </Chip>
-                <Chip readOnly size="sm">
-                  Open today
-                </Chip>
-              </TaskRows.Item>
-            </TaskRows>
-          </Card.Body>
-        </Card>
-      </div>
-    );
-  },
-};
 
 export const StatusList: Story = {
   name: "Pattern — status rows",
@@ -168,8 +86,8 @@ export const StatusList: Story = {
           <TaskRows.Detail label="Cone supplier follow-up" meta="draft" />
           <TaskRows.Detail label="Pistachio reorder note" meta="draft" />
         </TaskRows.Item>
-        <TaskRows.Item label="Sync market hours" meta="1 source" status="failed">
-          <TaskRows.Detail label="USDA API timeout" meta="retry" />
+        <TaskRows.Item label="Sync opening hours" meta="1 source" status="failed">
+          <TaskRows.Detail label="External API timeout" meta="retry" />
         </TaskRows.Item>
       </TaskRows>
     </div>
@@ -179,11 +97,11 @@ export const StatusList: Story = {
 export const CardWithStatusRows: Story = {
   name: "Pattern — card + status rows",
   parameters: {
-    layout: "padded",
+    wmdsLayout: "padded",
     docs: {
       description: {
         story:
-          "Layout **Card** (white shell, Body inherits fill) with **TaskRows variant=\"list\"** — agent / progress flows with done, running, pending, failed.",
+          "Optional **Card** wrapper — **TaskRows variant=\"list\"** in **Card.Body** for agent / progress flows.",
       },
     },
   },
@@ -220,8 +138,8 @@ export const CardWithStatusRows: Story = {
             <TaskRows.Detail label="Cone supplier follow-up" meta="draft" />
             <TaskRows.Detail label="Pistachio reorder note" meta="draft" />
           </TaskRows.Item>
-          <TaskRows.Item label="Sync market hours" meta="1 source" status="failed">
-            <TaskRows.Detail label="USDA API timeout" meta="retry" />
+          <TaskRows.Item label="Sync opening hours" meta="1 source" status="failed">
+            <TaskRows.Detail label="External API timeout" meta="retry" />
           </TaskRows.Item>
         </TaskRows>
       </Card.Body>
@@ -237,6 +155,14 @@ export const CardWithStatusRows: Story = {
 
 export const Capsules: Story = {
   name: "Pattern — capsules",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Separated pill rows — **22px** radius when collapsed, **14px** when expanded (`open ? 14 : 22`). Second row starts open.",
+      },
+    },
+  },
   args: {
     variant: "capsule",
   },
@@ -252,69 +178,4 @@ export const Capsules: Story = {
       </TaskRows>
     </div>
   ),
-};
-
-export const WithPrimaryAction: Story = {
-  name: "Example — card + rows + footer",
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Hours and address live in **Card.Header** (shell padding). **TaskRows** occupies the **Card.Body** slot — one of several valid occupants.",
-      },
-    },
-  },
-  render: function CardComposeDemo() {
-    const [directionsOpen, setDirectionsOpen] = useState(false);
-
-    return (
-      <div className="w-max p-4">
-        <Card shape="rounded" padding="none">
-          <Card.Header
-            start={
-              <>
-                <h2 className={cardTitleClasses}>SFC Farmers&apos; Market Downtown</h2>
-                <p className={cardSubtitleClasses}>422 Guadalupe St</p>
-                <p className={`${cardBodyTextClasses} text-muted`}>Saturdays · 9am – 1pm</p>
-              </>
-            }
-            end={
-              <IconButton
-                icon={<X strokeWidth={2} />}
-                aria-label="Close market detail"
-                title="Close market detail"
-                role="secondary"
-                size="sm"
-              />
-            }
-          />
-          <Card.Body>
-            <TaskRows variant="capsule">
-              <TaskRows.Item
-                label="Get directions"
-                meta="2.4 mi"
-                detailsLayout="actions"
-                detailsLabel="Open in"
-                open={directionsOpen}
-                onOpenChange={setDirectionsOpen}
-              >
-                <TaskRows.Detail variant="button" label="Apple Maps" onPress={() => undefined} />
-                <TaskRows.Detail variant="button" label="Google Maps" onPress={() => undefined} />
-              </TaskRows.Item>
-            </TaskRows>
-          </Card.Body>
-          <Card.Footer>
-            <Button
-              role="primary"
-              size="sm"
-              className="w-full"
-              icon={<MapPin strokeWidth={2} />}
-            >
-              View market
-            </Button>
-          </Card.Footer>
-        </Card>
-      </div>
-    );
-  },
 };

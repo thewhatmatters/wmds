@@ -5,7 +5,7 @@
 
 ## Context
 
-WMDS needs text entry for Farmer Market (ZIP/city search, Find pill) and future forms. Two common models:
+WMDS needs text entry for location search, hero Find flows, and future forms. Two common models:
 
 1. **Material-style** — one `TextField` family with `variant`, `type`, and shared floating-label shell; Select/Autocomplete extend the same base.
 2. **Astryx-style** — discrete **Data Input** components (`Text Input`, `Text Area`, `Selector`, …) plus **`Field`** for label/layout composition.
@@ -60,7 +60,7 @@ Bare control is the **default**. Optional props add field chrome when needed:
 **Accessibility:** when `label` is omitted, **`aria-label` is required** (dev warn in Storybook — same contract as `IconButton`).
 
 ```tsx
-// Bare — FM Find pill, toolbar search (ShadCN-style)
+// Bare — Find pill, toolbar search (ShadCN-style)
 <Input placeholder="ZIP or city" aria-label="Location" icon={<MapPin strokeWidth={2} />} />
 
 // With label — simple form, no Field import
@@ -103,7 +103,7 @@ Named patterns for search UX — not a second input kit:
 |---------|-------------|
 | **Inline search** | `Input` + `Button` (Astryx inline + button) |
 | **With clear** | Input + trailing clear affordance |
-| **Find pill** (FM) | Example flow: `Button` → bare `Input` → removable `Chip` — see FM roadmap |
+| **Find pill** | `Search` molecule or `Button` → bare `Input` → removable `Chip` |
 
 ### Storybook contract
 
@@ -143,7 +143,7 @@ Named patterns for search UX — not a second input kit:
 
 ## Consequences
 
-- **`Input` atom** is the FM blocker for Find pill and ZIP search
+- **`Input` atom** ships Find pill and ZIP/city search patterns via **Search**
 - **`Field`** can ship after `Input` when horizontal/labeled forms are needed
 - **`Select`** / **`Search`** ship when their patterns are spec’d — not upfront
 - Rebuild legacy flat input paths under `src/components/atoms/Input/`
@@ -153,4 +153,4 @@ Named patterns for search UX — not a second input kit:
 
 - ADR-0004 — pattern-first
 - ADR-0002 — atoms vs molecules
-- `docs/farmermarket-component-roadmap.md` — FM Input patterns
+- **Molecules/Search** — hero search with inset button

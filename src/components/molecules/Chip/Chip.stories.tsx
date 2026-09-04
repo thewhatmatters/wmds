@@ -35,7 +35,7 @@ const meta = {
 
 | Pattern | Props |
 |---------|--------|
-| **Filter (multi-select)** | \`ChipFilterGroup\` + \`Chip value\` — default for Farmer Market filters |
+| **Filter (multi-select)** | \`ChipFilterGroup\` + \`Chip value\` — default for filter rails |
 | **Filter (single)** | \`ChipFilterGroup selectionMode="single"\` + \`Chip value\` |
 | **Standalone toggle** | \`selected\` + \`onSelectedChange\` — one chip outside a group |
 | **Removable token** | \`onRemove\` — Find pill committed state, applied filters |
@@ -67,7 +67,7 @@ export const FilterMultiSelect: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Farmer Market filter rail — Open today, Saturday, Dogs, etc. Multi-select by default.",
+        story: "Filter rail — Open today, Saturday, Dogs, etc. Multi-select by default.",
       },
     },
   },

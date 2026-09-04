@@ -37,7 +37,7 @@ Single token: `--ease-standard: cubic-bezier(0.24, 1, 0.4, 1)`. Remove `ease-out
 |-----------|------|-----------|
 | Button, Chip | fast | High-frequency |
 | Input shell, focus ring | fast | Must not lag |
-| FindMorph layout | medium | Spatial rearrangement |
+| Search expand morph | medium | Spatial rearrangement |
 | Input validation band | medium | Structural reveal |
 | motion-collapse | medium | Panel expand |
 

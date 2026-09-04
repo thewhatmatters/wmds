@@ -8,14 +8,14 @@
 
 ADR-0002 placed **List** and **Card** in **Organisms** alongside Table, Tab, and MoreMenu — inherited from the pre-rebuild flat catalog when those components were generic, section-scale shells.
 
-Farmer Market refresh clarified actual use:
+Product work clarified actual use:
 
-- **List** — reusable market row pattern (name, street, miles, SNAP `Chip`). Apps compose many rows; not a page section.
-- **Card** — modular 360° open surface for a single market. Embedded and reused, not a full template.
+- **List** — reusable browse row pattern (title, subtitle, meta, optional chips). Apps compose many rows; not a page section.
+- **Card** — modular surface for a single entity detail. Embedded and reused, not a full template.
 
 Brad Frost **organisms** are distinct page regions (header, product grid). **Molecules** are modular groups of atoms — reusable across layouts. List and Card fit the latter for WMDS scope.
 
-**Find pill** (hero search) is composition (`Button` → `Input` → removable `Chip`), not a tier — spec as **Example** or thin **Search** molecule once Input ships. Page-level FM layout stays in **`Examples/`**.
+**Find pill** (hero search) is composition (`Button` → `Input` → removable `Chip`), not a tier — shipped as **Search** molecule. Page-level layouts stay in **`Examples/`**.
 
 ## Decision
 
@@ -43,7 +43,7 @@ Use **organism** when the component is:
 
 Use **Examples** when the component is:
 
-- A template or page flow composing lower tiers (e.g. **FarmerMarket** hero + filters + list)
+- A template or page flow composing lower tiers (e.g. hero search + filters + browse list)
 
 ### Updated planned catalog
 
@@ -62,9 +62,9 @@ Molecules may compose atoms and other molecules (e.g. List row trailing `Chip`).
 - `src/package.manifest.ts` and docs updated to match
 - Rebuilt **List** / **Card** land in `molecules/`, not `organisms/`
 - Legacy flat `src/components/List/` and `src/components/Card/` are not the canonical paths when rebuilt
-- FM roadmap tier column reflects molecules for List and Card
+- Roadmap tier column reflects molecules for List and Card
 
 ## Related
 
 - ADR-0002 — atomic design tiers
-- `docs/farmermarket-component-roadmap.md` — FM harvest order
+- ADR-0002 — atomic tiers

@@ -66,7 +66,7 @@ export const MultiStateBadge: Story = {
           "Primary pattern for form submit and async actions. Control `status` from parent state after API response.",
       },
     },
-    layout: "centered",
+    wmdsLayout: "centered",
     backgrounds: { default: "dark" },
   },
   render: function SubmitPattern() {

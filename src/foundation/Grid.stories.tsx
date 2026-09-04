@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { GridOverlay } from "../lib/GridOverlay";
-import { readGridColumnCount } from "../lib/gridOverlay";
+import { readGridColumnCount } from "../lib/gridOverlayUtils";
 import { typographyClass } from "../lib/typography";
 import { cn } from "../lib/cn";
 import {
@@ -15,7 +15,7 @@ const meta = {
   title: "Foundation/Grid",
   tags: ["autodocs"],
   parameters: {
-    layout: "padded",
+    wmdsLayout: "padded",
     docs: {
       description: {
         component:
@@ -112,7 +112,7 @@ export const Scale: Story = {
 export const PageAndBand: Story = {
   name: "Spine — grid-page + overlay",
   parameters: {
-    layout: "fullscreen",
+    wmdsLayout: "fullscreen",
     docs: {
       description: {
         story:

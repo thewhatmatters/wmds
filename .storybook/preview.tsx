@@ -1,8 +1,67 @@
 import type { Preview } from "@storybook/react-vite";
+import type { ReactNode } from "react";
+import { useEffect } from "react";
 import { MotionConfig } from "motion/react";
 import { storybookViewports } from "../src/lib/viewports";
 import "../src/styles/global.css";
 import "./docs.css";
+import "./docs-preview.css";
+
+type WmdsLayout = "centered" | "padded" | "fullscreen";
+
+function PreviewShell({
+  children,
+  globals,
+  viewMode,
+  parameters,
+}: {
+  children: ReactNode;
+  globals: { theme?: string };
+  viewMode: string;
+  parameters: { wmdsLayout?: WmdsLayout };
+}) {
+  const wmdsLayout = parameters.wmdsLayout ?? "centered";
+  const isFullscreen = wmdsLayout === "fullscreen";
+  const isPadded = wmdsLayout === "padded";
+  const isDark = globals.theme === "dark";
+
+  /** Sync toolbar theme to :root so autodocs preview chrome picks up token swaps. */
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.dataset.theme = "dark";
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+    }
+  }, [isDark]);
+
+  /** Canvas tab — Examples use `wmdsLayout: "fullscreen"`. */
+  const storyShellClass = isFullscreen
+    ? "min-h-[100svh] w-full"
+    : isPadded
+      ? "w-full p-6"
+      : "flex min-h-[min(100svh,640px)] w-full items-center justify-center p-6";
+
+  /** Autodocs — fill stretched preview block (see docs-preview.css). */
+  const docsShellClass = isFullscreen
+    ? "min-h-[100svh] w-full"
+    : isPadded
+      ? "min-h-full w-full p-6"
+      : "flex min-h-full w-full items-center justify-center p-6";
+
+  return (
+    <MotionConfig reducedMotion="user">
+      <div
+        data-theme={isDark ? "dark" : undefined}
+        className={[
+          "bg-body text-fg font-sans w-full",
+          viewMode === "story" ? storyShellClass : docsShellClass,
+        ].join(" ")}
+      >
+        {children}
+      </div>
+    </MotionConfig>
+  );
+}
 
 const preview: Preview = {
   globalTypes: {
@@ -34,35 +93,15 @@ const preview: Preview = {
     },
   },
   decorators: [
-    (Story, { globals, viewMode, parameters }) => {
-      const layout = parameters.layout as string | undefined;
-      const isFullscreen = layout === "fullscreen";
-
-      const storyShellClass = isFullscreen
-        ? "min-h-[100svh] w-full"
-        : "flex min-h-[100svh] w-full items-center justify-center p-6";
-
-      /**
-       * Docs embeds every story in a canvas. `min-h-[100svh]` there turns each
-       * specimen into a full viewport of empty space. Center a compact column
-       * instead; fullscreen page stories still own their height.
-       */
-      const docsShellClass = isFullscreen ? "w-full" : "mx-auto w-full max-w-3xl p-6";
-
-      return (
-        <MotionConfig reducedMotion="user">
-          <div
-            data-theme={globals.theme === "dark" ? "dark" : undefined}
-            className={[
-              "bg-body text-fg font-sans w-full",
-              viewMode === "docs" ? docsShellClass : storyShellClass,
-            ].join(" ")}
-          >
-            <Story />
-          </div>
-        </MotionConfig>
-      );
-    },
+    (Story, context) => (
+      <PreviewShell
+        globals={context.globals}
+        viewMode={context.viewMode}
+        parameters={context.parameters}
+      >
+        <Story />
+      </PreviewShell>
+    ),
   ],
   parameters: {
     options: {
@@ -101,9 +140,12 @@ const preview: Preview = {
         return aTitle.localeCompare(bTitle, undefined, { numeric: true });
       },
     },
-    /** Mobile-first — default Storybook viewport is Mobile (390px). Use toolbar to check tablet/desktop. */
-    /** Decorator owns centering — avoid Storybook's `centered` layout (shrinks canvas to content width). */
+    /**
+     * Storybook `layout: fullscreen` keeps the iframe from shrink-wrapping content.
+     * Specimen centering / padding is owned by `wmdsLayout` in PreviewShell.
+     */
     layout: "fullscreen",
+    wmdsLayout: "centered",
     controls: {
       matchers: {
         color: /(background|color)$/i,

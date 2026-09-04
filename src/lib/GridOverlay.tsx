@@ -4,7 +4,7 @@ import {
   gridOverlayKeyShouldToggle,
   readGridColumnCount,
   setDocumentGridOn,
-} from "./gridOverlay";
+} from "./gridOverlayUtils";
 
 export interface GridOverlayProps {
   /**

@@ -1,5 +1,10 @@
 import { motionTransition } from "../../../lib/motion";
 import { typographyClass } from "../../../lib/typography";
+import {
+  capsuleRowOpenRadiusClass,
+  capsuleRowRadiusClass,
+  capsuleStackGapClass,
+} from "../../../lib/insetWell";
 
 export const taskRowsVariants = ["list", "capsule"] as const;
 
@@ -23,37 +28,34 @@ export const taskRowsRootListClasses =
 /** Nested in **Card.Body** — parent owns surface; slot is square. */
 export const taskRowsRootListInsetClasses = "flex w-full flex-col font-sans text-fg";
 
-export const taskRowsRootCapsuleClasses = "flex w-full min-h-0 flex-col gap-[4px] font-sans text-fg";
+export const taskRowsRootCapsuleClasses =
+  `flex w-full min-h-0 flex-col ${capsuleStackGapClass} font-sans text-fg`;
 
 export const taskRowsItemListClasses =
   "overflow-hidden border-b border-border last:border-b-0 " + motionTransition("fast");
 
 /** Hairline + elevation via `shadow-raised` only — do not add `border` (token already includes 1px ring). */
 export const taskRowsItemCapsuleClasses =
-  "overflow-hidden bg-surface shadow-raised transition-[border-radius] duration-300 " +
-  motionTransition("medium");
+  "overflow-hidden bg-surface shadow-raised transition-[border-radius,background-color] duration-300 ease-standard";
 
-/** Collapsed — full pill (h-11 row + 1.375rem ≈ half height). */
-export const taskRowsItemCapsuleClosedClasses = "rounded-[1.375rem]";
+/** Collapsed — full pill (h-11 row → R = 22px). */
+export const taskRowsItemCapsuleClosedClasses = capsuleRowRadiusClass;
 
-/**
- * Expanded — keep pill curvature at stack ends; soften inner corners.
- */
-export const taskRowsItemCapsuleOpenClasses =
-  "rounded-t-xl rounded-b-xl first:rounded-t-[1.375rem] last:rounded-b-[1.375rem] only:rounded-t-[1.375rem] only:rounded-b-xl";
+/** Expanded — 14px uniform radius (reference: `open ? 14 : 22`). */
+export const taskRowsItemCapsuleOpenClasses = capsuleRowOpenRadiusClass;
 
-export const taskRowsItemHoverClasses = "hover:bg-ghost-hover";
+export const taskRowsItemHoverClasses = "cursor-pointer hover:bg-ghost-hover";
 
 /** Horizontal inset — matches **Card** section padding (`px-4`). */
 export const taskRowsInsetXClasses = "px-4";
 
 export const taskRowsTriggerClasses =
-  "flex h-11 w-full items-center gap-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-inset " +
+  "flex h-11 w-full cursor-pointer items-center gap-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-inset " +
   taskRowsInsetXClasses;
 
 export const taskRowsStatusSlotClasses = "flex size-6 shrink-0 items-center justify-center";
 
-/** Leading Lucide icon — expand-only rows (FM directions, services). Not combinable with `status`. */
+/** Leading Lucide icon — expand-only rows (directions, services). Not combinable with `status`. */
 export const taskRowsLeadingIconClasses =
   "text-muted [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:stroke-current";
 
@@ -101,10 +103,10 @@ export const taskRowsDetailsExpandOnlyClasses = "flex flex-col pb-4 " + taskRows
 /** Expanded details when row has no status badge — stacked lines. */
 export const taskRowsDetailsPlainClasses = "flex flex-col gap-1.5";
 
-/** Horizontal action buttons — FM map apps, quick choices. One line, equal height, no wrap. */
+/** Horizontal action buttons — map apps, quick choices. One line, equal height, no wrap. */
 export const taskRowsDetailsActionsClasses = "flex w-full flex-nowrap items-stretch gap-2.5";
 
-/** Read-only service tags — FM market detail, display-only Chip children. */
+/** Read-only tags — display-only Chip children in expanded rows. */
 export const taskRowsDetailsChipsClasses = "flex w-full flex-row flex-wrap gap-2";
 
 export const taskRowsDetailsLabelClasses = `${typographyClass("caption")} mb-2 text-muted`;
@@ -122,7 +124,7 @@ export const taskRowsDetailRowClasses =
   "flex w-full items-center justify-between gap-3 text-left " + motionTransition("fast");
 
 export const taskRowsDetailRowInteractiveClasses =
-  "rounded-md px-1 py-0.5 hover:bg-ghost-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring";
+  "cursor-pointer rounded-md px-1 py-0.5 hover:bg-ghost-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring";
 
 export const taskRowsDetailLabelClasses = `${typographyClass("caption")} text-muted`;
 

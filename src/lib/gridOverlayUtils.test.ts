@@ -6,7 +6,7 @@ import {
   GRID_ON_CLASS,
   gridOverlayKeyShouldToggle,
   isEditableGridOverlayTarget,
-} from "./gridOverlay";
+} from "./gridOverlayUtils";
 import { gridColumnSteps } from "./viewports";
 
 const gridCss = readFileSync(

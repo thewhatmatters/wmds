@@ -1,0 +1,49 @@
+/**
+ * Storybook autodocs — inline previews shrink-wrap to story content (innerZoomElementWrapper).
+ * Stretch the chain so WMDS bg-body fills the full sbdocs-preview block.
+ */
+
+.sbdocs.sbdocs-preview {
+  background-color: var(--color-background-body) !important;
+}
+
+.sbdocs.sbdocs-preview .docs-story {
+  min-height: 10rem;
+}
+
+.sbdocs.sbdocs-preview .docs-story > div:first-child,
+.sbdocs.sbdocs-preview .innerZoomElementWrapper,
+.sbdocs.sbdocs-preview .innerZoomElementWrapper > div,
+.sbdocs.sbdocs-preview .sb-story {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.sbdocs.sbdocs-preview .docs-story > div:first-child,
+.sbdocs.sbdocs-preview .innerZoomElementWrapper,
+.sbdocs.sbdocs-preview .innerZoomElementWrapper > div,
+.sbdocs.sbdocs-preview .sb-story,
+.sbdocs.sbdocs-preview .sb-story > div:first-child {
+  min-height: 10rem;
+  height: 100%;
+}
+
+.sbdocs.sbdocs-preview .docs-story > div:first-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.sbdocs.sbdocs-preview .innerZoomElementWrapper,
+.sbdocs.sbdocs-preview .innerZoomElementWrapper > div,
+.sbdocs.sbdocs-preview .sb-story {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.sbdocs.sbdocs-preview .sb-story > div:first-child {
+  flex: 1 1 auto;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}

@@ -130,7 +130,7 @@ export const typographyStyles: TypographyStyle[] = [
     tracking: "tight",
     trackingClass: "tracking-tight",
     sample: "Find a market",
-    usedIn: ["FM page title", "Page headings"],
+    usedIn: ["Page title", "Page headings"],
   },
   {
     role: "section-heading",
@@ -163,7 +163,7 @@ export const typographyStyles: TypographyStyle[] = [
     tracking: "normal",
     trackingClass: "tracking-normal",
     sample: "The quick brown fox jumps over the lazy dog.",
-    usedIn: ["Card.Body", "FM empty states"],
+    usedIn: ["Card.Body", "Empty states"],
   },
   {
     role: "ui-label",
@@ -174,7 +174,7 @@ export const typographyStyles: TypographyStyle[] = [
     tracking: "normal",
     trackingClass: "tracking-normal",
     sample: "Accept recommendation",
-    usedIn: ["Input label", "FM market row title"],
+    usedIn: ["Input label", "List row title"],
   },
   {
     role: "caption",
@@ -185,7 +185,7 @@ export const typographyStyles: TypographyStyle[] = [
     tracking: "normal",
     trackingClass: "tracking-normal",
     sample: "Updated 2 minutes ago",
-    usedIn: ["FM street line", "Input description"],
+    usedIn: ["Address line", "Input description"],
   },
   {
     role: "overline",

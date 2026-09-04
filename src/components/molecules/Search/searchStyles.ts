@@ -9,7 +9,7 @@ const searchShellBaseClasses =
   "focus-within:outline-none focus-within:ring-2 focus-within:ring-focus-ring focus-within:ring-offset-2 focus-within:ring-offset-body " +
   focusRingTransitionClasses;
 
-/** FM hero pill — fixed outer height; py/pr/pl inset the trailing button from the curve. */
+/** Hero search pill — fixed outer height; py/pr/pl inset the trailing button from the curve. */
 export const searchShellClasses: Record<SearchSize, string> = {
   sm: `${searchShellBaseClasses} h-10 gap-1.5 py-1 pl-2 pr-1`,
   md: `${searchShellBaseClasses} h-11 gap-2 py-1.5 pl-2 pr-1.5`,

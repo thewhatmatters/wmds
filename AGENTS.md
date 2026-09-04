@@ -16,9 +16,9 @@
 - **IconButton:** circular icon-only control ([Astryx IconButton](https://astryx.atmeta.com/components/IconButton)). Patterns: toolbar (ghost), `fab`, `loading`, `title` tooltip. **`aria-label` required** — use `Button` when text is needed.
 - **Badge:** solid semantic fills ([Astryx Badge](https://astryx.atmeta.com/components/Badge)). Patterns: label, `count`, `icon` — mutually exclusive where documented. No slots; no StatusDot inside Badge.
 - **Chip:** filter/toggle molecule. Patterns: **multi-select filter** (`ChipFilterGroup` + `value`), single-select group, standalone `selected`, **removable** (`onRemove`), **read-only**. Sizes `sm` | `md` | `lg`. Optional `icon`, `count` — not with `onRemove`. No slots.
-- **TaskRows:** expandable rows inside cards — optional `icon` or status badge, meta, detail panel with left rail. Patterns: **FM market detail** (`Card outlined` + `variant="capsule"`, `icon`, `detailsLayout="actions" | "chips"`); **progress list** (standalone `variant="list"`, `status="done" / "running" / "failed"`).
+- **TaskRows:** expandable rows — optional `icon` or status badge, meta, detail panel with left rail. Patterns: **status rows** (`variant="list"`, `status="done" / "running" / "failed"`); **capsules** (`variant="capsule"`, standalone or in **Card.Body**). Card is optional.
 - **Card:** [Astryx Card](https://astryx.atmeta.com/components/Card) — `Card.Header`, `Card.Body`, `Card.Footer`. Layout cards (`padding="none"`): header/footer on the shell; **`Card.Header`** is two horizontal slots (`start` | `end`) — put title + subtitle, tabs, kebab `IconButton`, Badge, or anything else in those slots. **`Card.Body` is a square composition slot** 2px from the card edges — no inner pad, no radius, **no default fill** (inherits the shell). Occupants own chrome. Default **`shape="rounded"`**. **`shape="flush"`** only when a parent owns outer chrome. Simple cards: `padding="md"`.
-- **Input:** pill-only. Optional leading `icon`; trailing `endBadge` or status / `loading`. FM hero with inset button → **Search** molecule. See **ADR-0006**.
+- **Input:** pill-only. Optional leading `icon`; trailing `endBadge` or status / `loading`. Hero search with inset button → **Search** molecule. See **ADR-0006**.
 - **StatusDot:** fixed 8px semantic dot ([Astryx StatusDot](https://astryx.atmeta.com/components/StatusDot)). Patterns: standalone (`label`), `besideLabel`, optional `pulsing`. Not inside Badge.
 - **Layers:** Theme → **lib** → Components → Examples. Foundation = Storybook specimens only. Tailwind scan list = **`src/theme/sources.css`**. Package exports tracked in **`src/package.manifest.ts`**.
 - **Responsive:** **Mobile-first** — unprefixed utilities = mobile; `sm:` / `md:` / `lg:` scale up. Review at Mobile (390px), Tablet (768px), Desktop (1280px). Grid columns step on that same scale (4 / 8 / 12). Atoms: min **44×44px** touch targets. No hover-only core actions. See **ADR-0003** and **Foundation → Grid**.
@@ -41,8 +41,6 @@ Brad Frost tiers under **`src/components/`**:
 **Import rules:** atoms ← molecules ← organisms ← examples. Molecules may compose other molecules (e.g. TaskRows + Chip). Atoms never import other components.
 
 **Catalog** — see `src/package.manifest.ts` → `atomicExports`. Reclassify via ADR only. **Card** is a molecule (ADR-0005).
-
-**Farmer Market refresh** — designer harvest order: **`docs/farmermarket-component-roadmap.md`**. Target FM first; restyle shipped atoms, then Input → Card.
 
 When adding a component: create folder in the correct tier, match Storybook title prefix, add to manifest, export from `src/index.ts` alphabetically within tier. Document **Usage → Anatomy → Best practices → Examples** — the story is the contract (ADR-0004).
 

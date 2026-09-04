@@ -88,7 +88,7 @@ export {
   isEditableGridOverlayTarget,
   readGridColumnCount,
   setDocumentGridOn,
-} from "./lib/gridOverlay";
+} from "./lib/gridOverlayUtils";
 export {
   focusRingTransitionClasses,
   motionTransition,

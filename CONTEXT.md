@@ -50,9 +50,3 @@ Examples (templates / pages)
 ```
 
 See `docs/adr/0001-layer-architecture.md`, `docs/adr/0002-atomic-design.md`, `docs/adr/0003-responsive-mobile-first.md`, `docs/adr/0004-pattern-first-not-utility-first.md`, `docs/adr/0005-list-card-as-molecules.md`, `docs/adr/0006-input-architecture.md`, and `docs/adr/0010-app-grid-spine.md`. **DESIGN.md → Grid** is the agent-facing grid contract.
-
-## Farmer Market refresh
-
-Designer-driven harvest list for [farmermarket.us](https://farmermarket.us): **`docs/farmermarket-component-roadmap.md`**.
-
-Order: Chip → Input → Card (Button + IconButton shipped). Find pill = Example composition (Button → Input → Chip). Card is a molecule per ADR-0005.

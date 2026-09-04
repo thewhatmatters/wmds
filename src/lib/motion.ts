@@ -113,7 +113,7 @@ export const motionDurations: MotionToken[] = [
     token: "--duration-medium",
     value: "410ms",
     role: "Panels, expand/collapse, layout morph",
-    usedIn: ["FindMorph", "Validation band", "motion-collapse", "Panel reveal"],
+    usedIn: ["Search expand", "Validation band", "motion-collapse", "Panel reveal"],
   },
   {
     token: "--duration-medium-max",
