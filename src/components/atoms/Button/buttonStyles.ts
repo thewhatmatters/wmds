@@ -1,4 +1,8 @@
 import { motionTransition, pressScaleClass } from "../../../lib/motion";
+import {
+  clusterHeightClasses,
+  clusterSquareClasses,
+} from "../../../lib/clusterScale";
 
 /** Prescribed action roles — not a semantic color picker. ADR-0004. */
 export const buttonRoles = ["primary", "secondary", "ghost", "destructive"] as const;
@@ -41,11 +45,11 @@ export const buttonHorizontalPadding: Record<ButtonSize, string> = {
   lg: "px-7",
 };
 
-/** Touch-friendly heights — md meets 44px minimum (ADR-0003). */
+/** Touch-friendly heights — xs/sm/md align to cluster sm/md/lg (ADR-0011); lg is extended. */
 export const buttonSizeClasses: Record<ButtonSize, string> = {
-  xs: `min-h-7 ${buttonHorizontalPadding.xs} py-1 text-sm leading-none`,
-  sm: `min-h-8 ${buttonHorizontalPadding.sm} py-1.5 text-sm leading-none`,
-  md: `min-h-11 ${buttonHorizontalPadding.md} py-2.5 text-sm leading-none`,
+  xs: `${clusterHeightClasses.sm} ${buttonHorizontalPadding.xs} py-1 text-sm leading-none`,
+  sm: `${clusterHeightClasses.md} ${buttonHorizontalPadding.sm} py-1.5 text-sm leading-none`,
+  md: `${clusterHeightClasses.lg} ${buttonHorizontalPadding.md} py-2.5 text-sm leading-none`,
   lg: `min-h-12 ${buttonHorizontalPadding.lg} py-3 text-base leading-none`,
 };
 
@@ -56,10 +60,10 @@ export const buttonIconSizeClasses: Record<ButtonSize, string> = {
   lg: "size-[1.125rem]",
 };
 
-/** Square hit targets — paired with buttonIconSizeClasses for the glyph. */
+/** Square hit targets — xs/sm/md align to cluster sm/md/lg; lg is FAB extended (48px). */
 export const iconButtonSizeClasses: Record<IconButtonSize, string> = {
-  xs: "size-7",
-  sm: "size-8",
-  md: "size-11",
-  lg: "size-12",
+  xs: clusterSquareClasses.sm,
+  sm: clusterSquareClasses.md,
+  md: clusterSquareClasses.lg,
+  lg: "size-12 shrink-0",
 };

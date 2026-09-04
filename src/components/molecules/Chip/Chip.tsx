@@ -1,17 +1,17 @@
 import type { ReactElement, ReactNode } from "react";
 import { X } from "lucide-react";
+import { BadgeIcon } from "../../atoms/Badge/BadgeIcon";
+import { BadgeSegmentCount } from "../../atoms/Badge/BadgeSegmentCount";
+import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
+import { IconButton } from "../../atoms/IconButton/IconButton";
 import { cn } from "../../../lib/cn";
-import { focusRingTransitionClasses } from "../../../lib/motion";
-import { CountPill, segmentedDisabledClasses, segmentedFocusRingClasses } from "../../../lib/segmentedControl";
+import { segmentedDisabledClasses, segmentedFocusRingClasses } from "../../../lib/segmentedControl";
 import { useChipFilterGroup } from "./ChipFilterGroup";
-import { ChipIcon } from "./ChipIcon";
 import {
   chipBaseClasses,
   chipIconGapClasses,
   chipReadOnlyClasses,
   chipRemovableGapClasses,
-  chipRemoveButtonClasses,
-  chipRemoveIconClasses,
   chipSelectedClasses,
   chipSizeClasses,
   chipUnselectedClasses,
@@ -43,6 +43,14 @@ export interface ChipProps {
   readOnly?: boolean;
   disabled?: boolean;
   className?: ChipLayoutClassName;
+}
+
+function ChipLeadingIcon({ size, icon }: { size: ChipSize; icon: ReactElement }) {
+  if (size === "lg") {
+    return <ButtonIcon size="sm">{icon}</ButtonIcon>;
+  }
+
+  return <BadgeIcon size={size === "sm" ? "sm" : "md"}>{icon}</BadgeIcon>;
 }
 
 function resolveChipLabel(children: ReactNode): string {
@@ -151,7 +159,7 @@ export function Chip({
         data-pattern="read-only"
         data-size={size}
       >
-        {showIcon ? <ChipIcon size={size}>{icon}</ChipIcon> : null}
+        {showIcon && icon ? <ChipLeadingIcon size={size} icon={icon} /> : null}
         {children}
       </span>
     );
@@ -170,21 +178,21 @@ export function Chip({
         data-pattern="removable"
         data-size={size}
       >
-        {showIcon ? <ChipIcon size={size}>{icon}</ChipIcon> : null}
+        {showIcon && icon ? <ChipLeadingIcon size={size} icon={icon} /> : null}
         <span className="truncate">{children}</span>
-        <button
-          type="button"
-          className={cn(
-            chipRemoveButtonClasses[size],
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-1 focus-visible:ring-offset-surface",
-            focusRingTransitionClasses,
-          )}
+        <IconButton
+          inset
+          size={size}
+          role="ghost"
+          icon={<X strokeWidth={2} />}
           aria-label={`Remove ${label}`}
+          title={`Remove ${label}`}
           disabled={disabled}
-          onClick={onRemove}
-        >
-          <X className={chipRemoveIconClasses[size]} strokeWidth={2} aria-hidden />
-        </button>
+          onClick={(event) => {
+            event.stopPropagation();
+            onRemove();
+          }}
+        />
       </span>
     );
   }
@@ -221,9 +229,9 @@ export function Chip({
       data-size={size}
       data-value={value}
     >
-      {showIcon ? <ChipIcon size={size}>{icon}</ChipIcon> : null}
+      {showIcon && icon ? <ChipLeadingIcon size={size} icon={icon} /> : null}
       {children}
-      {count != null ? <CountPill active={isSelected} count={count} /> : null}
+      {count != null ? <BadgeSegmentCount active={isSelected} count={count} /> : null}
     </button>
   );
 }

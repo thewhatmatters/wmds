@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { clusterHeightClasses } from "../../../lib/clusterScale";
 import { buttonHorizontalPadding, type ButtonSize } from "./buttonStyles";
 
 /** Multi-state pill cycle — inspired by [Motion multi-state badge](https://motion.dev/examples/react-multi-state-badge). */
@@ -34,11 +35,11 @@ export function resolveStatusLabels(
   };
 }
 
-/** Status morph sizing — same horizontal padding as classic buttons. Gap applied only when icon visible. */
+/** Status morph sizing — aligns with cluster scale for xs/sm/md (ADR-0011). */
 export const buttonStatusSizeClasses = {
-  xs: `min-h-7 ${buttonHorizontalPadding.xs} py-1 text-sm leading-none`,
-  sm: `min-h-8 ${buttonHorizontalPadding.sm} py-1.5 text-sm leading-none`,
-  md: `min-h-11 ${buttonHorizontalPadding.md} py-2.5 text-sm leading-none`,
+  xs: `${clusterHeightClasses.sm} ${buttonHorizontalPadding.xs} py-1 text-sm leading-none`,
+  sm: `${clusterHeightClasses.md} ${buttonHorizontalPadding.sm} py-1.5 text-sm leading-none`,
+  md: `${clusterHeightClasses.lg} ${buttonHorizontalPadding.md} py-2.5 text-sm leading-none`,
   lg: `min-h-12 ${buttonHorizontalPadding.lg} py-3 text-base leading-none`,
 } as const satisfies Record<ButtonSize, string>;
 

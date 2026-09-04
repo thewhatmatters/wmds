@@ -1,0 +1,14 @@
+/**
+ * Cluster control scale — shared heights for controls in one row
+ * (Card header, filter rails, toolbar groups).
+ *
+ * `--spacing` stays 4px (ADR-0007). Cluster tiers = 7 / 9 / 11 × spacing.
+ * See ADR-0011 and Foundation → Cluster.
+ */
+
+:root {
+  /* 7 / 9 / 11 × 4px — mirrored by h-7 / h-9 / min-h-11 in clusterScale.ts */
+  --cluster-height-sm: 1.75rem; /* 28px */
+  --cluster-height-md: 2.25rem; /* 36px */
+  --cluster-height-lg: 2.75rem; /* 44px */
+}

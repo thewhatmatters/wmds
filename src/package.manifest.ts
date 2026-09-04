@@ -55,6 +55,9 @@ export const packageManifest = {
     "grid-page",
     "--grid-cols",
     "--leading-base",
+    "--cluster-height-sm",
+    "--cluster-height-md",
+    "--cluster-height-lg",
   ] as const,
 } as const;
 

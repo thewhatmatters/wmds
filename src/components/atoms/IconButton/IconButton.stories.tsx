@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { Pencil, Plus, Settings, Trash2, Wrench } from "lucide-react";
+import { Pencil, Plus, Settings, Trash2, Wrench, X } from "lucide-react";
 import { IconButton, buttonRoles } from "./IconButton";
 import { iconButtonToolbarGroupClasses } from "./iconButtonStyles";
 
@@ -40,8 +40,9 @@ const meta = {
 | **FAB** | \`fab\` + \`aria-label\` |
 | **With tooltip** | \`title\` (defaults to \`aria-label\`) |
 | **Async** | \`loading\` + \`aria-label\` |
+| **Inset dismiss** | \`inset\` + \`size="sm" \| "md" \| "lg"\` — removable Chip trailing × |
 
-Inspired by [Astryx IconButton](https://astryx.atmeta.com/components/IconButton). Circular hit target; \`md\` = 44×44px (ADR-0003).
+Inspired by [Astryx IconButton](https://astryx.atmeta.com/components/IconButton). Circular hit target; \`md\` = cluster lg (44×44px, ADR-0003). \`xs\` / \`sm\` / \`md\` map to cluster sm / md / lg — see **Foundation → Cluster** (ADR-0011).
 
 ## Best practices
 
@@ -73,6 +74,31 @@ export const Toolbar: Story = {
       <IconButton icon={<Pencil strokeWidth={2} />} aria-label="Edit item" title="Edit item" />
       <IconButton icon={<Trash2 strokeWidth={2} />} aria-label="Delete conversation" title="Delete conversation" role="ghost" />
       <IconButton icon={<Settings strokeWidth={2} />} aria-label="Open settings" title="Settings" />
+    </div>
+  ),
+};
+
+export const InsetDismiss: Story = {
+  name: "Pattern — inset dismiss",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Compact ghost dismiss — pairs with **Chip** `onRemove` (trailing ×). Use `inset` so hit targets match chip innards.",
+      },
+    },
+  },
+  render: () => (
+    <div className="inline-flex items-center gap-2 rounded-full bg-surface px-3 py-1 shadow-hairline">
+      <span className="text-sm text-fg">78701</span>
+      <IconButton
+        inset
+        size="md"
+        role="ghost"
+        icon={<X strokeWidth={2} />}
+        aria-label="Remove 78701"
+        title="Remove 78701"
+      />
     </div>
   ),
 };
@@ -159,7 +185,7 @@ export const Sizes: Story = {
   parameters: {
     docs: {
       description: {
-        story: "`md` meets the 44×44px touch target minimum.",
+        story: "`xs` / `sm` / `md` align to cluster sm (28px) / md (36px) / lg (44px). `lg` is extended (FAB).",
       },
     },
   },

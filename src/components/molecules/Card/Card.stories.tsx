@@ -6,6 +6,7 @@ import { Button } from "../../atoms/Button/Button";
 import { IconButton } from "../../atoms/IconButton/IconButton";
 import { Input } from "../../atoms/Input/Input";
 import { Chip, ChipFilterGroup } from "../Chip/Chip";
+import { iconButtonSizeForCluster } from "../../../lib/clusterScale";
 import { TaskRows } from "../TaskRows/TaskRows";
 import {
   Card,
@@ -180,7 +181,7 @@ export const HeaderSlots: Story = {
     docs: {
       description: {
         story:
-          "**Header** is two horizontal slots. `start` and `end` take any cluster — title + subtitle, chips-as-tabs, kebab `IconButton`, Badge.",
+          "**Header** is two horizontal slots. `start` and `end` take any cluster — title + subtitle, chips-as-tabs, kebab `IconButton`, Badge. Filter chips at **`sm`** pair with **`IconButton` `xs`** (cluster sm, 28px) — see **Foundation → Cluster**.",
       },
     },
   },
@@ -216,7 +217,7 @@ export const HeaderSlots: Story = {
                 aria-label="More market actions"
                 title="More"
                 role="ghost"
-                size="sm"
+                size={iconButtonSizeForCluster("sm")}
               />
             </>
           }

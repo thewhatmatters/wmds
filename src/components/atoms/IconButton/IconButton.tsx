@@ -9,10 +9,12 @@ import {
   type ButtonRole,
   type IconButtonSize,
 } from "../Button/buttonStyles";
-import { iconButtonFabClasses, iconButtonShapeClass } from "./iconButtonStyles";
+import { iconButtonFabClasses, iconButtonInsetFocusClasses, iconButtonInsetHitClasses, iconButtonInsetIconSizeClasses, iconButtonShapeClass } from "./iconButtonStyles";
 
 export type { ButtonRole, IconButtonSize } from "../Button/buttonStyles";
 export { buttonRoles } from "../Button/buttonStyles";
+
+export type IconButtonInsetSize = "sm" | "md" | "lg";
 
 /** Layout-only — not for colors, borders, or typography overrides. */
 export type IconButtonLayoutClassName = string;
@@ -24,7 +26,10 @@ export interface IconButtonProps {
   "aria-label": string;
   /** Action role. Default: `ghost` (toolbars). FAB pattern forces `primary`. */
   role?: ButtonRole;
-  size?: IconButtonSize;
+  /** Toolbar / FAB size — or inset dismiss tier when `inset` is set. Default: `md`. */
+  size?: IconButtonSize | IconButtonInsetSize;
+  /** Inset dismiss — compact hit target for chip innards; `size` uses sm | md | lg inset scale. */
+  inset?: boolean;
   /** Native tooltip for sighted users — defaults to `aria-label`. */
   title?: string;
   /** FAB pattern — primary fill + elevated shadow. [Astryx IconButton](https://astryx.atmeta.com/components/IconButton). */
@@ -55,6 +60,7 @@ export function IconButton({
   "aria-label": ariaLabel,
   role: roleProp,
   size = "md",
+  inset = false,
   title,
   fab = false,
   loading = false,
@@ -71,6 +77,10 @@ export function IconButton({
   const role = fab ? "primary" : (roleProp ?? "ghost");
   const isDisabled = disabled || loading;
   const tooltip = title ?? ariaLabel;
+  const insetSize = inset ? (size as IconButtonInsetSize) : null;
+  const hitClass = inset
+    ? iconButtonInsetHitClasses[insetSize ?? "md"]
+    : iconButtonSizeClasses[size as IconButtonSize];
 
   return (
     <button
@@ -86,20 +96,31 @@ export function IconButton({
       className={cn(
         buttonBaseClasses,
         buttonRoleClasses[role],
-        iconButtonSizeClasses[size],
+        hitClass,
         iconButtonShapeClass,
+        inset && iconButtonInsetFocusClasses,
         fab && iconButtonFabClasses,
         className,
       )}
       data-role={role}
       data-size={size}
-      data-pattern={fab ? "fab" : "icon"}
+      data-pattern={fab ? "fab" : inset ? "inset" : "icon"}
       data-loading={loading || undefined}
     >
       {loading ? (
-        <ButtonSpinner size={size} />
+        <ButtonSpinner size={inset ? "xs" : (size as IconButtonSize)} />
+      ) : inset ? (
+        <span
+          className={cn(
+            "inline-flex shrink-0 items-center justify-center text-inherit [&>svg]:size-full",
+            iconButtonInsetIconSizeClasses[insetSize ?? "md"],
+          )}
+          aria-hidden
+        >
+          {icon}
+        </span>
       ) : (
-        <ButtonIcon size={size}>{icon}</ButtonIcon>
+        <ButtonIcon size={size as IconButtonSize}>{icon}</ButtonIcon>
       )}
     </button>
   );

@@ -13,15 +13,16 @@
 - **Motion:** Astryx-aligned tiers in **`src/theme/motion.css`** — **fast** (hover/focus), **medium** (panels/layout), **slow** (rare). Single **`--ease-standard`**. CSS via `motionTransition()`; Motion via `motionTransitionProp()`. See **ADR-0008**. Storybook wraps `<MotionConfig reducedMotion="user">`.
 - **Icons:** **[Lucide](https://lucide.dev/icons/) only** until further notice — import from **`lucide-react`** in components, stories, and examples. Peer dep, not bundled; use `stroke-current` / `ButtonIcon` for sizing. See **Foundation → Icons**.
 - **Button:** pill-only; four **roles** (`primary`, `secondary`, `ghost`, `destructive`). Patterns: action, `icon`, `count`, `status` morph — mutually exclusive. No slots. [Motion reference](https://motion.dev/examples/react-multi-state-badge).
-- **IconButton:** circular icon-only control ([Astryx IconButton](https://astryx.atmeta.com/components/IconButton)). Patterns: toolbar (ghost), `fab`, `loading`, `title` tooltip. **`aria-label` required** — use `Button` when text is needed.
-- **Badge:** solid semantic fills ([Astryx Badge](https://astryx.atmeta.com/components/Badge)). Patterns: label, `count`, `icon` — mutually exclusive where documented. No slots; no StatusDot inside Badge.
-- **Chip:** filter/toggle molecule. Patterns: **multi-select filter** (`ChipFilterGroup` + `value`), single-select group, standalone `selected`, **removable** (`onRemove`), **read-only**. Sizes `sm` | `md` | `lg`. Optional `icon`, `count` — not with `onRemove`. No slots.
+- **IconButton:** circular icon-only control ([Astryx IconButton](https://astryx.atmeta.com/components/IconButton)). Patterns: toolbar (ghost), `fab`, `loading`, `title` tooltip, **`inset`** (compact dismiss inside Chip). **`aria-label` required** — use `Button` when text is needed.
+- **Badge:** solid semantic fills ([Astryx Badge](https://astryx.atmeta.com/components/Badge)). Patterns: label, `count`, `icon` — mutually exclusive where documented. **`BadgeSegmentCount`** for filter/tab segment totals (Chip trailing count). No slots; no StatusDot inside Badge.
+- **Chip:** filter/toggle molecule — composes **`BadgeIcon`** / **`ButtonIcon`**, **`IconButton inset`** (remove), **`BadgeSegmentCount`** (count). Patterns: **multi-select filter** (`ChipFilterGroup` + `value`), single-select group, standalone `selected`, **removable** (`onRemove`), **read-only**. Sizes `sm` | `md` | `lg`. Optional `icon`, `count` — not with `onRemove`. No slots.
 - **TaskRows:** expandable rows — optional `icon` or status badge, meta, detail panel with left rail. Patterns: **status rows** (`variant="list"`, `status="done" / "running" / "failed"`); **capsules** (`variant="capsule"`, standalone or in **Card.Body**). Card is optional.
 - **Card:** [Astryx Card](https://astryx.atmeta.com/components/Card) — `Card.Header`, `Card.Body`, `Card.Footer`. Layout cards (`padding="none"`): header/footer on the shell; **`Card.Header`** is two horizontal slots (`start` | `end`) at **16px** (`px-4`). **`Card.Body` is a square composition slot** with a **2px** horizontal gutter — no inner pad, no radius, **no default fill**. The **occupant** dictates how the body region looks; use **`cardLayoutBodyOccupantInsetXClasses`** (`px-3.5` / 14px) when body content should align with header/footer (2px + 14px = 16px). Default **`shape="rounded"`**. **`shape="flush"`** only when a parent owns outer chrome. Simple cards: `padding="md"`.
 - **Input:** pill-only. Optional leading `icon`; trailing `endBadge` or status / `loading`. Hero search with inset button → **Search** molecule. See **ADR-0006**.
 - **StatusDot:** fixed 8px semantic dot ([Astryx StatusDot](https://astryx.atmeta.com/components/StatusDot)). Patterns: standalone (`label`), `besideLabel`, optional `pulsing`. Not inside Badge.
 - **Layers:** Theme → **lib** → Components → Examples. Foundation = Storybook specimens only. Tailwind scan list = **`src/theme/sources.css`**. Package exports tracked in **`src/package.manifest.ts`**.
 - **Responsive:** **Mobile-first** — unprefixed utilities = mobile; `sm:` / `md:` / `lg:` scale up. Review at Mobile (390px), Tablet (768px), Desktop (1280px). Grid columns step on that same scale (4 / 8 / 12). Atoms: min **44×44px** touch targets. No hover-only core actions. See **ADR-0003** and **Foundation → Grid**.
+- **Cluster scale:** shared heights for controls in one row (Card headers, filter rails) — **sm / md / lg** → 28 / 36 / 44px. **Chip** `sm|md|lg` pairs with **IconButton** `xs|sm|md` and compact **Button** `xs|sm|md`. See **Foundation → Cluster** and **ADR-0011**. Use `iconButtonSizeForCluster()` when composing headers.
 
 ## Paper
 
@@ -39,6 +40,8 @@ Brad Frost tiers under **`src/components/`**:
 | Templates/pages | `examples/{Name}/` | `Examples/{Name}` | No |
 
 **Import rules:** atoms ← molecules ← organisms ← examples. Molecules may compose other molecules (e.g. TaskRows + Chip). Atoms never import other components.
+
+**Molecule composition:** Every visual affordance inside a molecule must **compose atoms** — not hand-rolled mini-controls. Leading icons → **`ButtonIcon`** / **`BadgeIcon`**. Dismiss / toolbar actions → **`IconButton`** (use **`inset`** inside chips). Counts on segments → **`BadgeSegmentCount`**. Status labels → **`Badge`**. Fields → **`Input`**. If an atom’s size or pattern doesn’t fit, **extend the atom** and its Storybook spec first — do not fork a one-off in the molecule (see **Chip** removable dismiss). The molecule keeps shell, layout, and state. Rule: **`.cursor/rules/wmds-atomic-composition.mdc`**.
 
 **Catalog** — see `src/package.manifest.ts` → `atomicExports`. Reclassify via ADR only. **Card** is a molecule (ADR-0005).
 

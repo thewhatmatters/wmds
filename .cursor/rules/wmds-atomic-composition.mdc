@@ -1,0 +1,45 @@
+---
+description: WMDS molecules must compose atoms — no hand-rolled affordances
+alwaysApply: true
+---
+
+# Atomic composition (molecules compose atoms)
+
+When **building or editing** WMDS components in `src/components/molecules/` or `organisms/`:
+
+## Rule
+
+Every **visual affordance** inside a molecule must come from an **existing atom** (or an atom extended with a documented pattern). The molecule owns **shell, layout, state, and composition** — not duplicate mini-atoms.
+
+| Affordance | Compose from | Not this |
+|------------|--------------|----------|
+| Icon-only action (×, kebab, edit) | **`IconButton`** (`inset` for chip innards) | Raw `<button>` + Lucide + local classes |
+| Leading Lucide glyph | **`ButtonIcon`** / **`BadgeIcon`** | Molecule-local `*Icon.tsx` wrappers |
+| Status / category label | **`Badge`** | Hand-rolled pill spans |
+| Segment / filter count | **`BadgeSegmentCount`** | `CountPill` or inline count spans in `lib/` |
+| Text field | **`Input`** / **`TextArea`** | Custom input shells |
+| Primary/secondary action | **`Button`** | Styled `<button>` with `bg-primary` |
+| Loading spinner in control | **`ButtonSpinner`** | Ad-hoc SVG/CSS spinners |
+| 8px semantic dot | **`StatusDot`** | Custom dots |
+
+## When sizing doesn't fit
+
+**Extend the atom** (new size, `inset` pattern, Storybook spec) — then compose it. Do **not** fork a one-off inside the molecule.
+
+Example: removable **Chip** dismiss → `IconButton inset`, not `chipRemoveButtonClasses`.
+
+## Allowed in molecules
+
+- `*Styles.ts` for the **molecule shell** (Card gutter, Chip filter toggle, TaskRows row chrome)
+- Context providers (`ChipFilterGroup`), compound slots documented in Storybook
+- **`lib/`** helpers that are **not** visual affordances (motion, cn, typography maps)
+- Composing other **molecules** when documented (TaskRows + Chip, Search + Button + Input)
+
+## Before finishing a molecule PR
+
+1. Grep the molecule folder for raw `<button`, local `*Icon.tsx`, and affordance-like class blocks in the TSX (not `*Styles.ts` shell).
+2. Map each piece to an atom or a documented exception in the story **Anatomy**.
+3. If you added a new atom pattern, add or update the atom Storybook story first.
+4. Header / filter / toolbar rows — pick a **cluster tier** (Foundation → Cluster) and pair Chip + IconButton + Button sizes from the canonical table.
+
+See **`AGENTS.md` → Molecule composition** and **ADR-0002**, **ADR-0011**.

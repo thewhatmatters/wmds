@@ -1,4 +1,5 @@
 import type { SemanticVariant } from "../../../lib/semanticVariants";
+import { cn } from "../../../lib/cn";
 
 export const badgeVariants = ["neutral", "info", "success", "warning", "destructive"] as const;
 
@@ -48,6 +49,14 @@ export const badgeCountSizeClasses: Record<BadgeSize, string> = {
 /** Internal — trailing count on secondary/primary buttons. */
 export const badgeOnButtonCountClasses =
   "border border-transparent bg-surface text-fg shadow-raised";
+
+/** Segment filter count — Chip / Tab trailing totals (not notification count). */
+export function badgeSegmentCountClasses(active: boolean): string {
+  return cn(
+    "rounded px-[length:var(--spacing-1)] text-[10.5px] leading-none tabular-nums text-muted",
+    active && "bg-secondary",
+  );
+}
 
 export function isBadgeVariant(value: string): value is BadgeVariant {
   return (badgeVariants as readonly string[]).includes(value);
