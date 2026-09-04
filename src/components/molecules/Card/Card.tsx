@@ -9,15 +9,19 @@ import {
   cardAddressClasses,
   cardBaseClasses,
   cardBodyTextClasses,
+  cardBodyWellClasses,
   cardDividerClasses,
+  cardLayoutHeaderEndClasses,
+  cardLayoutHeaderStartClasses,
   cardLayoutShellClasses,
   cardLayoutShellShapeClasses,
   cardOverflowClasses,
   cardRootPaddingClasses,
   cardSectionPaddingClasses,
   cardShapeClasses,
-  cardVariantClasses,
+  cardSubtitleClasses,
   cardTitleClasses,
+  cardVariantClasses,
   type CardPadding,
   type CardShape,
   type CardVariant,
@@ -42,8 +46,15 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
 }
 
 export interface CardSectionProps extends HTMLAttributes<HTMLElement> {
-  children: ReactNode;
+  children?: ReactNode;
   className?: CardLayoutClassName;
+}
+
+export interface CardHeaderProps extends CardSectionProps {
+  /** Start slot — title + subtitle, or any leading cluster. */
+  start?: ReactNode;
+  /** End slot — kebab, chips-as-tabs, Badge, or any trailing cluster. */
+  end?: ReactNode;
 }
 
 const CardPaddingContext = createContext<CardPadding>("none");
@@ -90,15 +101,27 @@ function CardRoot({
   );
 }
 
-function CardHeader({ className, children, ...props }: CardSectionProps) {
+function CardHeader({
+  className,
+  children,
+  start,
+  end,
+  ...props
+}: CardHeaderProps) {
   const padding = useCardPadding();
+  const startContent = start ?? children;
+
   return (
     <header className={cn(cardSectionPaddingClasses[padding].header, className)} {...props}>
-      {children}
+      {startContent != null ? (
+        <div className={cardLayoutHeaderStartClasses}>{startContent}</div>
+      ) : null}
+      {end != null ? <div className={cardLayoutHeaderEndClasses}>{end}</div> : null}
     </header>
   );
 }
 
+/** Inset well — composition slot for any supporting content. */
 function CardBody({ className, children, ...props }: CardSectionProps) {
   const padding = useCardPadding();
   return (
@@ -123,7 +146,8 @@ function CardDivider({ className, ...props }: HTMLAttributes<HTMLHRElement>) {
 
 /**
  * Content surface — [Astryx Card](https://astryx.atmeta.com/components/Card).
- * Layout cards (`padding="none"`) — white shell, muted inset body well, header/footer on shell.
+ * Layout cards (`padding="none"`) — shell + **Header** (`start` | `end`) + **Body** slot
+ * (2px outside, square, no fill).
  */
 export const Card = Object.assign(CardRoot, {
   Header: CardHeader,
@@ -132,4 +156,10 @@ export const Card = Object.assign(CardRoot, {
   Divider: CardDivider,
 });
 
-export { cardAddressClasses, cardBodyTextClasses, cardTitleClasses };
+export {
+  cardAddressClasses,
+  cardBodyTextClasses,
+  cardBodyWellClasses,
+  cardSubtitleClasses,
+  cardTitleClasses,
+};

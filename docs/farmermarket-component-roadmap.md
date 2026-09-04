@@ -10,9 +10,9 @@ Designer harvest order (running list — update status as components ship):
 | 1 | **Chip** | Molecule | SNAP (already `wmds-chip`), Open today, Saturday, Dogs, Viewing pill | **Shipped** — multi-select filters, sizes sm/md/lg, removable + read-only |
 | 2 | **Button** + **IconButton** | Atoms | Find, Use my location, GO, Get directions, Close, × clear | **Shipped** — restyle against FM as needed |
 | 3 | **Input** | Atom | ZIP or city search | **Shipped** — bare default, optional label; see ADR-0006 |
-| 4 | **List** | Molecule | Market rows — name, street, miles, SNAP booth | **Shipped** — stacked/split rows, dividers, selectable |
-| 5 | **Card** | Molecule | Market detail — shell + inset well, TaskRows body | **Shipped** — default `shape="rounded"`, Header/Body/Footer |
-| 6 | **Content rail** | Molecule | Map + market list pane — search/filters header, scrollable **List** body | **Shipped** — primary FM layout primitive |
+| 4 | **List** | — | Market rows — name, street, miles, SNAP booth | **Withdrawn** — not a keeper; app-owned rows for now |
+| 5 | **Card** | Molecule | Market detail — shell + inset **Body** slot (TaskRows in FM) | **Shipped** — Header / Body slot / Footer |
+| 6 | **Content rail** | — | Map + market list pane | **Withdrawn** — app-owned layout; no rail primitive |
 | 7 | **TaskRows** | Molecule | Map overlay detail — Get directions, services offered | **Shipped** — `MarketDetailCard` in **Examples/FarmerMarket** |
 
 ## Map overlay (FM)
@@ -20,7 +20,7 @@ Designer harvest order (running list — update status as components ship):
 Engineers own map library placement. WMDS ships **`MarketDetailCard`** (`Examples/FarmerMarket`) — mount in the map overlay slot. Pattern: **Molecules/TaskRows → Pattern — FM market detail**.
 
 
-Map + **ContentRail** in a viewport-height flex row — see **Examples/FarmerMarket**. Header and app nav are owned by the consuming app.
+Map + list pane in a viewport-height flex row — see **Examples/FarmerMarket**. Header, list pane, and app nav are owned by the consuming app.
 
 ## Input spec (ADR-0006)
 
@@ -50,9 +50,8 @@ Spec in **`Examples/FarmerMarket`** (page flow) or thin **`Search`** molecule on
 
 - **Chip before Find pill** — SNAP and filter tags share the same primitive.
 - **Input is the blocker** for search / Find pill / ZIP entry. Architecture: **ADR-0006** — individual components, optional `label` on `Input`, shared `inputShellStyles.ts`.
-- **List row anatomy** — leading content, primary line (name), secondary (street), trailing (miles, SNAP Chip).
-- **Content rail** — map + list browse uses **ContentRail** + app layout. See **Examples/FarmerMarket**.
-- **List + Card are molecules** — modular, reusable across layouts; page composition lives in Examples. See **ADR-0005**.
+- **List pane** — map + list browse is app-owned layout. See **Examples/FarmerMarket**.
+- **Card is a molecule** — modular, reusable across layouts; page composition lives in Examples. See **ADR-0005**.
 - **Button + IconButton** — verify FM-specific copy and layouts in Storybook against live FM screens during restyle pass.
 
 ## Related

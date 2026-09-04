@@ -135,9 +135,7 @@ import {
   Card,
   Chip,
   ChipFilterGroup,
-  ContentRail,
   Input,
-  List,
   Search,
   StatusDot,
   TaskRows,
@@ -153,11 +151,9 @@ import {
 | `Button` | `role`, `size`, `status`, `icon`, `count` | Atoms/Button — copy a **Pattern** story |
 | `IconButton` | `icon`, `aria-label`, `role`, `size`, `fab`, `loading`, `title` | Atoms/IconButton — copy a **Pattern** story |
 | `Chip` | `size`, `value`, `selected`, `onRemove`, `icon`, `count`, `readOnly` | Molecules/Chip — use `ChipFilterGroup` for multi-select filters |
-| `Input` | `label`, `description`, `status`, `message`, `loading`, `endBadge`, `icon`, `size`, `shape` | Atoms/Input — Required via `endBadge={<Badge>…</Badge>}` |
+| `Input` | `label`, `description`, `status`, `message`, `loading`, `endBadge`, `icon`, `size` | Atoms/Input — pill shell; Required via `endBadge={<Badge>…</Badge>}` |
 | `Search` | `size`, `placeholder`, `onSubmit` | Molecules/Search — inline input + button row |
-| `List` | `variant`, `hasDividers`, `header` | Molecules/List — `List.Item` with `layout`, `primary`, `secondary`, `meta`, `trailing`, `onPress`, `selected` |
-| `Card` | `variant`, `shape`, `padding` | Molecules/Card — `Card.Header`, `Card.Body`, `Card.Footer`, `Card.Divider` |
-| `ContentRail` | `position`, `width`, `header` | Molecules/ContentRail — map + list pane beside main canvas |
+| `Card` | `variant`, `shape`, `padding` | Molecules/Card — `Card.Header` (`start` | `end`), **`Card.Body` slot** (no default fill), `Card.Footer` |
 | `TaskRows` | `variant`, `detailsLayout` | Molecules/TaskRows — expandable rows; **Pattern — FM market detail** |
 | `Badge` | `variant`, `size`, `count`, `icon` | Atoms/Badge — copy a **Pattern** story |
 | `StatusDot` | `variant`, `label`, `besideLabel`, `pulsing` | Atoms/StatusDot — copy a **Pattern** story |
@@ -187,54 +183,37 @@ Peer deps in the FM app:
 npm install motion lucide-react
 ```
 
-### 2. Browse layout (map + list rail)
+### 2. Browse layout (map + list pane)
 
-Viewport-height flex row — map is `flex-1`, rail is **`ContentRail`** at `md:`+.
+Viewport-height flex row — map is `flex-1`. The list pane is **app-owned layout** (aside + header + result rows). WMDS ships **Input** and **ChipFilterGroup**.
 
 ```tsx
-import { ContentRail, Input, Chip, ChipFilterGroup, List, IconButton } from "@whatmatters/wmds";
-import { MapPin, X } from "lucide-react";
+import { Input, Chip, ChipFilterGroup } from "@whatmatters/wmds";
+import { MapPin } from "lucide-react";
 
 <div className="flex h-[100dvh] flex-col md:flex-row">
   {/* Map — your map library; WMDS does not own this */}
   <div className="relative min-h-[40vh] flex-1 md:min-h-0">{/* map + overlay slot */}</div>
 
-  <ContentRail
+  <aside
     aria-label="Market results"
-    position="end"
-    width="sm"
-    header={
-      <>
-        <Input
-          shape="pill"
-          placeholder="ZIP or city"
-          aria-label="Location"
-          icon={<MapPin strokeWidth={2} />}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <ChipFilterGroup aria-label="Market filters" value={filters} onValueChange={setFilters}>
-          <Chip value="snap">SNAP</Chip>
-          <Chip value="open-today">Open today</Chip>
-        </ChipFilterGroup>
-      </>
-    }
+    className="flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-surface md:h-full md:w-72 md:flex-none md:border-l md:border-border"
   >
-    <List variant="ghost" hasDividers>
-      {markets.map((market) => (
-        <List.Item
-          key={market.id}
-          layout="stacked"
-          primary={market.name}
-          secondary={market.street}
-          meta={`${market.miles} mi`}
-          trailing={market.snap ? <Chip readOnly size="sm">SNAP</Chip> : undefined}
-          selected={market.id === selectedId}
-          onPress={() => setSelectedId(market.id)}
-        />
-      ))}
-    </List>
-  </ContentRail>
+    <div className="flex shrink-0 flex-col gap-3 border-b border-border px-4 py-3">
+      <Input
+        placeholder="ZIP or city"
+        aria-label="Location"
+        icon={<MapPin strokeWidth={2} />}
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+      <ChipFilterGroup aria-label="Market filters" value={filters} onValueChange={setFilters}>
+        <Chip value="snap">SNAP</Chip>
+        <Chip value="open-today">Open today</Chip>
+      </ChipFilterGroup>
+    </div>
+    <div className="min-h-0 flex-1 overflow-y-auto">{/* app-owned result rows */}</div>
+  </aside>
 </div>
 ```
 

@@ -19,7 +19,7 @@ Shared implementation behind component seams — `cn`, `motion`, `collapse.css`,
 Smallest UI units — Button, Input, Badge, etc. Import only `lib/` + Theme. Storybook: **`Atoms/{Name}`**. Exported.
 
 **Molecules** (`src/components/molecules/`):
-Modular composed units — Field, List, Card, Chip, Search, etc. May compose atoms and other molecules. Storybook: **`Molecules/{Name}`**. Exported.
+Modular composed units — Field, Card, Chip, Search, etc. May compose atoms and other molecules. Storybook: **`Molecules/{Name}`**. Exported.
 
 **Organisms** (`src/components/organisms/`):
 Section-scale UI — Table, Tab, MoreMenu, etc. Storybook: **`Organisms/{Name}`**. Exported.
@@ -55,4 +55,4 @@ See `docs/adr/0001-layer-architecture.md`, `docs/adr/0002-atomic-design.md`, `do
 
 Designer-driven harvest list for [farmermarket.us](https://farmermarket.us): **`docs/farmermarket-component-roadmap.md`**.
 
-Order: Chip → Input → List → Card (Button + IconButton shipped). Find pill = Example composition (Button → Input → Chip). List + Card = molecules per ADR-0005.
+Order: Chip → Input → Card (Button + IconButton shipped). Find pill = Example composition (Button → Input → Chip). Card is a molecule per ADR-0005.

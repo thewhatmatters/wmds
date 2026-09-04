@@ -1,0 +1,7 @@
+/**
+ * Center autodocs pages and keep the reading column from hugging the edge.
+ */
+.sbdocs.sbdocs-content {
+  max-width: min(48rem, 100%) !important;
+  margin-inline: auto;
+}

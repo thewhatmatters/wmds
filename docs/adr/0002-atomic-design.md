@@ -35,7 +35,7 @@ Foundation and Theme are sub-component layers (tokens, specimens) — not atomic
 
 **Organisms:** Carousel, Chart, MoreMenu, Tab, Table
 
-Reclassify only via ADR update — don't bikeshed per PR. **List** and **Card** moved to molecules — see **ADR-0005**.
+Reclassify only via ADR update — don't bikeshed per PR. **Card** is a molecule — see **ADR-0005**. **List** was later withdrawn from the catalog.
 
 ### Storybook sidebar
 

@@ -44,7 +44,7 @@ Reference: **`src/lib/viewports.ts`** (`gridScale`) and **Foundation → Grid**.
 **Organisms**
 - **Table:** horizontal scroll within a bounded container on mobile, or documented card fallback — never clip without scroll.
 - **Tab / Chip rails:** horizontal scroll (`overflow-x-auto`) when items overflow.
-- **Card / List:** full-width on mobile; multi-column only at `md:`+.
+- **Card:** full-width on mobile; multi-column only at `md:`+.
 
 **Examples (templates / pages)**
 - Must demonstrate at least **mobile + desktop** layout in Storybook (viewport toolbar or dedicated story variants).

@@ -49,11 +49,11 @@ export function InputValidationMorphDemo() {
           <label htmlFor={controlId} className={typographyClass("ui-label")}>
             Email
           </label>
-          <div className={inputCompoundShellClassesFor("pill", "md", "error")}>
+          <div className={inputCompoundShellClassesFor("md", "error")}>
             <div
               className={cn(
                 "relative z-10 flex w-full items-center border bg-surface shadow-sm",
-                inputSoloRadiusClasses.pill.md,
+                inputSoloRadiusClasses.md,
                 inputShellTransitionClasses,
                 showError
                   ? cn(
@@ -112,7 +112,6 @@ export function InputValidationMorphDemo() {
                     status="error"
                     message="Please enter a valid email address."
                     messageId={messageId}
-                    shape="pill"
                     size="md"
                     messagePosition="bottom"
                   />

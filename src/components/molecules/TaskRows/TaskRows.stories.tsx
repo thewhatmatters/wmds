@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Dog, MapPin, Tags, X } from "lucide-react";
 import { Button } from "../../atoms/Button/Button";
 import { IconButton } from "../../atoms/IconButton/IconButton";
-import { Card, cardAddressClasses, cardBodyTextClasses, cardTitleClasses } from "../Card/Card";
+import { Card, cardAddressClasses, cardBodyTextClasses, cardSubtitleClasses, cardTitleClasses } from "../Card/Card";
 import { Chip } from "../Chip/Chip";
 import { TaskRows } from "./TaskRows";
 
@@ -20,6 +20,7 @@ const meta = {
     variant: "list",
   },
   parameters: {
+    layout: "padded",
     docs: {
       description: {
         component: `
@@ -50,14 +51,14 @@ TaskRows
 
 ## Best practices
 
-- **Do** use **Card** + \`TaskRows variant="capsule"\` — pill rows inside the inset body well.
-- **Do** put hours, address, and meta copy in **Card.Header** — not inside the inset (4px gutter is for rows only).
+- **Do** use **Card** + \`TaskRows variant="capsule"\` for FM market detail — pills inherit the shell.
+- **Do** put hours, address, and meta copy in **Card.Header** — not inside the Body slot (occupants own inner chrome).
 - **Do** use \`icon\` + \`status="none"\` for FM expandable rows — directions, services, hours.
 - **Do** use read-only **Chip** inside \`detailsLayout="chips"\` for SNAP, dogs, etc.
 - **Do** use \`TaskRows.Detail\` with \`onPress\` for FM Apple Maps / Google Maps deep links — labels stay on one line (do not wrap).
 - **Don't** use \`status="done"\` on FM rows — that's for agent task progress, not market detail.
 - **Don't** swap the whole card body for one action — expand in place instead.
-- **Don't** use for browse lists — **List** remains the market picker in **ContentRail**.
+- **Don't** use for browse lists.
 - **Don't** pair \`border\` with \`shadow-raised\` — the shadow token already includes a 1px hairline ring (\`theme.css\`).
         `.trim(),
       },
@@ -77,15 +78,17 @@ export const FarmerMarketDetail: Story = {
     return (
       <div className="w-max bg-body p-4">
         <Card shape="rounded" padding="none">
-          <Card.Header>
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
+          <Card.Header
+            start={
+              <>
                 <h2 className={cardTitleClasses}>Texas Farmers&apos; Market at Mueller</h2>
                 <div className={cardAddressClasses}>
                   <span>2006 Philomena St.</span>
                   <span>Austin, TX 78723</span>
                 </div>
-              </div>
+              </>
+            }
+            end={
               <IconButton
                 icon={<X strokeWidth={2} />}
                 aria-label="Close market detail"
@@ -93,8 +96,8 @@ export const FarmerMarketDetail: Story = {
                 role="secondary"
                 size="sm"
               />
-            </div>
-          </Card.Header>
+            }
+          />
           <Card.Body>
             <TaskRows variant="capsule">
               <TaskRows.Item
@@ -180,18 +183,18 @@ export const CardWithStatusRows: Story = {
     docs: {
       description: {
         story:
-          "Layout **Card** (white shell, gray inset well) with **TaskRows variant=\"list\"** — agent / progress flows with done, running, pending, failed.",
+          "Layout **Card** (white shell, Body inherits fill) with **TaskRows variant=\"list\"** — agent / progress flows with done, running, pending, failed.",
       },
     },
   },
   render: () => (
     <Card padding="none" className="max-w-md">
-      <Card.Header>
-        <div className="flex items-center justify-between gap-3">
-          <h2 className={cardTitleClasses}>Restock run</h2>
+      <Card.Header
+        start={<h2 className={cardTitleClasses}>Restock run</h2>}
+        end={
           <span className={cardBodyTextClasses + " text-muted tabular-nums"}>Step 2 of 4</span>
-        </div>
-      </Card.Header>
+        }
+      />
       <Card.Body>
         <TaskRows variant="list" inset>
           <TaskRows.Item
@@ -257,7 +260,7 @@ export const WithPrimaryAction: Story = {
     docs: {
       description: {
         story:
-          "Hours and address live in **Card.Header** (shell padding). **Card.Body** inset is for **TaskRows** only — 4px inner gutter.",
+          "Hours and address live in **Card.Header** (shell padding). **TaskRows** occupies the **Card.Body** slot — one of several valid occupants.",
       },
     },
   },
@@ -267,13 +270,15 @@ export const WithPrimaryAction: Story = {
     return (
       <div className="w-max p-4">
         <Card shape="rounded" padding="none">
-          <Card.Header>
-            <div className="flex items-start justify-between gap-3">
-              <div>
+          <Card.Header
+            start={
+              <>
                 <h2 className={cardTitleClasses}>SFC Farmers&apos; Market Downtown</h2>
-                <p className={cardBodyTextClasses}>422 Guadalupe St</p>
+                <p className={cardSubtitleClasses}>422 Guadalupe St</p>
                 <p className={`${cardBodyTextClasses} text-muted`}>Saturdays · 9am – 1pm</p>
-              </div>
+              </>
+            }
+            end={
               <IconButton
                 icon={<X strokeWidth={2} />}
                 aria-label="Close market detail"
@@ -281,8 +286,8 @@ export const WithPrimaryAction: Story = {
                 role="secondary"
                 size="sm"
               />
-            </div>
-          </Card.Header>
+            }
+          />
           <Card.Body>
             <TaskRows variant="capsule">
               <TaskRows.Item

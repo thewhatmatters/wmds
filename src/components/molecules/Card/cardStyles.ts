@@ -35,21 +35,36 @@ export const cardRootPaddingClasses: Record<CardPadding, string> = {
 };
 
 /**
- * Layout card — header/footer on white shell; body is a muted inset well (`bg-body`).
- * Default for `padding="none"` + Header / Body / Footer.
+ * Layout card — header/footer on the shell (`p-4`); Body sits 2px from the
+ * horizontal edges (`-mx-3.5` against that pad). Square slot — occupants
+ * own radius and other chrome.
  */
 export const cardLayoutShellClasses = "gap-3 bg-surface p-4";
+
+/** 16px shell pad − 14px pull = 2px of shell outside the Body slot. */
+export const cardLayoutSlotOutsetXClasses = "-mx-3.5";
 
 export const cardLayoutShellShapeClasses: Record<CardShape, string> = {
   flush: "",
   rounded: "rounded-2xl shadow-md",
 };
 
-export const cardLayoutHeaderClasses = "flex flex-col gap-1.5";
+/** Header row — start | end. Occupants decide what lands in each slot. */
+export const cardLayoutHeaderClasses = "flex items-start justify-between gap-3";
 
-/** Inset well — `bg-body` (#f8f8f8); 4px inner gutter; radius tracks TaskRows capsules. */
-export const cardLayoutBodyWellClasses =
-  "rounded-[calc(1.375rem+4px)] bg-body p-[4px]";
+/** Title + subtitle sit as one block — no flex gap; type leading is snug. */
+export const cardLayoutHeaderStartClasses = "flex min-w-0 flex-1 flex-col gap-0";
+
+export const cardLayoutHeaderEndClasses = "flex shrink-0 items-center gap-2";
+
+/** Body slot — 2px outside, square, no fill. Occupants own radius and background. */
+export const cardLayoutBodyWellClasses = [
+  cardLayoutSlotOutsetXClasses,
+  "flex min-h-0 flex-col",
+].join(" ");
+
+/** Opt-in muted fill — put on the occupant, not on `Card.Body`. */
+export const cardBodyWellClasses = "bg-body p-0.5";
 
 export const cardLayoutFooterClasses = "flex items-center justify-between gap-3";
 
@@ -64,22 +79,24 @@ export const cardSectionPaddingClasses: Record<
     footer: cardLayoutFooterClasses,
   },
   md: {
-    header: "flex flex-col gap-2 border-b border-border px-4 pb-3 pt-4",
+    header: `${cardLayoutHeaderClasses} border-b border-border px-4 pb-3 pt-4`,
     body: "px-4 py-3",
     footer: "flex items-center justify-between gap-4 border-t border-border px-4 py-3",
   },
   lg: {
-    header: "flex flex-col gap-2 border-b border-border px-6 pb-4 pt-6",
+    header: `${cardLayoutHeaderClasses} border-b border-border px-6 pb-4 pt-6`,
     body: "px-6 py-4",
     footer: "flex items-center justify-between gap-4 border-t border-border px-6 py-4",
   },
 };
 
-export const cardTitleClasses = typographyClass("subheading");
+export const cardTitleClasses = `${typographyClass("subheading")} leading-snug`;
+
+export const cardSubtitleClasses = `${typographyClass("caption")} leading-snug text-muted`;
 
 export const cardBodyTextClasses = typographyClass("body");
 
-/** Street + city/state/ZIP — one block; tighter line spacing than header `gap-1.5`. */
+/** Street + city/state/ZIP — one block; same tight stack as header title + subtitle. */
 export const cardAddressClasses =
   `${typographyClass("body")} flex flex-col gap-0 leading-snug`;
 

@@ -4,8 +4,6 @@ import { MapPin, X } from "lucide-react";
 import { IconButton } from "../../components/atoms/IconButton/IconButton";
 import { Input } from "../../components/atoms/Input/Input";
 import { Chip, ChipFilterGroup } from "../../components/molecules/Chip/Chip";
-import { ContentRail } from "../../components/molecules/ContentRail/ContentRail";
-import { List } from "../../components/molecules/List/List";
 import { cn } from "../../lib/cn";
 import { typographyClass } from "../../lib/typography";
 import { lockedViewportStory } from "../../lib/viewports";
@@ -30,12 +28,12 @@ Page-level composition for [farmermarket.us](https://farmermarket.us) — **Exam
 | Region | Components |
 |--------|------------|
 | **Page chrome** | App-owned layout (header, nav) — plain viewport flex in the FM app |
-| **Map** | Main canvas (placeholder) — flex-1 beside content rail on \`md:\`+ |
+| **Map** | Main canvas (placeholder) — flex-1 beside the list pane on \`md:\`+ |
 | **Map overlay** | \`MarketDetailCard\` — mount in map library overlay slot (engineers own placement) |
-| **List rail** | \`ContentRail width="sm"\` — pill \`Input\` (ZIP) + \`ChipFilterGroup\` header, \`List\` body |
-| **Rows** | \`List.Item\` stacked — name, street, miles, optional SNAP \`Chip\` |
+| **List pane** | App-owned aside — pill \`Input\` (ZIP) + \`ChipFilterGroup\` + result rows |
+| **Rows** | App-owned buttons — name, street, miles, optional SNAP \`Chip\` |
 
-\`ContentRail\` is the WMDS primitive for map + list. App nav (bottom bar, sidebar) stays in the consuming app.
+Page chrome (header, list pane, nav) stays in the consuming app. WMDS ships **Input** and **Chip** — not a list or rail primitive.
 
 ## Tier note
 
@@ -150,69 +148,75 @@ function MarketListRail({
   markets: Market[];
 }) {
   return (
-    <ContentRail
+    <aside
       aria-label="Market results"
-      position="end"
-      width="sm"
-      header={
-        <>
-          <Input
-            shape="pill"
-            value={query}
-            onChange={(event) => onQueryChange(event.target.value)}
-            placeholder="ZIP or city"
-            aria-label="Location"
-            icon={<MapPin strokeWidth={2} />}
-            endBadge={
-              query.length > 0 ? (
-                <IconButton
-                  icon={<X strokeWidth={2} />}
-                  aria-label="Clear location"
-                  role="ghost"
-                  size="sm"
-                  onClick={() => onQueryChange("")}
-                />
-              ) : undefined
-            }
-          />
-          <ChipFilterGroup
-            aria-label="Market filters"
-            value={filters}
-            onValueChange={onFiltersChange}
-          >
-            <Chip value="snap">SNAP</Chip>
-            <Chip value="open-today">Open today</Chip>
-          </ChipFilterGroup>
-        </>
-      }
+      className="flex min-h-0 w-full flex-1 flex-col overflow-hidden border-border bg-surface md:h-full md:w-72 md:flex-none md:self-stretch md:border-l"
     >
-      {markets.length > 0 ? (
-        <List variant="ghost" hasDividers>
-          {markets.map((market) => (
-            <List.Item
-              key={market.id}
-              layout="stacked"
-              primary={market.name}
-              secondary={market.street}
-              meta={`${market.miles} mi`}
-              trailing={
-                market.snap ? (
-                  <Chip readOnly size="sm">
-                    SNAP
-                  </Chip>
-                ) : undefined
-              }
-              selected={market.id === selectedId}
-              onPress={() => onSelect(market.id)}
-            />
-          ))}
-        </List>
-      ) : (
-        <p className={cn(typographyClass("body"), "px-4 py-8 text-center text-muted")}>
-          No markets match your filters.
-        </p>
-      )}
-    </ContentRail>
+      <div className="flex shrink-0 flex-col gap-3 border-b border-border px-4 py-3">
+        <Input
+          value={query}
+          onChange={(event) => onQueryChange(event.target.value)}
+          placeholder="ZIP or city"
+          aria-label="Location"
+          icon={<MapPin strokeWidth={2} />}
+          endBadge={
+            query.length > 0 ? (
+              <IconButton
+                icon={<X strokeWidth={2} />}
+                aria-label="Clear location"
+                role="ghost"
+                size="sm"
+                onClick={() => onQueryChange("")}
+              />
+            ) : undefined
+          }
+        />
+        <ChipFilterGroup
+          aria-label="Market filters"
+          value={filters}
+          onValueChange={onFiltersChange}
+        >
+          <Chip value="snap">SNAP</Chip>
+          <Chip value="open-today">Open today</Chip>
+        </ChipFilterGroup>
+      </div>
+      <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain">
+        {markets.length > 0 ? (
+          <div>
+            {markets.map((market) => (
+              <button
+                key={market.id}
+                type="button"
+                aria-pressed={market.id === selectedId}
+                onClick={() => onSelect(market.id)}
+                className={cn(
+                  "flex min-h-11 w-full flex-col gap-0.5 border-b border-border px-4 py-3 text-left last:border-b-0",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-inset",
+                  market.id === selectedId ? "bg-body" : "hover:bg-ghost-hover",
+                )}
+              >
+                <span className={typographyClass("ui-label")}>{market.name}</span>
+                <span className={typographyClass("caption")}>{market.street}</span>
+                <span className={`${typographyClass("caption")} tabular-nums`}>
+                  {market.miles} mi
+                </span>
+                {market.snap ? (
+                  <span className="mt-1">
+                    <Chip readOnly size="sm">
+                      SNAP
+                    </Chip>
+                  </span>
+                ) : null}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <p className={cn(typographyClass("body"), "px-4 py-8 text-center text-muted")}>
+            No markets match your filters.
+          </p>
+        )}
+      </div>
+    </aside>
   );
 }
 
@@ -305,7 +309,7 @@ export const Browse: Story = {
       ...desktopLocked.parameters.docs,
       description: {
         story:
-          "FM browse — map overlay slot shows **MarketDetailCard** when a list row is selected; **ContentRail** for ZIP search, filters, and **List** rows.",
+          "FM browse — map overlay slot shows **MarketDetailCard** when a result row is selected; app-owned pane for ZIP search, filters, and result rows.",
       },
     },
   },
@@ -323,7 +327,7 @@ export const BrowseMobile: Story = {
       ...mobileLocked.parameters.docs,
       description: {
         story:
-          "Mobile — **ContentRail** stacks above the map. App-owned bottom nav (if any) wraps this layout in the FM app.",
+          "Mobile — list pane stacks above the map. App-owned bottom nav (if any) wraps this layout in the FM app.",
       },
     },
   },
