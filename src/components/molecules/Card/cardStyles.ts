@@ -1,3 +1,4 @@
+import { backgroundPatternDotGridClasses } from "../../../lib/backgroundPatterns";
 import { typographyClass } from "../../../lib/typography";
 
 export const cardShapes = ["flush", "rounded"] as const;
@@ -77,6 +78,21 @@ export const cardLayoutBodyWellClasses = [
 
 /** Opt-in muted body fill for occupants — e.g. `className={cardBodyWellClasses}` on content inside `Card.Body`. */
 export const cardBodyWellClasses = "bg-body p-0.5";
+
+/**
+ * Inset body well — page-floor gray (`bg-body`) + 8px radius inside the Body gutter.
+ * Card shell stays `bg-surface`; occupant paints the lighter inset.
+ */
+export const cardLayoutBodyOccupantWellClasses = "rounded-lg bg-body";
+
+/**
+ * Inset body well with dot-grid texture — same 8px radius + page-floor base as well;
+ * dots add chart-canvas depth without a solid fill change.
+ */
+export const cardLayoutBodyOccupantDotGridWellClasses = [
+  "rounded-lg",
+  backgroundPatternDotGridClasses,
+].join(" ");
 
 export const cardLayoutFooterClasses = [
   cardLayoutSectionInsetXClasses,

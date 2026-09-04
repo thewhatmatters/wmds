@@ -9,9 +9,20 @@ import { Chip, ChipFilterGroup } from "../Chip/Chip";
 import { iconButtonSizeForCluster } from "../../../lib/clusterScale";
 import { TaskRows } from "../TaskRows/TaskRows";
 import {
+  Chart,
+  chartFormatPercent,
+  chartKpiHeroRowClasses,
+  chartKpiHeroValueClasses,
+  chartKpiTrendLabelClasses,
+  chartKpiTrendRowClasses,
+  chartKpiTrendValueClasses,
+} from "../../organisms/Chart/Chart";
+import {
   Card,
   cardBodyTextClasses,
   cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantDotGridWellClasses,
+  cardLayoutBodyOccupantWellClasses,
   cardPaddings,
   cardShapes,
   cardSubtitleClasses,
@@ -52,7 +63,7 @@ const meta = {
 |---------|-------------|
 | **Layout** | \`Card padding="none"\` + \`Card.Header\` / \`Card.Body\` / \`Card.Footer\` — default; shell + transparent Body slot |
 | **Header** | Horizontal \`start\` / \`end\` slots — title + subtitle, kebab, chips-as-tabs, Badge, or any cluster |
-| **Body slot** | TaskRows, form, or custom UI — occupant owns fill, radius, and padding |
+| **Body slot** | TaskRows, form, **Chart**, or custom UI — occupant owns fill, radius, and padding |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
 
 Default \`shape="rounded"\` — \`rounded-2xl shadow-md\` on the shell. Use \`shape="flush"\` only when a parent owns outer radius and shadow.
@@ -339,6 +350,148 @@ export const BodySlotStatusRows: Story = {
       </Card.Footer>
     </Card>
   ),
+};
+
+export const BodySlotOccupancyKpi: Story = {
+  name: "Example — body slot (occupancy KPI)",
+  parameters: {
+    wmdsLayout: "padded",
+    docs: {
+      description: {
+        story:
+          "**Chart.SegmentedBar** in the Body slot — scalar gauge with KPI + inline mono trend. **Planned:** **Card.Header** `end` → **Select** for period (e.g. This month), not static copy.",
+      },
+    },
+  },
+  render: () => {
+    const occupied = 144;
+    const total = 200;
+
+    return (
+      <Card shape="rounded" className="max-w-lg">
+        <Card.Header
+          start={<h2 className={cardTitleClasses}>Occupancy score</h2>}
+          end={<span className={mutedText(cardBodyTextClasses)}>This month</span>}
+        />
+        <Card.Body>
+          <div className={`flex flex-col gap-2 py-4 ${cardLayoutBodyOccupantInsetXClasses}`}>
+            <div className={chartKpiHeroRowClasses}>
+              <span className={chartKpiHeroValueClasses}>{chartFormatPercent(occupied, total)}</span>
+              <div className={chartKpiTrendRowClasses}>
+                <span className={`${chartKpiTrendValueClasses} text-success`}>+4.2%</span>
+                <span className={chartKpiTrendLabelClasses}>From last month</span>
+              </div>
+            </div>
+            <Chart.Frame>
+              <Chart.SegmentedBar value={occupied} max={total} tone="primary" fill="velocity" />
+            </Chart.Frame>
+          </div>
+        </Card.Body>
+        <Card.Footer>
+          <span className={mutedText(cardBodyTextClasses)}>Occupied units: {occupied}/{total}</span>
+          <Button role="secondary" size="sm">
+            View breakdown
+          </Button>
+        </Card.Footer>
+      </Card>
+    );
+  },
+};
+
+export const BodySlotOccupancyKpiInsetWell: Story = {
+  name: "Example — body slot (occupancy KPI, inset well)",
+  parameters: {
+    wmdsLayout: "padded",
+    docs: {
+      description: {
+        story:
+          "Same occupancy KPI — Body occupant uses **`cardLayoutBodyOccupantWellClasses`** (`bg-body` page-floor gray + `rounded-lg` / 8px) inside the 2px Body gutter. Shell stays **`bg-surface`**. **Planned:** **Select** in **Card.Header** `end`.",
+      },
+    },
+  },
+  render: () => {
+    const occupied = 144;
+    const total = 200;
+
+    return (
+      <Card shape="rounded" className="max-w-lg">
+        <Card.Header
+          start={<h2 className={cardTitleClasses}>Occupancy score</h2>}
+          end={<span className={mutedText(cardBodyTextClasses)}>This month</span>}
+        />
+        <Card.Body>
+          <div
+            className={`flex flex-col gap-2 py-4 ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}
+          >
+            <div className={chartKpiHeroRowClasses}>
+              <span className={chartKpiHeroValueClasses}>{chartFormatPercent(occupied, total)}</span>
+              <div className={chartKpiTrendRowClasses}>
+                <span className={`${chartKpiTrendValueClasses} text-success`}>+4.2%</span>
+                <span className={chartKpiTrendLabelClasses}>From last month</span>
+              </div>
+            </div>
+            <Chart.Frame>
+              <Chart.SegmentedBar value={occupied} max={total} tone="primary" fill="velocity" />
+            </Chart.Frame>
+          </div>
+        </Card.Body>
+        <Card.Footer>
+          <span className={mutedText(cardBodyTextClasses)}>Occupied units: {occupied}/{total}</span>
+          <Button role="secondary" size="sm">
+            View breakdown
+          </Button>
+        </Card.Footer>
+      </Card>
+    );
+  },
+};
+
+export const BodySlotOccupancyKpiDotGridWell: Story = {
+  name: "Example — body slot (occupancy KPI, dot grid well)",
+  parameters: {
+    wmdsLayout: "padded",
+    docs: {
+      description: {
+        story:
+          "Occupancy KPI on **`cardLayoutBodyOccupantDotGridWellClasses`** — inset well with **Foundation → Patterns → Dot grid** texture (`backgroundPatternDotGridClasses`). Same stack spacing as the solid inset well.",
+      },
+    },
+  },
+  render: () => {
+    const occupied = 144;
+    const total = 200;
+
+    return (
+      <Card shape="rounded" className="max-w-lg">
+        <Card.Header
+          start={<h2 className={cardTitleClasses}>Occupancy score</h2>}
+          end={<span className={mutedText(cardBodyTextClasses)}>This month</span>}
+        />
+        <Card.Body>
+          <div
+            className={`flex flex-col gap-2 py-4 ${cardLayoutBodyOccupantDotGridWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}
+          >
+            <div className={chartKpiHeroRowClasses}>
+              <span className={chartKpiHeroValueClasses}>{chartFormatPercent(occupied, total)}</span>
+              <div className={chartKpiTrendRowClasses}>
+                <span className={`${chartKpiTrendValueClasses} text-success`}>+4.2%</span>
+                <span className={chartKpiTrendLabelClasses}>From last month</span>
+              </div>
+            </div>
+            <Chart.Frame>
+              <Chart.SegmentedBar value={occupied} max={total} tone="primary" fill="velocity" />
+            </Chart.Frame>
+          </div>
+        </Card.Body>
+        <Card.Footer>
+          <span className={mutedText(cardBodyTextClasses)}>Occupied units: {occupied}/{total}</span>
+          <Button role="secondary" size="sm">
+            View breakdown
+          </Button>
+        </Card.Footer>
+      </Card>
+    );
+  },
 };
 
 export const RoundedStandalone: Story = {

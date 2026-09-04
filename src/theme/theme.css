@@ -11,6 +11,7 @@
 @import "./typography.css";
 @import "./grid.css";
 @import "./cluster.css";
+@import "./patterns.css";
 @import "./sources.css";
 
 @theme inline {
@@ -107,6 +108,20 @@
   --color-bg: var(--color-background-body);
 
   --color-focus-ring: var(--color-focus-ring);
+
+  /* Chart — categorical series (ADR-0013) */
+  --color-chart-categorical-1: var(--color-chart-categorical-1);
+  --color-chart-categorical-2: var(--color-chart-categorical-2);
+  --color-chart-categorical-3: var(--color-chart-categorical-3);
+  --color-chart-categorical-4: var(--color-chart-categorical-4);
+  --color-chart-categorical-5: var(--color-chart-categorical-5);
+  --color-chart-categorical-6: var(--color-chart-categorical-6);
+  --color-chart-categorical-7: var(--color-chart-categorical-7);
+  --color-chart-categorical-8: var(--color-chart-categorical-8);
+  --color-chart-categorical-9: var(--color-chart-categorical-9);
+  --color-chart-categorical-10: var(--color-chart-categorical-10);
+  --color-chart-categorical-11: var(--color-chart-categorical-11);
+  --color-chart-categorical-12: var(--color-chart-categorical-12);
 
   --font-sans: var(--font-family-body);
   --font-mono: var(--font-family-code);

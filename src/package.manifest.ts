@@ -34,7 +34,7 @@ export const packageManifest = {
   /** All planned component exports (flat). */
   componentExports: [...atoms, ...molecules, ...organisms] as const,
 
-  peerDependencies: ["react", "react-dom", "motion"] as const,
+  peerDependencies: ["react", "react-dom", "motion", "@visx/visx"] as const,
 
   libExternals: [
     "react",
@@ -42,9 +42,12 @@ export const packageManifest = {
     "react/jsx-runtime",
     "motion",
     "motion/react",
-    "recharts",
+    "@visx/visx",
     "lucide-react",
   ] as const,
+
+  /** Rollup external prefix — Chart imports granular `@visx/*` packages for tree-shaking. */
+  libExternalPrefixes: ["@visx/"] as const,
 
   /** Utilities that must appear in dist/styles.css after Tailwind CLI build. */
   requiredStyleTokens: [

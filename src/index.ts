@@ -66,6 +66,8 @@ export {
   cardBodyTextClasses,
   cardBodyWellClasses,
   cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantDotGridWellClasses,
+  cardLayoutBodyOccupantWellClasses,
   cardPaddings,
   cardShapes,
   cardSubtitleClasses,
@@ -102,6 +104,49 @@ export {
   type TaskRowsProps,
   type TaskRowsVariant,
 } from "./components/molecules/TaskRows/TaskRows";
+export {
+  Chart,
+  chartFormatPercent,
+  chartKpiHeroRowClasses,
+  chartKpiHeroValueClasses,
+  chartKpiTrendLabelClasses,
+  chartKpiTrendRowClasses,
+  chartKpiTrendValueClasses,
+  chartMaxTicksForWidth,
+  chartSegmentBarWidth,
+  chartSegmentFillVariants,
+  chartSegmentPresets,
+  chartSegmentTickSpec,
+  resolveCapacityBarLayout,
+  resolveSegmentBarConfig,
+  type ChartLayoutClassName,
+  type ChartSegmentFillVariant,
+  type ChartSegmentPreset,
+  type ChartSegmentedBarProps,
+  type ChartTone,
+} from "./components/organisms/Chart/Chart";
+export {
+  chartBucketPeriodData,
+  chartCategoricalCount,
+  chartCategoricalPalette,
+  chartNormalizePeriodData,
+  chartSeriesColor,
+  resolvePeriodSegmentPreset,
+  resolvePeriodSegments,
+  type ChartBucketPeriodOptions,
+  type ChartPeriod,
+  type ChartPeriodAggregate,
+  type ChartPeriodBucket,
+  type ChartPeriodKind,
+  type ChartPeriodPoint,
+  type ChartSegmentTickSpec,
+} from "./lib/chartTheme";
+export {
+  backgroundPatternDiagonalLinesClasses,
+  backgroundPatternDotGridClasses,
+  backgroundPatterns,
+  type BackgroundPatternId,
+} from "./lib/backgroundPatterns";
 export { cn } from "./lib/cn";
 export { GridOverlay, type GridOverlayProps } from "./lib/GridOverlay";
 export {

@@ -45,6 +45,7 @@ New visuals require a WMDS component or Example pattern — see **`docs/adr/0004
 - **Tailwind v4** recommended — import WMDS styles or theme
 - **Motion** — `npm install motion` when using animated components
 - **Lucide** — `lucide-react` for icons passed into component props
+- **visx** — `npm install @visx/visx` when using **Chart** (peer dep; WMDS composes `@visx/*` primitives — see **ADR-0012**)
 
 ## Install
 

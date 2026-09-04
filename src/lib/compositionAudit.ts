@@ -70,6 +70,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     ruleId: "lucide-import",
     reason: "Check / X passed into Badge iconOnly for default status leading marks.",
   },
+  {
+    file: "components/organisms/Chart/Chart.tsx",
+    ruleId: "inline-svg",
+    reason: "Chart owns visx-composed SVG marks (SegmentedBar, future Cartesian patterns) — ADR-0012.",
+  },
 ];
 
 /**

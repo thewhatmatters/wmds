@@ -2,8 +2,19 @@ import react from "@vitejs/plugin-react";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
+import { packageManifest } from "./src/package.manifest.ts";
 
 const dirname = typeof __dirname !== "undefined" ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+
+const libExternalPrefixes = packageManifest.libExternalPrefixes;
+
+function isLibExternal(id: string): boolean {
+  if (packageManifest.libExternals.includes(id as (typeof packageManifest.libExternals)[number])) {
+    return true;
+  }
+
+  return libExternalPrefixes.some((prefix) => id.startsWith(prefix));
+}
 
 /** Library bundle — React components only; styles ship via `dist/styles.css`. */
 export default defineConfig({
@@ -18,15 +29,7 @@ export default defineConfig({
     outDir: "dist",
     emptyOutDir: false,
     rollupOptions: {
-      external: [
-        "react",
-        "react-dom",
-        "react/jsx-runtime",
-        "motion",
-        "motion/react",
-        "recharts",
-        "lucide-react",
-      ],
+      external: isLibExternal,
       output: {
         preserveModules: false,
       },

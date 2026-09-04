@@ -1,0 +1,37 @@
+/**
+ * Background patterns — textures for Card occupants, chart canvases, empty states.
+ * Apply via backgroundPattern*Classes from src/lib/backgroundPatterns.ts.
+ */
+
+.wmds-pattern-dot-grid {
+  --wmds-pattern-dot-grid-size: 14px;
+  --wmds-pattern-dot-grid-dot: color-mix(in srgb, var(--color-text-primary) 8%, transparent);
+  background-color: var(--color-background-body);
+  background-image: radial-gradient(
+    circle,
+    var(--wmds-pattern-dot-grid-dot) 1px,
+    transparent 1px
+  );
+  background-size: var(--wmds-pattern-dot-grid-size) var(--wmds-pattern-dot-grid-size);
+}
+
+[data-theme="dark"] .wmds-pattern-dot-grid {
+  --wmds-pattern-dot-grid-dot: color-mix(in srgb, var(--color-text-primary) 12%, transparent);
+}
+
+.wmds-pattern-diagonal-lines {
+  --wmds-pattern-diagonal-lines-size: 14px;
+  --wmds-pattern-diagonal-lines-stroke: color-mix(in srgb, var(--color-text-primary) 8%, transparent);
+  background-color: var(--color-background-body);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--wmds-pattern-diagonal-lines-stroke) 0,
+    var(--wmds-pattern-diagonal-lines-stroke) 1px,
+    transparent 1px,
+    transparent var(--wmds-pattern-diagonal-lines-size)
+  );
+}
+
+[data-theme="dark"] .wmds-pattern-diagonal-lines {
+  --wmds-pattern-diagonal-lines-stroke: color-mix(in srgb, var(--color-text-primary) 12%, transparent);
+}

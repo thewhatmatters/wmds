@@ -12,6 +12,8 @@ import {
   cardBodyWellClasses,
   cardDividerClasses,
   cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantDotGridWellClasses,
+  cardLayoutBodyOccupantWellClasses,
   cardLayoutHeaderEndClasses,
   cardLayoutHeaderStartClasses,
   cardLayoutShellClasses,
@@ -162,6 +164,8 @@ export {
   cardBodyTextClasses,
   cardBodyWellClasses,
   cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantDotGridWellClasses,
+  cardLayoutBodyOccupantWellClasses,
   cardSubtitleClasses,
   cardTitleClasses,
 };
