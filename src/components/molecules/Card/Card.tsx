@@ -11,6 +11,7 @@ import {
   cardBodyTextClasses,
   cardBodyWellClasses,
   cardDividerClasses,
+  cardLayoutBodyOccupantInsetXClasses,
   cardLayoutHeaderEndClasses,
   cardLayoutHeaderStartClasses,
   cardLayoutShellClasses,
@@ -147,7 +148,7 @@ function CardDivider({ className, ...props }: HTMLAttributes<HTMLHRElement>) {
 /**
  * Content surface — [Astryx Card](https://astryx.atmeta.com/components/Card).
  * Layout cards (`padding="none"`) — shell + **Header** (`start` | `end`) + **Body** slot
- * (2px outside, square, no fill).
+ * (2px gutter, square, transparent — occupant owns fill and chrome).
  */
 export const Card = Object.assign(CardRoot, {
   Header: CardHeader,
@@ -160,6 +161,7 @@ export {
   cardAddressClasses,
   cardBodyTextClasses,
   cardBodyWellClasses,
+  cardLayoutBodyOccupantInsetXClasses,
   cardSubtitleClasses,
   cardTitleClasses,
 };

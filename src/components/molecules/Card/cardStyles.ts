@@ -35,14 +35,21 @@ export const cardRootPaddingClasses: Record<CardPadding, string> = {
 };
 
 /**
- * Layout card — header/footer on the shell (`p-4`); Body sits 2px from the
- * horizontal edges (`-mx-3.5` against that pad). Square slot — occupants
- * own radius and other chrome.
+ * Layout card — header/footer at 16px inset; Body gutter is 2px from the shell edge.
  */
-export const cardLayoutShellClasses = "gap-3 bg-surface p-4";
+export const cardLayoutShellClasses = "gap-3 bg-surface py-4";
 
-/** 16px shell pad − 14px pull = 2px of shell outside the Body slot. */
-export const cardLayoutSlotOutsetXClasses = "-mx-3.5";
+/** Horizontal inset for header/footer on the layout shell (16px). */
+export const cardLayoutSectionInsetXClasses = "px-4";
+
+/** Body gutter — 2px from the card shell edge; slot is full width inside. */
+export const cardLayoutBodyGutterClasses = "px-[2px]";
+
+/**
+ * Body occupant horizontal pad — 14px (`px-3.5`).
+ * With the 2px Body gutter, edges align with Header/Footer at 16px (`px-4`).
+ */
+export const cardLayoutBodyOccupantInsetXClasses = "px-3.5";
 
 export const cardLayoutShellShapeClasses: Record<CardShape, string> = {
   flush: "",
@@ -50,23 +57,31 @@ export const cardLayoutShellShapeClasses: Record<CardShape, string> = {
 };
 
 /** Header row — start | end. Occupants decide what lands in each slot. */
-export const cardLayoutHeaderClasses = "flex items-start justify-between gap-3";
+export const cardLayoutHeaderRowClasses = "flex items-start justify-between gap-3";
+
+export const cardLayoutHeaderClasses = [
+  cardLayoutSectionInsetXClasses,
+  cardLayoutHeaderRowClasses,
+].join(" ");
 
 /** Title + subtitle sit as one block — no flex gap; type leading is snug. */
 export const cardLayoutHeaderStartClasses = "flex min-w-0 flex-1 flex-col gap-0";
 
 export const cardLayoutHeaderEndClasses = "flex shrink-0 items-center gap-2";
 
-/** Body slot — 2px outside, square, no fill. Occupants own radius and background. */
+/** Body slot — full width inside 2px shell gutter; transparent. Occupant paint dictates the region. */
 export const cardLayoutBodyWellClasses = [
-  cardLayoutSlotOutsetXClasses,
-  "flex min-h-0 flex-col",
+  cardLayoutBodyGutterClasses,
+  "flex min-h-0 w-full flex-col",
 ].join(" ");
 
-/** Opt-in muted fill — put on the occupant, not on `Card.Body`. */
+/** Opt-in muted body fill for occupants — e.g. `className={cardBodyWellClasses}` on content inside `Card.Body`. */
 export const cardBodyWellClasses = "bg-body p-0.5";
 
-export const cardLayoutFooterClasses = "flex items-center justify-between gap-3";
+export const cardLayoutFooterClasses = [
+  cardLayoutSectionInsetXClasses,
+  "flex items-center justify-between gap-3",
+].join(" ");
 
 /** Simple padded cards — flat sections with dividers (legacy when padding md/lg + sections). */
 export const cardSectionPaddingClasses: Record<
@@ -79,12 +94,12 @@ export const cardSectionPaddingClasses: Record<
     footer: cardLayoutFooterClasses,
   },
   md: {
-    header: `${cardLayoutHeaderClasses} border-b border-border px-4 pb-3 pt-4`,
+    header: `${cardLayoutHeaderRowClasses} border-b border-border px-4 pb-3 pt-4`,
     body: "px-4 py-3",
     footer: "flex items-center justify-between gap-4 border-t border-border px-4 py-3",
   },
   lg: {
-    header: `${cardLayoutHeaderClasses} border-b border-border px-6 pb-4 pt-6`,
+    header: `${cardLayoutHeaderRowClasses} border-b border-border px-6 pb-4 pt-6`,
     body: "px-6 py-4",
     footer: "flex items-center justify-between gap-4 border-t border-border px-6 py-4",
   },

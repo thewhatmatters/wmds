@@ -44,6 +44,7 @@ export {
   cardAddressClasses,
   cardBodyTextClasses,
   cardBodyWellClasses,
+  cardLayoutBodyOccupantInsetXClasses,
   cardPaddings,
   cardShapes,
   cardSubtitleClasses,

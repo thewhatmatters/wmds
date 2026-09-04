@@ -14,13 +14,13 @@ export const buttonPillClass = "rounded-full";
 
 export const buttonBaseClasses =
   "inline-flex cursor-pointer items-center justify-center font-sans font-medium tracking-normal " +
-  "transition-[color,transform,box-shadow,border-color,outline-color] " +
+  "transition-[color,transform,box-shadow,border-color,outline-color,background-color] " +
   motionTransition("fast") +
   " " +
   pressScaleClass +
   " " +
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body " +
-  "disabled:pointer-events-none disabled:opacity-50";
+  "disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50";
 
 export const buttonRoleClasses: Record<ButtonRole, string> = {
   primary:

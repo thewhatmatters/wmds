@@ -10,6 +10,7 @@ import { TaskRows } from "../TaskRows/TaskRows";
 import {
   Card,
   cardBodyTextClasses,
+  cardLayoutBodyOccupantInsetXClasses,
   cardPaddings,
   cardShapes,
   cardSubtitleClasses,
@@ -44,13 +45,13 @@ const meta = {
         component: `
 ## Usage
 
-[Astryx Card](https://astryx.atmeta.com/components/Card) — **Header** and **Footer** sit on the shell; **Body** is a square **slot** 2px from the card edges. No default fill, radius, or inner pad — content inherits the shell and owns its own chrome.
+[Astryx Card](https://astryx.atmeta.com/components/Card) — **Header** and **Footer** sit on the shell; **Body** is a square **slot** 2px from the card edges. The slot has no default fill, radius, or inner pad — **the occupant dictates how the body region looks**. Background on the content (e.g. \`bg-body\`, TaskRows chrome) is what the card shows there; without it, the shell surface shows through.
 
 | Pattern | Composition |
 |---------|-------------|
-| **Layout** | \`Card padding="none"\` + \`Card.Header\` / \`Card.Body\` / \`Card.Footer\` — default; shell + Body slot (inherits fill) |
+| **Layout** | \`Card padding="none"\` + \`Card.Header\` / \`Card.Body\` / \`Card.Footer\` — default; shell + transparent Body slot |
 | **Header** | Horizontal \`start\` / \`end\` slots — title + subtitle, kebab, chips-as-tabs, Badge, or any cluster |
-| **Body slot** | Status rows, form, or custom UI — occupant owns chrome |
+| **Body slot** | TaskRows, form, or custom UI — occupant owns fill, radius, and padding |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
 
 Default \`shape="rounded"\` — \`rounded-2xl shadow-md\` on the shell. Use \`shape="flush"\` only when a parent owns outer radius and shadow.
@@ -58,22 +59,22 @@ Default \`shape="rounded"\` — \`rounded-2xl shadow-md\` on the shell. Use \`sh
 ## Anatomy
 
 \`\`\`
-Card (bg-surface shell, p-4, gap-3)
-├── Card.Header   — start | end slots — 16px inset
-├── Card.Body     — slot — 2px outside, square, no fill (inherits shell)
-└── Card.Footer   — status, actions (on shell, 16px inset)
+Card (bg-surface shell, py-4, gap-3)
+├── Card.Header   — start | end slots — 16px horizontal inset (px-4)
+├── Card.Body     — slot — 2px horizontal gutter (px-[2px]); transparent; occupant paints the region
+└── Card.Footer   — status, actions — 16px horizontal inset (px-4)
 \`\`\`
 
 ## Best practices
 
 - **Do** set \`padding="none"\` when using Header/Body/Footer.
 - **Do** put leading copy in \`start\` and trailing actions in \`end\` — do not hand-roll the header row.
-- **Do** treat \`Card.Body\` as a slot — TaskRows, Inputs, or custom UI all belong there.
+- **Do** use \`cardLayoutBodyOccupantInsetXClasses\` (\`px-3.5\` / 14px) on body occupants when horizontal edges should align with **Header** and **Footer** (2px gutter + 14px = 16px).
 - **Do** keep title, address, and meta in **Header**; primary actions in **Footer**.
 - **Do** use default \`shape="rounded"\` — detail overlays, dashboard widgets, map overlays.
 - **Do** use \`shape="flush"\` only when nested inside a parent that already owns radius and shadow.
 - **Don't** restrict the Body to TaskRows — that is one occupant, not the contract.
-- **Don't** put a muted fill on \`Card.Body\` — the slot inherits the shell.
+- **Don't** put fill or surface styling on \`Card.Body\` itself — only the 2px gutter belongs on the slot.
 - **Don't** re-theme the slot with \`className\` — put layout tweaks on the root only.
         `.trim(),
       },
@@ -107,7 +108,7 @@ export const Layout: Story = {
     docs: {
       description: {
         story:
-          "Default layout card — header/footer on the shell. **Body** is 2px from the card edges, square, no fill — content inherits the shell.",
+          "Default layout card — header/footer on the shell. **Body** is 2px from the card edges with no slot fill; this occupant has no background so the shell surface shows through.",
       },
     },
   },
@@ -128,6 +129,44 @@ export const Layout: Story = {
         <span className={mutedText(cardBodyTextClasses)}>1 of 4 in working hours</span>
         <Button role="primary" size="sm" icon={<Clock strokeWidth={2} />}>
           Find best time
+        </Button>
+      </Card.Footer>
+    </Card>
+  ),
+};
+
+export const BodyGutter: Story = {
+  name: "Pattern — body gutter",
+  parameters: {
+    wmdsLayout: "padded",
+    docs: {
+      description: {
+        story:
+          "**Card.Body** spans the full card width with **2px horizontal gutter** on the shell. The occupant's \`bg-body\` fill is what paints the body region — header and footer stay at **16px** inset on the shell.",
+      },
+    },
+  },
+  render: () => (
+    <Card shape="rounded" className="max-w-lg">
+      <Card.Header
+        start={
+          <>
+            <h2 className={cardTitleClasses}>Body gutter</h2>
+            <p className={cardSubtitleClasses}>Header and footer — 16px from the shell edge</p>
+          </>
+        }
+      />
+      <Card.Body>
+        <div className="flex min-h-28 items-center justify-center border border-dashed border-primary bg-body">
+          <p className={mutedText(cardBodyTextClasses)}>
+            Body slot — full width inside 2px shell gutter
+          </p>
+        </div>
+      </Card.Body>
+      <Card.Footer>
+        <span className={mutedText(cardBodyTextClasses)}>Compare dashed edge to header copy above</span>
+        <Button role="secondary" size="sm">
+          Action
         </Button>
       </Card.Footer>
     </Card>
@@ -202,8 +241,11 @@ export const BodySlotForm: Story = {
     wmdsLayout: "padded",
     docs: {
       description: {
-        story:
-          "Form controls in the Body slot — inherit the shell; the footer keeps the action.",
+        story: `
+Form controls in the Body slot — no occupant background here, so the shell surface shows through; the footer keeps the action.
+
+**Recommendation:** Header and footer sit at **16px** (\`px-4\`) from the shell edge. \`Card.Body\` adds a **2px** gutter — use **\`cardLayoutBodyOccupantInsetXClasses\`** (\`px-3.5\`, 14px) on the occupant so labels and fields align with the title and footer copy (2px + 14px = 16px).
+        `.trim(),
       },
     },
   },
@@ -218,7 +260,9 @@ export const BodySlotForm: Story = {
         }
       />
       <Card.Body>
-        <div className="flex flex-col gap-3 p-4">
+        <div
+          className={`flex flex-col gap-3 py-4 ${cardLayoutBodyOccupantInsetXClasses}`}
+        >
           <Input
             label="Home time zone"
             defaultValue="America/Chicago"
@@ -244,7 +288,7 @@ export const BodySlotStatusRows: Story = {
     docs: {
       description: {
         story:
-          "**TaskRows variant=\"list\"** in the Body slot — inherits the shell. No muted well. Status rows own their chrome.",
+          "**TaskRows variant=\"list\"** in the Body slot with \`inset\` — rows own their chrome; that content dictates the body appearance.",
       },
     },
   },

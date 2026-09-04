@@ -27,9 +27,9 @@ export const chipIconSizeClasses: Record<ChipSize, string> = {
   lg: "size-4 shrink-0 stroke-current",
 };
 
-export const chipSelectedClasses = "bg-surface text-fg shadow-hairline";
+export const chipSelectedClasses = "cursor-pointer bg-surface text-fg shadow-hairline";
 
-export const chipUnselectedClasses = "text-muted hover:bg-ghost-hover";
+export const chipUnselectedClasses = "cursor-pointer text-muted hover:bg-ghost-hover";
 
 /** Read-only labels — border only; no drop (sits flush in panels and cards). */
 export const chipReadOnlyClasses =
@@ -44,9 +44,9 @@ export const chipRemovableGapClasses: Record<ChipSize, string> = {
 
 /** Inset dismiss — chip height is fixed; button stays smaller than the shell. */
 export const chipRemoveButtonClasses: Record<ChipSize, string> = {
-  sm: "inline-flex size-5 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-ghost-hover hover:text-fg active:bg-ghost-active",
-  md: "inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-ghost-hover hover:text-fg active:bg-ghost-active",
-  lg: "inline-flex size-7 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-ghost-hover hover:text-fg active:bg-ghost-active",
+  sm: "inline-flex size-5 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted transition-colors hover:bg-ghost-hover hover:text-fg active:bg-ghost-active",
+  md: "inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted transition-colors hover:bg-ghost-hover hover:text-fg active:bg-ghost-active",
+  lg: "inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted transition-colors hover:bg-ghost-hover hover:text-fg active:bg-ghost-active",
 };
 
 export const chipRemoveIconClasses: Record<ChipSize, string> = {
