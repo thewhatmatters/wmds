@@ -18,7 +18,6 @@ import {
   taskRowsDetailLabelClasses,
   taskRowsDetailMetaClasses,
   taskRowsDetailRowClasses,
-  taskRowsDetailRowInteractiveClasses,
   taskRowsDetailsActionsClasses,
   taskRowsDetailsChipsClasses,
   taskRowsDetailsExpandOnlyClasses,
@@ -112,7 +111,7 @@ export interface TaskRowsItemProps {
 export interface TaskRowsDetailProps {
   label: ReactNode;
   meta?: ReactNode;
-  /** `row` — stacked detail line. `button` — secondary pill in `detailsLayout="actions"`. */
+  /** `row` — stacked detail line. `button` — secondary pill in `detailsLayout="actions"` (composes **Button** `size="xs"`). */
   variant?: TaskRowsDetailVariant;
   /** Leading Lucide icon — `detailsLayout="actions"` button rows (e.g. Apple, Google). */
   icon?: ReactElement;
@@ -310,7 +309,7 @@ function TaskRowsDetail({
     return (
       <Button
         role="secondary"
-        size="sm"
+        size="xs"
         type="button"
         icon={icon}
         className={cn(taskRowsDetailButtonClasses, className)}
@@ -330,13 +329,9 @@ function TaskRowsDetail({
 
   if (onPress) {
     return (
-      <button
-        type="button"
-        onClick={onPress}
-        className={cn(taskRowsDetailRowClasses, taskRowsDetailRowInteractiveClasses, className)}
-      >
+      <Button role="ghost" layout="row" type="button" onClick={onPress} className={className}>
         {content}
-      </button>
+      </Button>
     );
   }
 

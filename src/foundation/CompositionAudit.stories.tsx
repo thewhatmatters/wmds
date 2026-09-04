@@ -3,8 +3,9 @@ import { expect } from "storybook/test";
 import { cn } from "../lib/cn";
 import {
   auditCompositionSources,
-  compositionAuditAllowlist,
   compositionAuditRules,
+  compositionShellExceptions,
+  compositionTrackedOpenGaps,
   formatCompositionAuditReport,
   type CompositionAuditReport,
   type CompositionViolation,
@@ -112,15 +113,15 @@ function CompositionAuditReportView({ report }: { report: CompositionAuditReport
       </section>
 
       <ViolationTable
-        title="Unresolved violations"
-        rows={report.unresolved}
-        emptyMessage="No gaps — every hit is allowlisted or clean."
+        title="Open gaps (must be empty)"
+        rows={report.openGaps}
+        emptyMessage="No open gaps — every hit is an approved shell or clean."
       />
 
       <ViolationTable
-        title="Documented exceptions"
-        rows={report.allowlisted.map((row) => ({ ...row, reason: row.reason }))}
-        emptyMessage="No allowlisted exceptions."
+        title="Approved shells"
+        rows={report.shellExceptions.map((row) => ({ ...row, reason: row.reason }))}
+        emptyMessage="No documented shell exceptions."
       />
 
       <section className="rounded-lg border border-border bg-secondary/30 p-4">
@@ -154,7 +155,8 @@ Living report for **atomic composition** — scans molecule and organism compone
 | **Storybook** | This page + **Gate** story (automated test) |
 | **CI / local** | \`npm run test:unit\` → \`compositionAudit.test.ts\` |
 
-Documented shell exceptions live in \`src/lib/compositionAudit.ts\` → \`compositionAuditAllowlist\`.
+Documented shell exceptions live in \`src/lib/compositionAudit.ts\` → \`compositionShellExceptions\`.
+\`compositionTrackedOpenGaps\` must stay empty — add entries only while fixing known debt.
 
 ## Best practices
 
@@ -189,20 +191,22 @@ export const Gate: Story = {
   },
   play: async () => {
     const report = runCompositionAudit();
-    expect(report.unresolved, formatCompositionAuditReport(report)).toEqual([]);
+    expect(compositionTrackedOpenGaps).toEqual([]);
+    expect(report.openGaps, formatCompositionAuditReport(report)).toEqual([]);
   },
 };
 
-export const AllowlistReference: Story = {
-  name: "Allowlist reference",
+export const ShellExceptionsReference: Story = {
+  name: "Shell exceptions reference",
   render: () => (
     <div className="mx-auto max-w-3xl space-y-3 font-sans">
       <p className={cn(bodyClasses, "text-muted")}>
-        {compositionAuditAllowlist.length} documented exception(s) in{" "}
-        <code className="font-mono text-[0.8125rem]">compositionAuditAllowlist</code>.
+        {compositionShellExceptions.length} approved shell exception(s) in{" "}
+        <code className="font-mono text-[0.8125rem]">compositionShellExceptions</code>.
+        Tracked open gaps: {compositionTrackedOpenGaps.length} (must be 0).
       </p>
       <ul className="space-y-2">
-        {compositionAuditAllowlist.map((entry) => (
+        {compositionShellExceptions.map((entry) => (
           <li key={`${entry.file}:${entry.ruleId}`} className="rounded-lg border border-border bg-surface p-3">
             <p className={labelClasses}>
               <span className="font-mono text-[0.8125rem]">{entry.file}</span> · {entry.ruleId}

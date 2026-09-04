@@ -13,8 +13,12 @@ export type ButtonSize = "xs" | "sm" | "md" | "lg";
 
 export type IconButtonSize = ButtonSize;
 
-/** All buttons are pills — one prescribed shape (ADR-0004). */
+/** All action buttons are pills by default — `layout="row"` for flat full-width detail lines. */
 export const buttonPillClass = "rounded-full";
+
+export const buttonLayouts = ["pill", "row"] as const;
+
+export type ButtonLayout = (typeof buttonLayouts)[number];
 
 export const buttonBaseClasses =
   "inline-flex cursor-pointer items-center justify-center font-sans font-medium tracking-normal " +
@@ -67,3 +71,15 @@ export const iconButtonSizeClasses: Record<IconButtonSize, string> = {
   md: clusterSquareClasses.lg,
   lg: "size-12 shrink-0",
 };
+
+/** Flat full-width row — TaskRows detail lines, settings rows (not a pill CTA). */
+export const buttonRowBaseClasses =
+  "flex w-full cursor-pointer items-center font-sans tracking-normal " +
+  "transition-[color,background-color,outline-color] " +
+  motionTransition("fast") +
+  " focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring " +
+  "disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50";
+
+export const buttonRowLayoutClasses =
+  "h-auto min-h-0 justify-between gap-3 rounded-md px-1.5 py-1 text-left font-normal " +
+  "focus-visible:ring-inset focus-visible:ring-offset-0";

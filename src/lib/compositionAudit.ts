@@ -1,6 +1,6 @@
 /**
  * Static composition audit — molecules / organisms must compose atoms (ADR-0002, atomic-composition rule).
- * Run via Foundation → Composition audit (Storybook) or `npm run test:unit`.
+ * Run via Foundation → Composition audit (Storybook) or `npm run validate:composition`.
  */
 
 export type CompositionTier = "molecules" | "organisms";
@@ -22,24 +22,29 @@ export interface CompositionViolation {
   snippet: string;
 }
 
-export interface CompositionAllowlistEntry {
+export interface CompositionShellException {
   /** Path suffix — e.g. `components/molecules/Chip/Chip.tsx` */
   file: string;
   ruleId: string;
   reason: string;
 }
 
+/** @deprecated Use `CompositionShellException`. */
+export type CompositionAllowlistEntry = CompositionShellException;
+
 export interface CompositionAuditReport {
   tier: CompositionTier;
   scannedFiles: string[];
   violations: CompositionViolation[];
-  allowlisted: Array<CompositionViolation & { reason: string }>;
-  unresolved: CompositionViolation[];
+  /** Hits covered by documented molecule/organism shells — not composition gaps. */
+  shellExceptions: Array<CompositionViolation & { reason: string }>;
+  /** Unresolved hits — must stay empty for CI to pass. */
+  openGaps: CompositionViolation[];
   passed: boolean;
 }
 
-/** Documented shell / compose-at-call-site exceptions — keep reasons in sync with Storybook Anatomy. */
-export const compositionAuditAllowlist: CompositionAllowlistEntry[] = [
+/** Approved shell affordances — keep reasons in sync with Storybook Anatomy. */
+export const compositionShellExceptions: CompositionShellException[] = [
   {
     file: "components/molecules/Accordion/Accordion.tsx",
     ruleId: "lucide-import",
@@ -65,12 +70,16 @@ export const compositionAuditAllowlist: CompositionAllowlistEntry[] = [
     ruleId: "lucide-import",
     reason: "Check / X passed into Badge iconOnly for default status leading marks.",
   },
-  {
-    file: "components/molecules/TaskRows/TaskRows.tsx",
-    ruleId: "raw-button",
-    reason: "TaskRows.Detail row onPress — flat detail line; Button is pill-only (documented gap).",
-  },
 ];
+
+/**
+ * Registry of known composition debt — must stay empty.
+ * Add an entry only while fixing a gap; remove when resolved. CI fails when non-empty.
+ */
+export const compositionTrackedOpenGaps: CompositionShellException[] = [];
+
+/** @deprecated Use `compositionShellExceptions`. */
+export const compositionAuditAllowlist = compositionShellExceptions;
 
 export const compositionAuditRules: CompositionAuditRule[] = [
   {
@@ -141,20 +150,24 @@ export function shouldScanCompositionFile(path: string): boolean {
   return normalized.endsWith(".tsx") || normalized.endsWith(".ts");
 }
 
-function isAllowlisted(file: string, ruleId: string, allowlist: CompositionAllowlistEntry[]): boolean {
+function isShellException(
+  file: string,
+  ruleId: string,
+  shellExceptions: CompositionShellException[],
+): boolean {
   const normalized = normalizeAuditPath(file);
-  return allowlist.some(
+  return shellExceptions.some(
     (entry) => entry.ruleId === ruleId && normalized.endsWith(entry.file.replace(/^src\//, "")),
   );
 }
 
-function findAllowlistReason(
+function findShellExceptionReason(
   file: string,
   ruleId: string,
-  allowlist: CompositionAllowlistEntry[],
+  shellExceptions: CompositionShellException[],
 ): string | undefined {
   const normalized = normalizeAuditPath(file);
-  return allowlist.find(
+  return shellExceptions.find(
     (entry) => entry.ruleId === ruleId && normalized.endsWith(entry.file.replace(/^src\//, "")),
   )?.reason;
 }
@@ -162,11 +175,13 @@ function findAllowlistReason(
 export function auditCompositionSources(
   sources: Record<string, string>,
   options?: {
-    allowlist?: CompositionAllowlistEntry[];
+    /** @deprecated Use `shellExceptions`. */
+    allowlist?: CompositionShellException[];
+    shellExceptions?: CompositionShellException[];
     tier?: CompositionTier;
   },
 ): CompositionAuditReport {
-  const allowlist = options?.allowlist ?? compositionAuditAllowlist;
+  const shellExceptions = options?.shellExceptions ?? options?.allowlist ?? compositionShellExceptions;
   const violations: CompositionViolation[] = [];
 
   const scannedFiles = Object.keys(sources)
@@ -216,17 +231,17 @@ export function auditCompositionSources(
     }
   }
 
-  const allowlisted: Array<CompositionViolation & { reason: string }> = [];
-  const unresolved: CompositionViolation[] = [];
+  const shellExceptionHits: Array<CompositionViolation & { reason: string }> = [];
+  const openGaps: CompositionViolation[] = [];
 
   for (const violation of violations) {
-    if (isAllowlisted(violation.file, violation.ruleId, allowlist)) {
-      allowlisted.push({
+    if (isShellException(violation.file, violation.ruleId, shellExceptions)) {
+      shellExceptionHits.push({
         ...violation,
-        reason: findAllowlistReason(violation.file, violation.ruleId, allowlist) ?? "Allowlisted",
+        reason: findShellExceptionReason(violation.file, violation.ruleId, shellExceptions) ?? "Shell exception",
       });
     } else {
-      unresolved.push(violation);
+      openGaps.push(violation);
     }
   }
 
@@ -234,25 +249,34 @@ export function auditCompositionSources(
     tier: options?.tier ?? "molecules",
     scannedFiles,
     violations,
-    allowlisted,
-    unresolved,
-    passed: unresolved.length === 0,
+    shellExceptions: shellExceptionHits,
+    openGaps,
+    passed: openGaps.length === 0 && compositionTrackedOpenGaps.length === 0,
   };
 }
 
 export function formatCompositionAuditReport(report: CompositionAuditReport): string {
+  if (compositionTrackedOpenGaps.length > 0) {
+    return [
+      `Composition audit failed — ${compositionTrackedOpenGaps.length} tracked open gap(s) in compositionTrackedOpenGaps:`,
+      ...compositionTrackedOpenGaps.map(
+        (entry) => `  ${entry.file} [${entry.ruleId}] ${entry.reason}`,
+      ),
+    ].join("\n");
+  }
+
   if (report.passed) {
     return [
       `Composition audit passed (${report.scannedFiles.length} files).`,
-      report.allowlisted.length > 0
-        ? `${report.allowlisted.length} allowlisted exception(s) documented.`
-        : "No allowlisted exceptions.",
+      report.shellExceptions.length > 0
+        ? `${report.shellExceptions.length} approved shell exception(s) documented.`
+        : "No shell exceptions.",
     ].join("\n");
   }
 
   const lines = [
-    `Composition audit failed — ${report.unresolved.length} unresolved violation(s):`,
-    ...report.unresolved.map(
+    `Composition audit failed — ${report.openGaps.length} open gap(s):`,
+    ...report.openGaps.map(
       (violation) =>
         `  ${violation.file}:${violation.line} [${violation.ruleId}] ${violation.message} → ${violation.composeFrom}`,
     ),

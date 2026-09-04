@@ -8,13 +8,16 @@ import {
   buttonBaseClasses,
   buttonPillClass,
   buttonRoleClasses,
+  buttonRowBaseClasses,
+  buttonRowLayoutClasses,
   buttonSizeClasses,
+  type ButtonLayout,
   type ButtonRole,
   type ButtonSize,
 } from "./buttonStyles";
 
-export type { ButtonRole, ButtonSize } from "./buttonStyles";
-export { buttonRoles } from "./buttonStyles";
+export type { ButtonLayout, ButtonRole, ButtonSize } from "./buttonStyles";
+export { buttonLayouts, buttonRoles } from "./buttonStyles";
 export type { ButtonStatus } from "./buttonStatusStyles";
 export { defaultStatusLabels, getNextButtonStatus } from "./buttonStatusStyles";
 
@@ -26,6 +29,8 @@ export interface ButtonProps {
   children: ReactNode;
   /** Action role — primary CTA, secondary, ghost, or destructive. Default: `primary`. */
   role?: ButtonRole;
+  /** `pill` (default) or `row` — flat full-width lines for detail / settings rows. */
+  layout?: ButtonLayout;
   size?: ButtonSize;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
@@ -51,7 +56,13 @@ export interface ButtonProps {
   form?: string;
 }
 
-function assertActionPattern(props: Pick<ButtonProps, "status" | "icon" | "count">) {
+function assertActionPattern(
+  props: Pick<ButtonProps, "status" | "icon" | "count" | "layout">,
+) {
+  if (props.layout === "row" && (props.status != null || props.icon != null || props.count != null)) {
+    console.warn("[WMDS Button] `layout=\"row\"` is mutually exclusive with `status`, `icon`, and `count`.");
+  }
+
   if (props.status != null) {
     if (props.icon != null || props.count != null) {
       console.warn("[WMDS Button] `status` is mutually exclusive with `icon` and `count`.");
@@ -62,6 +73,7 @@ function assertActionPattern(props: Pick<ButtonProps, "status" | "icon" | "count
 export function Button({
   children,
   role = "primary",
+  layout = "pill",
   size = "md",
   disabled,
   type = "button",
@@ -77,7 +89,7 @@ export function Button({
   name,
   form,
 }: ButtonProps) {
-  assertActionPattern({ status, icon, count });
+  assertActionPattern({ status, icon, count, layout });
 
   if (status != null) {
     return (
@@ -98,6 +110,25 @@ export function Button({
       >
         {children}
       </ButtonStatusButton>
+    );
+  }
+
+  if (layout === "row") {
+    return (
+      <button
+        type={type}
+        disabled={disabled}
+        onClick={onClick}
+        aria-label={ariaLabel}
+        id={id}
+        name={name}
+        form={form}
+        className={cn(buttonRowBaseClasses, buttonRoleClasses[role], buttonRowLayoutClasses, className)}
+        data-role={role}
+        data-layout="row"
+      >
+        {children}
+      </button>
     );
   }
 

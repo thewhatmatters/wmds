@@ -2,7 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
-import { Button, buttonRoles, getNextButtonStatus, type ButtonStatus } from "./Button";
+import { Button, buttonLayouts, buttonRoles, getNextButtonStatus, type ButtonStatus } from "./Button";
+import { typographyClass } from "../../../lib/typography";
 
 const meta = {
   title: "Atoms/Button",
@@ -10,6 +11,7 @@ const meta = {
   tags: ["autodocs"],
   argTypes: {
     role: { control: "select", options: [...buttonRoles] },
+    layout: { control: "select", options: [...buttonLayouts] },
     size: { control: "select", options: ["xs", "sm", "md", "lg"] },
     status: { control: "select", options: ["idle", "loading", "success", "error"] },
     count: { control: "number" },
@@ -35,11 +37,12 @@ const meta = {
 | Pattern | Props |
 |---------|--------|
 | **Action** | \`role\` + label |
+| **Row** | \`layout="row"\` + \`role="ghost"\` — flat full-width detail / settings lines |
 | **With icon** | \`icon\` (Lucide) + \`role\` |
 | **With count** | \`count\` + \`role\` (inbox / notifications) |
 | **Submit / async** | \`status\` + optional \`statusLabels\` |
 
-Pill-shaped, token-driven. **Roles:** \`primary\` (main CTA), \`secondary\`, \`ghost\`, \`destructive\`. No semantic color variants — success/error live on \`status\` morph only.
+Pill-shaped by default (\`layout="pill"\`). **Row layout** is flat full-width — for TaskRows detail lines and settings rows. **Roles:** \`primary\` (main CTA), \`secondary\`, \`ghost\`, \`destructive\`. No semantic color variants — success/error live on \`status\` morph only.
 
 ## Best practices
 
@@ -96,6 +99,30 @@ export const SecondaryAction: Story = {
 export const GhostAction: Story = {
   name: "Pattern — ghost action",
   args: { role: "ghost", children: "Learn more" },
+};
+
+export const RowLayout: Story = {
+  name: "Pattern — row",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Flat full-width ghost row for detail lines (TaskRows.Detail) and settings lists. Mutually exclusive with `icon`, `count`, and `status`.",
+      },
+    },
+  },
+  render: () => (
+    <div className="max-w-md rounded-lg border border-border bg-surface p-3">
+      <Button role="ghost" layout="row" type="button" onClick={() => undefined}>
+        <span className={typographyClass("caption") + " text-muted"}>Due date</span>
+        <span className={typographyClass("caption")}>Sep 12</span>
+      </Button>
+      <Button role="ghost" layout="row" type="button" onClick={() => undefined}>
+        <span className={typographyClass("caption") + " text-muted"}>Assignee</span>
+        <span className={typographyClass("caption")}>Alex</span>
+      </Button>
+    </div>
+  ),
 };
 
 export const DestructiveAction: Story = {

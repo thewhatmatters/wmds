@@ -2,7 +2,9 @@
 export { Badge, type BadgeEmphasis, type BadgeLayoutClassName, type BadgeProps, type BadgeSize, type BadgeVariant, badgeEmphases, badgeVariants } from "./components/atoms/Badge/Badge";
 export {
   Button,
+  buttonLayouts,
   buttonRoles,
+  type ButtonLayout,
   type ButtonLayoutClassName,
   type ButtonProps,
   type ButtonRole,

@@ -53,9 +53,6 @@ export const taskRowsDetailsListClasses = "flex flex-col gap-1.5";
 export const taskRowsDetailRowClasses =
   "flex w-full items-center justify-between gap-3 text-left";
 
-export const taskRowsDetailRowInteractiveClasses =
-  "cursor-pointer rounded-md px-1 py-0.5 hover:bg-ghost-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring";
-
 export const taskRowsDetailLabelClasses = `${typographyClass("caption")} text-muted`;
 
 export const taskRowsDetailMetaClasses = `${typographyClass("caption")} font-mono tabular-nums text-muted`;

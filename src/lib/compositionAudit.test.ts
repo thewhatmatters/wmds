@@ -3,6 +3,7 @@ import { join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   auditCompositionSources,
+  compositionTrackedOpenGaps,
   formatCompositionAuditReport,
   shouldScanCompositionFile,
 } from "./compositionAudit";
@@ -48,11 +49,12 @@ function loadMoleculeAndOrganismSources(): Record<string, string> {
 }
 
 describe("compositionAudit", () => {
-  it("passes for shipped molecules and organisms (no unresolved composition gaps)", () => {
+  it("passes for shipped molecules and organisms (no open composition gaps)", () => {
     const sources = loadMoleculeAndOrganismSources();
     const report = auditCompositionSources(sources);
 
     expect(report.scannedFiles.length, "expected at least one molecule component file").toBeGreaterThan(0);
-    expect(report.unresolved, formatCompositionAuditReport(report)).toEqual([]);
+    expect(compositionTrackedOpenGaps, "remove tracked gaps by fixing them").toEqual([]);
+    expect(report.openGaps, formatCompositionAuditReport(report)).toEqual([]);
   });
 });

@@ -73,8 +73,8 @@ Expandable **task / action rows** — composes **Accordion** for disclosure, the
 |---------|-------------|
 | **Status rows** | \`variant="list"\` + \`status="done" \| "running" \| …\` |
 | **Capsules** | \`variant="capsule"\` — separated rounded rows (with or without **Card**) |
-| **Action details** | \`detailsLayout="actions"\` + \`TaskRows.Detail variant="button"\` |
-| **Tag chips** | \`detailsLayout="chips"\` + read-only **Chip** children |
+| **Action details** | \`detailsLayout="actions"\` + \`TaskRows.Detail variant="button"\` ( **Button** \`size="xs"\`) |
+| **Tag chips** | \`detailsLayout="chips"\` + read-only **Chip** \`size="sm"\` |
 | **Controlled expand** | \`open\` + \`onOpenChange\` on \`TaskRows.Item\` |
 
 See **Anatomy** for a live specimen and slot reference tables.
@@ -99,7 +99,7 @@ TaskRows
 - **Do** use \`variant="list"\` for agent / progress flows with \`status\`.
 - **Do** use \`variant="capsule"\` for separated expandable rows — standalone or in **Card.Body**.
 - **Do** use \`icon\` + \`status="none"\` for expand-only rows without task status UI.
-- **Do** use read-only **Chip** inside \`detailsLayout="chips"\` for tags and attributes.
+- **Do** use read-only **Chip** \`size="sm"\` inside \`detailsLayout="chips"\` — tags sit below \`ui-label\` row titles, not beside them.
 - **Do** use \`TaskRows.Detail\` with \`onPress\` for external actions — labels stay on one line (do not wrap).
 - **Don't** rely on cursor alone for expandable rows — the trigger band uses \`hover:bg-ghost-hover\`.
 - **Don't** use \`status="done"\` when the row is not a task/progress flow.
@@ -327,7 +327,7 @@ export const ActionDetails: Story = {
     docs: {
       description: {
         story:
-          "Expand-only service row — **TaskRows.Detail variant=\"button\"** composes **Button** for map / external app choices.",
+          "Expand-only service row — **TaskRows.Detail variant=\"button\"** composes **Button** `size=\"xs\"` for map / external app choices.",
       },
     },
   },
@@ -365,7 +365,7 @@ export const TagChips: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Read-only **Chip** children in `detailsLayout=\"chips\"` — tags and attributes, not filters.",
+        story: "Read-only **Chip** `size=\"sm\"` in `detailsLayout=\"chips\"` — tags and attributes, not filters.",
       },
     },
   },
@@ -373,9 +373,15 @@ export const TagChips: Story = {
     <div className="max-w-md p-4">
       <TaskRows variant="list">
         <TaskRows.Item label="Weekend market booth" meta="Sat–Sun" defaultOpen detailsLayout="chips">
-          <Chip readOnly>Outdoor</Chip>
-          <Chip readOnly>Produce</Chip>
-          <Chip readOnly>Card accepted</Chip>
+          <Chip readOnly size="sm">
+            Outdoor
+          </Chip>
+          <Chip readOnly size="sm">
+            Produce
+          </Chip>
+          <Chip readOnly size="sm">
+            Card accepted
+          </Chip>
         </TaskRows.Item>
       </TaskRows>
     </div>
