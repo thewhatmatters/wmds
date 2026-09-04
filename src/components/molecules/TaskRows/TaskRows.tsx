@@ -1,21 +1,19 @@
 import {
   createContext,
-  useCallback,
   useContext,
-  useId,
   useMemo,
-  useState,
   type HTMLAttributes,
   type ReactElement,
   type ReactNode,
 } from "react";
-import { Check, ChevronDown, RotateCw, X } from "lucide-react";
+import { Check, X } from "lucide-react";
+import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
+import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
+import { Status } from "../../atoms/Status/Status";
+import { Accordion } from "../Accordion/Accordion";
 import { cn } from "../../../lib/cn";
 import {
-  taskRowsChevronButtonClasses,
-  taskRowsChevronClasses,
-  taskRowsChevronOpenClasses,
   taskRowsDetailButtonClasses,
   taskRowsDetailLabelClasses,
   taskRowsDetailMetaClasses,
@@ -25,34 +23,14 @@ import {
   taskRowsDetailsChipsClasses,
   taskRowsDetailsExpandOnlyClasses,
   taskRowsDetailsGridClasses,
-  taskRowsDetailsInnerClasses,
   taskRowsDetailsLabelClasses,
   taskRowsDetailsListClasses,
   taskRowsDetailsPanelClasses,
   taskRowsDetailsPlainClasses,
   taskRowsDetailsRailClasses,
-  taskRowsExpandGridClasses,
-  taskRowsExpandGridClosedClasses,
-  taskRowsExpandGridOpenClasses,
-  taskRowsItemCapsuleClasses,
-  taskRowsItemCapsuleClosedClasses,
-  taskRowsItemCapsuleOpenClasses,
-  taskRowsItemHoverClasses,
-  taskRowsItemListClasses,
-  taskRowsLabelClasses,
-  taskRowsLeadingIconClasses,
   taskRowsMetaClasses,
-  taskRowsRootCapsuleClasses,
-  taskRowsRootListClasses,
-  taskRowsRootListInsetClasses,
-  taskRowsStatusBadgeBaseClasses,
-  taskRowsStatusBadgeDoneClasses,
-  taskRowsStatusBadgeFailedClasses,
-  taskRowsStatusPillBaseClasses,
-  taskRowsStatusPillDoneClasses,
-  taskRowsStatusPillFailedClasses,
   taskRowsStatusSlotClasses,
-  taskRowsTriggerClasses,
+  taskRowsTrailingClusterClasses,
   type TaskRowStatus,
   type TaskRowsDetailLayout,
   type TaskRowsDetailVariant,
@@ -103,9 +81,13 @@ export interface TaskRowsProps extends HTMLAttributes<HTMLDivElement> {
 export interface TaskRowsItemProps {
   /** Primary row label — task name, action title. */
   label: ReactNode;
-  /** Trailing summary — count, distance, duration. */
+  /** Trailing summary — convenience when `trailing` is omitted. Count, distance, duration. */
   meta?: ReactNode;
-  /** Leading Lucide icon for expand-only rows — not combinable with `status`. */
+  /** Entire trailing cluster — any content. When set, replaces default `meta` + status pill composition. */
+  trailing?: ReactNode;
+  /** Entire leading column — any content. When set, replaces default status / icon composition. */
+  leading?: ReactNode;
+  /** Leading Lucide icon for expand-only rows — not combinable with `status` when `leading` is omitted. */
   icon?: ReactElement;
   /** Progress / task status UI. Omit or `none` for expandable action rows (FM). */
   status?: TaskRowStatus;
@@ -138,69 +120,6 @@ export interface TaskRowsDetailProps {
   className?: TaskRowsLayoutClassName;
 }
 
-function TaskRowStatusRing({ active, step }: { active?: boolean; step?: number }) {
-  const size = 24;
-  const stroke = 2;
-  const radius = (size - stroke) / 2;
-  const circumference = 2 * Math.PI * radius;
-
-  return (
-    <span
-      className="relative inline-flex shrink-0 items-center justify-center"
-      style={{ width: size, height: size }}
-      aria-hidden
-    >
-      <svg
-        width={size}
-        height={size}
-        className={cn("absolute inset-0", active && "animate-spin")}
-      >
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          className="stroke-border"
-          strokeWidth={stroke}
-        />
-        {active ? (
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            fill="none"
-            className="stroke-muted"
-            strokeWidth={stroke}
-            strokeLinecap="round"
-            strokeDasharray={`${circumference * 0.28} ${circumference * 0.72}`}
-          />
-        ) : null}
-      </svg>
-      {step != null ? (
-        <span className="relative text-[0.65625rem] font-semibold tabular-nums text-fg">{step}</span>
-      ) : null}
-    </span>
-  );
-}
-
-function TaskRowStatusBadge({ status }: { status: Exclude<TaskRowStatus, "none" | "running" | "pending"> }) {
-  return (
-    <span
-      className={cn(
-        taskRowsStatusBadgeBaseClasses,
-        status === "done" ? taskRowsStatusBadgeDoneClasses : taskRowsStatusBadgeFailedClasses,
-      )}
-      aria-hidden
-    >
-      {status === "done" ? (
-        <Check strokeWidth={3.5} className="size-3 stroke-current" />
-      ) : (
-        <X strokeWidth={3.5} className="size-3 stroke-current" />
-      )}
-    </span>
-  );
-}
-
 function TaskRowsRoot({
   variant = "list",
   inset = false,
@@ -217,22 +136,11 @@ function TaskRowsRoot({
     [labels, variant],
   );
 
-  const rootListClasses =
-    variant === "list" && inset ? taskRowsRootListInsetClasses : taskRowsRootListClasses;
-
   return (
     <TaskRowsContext.Provider value={contextValue}>
-      <div
-        className={cn(
-          variant === "list" ? rootListClasses : taskRowsRootCapsuleClasses,
-          className,
-        )}
-        data-variant={variant}
-        data-inset={inset ? "true" : undefined}
-        {...props}
-      >
+      <Accordion variant={variant} inset={inset} className={className} {...props}>
         {children}
-      </div>
+      </Accordion>
     </TaskRowsContext.Provider>
   );
 }
@@ -283,140 +191,110 @@ function TaskRowsItemDetails({
 function TaskRowsItem({
   label,
   meta,
+  trailing,
+  leading,
   icon,
   status = "none",
   step,
   statusLabel,
   defaultOpen = false,
-  open: openProp,
+  open,
   onOpenChange,
   detailsLayout = "stack",
   detailsLabel,
   children,
   className,
 }: TaskRowsItemProps) {
-  const { variant, labels } = useContext(TaskRowsContext);
-  const detailId = useId();
-  const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  const isControlled = openProp !== undefined;
-  const open = isControlled ? openProp : internalOpen;
+  const { labels } = useContext(TaskRowsContext);
   const hasDetails = children != null;
-  const showLeading = status !== "none" || icon != null;
+  const showLeading = leading != null || status !== "none" || icon != null;
 
-  if (icon != null && status !== "none") {
+  if (leading == null && icon != null && status !== "none") {
     console.warn("[WMDS TaskRows] `icon` is not combinable with `status` — icon is ignored.");
   }
 
-  const setOpen = useCallback(
-    (next: boolean) => {
-      if (!isControlled) {
-        setInternalOpen(next);
-      }
-      onOpenChange?.(next);
-    },
-    [isControlled, onOpenChange],
-  );
+  if (leading != null && (status !== "none" || icon != null)) {
+    console.warn(
+      "[WMDS TaskRows] `leading` replaces default status/icon composition — `status` still drives trailing pill when `trailing` is omitted.",
+    );
+  }
 
-  const statusBadge = (() => {
-    if (status === "none") return null;
-    if (status === "done" || status === "failed") {
-      return <TaskRowStatusBadge status={status} />;
-    }
-    return <TaskRowStatusRing active={status === "running"} step={step} />;
-  })();
-
-  const statusPill = (() => {
-    if (statusLabel != null) return statusLabel;
+  const defaultLeading = (() => {
     if (status === "done") {
-      return (
-        <span className={cn(taskRowsStatusPillBaseClasses, taskRowsStatusPillDoneClasses)}>
-          {labels.completed}
-        </span>
-      );
+      return <Badge variant="success" icon={<Check strokeWidth={3.5} />} iconOnly />;
     }
     if (status === "failed") {
+      return <Badge variant="destructive" icon={<X strokeWidth={3.5} />} iconOnly />;
+    }
+    if (status === "running" || status === "pending") {
+      return <Status variant="ring" active={status === "running"} step={step} besideLabel />;
+    }
+    if (icon) {
       return (
-        <span className={cn(taskRowsStatusPillBaseClasses, taskRowsStatusPillFailedClasses)}>
-          {labels.failed}
-          <RotateCw strokeWidth={3} className="size-3 animate-spin stroke-current" aria-hidden />
+        <span className="text-muted" aria-hidden>
+          <ButtonIcon size="sm">{icon}</ButtonIcon>
         </span>
       );
     }
     return null;
   })();
 
-  const trigger = (
-    <>
-      {showLeading ? (
-        <span className={taskRowsStatusSlotClasses}>
-          {status !== "none" ? (
-            statusBadge
-          ) : icon ? (
-            <span className={taskRowsLeadingIconClasses} aria-hidden>
-              {icon}
-            </span>
-          ) : null}
-        </span>
-      ) : null}
-      <span className={taskRowsLabelClasses}>{label}</span>
-      {meta ? <span className={taskRowsMetaClasses}>{meta}</span> : null}
-      {statusPill}
-      {hasDetails ? (
-        <span className={taskRowsChevronButtonClasses} aria-hidden>
-          <ChevronDown
-            strokeWidth={2.2}
-            className={cn(taskRowsChevronClasses, open && taskRowsChevronOpenClasses)}
-          />
-        </span>
-      ) : null}
-    </>
-  );
+  const leadingContent = leading ?? defaultLeading;
+
+  const statusPill = (() => {
+    if (statusLabel != null) return statusLabel;
+    if (status === "done") {
+      return (
+        <Badge variant="success" emphasis="muted">
+          {labels.completed}
+        </Badge>
+      );
+    }
+    if (status === "failed") {
+      return (
+        <Badge variant="destructive" emphasis="muted">
+          {labels.failed}
+        </Badge>
+      );
+    }
+    return null;
+  })();
+
+  const hasTrailingCluster = trailing != null || meta != null || statusPill != null;
+
+  const trailingClusterContent =
+    trailing != null ? (
+      trailing
+    ) : (
+      <>
+        {meta != null ? <span className={taskRowsMetaClasses}>{meta}</span> : null}
+        {statusPill}
+      </>
+    );
 
   return (
-    <div
-      className={cn(
-        variant === "list" ? taskRowsItemListClasses : taskRowsItemCapsuleClasses,
-        variant === "capsule" &&
-          (open ? taskRowsItemCapsuleOpenClasses : taskRowsItemCapsuleClosedClasses),
-        variant === "capsule" && hasDetails && taskRowsItemHoverClasses,
-        className,
-      )}
+    <Accordion.Item
+      label={label}
+      leading={showLeading ? <span className={taskRowsStatusSlotClasses}>{leadingContent}</span> : undefined}
+      trailing={hasTrailingCluster ? (
+        <span className={taskRowsTrailingClusterClasses}>{trailingClusterContent}</span>
+      ) : undefined}
+      defaultOpen={defaultOpen}
+      open={open}
+      onOpenChange={onOpenChange}
+      className={className}
     >
       {hasDetails ? (
-        <button
-          type="button"
-          className={taskRowsTriggerClasses}
-          aria-expanded={open}
-          aria-controls={detailId}
-          onClick={() => setOpen(!open)}
+        <TaskRowsItemDetails
+          showLeading={showLeading}
+          status={status}
+          detailsLayout={detailsLayout}
+          detailsLabel={detailsLabel}
         >
-          {trigger}
-        </button>
-      ) : (
-        <div className={taskRowsTriggerClasses}>{trigger}</div>
-      )}
-
-      {hasDetails ? (
-        <div
-          id={detailId}
-          className={cn(
-            taskRowsExpandGridClasses,
-            open ? taskRowsExpandGridOpenClasses : taskRowsExpandGridClosedClasses,
-          )}
-        >
-          <div className={taskRowsDetailsInnerClasses}>
-            <TaskRowsItemDetails
-              showLeading={showLeading}
-              status={status}
-              detailsLayout={detailsLayout}
-              detailsLabel={detailsLabel}
-            >
-              {children}
-            </TaskRowsItemDetails>
-          </div>
-        </div>
-      ) : null}
-    </div>
+          {children}
+        </TaskRowsItemDetails>
+      ) : undefined}
+    </Accordion.Item>
   );
 }
 

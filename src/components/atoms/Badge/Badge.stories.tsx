@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Tag } from "lucide-react";
+import { Check, Tag, X } from "lucide-react";
 import { Button } from "../Button/Button";
 import { Badge, badgeVariants, type BadgeVariant } from "./Badge";
 
@@ -10,8 +10,10 @@ const meta = {
   argTypes: {
     variant: { control: "select", options: [...badgeVariants] },
     size: { control: "select", options: ["sm", "md"] },
+    emphasis: { control: "select", options: ["solid", "muted"] },
     count: { control: "number" },
     icon: { control: false },
+    iconOnly: { control: "boolean" },
     children: { control: "text" },
   },
   args: {
@@ -30,8 +32,10 @@ const meta = {
 | Pattern | Props |
 |---------|--------|
 | **Status label** | \`variant\` + label |
+| **Muted label** | \`emphasis="muted"\` + \`variant\` + label |
 | **Count** | \`count\` + \`variant\` |
 | **With icon** | \`icon\` (Lucide) + \`variant\` + label |
+| **Icon only** | \`iconOnly\` + \`icon\` + \`variant\` — **TaskRows** leading done/failed |
 
 Solid semantic fills inspired by [Astryx Badge](https://astryx.atmeta.com/components/Badge). **Variants:** \`neutral\` (categories), \`info\`, \`success\`, \`warning\`, \`destructive\` (status). Maps Astryx \`error\` → **\`destructive\`**.
 
@@ -39,7 +43,7 @@ Solid semantic fills inspired by [Astryx Badge](https://astryx.atmeta.com/compon
 
 - **Do** badge states that need attention — errors, warnings, follow-up items.
 - **Do** keep labels to one or two words; use surrounding text for detail.
-- **Do** pair StatusDot **beside** a label in list rows — not inside Badge.
+- **Do** pair **Status** \`variant="dot"\` beside a label in list rows — not inside Badge.
 - **Don't** badge every healthy row — if all items show green "Active", none stand out.
 - **Don't** use badges for metadata (dates, durations) — use supporting text.
 - **Don't** make badges clickable — use Button or Link for actions.
@@ -80,6 +84,68 @@ export const SemanticVariants: Story = {
   ),
 };
 
+export const WithIcon: Story = {
+  name: "Pattern — with icon",
+  parameters: {
+    docs: {
+      description: {
+        story: "Leading Lucide icon — same padding shell as the label pattern at each size.",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex flex-wrap items-center gap-3">
+      <Badge variant="info" size="sm" icon={<Tag />}>
+        Engineering
+      </Badge>
+      <Badge variant="info" size="md" icon={<Tag />}>
+        Engineering
+      </Badge>
+    </div>
+  ),
+};
+
+export const MutedEmphasis: Story = {
+  name: "Pattern — muted emphasis",
+  parameters: {
+    docs: {
+      description: {
+        story: "Soft semantic fills — **TaskRows** trailing completed/failed copy.",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex flex-wrap items-center gap-2">
+      <Badge variant="success" emphasis="muted">
+        Completed
+      </Badge>
+      <Badge variant="destructive" emphasis="muted">
+        Failed
+      </Badge>
+      <Badge variant="info" emphasis="muted">
+        In review
+      </Badge>
+    </div>
+  ),
+};
+
+export const IconOnly: Story = {
+  name: "Pattern — icon only",
+  parameters: {
+    docs: {
+      description: {
+        story: "22px circular outcome marks — **TaskRows** leading column for done/failed.",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex items-center gap-3">
+      <Badge variant="success" icon={<Check strokeWidth={3.5} />} iconOnly />
+      <Badge variant="destructive" icon={<X strokeWidth={3.5} />} iconOnly />
+    </div>
+  ),
+};
+
 export const StatusLabels: Story = {
   name: "Status labels in context",
   parameters: {
@@ -106,27 +172,6 @@ export const StatusLabels: Story = {
           <Badge variant="info">In review</Badge>
         </div>
       </div>
-    </div>
-  ),
-};
-
-export const WithIcon: Story = {
-  name: "Pattern — with icon",
-  parameters: {
-    docs: {
-      description: {
-        story: "Leading Lucide icon — same padding shell as the label pattern at each size.",
-      },
-    },
-  },
-  render: () => (
-    <div className="flex flex-wrap items-center gap-3">
-      <Badge variant="info" size="sm" icon={<Tag />}>
-        Engineering
-      </Badge>
-      <Badge variant="info" size="md" icon={<Tag />}>
-        Engineering
-      </Badge>
     </div>
   ),
 };

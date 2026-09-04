@@ -7,7 +7,7 @@ WMDS is **not** utility-class-first. You do **not** build product UI by composin
 **Do this:**
 
 ```tsx
-import { Button, Badge, Chip, ChipFilterGroup, IconButton, Input, StatusDot } from "@whatmatters/wmds";
+import { Button, Badge, Chip, ChipFilterGroup, IconButton, Input, Status } from "@whatmatters/wmds";
 import "@whatmatters/wmds/styles.css";
 
 <Button status={status}>Submit</Button>
@@ -16,7 +16,7 @@ import "@whatmatters/wmds/styles.css";
 <IconButton icon={<Settings strokeWidth={2} />} aria-label="Open settings" title="Settings" />
 <Badge variant="success">Online</Badge>
 <span className="inline-flex items-center gap-1.5">
-  <StatusDot variant="success" besideLabel />
+  <Status variant="dot" tone="success" besideLabel />
   Online
 </span>
 ```
@@ -137,7 +137,8 @@ import {
   ChipFilterGroup,
   Input,
   Search,
-  StatusDot,
+  Status,
+  Accordion,
   TaskRows,
   buttonRoles,
   getNextButtonStatus,
@@ -154,9 +155,10 @@ import {
 | `Input` | `label`, `description`, `status`, `message`, `loading`, `endBadge`, `icon`, `size` | Atoms/Input — pill shell; Required via `endBadge={<Badge>…</Badge>}` |
 | `Search` | `size`, `placeholder`, `onSubmit` | Molecules/Search — inline input + button row |
 | `Card` | `variant`, `shape`, `padding` | Molecules/Card — `Card.Header` (`start` | `end`), **`Card.Body` slot** (no default fill), `Card.Footer` |
-| `TaskRows` | `variant`, `detailsLayout` | Molecules/TaskRows — **Pattern — status rows** or **Pattern — capsules** |
-| `Badge` | `variant`, `size`, `count`, `icon` | Atoms/Badge — copy a **Pattern** story |
-| `StatusDot` | `variant`, `label`, `besideLabel`, `pulsing` | Atoms/StatusDot — copy a **Pattern** story |
+| `Accordion` | `variant`, `Accordion.Item` `leading` / `label` / `trailing` / `open` | Molecules/Accordion — FAQ, settings sections |
+| `TaskRows` | `variant`, `status`, `meta`, `detailsLayout` | Molecules/TaskRows — composes **Accordion**; **Pattern — status rows** or **capsules** |
+| `Badge` | `variant`, `size`, `emphasis`, `count`, `icon`, `iconOnly` | Atoms/Badge — copy a **Pattern** story |
+| `Status` | `variant`, `tone`, `label`, `besideLabel`, `pulsing`, `active`, `step` | Atoms/Status — `variant="ring"` or `variant="dot"` |
 
 Copy flow patterns from **Examples/** in Storybook when they ship. See **`src/package.manifest.ts`** for the export contract.
 

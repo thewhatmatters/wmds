@@ -29,7 +29,7 @@ Foundation and Theme are sub-component layers (tokens, specimens) — not atomic
 
 ### Planned catalog (initial taxonomy)
 
-**Atoms:** Badge, Button, IconButton, Input, TextArea, StatusDot, StatusRing
+**Atoms:** Badge, Button, IconButton, Input, TextArea, Status
 
 **Molecules:** Card, Chip, Field, List, Pagination, Search, Select
 

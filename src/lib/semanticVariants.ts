@@ -1,4 +1,4 @@
-/** Shared semantic palette roles — menu destructive rows. StatusDot styles live in statusDotStyles.ts. */
+/** Shared semantic palette roles — menu destructive rows. Status dot tones live in statusDotStyles.ts. */
 export type SemanticVariant = "neutral" | "info" | "success" | "warning" | "destructive";
 
 export const semanticMenuDestructiveItemClasses =

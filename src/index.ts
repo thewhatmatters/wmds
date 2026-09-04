@@ -1,5 +1,5 @@
 /** Package export surface — grows as Components ship. See src/package.manifest.ts for the full manifest. */
-export { Badge, type BadgeLayoutClassName, type BadgeProps, type BadgeSize, type BadgeVariant, badgeVariants } from "./components/atoms/Badge/Badge";
+export { Badge, type BadgeEmphasis, type BadgeLayoutClassName, type BadgeProps, type BadgeSize, type BadgeVariant, badgeEmphases, badgeVariants } from "./components/atoms/Badge/Badge";
 export {
   Button,
   buttonRoles,
@@ -28,7 +28,18 @@ export {
   type InputSize,
   type InputStatus,
 } from "./components/atoms/Input/Input";
-export { StatusDot, statusDotVariants, type StatusDotLayoutClassName, type StatusDotProps, type StatusDotVariant } from "./components/atoms/StatusDot/StatusDot";
+export {
+  Status,
+  statusRingSizePx,
+  statusTones,
+  statusVariants,
+  type StatusDotVariantProps,
+  type StatusLayoutClassName,
+  type StatusProps,
+  type StatusRingVariantProps,
+  type StatusTone,
+  type StatusVariant,
+} from "./components/atoms/Status/Status";
 export {
   Chip,
   ChipFilterGroup,
@@ -39,6 +50,14 @@ export {
   type ChipSelectionMode,
   type ChipSize,
 } from "./components/molecules/Chip/Chip";
+export {
+  Accordion,
+  accordionVariants,
+  type AccordionItemProps,
+  type AccordionLayoutClassName,
+  type AccordionProps,
+  type AccordionVariant,
+} from "./components/molecules/Accordion/Accordion";
 export {
   Card,
   cardAddressClasses,

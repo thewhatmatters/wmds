@@ -15,12 +15,14 @@ Every **visual affordance** inside a molecule must come from an **existing atom*
 |------------|--------------|----------|
 | Icon-only action (×, kebab, edit) | **`IconButton`** (`inset` for chip innards) | Raw `<button>` + Lucide + local classes |
 | Leading Lucide glyph | **`ButtonIcon`** / **`BadgeIcon`** | Molecule-local `*Icon.tsx` wrappers |
-| Status / category label | **`Badge`** | Hand-rolled pill spans |
+| Status / category label | **`Badge`** (`emphasis="muted"` for soft copy) | Hand-rolled pill spans |
+| Outcome mark (✓ / × circle) | **`Badge iconOnly`** | Custom filled circles in molecules |
 | Segment / filter count | **`BadgeSegmentCount`** | `CountPill` or inline count spans in `lib/` |
 | Text field | **`Input`** / **`TextArea`** | Custom input shells |
 | Primary/secondary action | **`Button`** | Styled `<button>` with `bg-primary` |
 | Loading spinner in control | **`ButtonSpinner`** | Ad-hoc SVG/CSS spinners |
-| 8px semantic dot | **`StatusDot`** | Custom dots |
+| 8px semantic dot | **`Status variant="dot"`** | Custom dots |
+| Task progress ring (24px) | **`Status variant="ring"`** | Inline SVG rings in molecules |
 
 ## When sizing doesn't fit
 
@@ -33,7 +35,7 @@ Example: removable **Chip** dismiss → `IconButton inset`, not `chipRemoveButto
 - `*Styles.ts` for the **molecule shell** (Card gutter, Chip filter toggle, TaskRows row chrome)
 - Context providers (`ChipFilterGroup`), compound slots documented in Storybook
 - **`lib/`** helpers that are **not** visual affordances (motion, cn, typography maps)
-- Composing other **molecules** when documented (TaskRows + Chip, Search + Button + Input)
+- Composing other **molecules** when documented (TaskRows + Chip, Search + Button + Input; **TaskRows** composes **Accordion**)
 
 ## Before finishing a molecule PR
 

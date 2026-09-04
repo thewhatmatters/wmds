@@ -38,8 +38,8 @@ npm run build       # dist/theme.css + dist/styles.css
 
 | Tier | Components |
 |------|------------|
-| Atoms | `Badge`, `Button`, `IconButton`, `Input`, `StatusDot` |
-| Molecules | `Card`, `Chip`, `ChipFilterGroup`, `Search`, `TaskRows` |
+| Atoms | `Badge`, `Button`, `IconButton`, `Input`, `Status` |
+| Molecules | `Accordion`, `Card`, `Chip`, `ChipFilterGroup`, `Search`, `TaskRows` |
 
 **Storybook-only:** **Examples/** tier — page-level compositions for copy-paste; not package exports.
 

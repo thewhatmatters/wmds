@@ -60,7 +60,7 @@ export const Usage: Story = {
       <p className="text-muted">
         Prefer <code className="font-mono text-xs">strokeWidth={"{2}"}</code> on 16–18px glyphs;
         use <code className="font-mono text-xs">strokeWidth={"{3}"}</code> inside small containers
-        like StatusDot.
+        like **Status** \`variant="dot"\`.
       </p>
     </div>
   ),

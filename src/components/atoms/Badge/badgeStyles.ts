@@ -7,6 +7,10 @@ export type BadgeVariant = (typeof badgeVariants)[number];
 
 export type BadgeSize = "sm" | "md";
 
+export const badgeEmphases = ["solid", "muted"] as const;
+
+export type BadgeEmphasis = (typeof badgeEmphases)[number];
+
 /** Shared shell — Astryx-style compact pill labels. */
 export const badgeBaseClasses =
   "inline-flex shrink-0 items-center justify-center font-sans font-medium tracking-normal";
@@ -22,6 +26,19 @@ export const badgeSolidClasses: Record<BadgeVariant, string> = {
   warning: "bg-warning text-on-warning",
   destructive: "bg-error text-on-error",
 };
+
+/** Soft semantic fills — task row trailing pills, subtle status copy. */
+export const badgeMutedClasses: Record<BadgeVariant, string> = {
+  neutral: "border border-border bg-secondary text-secondary-foreground",
+  info: "bg-info-muted text-info",
+  success: "bg-success-muted text-success",
+  warning: "bg-warning-muted text-warning",
+  destructive: "bg-error-muted text-error",
+};
+
+export function badgeSurfaceClasses(variant: BadgeVariant, emphasis: BadgeEmphasis): string {
+  return emphasis === "muted" ? badgeMutedClasses[variant] : badgeSolidClasses[variant];
+}
 
 /** Label sizing — text-only and icon patterns share the same padding shell. */
 export const badgeLabelSizeClasses: Record<BadgeSize, string> = {
@@ -45,6 +62,9 @@ export const badgeCountSizeClasses: Record<BadgeSize, string> = {
   sm: "min-h-[1.125rem] min-w-[1.125rem] rounded-full px-1 text-xs leading-none tabular-nums",
   md: "min-h-[1.25rem] min-w-[1.25rem] rounded-full px-1 text-sm leading-none tabular-nums",
 };
+
+/** Icon-only circle — **TaskRows** leading done/failed (22px). */
+export const badgeIconOnlySizeClasses = "size-[1.375rem] rounded-full p-0";
 
 /** Internal — trailing count on secondary/primary buttons. */
 export const badgeOnButtonCountClasses =
