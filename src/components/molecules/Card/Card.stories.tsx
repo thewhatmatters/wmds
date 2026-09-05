@@ -1,10 +1,11 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Clock, EllipsisVertical, Globe } from "lucide-react";
+import { Download, Globe, Share2 } from "lucide-react";
 import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
-import { IconButton } from "../../atoms/IconButton/IconButton";
+import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
 import { Input } from "../../atoms/Input/Input";
+import { MoreMenu } from "../../organisms/MoreMenu/MoreMenu";
 import { SegmentedControl } from "../SegmentedControl/SegmentedControl";
 import { iconButtonSizeForCluster } from "../../../lib/clusterScale";
 import { buildOccupancyAreaSeries } from "../../../lib/chartSampleData";
@@ -100,7 +101,7 @@ const meta = {
 | Pattern | Composition |
 |---------|-------------|
 | **Layout** | \`Card padding="none"\` + \`Card.Header\` / \`Card.Body\` / \`Card.Footer\` — default; shell + transparent Body slot |
-| **Header** | Horizontal \`start\` / \`end\` slots — title + subtitle, **SegmentedControl**, kebab, filter **Chip** rail, Badge, or any cluster |
+| **Header** | Horizontal \`start\` / \`end\` slots — title + subtitle, **SegmentedControl**, **MoreMenu**, filter **Chip** rail, Badge, or any cluster |
 | **Body slot** | TaskRows, form, **Chart** (SegmentedBar KPI or **Cartesian** history), or custom UI — occupant owns fill, radius, and padding |
 | **Inset well** | \`cardLayoutBodyOccupantWellClasses\` on the occupant — \`bg-body\` + concentric **14px** radius (\`rounded-[14px]\`); dot-grid → \`cardLayoutBodyOccupantDotGridWellClasses\` |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
@@ -237,7 +238,7 @@ export const HeaderSlots: Story = {
     docs: {
       description: {
         story:
-          "**Header** is two horizontal slots. `start` and `end` take any cluster — title + subtitle, **SegmentedControl** view switcher, kebab **IconButton**, Badge. **SegmentedControl** / filter **Chip** at **`sm`** pair with **IconButton** **`xs`** (cluster sm, 28px) — see **Foundation → Cluster**.",
+          "**Header** is two horizontal slots. `start` and `end` take any cluster — title + subtitle, **SegmentedControl** view switcher, **MoreMenu** kebab, Badge. **SegmentedControl** / filter **Chip** at **`sm`** pair with **MoreMenu** / **IconButton** **`xs`** (cluster sm, 28px) — see **Foundation → Cluster**.",
       },
     },
   },
@@ -264,12 +265,30 @@ export const HeaderSlots: Story = {
                 <SegmentedControl.Item value="overview">Overview</SegmentedControl.Item>
                 <SegmentedControl.Item value="hours">Hours</SegmentedControl.Item>
               </SegmentedControl>
-              <IconButton
-                icon={<EllipsisVertical strokeWidth={2} />}
+              <MoreMenu
                 aria-label="More market actions"
-                title="More"
-                role="ghost"
                 size={iconButtonSizeForCluster("sm")}
+                items={[
+                  {
+                    id: "export",
+                    label: "Export",
+                    start: (
+                      <ButtonIcon size="sm">
+                        <Download strokeWidth={2} />
+                      </ButtonIcon>
+                    ),
+                  },
+                  {
+                    id: "share",
+                    label: "Share",
+                    start: (
+                      <ButtonIcon size="sm">
+                        <Share2 strokeWidth={2} />
+                      </ButtonIcon>
+                    ),
+                  },
+                ]}
+                onAction={() => undefined}
               />
             </>
           }

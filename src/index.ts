@@ -165,6 +165,12 @@ export {
   type ChartSegmentedBarProps,
   type ChartTone,
 } from "./components/organisms/Chart/Chart";
+export {
+  MoreMenu,
+  type MoreMenuItem,
+  type MoreMenuLayoutClassName,
+  type MoreMenuProps,
+} from "./components/organisms/MoreMenu/MoreMenu";
 export type { ChartCartesianAnimate, ChartCartesianPoint, ChartCartesianProps } from "./components/organisms/Chart/ChartCartesian";
 export type { ChartSegmentedBarAnimate } from "./components/organisms/Chart/chartSegmentedBarMotion";
 export type { ChartLoadingLayoutClassName, ChartLoadingProps } from "./components/organisms/Chart/ChartLoading";

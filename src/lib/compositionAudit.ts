@@ -96,6 +96,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "Check / X passed into Badge iconOnly for default status leading marks.",
   },
   {
+    file: "components/organisms/MoreMenu/MoreMenu.tsx",
+    ruleId: "lucide-import",
+    reason: "MoreMenu owns the built-in kebab trigger glyph (IconButton shell).",
+  },
+  {
     file: "components/organisms/Chart/Chart.tsx",
     ruleId: "inline-svg",
     reason: "Chart owns visx-composed SVG marks (SegmentedBar) — ADR-0012.",

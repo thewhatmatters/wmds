@@ -40,6 +40,10 @@ export interface IconButtonProps {
   type?: "button" | "submit" | "reset";
   className?: IconButtonLayoutClassName;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
+  "aria-haspopup"?: boolean | "menu" | "dialog" | "listbox" | "tree" | "grid";
+  "aria-expanded"?: boolean;
+  "aria-controls"?: string;
   id?: string;
   name?: string;
   form?: string;
@@ -68,6 +72,10 @@ export function IconButton({
   type = "button",
   className,
   onClick,
+  onKeyDown,
+  "aria-haspopup": ariaHasPopup,
+  "aria-expanded": ariaExpanded,
+  "aria-controls": ariaControls,
   id,
   name,
   form,
@@ -88,8 +96,12 @@ export function IconButton({
       disabled={isDisabled}
       aria-busy={loading || undefined}
       aria-label={ariaLabel}
+      aria-haspopup={ariaHasPopup}
+      aria-expanded={ariaExpanded}
+      aria-controls={ariaControls}
       title={tooltip}
       onClick={onClick}
+      onKeyDown={onKeyDown}
       id={id}
       name={name}
       form={form}

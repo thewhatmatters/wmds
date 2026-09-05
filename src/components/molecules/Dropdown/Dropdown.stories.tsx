@@ -14,7 +14,7 @@ const meta = {
         component: `
 ## Usage
 
-Shared **floating menu** + **three-slot rows** — used by **Select** today; future action menus and multi-select reuse the same anatomy.
+Shared **floating menu** + **three-slot rows** — composed by **Select** (listbox) and **MoreMenu** (action menu).
 
 | Part | Role |
 |------|------|
