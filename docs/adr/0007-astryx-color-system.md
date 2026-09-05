@@ -30,13 +30,17 @@ Light: gray body → white surface/card. Dark: body darkest → surface lighter.
 
 ### Text & borders
 
-| Utility | Token |
-|---------|-------|
-| `text-fg` | `--color-text-primary` |
-| `text-muted` | `--color-text-secondary` |
-| `text-disabled` | `--color-text-disabled` |
-| `border-border` | alpha hairline |
-| `border-border-emphasized` | section dividers |
+| Utility | Token | Role |
+|---------|-------|------|
+| `text-fg` | `--color-text-primary` | Active labels, body |
+| `text-muted` | `--color-text-secondary` | Supporting copy, **interactive idle** (Chip, SegmentedControl) |
+| `text-disabled` | `--color-text-disabled` | Placeholder, non-interactive disabled only |
+| `border-border` | alpha hairline | |
+| `border-border-emphasized` | section dividers | |
+
+**Amendment (2026-09):** Widened the secondary ↔ disabled gap — secondary **stronger** (`#404040` light / `#b3b3b3` dark), disabled **lighter/dimmer** (`#b3b3b3` light / `#737373` dark). Do not use `text-disabled` for clickable idle controls.
+
+`text-secondary-foreground` is **not** secondary text — it is primary ink on `bg-secondary` controls (shadcn legacy name).
 
 ### Status
 

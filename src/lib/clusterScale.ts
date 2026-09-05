@@ -46,6 +46,7 @@ export const clusterComponentSizeMap = {
   chip: { sm: "sm", md: "md", lg: "lg" },
   iconButton: { sm: "xs", md: "sm", lg: "md" },
   button: { sm: "xs", md: "sm", lg: "md" },
+  segmentedControl: { sm: "sm", md: "md", lg: "lg" },
 } as const satisfies Record<string, Record<ClusterTier, string>>;
 
 /** IconButton `size` for a cluster tier — e.g. header `Chip sm` → `xs`. */

@@ -58,7 +58,7 @@ export const chartTooltipPanelClasses = cn(
 
 export const chartTooltipLabelClasses = `${typographyClass("caption")} mb-1 font-medium text-fg`;
 
-export const chartTooltipListClasses = "flex w-full min-w-0 flex-col gap-1";
+export const chartTooltipListClasses = "flex w-full min-w-0 flex-col gap-0";
 
 export const chartTooltipRowClasses = "flex w-full min-w-0 items-center gap-1.5";
 

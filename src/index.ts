@@ -114,6 +114,17 @@ export {
   type SelectSize,
 } from "./components/molecules/Select/Select";
 export {
+  SegmentedControl,
+  segmentedControlLayouts,
+  segmentedControlSizes,
+  type SegmentedControlItemLayoutClassName,
+  type SegmentedControlItemProps,
+  type SegmentedControlLayout,
+  type SegmentedControlLayoutClassName,
+  type SegmentedControlProps,
+  type SegmentedControlSize,
+} from "./components/molecules/SegmentedControl/SegmentedControl";
+export {
   TaskRows,
   taskRowStatuses,
   taskRowsDetailLayouts,

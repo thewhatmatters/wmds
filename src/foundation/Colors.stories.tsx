@@ -92,7 +92,22 @@ export const SurfaceHierarchy: Story = {
 
 export const TextRoles: Story = {
   name: "Text roles",
-  render: () => <SwatchGrid tokens={textTokens} />,
+  render: () => (
+    <div className="flex max-w-2xl flex-col gap-4">
+      <p className="text-sm text-muted">
+        Three-step ladder — <strong className="font-medium text-fg">primary</strong> →{" "}
+        <strong className="font-medium text-fg">secondary</strong> (<code className="font-mono text-xs">text-muted</code>
+        ) → <strong className="font-medium text-fg">disabled</strong> (
+        <code className="font-mono text-xs">text-disabled</code>). Use secondary for supporting copy and{" "}
+        <em>clickable idle</em> controls; reserve disabled for placeholders and non-interactive states only.
+      </p>
+      <SwatchGrid tokens={textTokens} />
+      <p className="text-xs text-muted">
+        <code className="font-mono">text-secondary-foreground</code> is primary ink on{" "}
+        <code className="font-mono">bg-secondary</code> buttons — not the secondary text tier.
+      </p>
+    </div>
+  ),
 };
 
 export const ActionRoles: Story = {
@@ -102,7 +117,14 @@ export const ActionRoles: Story = {
 
 export const StatusRoles: Story = {
   name: "Status roles",
-  render: () => <SwatchGrid tokens={statusTokens} />,
+  render: () => (
+    <div className="flex max-w-2xl flex-col gap-4">
+      <p className="text-sm text-muted">
+        Solid fills pair with <code className="font-mono text-xs">text-on-*</code> — light ink on dark error/success/warning/info in light mode; dark ink on bright status solids in dark mode.
+      </p>
+      <SwatchGrid tokens={statusTokens} />
+    </div>
+  ),
 };
 
 export const StateColors: Story = {

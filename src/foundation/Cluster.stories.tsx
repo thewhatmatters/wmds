@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import { EllipsisVertical } from "lucide-react";
 import { Button } from "../components/atoms/Button/Button";
 import { IconButton } from "../components/atoms/IconButton/IconButton";
@@ -9,6 +10,7 @@ import {
   iconButtonSizeForCluster,
 } from "../lib/clusterScale";
 import { Chip } from "../components/molecules/Chip/Chip";
+import { SegmentedControl } from "../components/molecules/SegmentedControl/SegmentedControl";
 
 const meta = {
   title: "Foundation/Cluster",
@@ -29,13 +31,13 @@ Shared heights for controls in **one row** — Card headers, filter rails, toolb
 
 ### Canonical pairing
 
-| Cluster | Chip | IconButton | Button |
-|---------|------|------------|--------|
-| **sm** | \`sm\` | \`xs\` | \`xs\` |
-| **md** | \`md\` | \`sm\` | \`sm\` |
-| **lg** | \`lg\` | \`md\` | \`md\` |
+| Cluster | Chip | IconButton | Button | SegmentedControl |
+|---------|------|------------|--------|------------------|
+| **sm** | \`sm\` | \`xs\` | \`xs\` | \`sm\` |
+| **md** | \`md\` | \`sm\` | \`sm\` | \`md\` |
+| **lg** | \`lg\` | \`md\` | \`md\` | \`lg\` |
 
-Component \`size\` prop names differ — use the **cluster tier** as the source of truth. Helpers: \`iconButtonSizeForCluster()\`, \`buttonSizeForCluster()\` in \`clusterScale.ts\`.
+Component \`size\` prop names differ — use the **cluster tier** as the source of truth. Helpers: \`iconButtonSizeForCluster()\`, \`buttonSizeForCluster()\` in \`clusterScale.ts\`. **Chip** and **SegmentedControl** use the same \`sm\` / \`md\` / \`lg\` prop names as the cluster tier.
 
 **Outside cluster:** IconButton \`lg\` (FAB), Button \`lg\`, IconButton \`inset\` (chip dismiss), Search inner track.
         `.trim(),
@@ -58,6 +60,7 @@ export const PairingTable: Story = {
           <th className="py-2 pr-4 font-medium">Chip</th>
           <th className="py-2 pr-4 font-medium">IconButton</th>
           <th className="py-2 pr-4 font-medium">Button</th>
+          <th className="py-2 pr-4 font-medium">SegmentedControl</th>
         </tr>
       </thead>
       <tbody>
@@ -68,6 +71,7 @@ export const PairingTable: Story = {
             <td className="py-2 pr-4 font-mono">{clusterComponentSizeMap.chip[tier]}</td>
             <td className="py-2 pr-4 font-mono">{clusterComponentSizeMap.iconButton[tier]}</td>
             <td className="py-2 pr-4 font-mono">{clusterComponentSizeMap.button[tier]}</td>
+            <td className="py-2 pr-4 font-mono">{clusterComponentSizeMap.segmentedControl[tier]}</td>
           </tr>
         ))}
       </tbody>
@@ -77,24 +81,37 @@ export const PairingTable: Story = {
 
 export const ClusterSm: Story = {
   name: "Specimen — cluster sm (28px)",
-  render: () => (
-    <div className="flex flex-wrap items-center gap-2">
-      <Chip size="sm" selected>
-        Overview
-      </Chip>
-      <Chip size="sm">Hours</Chip>
-      <IconButton
-        size={iconButtonSizeForCluster("sm")}
-        role="ghost"
-        icon={<EllipsisVertical strokeWidth={2} />}
-        aria-label="More actions"
-        title="More"
-      />
-      <Button size="xs" role="secondary">
-        Action
-      </Button>
-    </div>
-  ),
+  render: () => {
+    const [view, setView] = useState("list");
+
+    return (
+      <div className="flex flex-wrap items-center gap-2">
+        <Chip size="sm" selected>
+          Overview
+        </Chip>
+        <Chip size="sm">Hours</Chip>
+        <SegmentedControl
+          aria-label="View"
+          size="sm"
+          value={view}
+          onValueChange={setView}
+        >
+          <SegmentedControl.Item value="list">List</SegmentedControl.Item>
+          <SegmentedControl.Item value="grid">Grid</SegmentedControl.Item>
+        </SegmentedControl>
+        <IconButton
+          size={iconButtonSizeForCluster("sm")}
+          role="ghost"
+          icon={<EllipsisVertical strokeWidth={2} />}
+          aria-label="More actions"
+          title="More"
+        />
+        <Button size="xs" role="secondary">
+          Action
+        </Button>
+      </div>
+    );
+  },
 };
 
 export const ClusterMd: Story = {

@@ -15,10 +15,10 @@
   --color-background-popover: #ffffff;
   --color-background-muted: #f8f8f8;
 
-  /* Text */
+  /* Text — three-step ladder: primary → secondary (interactive idle + supporting) → disabled (placeholder only) */
   --color-text-primary: #171717;
-  --color-text-secondary: #525252;
-  --color-text-disabled: #a3a3a3;
+  --color-text-secondary: #404040;
+  --color-text-disabled: #b3b3b3;
   --color-text-accent: #262626;
 
   /* Accent (neutral UI chrome — not brand) */
@@ -52,7 +52,7 @@
   /* Status — warning */
   --color-warning: #745b00;
   --color-warning-muted: #f8da9d;
-  --color-on-warning: #171717;
+  --color-on-warning: #ffffff;
 
   /* Info (WMDS extension — Astryx blue family) */
   --color-info: #00458c;
@@ -106,8 +106,8 @@
   --color-background-muted: #1b1b1b;
 
   --color-text-primary: #fafafa;
-  --color-text-secondary: #a3a3a3;
-  --color-text-disabled: #525252;
+  --color-text-secondary: #b3b3b3;
+  --color-text-disabled: #737373;
   --color-text-accent: #ebebeb;
 
   --color-accent: #ebebeb;

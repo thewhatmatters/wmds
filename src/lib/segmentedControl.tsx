@@ -1,6 +1,6 @@
 import { focusRingTransitionClasses } from "./motion";
 
-/** Shared focus ring for Tab and Chip segment buttons. */
+/** Shared focus ring for Tab, Chip, and SegmentedControl segment buttons. */
 export const segmentedFocusRingClasses =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body " +
   focusRingTransitionClasses;

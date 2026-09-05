@@ -86,6 +86,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "Select owns the combobox trigger button — options compose Dropdown.Item.",
   },
   {
+    file: "components/molecules/SegmentedControl/SegmentedControlItem.tsx",
+    ruleId: "raw-button",
+    reason: "SegmentedControl owns the connected segment radio shell — not an action Button.",
+  },
+  {
     file: "components/molecules/TaskRows/TaskRows.tsx",
     ruleId: "lucide-import",
     reason: "Check / X passed into Badge iconOnly for default status leading marks.",
