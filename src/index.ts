@@ -82,12 +82,29 @@ export {
   type CardVariant,
 } from "./components/molecules/Card/Card";
 export {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  type DropdownItemLayoutClassName,
+  type DropdownItemProps,
+  type DropdownMenuLayoutClassName,
+  type DropdownMenuProps,
+} from "./components/molecules/Dropdown/Dropdown";
+export {
   Search,
   searchSizes,
   type SearchLayoutClassName,
   type SearchProps,
   type SearchSize,
 } from "./components/molecules/Search/Search";
+export {
+  Select,
+  selectSizes,
+  type SelectLayoutClassName,
+  type SelectOption,
+  type SelectProps,
+  type SelectSize,
+} from "./components/molecules/Select/Select";
 export {
   TaskRows,
   taskRowStatuses,
@@ -106,6 +123,9 @@ export {
 } from "./components/molecules/TaskRows/TaskRows";
 export {
   Chart,
+  ChartCartesian,
+  ChartLegend,
+  ChartTooltipContent,
   chartFormatPercent,
   chartKpiHeroRowClasses,
   chartKpiHeroValueClasses,
@@ -125,14 +145,30 @@ export {
   type ChartSegmentedBarProps,
   type ChartTone,
 } from "./components/organisms/Chart/Chart";
+export type { ChartCartesianPoint, ChartCartesianProps } from "./components/organisms/Chart/ChartCartesian";
+export type { ChartLegendLayoutClassName, ChartLegendProps } from "./components/organisms/Chart/ChartLegend";
+export type {
+  ChartTooltipContentLayoutClassName,
+  ChartTooltipContentProps,
+} from "./components/organisms/Chart/ChartTooltipContent";
 export {
   chartBucketPeriodData,
   chartCategoricalCount,
   chartCategoricalPalette,
+  chartFormatTooltipLabel,
+  chartFormatTooltipValue,
   chartNormalizePeriodData,
   chartSeriesColor,
+  chartSeriesConfigFromKeys,
+  chartSeriesConfigFromTone,
+  chartTooltipIndicators,
+  chartTooltipItemsFromConfig,
   resolvePeriodSegmentPreset,
   resolvePeriodSegments,
+  type ChartSeriesConfig,
+  type ChartSeriesConfigEntry,
+  type ChartTooltipIndicator,
+  type ChartTooltipItem,
   type ChartBucketPeriodOptions,
   type ChartPeriod,
   type ChartPeriodAggregate,

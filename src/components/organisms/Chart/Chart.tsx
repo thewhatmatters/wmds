@@ -13,6 +13,16 @@ import {
   type ChartTone,
 } from "../../../lib/chartTheme";
 import { chartFrameClasses, chartSegmentBarHostClasses } from "./chartStyles";
+import { ChartLegend } from "./ChartLegend";
+import { ChartTooltipContent } from "./ChartTooltipContent";
+import {
+  ChartCartesian,
+  ChartCartesianAreaSeries,
+  ChartCartesianAxisBottom,
+  ChartCartesianAxisLeft,
+  ChartCartesianGrid,
+  ChartCartesianTooltipLayer,
+} from "./ChartCartesian";
 
 export {
   chartKpiHeroRowClasses,
@@ -249,8 +259,36 @@ function ChartSegmentedBar({
   );
 }
 
-/** Dashboard charts — axis-agnostic shell + scalar / Cartesian patterns. See ADR-0012. */
+/** Dashboard charts — axis-agnostic shell + scalar / Cartesian patterns. See ADR-0012, ADR-0015. */
 export const Chart = Object.assign(ChartFrameRoot, {
   Frame: ChartFrameRoot,
   SegmentedBar: ChartSegmentedBar,
+  Cartesian: Object.assign(ChartCartesian, {
+    Grid: ChartCartesianGrid,
+    AxisBottom: ChartCartesianAxisBottom,
+    AxisLeft: ChartCartesianAxisLeft,
+    Area: ChartCartesianAreaSeries,
+    Tooltip: ChartCartesianTooltipLayer,
+  }),
+  Legend: ChartLegend,
+  Tooltip: {
+    Content: ChartTooltipContent,
+  },
 });
+
+export {
+  ChartCartesian,
+  ChartCartesianAreaSeries,
+  ChartCartesianAxisBottom,
+  ChartCartesianAxisLeft,
+  ChartCartesianGrid,
+  ChartCartesianTooltipLayer,
+  ChartLegend,
+  ChartTooltipContent,
+};
+export type { ChartCartesianPoint, ChartCartesianProps } from "./ChartCartesian";
+export type { ChartLegendProps, ChartLegendLayoutClassName } from "./ChartLegend";
+export type {
+  ChartTooltipContentProps,
+  ChartTooltipContentLayoutClassName,
+} from "./ChartTooltipContent";

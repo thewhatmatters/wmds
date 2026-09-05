@@ -51,7 +51,7 @@ export const chartUiTokens = {
   axis: "var(--color-muted)",
   cursor: "var(--color-border)",
   placeholder: "var(--color-border)",
-  tooltipBg: "var(--color-background-body)",
+  tooltipBg: "var(--color-background-popover)",
   tooltipBorder: "var(--color-border)",
   tooltipFg: "var(--color-text-primary)",
   tooltipMuted: "var(--color-text-secondary)",
@@ -69,6 +69,13 @@ export const chartMargins: Record<ChartVariant, ChartMargins> = {
   hero: { top: 8, right: 8, bottom: 0, left: 8 },
   compact: { top: 6, right: 4, bottom: 0, left: 4 },
   sparkline: { top: 2, right: 0, bottom: 2, left: 0 },
+};
+
+/** Cartesian plots — room for axis ticks and labels (ADR-0015). */
+export const chartCartesianMargins: Record<ChartVariant, ChartMargins> = {
+  hero: { top: 12, right: 12, bottom: 32, left: 44 },
+  compact: { top: 8, right: 8, bottom: 28, left: 36 },
+  sparkline: { top: 4, right: 4, bottom: 4, left: 4 },
 };
 
 export const chartAreaPresets: Record<ChartVariant, ChartAreaPreset> = {
@@ -535,11 +542,101 @@ export function chartFormatPercent(value: number, max: number): string {
   return `${Math.round((value / max) * 100)}%`;
 }
 
+/** Indicator style for tooltip rows — shadcn Chart parity (ADR-0015). */
+export const chartTooltipIndicators = ["dot", "line", "dashed"] as const;
+
+export type ChartTooltipIndicator = (typeof chartTooltipIndicators)[number];
+
+/** One series entry — shared by tooltip, legend, and Area marks. */
+export type ChartSeriesConfigEntry = {
+  label: string;
+  color: string;
+};
+
+/** Series labels and colors decoupled from data shape (shadcn ChartConfig). */
+export type ChartSeriesConfig = Record<string, ChartSeriesConfigEntry>;
+
+/** Build categorical series config from keys + labels. */
+export function chartSeriesConfigFromKeys(
+  entries: ReadonlyArray<{ key: string; label: string }>,
+  options?: { colorStartIndex?: number },
+): ChartSeriesConfig {
+  const start = options?.colorStartIndex ?? 0;
+  return Object.fromEntries(
+    entries.map(({ key, label }, index) => [
+      key,
+      { label, color: chartSeriesColor(start + index) },
+    ]),
+  );
+}
+
+/** Single semantic series — uses **ChartTone** stroke token, not categorical. */
+export function chartSeriesConfigFromTone(
+  key: string,
+  label: string,
+  tone: ChartTone = "primary",
+): ChartSeriesConfig {
+  const color = chartStroke(tone);
+  return { [key]: { label, color } };
+}
+
+/** Tabular tooltip value — locale-aware grouping, no currency assumptions. */
+export function chartFormatTooltipValue(value: number): string {
+  return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+}
+
+/** Default x-axis / header label for tooltip — period-aware date formatting. */
+export function chartFormatTooltipLabel(date: Date, periodKind?: ChartPeriodKind): string {
+  if (periodKind === "year") {
+    return new Intl.DateTimeFormat(undefined, { month: "short", year: "numeric" }).format(date);
+  }
+
+  if (periodKind === "quarter") {
+    return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(date);
+  }
+
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+}
+
+export type ChartTooltipItem = {
+  /** Config key — matches ChartSeriesConfig. */
+  key: string;
+  label: string;
+  value: string | number;
+  color: string;
+};
+
+/** Map active series values + config to tooltip rows. */
+export function chartTooltipItemsFromConfig(
+  config: ChartSeriesConfig,
+  values: Record<string, number | string | null | undefined>,
+  keys?: string[],
+): ChartTooltipItem[] {
+  const order = keys ?? Object.keys(config);
+  return order
+    .filter((key) => config[key] != null && values[key] != null && values[key] !== undefined)
+    .map((key) => {
+      const entry = config[key]!;
+      const raw = values[key]!;
+      return {
+        key,
+        label: entry.label,
+        color: entry.color,
+        value: typeof raw === "number" ? chartFormatTooltipValue(raw) : raw,
+      };
+    });
+}
+
 /** Bundled theme for Chart patterns and custom visx compositions in consumer apps. */
 export const chartTheme = {
   colors: chartColorTokens,
   ui: chartUiTokens,
   margins: chartMargins,
+  cartesianMargins: chartCartesianMargins,
   area: chartAreaPresets,
   segments: chartSegmentPresets,
   segmentFill: chartSegmentFillVariants,
@@ -560,6 +657,11 @@ export const chartTheme = {
   chartFill,
   chartGradientStops,
   chartFormatPercent,
+  chartFormatTooltipLabel,
+  chartFormatTooltipValue,
+  chartSeriesConfigFromKeys,
+  chartSeriesConfigFromTone,
+  chartTooltipItemsFromConfig,
   chartGrid,
   resolveChartTone,
 } as const;

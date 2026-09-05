@@ -21,7 +21,7 @@ const meta = {
           "**Semantic** tones (`ChartTone`) encode meaning — success, error, brand. " +
           "**Threshold / RAG** fills (`fill=\"semantic\"` on **Chart.SegmentedBar**) map position to status hues. " +
           "**Categorical** tokens (`--color-chart-categorical-*`) identify series with **no implied meaning** — resolve via **`chartSeriesColor(index)`**. " +
-          "See **ADR-0013**.",
+          "See **ADR-0013** and **Organisms/Chart** — **ADR-0015** tooltip/legend reference stories.",
       },
     },
   },

@@ -8,6 +8,11 @@
  * Overlay + content read the same `--grid-*` / `--leading-base` tokens.
  */
 
+/** Reserve scrollbar gutter — prevents horizontal layout shift when overflow appears (menus, modals). */
+html {
+  scrollbar-gutter: stable;
+}
+
 @theme {
   /* Geometry — 4-col mobile default; md/lg media queries below raise the count. */
   --grid-cols: 4;

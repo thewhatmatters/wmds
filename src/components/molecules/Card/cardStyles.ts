@@ -35,10 +35,12 @@ export const cardRootPaddingClasses: Record<CardPadding, string> = {
   lg: "p-6",
 };
 
-/**
- * Layout card — header/footer at 16px inset; Body gutter is 2px from the shell edge.
- */
-export const cardLayoutShellClasses = "gap-3 bg-surface py-4";
+/** Layout shell — top pad 16px; bottom pad via {@link cardLayoutShellBottomClasses}. */
+export const cardLayoutShellClasses = "gap-3 bg-surface pt-4";
+
+export function cardLayoutShellBottomClasses(bodyTerminal = false): string {
+  return bodyTerminal ? "pb-[2px]" : "pb-4";
+}
 
 /** Horizontal inset for header/footer on the layout shell (16px). */
 export const cardLayoutSectionInsetXClasses = "px-4";
@@ -80,17 +82,17 @@ export const cardLayoutBodyWellClasses = [
 export const cardBodyWellClasses = "bg-body p-0.5";
 
 /**
- * Inset body well — page-floor gray (`bg-body`) + 8px radius inside the Body gutter.
- * Card shell stays `bg-surface`; occupant paints the lighter inset.
+ * Inset body well — page-floor gray (`bg-body`) + concentric radius inside the Body gutter.
+ * Shell `rounded-2xl` (16px) − 2px gutter → `rounded-[14px]`. See **Molecules/Card** docs.
  */
-export const cardLayoutBodyOccupantWellClasses = "rounded-lg bg-body";
+export const cardLayoutBodyOccupantWellClasses = "rounded-[14px] bg-body";
 
 /**
- * Inset body well with dot-grid texture — same 8px radius + page-floor base as well;
+ * Inset body well with dot-grid texture — same concentric radius + page-floor base as well;
  * dots add chart-canvas depth without a solid fill change.
  */
 export const cardLayoutBodyOccupantDotGridWellClasses = [
-  "rounded-lg",
+  "rounded-[14px]",
   backgroundPatternDotGridClasses,
 ].join(" ");
 

@@ -17,6 +17,7 @@ import {
   cardLayoutHeaderEndClasses,
   cardLayoutHeaderStartClasses,
   cardLayoutShellClasses,
+  cardLayoutShellBottomClasses,
   cardLayoutShellShapeClasses,
   cardOverflowClasses,
   cardRootPaddingClasses,
@@ -44,6 +45,8 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
   variant?: CardVariant;
   /** Root padding. Use `none` with `Card.Header` / `Card.Body` / `Card.Footer`. */
   padding?: CardPadding;
+  /** When `Card.Body` is the last section (no **Footer**), shell bottom inset is 2px — matches Body gutter. */
+  bodyTerminal?: boolean;
   as?: "div" | "article" | "section";
   className?: CardLayoutClassName;
 }
@@ -70,6 +73,7 @@ function CardRoot({
   shape = "rounded",
   variant = "surface",
   padding = "none",
+  bodyTerminal = false,
   as: Component = "div",
   className,
   children,
@@ -83,7 +87,11 @@ function CardRoot({
         className={cn(
           cardBaseClasses,
           isLayout
-            ? cn(cardLayoutShellClasses, cardLayoutShellShapeClasses[shape])
+            ? cn(
+                cardLayoutShellClasses,
+                cardLayoutShellBottomClasses(bodyTerminal),
+                cardLayoutShellShapeClasses[shape],
+              )
             : cn(
                 cardOverflowClasses,
                 cardShapeClasses[shape],

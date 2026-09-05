@@ -1,7 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import { Button } from "../../atoms/Button/Button";
-import { Card, cardLayoutBodyOccupantInsetXClasses, cardTitleClasses } from "../../molecules/Card/Card";
+import { Card, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantWellClasses, cardTitleClasses } from "../../molecules/Card/Card";
+import { Select, type SelectOption } from "../../molecules/Select/Select";
 import { typographyClass } from "../../../lib/typography";
+import {
+  chartSeriesConfigFromKeys,
+  chartSeriesConfigFromTone,
+  chartTooltipItemsFromConfig,
+} from "../../../lib/chartTheme";
+import { buildOccupancyAreaSeries } from "../../../lib/chartSampleData";
+import { backgroundPatternDotGridClasses } from "../../../lib/backgroundPatterns";
+import { cn } from "../../../lib/cn";
 import { withStoryCopySource } from "../../../lib/storyCopySource";
 import {
   Chart,
@@ -12,9 +22,30 @@ import {
   chartKpiTrendRowClasses,
   chartKpiTrendValueClasses,
 } from "./Chart";
+import {
+  chartCartesianWireframeClasses,
+  chartTooltipCrosshairClasses,
+} from "./chartStyles";
 
 const kpiMetaClasses = `${typographyClass("caption")} text-muted`;
-const periodLabelClasses = `${typographyClass("caption")} text-muted`;
+
+const occupancyPeriodOptions: SelectOption[] = [
+  { value: "week", label: "This week" },
+  { value: "month", label: "This month" },
+  { value: "quarter", label: "This quarter" },
+  { value: "year", label: "This year" },
+];
+
+const occupancySeriesConfig = chartSeriesConfigFromKeys([
+  { key: "occupied", label: "Occupied units" },
+  { key: "available", label: "Available units" },
+]);
+
+const occupancyAreaData = buildOccupancyAreaSeries(30);
+
+const occupancyTooltipValues = { occupied: 144, available: 56 };
+
+const occupiedToneConfig = chartSeriesConfigFromTone("occupied", "Occupied units", "primary");
 
 const meta = {
   title: "Organisms/Chart",
@@ -35,7 +66,9 @@ Dashboard visualizations on **visx v4** — WMDS owns the **shell**; patterns ow
 | Plot family | Pattern | Axes |
 |-------------|---------|------|
 | **Capacity meter** | \`Chart.SegmentedBar\` — \`value\` / \`max\`, \`fill="velocity"\` \| \`semantic\` | No |
-| **Cartesian** | \`Chart.Area\` (planned) — daily / multi-series history | Yes |
+| **Cartesian** | \`Chart.Cartesian\` + \`Chart.Cartesian.Area\` — daily / multi-series history | Yes |
+
+**Tooltip + legend** — **ADR-0015**. Hover a Cartesian plot for crosshair + frosted tooltip; **Chart.Legend** uses the same \`ChartSeriesConfig\` / \`chartSeriesColor\` palette (**ADR-0013**). **SegmentedBar** has no tooltip.
 
 ## Anatomy
 
@@ -64,6 +97,237 @@ Card.Header / Footer usually carry KPI copy; the chart mark sits in **Card.Body*
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const TooltipContentReference: Story = {
+  name: "Reference — tooltip content",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Static **Chart.Tooltip.Content** — shadcn Chart parity on WMDS popover tokens. Header label + indicator + series name + tabular value. Wired to visx on **Chart.Area** (ADR-0015).",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex max-w-md flex-col gap-8">
+      <div className="flex flex-col gap-2">
+        <span className={kpiMetaClasses}>Single series</span>
+        <Chart.Tooltip.Content
+          label="Apr 12, 2026"
+          items={[
+            {
+              key: "occupied",
+              label: "Occupied units",
+              value: "144",
+              color: occupancySeriesConfig.occupied.color,
+            },
+          ]}
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <span className={kpiMetaClasses}>Multi series</span>
+        <Chart.Tooltip.Content
+          label="Apr 12, 2026"
+          items={chartTooltipItemsFromConfig(occupancySeriesConfig, occupancyTooltipValues)}
+        />
+      </div>
+    </div>
+  ),
+};
+
+export const TooltipIndicatorsReference: Story = {
+  name: "Reference — tooltip indicators",
+  parameters: {
+    docs: {
+      description: {
+        story: "Indicator variants — `dot` (default), `line`, `dashed` — shadcn `ChartTooltipContent` parity.",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex flex-wrap gap-6">
+      {(["dot", "line", "dashed"] as const).map((indicator) => (
+        <div key={indicator} className="flex flex-col gap-2">
+          <span className={kpiMetaClasses}>{indicator}</span>
+          <Chart.Tooltip.Content
+            label="Apr 12, 2026"
+            indicator={indicator}
+            items={chartTooltipItemsFromConfig(occupancySeriesConfig, occupancyTooltipValues)}
+          />
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const LegendReference: Story = {
+  name: "Reference — legend",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "**Chart.Legend** — same `ChartSeriesConfig` as tooltip rows. Typical placement: **Card.Body** below the plot.",
+      },
+    },
+  },
+  render: () => <Chart.Legend config={occupancySeriesConfig} />,
+};
+
+export const TooltipLegendPairingReference: Story = {
+  name: "Reference — tooltip + legend pairing",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Multi-series Cartesian specimen — frosted-glass **Chart.Tooltip.Content** over plot marks; legend below. Static wireframe until **Chart.Area** ships.",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex w-full max-w-lg flex-col gap-3">
+      <div className={chartCartesianWireframeClasses}>
+        <div className={`absolute inset-0 ${backgroundPatternDotGridClasses}`} aria-hidden />
+        <div className="absolute inset-x-8 bottom-8 top-10 flex items-end justify-between gap-1" aria-hidden>
+          {[28, 42, 55, 72, 68, 48, 36].map((height, index) => (
+            <div
+              key={height}
+              className={cn(
+                "w-2 rounded-full bg-border/80",
+                index === 4 && "bg-primary/35 shadow-[0_0_18px_4px_color-mix(in_srgb,var(--color-primary)_35%,transparent)]",
+              )}
+              style={{ height: `${height}%` }}
+            />
+          ))}
+        </div>
+        <div
+          className={chartTooltipCrosshairClasses}
+          style={{ left: "62%", bottom: "2rem", top: "1.5rem" }}
+          aria-hidden
+        />
+        <div className="absolute left-[54%] top-6 z-10">
+          <Chart.Tooltip.Content
+            label="Apr 12, 2026"
+            items={chartTooltipItemsFromConfig(occupancySeriesConfig, occupancyTooltipValues)}
+          />
+        </div>
+      </div>
+      <Chart.Legend config={occupancySeriesConfig} />
+    </div>
+  ),
+};
+
+export const AreaSingleSeries: Story = {
+  name: "Pattern — area (single series)",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Single semantic series — `chartSeriesConfigFromTone` + primary stroke. Hover for crosshair tooltip; categorical palette not used.",
+      },
+    },
+  },
+  render: () => (
+    <Chart.Cartesian
+      className="max-w-lg"
+      data={occupancyAreaData}
+      config={occupiedToneConfig}
+      seriesKeys={["occupied"]}
+      periodKind="month"
+      aria-label="Occupied units over time"
+    />
+  ),
+};
+
+export const AreaMultiSeries: Story = {
+  name: "Pattern — area (multi series + legend)",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Multi-series — `chartSeriesConfigFromKeys` assigns **chartSeriesColor** indices. Tooltip rows and **Chart.Legend** share the same config.",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex w-full max-w-lg flex-col gap-3">
+      <Chart.Cartesian
+        data={occupancyAreaData}
+        config={occupancySeriesConfig}
+        periodKind="month"
+        aria-label="Occupied and available units over time"
+      />
+      <Chart.Legend config={occupancySeriesConfig} />
+    </div>
+  ),
+};
+
+export const OccupancyHistoryInCard: Story = {
+  name: "Pattern — occupancy history in Card",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "History companion to the capacity KPI — **Card.Header** Select scopes period; inset well + **`bodyTerminal`** (no **Footer**). Categorical palette for occupied vs available.",
+        },
+      },
+    },
+    `
+import { Card, Chart, Select, chartSeriesConfigFromKeys, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantWellClasses, cardTitleClasses } from "@whatmatters/wmds";
+
+const config = chartSeriesConfigFromKeys([
+  { key: "occupied", label: "Occupied units" },
+  { key: "available", label: "Available units" },
+]);
+
+<Card shape="rounded" bodyTerminal className="max-w-lg">
+  <Card.Header
+    start={<h2 className={cardTitleClasses}>Occupancy history</h2>}
+    end={<Select aria-label="Reporting period" size="sm" options={periodOptions} defaultValue="month" className="w-36" />}
+  />
+  <Card.Body>
+    <div className={\`flex flex-col gap-3 py-4 \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantInsetXClasses}\`}>
+      <Chart.Cartesian data={data} config={config} periodKind="month" minHeight={220} />
+      <Chart.Legend config={config} />
+    </div>
+  </Card.Body>
+</Card>
+    `,
+  ),
+  render: () => {
+    const [period, setPeriod] = useState("month");
+
+    return (
+      <Card shape="rounded" bodyTerminal className="max-w-lg">
+        <Card.Header
+          start={<h2 className={cardTitleClasses}>Occupancy history</h2>}
+          end={
+            <Select
+              aria-label="Reporting period"
+              size="sm"
+              options={occupancyPeriodOptions}
+              value={period}
+              onValueChange={setPeriod}
+              className="w-36"
+            />
+          }
+        />
+        <Card.Body>
+          <div className={`flex flex-col gap-3 py-4 ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}>
+            <Chart.Cartesian
+              data={occupancyAreaData}
+              config={occupancySeriesConfig}
+              periodKind="month"
+              minHeight={220}
+              aria-label="Occupied and available units over the selected period"
+            />
+            <Chart.Legend config={occupancySeriesConfig} />
+          </div>
+        </Card.Body>
+      </Card>
+    );
+  },
+};
 
 export const SegmentedBar: Story = {
   name: "Pattern — segmented bar",
@@ -177,20 +441,34 @@ export const OccupancyInCard: Story = {
       docs: {
         description: {
           story:
-            "Dashboard widget — hero percent + inline mono trend, **Chart.SegmentedBar** in **Card.Body**, footer meta. **Planned:** replace static period copy in **Card.Header** `end` with **Select** (time range) when **Molecules/Select** ships.",
+            "Dashboard widget — hero percent + inline mono trend, **Chart.SegmentedBar** in **Card.Body**, footer meta. **Card.Header** `end` → **Select** (`size=\"sm\"`) for reporting period.",
         },
       },
     },
     `
-import { Button, Card, Chart, chartFormatPercent, chartKpiHeroRowClasses, chartKpiHeroValueClasses, chartKpiTrendLabelClasses, chartKpiTrendRowClasses, chartKpiTrendValueClasses, cardLayoutBodyOccupantInsetXClasses, cardTitleClasses } from "@whatmatters/wmds";
+import { Button, Card, Chart, Select, chartFormatPercent, chartKpiHeroRowClasses, chartKpiHeroValueClasses, chartKpiTrendLabelClasses, chartKpiTrendRowClasses, chartKpiTrendValueClasses, cardLayoutBodyOccupantInsetXClasses, cardTitleClasses } from "@whatmatters/wmds";
 
 const occupied = 144;
 const total = 200;
+const periodOptions = [
+  { value: "week", label: "This week" },
+  { value: "month", label: "This month" },
+  { value: "quarter", label: "This quarter" },
+  { value: "year", label: "This year" },
+];
 
 <Card shape="rounded" className="max-w-lg">
   <Card.Header
     start={<h2 className={cardTitleClasses}>Occupancy score</h2>}
-    end={<span className="type-supporting text-muted">This month</span>}
+    end={
+      <Select
+        aria-label="Reporting period"
+        size="sm"
+        options={periodOptions}
+        defaultValue="month"
+        className="w-36"
+      />
+    }
   />
   <Card.Body>
     <div className={\`flex flex-col gap-2 py-4 \${cardLayoutBodyOccupantInsetXClasses}\`}>
@@ -218,12 +496,22 @@ const total = 200;
   render: () => {
     const occupied = 144;
     const total = 200;
+    const [period, setPeriod] = useState("month");
 
     return (
       <Card shape="rounded" className="max-w-lg">
         <Card.Header
           start={<h2 className={cardTitleClasses}>Occupancy score</h2>}
-          end={<span className={periodLabelClasses}>This month</span>}
+          end={
+            <Select
+              aria-label="Reporting period"
+              size="sm"
+              options={occupancyPeriodOptions}
+              value={period}
+              onValueChange={setPeriod}
+              className="w-36"
+            />
+          }
         />
         <Card.Body>
           <div className={`flex flex-col gap-2 py-4 ${cardLayoutBodyOccupantInsetXClasses}`}>

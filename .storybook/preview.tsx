@@ -120,6 +120,7 @@ const preview: Preview = {
           "Shadows",
           "Motion",
           "Icons",
+          "Form controls",
         ];
         const rank = (title, list) => {
           const index = list.indexOf(title);

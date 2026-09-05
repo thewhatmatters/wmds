@@ -66,6 +66,26 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "Chip owns the filter/toggle shell (aria-pressed segment control).",
   },
   {
+    file: "components/molecules/Dropdown/DropdownItem.tsx",
+    ruleId: "lucide-import",
+    reason: "Dropdown.Item owns the selected-state check in the end slot (listbox pattern).",
+  },
+  {
+    file: "components/molecules/Dropdown/DropdownItem.tsx",
+    ruleId: "raw-button",
+    reason: "Dropdown.Item owns the menu/listbox row shell — not an action Button.",
+  },
+  {
+    file: "components/molecules/Select/Select.tsx",
+    ruleId: "lucide-import",
+    reason: "Select owns the combobox trigger chevron (ButtonIcon inside the molecule shell).",
+  },
+  {
+    file: "components/molecules/Select/Select.tsx",
+    ruleId: "raw-button",
+    reason: "Select owns the combobox trigger button — options compose Dropdown.Item.",
+  },
+  {
     file: "components/molecules/TaskRows/TaskRows.tsx",
     ruleId: "lucide-import",
     reason: "Check / X passed into Badge iconOnly for default status leading marks.",
@@ -73,7 +93,12 @@ export const compositionShellExceptions: CompositionShellException[] = [
   {
     file: "components/organisms/Chart/Chart.tsx",
     ruleId: "inline-svg",
-    reason: "Chart owns visx-composed SVG marks (SegmentedBar, future Cartesian patterns) — ADR-0012.",
+    reason: "Chart owns visx-composed SVG marks (SegmentedBar) — ADR-0012.",
+  },
+  {
+    file: "components/organisms/Chart/ChartCartesian.tsx",
+    ruleId: "inline-svg",
+    reason: "Chart.Cartesian owns visx-composed SVG (Area, axes, grid, crosshair) — ADR-0012, ADR-0015.",
   },
 ];
 

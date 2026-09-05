@@ -7,7 +7,11 @@ import { IconButton } from "../../atoms/IconButton/IconButton";
 import { Input } from "../../atoms/Input/Input";
 import { Chip, ChipFilterGroup } from "../Chip/Chip";
 import { iconButtonSizeForCluster } from "../../../lib/clusterScale";
+import { buildOccupancyAreaSeries } from "../../../lib/chartSampleData";
+import { chartSeriesConfigFromKeys } from "../../../lib/chartTheme";
+import { withStoryCopySource } from "../../../lib/storyCopySource";
 import { TaskRows } from "../TaskRows/TaskRows";
+import { Select, type SelectOption } from "../Select/Select";
 import {
   Chart,
   chartFormatPercent,
@@ -32,6 +36,39 @@ import {
 
 function mutedText(className: string) {
   return `${className} text-muted`;
+}
+
+const occupancyPeriodOptions: SelectOption[] = [
+  { value: "week", label: "This week" },
+  { value: "month", label: "This month" },
+  { value: "quarter", label: "This quarter" },
+  { value: "year", label: "This year" },
+];
+
+const occupancyHistoryConfig = chartSeriesConfigFromKeys([
+  { key: "occupied", label: "Occupied units" },
+  { key: "available", label: "Available units" },
+]);
+
+const occupancyHistoryData = buildOccupancyAreaSeries(30);
+
+function OccupancyPeriodSelect({
+  value,
+  onValueChange,
+}: {
+  value: string;
+  onValueChange: (value: string) => void;
+}) {
+  return (
+    <Select
+      aria-label="Reporting period"
+      size="sm"
+      options={occupancyPeriodOptions}
+      value={value}
+      onValueChange={onValueChange}
+      className="w-36"
+    />
+  );
 }
 
 const meta = {
@@ -63,7 +100,8 @@ const meta = {
 |---------|-------------|
 | **Layout** | \`Card padding="none"\` + \`Card.Header\` / \`Card.Body\` / \`Card.Footer\` — default; shell + transparent Body slot |
 | **Header** | Horizontal \`start\` / \`end\` slots — title + subtitle, kebab, chips-as-tabs, Badge, or any cluster |
-| **Body slot** | TaskRows, form, **Chart**, or custom UI — occupant owns fill, radius, and padding |
+| **Body slot** | TaskRows, form, **Chart** (SegmentedBar KPI or **Cartesian** history), or custom UI — occupant owns fill, radius, and padding |
+| **Inset well** | \`cardLayoutBodyOccupantWellClasses\` on the occupant — \`bg-body\` + concentric **14px** radius (\`rounded-[14px]\`); dot-grid → \`cardLayoutBodyOccupantDotGridWellClasses\` |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
 
 Default \`shape="rounded"\` — \`rounded-2xl shadow-md\` on the shell. Use \`shape="flush"\` only when a parent owns outer radius and shadow.
@@ -74,19 +112,25 @@ Default \`shape="rounded"\` — \`rounded-2xl shadow-md\` on the shell. Use \`sh
 Card (bg-surface shell, py-4, gap-3)
 ├── Card.Header   — start | end slots — 16px horizontal inset (px-4)
 ├── Card.Body     — slot — 2px horizontal gutter (px-[2px]); transparent; occupant paints the region
+│   └── occupant  — e.g. cardLayoutBodyOccupantWellClasses (bg-body, rounded-[14px])
 └── Card.Footer   — status, actions — 16px horizontal inset (px-4)
 \`\`\`
+
+**Inset well radius:** layout shell uses \`rounded-2xl\` (**16px**). **Card.Body** inset is **2px** on each side. Inner well radius = **16px − 2px = 14px** (\`rounded-[14px]\`) so corners stay concentric with the shell. Copy **Example — body slot (occupancy history)** or **Example — body slot (occupancy KPI, inset well)**.
 
 ## Best practices
 
 - **Do** set \`padding="none"\` when using Header/Body/Footer.
 - **Do** put leading copy in \`start\` and trailing actions in \`end\` — do not hand-roll the header row.
 - **Do** use \`cardLayoutBodyOccupantInsetXClasses\` (\`px-3.5\` / 14px) on body occupants when horizontal edges should align with **Header** and **Footer** (2px gutter + 14px = 16px).
+- **Do** paint inset body backgrounds with \`cardLayoutBodyOccupantWellClasses\` (\`bg-body\` + \`rounded-[14px]\`) — concentric with the shell (16px − 2px gutter); chart canvas texture → \`cardLayoutBodyOccupantDotGridWellClasses\`.
+- **Do** set \`bodyTerminal\` on layout cards when **Card.Body** is the last section — 2px bottom shell inset matches the Body gutter (inset well flush to card bottom).
 - **Do** keep title, address, and meta in **Header**; primary actions in **Footer**.
 - **Do** use default \`shape="rounded"\` — detail overlays, dashboard widgets, map overlays.
 - **Do** use \`shape="flush"\` only when nested inside a parent that already owns radius and shadow.
 - **Don't** restrict the Body to TaskRows — that is one occupant, not the contract.
 - **Don't** put fill or surface styling on \`Card.Body\` itself — only the 2px gutter belongs on the slot.
+- **Don't** use \`rounded-lg\` (8px) on inset body wells — use \`cardLayoutBodyOccupantWellClasses\` so corners track the shell.
 - **Don't** re-theme the slot with \`className\` — put layout tweaks on the root only.
         `.trim(),
       },
@@ -359,19 +403,20 @@ export const BodySlotOccupancyKpi: Story = {
     docs: {
       description: {
         story:
-          "**Chart.SegmentedBar** in the Body slot — scalar gauge with KPI + inline mono trend. **Planned:** **Card.Header** `end` → **Select** for period (e.g. This month), not static copy.",
+          "**Chart.SegmentedBar** in the Body slot — scalar gauge with KPI + inline mono trend. **Card.Header** `end` → **Select** (`size=\"sm\"`) for reporting period.",
       },
     },
   },
   render: () => {
     const occupied = 144;
     const total = 200;
+    const [period, setPeriod] = useState("month");
 
     return (
       <Card shape="rounded" className="max-w-lg">
         <Card.Header
           start={<h2 className={cardTitleClasses}>Occupancy score</h2>}
-          end={<span className={mutedText(cardBodyTextClasses)}>This month</span>}
+          end={<OccupancyPeriodSelect value={period} onValueChange={setPeriod} />}
         />
         <Card.Body>
           <div className={`flex flex-col gap-2 py-4 ${cardLayoutBodyOccupantInsetXClasses}`}>
@@ -405,19 +450,20 @@ export const BodySlotOccupancyKpiInsetWell: Story = {
     docs: {
       description: {
         story:
-          "Same occupancy KPI — Body occupant uses **`cardLayoutBodyOccupantWellClasses`** (`bg-body` page-floor gray + `rounded-lg` / 8px) inside the 2px Body gutter. Shell stays **`bg-surface`**. **Planned:** **Select** in **Card.Header** `end`.",
+          "Same occupancy KPI — Body occupant uses **`cardLayoutBodyOccupantWellClasses`** (`bg-body` page-floor gray + **14px** concentric radius) inside the 2px Body gutter. Shell stays **`bg-surface`**. **Select** in **Card.Header** `end`.",
       },
     },
   },
   render: () => {
     const occupied = 144;
     const total = 200;
+    const [period, setPeriod] = useState("month");
 
     return (
       <Card shape="rounded" className="max-w-lg">
         <Card.Header
           start={<h2 className={cardTitleClasses}>Occupancy score</h2>}
-          end={<span className={mutedText(cardBodyTextClasses)}>This month</span>}
+          end={<OccupancyPeriodSelect value={period} onValueChange={setPeriod} />}
         />
         <Card.Body>
           <div
@@ -460,12 +506,13 @@ export const BodySlotOccupancyKpiDotGridWell: Story = {
   render: () => {
     const occupied = 144;
     const total = 200;
+    const [period, setPeriod] = useState("month");
 
     return (
       <Card shape="rounded" className="max-w-lg">
         <Card.Header
           start={<h2 className={cardTitleClasses}>Occupancy score</h2>}
-          end={<span className={mutedText(cardBodyTextClasses)}>This month</span>}
+          end={<OccupancyPeriodSelect value={period} onValueChange={setPeriod} />}
         />
         <Card.Body>
           <div
@@ -489,6 +536,74 @@ export const BodySlotOccupancyKpiDotGridWell: Story = {
             View breakdown
           </Button>
         </Card.Footer>
+      </Card>
+    );
+  },
+};
+
+export const BodySlotOccupancyHistory: Story = {
+  name: "Example — body slot (occupancy history)",
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "padded",
+      docs: {
+        description: {
+          story:
+            "**Chart.Cartesian** area history in the Body slot — **`cardLayoutBodyOccupantWellClasses`** inset well + **`bodyTerminal`** (2px bottom shell gutter when no **Footer**). Hover for crosshair tooltip.",
+        },
+      },
+    },
+    `
+import {
+  Card,
+  Chart,
+  Select,
+  chartSeriesConfigFromKeys,
+  cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantWellClasses,
+  cardTitleClasses,
+} from "@whatmatters/wmds";
+
+const config = chartSeriesConfigFromKeys([
+  { key: "occupied", label: "Occupied units" },
+  { key: "available", label: "Available units" },
+]);
+
+<Card shape="rounded" bodyTerminal className="max-w-lg">
+  <Card.Header
+    start={<h2 className={cardTitleClasses}>Occupancy history</h2>}
+    end={<Select aria-label="Reporting period" size="sm" options={periodOptions} defaultValue="month" className="w-36" />}
+  />
+  <Card.Body>
+    <div className={\`flex flex-col gap-3 py-4 \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantInsetXClasses}\`}>
+      <Chart.Cartesian data={data} config={config} periodKind="month" minHeight={220} />
+      <Chart.Legend config={config} />
+    </div>
+  </Card.Body>
+</Card>
+    `,
+  ),
+  render: () => {
+    const [period, setPeriod] = useState("month");
+
+    return (
+      <Card shape="rounded" bodyTerminal className="max-w-lg">
+        <Card.Header
+          start={<h2 className={cardTitleClasses}>Occupancy history</h2>}
+          end={<OccupancyPeriodSelect value={period} onValueChange={setPeriod} />}
+        />
+        <Card.Body>
+          <div className={`flex flex-col gap-3 py-4 ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}>
+            <Chart.Cartesian
+              data={occupancyHistoryData}
+              config={occupancyHistoryConfig}
+              periodKind="month"
+              minHeight={220}
+              aria-label="Occupied and available units over the selected period"
+            />
+            <Chart.Legend config={occupancyHistoryConfig} />
+          </div>
+        </Card.Body>
       </Card>
     );
   },
