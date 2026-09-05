@@ -85,7 +85,12 @@ export function MoreMenu({
   const openMenu = useCallback(() => {
     const trigger = triggerRef.current;
     if (trigger != null) {
-      setMenuStyle(measureDropdownMenuStyle(trigger, toMeasureRows(items), "end"));
+      setMenuStyle(
+        measureDropdownMenuStyle(trigger, toMeasureRows(items), {
+          align: "end",
+          widthMode: "content",
+        }),
+      );
     }
     setOpen(true);
   }, [items]);
@@ -103,7 +108,12 @@ export function MoreMenu({
     if (trigger == null) {
       return;
     }
-    setMenuStyle(measureDropdownMenuStyle(trigger, toMeasureRows(items), "end"));
+    setMenuStyle(
+      measureDropdownMenuStyle(trigger, toMeasureRows(items), {
+        align: "end",
+        widthMode: "content",
+      }),
+    );
   }, [items]);
 
   useLayoutEffect(() => {
@@ -237,6 +247,7 @@ export function MoreMenu({
               <Dropdown.Item
                 role="menuitem"
                 tabIndex={-1}
+                truncate={false}
                 active={index === activeIndex}
                 disabled={item.disabled}
                 start={item.start}

@@ -18,8 +18,8 @@ Shared **floating menu** + **three-slot rows** — composed by **Select** (listb
 
 | Part | Role |
 |------|------|
-| **Dropdown.Menu** | Rounded surface panel (\`p-0.5\` / 2px inset) |
-| **Dropdown.Item** | Interactive row — \`start\` \\| label \\| \`end\`. **Selection** → check in \`end\` (\`selected\`); **hover/focus** → row fill (\`active\`) — not both. |
+| **Dropdown.Menu** | Rounded surface panel (\`p-0.5\` / 2px inset); rows stacked with \`gap-0.5\` |
+| **Dropdown.Item** | Interactive row — \`start\` \\| label \\| \`end\`; **14px** inner radius; **Selection** → check in \`end\` (\`selected\`); **hover/focus** → row fill (\`active\`) — not both. |
 
 ## Anatomy
 

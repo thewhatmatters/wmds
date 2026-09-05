@@ -1,12 +1,10 @@
 import type { CSSProperties, ReactNode } from "react";
 import {
-  dropdownItemButtonClasses,
   dropdownItemEndClasses,
-  dropdownItemLabelFullClasses,
+  dropdownItemMeasureButtonClasses,
+  dropdownItemMeasureLabelClasses,
   dropdownItemSelectedCheckClasses,
   dropdownItemStartClasses,
-  dropdownMenuClasses,
-  dropdownMenuListClasses,
   dropdownMenuOffsetPx,
 } from "./dropdownStyles";
 
@@ -22,6 +20,14 @@ export type DropdownMenuMeasureRow = {
 };
 
 export type DropdownMenuAlign = "start" | "end";
+
+/** `content` — menu width from widest row (**MoreMenu**). `at-least-trigger` — never narrower than anchor (**Select**). */
+export type DropdownMenuWidthMode = "content" | "at-least-trigger";
+
+export type DropdownMenuMeasureOptions = {
+  align?: DropdownMenuAlign;
+  widthMode?: DropdownMenuWidthMode;
+};
 
 let measureHost: HTMLDivElement | null = null;
 
@@ -59,67 +65,79 @@ function clampMenuLeft(left: number, menuWidth: number, boundary: DOMRect): numb
   return Math.min(Math.max(left, minLeft), maxLeft);
 }
 
-/** Widest row — labels, optional start, check or end meta. */
+function appendMeasureStartSlot(button: HTMLButtonElement) {
+  const start = document.createElement("span");
+  start.className = dropdownItemStartClasses;
+  const icon = document.createElement("span");
+  icon.className = "size-4 shrink-0";
+  icon.setAttribute("aria-hidden", "true");
+  start.appendChild(icon);
+  button.appendChild(start);
+}
+
+function measureDropdownMenuRowWidth(row: DropdownMenuMeasureRow): number {
+  const host = getMeasureHost();
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = dropdownItemMeasureButtonClasses;
+
+  if (row.start != null) {
+    appendMeasureStartSlot(button);
+  }
+
+  const label = document.createElement("span");
+  label.className = dropdownItemMeasureLabelClasses;
+  label.textContent = row.label;
+  button.appendChild(label);
+
+  if (row.end != null) {
+    const end = document.createElement("span");
+    end.className = dropdownItemEndClasses;
+    end.textContent = typeof row.end === "string" ? row.end : "⌘K";
+    button.appendChild(end);
+  } else if (row.selectionCheck) {
+    const check = document.createElement("span");
+    check.className = dropdownItemSelectedCheckClasses;
+    check.setAttribute("aria-hidden", "true");
+    check.textContent = "✓";
+    button.appendChild(check);
+  }
+
+  host.replaceChildren(button);
+  return Math.ceil(button.getBoundingClientRect().width);
+}
+
+/** Widest row — labels, optional start, check or end meta. Includes menu shell inset (p-0.5 × 2). */
 export function measureDropdownMenuContentWidth(rows: DropdownMenuMeasureRow[]): number {
   if (rows.length === 0) {
     return 0;
   }
 
-  const host = getMeasureHost();
-  host.replaceChildren();
-
-  const menu = document.createElement("ul");
-  menu.className = `${dropdownMenuClasses} ${dropdownMenuListClasses}`;
-
+  let widestRow = 0;
   for (const row of rows) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = dropdownItemButtonClasses;
-
-    if (row.start != null) {
-      const start = document.createElement("span");
-      start.className = dropdownItemStartClasses;
-      start.textContent = "•";
-      button.appendChild(start);
-    }
-
-    const label = document.createElement("span");
-    label.className = dropdownItemLabelFullClasses;
-    label.textContent = row.label;
-    button.appendChild(label);
-
-    if (row.end != null) {
-      const end = document.createElement("span");
-      end.className = dropdownItemEndClasses;
-      end.textContent = typeof row.end === "string" ? row.end : "⌘K";
-      button.appendChild(end);
-    } else if (row.selectionCheck) {
-      const check = document.createElement("span");
-      check.className = dropdownItemSelectedCheckClasses;
-      check.setAttribute("aria-hidden", "true");
-      check.textContent = "✓";
-      button.appendChild(check);
-    }
-
-    const item = document.createElement("li");
-    item.appendChild(button);
-    menu.appendChild(item);
+    widestRow = Math.max(widestRow, measureDropdownMenuRowWidth(row));
   }
 
-  host.appendChild(menu);
-  return menu.scrollWidth;
+  // Menu shell horizontal inset — p-0.5 (2px) each side.
+  return widestRow + 4;
 }
 
 export function measureDropdownMenuStyle(
   trigger: HTMLElement,
   rows: DropdownMenuMeasureRow[],
-  align: DropdownMenuAlign = "start",
+  alignOrOptions: DropdownMenuAlign | DropdownMenuMeasureOptions = "start",
 ): CSSProperties {
+  const options =
+    typeof alignOrOptions === "string" ? { align: alignOrOptions } : alignOrOptions;
+  const align = options.align ?? "start";
+  const widthMode = options.widthMode ?? "at-least-trigger";
+
   const rect = trigger.getBoundingClientRect();
   const boundary = findDropdownMenuBoundary(trigger);
   const triggerWidth = rect.width;
   const contentWidth = measureDropdownMenuContentWidth(rows);
-  const menuWidth = Math.max(triggerWidth, contentWidth);
+  const menuWidth =
+    widthMode === "content" ? contentWidth : Math.max(contentWidth, triggerWidth);
 
   let left = rect.left;
   if (align === "end") {
@@ -139,6 +157,6 @@ export function measureDropdownMenuStyle(
     top: rect.bottom + dropdownMenuOffsetPx,
     left,
     width: menuWidth,
-    minWidth: triggerWidth,
+    minWidth: widthMode === "content" ? contentWidth : triggerWidth,
   };
 }

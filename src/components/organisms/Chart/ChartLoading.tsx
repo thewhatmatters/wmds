@@ -1,5 +1,4 @@
 import { ButtonSpinner } from "../../atoms/Button/ButtonSpinner";
-import { typographyClass } from "../../../lib/typography";
 import { cn } from "../../../lib/cn";
 import { chartLoadingLabelClasses, chartLoadingPanelClasses } from "./chartStyles";
 

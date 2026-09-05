@@ -46,7 +46,6 @@ import {
   chartTooltipAnchorAboveRightClasses,
   chartTooltipAnchorBelowLeftClasses,
   chartTooltipAnchorBelowRightClasses,
-  chartTooltipCrosshairClasses,
   chartTooltipCrosshairLineClasses,
   chartTooltipPortalClasses,
 } from "./chartStyles";
@@ -117,7 +116,7 @@ function ChartCartesianInner({
   periodKind,
   xAccessor,
   yAccessor,
-  ariaLabel,
+  "aria-label": ariaLabel,
   animateEnter,
   verticalGrid,
   yTickFormat,
@@ -329,8 +328,8 @@ export function ChartCartesianAxisBottom() {
       numTicks={CARTESIAN_X_TICK_COUNT}
       stroke={chartUiTokens.axis}
       tickStroke={chartUiTokens.axis}
-      tickLine={false}
-      axisLine={false}
+      hideTicks
+      hideAxisLine
       tickFormat={(value) => {
         const date = value instanceof Date ? value : new Date(value.valueOf());
         return chartFormatTooltipLabel(date, periodKind);
@@ -355,8 +354,8 @@ export function ChartCartesianAxisLeft() {
       numTicks={5}
       stroke={chartUiTokens.axis}
       tickStroke={chartUiTokens.axis}
-      tickLine={false}
-      axisLine={false}
+      hideTicks
+      hideAxisLine
       tickFormat={(value) => {
         const numeric = typeof value === "number" ? value : Number(value);
         const format = yTickFormat ?? chartFormatAxisValue;
