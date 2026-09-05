@@ -10,9 +10,9 @@ export const segmentedControlLayouts = ["hug", "stretch"] as const;
 
 export type SegmentedControlLayout = (typeof segmentedControlLayouts)[number];
 
-/** Shared track — inset padding matches Dropdown menu (`p-0.5`). Outer height = cluster tier (ADR-0011). */
+/** Shared track — recessed `bg-body` well; inset padding matches Dropdown menu (`p-0.5`). */
 export const segmentedControlTrackClasses = cn(
-  "relative inline-flex items-stretch rounded-full bg-secondary p-0.5 shadow-hairline",
+  "relative inline-flex items-stretch rounded-full bg-body p-0.5 shadow-hairline",
   motionTransition("fast"),
 );
 
@@ -73,5 +73,6 @@ export const segmentedControlItemSelectedClasses = "text-fg";
 /** Idle segment — `text-muted` (secondary text); hover promotes to primary ink. */
 export const segmentedControlItemUnselectedClasses = "text-muted hover:text-fg";
 
+/** Sliding selected segment — raised surface pill inside the body well. */
 export const segmentedControlThumbClasses =
-  "pointer-events-none absolute inset-0 rounded-full bg-surface shadow-hairline";
+  "pointer-events-none absolute inset-0 rounded-full bg-surface shadow-raised";

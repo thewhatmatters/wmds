@@ -183,6 +183,36 @@ export type ChartSegmentPresetConfig = (typeof chartSegmentPresets)[ChartSegment
 /** Dashboard period filter — drives period-strip segment count (Card.Header Select). */
 export type ChartPeriodKind = "week" | "month" | "quarter" | "year" | "rolling";
 
+/** Trailing calendar days for dashboard period filters (occupancy history, etc.). */
+export function resolveChartPeriodDayCount(kind: ChartPeriodKind): number {
+  switch (kind) {
+    case "week":
+      return 7;
+    case "month":
+      return 30;
+    case "quarter":
+      return 90;
+    case "year":
+      return 365;
+    case "rolling":
+      return 30;
+  }
+}
+
+export function chartPeriodKindFromValue(value: string): ChartPeriodKind {
+  if (
+    value === "week" ||
+    value === "month" ||
+    value === "quarter" ||
+    value === "year" ||
+    value === "rolling"
+  ) {
+    return value;
+  }
+
+  return "month";
+}
+
 export type ChartPeriod = {
   kind: ChartPeriodKind;
   /** Raw series length — e.g. 90 for last three months. */
@@ -669,6 +699,8 @@ export const chartTheme = {
   chartSegmentTickCenterX,
   chartSegmentX,
   chartSeriesColor,
+  resolveChartPeriodDayCount,
+  chartPeriodKindFromValue,
   resolvePeriodSegmentPreset,
   resolvePeriodSegments,
   resolveSegmentBarConfig,

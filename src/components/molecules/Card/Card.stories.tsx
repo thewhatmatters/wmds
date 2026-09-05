@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Clock, Download, Globe, Share2 } from "lucide-react";
 import { Badge } from "../../atoms/Badge/Badge";
@@ -8,7 +8,8 @@ import { Input } from "../../atoms/Input/Input";
 import { MoreMenu } from "../../organisms/MoreMenu/MoreMenu";
 import { SegmentedControl } from "../SegmentedControl/SegmentedControl";
 import { iconButtonSizeForCluster } from "../../../lib/clusterScale";
-import { buildOccupancyAreaSeries } from "../../../lib/chartSampleData";
+import { buildOccupancyAreaSeries, occupancyAreaSeriesForSelectValue } from "../../../lib/chartSampleData";
+import { chartPeriodKindFromValue } from "../../../lib/chartTheme";
 import { chartSeriesConfigFromKeys } from "../../../lib/chartTheme";
 import { withStoryCopySource } from "../../../lib/storyCopySource";
 import { TaskRows } from "../TaskRows/TaskRows";
@@ -52,7 +53,7 @@ const occupancyHistoryConfig = chartSeriesConfigFromKeys([
   { key: "available", label: "Available units" },
 ]);
 
-const occupancyHistoryData = buildOccupancyAreaSeries(30);
+const occupancyHistorySource = buildOccupancyAreaSeries(365);
 
 function OccupancyPeriodSelect({
   value,
@@ -602,6 +603,11 @@ const config = chartSeriesConfigFromKeys([
   ),
   render: () => {
     const [period, setPeriod] = useState("month");
+    const periodKind = chartPeriodKindFromValue(period);
+    const chartData = useMemo(
+      () => occupancyAreaSeriesForSelectValue(occupancyHistorySource, period),
+      [period],
+    );
 
     return (
       <Card shape="rounded" bodyTerminal className="max-w-lg">
@@ -612,9 +618,9 @@ const config = chartSeriesConfigFromKeys([
         <Card.Body>
           <div className={`flex flex-col gap-3 ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}>
             <Chart.Cartesian
-              data={occupancyHistoryData}
+              data={chartData}
               config={occupancyHistoryConfig}
-              periodKind="month"
+              periodKind={periodKind}
               minHeight={220}
               aria-label="Occupied and available units over the selected period"
             />

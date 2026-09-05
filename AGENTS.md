@@ -74,7 +74,7 @@ When adding a component: create folder in the correct tier, match Storybook titl
 | Card examples (no state toolbar) | **Molecules/Card → body slot (occupancy KPI / history)** |
 | Categorical palette | **Foundation/Charts** |
 
-**Next backlog (ADR-0015):** wire **Select** period → **`chartBucketPeriodData`**; optional **Popover** extract; action **Dropdown** menus.
+**Next backlog (ADR-0015):** optional **Popover** extract; legend series toggle (non-goal v1).
 
 **Gotchas (don’t re-debug):** visx tooltip **`unstyled`**; Cartesian host **`height` + `minHeight`** for ParentSize; shell **`bodyTerminal`** when no **Footer** (history); inset well radius **14px** not `rounded-lg`; **SegmentedBar** has no empty/error **`state`** prop — loading is layout-level (**Skeleton** / **Chart.Loading**); Card pattern stories use **React `useState`** for body-state chips (not **`useArgs`** — breaks Docs/Canvas when mixed with React hooks); Controls → preview syncs via **`args.bodyState`**; chip → Controls may lag.
 

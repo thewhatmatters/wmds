@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Button } from "../../atoms/Button/Button";
 import { Skeleton } from "../../atoms/Skeleton/Skeleton";
 import { Chip } from "../../molecules/Chip/Chip";
@@ -8,11 +8,15 @@ import { Card, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantPadYCl
 import { Select, type SelectOption } from "../../molecules/Select/Select";
 import { typographyClass } from "../../../lib/typography";
 import {
+  chartPeriodKindFromValue,
   chartSeriesConfigFromKeys,
   chartSeriesConfigFromTone,
   chartTooltipItemsFromConfig,
 } from "../../../lib/chartTheme";
-import { buildOccupancyAreaSeries } from "../../../lib/chartSampleData";
+import {
+  buildOccupancyAreaSeries,
+  occupancyAreaSeriesForSelectValue,
+} from "../../../lib/chartSampleData";
 import { backgroundPatternDotGridClasses } from "../../../lib/backgroundPatterns";
 import { cn } from "../../../lib/cn";
 import { withStoryCopySource } from "../../../lib/storyCopySource";
@@ -53,7 +57,8 @@ const occupancySeriesConfig = chartSeriesConfigFromKeys([
   { key: "available", label: "Available units" },
 ]);
 
-const occupancyAreaData = buildOccupancyAreaSeries(30);
+const occupancyAreaSource = buildOccupancyAreaSeries(365);
+const occupancyAreaData = occupancyAreaSeriesForSelectValue(occupancyAreaSource, "month");
 
 const occupancyTooltipValues = { occupied: 144, available: 56 };
 
@@ -238,6 +243,12 @@ function OccupancyHistoryCardPattern({
   onPeriodChange: (value: string) => void;
   chartEnterKey: number;
 }) {
+  const periodKind = chartPeriodKindFromValue(period);
+  const chartData = useMemo(
+    () => occupancyAreaSeriesForSelectValue(occupancyAreaSource, period),
+    [period],
+  );
+
   if (bodyState === "skeleton") {
     return (
       <Card
@@ -283,10 +294,10 @@ function OccupancyHistoryCardPattern({
           ) : (
             <>
               <Chart.Cartesian
-                key={chartEnterKey}
-                data={occupancyAreaData}
+                key={`${chartEnterKey}-${period}`}
+                data={chartData}
                 config={occupancySeriesConfig}
-                periodKind="month"
+                periodKind={periodKind}
                 minHeight={220}
                 animate="initial"
                 aria-label="Occupied and available units over the selected period"

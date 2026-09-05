@@ -50,8 +50,8 @@ Connected **segmented control** — one track, sliding inset thumb, mutually exc
 
 ## Anatomy
 
-- **Track** — \`rounded-full\` \`bg-secondary\`, **2px** inset (\`p-0.5\`), hairline border
-- **Thumb** — Motion \`layoutId\` slide on \`bg-surface\` + hairline shadow
+- **Track** — \`rounded-full\` \`bg-body\` recessed well, **2px** inset (\`p-0.5\`), hairline border
+- **Thumb** — Motion \`layoutId\` slide on \`bg-surface\` + \`shadow-raised\` (hairline + drop)
 - **Item** — \`start\` | label (\`children\`) | \`end\` — same three-slot row as **Dropdown.Item** / **Select** options; \`role="radio"\`
 
 ## Best practices
