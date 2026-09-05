@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "../../atoms/Button/Button";
+import { Skeleton } from "../../atoms/Skeleton/Skeleton";
+import { Chip } from "../../molecules/Chip/Chip";
+import { ChipFilterGroup } from "../../molecules/Chip/ChipFilterGroup";
 import { Card, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantPadYClasses, cardLayoutBodyOccupantWellClasses, cardTitleClasses } from "../../molecules/Card/Card";
 import { Select, type SelectOption } from "../../molecules/Select/Select";
 import { typographyClass } from "../../../lib/typography";
@@ -26,6 +29,15 @@ import {
   chartCartesianWireframeClasses,
   chartTooltipCrosshairClasses,
 } from "./chartStyles";
+import {
+  chartCardBodyStateArgType,
+  chartCardBodyStateControlsParameters,
+  chartCardBodyStateHints,
+  chartCardBodyStateLabels,
+  chartCardBodyStates,
+  initialChartCardBodyState,
+  type ChartCardBodyState,
+} from "./chartCardBodyStateStory";
 
 const kpiMetaClasses = `${typographyClass("caption")} text-muted`;
 
@@ -47,12 +59,115 @@ const occupancyTooltipValues = { occupied: 144, available: 56 };
 
 const occupiedToneConfig = chartSeriesConfigFromTone("occupied", "Occupied units", "primary");
 
+function ChartCardBodyStateToolbar({
+  bodyState,
+  onBodyStateChange,
+  resolvedHint,
+}: {
+  bodyState: ChartCardBodyState;
+  onBodyStateChange: (state: ChartCardBodyState) => void;
+  resolvedHint?: string;
+}) {
+  const hint =
+    bodyState === "resolved" && resolvedHint != null ? resolvedHint : chartCardBodyStateHints[bodyState];
+
+  return (
+    <div className="flex max-w-lg flex-col gap-1.5">
+      <ChipFilterGroup
+        selectionMode="single"
+        aria-label="Preview card body state"
+        value={bodyState}
+        onValueChange={(value) => onBodyStateChange(value as ChartCardBodyState)}
+        className="self-start"
+      >
+        {chartCardBodyStates.map((state) => (
+          <Chip key={state} value={state} size="sm">
+            {chartCardBodyStateLabels[state]}
+          </Chip>
+        ))}
+      </ChipFilterGroup>
+      <span className={kpiMetaClasses}>{hint}</span>
+    </div>
+  );
+}
+
+function ChartCardBodyStatePreview({
+  bodyState,
+  onBodyStateChange,
+  resolvedHint,
+  children,
+}: {
+  bodyState: ChartCardBodyState;
+  onBodyStateChange: (state: ChartCardBodyState) => void;
+  resolvedHint?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex max-w-lg flex-col gap-4">
+      <ChartCardBodyStateToolbar
+        bodyState={bodyState}
+        onBodyStateChange={onBodyStateChange}
+        resolvedHint={resolvedHint}
+      />
+      {children}
+    </div>
+  );
+}
+
+/** Docs + Canvas body-state — React state only (no Storybook preview hooks). */
+function useChartCardBodyStateFromArgs(args: { bodyState?: ChartCardBodyState }) {
+  const [bodyState, setBodyState] = useState<ChartCardBodyState>(() => initialChartCardBodyState(args));
+  const [enterGeneration, setEnterGeneration] = useState(0);
+  const previousBodyStateRef = useRef<ChartCardBodyState>(initialChartCardBodyState(args));
+
+  useEffect(() => {
+    if (args.bodyState == null) {
+      return;
+    }
+    const next = args.bodyState as ChartCardBodyState;
+    if (next === previousBodyStateRef.current) {
+      return;
+    }
+    previousBodyStateRef.current = next;
+    setBodyState(next);
+    if (next === "resolved") {
+      setEnterGeneration((generation) => generation + 1);
+    }
+  }, [args.bodyState]);
+
+  const setBodyStateWithReplay = (state: ChartCardBodyState) => {
+    previousBodyStateRef.current = state;
+    setBodyState(state);
+    if (state === "resolved") {
+      setEnterGeneration((generation) => generation + 1);
+    }
+  };
+
+  return {
+    bodyState,
+    enterGeneration,
+    setBodyState: setBodyStateWithReplay,
+  };
+}
+
 const meta = {
   title: "Organisms/Chart",
   component: Chart,
   tags: ["autodocs"],
+  argTypes: {
+    bodyState: {
+      ...chartCardBodyStateArgType,
+      table: { disable: true },
+    },
+  },
+  args: {
+    bodyState: "resolved",
+  },
   parameters: {
     wmdsLayout: "padded",
+    controls: {
+      exclude: ["bodyState"],
+    },
     docs: {
       source: {
         disable: true,
@@ -70,6 +185,8 @@ Dashboard visualizations on **visx v4** — WMDS owns the **shell**; patterns ow
 
 **Tooltip + legend** — **ADR-0015**. Hover a Cartesian plot for crosshair + frosted tooltip; **Chart.Legend** uses the same \`ChartSeriesConfig\` / \`chartSeriesColor\` palette (**ADR-0013**). **SegmentedBar** has no tooltip.
 
+**Card pattern stories** — use the state chips above each Card preview, or **Controls → Body state** (Docs and Canvas), to toggle initial skeleton, retrieving, and resolved.
+
 ## Anatomy
 
 \`\`\`
@@ -86,7 +203,9 @@ Card.Header / Footer usually carry KPI copy; the chart mark sits in **Card.Body*
 - **Do** use \`chartFormatPercent(value, max)\` for headline percent copy.
 - **Do** pass \`label\` when \`role="meter"\` needs more context than a percent.
 - **Do** use \`Chart.SegmentedBar\` only for **capacity** — snapshot fill (\`value\` / \`max\`). Daily history → **Chart.Cartesian** + **Chart.Cartesian.Area** (ADR-0015).
-- **Do** use \`fill="velocity"\` for occupancy-style capacity bars; \`fill="semantic"\` for RAG utilization meters.
+- **Do** use \`fill="velocity"\` for occupancy-style capacity bars; \`fill="semantic"\` for RAG utilization meters (red → orange → yellow → green).
+- **Do** use **Chart.Loading** in **Card.Body** while chart data fetches — keep **Card.Header** mounted; swap the well for **Chart.Cartesian** when resolved (default \`animate="initial"\` fades the plot in once).
+- **Do** use **Skeleton** (**Atoms/Skeleton**) for initial page/card skeleton screens — mirror layout, then swap for **Chart.Loading** or live marks.
 - **Don't** use \`Chart.SegmentedBar\` for per-day or per-week strips — ticks are not calendar buckets.
 - **Don't** put axis assumptions in \`Chart.Frame\` — use \`Chart.Cartesian\` for time series (ADR-0015).
         `.trim(),
@@ -97,6 +216,177 @@ Card.Header / Footer usually carry KPI copy; the chart mark sits in **Card.Body*
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+const occupancyHistoryWellClasses = `flex flex-col gap-3 ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`;
+
+const occupancyKpiWellClasses = `flex flex-col gap-2 ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`;
+
+const occupancyCardHeaderSkeleton = {
+  start: <Skeleton width={148} height={18} radius="inner" index={0} />,
+  end: <Skeleton width={144} height={28} radius="full" index={1} />,
+} as const;
+
+function OccupancyHistoryCardPattern({
+  bodyState,
+  period,
+  onPeriodChange,
+  chartEnterKey,
+}: {
+  bodyState: ChartCardBodyState;
+  period: string;
+  onPeriodChange: (value: string) => void;
+  chartEnterKey: number;
+}) {
+  if (bodyState === "skeleton") {
+    return (
+      <Card
+        shape="rounded"
+        bodyTerminal
+        className="max-w-lg"
+        aria-busy="true"
+        aria-label="Loading occupancy history"
+      >
+        <Card.Header {...occupancyCardHeaderSkeleton} />
+        <Card.Body>
+          <div className={occupancyHistoryWellClasses}>
+            <Skeleton width="100%" height={220} radius="element" index={2} />
+            <div className="flex flex-wrap gap-4">
+              <Skeleton width={112} height={12} radius="inner" index={3} />
+              <Skeleton width={96} height={12} radius="inner" index={4} />
+            </div>
+          </div>
+        </Card.Body>
+      </Card>
+    );
+  }
+
+  return (
+    <Card shape="rounded" bodyTerminal className="max-w-lg">
+      <Card.Header
+        start={<h2 className={cardTitleClasses}>Occupancy history</h2>}
+        end={
+          <Select
+            aria-label="Reporting period"
+            size="sm"
+            options={occupancyPeriodOptions}
+            value={period}
+            onValueChange={onPeriodChange}
+            className="w-36"
+          />
+        }
+      />
+      <Card.Body>
+        <div className={occupancyHistoryWellClasses}>
+          {bodyState === "retrieving" ? (
+            <Chart.Loading minHeight={220} />
+          ) : (
+            <>
+              <Chart.Cartesian
+                key={chartEnterKey}
+                data={occupancyAreaData}
+                config={occupancySeriesConfig}
+                periodKind="month"
+                minHeight={220}
+                animate="initial"
+                aria-label="Occupied and available units over the selected period"
+              />
+              <Chart.Legend config={occupancySeriesConfig} />
+            </>
+          )}
+        </div>
+      </Card.Body>
+    </Card>
+  );
+}
+
+function OccupancyKpiCardPattern({
+  bodyState,
+  period,
+  onPeriodChange,
+  barEnterKey,
+}: {
+  bodyState: ChartCardBodyState;
+  period: string;
+  onPeriodChange: (value: string) => void;
+  barEnterKey: number;
+}) {
+  const occupied = 144;
+  const total = 200;
+
+  if (bodyState === "skeleton") {
+    return (
+      <Card
+        shape="rounded"
+        className="max-w-lg"
+        aria-busy="true"
+        aria-label="Loading occupancy score"
+      >
+        <Card.Header {...occupancyCardHeaderSkeleton} />
+        <Card.Body>
+          <div className={occupancyKpiWellClasses}>
+            <Skeleton width={160} height={40} radius="inner" index={2} />
+            <Skeleton width="100%" height={32} radius="element" index={3} />
+          </div>
+        </Card.Body>
+        <Card.Footer>
+          <Skeleton width={160} height={14} radius="inner" index={4} />
+          <Skeleton width={112} height={28} radius="full" index={5} />
+        </Card.Footer>
+      </Card>
+    );
+  }
+
+  return (
+    <Card shape="rounded" className="max-w-lg">
+      <Card.Header
+        start={<h2 className={cardTitleClasses}>Occupancy score</h2>}
+        end={
+          <Select
+            aria-label="Reporting period"
+            size="sm"
+            options={occupancyPeriodOptions}
+            value={period}
+            onValueChange={onPeriodChange}
+            className="w-36"
+          />
+        }
+      />
+      <Card.Body>
+        <div className={occupancyKpiWellClasses}>
+          {bodyState === "retrieving" ? (
+            <Chart.Loading minHeight={120} />
+          ) : (
+            <>
+              <div className={chartKpiHeroRowClasses}>
+                <span className={chartKpiHeroValueClasses}>{chartFormatPercent(occupied, total)}</span>
+                <div className={chartKpiTrendRowClasses}>
+                  <span className={`${chartKpiTrendValueClasses} text-success`}>+4.2%</span>
+                  <span className={chartKpiTrendLabelClasses}>From last month</span>
+                </div>
+              </div>
+              <Chart.Frame>
+                <Chart.SegmentedBar
+                  key={barEnterKey}
+                  value={occupied}
+                  max={total}
+                  tone="primary"
+                  fill="velocity"
+                  animate="initial"
+                />
+              </Chart.Frame>
+            </>
+          )}
+        </div>
+      </Card.Body>
+      <Card.Footer>
+        <span className={kpiMetaClasses}>Occupied units: {occupied}/{total}</span>
+        <Button role="secondary" size="sm">
+          View breakdown
+        </Button>
+      </Card.Footer>
+    </Card>
+  );
+}
 
 export const TooltipContentReference: Story = {
   name: "Reference — tooltip content",
@@ -263,12 +553,20 @@ export const AreaMultiSeries: Story = {
 
 export const OccupancyHistoryInCard: Story = {
   name: "Pattern — occupancy history in Card",
-  parameters: withStoryCopySource(
+  argTypes: {
+    bodyState: chartCardBodyStateArgType,
+  },
+  args: {
+    bodyState: "resolved",
+  },
+  parameters: {
+    ...chartCardBodyStateControlsParameters,
+    ...withStoryCopySource(
     {
       docs: {
         description: {
           story:
-            "History companion to the capacity KPI — **Card.Header** Select scopes period; inset well + **`bodyTerminal`** (no **Footer**). Categorical palette for occupied vs available.",
+            "History companion to the capacity KPI — **Card.Header** Select scopes period; inset well + **`bodyTerminal`**. State chips: **Initial load** = Skeleton shimmer ([Motion Dev](https://motion.dev/examples/react-skeleton-shimmer)); **Retrieving** = **Chart.Loading**; **Resolved** = path draw enter — click **Resolved** again to replay.",
         },
       },
     },
@@ -287,132 +585,42 @@ const config = chartSeriesConfigFromKeys([
   />
   <Card.Body>
     <div className={\`flex flex-col gap-3 \${cardLayoutBodyOccupantPadYClasses} \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantInsetXClasses}\`}>
-      <Chart.Cartesian data={data} config={config} periodKind="month" minHeight={220} />
+      <Chart.Cartesian data={data} config={config} periodKind="month" minHeight={220} animate="initial" />
       <Chart.Legend config={config} />
     </div>
   </Card.Body>
 </Card>
     `,
-  ),
-  render: () => {
+    ),
+  },
+  render: function OccupancyHistoryInCardRender(args) {
+    const { bodyState, enterGeneration, setBodyState } = useChartCardBodyStateFromArgs(args);
     const [period, setPeriod] = useState("month");
 
     return (
-      <Card shape="rounded" bodyTerminal className="max-w-lg">
-        <Card.Header
-          start={<h2 className={cardTitleClasses}>Occupancy history</h2>}
-          end={
-            <Select
-              aria-label="Reporting period"
-              size="sm"
-              options={occupancyPeriodOptions}
-              value={period}
-              onValueChange={setPeriod}
-              className="w-36"
-            />
-          }
+      <ChartCardBodyStatePreview
+        bodyState={bodyState}
+        onBodyStateChange={setBodyState}
+        resolvedHint="Path draw enter (Motion)"
+      >
+        <OccupancyHistoryCardPattern
+          bodyState={bodyState}
+          period={period}
+          onPeriodChange={setPeriod}
+          chartEnterKey={enterGeneration}
         />
-        <Card.Body>
-          <div className={`flex flex-col gap-3 ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}>
-            <Chart.Cartesian
-              data={occupancyAreaData}
-              config={occupancySeriesConfig}
-              periodKind="month"
-              minHeight={220}
-              aria-label="Occupied and available units over the selected period"
-            />
-            <Chart.Legend config={occupancySeriesConfig} />
-          </div>
-        </Card.Body>
-      </Card>
+      </ChartCardBodyStatePreview>
     );
   },
 };
 
-export const SegmentedBar: Story = {
-  name: "Pattern — segmented bar",
-  parameters: withStoryCopySource(
-    {
-      docs: {
-        description: {
-          story:
-            "Capacity meter — **60** ticks at **5px** each (**1px** min gap); gap flexes so the bar **fills the card width**. Filled segment count from `value / max`. `role=\"meter\"`.",
-        },
-      },
-    },
-    `
-import { Chart } from "@whatmatters/wmds";
-
-<Chart.Frame className="max-w-lg">
-  <Chart.SegmentedBar value={144} max={200} tone="primary" label="Occupancy 72%" />
-</Chart.Frame>
-    `,
-  ),
-  render: () => (
-    <Chart.Frame className="max-w-lg">
-      <Chart.SegmentedBar value={144} max={200} tone="primary" label="Occupancy 72%" />
-    </Chart.Frame>
-  ),
-};
-
-export const SegmentedBarVelocity: Story = {
-  name: "Pattern — segmented bar (velocity)",
-  parameters: withStoryCopySource(
-    {
-      docs: {
-        description: {
-          story:
-            "Occupancy-style fill — `fill=\"velocity\"` applies a left → right tone gradient across filled ticks (token opacity 1 → 0.22).",
-        },
-      },
-    },
-    `
-import { Chart } from "@whatmatters/wmds";
-
-<Chart.Frame className="max-w-lg">
-  <Chart.SegmentedBar value={144} max={200} tone="primary" fill="velocity" label="Occupancy 72%" />
-</Chart.Frame>
-    `,
-  ),
-  render: () => (
-    <Chart.Frame className="max-w-lg">
-      <Chart.SegmentedBar value={144} max={200} tone="primary" fill="velocity" label="Occupancy 72%" />
-    </Chart.Frame>
-  ),
-};
-
-export const SegmentedBarSemantic: Story = {
-  name: "Pattern — segmented bar (RAG)",
-  parameters: withStoryCopySource(
-    {
-      docs: {
-        description: {
-          story:
-            "**RAG** (red / amber / green) — `fill=\"semantic\"` maps error → warning → success across bar capacity. Common for utilization and health meters.",
-        },
-      },
-    },
-    `
-import { Chart } from "@whatmatters/wmds";
-
-<Chart.Frame className="max-w-lg">
-  <Chart.SegmentedBar value={144} max={200} fill="semantic" label="Occupancy 72%" />
-</Chart.Frame>
-    `,
-  ),
-  render: () => (
-    <Chart.Frame className="max-w-lg">
-      <Chart.SegmentedBar value={144} max={200} fill="semantic" label="Occupancy 72%" />
-    </Chart.Frame>
-  ),
-};
-
-export const SegmentedBarFillComparison: Story = {
+export const SegmentedBarFillReference: Story = {
   name: "Reference — segment fills",
   parameters: {
     docs: {
       description: {
-        story: "Same `144/200` data — **velocity** (tone fade) vs **semantic** (RAG hue scale).",
+        story:
+          "Fill variants on the same `144/200` meter — **`velocity`** (occupancy-style tone fade) vs **`semantic`** (RAG red → orange → yellow → green). Prefer **velocity** in KPI cards; **semantic** for utilization / health thresholds.",
       },
     },
   },
@@ -421,13 +629,13 @@ export const SegmentedBarFillComparison: Story = {
       <div className="flex flex-col gap-2">
         <span className={kpiMetaClasses}>fill=&quot;velocity&quot;</span>
         <Chart.Frame>
-          <Chart.SegmentedBar value={144} max={200} tone="primary" fill="velocity" />
+          <Chart.SegmentedBar value={144} max={200} tone="primary" fill="velocity" label="Occupancy 72%" />
         </Chart.Frame>
       </div>
       <div className="flex flex-col gap-2">
         <span className={kpiMetaClasses}>fill=&quot;semantic&quot; (RAG)</span>
         <Chart.Frame>
-          <Chart.SegmentedBar value={144} max={200} fill="semantic" />
+          <Chart.SegmentedBar value={144} max={200} fill="semantic" label="Utilization 72%" />
         </Chart.Frame>
       </div>
     </div>
@@ -436,17 +644,25 @@ export const SegmentedBarFillComparison: Story = {
 
 export const OccupancyInCard: Story = {
   name: "Pattern — occupancy KPI in Card",
-  parameters: withStoryCopySource(
+  argTypes: {
+    bodyState: chartCardBodyStateArgType,
+  },
+  args: {
+    bodyState: "resolved",
+  },
+  parameters: {
+    ...chartCardBodyStateControlsParameters,
+    ...withStoryCopySource(
     {
       docs: {
         description: {
           story:
-            "Dashboard widget — hero percent + inline mono trend, **Chart.SegmentedBar** in **Card.Body**, footer meta. **Card.Header** `end` → **Select** (`size=\"sm\"`) for reporting period.",
+            "Dashboard widget — hero percent + inline mono trend, **Chart.SegmentedBar** in inset well (same shell as history pattern), **Card.Footer** on skeleton and resolved. **Retrieving** = **Chart.Loading**; **Resolved** = spring fill ([Motion progress bar](https://motion.dev/examples/react-loading-progress-bar)). Click **Resolved** to replay.",
         },
       },
     },
     `
-import { Button, Card, Chart, Select, chartFormatPercent, chartKpiHeroRowClasses, chartKpiHeroValueClasses, chartKpiTrendLabelClasses, chartKpiTrendRowClasses, chartKpiTrendValueClasses, cardLayoutBodyOccupantInsetXClasses, cardTitleClasses } from "@whatmatters/wmds";
+import { Button, Card, Chart, Select, chartFormatPercent, chartKpiHeroRowClasses, chartKpiHeroValueClasses, chartKpiTrendLabelClasses, chartKpiTrendRowClasses, chartKpiTrendValueClasses, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantPadYClasses, cardLayoutBodyOccupantWellClasses, cardTitleClasses } from "@whatmatters/wmds";
 
 const occupied = 144;
 const total = 200;
@@ -471,7 +687,7 @@ const periodOptions = [
     }
   />
   <Card.Body>
-    <div className={\`flex flex-col gap-2 py-4 \${cardLayoutBodyOccupantInsetXClasses}\`}>
+    <div className={\`flex flex-col gap-2 \${cardLayoutBodyOccupantPadYClasses} \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantInsetXClasses}\`}>
       <div className={chartKpiHeroRowClasses}>
         <span className={chartKpiHeroValueClasses}>{chartFormatPercent(occupied, total)}</span>
         <div className={chartKpiTrendRowClasses}>
@@ -480,7 +696,7 @@ const periodOptions = [
         </div>
       </div>
       <Chart.Frame>
-        <Chart.SegmentedBar value={occupied} max={total} tone="primary" fill="velocity" />
+        <Chart.SegmentedBar value={occupied} max={total} tone="primary" fill="velocity" animate="initial" />
       </Chart.Frame>
     </div>
   </Card.Body>
@@ -492,48 +708,25 @@ const periodOptions = [
   </Card.Footer>
 </Card>
     `,
-  ),
-  render: () => {
-    const occupied = 144;
-    const total = 200;
+    ),
+  },
+  render: function OccupancyInCardRender(args) {
+    const { bodyState, enterGeneration, setBodyState } = useChartCardBodyStateFromArgs(args);
     const [period, setPeriod] = useState("month");
 
     return (
-      <Card shape="rounded" className="max-w-lg">
-        <Card.Header
-          start={<h2 className={cardTitleClasses}>Occupancy score</h2>}
-          end={
-            <Select
-              aria-label="Reporting period"
-              size="sm"
-              options={occupancyPeriodOptions}
-              value={period}
-              onValueChange={setPeriod}
-              className="w-36"
-            />
-          }
+      <ChartCardBodyStatePreview
+        bodyState={bodyState}
+        onBodyStateChange={setBodyState}
+        resolvedHint="Spring fill enter (Motion progress bar)"
+      >
+        <OccupancyKpiCardPattern
+          bodyState={bodyState}
+          period={period}
+          onPeriodChange={setPeriod}
+          barEnterKey={enterGeneration}
         />
-        <Card.Body>
-          <div className={`flex flex-col gap-2 py-4 ${cardLayoutBodyOccupantInsetXClasses}`}>
-            <div className={chartKpiHeroRowClasses}>
-              <span className={chartKpiHeroValueClasses}>{chartFormatPercent(occupied, total)}</span>
-              <div className={chartKpiTrendRowClasses}>
-                <span className={`${chartKpiTrendValueClasses} text-success`}>+4.2%</span>
-                <span className={chartKpiTrendLabelClasses}>From last month</span>
-              </div>
-            </div>
-            <Chart.Frame>
-              <Chart.SegmentedBar value={occupied} max={total} tone="primary" fill="velocity" />
-            </Chart.Frame>
-          </div>
-        </Card.Body>
-        <Card.Footer>
-          <span className={kpiMetaClasses}>Occupied units: {occupied}/{total}</span>
-          <Button role="secondary" size="sm">
-            View breakdown
-          </Button>
-        </Card.Footer>
-      </Card>
+      </ChartCardBodyStatePreview>
     );
   },
 };

@@ -8,6 +8,7 @@ const atoms = [
   "Button",
   "IconButton",
   "Input",
+  "Skeleton",
   "Status",
   "TextArea",
 ] as const;

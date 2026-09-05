@@ -20,6 +20,12 @@ export const chartKpiTrendValueClasses = "font-mono text-sm tabular-nums leading
 
 export const chartKpiTrendLabelClasses = `${typographyClass("overline")} text-muted`;
 
+/** Centered retrieving state — spinner + caption; pair with Chart.Cartesian when data is in flight. */
+export const chartLoadingPanelClasses =
+  "flex w-full min-w-0 flex-col items-center justify-center gap-2 text-muted";
+
+export const chartLoadingLabelClasses = typographyClass("caption");
+
 /** Shifts **Chart.Tooltip.Content** above/below the crosshair anchor inside an unstyled visx portal. */
 export const chartTooltipAnchorAboveClasses = "-translate-y-[calc(100%+4px)]";
 

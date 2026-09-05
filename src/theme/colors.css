@@ -36,6 +36,9 @@
   --color-border: #00000014;
   --color-border-emphasized: #d4d4d4;
 
+  /* Loading placeholders — skeleton screens (Astryx Skeleton) */
+  --color-skeleton: color-mix(in srgb, var(--color-text-primary) 8%, var(--color-background-muted));
+
   /* Status — error */
   --color-error: #a50c25;
   --color-error-muted: #facecb;
@@ -80,6 +83,16 @@
   --color-chart-categorical-11: #9b5de5;
   --color-chart-categorical-12: #c97b5a;
 
+  /*
+   * Chart — RAG threshold scale (segmented capacity meters only).
+   * Four fill stops: red → orange → yellow → green across bar width.
+   * Not for text, badges, or categorical series — see ADR-0013.
+   */
+  --color-chart-rag-1: #a50c25;
+  --color-chart-rag-2: #e85a00;
+  --color-chart-rag-3: #e6b800;
+  --color-chart-rag-4: #007004;
+
   /* Shadow primitives (referenced by @theme semantic shadows) */
   --shadow-drop-sm: 0 1px 2px rgb(0 0 0 / 8%);
   --shadow-drop-md: 0 1px 2px rgb(0 0 0 / 6%), 0 2px 6px rgb(0 0 0 / 4%);
@@ -108,6 +121,8 @@
 
   --color-border: #ffffff1a;
   --color-border-emphasized: #525252;
+
+  --color-skeleton: color-mix(in srgb, var(--color-text-primary) 12%, var(--color-background-muted));
 
   --color-error: #ffc6c1;
   --color-error-muted: #ff9e973d;
@@ -142,6 +157,11 @@
   --color-chart-categorical-10: #40b8c8;
   --color-chart-categorical-11: #c098f0;
   --color-chart-categorical-12: #e89878;
+
+  --color-chart-rag-1: #ff8a84;
+  --color-chart-rag-2: #ffb347;
+  --color-chart-rag-3: #fdcf4f;
+  --color-chart-rag-4: #9fe59b;
 
   --shadow-drop-sm: 0 1px 2px rgb(0 0 0 / 30%);
   --shadow-drop-md: 0 1px 2px rgb(0 0 0 / 20%), 0 2px 6px rgb(0 0 0 / 20%);

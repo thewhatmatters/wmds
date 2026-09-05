@@ -1,14 +1,16 @@
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { curveMonotoneX } from "@visx/curve";
 import { localPoint } from "@visx/event";
-import { GridRows } from "@visx/grid";
+import { GridColumns, GridRows } from "@visx/grid";
 import { LinearGradient } from "@visx/gradient";
 import { Group } from "@visx/group";
 import { ParentSize } from "@visx/responsive";
 import { scaleLinear, scaleTime } from "@visx/scale";
 import { AreaClosed, LinePath } from "@visx/shape";
+import { line } from "@visx/vendor/d3-shape";
 import { useTooltip, useTooltipInPortal } from "@visx/tooltip";
 import { bisector } from "d3-array";
+import { motion, useReducedMotion } from "motion/react";
 import {
   useCallback,
   useId,
@@ -43,6 +45,15 @@ import {
   chartTooltipCrosshairClasses,
   chartTooltipCrosshairLineClasses,
 } from "./chartStyles";
+import {
+  chartCartesianAreaEnterTransition,
+  chartCartesianEnterTransition,
+  chartCartesianEnterVariants,
+  chartCartesianLineEnterTransition,
+  type ChartCartesianAnimate,
+} from "./chartCartesianMotion";
+
+export type { ChartCartesianAnimate } from "./chartCartesianMotion";
 
 export type { ChartCartesianPoint } from "./chartCartesianContext";
 
@@ -62,6 +73,8 @@ export interface ChartCartesianProps {
   yAccessor?: (point: ChartCartesianPoint, key: string) => number;
   /** Accessible chart summary. */
   "aria-label"?: string;
+  /** Mount enter — `initial` fades the plot in once; `none` for static Storybook layouts. Period changes do not re-run. */
+  animate?: ChartCartesianAnimate;
   className?: ChartCartesianLayoutClassName;
   children?: ReactNode;
 }
@@ -96,11 +109,13 @@ function ChartCartesianInner({
   xAccessor,
   yAccessor,
   ariaLabel,
+  animateEnter,
   children,
   TooltipInPortal,
 }: ChartCartesianProps & {
   width: number;
   height: number;
+  animateEnter: boolean;
   TooltipInPortal: ReturnType<typeof useTooltipInPortal>["TooltipInPortal"];
 }) {
   const keys = seriesKeys ?? Object.keys(config);
@@ -147,9 +162,11 @@ function ChartCartesianInner({
       xAccessor: xAccessor!,
       yAccessor: yAccessor!,
       TooltipInPortal,
+      animateEnter,
     }),
     [
       TooltipInPortal,
+      animateEnter,
       config,
       data,
       height,
@@ -173,7 +190,17 @@ function ChartCartesianInner({
 
   return (
     <ChartCartesianProvider value={contextValue}>
-      <svg width={width} height={height} className={chartCartesianSvgClasses} role="img" aria-label={ariaLabel}>
+      <motion.svg
+        width={width}
+        height={height}
+        className={chartCartesianSvgClasses}
+        role="img"
+        aria-label={ariaLabel}
+        variants={chartCartesianEnterVariants}
+        initial={animateEnter ? "hidden" : false}
+        animate="visible"
+        transition={chartCartesianEnterTransition}
+      >
         <Group left={margin.left} top={margin.top}>
           {children ?? (
             <>
@@ -185,7 +212,7 @@ function ChartCartesianInner({
             </>
           )}
         </Group>
-      </svg>
+      </motion.svg>
     </ChartCartesianProvider>
   );
 }
@@ -199,11 +226,14 @@ export function ChartCartesian({
   periodKind,
   xAccessor = (point) => point.date,
   yAccessor = defaultYAccessor,
+  animate = "initial",
   className,
   children,
   "aria-label": ariaLabel = "Time series chart",
 }: ChartCartesianProps) {
   const { containerRef, TooltipInPortal } = useTooltipInPortal({ scroll: true, detectBounds: false });
+  const shouldReduceMotion = useReducedMotion();
+  const shouldEnter = animate === "initial" && !shouldReduceMotion;
 
   return (
     <div
@@ -225,6 +255,7 @@ export function ChartCartesian({
               xAccessor={xAccessor}
               yAccessor={yAccessor}
               aria-label={ariaLabel}
+              animateEnter={shouldEnter}
               TooltipInPortal={TooltipInPortal}
             >
               {children}
@@ -236,18 +267,28 @@ export function ChartCartesian({
   );
 }
 
+const CARTESIAN_X_TICK_COUNT = 6;
+
+const cartesianGridLineProps = {
+  stroke: chartUiTokens.grid,
+  strokeOpacity: 0.6,
+  strokeDasharray: "4 4",
+  pointerEvents: "none" as const,
+};
+
 export function ChartCartesianGrid() {
-  const { yScale, innerWidth } = useChartCartesian();
+  const { xScale, yScale, innerWidth, innerHeight } = useChartCartesian();
 
   return (
-    <GridRows
-      scale={yScale}
-      width={innerWidth}
-      stroke={chartUiTokens.grid}
-      strokeOpacity={0.6}
-      strokeDasharray="4 4"
-      pointerEvents="none"
-    />
+    <>
+      <GridRows scale={yScale} width={innerWidth} {...cartesianGridLineProps} />
+      <GridColumns
+        scale={xScale}
+        height={innerHeight}
+        numTicks={CARTESIAN_X_TICK_COUNT}
+        {...cartesianGridLineProps}
+      />
+    </>
   );
 }
 
@@ -258,7 +299,7 @@ export function ChartCartesianAxisBottom() {
     <AxisBottom
       top={innerHeight}
       scale={xScale}
-      numTicks={6}
+      numTicks={CARTESIAN_X_TICK_COUNT}
       stroke={chartUiTokens.axis}
       tickStroke={chartUiTokens.axis}
       tickLine={false}
@@ -301,7 +342,7 @@ export function ChartCartesianAxisLeft() {
 }
 
 export function ChartCartesianAreaSeries() {
-  const { data, config, seriesKeys, xScale, yScale, xAccessor, yAccessor, variant } =
+  const { data, config, seriesKeys, xScale, yScale, xAccessor, yAccessor, variant, animateEnter } =
     useChartCartesian();
   const areaPreset = chartAreaPresets[variant];
   const chartUid = useId().replace(/:/g, "");
@@ -311,6 +352,11 @@ export function ChartCartesianAreaSeries() {
       {seriesKeys.map((key) => {
         const color = config[key]?.color ?? chartUiTokens.axis;
         const gradientId = `wmds-area-${chartUid}-${key.replace(/[^a-z0-9]/gi, "")}`;
+        const linePath =
+          line<ChartCartesianPoint>()
+            .x((point) => xScale(xAccessor(point)) ?? 0)
+            .y((point) => yScale(yAccessor(point, key)) ?? 0)
+            .curve(curveMonotoneX)(data) ?? "";
 
         return (
           <Group key={key}>
@@ -322,23 +368,53 @@ export function ChartCartesianAreaSeries() {
               toOpacity={0}
               vertical
             />
-            <AreaClosed
-              data={data}
-              x={(point) => xScale(xAccessor(point)) ?? 0}
-              y={(point) => yScale(yAccessor(point, key)) ?? 0}
-              yScale={yScale}
-              fill={`url(#${gradientId})`}
-              stroke="transparent"
-              curve={curveMonotoneX}
-            />
-            <LinePath
-              data={data}
-              x={(point) => xScale(xAccessor(point)) ?? 0}
-              y={(point) => yScale(yAccessor(point, key)) ?? 0}
-              stroke={color}
-              strokeWidth={areaPreset.strokeWidth}
-              curve={curveMonotoneX}
-            />
+            {animateEnter ? (
+              <motion.g
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={chartCartesianAreaEnterTransition}
+              >
+                <AreaClosed
+                  data={data}
+                  x={(point) => xScale(xAccessor(point)) ?? 0}
+                  y={(point) => yScale(yAccessor(point, key)) ?? 0}
+                  yScale={yScale}
+                  fill={`url(#${gradientId})`}
+                  stroke="transparent"
+                  curve={curveMonotoneX}
+                />
+              </motion.g>
+            ) : (
+              <AreaClosed
+                data={data}
+                x={(point) => xScale(xAccessor(point)) ?? 0}
+                y={(point) => yScale(yAccessor(point, key)) ?? 0}
+                yScale={yScale}
+                fill={`url(#${gradientId})`}
+                stroke="transparent"
+                curve={curveMonotoneX}
+              />
+            )}
+            {animateEnter ? (
+              <motion.path
+                d={linePath}
+                fill="none"
+                stroke={color}
+                strokeWidth={areaPreset.strokeWidth}
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={chartCartesianLineEnterTransition}
+              />
+            ) : (
+              <LinePath
+                data={data}
+                x={(point) => xScale(xAccessor(point)) ?? 0}
+                y={(point) => yScale(yAccessor(point, key)) ?? 0}
+                stroke={color}
+                strokeWidth={areaPreset.strokeWidth}
+                curve={curveMonotoneX}
+              />
+            )}
           </Group>
         );
       })}

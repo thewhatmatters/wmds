@@ -55,6 +55,8 @@ export const chartUiTokens = {
   tooltipBorder: "var(--color-border)",
   tooltipFg: "var(--color-text-primary)",
   tooltipMuted: "var(--color-text-secondary)",
+  /** Error state tick fill — soft error wash across the track. */
+  errorSegment: "var(--color-error-muted)",
 } as const;
 
 /** Dot-grid canvas — apply `backgroundPatternDotGridClasses` or Chart shell with grid. */
@@ -482,7 +484,7 @@ export function chartSegmentTickCenter(
   return chartSegmentPosition(index, tickWidth, gap) + tickWidth / 2;
 }
 
-/** Segmented bar fill — `velocity` = single-tone fade; `semantic` = RAG (red → warning → green). */
+/** Segmented bar fill — `velocity` = single-tone fade; `semantic` = RAG (red → orange → yellow → green). */
 export const chartSegmentFillVariants = {
   solid: {
     kind: "solid" as const,
@@ -496,9 +498,10 @@ export const chartSegmentFillVariants = {
     kind: "semantic" as const,
     /** Full-bar RAG scale — each tick picks up hue by position (0 → capacity). */
     stops: [
-      { offset: 0, color: "var(--color-error)" },
-      { offset: 0.5, color: "var(--color-warning)" },
-      { offset: 1, color: "var(--color-success)" },
+      { offset: 0, color: "var(--color-chart-rag-1)" },
+      { offset: 0.33, color: "var(--color-chart-rag-2)" },
+      { offset: 0.66, color: "var(--color-chart-rag-3)" },
+      { offset: 1, color: "var(--color-chart-rag-4)" },
     ],
   },
 } as const;

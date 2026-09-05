@@ -33,3 +33,10 @@
   --duration-slower: var(--duration-medium-max);
   --ease-out-expo: var(--ease-standard);
 }
+
+/** Skeleton screens — higher contrast resting fill when shimmer is off (reduced motion). */
+@media (prefers-contrast: more) {
+  .wmds-skeleton-host {
+    background-color: color-mix(in srgb, var(--color-skeleton) 70%, var(--color-text-primary) 30%);
+  }
+}

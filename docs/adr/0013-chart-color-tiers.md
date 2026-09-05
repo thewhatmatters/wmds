@@ -10,7 +10,7 @@ WMDS charts need three distinct color jobs. Conflating them breaks dashboard rea
 | Tier | Job | Example |
 |------|-----|---------|
 | **Semantic** | Encode meaning | KPI trend `text-success`, `ChartTone` stroke |
-| **Threshold / RAG** | Position on a scalar | `Chart.SegmentedBar` `fill="semantic"` (error → warning → success) |
+| **Threshold / RAG** | Position on a scalar | `Chart.SegmentedBar` `fill="semantic"` (red → orange → yellow → green via `--color-chart-rag-*`) |
 | **Categorical** | Series identity, no meaning | Multi-series line, legend swatch, donut segment |
 
 ADR-0012 established visx + `chartTheme.ts`. Occupancy KPI and segmented bar patterns shipped semantic and RAG tiers. Multi-series Cartesian charts need a dedicated categorical palette.
@@ -20,7 +20,7 @@ ADR-0012 established visx + `chartTheme.ts`. Occupancy KPI and segmented bar pat
 ### Three tiers — keep separate
 
 1. **Semantic** — existing `--color-primary`, `--color-success`, `--color-error`, etc. via `ChartTone` and `chartColorTokens`.
-2. **Threshold / RAG** — `chartSegmentFillVariants.semantic` stops on segmented capacity bars.
+2. **Threshold / RAG** — `chartSegmentFillVariants.semantic` stops (`--color-chart-rag-1` … `4`) on segmented capacity bars.
 3. **Categorical** — new `--color-chart-categorical-1` … `--color-chart-categorical-12` in `colors.css`.
 
 Do **not** map series color to Badge variants or status roles.

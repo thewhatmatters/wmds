@@ -19,7 +19,7 @@ const meta = {
         component:
           "Chart color tiers from **`src/theme/colors.css`** and **`src/lib/chartTheme.ts`**. " +
           "**Semantic** tones (`ChartTone`) encode meaning — success, error, brand. " +
-          "**Threshold / RAG** fills (`fill=\"semantic\"` on **Chart.SegmentedBar**) map position to status hues. " +
+          "**Threshold / RAG** fills (`fill=\"semantic\"` on **Chart.SegmentedBar**) — red → orange → yellow → green via `--color-chart-rag-*`. " +
           "**Categorical** tokens (`--color-chart-categorical-*`) identify series with **no implied meaning** — resolve via **`chartSeriesColor(index)`**. " +
           "See **ADR-0013** and **Organisms/Chart** — **ADR-0015** tooltip/legend reference stories.",
       },

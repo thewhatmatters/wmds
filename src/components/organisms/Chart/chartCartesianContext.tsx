@@ -33,6 +33,8 @@ export type ChartCartesianContextValue = {
   xAccessor: (point: ChartCartesianPoint) => Date;
   yAccessor: (point: ChartCartesianPoint, key: string) => number;
   TooltipInPortal: UseTooltipInPortal["TooltipInPortal"];
+  /** When true, area series plays mount enter (path draw + fill fade). */
+  animateEnter: boolean;
 };
 
 const ChartCartesianContext = createContext<ChartCartesianContextValue | null>(null);
