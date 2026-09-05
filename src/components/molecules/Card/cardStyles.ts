@@ -54,6 +54,12 @@ export const cardLayoutBodyGutterClasses = "px-[2px]";
  */
 export const cardLayoutBodyOccupantInsetXClasses = "px-3.5";
 
+/**
+ * Body occupant vertical pad — 16px literal (not rem-scaled).
+ * Pair with {@link cardLayoutBodyOccupantInsetXClasses} + well classes on the occupant shell.
+ */
+export const cardLayoutBodyOccupantPadYClasses = "py-[16px]";
+
 export const cardLayoutShellShapeClasses: Record<CardShape, string> = {
   flush: "",
   rounded: "rounded-2xl shadow-md",

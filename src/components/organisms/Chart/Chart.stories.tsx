@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Button } from "../../atoms/Button/Button";
-import { Card, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantWellClasses, cardTitleClasses } from "../../molecules/Card/Card";
+import { Card, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantPadYClasses, cardLayoutBodyOccupantWellClasses, cardTitleClasses } from "../../molecules/Card/Card";
 import { Select, type SelectOption } from "../../molecules/Select/Select";
 import { typographyClass } from "../../../lib/typography";
 import {
@@ -273,7 +273,7 @@ export const OccupancyHistoryInCard: Story = {
       },
     },
     `
-import { Card, Chart, Select, chartSeriesConfigFromKeys, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantWellClasses, cardTitleClasses } from "@whatmatters/wmds";
+import { Card, Chart, Select, chartSeriesConfigFromKeys, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantPadYClasses, cardLayoutBodyOccupantWellClasses, cardTitleClasses } from "@whatmatters/wmds";
 
 const config = chartSeriesConfigFromKeys([
   { key: "occupied", label: "Occupied units" },
@@ -286,7 +286,7 @@ const config = chartSeriesConfigFromKeys([
     end={<Select aria-label="Reporting period" size="sm" options={periodOptions} defaultValue="month" className="w-36" />}
   />
   <Card.Body>
-    <div className={\`flex flex-col gap-3 py-4 \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantInsetXClasses}\`}>
+    <div className={\`flex flex-col gap-3 \${cardLayoutBodyOccupantPadYClasses} \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantInsetXClasses}\`}>
       <Chart.Cartesian data={data} config={config} periodKind="month" minHeight={220} />
       <Chart.Legend config={config} />
     </div>
@@ -313,7 +313,7 @@ const config = chartSeriesConfigFromKeys([
           }
         />
         <Card.Body>
-          <div className={`flex flex-col gap-3 py-4 ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}>
+          <div className={`flex flex-col gap-3 ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}>
             <Chart.Cartesian
               data={occupancyAreaData}
               config={occupancySeriesConfig}

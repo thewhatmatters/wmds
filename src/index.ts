@@ -66,6 +66,7 @@ export {
   cardBodyTextClasses,
   cardBodyWellClasses,
   cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantPadYClasses,
   cardLayoutBodyOccupantDotGridWellClasses,
   cardLayoutBodyOccupantWellClasses,
   cardPaddings,

@@ -25,6 +25,7 @@ import {
   Card,
   cardBodyTextClasses,
   cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantPadYClasses,
   cardLayoutBodyOccupantDotGridWellClasses,
   cardLayoutBodyOccupantWellClasses,
   cardPaddings,
@@ -122,7 +123,7 @@ Card (bg-surface shell, py-4, gap-3)
 
 - **Do** set \`padding="none"\` when using Header/Body/Footer.
 - **Do** put leading copy in \`start\` and trailing actions in \`end\` — do not hand-roll the header row.
-- **Do** use \`cardLayoutBodyOccupantInsetXClasses\` (\`px-3.5\` / 14px) on body occupants when horizontal edges should align with **Header** and **Footer** (2px gutter + 14px = 16px).
+- **Do** use \`cardLayoutBodyOccupantPadYClasses\` (\`py-[16px]\`) + \`cardLayoutBodyOccupantInsetXClasses\` on body occupants — 16px vertical, horizontal aligns with **Header** (2px gutter + 14px).
 - **Do** paint inset body backgrounds with \`cardLayoutBodyOccupantWellClasses\` (\`bg-body\` + \`rounded-[14px]\`) — concentric with the shell (16px − 2px gutter); chart canvas texture → \`cardLayoutBodyOccupantDotGridWellClasses\`.
 - **Do** set \`bodyTerminal\` on layout cards when **Card.Body** is the last section — 2px bottom shell inset matches the Body gutter (inset well flush to card bottom).
 - **Do** keep title, address, and meta in **Header**; primary actions in **Footer**.
@@ -467,7 +468,7 @@ export const BodySlotOccupancyKpiInsetWell: Story = {
         />
         <Card.Body>
           <div
-            className={`flex flex-col gap-2 py-4 ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}
+            className={`flex flex-col gap-2 ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}
           >
             <div className={chartKpiHeroRowClasses}>
               <span className={chartKpiHeroValueClasses}>{chartFormatPercent(occupied, total)}</span>
@@ -516,7 +517,7 @@ export const BodySlotOccupancyKpiDotGridWell: Story = {
         />
         <Card.Body>
           <div
-            className={`flex flex-col gap-2 py-4 ${cardLayoutBodyOccupantDotGridWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}
+            className={`flex flex-col gap-2 ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantDotGridWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}
           >
             <div className={chartKpiHeroRowClasses}>
               <span className={chartKpiHeroValueClasses}>{chartFormatPercent(occupied, total)}</span>
@@ -560,6 +561,7 @@ import {
   Select,
   chartSeriesConfigFromKeys,
   cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantPadYClasses,
   cardLayoutBodyOccupantWellClasses,
   cardTitleClasses,
 } from "@whatmatters/wmds";
@@ -575,7 +577,7 @@ const config = chartSeriesConfigFromKeys([
     end={<Select aria-label="Reporting period" size="sm" options={periodOptions} defaultValue="month" className="w-36" />}
   />
   <Card.Body>
-    <div className={\`flex flex-col gap-3 py-4 \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantInsetXClasses}\`}>
+    <div className={\`flex flex-col gap-3 \${cardLayoutBodyOccupantPadYClasses} \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantInsetXClasses}\`}>
       <Chart.Cartesian data={data} config={config} periodKind="month" minHeight={220} />
       <Chart.Legend config={config} />
     </div>
@@ -593,7 +595,7 @@ const config = chartSeriesConfigFromKeys([
           end={<OccupancyPeriodSelect value={period} onValueChange={setPeriod} />}
         />
         <Card.Body>
-          <div className={`flex flex-col gap-3 py-4 ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}>
+          <div className={`flex flex-col gap-3 ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}>
             <Chart.Cartesian
               data={occupancyHistoryData}
               config={occupancyHistoryConfig}
