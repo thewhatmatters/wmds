@@ -5,7 +5,7 @@ import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
 import { IconButton } from "../../atoms/IconButton/IconButton";
 import { Input } from "../../atoms/Input/Input";
-import { Chip, ChipFilterGroup } from "../Chip/Chip";
+import { SegmentedControl } from "../SegmentedControl/SegmentedControl";
 import { iconButtonSizeForCluster } from "../../../lib/clusterScale";
 import { buildOccupancyAreaSeries } from "../../../lib/chartSampleData";
 import { chartSeriesConfigFromKeys } from "../../../lib/chartTheme";
@@ -100,7 +100,7 @@ const meta = {
 | Pattern | Composition |
 |---------|-------------|
 | **Layout** | \`Card padding="none"\` + \`Card.Header\` / \`Card.Body\` / \`Card.Footer\` — default; shell + transparent Body slot |
-| **Header** | Horizontal \`start\` / \`end\` slots — title + subtitle, kebab, chips-as-tabs, Badge, or any cluster |
+| **Header** | Horizontal \`start\` / \`end\` slots — title + subtitle, **SegmentedControl**, kebab, filter **Chip** rail, Badge, or any cluster |
 | **Body slot** | TaskRows, form, **Chart** (SegmentedBar KPI or **Cartesian** history), or custom UI — occupant owns fill, radius, and padding |
 | **Inset well** | \`cardLayoutBodyOccupantWellClasses\` on the occupant — \`bg-body\` + concentric **14px** radius (\`rounded-[14px]\`); dot-grid → \`cardLayoutBodyOccupantDotGridWellClasses\` |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
@@ -237,7 +237,7 @@ export const HeaderSlots: Story = {
     docs: {
       description: {
         story:
-          "**Header** is two horizontal slots. `start` and `end` take any cluster — title + subtitle, chips-as-tabs, kebab `IconButton`, Badge. Filter chips at **`sm`** pair with **`IconButton` `xs`** (cluster sm, 28px) — see **Foundation → Cluster**.",
+          "**Header** is two horizontal slots. `start` and `end` take any cluster — title + subtitle, **SegmentedControl** view switcher, kebab **IconButton**, Badge. **SegmentedControl** / filter **Chip** at **`sm`** pair with **IconButton** **`xs`** (cluster sm, 28px) — see **Foundation → Cluster**.",
       },
     },
   },
@@ -255,19 +255,15 @@ export const HeaderSlots: Story = {
           }
           end={
             <>
-              <ChipFilterGroup
+              <SegmentedControl
                 aria-label="Market detail view"
-                selectionMode="single"
+                size="sm"
                 value={view}
                 onValueChange={setView}
               >
-                <Chip value="overview" size="sm">
-                  Overview
-                </Chip>
-                <Chip value="hours" size="sm">
-                  Hours
-                </Chip>
-              </ChipFilterGroup>
+                <SegmentedControl.Item value="overview">Overview</SegmentedControl.Item>
+                <SegmentedControl.Item value="hours">Hours</SegmentedControl.Item>
+              </SegmentedControl>
               <IconButton
                 icon={<EllipsisVertical strokeWidth={2} />}
                 aria-label="More market actions"
