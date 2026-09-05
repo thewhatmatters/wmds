@@ -1,6 +1,6 @@
 # ADR-0015: Chart Cartesian — Area, tooltip, and legend
 
-**Status:** Accepted  
+**Status:** Accepted (implemented 2026-09-04)  
 **Date:** 2026-09-04
 
 ## Context
@@ -15,7 +15,7 @@ WMDS ships **Chart.SegmentedBar** as a **capacity meter only** (ADR-0014) — no
 
 ADR-0012 commits WMDS to **visx** for marks/scales — not Recharts. WMDS owns **shell, tooltip, legend, and Storybook patterns**. Categorical colors live in ADR-0013; period bucketing helpers already exist in **`chartTheme.ts`** (`chartBucketPeriodData`).
 
-**SegmentedBar does not get a tooltip.** Tooltip + legend are designed on **`Chart.Area`** (first Cartesian pattern).
+**SegmentedBar does not get a tooltip.** Tooltip + legend ship on **`Chart.Cartesian`** + **`Chart.Cartesian.Area`** (first Cartesian pattern).
 
 ## Decision
 
@@ -24,26 +24,26 @@ ADR-0012 commits WMDS to **visx** for marks/scales — not Recharts. WMDS owns *
 | Family | Pattern | Tooltip | Legend | Axes |
 |--------|---------|---------|--------|------|
 | **Capacity meter** | `Chart.SegmentedBar` | No | No | No |
-| **Cartesian** | `Chart.Area` (v1) | Yes | Optional | Yes |
+| **Cartesian** | `Chart.Cartesian` + `Chart.Cartesian.Area` (v1) | Yes | Optional | Yes |
 
 Future Cartesian types (line, bar) reuse the same shell, config, tooltip, and legend — not new chrome.
 
-### Compound API (v1 target)
+### Compound API (shipped)
 
 ```
 Chart.Cartesian          — ParentSize, margins, svg root, series context
-├── Chart.Grid
-├── Chart.AxisBottom / Chart.AxisLeft
-├── Chart.Area           — fill + stroke (single or multi series)
-├── Chart.Tooltip        — @visx/tooltip + crosshair
-│   └── Chart.Tooltip.Content
-└── Chart.Legend         — config-driven row (typical: Card.Body below plot)
+├── Chart.Cartesian.Grid
+├── Chart.Cartesian.AxisBottom / Chart.Cartesian.AxisLeft
+├── Chart.Cartesian.Area — fill + stroke (single or multi series)
+├── Chart.Cartesian.Tooltip — @visx/tooltip + crosshair + active dots
+Chart.Tooltip.Content    — presentational rows (also Reference stories)
+Chart.Legend             — config-driven row (typical: Card.Body below plot)
 
 Chart.SegmentedBar       — unchanged (ADR-0014)
-Chart.Frame              — axis-agnostic shell (SegmentedBar today)
+Chart.Frame              — axis-agnostic shell (SegmentedBar)
 ```
 
-**Reference stories ship first** — static **`Chart.Tooltip.Content`** and **`Chart.Legend`** specimens (no visx) to lock visual contract before **`Chart.Area`** interaction.
+**Reference stories** — static **`Chart.Tooltip.Content`** and **`Chart.Legend`** specimens lock visual contract; **Pattern — area** stories wire live visx interaction.
 
 ### Series config (`ChartSeriesConfig`)
 
@@ -89,9 +89,11 @@ Helpers: **`chartSeriesConfigFromKeys()`**, types in **`chartTheme.ts`**.
 | `indicator?` | `dot` \| `line` \| `dashed` — default **`dot`** |
 | `hideLabel?` / `hideIndicator?` | Row chrome toggles (shadcn parity) |
 
-**Interaction (when Area ships):** `@visx/tooltip` + `@visx/event` bisect; vertical crosshair at `chartUiTokens.cursor`; portal/fixed positioning (Card-safe, same class of fix as **Select** menu).
+**Interaction:** `@visx/tooltip` + `@visx/event` bisect on x; vertical crosshair; tooltip anchored to topmost series Y at the crosshair (active dots per series). Portal via **`useTooltipInPortal`** with **`unstyled`** + **`applyPositionStyle`** — visx default tooltip chrome must **not** wrap **`Chart.Tooltip.Content`** (double padding/background). Compact panel: **`w-max`**, no `min-width`; rows use inline flex, not `justify-between`.
 
-Styles live in **`chartStyles.ts`** (`chartTooltip*`). Legacy `chartPeriodTooltip*` names are retired in favor of `chartTooltip*`.
+**Cartesian host:** `@visx/responsive` **`ParentSize`** needs explicit **`height`** on the host (default `minHeight={240}` sets both `minHeight` and `height`) — `min-height` alone renders a blank plot.
+
+Styles live in **`chartStyles.ts`** (`chartTooltip*`, `chartTooltipAnchorAboveClasses`). Legacy `chartPeriodTooltip*` names are retired.
 
 ### Legend
 
@@ -100,16 +102,21 @@ Styles live in **`chartStyles.ts`** (`chartTooltip*`). Legacy `chartPeriodToolti
 - Reads the **same `ChartSeriesConfig`** as tooltip — colors and names never drift.  
 - **v1:** display only (no click-to-toggle series).
 
-### Area pattern (implementation follow-up)
+### Area pattern (shipped)
 
 | Story | Series | Tooltip | Legend |
 |-------|--------|---------|--------|
-| **Occupancy history** | 1 (`ChartTone`) | Yes | No |
-| **Multi-series comparison** | 2–3 (categorical) | Yes | Yes |
+| **Pattern — area (single series)** | 1 (`chartSeriesConfigFromTone`) | Yes | No |
+| **Pattern — area (multi series + legend)** | 2+ (`chartSeriesConfigFromKeys`) | Yes | Yes |
+| **Pattern — occupancy history in Card** | 2 (categorical) | Yes | Yes |
 
-Data: `{ date: Date; [seriesKey: number] }[]` or per-series arrays; period scope via **Card.Header Select** + `chartBucketPeriodData`.
+Data shape: **`ChartCartesianPoint[]`** — `{ date: Date; [seriesKey: number] }`. Sample builder: **`buildOccupancyAreaSeries()`** in **`chartSampleData.ts`**.
 
-Variants: **`chartAreaPresets`** (`hero` \| `compact` \| `sparkline`); margins from **`chartMargins`**.
+**Card composition (occupancy history):** **`bodyTerminal`** on **Card** (no Footer → 2px shell bottom); occupant = **`cardLayoutBodyOccupantPadYClasses`** + **`cardLayoutBodyOccupantWellClasses`** + **`cardLayoutBodyOccupantInsetXClasses`**. See **Molecules/Card** docs (inset well radius = shell 16px − 2px gutter = **14px**).
+
+**Not wired yet:** **Card.Header** **Select** period state → **`chartBucketPeriodData`** (stories use static 30-day sample).
+
+Variants: **`chartAreaPresets`**; Cartesian margins **`chartCartesianMargins`** (distinct from **`chartMargins`** / SegmentedBar).
 
 ### Date formatting
 
@@ -124,11 +131,18 @@ Default: **`chartFormatTooltipLabel(date, period?)`** in **`chartTheme.ts`** usi
 
 ## Consequences
 
-- **`Chart.Tooltip.Content`** and **`Chart.Legend`** export as presentational components before visx Area ships.  
-- **`chartUiTokens.tooltipBg`** points at **`--color-background-popover`**.  
-- **`Chart.stories.tsx`** gains Reference specimens for tooltip, legend, and paired chrome.  
-- Next implementation PR: **`Chart.Cartesian`** + **`Chart.Area`** + wired tooltip.  
-- **`CONSUMING.md`** / **AGENTS.md** updated when Area pattern ships.
+- **`Chart.Cartesian`**, **`Chart.Tooltip.Content`**, **`Chart.Legend`**, and **`chartSeriesConfigFrom*`** helpers export from **`src/index.ts`**.  
+- **`chartUiTokens.tooltipBg`** → **`--color-background-popover`**; frosted panel in **`chartTooltipPanelClasses`**.  
+- **`Chart.stories.tsx`** — Reference (tooltip/legend) + Pattern (area, occupancy Card). **`Card.stories.tsx`** — **Example — body slot (occupancy history)**.  
+- **`compositionShellExceptions`** includes **`ChartCartesian.tsx`** (visx SVG), same tier as SegmentedBar.  
+- **Foundation → Form controls** catalog documents Input / Select / Dropdown cross-tier map (ADR-0006).
+
+### Next session (backlog)
+
+- Wire occupancy **Select** → **`chartBucketPeriodData`** / period kind on **Chart.Cartesian**.  
+- Extract generic **Popover** molecule if tooltip + Select/menus need shared primitive.  
+- Action **Dropdown** menus (kebab) on shared **Dropdown** molecule.  
+- Legend series toggle (non-goal v1 — revisit with product need).
 
 ## References
 
@@ -137,4 +151,5 @@ Default: **`chartFormatTooltipLabel(date, period?)`** in **`chartTheme.ts`** usi
 - ADR-0014 (SegmentedBar capacity only)
 - [shadcn Chart — tooltip & legend](https://ui.shadcn.com/docs/components/chart)
 - `src/lib/chartTheme.ts` — `chartBucketPeriodData`, `chartSeriesColor`
-- `src/components/organisms/Chart/` — tooltip/legend reference stories
+- `src/components/organisms/Chart/` — Cartesian, tooltip, legend, stories
+- `src/components/molecules/Select/` — listbox positioning (`selectMenuPosition.ts`, 4px offset, Card boundary)

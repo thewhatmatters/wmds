@@ -19,7 +19,7 @@ An earlier iteration added **period strip** mode (per-day ticks, bucketing, tool
 | `fill` | `velocity` (occupancy fade), `semantic` (RAG), `solid` |
 | `segments` | Target tick count — default **60** |
 
-**Not supported:** per-day data, period bucketing, or calendar strips on this component. Daily / multi-day history → **`Chart.Area`** (planned Cartesian pattern).
+**Not supported:** per-day data, period bucketing, or calendar strips on this component. Daily / multi-day history → **`Chart.Cartesian`** (ADR-0015).
 
 Header **Select** (period) scopes the **hero KPI and trend**, not the tick count on the capacity bar.
 

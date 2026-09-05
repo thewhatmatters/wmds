@@ -85,10 +85,10 @@ Card.Header / Footer usually carry KPI copy; the chart mark sits in **Card.Body*
 - **Do** pair scalar charts with hero KPI + inline mono trend (\`chartKpiTrend*\` classes) — not **Badge**.
 - **Do** use \`chartFormatPercent(value, max)\` for headline percent copy.
 - **Do** pass \`label\` when \`role="meter"\` needs more context than a percent.
-- **Do** use \`Chart.SegmentedBar\` only for **capacity** — snapshot fill (\`value\` / \`max\`). Daily history → **Chart.Area** (planned).
+- **Do** use \`Chart.SegmentedBar\` only for **capacity** — snapshot fill (\`value\` / \`max\`). Daily history → **Chart.Cartesian** + **Chart.Cartesian.Area** (ADR-0015).
 - **Do** use \`fill="velocity"\` for occupancy-style capacity bars; \`fill="semantic"\` for RAG utilization meters.
 - **Don't** use \`Chart.SegmentedBar\` for per-day or per-week strips — ticks are not calendar buckets.
-- **Don't** put axis assumptions in \`Chart.Frame\` — add \`Chart.Cartesian\` when area/bar ships.
+- **Don't** put axis assumptions in \`Chart.Frame\` — use \`Chart.Cartesian\` for time series (ADR-0015).
         `.trim(),
       },
     },
