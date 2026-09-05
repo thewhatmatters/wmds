@@ -27,7 +27,7 @@ export interface ChartTooltipContentProps extends HTMLAttributes<HTMLDivElement>
 
 /**
  * Tooltip panel rows — shadcn Chart parity on WMDS tokens (ADR-0015).
- * Cartesian plots portal this via visx with `unstyled` — no second chrome shell.
+ * Series name left; tabular mono value right (`justify-between`).
  */
 export function ChartTooltipContent({
   label,

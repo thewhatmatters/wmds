@@ -35,6 +35,10 @@ export type ChartCartesianContextValue = {
   TooltipInPortal: UseTooltipInPortal["TooltipInPortal"];
   /** When true, area series plays mount enter (path draw + fill fade). */
   animateEnter: boolean;
+  /** Horizontal grid always; vertical dashed columns at x-axis ticks when true. */
+  verticalGrid: boolean;
+  /** Y-axis tick formatter — defaults to chartFormatAxisValue. */
+  yTickFormat?: (value: number) => string;
 };
 
 const ChartCartesianContext = createContext<ChartCartesianContextValue | null>(null);

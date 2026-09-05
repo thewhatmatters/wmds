@@ -166,6 +166,7 @@ export {
   chartBucketPeriodData,
   chartCategoricalCount,
   chartCategoricalPalette,
+  chartFormatAxisValue,
   chartFormatTooltipLabel,
   chartFormatTooltipValue,
   chartNormalizePeriodData,

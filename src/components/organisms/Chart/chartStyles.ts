@@ -26,14 +26,29 @@ export const chartLoadingPanelClasses =
 
 export const chartLoadingLabelClasses = typographyClass("caption");
 
-/** Shifts **Chart.Tooltip.Content** above/below the crosshair anchor inside an unstyled visx portal. */
-export const chartTooltipAnchorAboveClasses = "-translate-y-[calc(100%+4px)]";
+/** Shifts **Chart.Tooltip.Content** relative to the crosshair anchor (visx portal `left`/`top`). */
+export const chartTooltipAnchorAboveRightClasses = "-translate-y-[calc(100%+4px)] translate-x-1";
 
-export const chartTooltipAnchorBelowClasses = "translate-y-1";
+export const chartTooltipAnchorAboveLeftClasses =
+  "-translate-x-[calc(100%+4px)] -translate-y-[calc(100%+4px)]";
+
+export const chartTooltipAnchorBelowRightClasses = "translate-x-1 translate-y-1";
+
+export const chartTooltipAnchorBelowLeftClasses =
+  "-translate-x-[calc(100%+4px)] translate-y-1";
+
+/** @deprecated Use chartTooltipAnchorAboveRightClasses */
+export const chartTooltipAnchorAboveClasses = chartTooltipAnchorAboveRightClasses;
+
+/** @deprecated Use chartTooltipAnchorBelowRightClasses */
+export const chartTooltipAnchorBelowClasses = chartTooltipAnchorBelowRightClasses;
+
+/** Portal wrapper — must not capture pointer events or the SVG hit rect flickers hide/show. */
+export const chartTooltipPortalClasses = "pointer-events-none";
 
 /** Floating tooltip panel — frosted glass on popover token (ADR-0015). */
 export const chartTooltipPanelClasses = cn(
-  "pointer-events-none w-max rounded-lg px-2.5 py-2",
+  "pointer-events-none w-max min-w-[8rem] rounded-lg px-2.5 py-2",
   "border border-border/40",
   "bg-[color-mix(in_srgb,var(--color-background-popover)_72%,transparent)]",
   "shadow-[var(--shadow-drop-sm),var(--shadow-inset-highlight)]",
@@ -43,11 +58,12 @@ export const chartTooltipPanelClasses = cn(
 
 export const chartTooltipLabelClasses = `${typographyClass("caption")} mb-1 font-medium text-fg`;
 
-export const chartTooltipListClasses = "flex flex-col gap-1";
+export const chartTooltipListClasses = "flex w-full min-w-0 flex-col gap-1";
 
-export const chartTooltipRowClasses = "flex items-center gap-1.5";
+export const chartTooltipRowClasses = "flex w-full min-w-0 items-center gap-1.5";
 
-export const chartTooltipRowBodyClasses = "inline-flex items-baseline gap-1.5";
+export const chartTooltipRowBodyClasses =
+  "flex min-w-0 flex-1 items-baseline justify-between gap-2";
 
 export const chartTooltipIndicatorDotClasses = "size-2 shrink-0 rounded-full";
 
@@ -56,15 +72,18 @@ export const chartTooltipIndicatorLineClasses = "h-3 w-0.5 shrink-0 rounded-full
 export const chartTooltipIndicatorDashedClasses =
   "h-3 w-0 shrink-0 border-l-2 border-dashed bg-transparent";
 
-export const chartTooltipNameClasses = `${typographyClass("caption")} text-muted whitespace-nowrap`;
+export const chartTooltipNameClasses = `${typographyClass("caption")} min-w-0 text-muted whitespace-nowrap`;
 
 export const chartTooltipValueClasses =
-  "shrink-0 font-mono text-xs tabular-nums leading-none text-fg whitespace-nowrap";
+  "shrink-0 text-right font-mono text-xs tabular-nums leading-none text-fg whitespace-nowrap";
 
 /** Cartesian host — ParentSize needs explicit height (not min-height alone). */
 export const chartCartesianHostClasses = "relative w-full min-w-0";
 
 export const chartCartesianSvgClasses = "block max-w-full overflow-visible select-none";
+
+/** SVG axis tick labels — caption scale + tabular figures (Lieflat hairline / F3). */
+export const chartCartesianAxisTickLabelClasses = `${typographyClass("caption")} tabular-nums`;
 
 /** Vertical crosshair at hovered x — SVG line in Cartesian plots. */
 export const chartTooltipCrosshairLineClasses = "pointer-events-none stroke-border [stroke-width:1px]";
@@ -100,8 +119,7 @@ export const chartPeriodTooltipTitleClasses = chartTooltipLabelClasses;
 export const chartPeriodTooltipListClasses = chartTooltipListClasses;
 
 /** @deprecated Use chartTooltipRowBodyClasses. */
-export const chartPeriodTooltipRowClasses =
-  "flex items-baseline justify-between gap-4 font-mono text-xs tabular-nums leading-none";
+export const chartPeriodTooltipRowClasses = chartTooltipRowBodyClasses;
 
 /** @deprecated Use chartTooltipNameClasses. */
 export const chartPeriodTooltipPointLabelClasses = chartTooltipNameClasses;

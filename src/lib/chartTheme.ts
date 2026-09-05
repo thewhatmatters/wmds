@@ -82,20 +82,20 @@ export const chartCartesianMargins: Record<ChartVariant, ChartMargins> = {
 
 export const chartAreaPresets: Record<ChartVariant, ChartAreaPreset> = {
   hero: {
-    strokeWidth: 2,
-    fillOpacity: 0.12,
+    strokeWidth: 1.5,
+    fillOpacity: 0.08,
     type: "monotone",
     animation: true,
   },
   compact: {
-    strokeWidth: 2,
-    fillOpacity: 0.1,
+    strokeWidth: 1.5,
+    fillOpacity: 0.08,
     type: "monotone",
     animation: true,
   },
   sparkline: {
-    strokeWidth: 1.5,
-    fillOpacity: 0.22,
+    strokeWidth: 1.25,
+    fillOpacity: 0.18,
     type: "monotone",
     animation: false,
   },
@@ -586,6 +586,23 @@ export function chartSeriesConfigFromTone(
 /** Tabular tooltip value — locale-aware grouping, no currency assumptions. */
 export function chartFormatTooltipValue(value: number): string {
   return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+}
+
+/** Default y-axis tick — integer grouping; compact notation from 10k+. */
+export function chartFormatAxisValue(value: number): string {
+  if (!Number.isFinite(value)) {
+    return "";
+  }
+
+  const abs = Math.abs(value);
+  if (abs >= 10_000) {
+    return new Intl.NumberFormat(undefined, {
+      notation: "compact",
+      maximumFractionDigits: 1,
+    }).format(value);
+  }
+
+  return new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(value);
 }
 
 /** Default x-axis / header label for tooltip — period-aware date formatting. */

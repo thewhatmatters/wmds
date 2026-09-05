@@ -41,6 +41,7 @@ Exotic canvas-scale charts in individual apps may use other libraries outside WM
 - Chart patterns take more upfront composition than a high-level `<BarChart />`, but every pixel can match WMDS.
 - First Chart pattern sets the template for later types (scales, axes, grid, tooltip, a11y).
 - `vite.lib.config.ts` externalizes all `@visx/*` imports via `libExternalPrefixes` in `package.manifest.ts`.
+- **Chart-type selection reference:** [Lieflat Charts](https://github.com/larashero3-dotcom/lieflat-charts) catalog maps data shapes to patterns; WMDS agents use **`.cursor/skills/wmds-visx-charts/lieflat-mapping.md`** (example data + backlog) — Lieflat HTML/ECharts is spec-only, not runtime (see skill § Lieflat).
 
 ## References
 

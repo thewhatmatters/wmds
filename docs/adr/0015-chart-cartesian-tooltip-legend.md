@@ -77,8 +77,8 @@ Helpers: **`chartSeriesConfigFromKeys()`**, types in **`chartTheme.ts`**.
 ┌─────────────────────────────┐
 │  Apr 12, 2026               │  caption, medium — x-axis label (optional)
 ├─────────────────────────────┤
-│  ● Occupied units    144     │  indicator + label + tabular mono value
-│  ● Available units    56      │
+│  ● Occupied units       144 │  label left, tabular mono value right
+│  ● Available units       56 │
 └─────────────────────────────┘
 ```
 
@@ -89,7 +89,7 @@ Helpers: **`chartSeriesConfigFromKeys()`**, types in **`chartTheme.ts`**.
 | `indicator?` | `dot` \| `line` \| `dashed` — default **`dot`** |
 | `hideLabel?` / `hideIndicator?` | Row chrome toggles (shadcn parity) |
 
-**Interaction:** `@visx/tooltip` + `@visx/event` bisect on x; vertical crosshair; tooltip anchored to topmost series Y at the crosshair (active dots per series). Portal via **`useTooltipInPortal`** with **`unstyled`** + **`applyPositionStyle`** — visx default tooltip chrome must **not** wrap **`Chart.Tooltip.Content`** (double padding/background). Compact panel: **`w-max`**, no `min-width`; rows use inline flex, not `justify-between`.
+**Interaction:** `@visx/tooltip` + `@visx/event` bisect on x; vertical crosshair; tooltip anchored to topmost series Y at the crosshair (active dots per series). Portal via **`useTooltipInPortal`** with **`unstyled`** + **`applyPositionStyle`** — visx default tooltip chrome must **not** wrap **`Chart.Tooltip.Content`** (double padding/background). Panel: **`w-max min-w-[8rem]`**; row body **`justify-between gap-2`** — series name left, **`tabular-nums`** value right (shadcn **ChartTooltipContent** parity).
 
 **Cartesian host:** `@visx/responsive` **`ParentSize`** needs explicit **`height`** on the host (default `minHeight={240}` sets both `minHeight` and `height`) — `min-height` alone renders a blank plot.
 

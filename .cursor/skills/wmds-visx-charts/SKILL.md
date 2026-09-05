@@ -3,8 +3,9 @@ name: wmds-visx-charts
 description: >-
   Builds WMDS Chart organisms and dashboard visualizations with visx v4 and
   chartTheme tokens. Use when authoring Organisms/Chart, visx compositions,
-  chart Storybook patterns, scales/axes/grid/tooltip work, or when the user
-  mentions visx, dashboard charts, or WMDS chartTheme.
+  chart Storybook patterns, scales/axes/grid/tooltip work, choosing chart types
+  from data shape (Lieflat catalog), or when the user mentions visx, dashboard
+  charts, lieflat-charts, or WMDS chartTheme.
 ---
 
 # WMDS visx charts
@@ -138,8 +139,29 @@ Reach for **`@visx/voronoi`**, custom `@visx/shape` paths, or D3 layout packages
 
 The [chrisvoncsefalvay d3-viz skill](https://github.com/chrisvoncsefalvay/claude-d3js-skill) is useful for **scale math, margins, and chart anatomy** — not for imperative DOM. See [scales-and-packages.md](scales-and-packages.md).
 
+## Lieflat Charts (selection reference only)
+
+[lieflat-charts](https://github.com/larashero3-dotcom/lieflat-charts) is an agent skill for **standalone HTML** charts (SVG / ECharts / Chart.js). **Do not import its templates or engines into WMDS** (ADR-0012).
+
+**Do use Lieflat for:**
+
+- **Data-shape → chart-type** decisions (63 gallery types + 12 report layouts)
+- **Editorial vs dashboard tone** (Lupi vs Glance vs Basics)
+- **Visual grammar** when speccing new patterns (hairline grid, unit honesty, motion discipline)
+- **Gallery HTML** as a pixel/spec reference when implementing a backlog **`Chart.*`** pattern in visx
+
+**Workflow:**
+
+1. Read Lieflat `SKILL.md` §0–§4 for audit order (Lupi Editorial → Lupi Basics → Glance).
+2. Open **[lieflat-mapping.md](lieflat-mapping.md)** — full catalog with **example data**, WMDS status, visx packages, Storybook paths, and compose snippets for every **G / L / F / M / B / R** ID.
+3. If **Shipped / Partial** — compose existing **Chart.*** + **Card** from the mapping row.
+4. If **Backlog** — implement with listed `@visx/*` packages; add Pattern story; never ship raw gallery code.
+
+**Shipped today (see mapping):** `Chart.Cartesian.Area` (F2/F3/G8), `Chart.SegmentedBar` KPI (F11/G18), tooltip/legend, Card loading patterns (Skeleton → Chart.Loading → marks).
+
 ## External references
 
+- [Lieflat Charts repo](https://github.com/larashero3-dotcom/lieflat-charts) — catalog + galleries (reference)
 - [visx docs](https://airbnb.io/visx/)
 - [visx gallery](https://airbnb.io/visx/gallery)
 - [visx shadcn registry (starters)](https://github.com/airbnb/visx/tree/master/packages/visx-demo/src/sandboxes)

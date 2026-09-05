@@ -9,12 +9,12 @@ import { scaleLinear, scaleTime } from "@visx/scale";
 import { AreaClosed, LinePath } from "@visx/shape";
 import { line } from "@visx/vendor/d3-shape";
 import { useTooltip, useTooltipInPortal } from "@visx/tooltip";
-import { bisector } from "d3-array";
 import { motion, useReducedMotion } from "motion/react";
 import {
   useCallback,
   useId,
   useMemo,
+  useRef,
   type PointerEvent,
   type ReactNode,
 } from "react";
@@ -22,6 +22,7 @@ import { cn } from "../../../lib/cn";
 import {
   chartAreaPresets,
   chartCartesianMargins,
+  chartFormatAxisValue,
   chartFormatTooltipLabel,
   chartTooltipItemsFromConfig,
   chartUiTokens,
@@ -39,11 +40,15 @@ import { ChartTooltipContent } from "./ChartTooltipContent";
 import {
   chartCartesianHostClasses,
   chartCartesianSvgClasses,
+  chartCartesianAxisTickLabelClasses,
   chartTooltipActiveDotClasses,
-  chartTooltipAnchorAboveClasses,
-  chartTooltipAnchorBelowClasses,
+  chartTooltipAnchorAboveLeftClasses,
+  chartTooltipAnchorAboveRightClasses,
+  chartTooltipAnchorBelowLeftClasses,
+  chartTooltipAnchorBelowRightClasses,
   chartTooltipCrosshairClasses,
   chartTooltipCrosshairLineClasses,
+  chartTooltipPortalClasses,
 } from "./chartStyles";
 import {
   chartCartesianAreaEnterTransition,
@@ -75,6 +80,10 @@ export interface ChartCartesianProps {
   "aria-label"?: string;
   /** Mount enter — `initial` fades the plot in once; `none` for static Storybook layouts. Period changes do not re-run. */
   animate?: ChartCartesianAnimate;
+  /** Horizontal grid always; vertical dashed columns at x-axis ticks when true (default). */
+  verticalGrid?: boolean;
+  /** Y-axis tick labels — default locale-aware integers / compact 10k+. */
+  yTickFormat?: (value: number) => string;
   className?: ChartCartesianLayoutClassName;
   children?: ReactNode;
 }
@@ -110,12 +119,15 @@ function ChartCartesianInner({
   yAccessor,
   ariaLabel,
   animateEnter,
+  verticalGrid,
+  yTickFormat,
   children,
   TooltipInPortal,
 }: ChartCartesianProps & {
   width: number;
   height: number;
   animateEnter: boolean;
+  verticalGrid: boolean;
   TooltipInPortal: ReturnType<typeof useTooltipInPortal>["TooltipInPortal"];
 }) {
   const keys = seriesKeys ?? Object.keys(config);
@@ -163,10 +175,14 @@ function ChartCartesianInner({
       yAccessor: yAccessor!,
       TooltipInPortal,
       animateEnter,
+      verticalGrid,
+      yTickFormat,
     }),
     [
       TooltipInPortal,
       animateEnter,
+      verticalGrid,
+      yTickFormat,
       config,
       data,
       height,
@@ -227,6 +243,8 @@ export function ChartCartesian({
   xAccessor = (point) => point.date,
   yAccessor = defaultYAccessor,
   animate = "initial",
+  verticalGrid = true,
+  yTickFormat,
   className,
   children,
   "aria-label": ariaLabel = "Time series chart",
@@ -256,6 +274,8 @@ export function ChartCartesian({
               yAccessor={yAccessor}
               aria-label={ariaLabel}
               animateEnter={shouldEnter}
+              verticalGrid={verticalGrid}
+              yTickFormat={yTickFormat}
               TooltipInPortal={TooltipInPortal}
             >
               {children}
@@ -269,25 +289,32 @@ export function ChartCartesian({
 
 const CARTESIAN_X_TICK_COUNT = 6;
 
-const cartesianGridLineProps = {
+const cartesianGridRowProps = {
   stroke: chartUiTokens.grid,
-  strokeOpacity: 0.6,
-  strokeDasharray: "4 4",
+  strokeOpacity: 0.4,
+  strokeWidth: 1,
   pointerEvents: "none" as const,
 };
 
+const cartesianGridColumnProps = {
+  ...cartesianGridRowProps,
+  strokeDasharray: "2 6",
+};
+
 export function ChartCartesianGrid() {
-  const { xScale, yScale, innerWidth, innerHeight } = useChartCartesian();
+  const { yScale, innerWidth, innerHeight, verticalGrid, xScale } = useChartCartesian();
 
   return (
     <>
-      <GridRows scale={yScale} width={innerWidth} {...cartesianGridLineProps} />
-      <GridColumns
-        scale={xScale}
-        height={innerHeight}
-        numTicks={CARTESIAN_X_TICK_COUNT}
-        {...cartesianGridLineProps}
-      />
+      <GridRows scale={yScale} width={innerWidth} {...cartesianGridRowProps} />
+      {verticalGrid ? (
+        <GridColumns
+          scale={xScale}
+          height={innerHeight}
+          numTicks={CARTESIAN_X_TICK_COUNT}
+          {...cartesianGridColumnProps}
+        />
+      ) : null}
     </>
   );
 }
@@ -313,13 +340,14 @@ export function ChartCartesianAxisBottom() {
         fontSize: 11,
         textAnchor: "middle",
         dy: 4,
+        className: chartCartesianAxisTickLabelClasses,
       })}
     />
   );
 }
 
 export function ChartCartesianAxisLeft() {
-  const { yScale } = useChartCartesian();
+  const { yScale, yTickFormat } = useChartCartesian();
 
   return (
     <AxisLeft
@@ -329,13 +357,18 @@ export function ChartCartesianAxisLeft() {
       tickStroke={chartUiTokens.axis}
       tickLine={false}
       axisLine={false}
-      tickFormat={(value) => `${value}`}
+      tickFormat={(value) => {
+        const numeric = typeof value === "number" ? value : Number(value);
+        const format = yTickFormat ?? chartFormatAxisValue;
+        return format(numeric);
+      }}
       tickLabelProps={() => ({
         fill: chartUiTokens.tooltipMuted,
         fontSize: 11,
         textAnchor: "end",
         dx: -4,
         dy: 3,
+        className: chartCartesianAxisTickLabelClasses,
       })}
     />
   );
@@ -422,7 +455,35 @@ export function ChartCartesianAreaSeries() {
   );
 }
 
-const bisectDate = bisector<ChartCartesianPoint, Date>((point) => point.date).center;
+/** Nearest series index by horizontal pixel — reliable at plot edges (Aug 9 snap). */
+function nearestPointIndexByPixelX(
+  data: ChartCartesianPoint[],
+  pointerX: number,
+  xAccessor: (point: ChartCartesianPoint) => Date,
+  xScale: (date: Date) => number | undefined,
+): number {
+  if (data.length === 0) {
+    return -1;
+  }
+
+  let bestIndex = 0;
+  let bestDistance = Number.POSITIVE_INFINITY;
+
+  for (let i = 0; i < data.length; i++) {
+    const pointX = xScale(xAccessor(data[i]!)) ?? 0;
+    const distance = Math.abs(pointX - pointerX);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      bestIndex = i;
+    }
+  }
+
+  return bestIndex;
+}
+
+/** Estimated tooltip width for horizontal flip before paint (min-w-[8rem] + labels). */
+const TOOLTIP_FLIP_EST_WIDTH = 176;
+const TOOLTIP_CONTAINER_PAD = 8;
 
 /** Pixel Y of the topmost series value at a point — tooltip anchors to the line stack. */
 function resolveTooltipAnchorY(
@@ -442,6 +503,7 @@ export function ChartCartesianTooltipLayer() {
     innerWidth,
     innerHeight,
     margin,
+    width,
     xScale,
     yScale,
     xAccessor,
@@ -453,6 +515,17 @@ export function ChartCartesianTooltipLayer() {
   const { tooltipOpen, tooltipLeft, tooltipTop, tooltipData, showTooltip, hideTooltip } =
     useTooltip<ChartCartesianTooltipDatum>();
 
+  const lastSnapIndexRef = useRef<number | null>(null);
+
+  /** Cover y-axis label gutter so the first/last points are reachable at the plot rim. */
+  const pointerGutterLeft = margin.left;
+  const pointerGutterRight = 12;
+
+  const handlePointerLeave = useCallback(() => {
+    lastSnapIndexRef.current = null;
+    hideTooltip();
+  }, [hideTooltip]);
+
   const handlePointerMove = useCallback(
     (event: PointerEvent<SVGRectElement>) => {
       const point = localPoint(event);
@@ -460,13 +533,19 @@ export function ChartCartesianTooltipLayer() {
         return;
       }
 
-      const xDate = xScale.invert(point.x);
-      const index = bisectDate(data, xDate, 1);
-      const datum = data[index];
-      if (datum == null) {
+      // localPoint is rect-local; rect starts at x=-pointerGutterLeft — convert to plot x (0…innerWidth).
+      const plotX = point.x - pointerGutterLeft;
+      const index = nearestPointIndexByPixelX(data, plotX, xAccessor, xScale);
+      if (index < 0 || data[index] == null) {
         return;
       }
 
+      if (lastSnapIndexRef.current === index) {
+        return;
+      }
+
+      lastSnapIndexRef.current = index;
+      const datum = data[index]!;
       const x = xScale(xAccessor(datum)) ?? 0;
       const anchorY = resolveTooltipAnchorY(datum, seriesKeys, yScale, yAccessor);
       showTooltip({
@@ -475,7 +554,18 @@ export function ChartCartesianTooltipLayer() {
         tooltipTop: margin.top + anchorY,
       });
     },
-    [data, margin.left, margin.top, seriesKeys, showTooltip, xAccessor, yAccessor, xScale, yScale],
+    [
+      data,
+      margin.left,
+      margin.top,
+      pointerGutterLeft,
+      seriesKeys,
+      showTooltip,
+      xAccessor,
+      yAccessor,
+      xScale,
+      yScale,
+    ],
   );
 
   const tooltipItems =
@@ -492,17 +582,37 @@ export function ChartCartesianTooltipLayer() {
     tooltipData != null
       ? resolveTooltipAnchorY(tooltipData.point, seriesKeys, yScale, yAccessor)
       : null;
-  /** Flip below the anchor when the topmost series sits under ~56px of headroom. */
-  const placeTooltipBelow = anchorY != null && anchorY < 56;
+
+  /** Stable while snapped to one index — avoids flip thrash at thresholds. */
+  const tooltipPlacement = useMemo(() => {
+    const below = anchorY != null && anchorY < 56;
+    const crosshairAbsoluteX = crosshairX != null ? margin.left + crosshairX : null;
+    const left =
+      crosshairAbsoluteX != null &&
+      crosshairAbsoluteX + TOOLTIP_FLIP_EST_WIDTH + TOOLTIP_CONTAINER_PAD > width;
+
+    if (below && left) {
+      return chartTooltipAnchorBelowLeftClasses;
+    }
+    if (below) {
+      return chartTooltipAnchorBelowRightClasses;
+    }
+    if (left) {
+      return chartTooltipAnchorAboveLeftClasses;
+    }
+    return chartTooltipAnchorAboveRightClasses;
+  }, [anchorY, crosshairX, margin.left, tooltipData?.index, width]);
 
   return (
     <>
       <rect
-        width={innerWidth}
+        x={-pointerGutterLeft}
+        y={0}
+        width={innerWidth + pointerGutterLeft + pointerGutterRight}
         height={innerHeight}
         fill="transparent"
         onPointerMove={handlePointerMove}
-        onPointerLeave={hideTooltip}
+        onPointerLeave={handlePointerLeave}
       />
       {tooltipOpen && crosshairX != null ? (
         <line
@@ -536,14 +646,12 @@ export function ChartCartesianTooltipLayer() {
           applyPositionStyle
           left={tooltipLeft}
           top={tooltipTop}
-          offsetLeft={4}
+          offsetLeft={0}
           offsetTop={0}
+          className={chartTooltipPortalClasses}
+          style={{ pointerEvents: "none" }}
         >
-          <div
-            className={cn(
-              placeTooltipBelow ? chartTooltipAnchorBelowClasses : chartTooltipAnchorAboveClasses,
-            )}
-          >
+          <div className={cn(tooltipPlacement, chartTooltipPortalClasses)}>
             <ChartTooltipContent
               label={chartFormatTooltipLabel(xAccessor(tooltipData.point), periodKind)}
               items={tooltipItems}
