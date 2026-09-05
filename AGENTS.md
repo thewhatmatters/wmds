@@ -24,7 +24,8 @@
 - **Select:** pill trigger matched to **Input** shell + floating listbox (**Dropdown.Menu** / **Dropdown.Item**). **`size="sm"`** in Card headers beside **Chip sm**. Options support **`start`** / **`end`** slots for icons and shortcuts. See **Molecules/Select**, **Molecules/Dropdown**.
 - **Dropdown:** shared menu panel (`p-0.5` inset) + three-slot rows (`start` | label | `end`) — composed by **Select**; future action menus and multi-select.
 - **Status:** fixed-scale indicators — **`variant="ring"`** (24px task progress: `active`, `step`) or **`variant="dot"`** (8px semantic: `tone`, `pulsing`). `besideLabel` / `label` for a11y. Not inside Badge.
-- **Chart:** composes **[@visx/visx](https://airbnb.io/visx/)** primitives — peer dep, not bundled. WMDS owns shell, tooltip, legend, and **`chartTheme.ts`** token maps. **`Chart.SegmentedBar`** — capacity meter only (no tooltip). **`Chart.Cartesian`** + **`Chart.Cartesian.Area`** — time series with crosshair tooltip + optional **`Chart.Legend`**. Series colors: semantic **`chartSeriesConfigFromTone`** or categorical **`chartSeriesConfigFromKeys`** / **`chartSeriesColor(index)`** (ADR-0013). Tooltip portal: visx **`unstyled`** — styling only on **`Chart.Tooltip.Content`**. Cartesian host needs explicit **height** for **`ParentSize`**. See **ADR-0012**, **ADR-0014**, **ADR-0015**.
+- **Skeleton:** layout placeholder blocks — Motion horizontal shimmer ([Motion skeleton shimmer](https://motion.dev/examples/react-skeleton-shimmer)); **`index`** staggers sweep. Compose to mirror resolved chrome (title, **Select**, well, footer). **`aria-busy`** on **Card** / page region; shapes **`aria-hidden`**. Not chart-mark state — swap region for **Chart.Loading** or live marks. See **Atoms/Skeleton**, **Organisms/Chart** Card pattern stories.
+- **Chart:** composes **[@visx/visx](https://airbnb.io/visx/)** primitives — peer dep, not bundled. WMDS owns shell, tooltip, legend, and **`chartTheme.ts`** token maps. **`Chart.SegmentedBar`** — capacity meter only (no tooltip); **`animate="initial" | "none"`** spring fill on mount. **`Chart.Cartesian`** + **`Chart.Cartesian.Area`** — time series with crosshair tooltip + optional **`Chart.Legend`**; **`animate="initial" | "none"`** path draw + fade enter. **`Chart.Loading`** — spinner + copy for in-flight fetch (**Card.Body**; header stays mounted). Loading model: **Skeleton** (initial layout) → **Chart.Loading** (fetch) → live marks with enter animation. Series colors: semantic **`chartSeriesConfigFromTone`** or categorical **`chartSeriesConfigFromKeys`** / **`chartSeriesColor(index)`** (ADR-0013). Tooltip portal: visx **`unstyled`** — styling only on **`Chart.Tooltip.Content`**. Cartesian host needs explicit **height** for **`ParentSize`**. See **ADR-0012**, **ADR-0014**, **ADR-0015**.
 - **Layers:** Theme → **lib** → Components → Examples. Foundation = Storybook specimens only. Tailwind scan list = **`src/theme/sources.css`**. Package exports tracked in **`src/package.manifest.ts`**.
 - **Responsive:** **Mobile-first** — unprefixed utilities = mobile; `sm:` / `md:` / `lg:` scale up. Review at Mobile (390px), Tablet (768px), Desktop (1280px). Grid columns step on that same scale (4 / 8 / 12). Atoms: min **44×44px** touch targets. No hover-only core actions. See **ADR-0003** and **Foundation → Grid**.
 - **Cluster scale:** shared heights for controls in one row (Card headers, filter rails) — **sm / md / lg** → 28 / 36 / 44px. **Chip** `sm|md|lg` pairs with **IconButton** `xs|sm|md` and compact **Button** `xs|sm|md`. See **Foundation → Cluster** and **ADR-0011**. Use `iconButtonSizeForCluster()` when composing headers.
@@ -58,20 +59,22 @@ When adding a component: create folder in the correct tier, match Storybook titl
 
 - **`src/examples/{Name}/`** — Storybook-only; never in `src/index.ts`.
 
-## Resume here (Chart + Card session)
+## Resume here (Chart loading + Card patterns)
 
-**Shipped on `main`:** **Select** / **Dropdown**; **Foundation → Form controls**; **Chart.Cartesian** + Area + frosted tooltip + **Chart.Legend**; **Card** inset-well recipe (`bodyTerminal`, concentric **14px** radius, **16px** occupant pad). Full decision + gotchas: **ADR-0015** (implementation notes, backlog).
+**Shipped on `main` (`bc3cf26`):** **Skeleton** atom (Motion shimmer); **Chart.Loading**; **Chart.Cartesian** / **Chart.SegmentedBar** enter motion (`animate="initial" | "none"`); **Organisms/Chart** Card pattern stories with **body-state** chips (skeleton → retrieving → resolved). KPI + history companions share inset well + header skeleton; KPI keeps **Card.Footer** skeleton on initial load. Prior: **Select** / **Dropdown**; **Chart.Cartesian** + tooltip + **Chart.Legend**; **Card** inset-well recipe. Full decision + gotchas: **ADR-0015**.
 
 | Pick up in Storybook | Path |
 |---------------------|------|
+| Loading phases (KPI) | **Organisms/Chart → Pattern — occupancy KPI in Card** |
+| Loading phases (history) | **Organisms/Chart → Pattern — occupancy history in Card** |
+| Skeleton atom | **Atoms/Skeleton** |
 | Area chart + tooltip | **Organisms/Chart → Pattern — area (multi series + legend)** |
-| Card + history chart | **Molecules/Card → Example — body slot (occupancy history)** |
-| Select in Card header | **Molecules/Select**, **Molecules/Card → occupancy KPI** examples |
+| Card examples (no state toolbar) | **Molecules/Card → body slot (occupancy KPI / history)** |
 | Categorical palette | **Foundation/Charts** |
 
 **Next backlog (ADR-0015):** wire **Select** period → **`chartBucketPeriodData`**; optional **Popover** extract; action **Dropdown** menus.
 
-**Gotchas (don’t re-debug):** visx tooltip **`unstyled`**; Cartesian host **`height` + `minHeight`** for ParentSize; shell **`bodyTerminal`** uses conditional **`pb-[2px]`** (not conflicting `pb-4`); inset well radius **14px** not `rounded-lg`.
+**Gotchas (don’t re-debug):** visx tooltip **`unstyled`**; Cartesian host **`height` + `minHeight`** for ParentSize; shell **`bodyTerminal`** when no **Footer** (history); inset well radius **14px** not `rounded-lg`; **SegmentedBar** has no empty/error **`state`** prop — loading is layout-level (**Skeleton** / **Chart.Loading**); Card pattern stories use **React `useState`** for body-state chips (not **`useArgs`** — breaks Docs/Canvas when mixed with React hooks); Controls → preview syncs via **`args.bodyState`**; chip → Controls may lag.
 
 <!-- wire-vault:start -->
 ## Knowledge vault — project layer

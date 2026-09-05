@@ -133,9 +133,21 @@ Default: **`chartFormatTooltipLabel(date, period?)`** in **`chartTheme.ts`** usi
 
 - **`Chart.Cartesian`**, **`Chart.Tooltip.Content`**, **`Chart.Legend`**, and **`chartSeriesConfigFrom*`** helpers export from **`src/index.ts`**.  
 - **`chartUiTokens.tooltipBg`** → **`--color-background-popover`**; frosted panel in **`chartTooltipPanelClasses`**.  
-- **`Chart.stories.tsx`** — Reference (tooltip/legend) + Pattern (area, occupancy Card). **`Card.stories.tsx`** — **Example — body slot (occupancy history)**.  
+- **`Chart.stories.tsx`** — Reference (tooltip/legend) + Pattern (area, occupancy KPI/history Card with **body-state** toolbar). **`chartCardBodyStateStory.ts`** — story-only arg helpers. **`Card.stories.tsx`** — **Example — body slot (occupancy history / KPI)** (no state toolbar).
 - **`compositionShellExceptions`** includes **`ChartCartesian.tsx`** (visx SVG), same tier as SegmentedBar.  
 - **Foundation → Form controls** catalog documents Input / Select / Dropdown cross-tier map (ADR-0006).
+
+### Loading phases (shipped)
+
+Three layout-level phases — not props on chart marks:
+
+| Phase | UI |
+|-------|-----|
+| Initial layout | Compose **Skeleton** blocks; **`aria-busy`** on **Card** |
+| Fetch in flight | **Chart.Loading** in **Card.Body**; **Card.Header** mounted |
+| Data resolved | **Chart.Cartesian** (`animate="initial"` path draw) or **Chart.SegmentedBar** (`animate="initial"` spring fill) |
+
+**SegmentedBar** — no **`empty`/`error`** state prop (ADR-0014 capacity-only). **Storybook** Card patterns: **`bodyState`** arg + chip toolbar; implementation in **`Chart.stories.tsx`** (`useChartCardBodyStateFromArgs` — React state, not **`useArgs`**).
 
 ### Next session (backlog)
 
