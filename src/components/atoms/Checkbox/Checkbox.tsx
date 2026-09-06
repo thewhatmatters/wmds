@@ -13,18 +13,18 @@ import {
   checkboxBoxClassesFor,
   checkboxCheckIconSizeClasses,
   checkboxDescriptionClasses,
+  checkboxDescriptionInsetClasses,
+  checkboxDescriptionStackClasses,
   checkboxHiddenInputClasses,
-  checkboxHitTargetDescriptionAlignClasses,
   checkboxHitTargetSizeClasses,
   checkboxIndeterminateBarSizeClasses,
   checkboxLabelClassesFor,
-  checkboxLabelTextColumnClasses,
+  checkboxLabelRowClasses,
   checkboxMarkClasses,
   checkboxRowBaseClasses,
   checkboxRowDisabledClasses,
   checkboxRowLabelOnlyClasses,
   checkboxRowSizeClasses,
-  checkboxRowWithDescriptionClasses,
   checkboxStatusBannerClassesFor,
   type CheckboxSize,
 } from "./checkboxStyles";
@@ -143,79 +143,92 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
 
   const hasDescription = description != null && !labelHidden;
 
+  const control = (
+    <span
+      className={cn(
+        "relative flex shrink-0 items-center justify-center",
+        checkboxHitTargetSizeClasses[size],
+      )}
+    >
+      <input
+        {...rest}
+        ref={setIndeterminateRef}
+        id={controlId}
+        type="checkbox"
+        checked={isControlled ? checked : undefined}
+        defaultChecked={!isControlled ? defaultChecked : undefined}
+        disabled={isDisabled}
+        readOnly={readOnly}
+        aria-invalid={status === "error" || undefined}
+        aria-describedby={describedBy}
+        aria-checked={indeterminate ? "mixed" : undefined}
+        aria-busy={loading || undefined}
+        onChange={handleChange}
+        className={checkboxHiddenInputClasses}
+      />
+      <span className={boxClasses} aria-hidden>
+        {loading ? (
+          <Loader2
+            className={cn(
+              checkboxCheckIconSizeClasses[size],
+              checkboxMarkClasses,
+              "animate-spin",
+            )}
+            strokeWidth={2}
+          />
+        ) : indeterminate ? (
+          <span
+            className={cn(
+              checkboxIndeterminateBarSizeClasses[size],
+              checkboxMarkClasses,
+              "rounded-full bg-current",
+            )}
+          />
+        ) : resolvedChecked ? (
+          <Check
+            className={cn(checkboxCheckIconSizeClasses[size], checkboxMarkClasses)}
+            strokeWidth={3}
+            aria-hidden
+          />
+        ) : null}
+      </span>
+    </span>
+  );
+
   const row = (
     <label
       htmlFor={controlId}
       className={cn(
         checkboxRowBaseClasses,
-        hasDescription ? checkboxRowWithDescriptionClasses : checkboxRowLabelOnlyClasses,
-        checkboxRowSizeClasses[size],
+        !hasDescription && checkboxRowLabelOnlyClasses,
+        !hasDescription && checkboxRowSizeClasses[size],
         isDisabled && checkboxRowDisabledClasses,
         className,
       )}
     >
-      <span
-        className={cn(
-          "relative flex shrink-0 items-center justify-center",
-          checkboxHitTargetSizeClasses[size],
-          hasDescription && checkboxHitTargetDescriptionAlignClasses[size],
-        )}
-      >
-        <input
-          {...rest}
-          ref={setIndeterminateRef}
-          id={controlId}
-          type="checkbox"
-          checked={isControlled ? checked : undefined}
-          defaultChecked={!isControlled ? defaultChecked : undefined}
-          disabled={isDisabled}
-          readOnly={readOnly}
-          aria-invalid={status === "error" || undefined}
-          aria-describedby={describedBy}
-          aria-checked={indeterminate ? "mixed" : undefined}
-          aria-busy={loading || undefined}
-          onChange={handleChange}
-          className={checkboxHiddenInputClasses}
-        />
-        <span className={boxClasses} aria-hidden>
-          {loading ? (
-            <Loader2
-              className={cn(
-                checkboxCheckIconSizeClasses[size],
-                checkboxMarkClasses,
-                "animate-spin",
-              )}
-              strokeWidth={2}
-            />
-          ) : indeterminate ? (
-            <span
-              className={cn(
-                checkboxIndeterminateBarSizeClasses[size],
-                checkboxMarkClasses,
-                "rounded-full bg-current",
-              )}
-            />
-          ) : resolvedChecked ? (
-            <Check
-              className={cn(checkboxCheckIconSizeClasses[size], checkboxMarkClasses)}
-              strokeWidth={3}
-              aria-hidden
-            />
-          ) : null}
-        </span>
-      </span>
-
-      {!labelHidden ? (
-        <span className={checkboxLabelTextColumnClasses}>
-          <span className={checkboxLabelClassesFor(isDisabled)}>{label}</span>
-          {description != null ? (
-            <span id={descriptionId} className={checkboxDescriptionClasses}>
-              {description}
-            </span>
-          ) : null}
+      {labelHidden ? (
+        <>
+          {control}
+          <span className="sr-only">{label}</span>
+        </>
+      ) : hasDescription ? (
+        <span className={checkboxDescriptionStackClasses}>
+          <span className={checkboxLabelRowClasses[size]}>
+            {control}
+            <span className={checkboxLabelClassesFor(isDisabled)}>{label}</span>
+          </span>
+          <span
+            id={descriptionId}
+            className={cn(checkboxDescriptionClasses, checkboxDescriptionInsetClasses[size])}
+          >
+            {description}
+          </span>
         </span>
       ) : (
-        <span className="sr-only">{label}</span>
+        <>
+          {control}
+          <span className={checkboxLabelClassesFor(isDisabled)}>{label}</span>
+        </>
       )}
     </label>
   );

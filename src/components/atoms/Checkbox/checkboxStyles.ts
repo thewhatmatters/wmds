@@ -57,23 +57,30 @@ export const checkboxBoxDisabledClasses = "opacity-50";
 
 export const checkboxLabelClasses = typographyClass("ui-label");
 
-export const checkboxDescriptionClasses = typographyClass("caption");
+/** Tighter than global `type-supporting` leading — checkbox description only. */
+export const checkboxDescriptionClasses = cn(typographyClass("caption"), "leading-snug");
+
+/** Label row + indented description stack. */
+export const checkboxDescriptionStackClasses = "flex w-full min-w-0 flex-col gap-px";
+
+export const checkboxLabelRowClasses: Record<CheckboxSize, string> = {
+  sm: "flex min-w-0 items-center gap-2",
+  md: "flex min-w-0 items-center gap-2.5",
+};
+
+/** Align description with label column (hit target + row gap). */
+export const checkboxDescriptionInsetClasses: Record<CheckboxSize, string> = {
+  sm: "pl-9",
+  md: "pl-[2.875rem]",
+};
 
 export const checkboxLabelTextColumnClasses = "flex min-w-0 flex-col gap-0.5";
 
 export const checkboxRowBaseClasses =
   "group/checkbox relative flex w-full cursor-pointer";
 
-/** Single-line label — vertically center with the box ([Astryx CheckboxInput](https://astryx.atmeta.com/components/CheckboxInput)). */
+/** Single-line label — vertically center with the box. */
 export const checkboxRowLabelOnlyClasses = "items-center";
-
-/** Label + description — top-align; box nudged to label cap via {@link checkboxHitTargetDescriptionAlignClasses}. */
-export const checkboxRowWithDescriptionClasses = "items-start";
-
-export const checkboxHitTargetDescriptionAlignClasses: Record<CheckboxSize, string> = {
-  sm: "mt-px",
-  md: "mt-0.5",
-};
 
 export const checkboxRowClasses = cn(checkboxRowBaseClasses, checkboxRowLabelOnlyClasses);
 
