@@ -60,21 +60,21 @@ export const checkboxLabelClasses = typographyClass("ui-label");
 /** Tighter than global `type-supporting` leading — checkbox description only. */
 export const checkboxDescriptionClasses = cn(typographyClass("caption"), "leading-snug");
 
-/** Label row + indented description stack. */
-export const checkboxDescriptionStackClasses = "flex w-full min-w-0 flex-col gap-px";
+/** Label + description column beside the box — tight title/subtitle rhythm. */
+export const checkboxTextColumnClasses = "flex min-w-0 flex-col gap-px";
 
-export const checkboxLabelRowClasses: Record<CheckboxSize, string> = {
-  sm: "flex min-w-0 items-center gap-2",
-  md: "flex min-w-0 items-center gap-2.5",
+export const checkboxLabelWithDescriptionClasses = cn(checkboxLabelClasses, "leading-tight");
+
+export const checkboxDescriptionRowClasses: Record<CheckboxSize, string> = {
+  sm: "flex min-w-0 items-start gap-2",
+  md: "flex min-w-0 items-start gap-2.5",
 };
 
-/** Align description with label column (hit target + row gap). */
-export const checkboxDescriptionInsetClasses: Record<CheckboxSize, string> = {
-  sm: "pl-9",
-  md: "pl-[2.875rem]",
+/** Optical center — box with single-line title cap (not full text column). */
+export const checkboxHitTargetDescriptionAlignClasses: Record<CheckboxSize, string> = {
+  sm: "mt-px",
+  md: "mt-0.5",
 };
-
-export const checkboxLabelTextColumnClasses = "flex min-w-0 flex-col gap-0.5";
 
 export const checkboxRowBaseClasses =
   "group/checkbox relative flex w-full cursor-pointer";
@@ -111,8 +111,11 @@ export function checkboxBoxClassesFor(
   );
 }
 
-export function checkboxLabelClassesFor(disabled?: boolean): string {
-  return cn(checkboxLabelClasses, disabled && inputDisabledLabelClasses);
+export function checkboxLabelClassesFor(disabled?: boolean, withDescription?: boolean): string {
+  return cn(
+    withDescription ? checkboxLabelWithDescriptionClasses : checkboxLabelClasses,
+    disabled && inputDisabledLabelClasses,
+  );
 }
 
 /** Flat status row below the checkbox — no pill overlap band. */

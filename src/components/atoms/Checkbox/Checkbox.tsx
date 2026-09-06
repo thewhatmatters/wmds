@@ -13,18 +13,19 @@ import {
   checkboxBoxClassesFor,
   checkboxCheckIconSizeClasses,
   checkboxDescriptionClasses,
-  checkboxDescriptionInsetClasses,
-  checkboxDescriptionStackClasses,
+  checkboxDescriptionRowClasses,
   checkboxHiddenInputClasses,
+  checkboxHitTargetDescriptionAlignClasses,
   checkboxHitTargetSizeClasses,
   checkboxIndeterminateBarSizeClasses,
   checkboxLabelClassesFor,
-  checkboxLabelRowClasses,
+  checkboxLabelWithDescriptionClasses,
   checkboxMarkClasses,
   checkboxRowBaseClasses,
   checkboxRowDisabledClasses,
   checkboxRowLabelOnlyClasses,
   checkboxRowSizeClasses,
+  checkboxTextColumnClasses,
   checkboxStatusBannerClassesFor,
   type CheckboxSize,
 } from "./checkboxStyles";
@@ -143,11 +144,12 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
 
   const hasDescription = description != null && !labelHidden;
 
-  const control = (
+  const renderControl = (hitTargetClassName?: string) => (
     <span
       className={cn(
         "relative flex shrink-0 items-center justify-center",
         checkboxHitTargetSizeClasses[size],
+        hitTargetClassName,
       )}
     >
       <input
@@ -208,25 +210,22 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
     >
       {labelHidden ? (
         <>
-          {control}
+          {renderControl()}
           <span className="sr-only">{label}</span>
         </>
       ) : hasDescription ? (
-        <span className={checkboxDescriptionStackClasses}>
-          <span className={checkboxLabelRowClasses[size]}>
-            {control}
-            <span className={checkboxLabelClassesFor(isDisabled)}>{label}</span>
-          </span>
-          <span
-            id={descriptionId}
-            className={cn(checkboxDescriptionClasses, checkboxDescriptionInsetClasses[size])}
-          >
-            {description}
+        <span className={checkboxDescriptionRowClasses[size]}>
+          {renderControl(checkboxHitTargetDescriptionAlignClasses[size])}
+          <span className={checkboxTextColumnClasses}>
+            <span className={checkboxLabelClassesFor(isDisabled, true)}>{label}</span>
+            <span id={descriptionId} className={checkboxDescriptionClasses}>
+              {description}
+            </span>
           </span>
         </span>
       ) : (
         <>
-          {control}
+          {renderControl()}
           <span className={checkboxLabelClassesFor(isDisabled)}>{label}</span>
         </>
       )}
