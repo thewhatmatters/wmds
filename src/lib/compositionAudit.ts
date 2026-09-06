@@ -115,6 +115,21 @@ export const compositionShellExceptions: CompositionShellException[] = [
     ruleId: "inline-svg",
     reason: "Chart.Cartesian owns visx-composed SVG (Area, axes, grid, crosshair) — ADR-0012, ADR-0015.",
   },
+  {
+    file: "components/organisms/NavRail/NavRailBrandMark.tsx",
+    ruleId: "inline-svg",
+    reason: "NavRailBrandMark owns the WhatMatters sparkle product glyph — brand asset, not Lucide.",
+  },
+  {
+    file: "components/organisms/Tab/Tab.tsx",
+    ruleId: "raw-button",
+    reason: "Tab owns the WAI-ARIA tab trigger and responsive More overflow trigger shells.",
+  },
+  {
+    file: "components/organisms/Tab/Tab.tsx",
+    ruleId: "lucide-import",
+    reason: "Tab owns the More overflow disclosure glyph inside its trigger shell.",
+  },
 ];
 
 /**

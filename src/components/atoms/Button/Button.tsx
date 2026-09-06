@@ -8,6 +8,8 @@ import {
   buttonBaseClasses,
   buttonPillClass,
   buttonRoleClasses,
+  buttonNavLayoutClasses,
+  buttonNavStateClasses,
   buttonRowBaseClasses,
   buttonRowLayoutClasses,
   buttonSizeClasses,
@@ -47,6 +49,8 @@ export interface ButtonProps {
   icon?: ReactElement;
   /** Trailing numeric count (inbox / notifications). Not combinable with `status`. */
   count?: number;
+  /** Inset nav row — `layout="nav"` only. Sets quiet selected fill + `aria-current`. */
+  selected?: boolean;
   /** Layout-only: width, margin, flex placement. */
   className?: ButtonLayoutClassName;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -59,8 +63,13 @@ export interface ButtonProps {
 function assertActionPattern(
   props: Pick<ButtonProps, "status" | "icon" | "count" | "layout">,
 ) {
-  if (props.layout === "row" && (props.status != null || props.icon != null || props.count != null)) {
-    console.warn("[WMDS Button] `layout=\"row\"` is mutually exclusive with `status`, `icon`, and `count`.");
+  if (
+    (props.layout === "row" || props.layout === "nav") &&
+    (props.status != null || props.icon != null || props.count != null)
+  ) {
+    console.warn(
+      `[WMDS Button] \`layout="${props.layout}"\` is mutually exclusive with \`status\`, \`icon\`, and \`count\`.`,
+    );
   }
 
   if (props.status != null) {
@@ -82,6 +91,7 @@ export function Button({
   disableOnError,
   icon,
   count,
+  selected = false,
   className,
   onClick,
   "aria-label": ariaLabel,
@@ -126,6 +136,31 @@ export function Button({
         className={cn(buttonRowBaseClasses, buttonRoleClasses[role], buttonRowLayoutClasses, className)}
         data-role={role}
         data-layout="row"
+      >
+        {children}
+      </button>
+    );
+  }
+
+  if (layout === "nav") {
+    return (
+      <button
+        type={type}
+        disabled={disabled}
+        onClick={onClick}
+        aria-label={ariaLabel}
+        aria-current={selected ? "page" : undefined}
+        id={id}
+        name={name}
+        form={form}
+        className={cn(
+          buttonRowBaseClasses,
+          buttonNavLayoutClasses,
+          buttonNavStateClasses(selected),
+          className,
+        )}
+        data-layout="nav"
+        data-selected={selected ? "" : undefined}
       >
         {children}
       </button>

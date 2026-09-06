@@ -36,14 +36,14 @@ function PreviewShell({
 
   /** Canvas tab — Examples use `wmdsLayout: "fullscreen"`. */
   const storyShellClass = isFullscreen
-    ? "min-h-[100svh] w-full"
+    ? "flex h-[100svh] min-h-[100svh] w-full flex-col"
     : isPadded
       ? "w-full p-6"
       : "flex min-h-[min(100svh,640px)] w-full items-center justify-center p-6";
 
   /** Autodocs — fill stretched preview block (see docs-preview.css). */
   const docsShellClass = isFullscreen
-    ? "min-h-[100svh] w-full"
+    ? "flex h-[100svh] min-h-[100svh] w-full flex-col"
     : isPadded
       ? "min-h-full w-full p-6"
       : "flex min-h-full w-full items-center justify-center p-6";

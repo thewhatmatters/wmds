@@ -16,7 +16,7 @@ export type IconButtonSize = ButtonSize;
 /** All action buttons are pills by default — `layout="row"` for flat full-width detail lines. */
 export const buttonPillClass = "rounded-full";
 
-export const buttonLayouts = ["pill", "row"] as const;
+export const buttonLayouts = ["pill", "row", "nav"] as const;
 
 export type ButtonLayout = (typeof buttonLayouts)[number];
 
@@ -83,3 +83,15 @@ export const buttonRowBaseClasses =
 export const buttonRowLayoutClasses =
   "h-auto min-h-0 justify-between gap-3 rounded-md px-1.5 py-1 text-left font-normal " +
   "focus-visible:ring-inset focus-visible:ring-offset-0";
+
+/** Inset nav row — **NavList** rows (icon + label + optional count as children). */
+export const buttonNavLayoutClasses =
+  "h-auto min-h-0 w-full justify-start gap-2.5 rounded-xl px-2.5 py-2 text-left " +
+  "text-sm font-normal leading-[var(--line-height-sm)] " +
+  "focus-visible:ring-inset focus-visible:ring-offset-0";
+
+export function buttonNavStateClasses(selected: boolean): string {
+  return selected
+    ? "bg-secondary text-secondary-foreground"
+    : "bg-transparent text-muted hover:bg-ghost-hover hover:text-fg";
+}

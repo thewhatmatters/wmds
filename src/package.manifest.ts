@@ -4,6 +4,7 @@
  */
 
 const atoms = [
+  "Avatar",
   "Badge",
   "Button",
   "Checkbox",
@@ -16,9 +17,9 @@ const atoms = [
   "TextArea",
 ] as const;
 
-const molecules = ["Accordion", "Card", "CheckboxGroup", "Chip", "Dropdown", "Field", "Pagination", "RadioGroup", "Search", "Select", "SegmentedControl", "TaskRows"] as const;
+const molecules = ["Accordion", "Card", "CheckboxGroup", "Chip", "Dropdown", "Field", "NavList", "PageHeader", "Pagination", "RadioGroup", "Search", "Select", "SegmentedControl", "Stat", "TaskRows"] as const;
 
-const organisms = ["Carousel", "Chart", "Dialog", "MoreMenu", "Panel", "Sheet", "Tab", "Table"] as const;
+const organisms = ["Carousel", "Chart", "Dialog", "MoreMenu", "NavRail", "Panel", "Sheet", "Tab", "Table"] as const;
 
 export const packageManifest = {
   /** Modules exported from src/index.ts today. */

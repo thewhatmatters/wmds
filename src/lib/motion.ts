@@ -249,7 +249,7 @@ export function motionPanelRevealTransition(root?: Element | null): Transition {
 export const motionPanelRevealFromStart: Variants = {
   hidden: { opacity: 0, x: -12 },
   visible: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -8 },
+  exit: { opacity: 0, x: -12 },
 };
 
 /** Slide + fade from block-start — mobile sub-nav below header. */
@@ -274,6 +274,29 @@ export const motionSubNavItemVariants: Variants = {
   visible: {
     opacity: 1,
     x: 0,
+    transition: {
+      duration: motionDurationFallbackMs.fast / 1000,
+      ease: ASTRYX_EASE_STANDARD,
+    },
+  },
+};
+
+/** Mobile nav dock menu — stagger children upward from the dock pill. */
+export const motionNavDockMenuVariants: Variants = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.05, staggerDirection: -1, delayChildren: 0.02 },
+  },
+};
+
+/** Mobile nav dock row — rise + fade on expand (vertical speed-dial, not radial). */
+export const motionNavDockItemVariants: Variants = {
+  hidden: { opacity: 0, y: 10, scale: 0.98 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
     transition: {
       duration: motionDurationFallbackMs.fast / 1000,
       ease: ASTRYX_EASE_STANDARD,

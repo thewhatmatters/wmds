@@ -1,4 +1,14 @@
 /** Package export surface — grows as Components ship. See src/package.manifest.ts for the full manifest. */
+export {
+  Avatar,
+  avatarSizeForCluster,
+  avatarSizePx,
+  avatarSizes,
+  type AvatarLayoutClassName,
+  type AvatarPresence,
+  type AvatarProps,
+  type AvatarSize,
+} from "./components/atoms/Avatar/Avatar";
 export { Badge, type BadgeEmphasis, type BadgeLayoutClassName, type BadgeProps, type BadgeSize, type BadgeVariant, badgeEmphases, badgeVariants } from "./components/atoms/Badge/Badge";
 export {
   Button,
@@ -144,6 +154,26 @@ export {
   type FieldProps,
 } from "./components/molecules/Field/Field";
 export {
+  NavList,
+  navListLabelAlignments,
+  type NavListIcon,
+  type NavListItemDef,
+  type NavListItemProps,
+  type NavListLabelAlignment,
+  type NavListLayoutClassName,
+  type NavListProps,
+  type NavListSectionDef,
+  type NavListSectionProps,
+} from "./components/molecules/NavList/NavList";
+export {
+  PageHeader,
+  pageHeaderAppBandHeightClasses,
+  pageHeaderVariants,
+  type PageHeaderLayoutClassName,
+  type PageHeaderProps,
+  type PageHeaderVariant,
+} from "./components/molecules/PageHeader/PageHeader";
+export {
   RadioGroup,
   radioGroupOrientations,
   type RadioGroupItemProps,
@@ -177,6 +207,20 @@ export {
   type SegmentedControlProps,
   type SegmentedControlSize,
 } from "./components/molecules/SegmentedControl/SegmentedControl";
+export {
+  Stat,
+  statGroupColumns,
+  statGroupGridClasses,
+  statSizes,
+  statTrendDirections,
+  type StatGroupColumns,
+  type StatGroupProps,
+  type StatLayoutClassName,
+  type StatProps,
+  type StatSize,
+  type StatTrend,
+  type StatTrendDirection,
+} from "./components/molecules/Stat/Stat";
 export {
   TaskRows,
   taskRowStatuses,
@@ -225,6 +269,17 @@ export {
   type MoreMenuProps,
 } from "./components/organisms/MoreMenu/MoreMenu";
 export {
+  NavRail,
+  NavRailBrandMark,
+  navRailClusterTier,
+  navRailItemStackGapClasses,
+  navRailItemSurfaces,
+  type NavRailItem,
+  type NavRailItemSurface,
+  type NavRailLayoutClassName,
+  type NavRailProps,
+} from "./components/organisms/NavRail/NavRail";
+export {
   AlertDialog,
   alertDialogConfirmRoles,
   type AlertDialogConfirmRole,
@@ -263,6 +318,13 @@ export {
   type SheetSide,
   type SheetSize,
 } from "./components/organisms/Sheet/Sheet";
+export {
+  Tab,
+  tabSizes,
+  type TabGroupProps,
+  type TabItemProps,
+  type TabSize,
+} from "./components/organisms/Tab/Tab";
 export type { ChartCartesianAnimate, ChartCartesianPoint, ChartCartesianProps } from "./components/organisms/Chart/ChartCartesian";
 export type { ChartSegmentedBarAnimate } from "./components/organisms/Chart/chartSegmentedBarMotion";
 export type { ChartLoadingLayoutClassName, ChartLoadingProps } from "./components/organisms/Chart/ChartLoading";

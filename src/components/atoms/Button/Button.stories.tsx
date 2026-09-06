@@ -40,6 +40,7 @@ const meta = {
 |---------|--------|
 | **Action** | \`role\` + label |
 | **Row** | \`layout="row"\` + \`role="ghost"\` — flat full-width detail / settings lines |
+| **Nav** | \`layout="nav"\` + \`selected\` — inset pill rows; compose in **NavList** only |
 | **With icon** | \`icon\` (Lucide) + \`role\` |
 | **With count** | \`count\` + \`role\` (inbox / notifications) |
 | **Submit / async** | \`status\` + optional \`statusLabels\` |
