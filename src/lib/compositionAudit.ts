@@ -101,6 +101,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "MoreMenu owns the built-in kebab trigger glyph (IconButton shell).",
   },
   {
+    file: "components/organisms/Dialog/OverlayPanelHeader.tsx",
+    ruleId: "lucide-import",
+    reason: "OverlayPanelHeader owns the built-in dismiss glyph (IconButton close).",
+  },
+  {
     file: "components/organisms/Chart/Chart.tsx",
     ruleId: "inline-svg",
     reason: "Chart owns visx-composed SVG marks (SegmentedBar) — ADR-0012.",
