@@ -40,7 +40,7 @@ Ship **NavRail** as an **organism** under `src/components/organisms/NavRail/`.
 
 - No Motion `layoutId` thumb — instant active swap only
 - Not for secondary section lists — **NavList**
-- Mobile primary nav — **MobileNavDock** (example tier, ADR-0021)
+- Mobile primary nav — **AppShell.Mobile** expandable dock (ADR-0021, ADR-0023)
 
 ## Consequences
 

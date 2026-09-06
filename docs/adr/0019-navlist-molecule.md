@@ -32,7 +32,7 @@ App shell **SideNav** was example-tier code with hand-rolled `<button>` inset pi
 
 - **Positive:** App shell uses exported **NavList**; composition audit clean.
 - **Positive:** **Button** `layout="nav"` is documented and reusable only through **NavList** in product docs.
-- **Follow-up:** ~~mobile **TabBar**~~ (**MobileNavDock**, ADR-0021).
+- **Follow-up:** ~~mobile **TabBar**~~ (**AppShell.Mobile**, ADR-0021, ADR-0023).
 
 ## References
 

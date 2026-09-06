@@ -80,7 +80,7 @@ NavList (nav)
 - **Do** keep one \`activeId\` — instant swap; no Motion thumb on items.
 - **Do** pass \`aria-label\` when the nav landmark needs more context than section labels.
 - **Don't** hand-roll inset pill \`<button>\` rows — extend **Button** \`layout="nav"\` via **NavList**.
-- **Don't** use for primary app destinations — accent **NavRail** / mobile **MobileNavDock** (example tier).
+- **Don't** use for primary app destinations — use **AppShell** desktop or mobile navigation.
         `.trim(),
       },
     },

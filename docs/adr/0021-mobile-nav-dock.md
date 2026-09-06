@@ -21,7 +21,7 @@ Motion+ ships radial-menu and FAB expand source ([react-radial-menu](https://mot
 
 ## Decision
 
-Ship **MobileNavDock** as **example-tier** chrome in `src/examples/AppShell/` (not exported from the package v1).
+Ship the expandable mobile dock as the primary-navigation chrome encapsulated by exported **`AppShell.Mobile`**. The dock is not a standalone app API; consumers provide navigation data through **AppShell**.
 
 ### Pattern
 
@@ -36,20 +36,21 @@ Ship **MobileNavDock** as **example-tier** chrome in `src/examples/AppShell/` (n
 - Nav rows reuse **NavList** item styling (`navListItem*` classes) + **Button** `layout="nav"`
 - The menu owns one border and shadow; rows use borderless selected/hover fills so chrome is never nested
 - Toggle: **IconButton** `role="secondary"` at cluster **md**
-- Secondary nav: **MobileSecondaryNav** flattens NavList section data into one responsive **Tab** row
+- Secondary nav: **AppShell.Mobile** flattens NavList section data into one responsive **Tab** row
 - Excess pages move into More; selecting one promotes it before More while keeping the settings content mounted below
 
 ### Non-goals (v1)
 
-- Package export / organism tier — promote via ADR when apps need it outside examples
+- Standalone `MobileNavDock` export — consume it through **AppShell.Mobile**
 - Radial / arch layout
 - Icon-only persistent tab bar (insufficient for long labels)
 
 ## Consequences
 
-- **Examples/App shell → Pattern — shell navigation (mobile)** demonstrates the dock
+- **Organisms/AppShell → Pattern — mobile navigation** defines the package contract
+- **Examples/App shell → Pattern — shell navigation (mobile)** demonstrates it with route content
 - Example **TabBar** (raw `<button>` stub) removed
-- **AppShellMobileLayout** mirrors desktop routing with mobile chrome only
+- **AppShell.Mobile** mirrors desktop routing data with mobile chrome only
 
 ## References
 

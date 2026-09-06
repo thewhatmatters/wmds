@@ -3,16 +3,14 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { lockedViewportStory } from "../../lib/viewports";
 import { storyCopySource, storyMetaDocsDefaults } from "../../lib/storyCopySource";
 import { PageHeader } from "../../components/molecules/PageHeader/PageHeader";
-import { AppCanvasBody } from "./AppCanvas";
+import { AppShell } from "../../components/organisms/AppShell/AppShell";
 import { AppShellHeaderAvatar } from "./AppShellHeaderAvatar";
 import {
   appShellHasSecondaryNav,
   appShellPrimaryFooterItems,
   appShellPrimaryNavItems,
   appShellSettingsSideNavSections,
-  AppShellLayout,
 } from "./AppShellLayout";
-import { AppShellMobileLayout } from "./AppShellMobileLayout";
 import { CreatorInsightsPage } from "./CreatorInsightsPage";
 import { SettingsPage } from "./SettingsPage";
 
@@ -37,7 +35,7 @@ Not every primary destination needs a secondary nav. Pass \`secondaryNav\` only 
 | **NavList** | Optional secondary inset pills — icon + label; instant active swap |
 | **AppCanvas** | \`surface\` sheet — drag handle only when **NavList** is mounted |
 | **PageHeader** | \`variant="app"\` — 56px canvas band; same height as **NavRail** logo |
-| **AppCanvasBody** | Scrollable flex column below the header — Tailwind page layout |
+| **AppShell.Body** | Scrollable flex column below the header — Tailwind page layout |
 
 When **NavList** is present: drag the leading-edge pill left to cover it; labels fade with cover progress; release past halfway to snap. Double-click toggles.
 
@@ -46,20 +44,20 @@ Copy **Pattern — shell navigation (desktop)** — switch **Home** vs **Setting
 ## Anatomy
 
 \`\`\`
-AppShellLayout
+AppShell
 ├── NavRail
 ├── NavList?      — only when secondaryNav prop is set
 └── AppCanvas
     ├── AppCanvasDragHandle? — only with NavList
     ├── PageHeader (\`variant="app"\`)? — canvas top band
-    └── AppCanvasBody → Tailwind sections (e.g. **Stat.Group**)
+    └── AppShell.Body → Tailwind sections (e.g. **Stat.Group**)
 \`\`\`
 
 ## Best practices
 
 - **Do** omit \`secondaryNav\` for top-level panels that do not need a section list.
-- **Do** reset drag reveal when unmounting **NavList** — \`useSideNavReveal(_, enabled)\` handles this.
-- **Do** compose canvas pages in **AppCanvasBody** with Tailwind utilities (\`flex\`, \`grid\`, \`gap-*\`).
+- **Do** remove \`secondaryNav\` when the active route has no section list; **AppShell** resets its reveal state.
+- **Do** compose canvas pages in **AppShell.Body** with Tailwind utilities (\`flex\`, \`grid\`, \`gap-*\`).
 - **Don't** show a drag handle when there is nothing to cover.
         `.trim(),
       },
@@ -95,27 +93,29 @@ function AppShellNavigationDemo() {
     : null;
 
   return (
-    <AppShellLayout
-      activePrimaryId={primaryId}
-      onPrimaryChange={setPrimaryId}
+    <AppShell
+      items={appShellPrimaryNavItems}
+      footerItems={appShellPrimaryFooterItems}
+      activeId={primaryId}
+      onSelect={setPrimaryId}
       secondaryNav={secondaryNav}
     >
       {primaryId === "settings" ? (
         <>
           <PageHeader variant="app" title="Settings" />
-          <AppCanvasBody>
+          <AppShell.Body>
             <SettingsPage activeSection={settingsSectionId} />
-          </AppCanvasBody>
+          </AppShell.Body>
         </>
       ) : (
         <>
           <InsightsCanvasHeader title={primaryTitles[primaryId] ?? "Insights"} />
-          <AppCanvasBody>
+          <AppShell.Body>
             <CreatorInsightsPage />
-          </AppCanvasBody>
+          </AppShell.Body>
         </>
       )}
-    </AppShellLayout>
+    </AppShell>
   );
 }
 
@@ -137,13 +137,13 @@ export const ShellNavigationDesktop: Story = {
     },
     ...storyCopySource(`
 import { useState } from "react";
-import { PageHeader } from "@whatmatters/wmds";
+import { AppShell, PageHeader } from "@whatmatters/wmds";
 import {
   appShellHasSecondaryNav,
   appShellSettingsSideNavSections,
-  AppCanvasBody,
   AppShellHeaderAvatar,
-  AppShellLayout,
+  appShellPrimaryFooterItems,
+  appShellPrimaryNavItems,
   CreatorInsightsPage,
   SettingsPage,
 } from "./examples/AppShell";
@@ -161,17 +161,19 @@ export function AppShellNavigationExample() {
     : null;
 
   return (
-    <AppShellLayout
-      activePrimaryId={primaryId}
-      onPrimaryChange={setPrimaryId}
+    <AppShell
+      items={appShellPrimaryNavItems}
+      footerItems={appShellPrimaryFooterItems}
+      activeId={primaryId}
+      onSelect={setPrimaryId}
       secondaryNav={secondaryNav}
     >
       {primaryId === "settings" ? (
         <>
           <PageHeader variant="app" title="Settings" />
-          <AppCanvasBody>
+          <AppShell.Body>
             <SettingsPage activeSection={settingsSectionId} />
-          </AppCanvasBody>
+          </AppShell.Body>
         </>
       ) : (
         <>
@@ -180,12 +182,12 @@ export function AppShellNavigationExample() {
             title="Insights"
             end={<AppShellHeaderAvatar />}
           />
-          <AppCanvasBody>
+          <AppShell.Body>
             <CreatorInsightsPage />
-          </AppCanvasBody>
+          </AppShell.Body>
         </>
       )}
-    </AppShellLayout>
+    </AppShell>
   );
 }
 `),
@@ -216,9 +218,9 @@ function AppShellMobileNavigationDemo() {
   );
 
   return (
-    <AppShellMobileLayout
-      activePrimaryId={primaryId}
-      onPrimaryChange={setPrimaryId}
+    <AppShell.Mobile
+      activeId={primaryId}
+      onSelect={setPrimaryId}
       items={mobileItems}
       footerItems={appShellPrimaryFooterItems}
       secondaryNav={secondaryNav}
@@ -235,7 +237,7 @@ function AppShellMobileNavigationDemo() {
       ) : (
         <CreatorInsightsPage />
       )}
-    </AppShellMobileLayout>
+    </AppShell.Mobile>
   );
 }
 
@@ -252,18 +254,17 @@ export const ShellNavigationMobile: Story = {
     docs: {
       description: {
         story:
-          "Expandable bottom **MobileNavDock** — vertical menu stack for long labels (not a radial arch or cramped tab bar). On **Settings**, one responsive **Tab** row replaces the desktop NavList; excess pages move into More and a selected hidden page is promoted before More.",
+          "Expandable bottom navigation — vertical menu stack for long labels (not a radial arch or cramped tab bar). On **Settings**, one responsive **Tab** row replaces the desktop NavList; excess pages move into More and a selected hidden page is promoted before More.",
       },
     },
     ...storyCopySource(`
 import { useState } from "react";
-import { PageHeader } from "@whatmatters/wmds";
+import { AppShell, PageHeader } from "@whatmatters/wmds";
 import {
   appShellHasSecondaryNav,
   appShellPrimaryFooterItems,
   appShellPrimaryNavItems,
   appShellSettingsSideNavSections,
-  AppShellMobileLayout,
   AppShellHeaderAvatar,
   CreatorInsightsPage,
   SettingsPage,
@@ -282,9 +283,9 @@ export function AppShellMobileExample() {
     : null;
 
   return (
-    <AppShellMobileLayout
-      activePrimaryId={primaryId}
-      onPrimaryChange={setPrimaryId}
+    <AppShell.Mobile
+      activeId={primaryId}
+      onSelect={setPrimaryId}
       items={appShellPrimaryNavItems}
       footerItems={appShellPrimaryFooterItems}
       secondaryNav={secondaryNav}
@@ -305,7 +306,7 @@ export function AppShellMobileExample() {
       ) : (
         <CreatorInsightsPage />
       )}
-    </AppShellMobileLayout>
+    </AppShell.Mobile>
   );
 }
 `),

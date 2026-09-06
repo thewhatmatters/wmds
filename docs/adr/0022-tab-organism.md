@@ -55,7 +55,7 @@ Ship **Tab** as an organism under `src/components/organisms/Tab/`.
 
 ## Consequences
 
-- **AppShellMobileLayout** uses one responsive Tab row for Settings secondary pages.
+- **AppShell.Mobile** uses one responsive Tab row for Settings secondary pages.
 - SegmentedControl remains for settings values and view modes, not page navigation.
 - No horizontally scrolling tab track or clipped selected pill.
 

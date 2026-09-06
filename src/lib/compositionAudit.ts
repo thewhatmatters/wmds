@@ -116,6 +116,16 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "Chart.Cartesian owns visx-composed SVG (Area, axes, grid, crosshair) — ADR-0012, ADR-0015.",
   },
   {
+    file: "components/organisms/AppShell/AppShell.tsx",
+    ruleId: "raw-button",
+    reason: "AppShell owns the pointer-driven WAI-ARIA separator used to cover secondary navigation.",
+  },
+  {
+    file: "components/organisms/AppShell/AppShell.tsx",
+    ruleId: "lucide-import",
+    reason: "AppShell owns the mobile dock disclosure glyphs inside IconButton.",
+  },
+  {
     file: "components/organisms/NavRail/NavRailBrandMark.tsx",
     ruleId: "inline-svg",
     reason: "NavRailBrandMark owns the WhatMatters sparkle product glyph — brand asset, not Lucide.",
