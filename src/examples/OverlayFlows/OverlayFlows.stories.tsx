@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SlidersHorizontal } from "lucide-react";
 import { Button } from "../../components/atoms/Button/Button";
 import { Switch } from "../../components/atoms/Switch/Switch";
-import { Card } from "../../components/molecules/Card/Card";
+import { Card, cardLayoutBodyOccupantInsetXClasses, cardSubtitleClasses, cardTitleClasses } from "../../components/molecules/Card/Card";
 import { CheckboxGroup } from "../../components/molecules/CheckboxGroup/CheckboxGroup";
 import { Input } from "../../components/atoms/Input/Input";
 import { AlertDialog } from "../../components/organisms/Dialog/AlertDialog";
@@ -36,12 +36,16 @@ Copy this story for workspace settings, market filters, or destructive toggles �
 ## Anatomy
 
 \`\`\`
-Card (settings surface)
-├── Switch rows — inline toggles
+Card padding="none" (settings surface)
+├── Card.Header — title + subtitle
+├── Card.Body — occupant inset; Switch rows
+├── Card.Footer — overlay trigger actions
 ├── Dialog — channel picker (CheckboxGroup + footer actions)
 ├── AlertDialog — disable critical alerts
 └── Sheet — market filters (bottom drawer)
 \`\`\`
+
+**Do not** use \`padding="md"\` with **Header** / **Body** / **Footer** — that stacks root \`p-4\` on legacy inset sections. Layout cards use \`padding="none"\` (default).
         `.trim(),
       },
     },
@@ -71,34 +75,36 @@ export const NotificationPreferences: Story = {
 
     return (
       <>
-        <Card padding="md" className="mx-auto max-w-lg">
+        <Card padding="none" className="mx-auto max-w-lg">
           <Card.Header
             start={
               <div>
-                <h2 className="type-heading-4 leading-snug text-fg">Notification preferences</h2>
-                <p className="type-supporting pt-1 text-muted">
-                  Choose how WhatMatters reaches residents and staff.
-                </p>
+                <h2 className={cardTitleClasses}>Notification preferences</h2>
+                <p className={cardSubtitleClasses}>Choose how WhatMatters reaches residents and staff.</p>
               </div>
             }
           />
-          <Card.Body className="flex flex-col gap-4">
-            <Switch
-              layout="settings"
-              label="Email digests"
-              description="Weekly occupancy summary"
-              checked={emailDigests}
-              onChange={(event) => setEmailDigests(event.target.checked)}
-            />
-            <Switch
-              layout="settings"
-              label="Critical alerts"
-              description="Immediate SMS for threshold breaches"
-              checked={criticalAlerts}
-              onChange={(event) => handleCriticalChange(event.target.checked)}
-            />
+          <Card.Body>
+            <div
+              className={`flex flex-col gap-4 py-4 ${cardLayoutBodyOccupantInsetXClasses}`}
+            >
+              <Switch
+                layout="settings"
+                label="Email digests"
+                description="Weekly occupancy summary"
+                checked={emailDigests}
+                onChange={(event) => setEmailDigests(event.target.checked)}
+              />
+              <Switch
+                layout="settings"
+                label="Critical alerts"
+                description="Immediate SMS for threshold breaches"
+                checked={criticalAlerts}
+                onChange={(event) => handleCriticalChange(event.target.checked)}
+              />
+            </div>
           </Card.Body>
-          <Card.Footer className="flex flex-wrap justify-end gap-2">
+          <Card.Footer className="justify-end gap-2">
             <Button role="secondary" size="sm" onClick={() => setFiltersOpen(true)}>
               Market filters
             </Button>
@@ -196,8 +202,8 @@ export function NotificationPreferencesPage() {
 
   return (
     <>
-      <Card padding="md">
-        {/* Switch rows + footer actions — see full story */}
+      <Card padding="none">
+        {/* Card.Header + Card.Body (occupant inset) + Card.Footer — see full story */}
       </Card>
       <Dialog open={channelsOpen} onOpenChange={setChannelsOpen}>
         <Dialog.Content title="Alert channels" footer={/* Save / Cancel */}>
