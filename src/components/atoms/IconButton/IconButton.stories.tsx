@@ -42,7 +42,7 @@ const meta = {
 | **Async** | \`loading\` + \`aria-label\` |
 | **Inset dismiss** | \`inset\` + \`size="sm" \| "md" \| "lg"\` — removable Chip trailing × |
 
-Inspired by [Astryx IconButton](https://astryx.atmeta.com/components/IconButton). Circular hit target; \`md\` = cluster lg (44×44px, ADR-0003). \`xs\` / \`sm\` / \`md\` map to cluster sm / md / lg — see **Foundation → Cluster** (ADR-0011).
+Circular icon-only hit target; \`md\` = cluster lg (44×44px, ADR-0003). \`xs\` / \`sm\` / \`md\` map to cluster sm / md / lg — see **Foundation → Cluster** (ADR-0011).
 
 ## Best practices
 

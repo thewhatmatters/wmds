@@ -17,9 +17,9 @@ const meta = {
     docs: {
       description: {
         component:
-          "Astryx-aligned typography in **`src/theme/typography.css`**: geometric **`--font-size-*`** ramp (14px × 1.2) + semantic **`type-*`** utilities. " +
+          "WMDS typography in **`src/theme/typography.css`**: geometric **`--font-size-*`** ramp (14px × 1.2) + semantic **`type-*`** utilities. " +
           "Components use **`typographyClass(role)`** from **`src/lib/typography.ts`** — not raw **`text-sm`** / **`font-medium`**. " +
-          "Reference: [Astryx Typography](https://astryx.atmeta.com/docs/typography). See **ADR-0009**.",
+          "See **ADR-0009**.",
       },
     },
   },
@@ -36,7 +36,7 @@ export const GeometricScale: Story = {
       <div className="flex max-w-2xl flex-col gap-3 font-sans">
         <p className="type-supporting text-muted">
           Raw size ramp — adjust <code className="font-mono text-xs">--type-scale-base</code> and{" "}
-          <code className="font-mono text-xs">--type-scale-ratio</code> holistically (Astryx pattern).
+          <code className="font-mono text-xs">--type-scale-ratio</code> holistically — adjust base and ratio together.
         </p>
         {steps.map(({ token, value, sample }) => (
           <div key={token} className="flex items-baseline justify-between gap-4 border-b border-border pb-2">
@@ -62,8 +62,8 @@ export const Weights: Story = {
   ),
 };
 
-export const AstryxTypeScale: Story = {
-  name: "Astryx type scale",
+export const SemanticTypeScale: Story = {
+  name: "Semantic type scale",
   render: () => (
     <div className="flex max-w-2xl flex-col gap-6 font-sans">
       <p className="type-supporting text-muted">
@@ -90,7 +90,7 @@ export const Roles: Story = {
   render: () => (
     <div className="flex max-w-2xl flex-col gap-8 font-sans">
       <p className="type-supporting text-muted">
-        WMDS roles map to Astryx types — import via{" "}
+        WMDS document roles map to semantic type utilities — import via{" "}
         <code className="font-mono text-xs text-fg">typographyClass(&quot;body&quot;)</code>.
       </p>
       {typographyStyles.map(({ role, label, description, astryxType, className, trackingClass, sample }) => (
@@ -98,7 +98,7 @@ export const Roles: Story = {
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <span className="font-mono text-xs text-muted">{role}</span>
             <span className="type-label text-fg">{label}</span>
-            <span className="font-mono text-xs text-muted">→ {astryxType}</span>
+            <span className="font-mono text-xs text-muted">→ {astryxType} utility</span>
             <span className="font-mono text-xs text-muted">{trackingClass}</span>
           </div>
           <p className="type-supporting text-muted">{description}</p>
@@ -117,7 +117,7 @@ export const LetterSpacing: Story = {
   render: () => (
     <div className="flex max-w-2xl flex-col gap-6 font-sans">
       <p className="type-supporting text-muted">
-        Three tracking values — assigned only through typography roles (WMDS extension on Astryx).
+        Three tracking values — assigned only through typography roles.
       </p>
       <table className="w-full border-collapse text-sm">
         <thead>

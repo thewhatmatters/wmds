@@ -43,7 +43,7 @@ const meta = {
         component: `
 ## Usage
 
-[Astryx Field](https://astryx.atmeta.com/components/Field) — **layout molecule**, not a text control (ADR-0006). Wrap **Input**, **TextArea**, **Select**, or **Search** when orientation or shared label context is clearer than props on the control.
+**Layout molecule**, not a text control (ADR-0006). Wrap **Input**, **TextArea**, **Select**, or **Search** when orientation or shared label context is clearer than props on the control.
 
 | Pattern | When |
 |---------|------|

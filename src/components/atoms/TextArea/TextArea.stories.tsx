@@ -43,7 +43,7 @@ const meta = {
         component: `
 ## Usage
 
-[Astryx Text Area](https://astryx.atmeta.com/components/TextArea) — **element-radius** shell (\`rounded-xl\` / 12px), not pill. Same optional label and **status validation** as **Input** (ADR-0006).
+**Element-radius** multiline field (\`rounded-xl\` / 12px), not pill. Same optional label and **status validation** as **Input** (ADR-0006).
 
 | Pattern | Props |
 |---------|--------|

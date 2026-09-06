@@ -154,7 +154,7 @@ function StatusDotPattern({
 }
 
 /**
- * Fixed-scale status indicators — inspired by [Astryx StatusDot](https://astryx.atmeta.com/components/StatusDot).
+ * Fixed-scale status indicators — **`variant="ring"`** (24px) or **`variant="dot"`** (8px).
  * Pattern-first: `variant="ring"` (24px task progress) or `variant="dot"` (8px semantic dot).
  */
 export function Status(props: StatusProps) {

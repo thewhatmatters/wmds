@@ -45,7 +45,7 @@ const meta = {
         component: `
 ## Usage
 
-[Astryx Text Input](https://astryx.atmeta.com/components/TextInput) — **pill** shell only. Optional label, **status validation** (not required asterisks). See **ADR-0006**.
+**Pill** single-line text field. Optional label, **status validation** (not required asterisks). See **ADR-0006**.
 
 | Pattern | Props |
 |---------|--------|

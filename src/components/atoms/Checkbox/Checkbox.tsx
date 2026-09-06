@@ -69,7 +69,7 @@ function assertCheckboxPattern(props: Pick<CheckboxProps, "status" | "message">)
 }
 
 /**
- * Boolean toggle — [Astryx CheckboxInput](https://astryx.atmeta.com/components/CheckboxInput) pattern.
+ * Boolean toggle — box + label row.
  * Label + optional description beside the box; validation message below the row.
  */
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox(

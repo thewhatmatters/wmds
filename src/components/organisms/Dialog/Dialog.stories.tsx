@@ -23,7 +23,7 @@ const meta = {
         component: `
 ## Usage
 
-Modal overlay system — [Astryx Dialog](https://astryx.atmeta.com/components/Dialog) + [AlertDialog](https://astryx.atmeta.com/components/AlertDialog).
+Modal overlay system — **Dialog** for general modals, **AlertDialog** for blocking confirms.
 
 | Pattern | Component | Notes |
 |---------|-----------|--------|

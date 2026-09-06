@@ -157,7 +157,7 @@ function CardDivider({ className, ...props }: HTMLAttributes<HTMLHRElement>) {
 }
 
 /**
- * Content surface — [Astryx Card](https://astryx.atmeta.com/components/Card).
+ * Content surface — **Header**, **Body**, **Footer** composition slots.
  * Layout cards (`padding="none"`) — shell + **Header** (`start` | `end`) + **Body** slot
  * (2px gutter, square, transparent — occupant owns fill and chrome).
  */

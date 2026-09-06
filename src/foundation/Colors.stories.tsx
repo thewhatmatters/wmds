@@ -40,10 +40,10 @@ const meta = {
     docs: {
       description: {
         component:
-          "Astryx-aligned semantic roles from **`src/theme/colors.css`**. Surface hierarchy: **body → surface → card → popover**. " +
+          "Semantic color roles from **`src/theme/colors.css`**. Surface hierarchy: **body → surface → card → popover**. " +
           "Status roles use solid + **`*-muted`** tints — not Tailwind opacity modifiers. " +
           "Interaction states derive in **`src/theme/stateColors.css`**. Dark mode swaps values under **`[data-theme=\"dark\"]`** — same utility names. " +
-          "Reference: [Astryx Color](https://astryx.atmeta.com/docs/color).",
+          "See **ADR-0007**.",
       },
     },
   },
@@ -132,7 +132,7 @@ export const StateColors: Story = {
   render: () => (
     <div className="flex max-w-md flex-col gap-3">
       <p className="text-sm text-muted">
-        Hover each swatch — ghost/secondary use Astryx overlay tints; primary/error use color-mix.
+        Hover each swatch — ghost/secondary use overlay tints; primary/error use color-mix.
       </p>
       {(
         [

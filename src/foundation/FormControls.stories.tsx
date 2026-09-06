@@ -379,7 +379,7 @@ export const SwitchSettings: Story = {
     docs: {
       description: {
         story:
-          "**Switch** `layout=\"settings\"` — label + description left, control right (Astryx Switch).",
+          "**Switch** `layout=\"settings\"` — label + description left, control right.",
       },
     },
   },
@@ -412,7 +412,7 @@ export const RadioGroupOptions: Story = {
     docs: {
       description: {
         story:
-          "**RadioGroup** owns the group label, shared `name`, and validation — each **RadioGroup.Item** is one pick-one option (Astryx RadioList).",
+          "**RadioGroup** owns the group label, shared `name`, and validation — each **RadioGroup.Item** is one pick-one option.",
       },
     },
   },

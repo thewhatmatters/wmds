@@ -32,7 +32,7 @@ export interface IconButtonProps {
   inset?: boolean;
   /** Native tooltip for sighted users — defaults to `aria-label`. */
   title?: string;
-  /** FAB pattern — primary fill + elevated shadow. [Astryx IconButton](https://astryx.atmeta.com/components/IconButton). */
+  /** FAB pattern — primary fill + elevated shadow. */
   fab?: boolean;
   /** Shows spinner instead of icon — async feedback. */
   loading?: boolean;
@@ -56,7 +56,7 @@ function assertIconButtonPattern(props: Pick<IconButtonProps, "fab" | "role">) {
 }
 
 /**
- * Icon-only action control — [Astryx IconButton](https://astryx.atmeta.com/components/IconButton).
+ * Icon-only action control — circular hit target; **`aria-label` required**.
  * Use when space is tight and the icon is universally understood; otherwise use `Button` with a label.
  */
 export function IconButton({

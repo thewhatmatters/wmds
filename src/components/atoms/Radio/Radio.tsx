@@ -60,7 +60,7 @@ function assertRadioPattern(props: Pick<RadioProps, "status" | "message">) {
 }
 
 /**
- * Single radio option — [Astryx RadioList item](https://astryx.atmeta.com/components/RadioList) pattern.
+ * Single radio option — circle + label row; compose in **RadioGroup**.
  * Compose inside **RadioGroup** for grouped selection, or use standalone with a shared `name`.
  */
 export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(

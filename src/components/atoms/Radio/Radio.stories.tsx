@@ -41,7 +41,7 @@ const meta = {
         component: `
 ## Usage
 
-[Astryx RadioList item](https://astryx.atmeta.com/components/RadioList) — circle + label row. Prefer **RadioGroup** for mutually exclusive options.
+Single radio option — circle + label row. Prefer **RadioGroup** for mutually exclusive options.
 
 | Pattern | When |
 |---------|------|

@@ -45,7 +45,7 @@ export interface AlertDialogProps {
 }
 
 /**
- * Blocking confirm dialog — [Astryx AlertDialog](https://astryx.atmeta.com/components/AlertDialog).
+ * Blocking confirm dialog — cancel + confirm footer; scrim dismiss off by default.
  * Opinionated title + description + cancel/confirm footer on the shared overlay primitive.
  */
 export function AlertDialog({

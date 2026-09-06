@@ -41,7 +41,7 @@ export interface TextAreaProps
   label?: string;
   /** Neutral helper below the control — hidden when validation `message` is shown. */
   description?: string;
-  /** Validation status — border + trailing icon ([Astryx Text Area](https://astryx.atmeta.com/components/TextArea)). */
+  /** Validation status — border + trailing icon. */
   status?: InputStatus;
   /** Validation copy in integrated status band — requires `status`. */
   message?: string;

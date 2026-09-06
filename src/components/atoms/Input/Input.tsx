@@ -52,11 +52,11 @@ export interface InputProps
   label?: string;
   /** Neutral helper below the control — hidden when validation `message` is shown. */
   description?: string;
-  /** Validation status — border + trailing icon ([Astryx Text Input](https://astryx.atmeta.com/components/TextInput)). */
+  /** Validation status — border + trailing icon. */
   status?: InputStatus;
   /** Validation copy in integrated status band — requires `status`; omit for status-only (border + icon). */
   message?: string;
-  /** Status band placement when `message` is set — default `bottom` ([Astryx ChatComposer](https://astryx.atmeta.com/components/ChatComposer)). */
+  /** Status band placement when `message` is set — default `bottom`. */
   messagePosition?: InputMessagePosition;
   /** Trailing spinner — async validation. Combinable with `endBadge`. */
   loading?: boolean;
@@ -112,7 +112,7 @@ function resolveTrailingPadding(
 }
 
 /**
- * Single-line pill text input — Astryx validation patterns (status, message footer, trailing icon).
+ * Single-line pill text input — validation via `status`, `message`, and trailing icon.
  * Bare by default; optional `label` (ADR-0006). Required fields: `endBadge` + `required`, not asterisks.
  */
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(

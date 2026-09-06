@@ -310,7 +310,7 @@ function DialogContent({
 }
 
 /**
- * Modal overlay — [Astryx Dialog](https://astryx.atmeta.com/components/Dialog).
+ * Modal overlay — portal scrim, focus trap, scroll lock; composes **Card** shell.
  * Composes **Card** shell + portal scrim; use **AlertDialog** for blocking confirms.
  */
 export const Dialog = Object.assign(DialogRoot, {

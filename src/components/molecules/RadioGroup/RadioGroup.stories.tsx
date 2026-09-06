@@ -49,7 +49,7 @@ const meta = {
         component: `
 ## Usage
 
-[Astryx RadioList](https://astryx.atmeta.com/components/RadioList) — mutually exclusive options with optional group label, description, and validation band.
+Mutually exclusive options with optional group label, description, and validation band.
 
 | Pattern | Props |
 |---------|--------|

@@ -74,7 +74,7 @@ export const OnBeige: Story = {
   parameters: {
     docs: {
       description: {
-        story: "White surface pill on gray body — Astryx surface hierarchy.",
+        story: "White surface pill on gray body — WMDS surface hierarchy (body → surface).",
       },
     },
   },

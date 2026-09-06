@@ -97,7 +97,7 @@ const meta = {
         component: `
 ## Usage
 
-[Astryx Card](https://astryx.atmeta.com/components/Card) — **Header** and **Footer** sit on the shell; **Body** is a square **slot** 2px from the card edges. The slot has no default fill, radius, or inner pad — **the occupant dictates how the body region looks**. Background on the content (e.g. \`bg-body\`, TaskRows chrome) is what the card shows there; without it, the shell surface shows through.
+**Header** and **Footer** sit on the shell; **Body** is a square **slot** 2px from the card edges. The slot has no default fill, radius, or inner pad — **the occupant dictates how the body region looks**. Background on the content (e.g. \`bg-body\`, TaskRows chrome) is what the card shows there; without it, the shell surface shows through.
 
 | Pattern | Composition |
 |---------|-------------|

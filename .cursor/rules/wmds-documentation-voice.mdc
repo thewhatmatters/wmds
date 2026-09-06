@@ -1,0 +1,24 @@
+---
+description: WMDS-native Storybook and agent docs — no external design-system references
+globs: "**/*.{stories.tsx,md,mdc}"
+alwaysApply: false
+---
+
+# Documentation voice
+
+Storybook meta, **Pattern** stories, and agent notes describe **WMDS contracts only**.
+
+## Do
+
+- Document **props**, **anatomy**, **composition**, and **when to use** each component.
+- Point to **Pattern — …** stories and **Best practices** for consuming apps and agents.
+- Reference **ADRs** and **Foundation** token stories for tier/token decisions.
+- Use **For agents building UIs** on complex atoms/molecules when composition rules are easy to get wrong (see **Atoms/Avatar**).
+
+## Don't
+
+- Link or name external design systems in Storybook `docs.description` or component bullets in **AGENTS.md**.
+- Write "inspired by …" or "maps X → Y" against another system's naming.
+- Document raw Tailwind recipes as the primary API — **Pattern-first** (ADR-0004).
+
+ADRs may record historical context; Storybook and **AGENTS.md** component bullets stay WMDS-native.

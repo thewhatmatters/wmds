@@ -47,7 +47,7 @@ const meta = {
         component: `
 ## Usage
 
-[Astryx CheckboxInput](https://astryx.atmeta.com/components/CheckboxInput) — box + label row; optional description and status message below.
+Boolean toggle — box + label row; optional description and status message below.
 
 | Pattern | Props |
 |---------|--------|

@@ -59,7 +59,7 @@ function assertBadgePattern(props: Pick<BadgeProps, "count" | "icon" | "iconOnly
 }
 
 /**
- * Short status, count, or category label — [Astryx Badge](https://astryx.atmeta.com/components/Badge).
+ * Short status, count, or category label — solid semantic fills.
  * Pattern-first: label, count, icon + label, icon-only, muted emphasis.
  */
 export function Badge({

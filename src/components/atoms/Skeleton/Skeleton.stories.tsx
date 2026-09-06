@@ -27,7 +27,7 @@ const meta = {
         component: `
 ## Usage
 
-Placeholder blocks for **skeleton screens** while layout mounts — geometry from [Astryx Skeleton](https://astryx.atmeta.com/components/Skeleton), shimmer sweep from [Motion skeleton shimmer](https://motion.dev/examples/react-skeleton-shimmer). Compose multiple **Skeleton** shapes to mirror the resolved UI (title, select, chart well, legend). Not a chart-specific API.
+Placeholder blocks for **skeleton screens** while layout mounts — WMDS radius tokens for shape, shimmer sweep from [Motion skeleton shimmer](https://motion.dev/examples/react-skeleton-shimmer). Compose multiple **Skeleton** shapes to mirror the resolved UI (title, select, chart well, legend). Not a chart-specific API.
 
 Set \`aria-busy="true"\` on the owning **Card** or page region. Individual shapes are \`aria-hidden\`. Shimmer respects **MotionConfig** \`reducedMotion="user"\` — static blocks when reduced motion is preferred.
 

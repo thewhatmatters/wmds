@@ -33,7 +33,7 @@ One **Status** component — pick a **variant** for the indicator scale and patt
 | **\`ring\`** | 24px | \`active\`, \`step\`, \`besideLabel\` / \`label\` |
 | **\`dot\`** | 8px | \`tone\`, \`pulsing\`, \`besideLabel\` / \`label\` |
 
-**StatusDot** on Astryx maps to \`variant="dot"\` here — one **Status** atom, not a separate export.
+Use \`variant="dot"\` for 8px semantic presence — one **Status** atom, not a separate dot export.
 
 ## Best practices
 
@@ -165,7 +165,7 @@ export const AllDotTones: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Semantic fills for `variant=\"dot\"` — maps Astryx `error` → **destructive**.",
+        story: "Semantic fills for `variant=\"dot\"` — use **destructive** for errors.",
       },
     },
   },

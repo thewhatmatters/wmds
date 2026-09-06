@@ -21,9 +21,9 @@ const meta = {
     docs: {
       description: {
         component:
-          "Astryx-aligned duration and easing tokens in **`src/theme/motion.css`**. " +
+          "WMDS duration and easing tokens in **`src/theme/motion.css`**. " +
           "Prefer **CSS `transition`** + `motionTransition()` for hovers and color; use **[Motion](https://motion.dev/docs/react)** for layout and enter/exit. " +
-          "Reference: [Astryx Motion](https://astryx.atmeta.com/docs/motion). " +
+          "See **ADR-0008**. " +
           "**Fast** — high-frequency (hover, focus). **Medium** — spatial change (panels, collapse). **Slow** — rare hero transitions. " +
           "Storybook wraps `<MotionConfig reducedMotion=\"user\">`.",
       },
@@ -90,7 +90,7 @@ export const CssTransitions: Story = {
     docs: {
       description: {
         story:
-          "Hover each track — same distance, different Astryx tier. " +
+          "Hover each track — same distance, different duration tier. " +
           "High-frequency hovers belong on **fast**; layout shifts use **medium**.",
       },
     },
@@ -141,7 +141,7 @@ export const FocusRingFade: Story = {
     docs: {
       description: {
         story:
-          "`focusRingTransitionClasses` — **fast** (175ms) box-shadow fade. Astryx: focus must not lag behind the user.",
+          "`focusRingTransitionClasses` — **fast** (175ms) box-shadow fade. Focus must not lag behind the user.",
       },
     },
   },

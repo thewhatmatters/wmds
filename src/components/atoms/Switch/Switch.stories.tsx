@@ -47,7 +47,7 @@ const meta = {
         component: `
 ## Usage
 
-[Astryx Switch](https://astryx.atmeta.com/components/Switch) — pill track + sliding thumb; instant on/off for settings.
+Instant on/off — pill track + sliding thumb for settings and preferences.
 
 | Pattern | Props |
 |---------|--------|

@@ -67,7 +67,7 @@ function assertSwitchPattern(props: Pick<SwitchProps, "status" | "message">) {
 }
 
 /**
- * Boolean toggle — [Astryx Switch](https://astryx.atmeta.com/components/Switch) pattern.
+ * Boolean toggle — pill track + sliding thumb.
  * Pill track + sliding thumb; `layout="settings"` for label-left / switch-right rows.
  */
 export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(

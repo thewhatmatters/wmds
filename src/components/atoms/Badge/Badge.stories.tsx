@@ -37,7 +37,7 @@ const meta = {
 | **With icon** | \`icon\` (Lucide) + \`variant\` + label |
 | **Icon only** | \`iconOnly\` + \`icon\` + \`variant\` — **TaskRows** leading done/failed |
 
-Solid semantic fills inspired by [Astryx Badge](https://astryx.atmeta.com/components/Badge). **Variants:** \`neutral\` (categories), \`info\`, \`success\`, \`warning\`, \`destructive\` (status). Maps Astryx \`error\` → **\`destructive\`**.
+Solid semantic fills for status and category labels. **Variants:** \`neutral\` (categories), \`info\`, \`success\`, \`warning\`, \`destructive\` (errors and irreversible outcomes).
 
 ## Best practices
 
@@ -69,7 +69,7 @@ export const SemanticVariants: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Solid semantic fills — status row from Astryx Badge.",
+        story: "Solid semantic fills — one variant per tone.",
       },
     },
   },
