@@ -6,6 +6,7 @@
 const atoms = [
   "Badge",
   "Button",
+  "Checkbox",
   "IconButton",
   "Input",
   "Skeleton",

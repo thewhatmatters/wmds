@@ -14,6 +14,13 @@ export {
   getNextButtonStatus,
 } from "./components/atoms/Button/Button";
 export {
+  Checkbox,
+  checkboxSizes,
+  type CheckboxLayoutClassName,
+  type CheckboxProps,
+  type CheckboxSize,
+} from "./components/atoms/Checkbox/Checkbox";
+export {
   IconButton,
   type IconButtonLayoutClassName,
   type IconButtonProps,

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MapPin } from "lucide-react";
 import { Input } from "../components/atoms/Input/Input";
+import { Checkbox } from "../components/atoms/Checkbox/Checkbox";
 import { TextArea } from "../components/atoms/TextArea/TextArea";
 import { inputSizes } from "../components/atoms/Input/inputShellStyles";
 import { Field } from "../components/molecules/Field/Field";
@@ -37,6 +38,7 @@ WMDS ships **discrete components** — not a monolithic \`TextField\` or \`Input
 |--------|------|------|-----------|
 | **Input** | Atom | Single-line text — pill shell, optional label/status | **Atoms/Input** |
 | **TextArea** | Atom | Multiline — same optional chrome as Input | **Atoms/TextArea** |
+| **Checkbox** | Atom | Boolean toggle — label row + validation | **Atoms/Checkbox** |
 | **Select** | Molecule | Pill trigger + floating listbox | **Molecules/Select** |
 | **Search** | Molecule | Hero search — inset button in one shell | **Molecules/Search** |
 | **Dropdown** | Molecule | Shared menu panel + three-slot rows | **Molecules/Dropdown** |
@@ -60,6 +62,7 @@ When \`label\` is omitted, **\`aria-label\` is required** (dev warn in Storybook
 |------|-----|
 | ZIP, email, plain text | **Input** |
 | Multiline copy | **TextArea** |
+| On/off consent, filters, settings toggles | **Checkbox** |
 | Pick one of N discrete values | **Select** |
 | ZIP/city + "Use my location" / GO | **Search** |
 | Action menu, context menu, multi-select rows | **Dropdown** *(Select uses it today)* |
@@ -120,6 +123,12 @@ export const ComponentMap: Story = {
             <td className="py-2 pr-4 text-muted">Atom</td>
             <td className="py-2 pr-4 text-muted">Element radius (`rounded-xl`)</td>
             <td className="py-2 text-muted">Top-trailing status / loading; vertical resize</td>
+          </tr>
+          <tr className="border-b border-border">
+            <td className="py-2 pr-4 font-medium">Checkbox</td>
+            <td className="py-2 pr-4 text-muted">Atom</td>
+            <td className="py-2 pr-4 text-muted">Square box + label row</td>
+            <td className="py-2 text-muted">Indeterminate, status band, loading</td>
           </tr>
           <tr>
             <td className="py-2 pr-4 font-medium">Field</td>
@@ -269,6 +278,29 @@ export const HorizontalField: Story = {
           options={periodOptions}
         />
       </Field>
+    </div>
+  ),
+};
+
+export const CheckboxOptions: Story = {
+  name: "Specimen — checkbox list",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Use native `fieldset` / `legend` or **Field** for group labels — each option is a bare **Checkbox** with its own label.",
+      },
+    },
+  },
+  render: () => (
+    <div className="mx-auto flex w-full max-w-md flex-col gap-3 px-8 py-6">
+      <Checkbox
+        label="Email alerts"
+        description="Quote and SEC filing notifications."
+        defaultChecked
+      />
+      <Checkbox label="Push notifications" />
+      <Checkbox label="Weekly summary" />
     </div>
   ),
 };

@@ -24,6 +24,7 @@
 - **Input:** pill-only. Optional leading `icon`; trailing `endBadge` or status / `loading`. Hero search with inset button → **Search** molecule. See **ADR-0006**.
 - **TextArea:** element-radius multiline — same optional `label`, `description`, `status`, `message`, and `loading` as **Input**; default `resize="vertical"`. See **ADR-0006**.
 - **Field:** label/layout wrapper — `orientation="vertical" | "horizontal"`; never required. Validation stays on **Input** / **TextArea**. See **ADR-0006**.
+- **Checkbox:** boolean toggle — label row + optional `description`, `indeterminate`, `status` / `message`, and `loading` ([Astryx CheckboxInput](https://astryx.atmeta.com/components/CheckboxInput)). See **ADR-0006**.
 - **Select:** pill trigger matched to **Input** shell + floating listbox (**Dropdown.Menu** / **Dropdown.Item**). **`size="sm"`** in Card headers beside **Chip sm**. Options support **`start`** / **`end`** slots for icons and shortcuts. See **Molecules/Select**, **Molecules/Dropdown**.
 - **Dropdown:** shared menu panel (`p-0.5` inset) + three-slot rows (`start` | label | `end`) — composed by **Select**; action menus via **MoreMenu**.
 - **MoreMenu:** kebab **IconButton** + floating **Dropdown** action menu — Card header `end` slot; menu right-aligns to trigger; **`items`** + **`onAction`**. Sizes **`xs` | `sm` | `md` | `lg`** (**IconButton** scale). Not for single-select — **Select** / **SegmentedControl**.
