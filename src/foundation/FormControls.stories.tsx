@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import { MapPin } from "lucide-react";
 import { Input } from "../components/atoms/Input/Input";
 import { Checkbox } from "../components/atoms/Checkbox/Checkbox";
 import { TextArea } from "../components/atoms/TextArea/TextArea";
 import { inputSizes } from "../components/atoms/Input/inputShellStyles";
 import { Field } from "../components/molecules/Field/Field";
+import { RadioGroup } from "../components/molecules/RadioGroup/RadioGroup";
 import { Search } from "../components/molecules/Search/Search";
 import { Select } from "../components/molecules/Select/Select";
 import { cn } from "../lib/cn";
@@ -39,6 +41,8 @@ WMDS ships **discrete components** — not a monolithic \`TextField\` or \`Input
 | **Input** | Atom | Single-line text — pill shell, optional label/status | **Atoms/Input** |
 | **TextArea** | Atom | Multiline — same optional chrome as Input | **Atoms/TextArea** |
 | **Checkbox** | Atom | Boolean toggle — label row + validation | **Atoms/Checkbox** |
+| **Radio** | Atom | Single option — circle + label row | **Atoms/Radio** |
+| **RadioGroup** | Molecule | Pick one of N — vertical / horizontal | **Molecules/RadioGroup** |
 | **Select** | Molecule | Pill trigger + floating listbox | **Molecules/Select** |
 | **Search** | Molecule | Hero search — inset button in one shell | **Molecules/Search** |
 | **Dropdown** | Molecule | Shared menu panel + three-slot rows | **Molecules/Dropdown** |
@@ -63,7 +67,8 @@ When \`label\` is omitted, **\`aria-label\` is required** (dev warn in Storybook
 | ZIP, email, plain text | **Input** |
 | Multiline copy | **TextArea** |
 | On/off consent, filters, settings toggles | **Checkbox** |
-| Pick one of N discrete values | **Select** |
+| Pick one of 2–5 visible options | **RadioGroup** |
+| Pick one of N discrete values (compact) | **Select** |
 | ZIP/city + "Use my location" / GO | **Search** |
 | Action menu, context menu, multi-select rows | **Dropdown** *(Select uses it today)* |
 | Label beside control, multi-control row | **Field** |
@@ -129,6 +134,18 @@ export const ComponentMap: Story = {
             <td className="py-2 pr-4 text-muted">Atom</td>
             <td className="py-2 pr-4 text-muted">Square box + label row</td>
             <td className="py-2 text-muted">Indeterminate, status band, loading</td>
+          </tr>
+          <tr className="border-b border-border">
+            <td className="py-2 pr-4 font-medium">Radio</td>
+            <td className="py-2 pr-4 text-muted">Atom</td>
+            <td className="py-2 pr-4 text-muted">Circle + label row</td>
+            <td className="py-2 text-muted">Compose in **RadioGroup**</td>
+          </tr>
+          <tr className="border-b border-border">
+            <td className="py-2 pr-4 font-medium">RadioGroup</td>
+            <td className="py-2 pr-4 text-muted">Molecule</td>
+            <td className="py-2 pr-4 text-muted">Pick-one list — vertical / horizontal</td>
+            <td className="py-2 text-muted">Group legend + validation band</td>
           </tr>
           <tr>
             <td className="py-2 pr-4 font-medium">Field</td>
@@ -303,4 +320,37 @@ export const CheckboxOptions: Story = {
       <Checkbox label="Weekly summary" />
     </div>
   ),
+};
+
+export const RadioGroupOptions: Story = {
+  name: "Specimen — radio group",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "**RadioGroup** owns the group label, shared `name`, and validation — each **RadioGroup.Item** is one pick-one option (Astryx RadioList).",
+      },
+    },
+  },
+  render: () => {
+    const [value, setValue] = useState("standard");
+    return (
+      <div className="mx-auto w-full max-w-md px-8 py-6">
+        <RadioGroup
+          label="Delivery speed"
+          description="Choose how quickly we ship your order."
+          value={value}
+          onValueChange={setValue}
+        >
+          <RadioGroup.Item value="standard" label="Standard (5–7 days)" />
+          <RadioGroup.Item
+            value="express"
+            label="Express (2–3 days)"
+            description="Additional shipping fee applies."
+          />
+          <RadioGroup.Item value="overnight" label="Overnight" />
+        </RadioGroup>
+      </div>
+    );
+  },
 };
