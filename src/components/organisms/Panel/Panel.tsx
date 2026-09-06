@@ -11,16 +11,19 @@ import {
   overlayPanelBodyScrollClasses,
   overlayPanelChromeClasses,
   overlayPanelFooterClasses,
+  overlayPanelFooterDelineatedInnerClasses,
+  overlayPanelFooterDelineatedShellClasses,
+  overlayPanelFooterHairlineClasses,
   overlayPanelSectionStackClasses,
 } from "../Dialog/dialogStyles";
 import { OverlayPanelHeader } from "../Dialog/OverlayPanelHeader";
 import { PanelProvider, usePanelContext, usePanelLabelIds } from "./PanelContext";
 import {
-  panelFooterClasses,
+  panelBackdropClasses,
   panelMotionTransition,
   panelMotionVariants,
+  panelOverlayRootClasses,
   panelPlacementClasses,
-  panelRootClasses,
   panelShellClasses,
   panelSides,
   panelSizeClasses,
@@ -117,12 +120,13 @@ function PanelPortal({
     <AnimatePresence>
       {open ? (
         <motion.div
-          className={panelRootClasses[side]}
+          className={panelOverlayRootClasses[side]}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={panelMotionTransition(side)}
         >
+          <div className={panelBackdropClasses} aria-hidden="true" />
           <motion.div
             ref={panelRef}
             className={cn(
@@ -257,14 +261,14 @@ function PanelContent({
         ) : null}
 
         {hasFooter ? (
-          <footer
-            className={cn(
-              hasScrollBody ? panelFooterClasses : overlayPanelFooterClasses,
-              "pb-4",
-            )}
-          >
-            {footer}
-          </footer>
+          hasScrollBody ? (
+            <footer className={overlayPanelFooterDelineatedShellClasses}>
+              <hr className={overlayPanelFooterHairlineClasses} aria-hidden="true" />
+              <div className={overlayPanelFooterDelineatedInnerClasses}>{footer}</div>
+            </footer>
+          ) : (
+            <footer className={cn(overlayPanelFooterClasses, "pb-4")}>{footer}</footer>
+          )
         ) : null}
       </div>
     </PanelPortal>
@@ -272,7 +276,7 @@ function PanelContent({
 }
 
 /**
- * Persistent edge flyover — no scrim, no scroll lock, no focus trap.
+ * Persistent edge flyover — non-blocking visual scrim, no scroll lock, no focus trap.
  * Page stays interactive; use **Sheet** when the flow should block the canvas.
  */
 export const Panel = Object.assign(PanelRoot, {

@@ -2,7 +2,11 @@ import type { Variants } from "motion/react";
 import { cn } from "../../../lib/cn";
 import { motionTransitionProp } from "../../../lib/motion";
 import { cardBaseClasses, cardLayoutShellClasses } from "../../molecules/Card/cardStyles";
-import { dialogBackdropClasses, overlayPanelFooterShellClasses } from "../Dialog/dialogStyles";
+import {
+  dialogBackdropClasses,
+  overlayPanelFooterDelineatedInnerClasses,
+  overlayPanelFooterDelineatedShellClasses,
+} from "../Dialog/dialogStyles";
 
 export const sheetSides = ["bottom", "end", "start"] as const;
 
@@ -72,8 +76,13 @@ export const sheetPanelPlacementClasses: Record<SheetSide, string> = {
   start: "h-full w-full rounded-r-2xl",
 };
 
-/** Sheet footer — same chrome as overlay footer shell (**Sheet** has no **Card** bottom pad). */
-export const sheetPanelFooterClasses = overlayPanelFooterShellClasses;
+/** @deprecated Use {@link overlayPanelFooterDelineatedShellClasses} + hairline + inner row. */
+export const sheetPanelFooterShellClasses = overlayPanelFooterDelineatedShellClasses;
+
+/** @deprecated Use {@link overlayPanelFooterDelineatedInnerClasses}. */
+export const sheetPanelFooterInnerClasses = overlayPanelFooterDelineatedInnerClasses;
+
+export { overlayPanelFooterHairlineClasses as sheetPanelFooterHairlineClasses } from "../Dialog/dialogStyles";
 
 /** Scrollable body region between header and footer. */
 export { overlayPanelBodyScrollClasses as sheetBodyScrollClasses } from "../Dialog/dialogStyles";

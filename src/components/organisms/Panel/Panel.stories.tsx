@@ -2,9 +2,16 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Info } from "lucide-react";
 import { Button } from "../../atoms/Button/Button";
-import { Card, cardBodyTextClasses, cardTitleClasses } from "../../molecules/Card/Card";
+import {
+  Card,
+  cardBodyTextClasses,
+  cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantPadYClasses,
+  cardTitleClasses,
+} from "../../molecules/Card/Card";
 import { Panel, panelSides, panelSizes } from "./Panel";
 import { dialogFooterActionsClasses } from "../Dialog/dialogStyles";
+import { cn } from "../../../lib/cn";
 import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySource";
 
 const meta = {
@@ -19,7 +26,7 @@ const meta = {
         component: `
 ## Usage
 
-Persistent edge flyover — no scrim, no scroll lock, no focus trap. The page behind stays visible and interactive.
+Persistent edge flyover — non-blocking visual scrim; no scroll lock, no focus trap. The page behind stays visible and interactive (clicks pass through the dim layer).
 
 | Pattern | Props |
 |---------|--------|
@@ -27,16 +34,16 @@ Persistent edge flyover — no scrim, no scroll lock, no focus trap. The page be
 | **Tool palette** | \`side="start"\` — secondary tools beside the canvas |
 | **Size** | \`sm\` / \`md\` / \`lg\` — same width tokens as **Sheet** side panels |
 
-Use **Sheet** when the flow should block the canvas (scrim + scroll lock). Use **Panel** when users may still interact with the page.
+Use **Sheet** when the flow should block the canvas (scrim captures clicks + scroll lock). Use **Panel** when users may still interact with the page.
 
 ## Anatomy
 
 \`\`\`
 Panel (open / onOpenChange)
 └── Panel.Content — Card header rhythm + scrollable body + optional footer
-    ├── header — hairline when body/footer follow (**Sheet** chrome)
+    ├── header — full-width hairline when body/footer follow (**Sheet** chrome)
     ├── body — flex-1 overflow-y scroll
-    └── footer — pinned actions
+    └── footer — full-width hairline + pinned actions
 \`\`\`
 
 ## Best practices
@@ -57,17 +64,24 @@ type Story = StoryObj<typeof meta>;
 export const EndDetailRail: Story = {
   name: "Pattern — end detail rail",
   render: function EndDetailRailPattern() {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
 
     return (
-      <>
-        <Card padding="md" className="max-w-xl">
+      <div className="relative min-h-[28rem] w-full">
+        <Card padding="none" className="max-w-xl">
           <Card.Header start={<h2 className={cardTitleClasses}>Mueller market</h2>} />
           <Card.Body>
-            <p className={cardBodyTextClasses}>
-              Occupancy held at 82% this week. Open the detail rail to review threshold history
-              without leaving the list.
-            </p>
+            <div
+              className={cn(
+                cardLayoutBodyOccupantInsetXClasses,
+                cardLayoutBodyOccupantPadYClasses,
+              )}
+            >
+              <p className={cardBodyTextClasses}>
+                Occupancy held at 82% this week. Open the detail rail to review threshold
+                history without leaving the list.
+              </p>
+            </div>
           </Card.Body>
           <Card.Footer className="justify-end">
             <Button role="secondary" size="sm" onClick={() => setOpen(true)}>
@@ -98,7 +112,7 @@ export const EndDetailRail: Story = {
             </ul>
           </Panel.Content>
         </Panel>
-      </>
+      </div>
     );
   },
   parameters: storyCopySource(`
@@ -110,9 +124,13 @@ function MarketDetailRail() {
 
   return (
     <>
-      <Card padding="md">{/* list row */}</Card>
+      <Card padding="none">{/* list row */}</Card>
       <Panel open={open} onOpenChange={setOpen}>
-        <Panel.Content title="Threshold history" size="md">
+        <Panel.Content
+          title="Threshold history"
+          description="Last 7 days — Mueller market"
+          size="md"
+        >
           {/* scrollable detail */}
         </Panel.Content>
       </Panel>

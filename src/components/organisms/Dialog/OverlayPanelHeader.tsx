@@ -9,7 +9,8 @@ import {
 import { cn } from "../../../lib/cn";
 import {
   overlayPanelHeaderClasses,
-  overlayPanelHeaderDelineatedClasses,
+  overlayPanelHeaderDelineatedInnerClasses,
+  overlayPanelHeaderHairlineClasses,
   overlayPanelHeaderStartClusterClasses,
   overlayPanelHeaderStartSlotClasses,
 } from "./dialogStyles";
@@ -54,10 +55,11 @@ export function OverlayPanelHeader({
     return null;
   }
 
-  return (
+  const header = (
     <Card.Header
       className={cn(
-        delineated ? overlayPanelHeaderDelineatedClasses : overlayPanelHeaderClasses,
+        overlayPanelHeaderClasses,
+        delineated ? overlayPanelHeaderDelineatedInnerClasses : undefined,
         className,
       )}
       start={
@@ -94,4 +96,15 @@ export function OverlayPanelHeader({
       }
     />
   );
+
+  if (delineated) {
+    return (
+      <div className={cn(overlayPanelHeaderClasses, "w-full")}>
+        {header}
+        <hr className={overlayPanelHeaderHairlineClasses} aria-hidden="true" />
+      </div>
+    );
+  }
+
+  return header;
 }

@@ -18,6 +18,9 @@ import {
   overlayPanelBodyScrollClasses,
   overlayPanelChromeClasses,
   overlayPanelFooterClasses,
+  overlayPanelFooterDelineatedInnerClasses,
+  overlayPanelFooterDelineatedShellClasses,
+  overlayPanelFooterHairlineClasses,
   overlayPanelSectionStackClasses,
 } from "../Dialog/dialogStyles";
 import { OverlayPanelHeader } from "../Dialog/OverlayPanelHeader";
@@ -26,7 +29,6 @@ import {
   sheetBackdropClasses,
   sheetOverlayRootClasses,
   sheetPanelBaseClasses,
-  sheetPanelFooterClasses,
   sheetPanelMotionTransition,
   sheetPanelMotionVariants,
   sheetPanelPlacementClasses,
@@ -307,14 +309,14 @@ function SheetContent({
         ) : null}
 
         {hasFooter ? (
-          <footer
-            className={cn(
-              hasScrollBody ? sheetPanelFooterClasses : overlayPanelFooterClasses,
-              "pb-4",
-            )}
-          >
-            {footer}
-          </footer>
+          hasScrollBody ? (
+            <footer className={overlayPanelFooterDelineatedShellClasses}>
+              <hr className={overlayPanelFooterHairlineClasses} aria-hidden="true" />
+              <div className={overlayPanelFooterDelineatedInnerClasses}>{footer}</div>
+            </footer>
+          ) : (
+            <footer className={cn(overlayPanelFooterClasses, "pb-4")}>{footer}</footer>
+          )
         ) : null}
       </div>
     </SheetPortal>

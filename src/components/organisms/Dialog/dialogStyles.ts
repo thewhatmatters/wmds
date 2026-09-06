@@ -59,10 +59,26 @@ export const overlayPanelMaxHeightClasses = "max-h-[min(85vh,100%)]";
 
 export const overlayPanelHeaderClasses = "shrink-0";
 
-/** Hairline below header — **Sheet** scroll chrome only (not **Dialog** / **AlertDialog**). */
-export const overlayPanelHeaderDelineatedClasses = cn(
+/** Full-width section hairline — sibling of inset header/footer rows (**Sheet** / **Panel**). */
+export const overlayPanelHairlineClasses = "m-0 w-full shrink-0 border-0 border-border p-0";
+
+export const overlayPanelHeaderHairlineClasses = cn(overlayPanelHairlineClasses, "border-b");
+
+export const overlayPanelFooterHairlineClasses = cn(overlayPanelHairlineClasses, "border-t");
+
+/** @deprecated Prefer {@link overlayPanelHeaderHairlineClasses} below padded **Card.Header**. */
+export const overlayPanelHeaderDelineatedShellClasses = cn(
   overlayPanelHeaderClasses,
-  "border-b border-border pb-3",
+  "border-b border-border",
+);
+
+/** Header inner pad when a scroll body or footer follows. */
+export const overlayPanelHeaderDelineatedInnerClasses = "pb-3";
+
+/** @deprecated Use {@link overlayPanelHeaderDelineatedShellClasses} + inner pad on **Card.Header**. */
+export const overlayPanelHeaderDelineatedClasses = cn(
+  overlayPanelHeaderDelineatedShellClasses,
+  overlayPanelHeaderDelineatedInnerClasses,
 );
 
 /** Title row + optional leading slot — mirrors **Card.Header** `start` cluster. */
@@ -101,13 +117,22 @@ export const overlayPanelDialogBodyScrollClasses = cn(
 /** Dialog footer — top inset without hairlines. */
 export const overlayPanelDialogFooterClasses = cn(overlayPanelFooterClasses, "pt-2");
 
-/** Hairline above footer — **Sheet** scroll chrome only (not **Dialog** / **AlertDialog**). */
+/** Footer shell when a scroll body precedes the footer. */
+export const overlayPanelFooterDelineatedShellClasses = "shrink-0 w-full";
+
+/** Footer inner pad when a scroll body precedes the footer. */
+export const overlayPanelFooterDelineatedInnerClasses = cn(
+  dialogFooterClasses,
+  "pt-3 pb-4",
+);
+
+/** @deprecated Use {@link overlayPanelFooterHairlineClasses} + inner row. */
 export const overlayPanelFooterDelineatedClasses = cn(
-  overlayPanelFooterClasses,
+  overlayPanelFooterDelineatedShellClasses,
   "border-t border-border pt-3",
 );
 
-/** Footer chrome — hairline + top/bottom inset (use when shell has no **Card** bottom pad). */
+/** @deprecated Use delineated shell + inner classes on **Sheet** / **Panel** footers. */
 export const overlayPanelFooterShellClasses = cn(
   overlayPanelFooterDelineatedClasses,
   "pb-4",
