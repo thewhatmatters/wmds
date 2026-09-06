@@ -6,7 +6,7 @@ import {
   type InputMessagePosition,
   type InputSize,
   type InputStatus,
-} from "./inputShellStyles";
+} from "../Input/inputShellStyles";
 
 function BannerIcon({ status }: { status: InputStatus }) {
   const className = inputStatusBannerIconClasses[status];
@@ -21,25 +21,32 @@ function BannerIcon({ status }: { status: InputStatus }) {
   return <CheckCircle2 className={className} strokeWidth={strokeWidth} aria-hidden />;
 }
 
+/** Tinted validation band — shared by **Input** and **TextArea** (ADR-0006). */
 export function InputStatusBanner({
   status,
   message,
   messageId,
   size,
   messagePosition,
+  bannerClassName,
+  className,
 }: {
   status: InputStatus;
   message: string;
   messageId: string;
   size: InputSize;
   messagePosition: InputMessagePosition;
+  /** Replace default pill overlap band geometry — e.g. **TextArea** multiline shell. */
+  bannerClassName?: string;
+  className?: string;
 }) {
   return (
     <p
       id={messageId}
       className={cn(
-        inputStatusBannerClassesFor(status, size, messagePosition),
+        bannerClassName ?? inputStatusBannerClassesFor(status, size, messagePosition),
         "text-xs font-normal tracking-normal",
+        className,
       )}
       role={status === "error" ? "alert" : "status"}
     >

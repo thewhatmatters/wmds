@@ -6,7 +6,7 @@ import {
   inputStatusIconSizeClasses,
   type InputSize,
   type InputStatus,
-} from "./inputShellStyles";
+} from "../Input/inputShellStyles";
 
 function StatusIcon({ status, size }: { status: InputStatus; size: InputSize }) {
   const className = cn(inputStatusIconSizeClasses[size], inputStatusIconClasses[status]);
@@ -21,6 +21,7 @@ function StatusIcon({ status, size }: { status: InputStatus; size: InputSize }) 
   return <CheckCircle2 className={className} strokeWidth={strokeWidth} aria-hidden />;
 }
 
+/** Trailing status icon or spinner — shared by **Input** and **TextArea**. */
 export function InputTrailingAffordance({
   size,
   status,

@@ -157,7 +157,8 @@ export function inputStatusBannerClassesFor(
   );
 }
 
-const inputStatusBannerSurfaceClasses: Record<InputStatus, string> = {
+/** Status band fills — shared with **TextArea** overlap variants. */
+export const inputStatusBannerSurfaceClasses: Record<InputStatus, string> = {
   error: "bg-error-muted text-error",
   warning: "bg-warning-muted text-warning",
   success: "bg-success-muted text-success",

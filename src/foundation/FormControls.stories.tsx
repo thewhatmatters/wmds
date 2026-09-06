@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MapPin } from "lucide-react";
 import { Input } from "../components/atoms/Input/Input";
+import { TextArea } from "../components/atoms/TextArea/TextArea";
 import { inputSizes } from "../components/atoms/Input/inputShellStyles";
 import { Search } from "../components/molecules/Search/Search";
 import { Select } from "../components/molecules/Select/Select";
@@ -34,7 +35,7 @@ WMDS ships **discrete components** — not a monolithic \`TextField\` or \`Input
 | Export | Tier | Role | Storybook |
 |--------|------|------|-----------|
 | **Input** | Atom | Single-line text — pill shell, optional label/status | **Atoms/Input** |
-| **TextArea** | Atom | Multiline — same optional chrome as Input | *(planned)* |
+| **TextArea** | Atom | Multiline — same optional chrome as Input | **Atoms/TextArea** |
 | **Select** | Molecule | Pill trigger + floating listbox | **Molecules/Select** |
 | **Search** | Molecule | Hero search — inset button in one shell | **Molecules/Search** |
 | **Dropdown** | Molecule | Shared menu panel + three-slot rows | **Molecules/Dropdown** |
@@ -57,7 +58,7 @@ When \`label\` is omitted, **\`aria-label\` is required** (dev warn in Storybook
 | Need | Use |
 |------|-----|
 | ZIP, email, plain text | **Input** |
-| Multiline copy | **TextArea** *(planned)* |
+| Multiline copy | **TextArea** |
 | Pick one of N discrete values | **Select** |
 | ZIP/city + "Use my location" / GO | **Search** |
 | Action menu, context menu, multi-select rows | **Dropdown** *(Select uses it today)* |
@@ -113,11 +114,17 @@ export const ComponentMap: Story = {
             <td className="py-2 pr-4 text-muted">Floating panel (\`p-0.5\` inset)</td>
             <td className="py-2 text-muted">Item rows — start | label | end</td>
           </tr>
-          <tr>
-            <td className="py-2 pr-4 font-medium text-muted">TextArea</td>
+          <tr className="border-b border-border">
+            <td className="py-2 pr-4 font-medium">TextArea</td>
             <td className="py-2 pr-4 text-muted">Atom</td>
-            <td className="py-2 pr-4 text-muted">Planned — Input shell</td>
-            <td className="py-2 text-muted">—</td>
+            <td className="py-2 pr-4 text-muted">Element radius (`rounded-xl`)</td>
+            <td className="py-2 text-muted">Top-trailing status / loading; vertical resize</td>
+          </tr>
+          <tr>
+            <td className="py-2 pr-4 font-medium text-muted">Field</td>
+            <td className="py-2 pr-4 text-muted">Molecule</td>
+            <td className="py-2 pr-4 text-muted">Planned — label/layout wrapper</td>
+            <td className="py-2 text-muted">Horizontal / multi-control rows</td>
           </tr>
         </tbody>
       </table>
@@ -211,7 +218,7 @@ export const OptionalLabel: Story = {
     docs: {
       description: {
         story:
-          "Vertical label + description on the control itself — no Field wrapper required. Same props on Input and Select.",
+          "Vertical label + description on the control itself — no Field wrapper required. Same props on Input, TextArea, and Select.",
       },
     },
   },
@@ -222,6 +229,12 @@ export const OptionalLabel: Story = {
         type="email"
         placeholder="you@example.com"
         description="We'll never share this."
+      />
+      <TextArea
+        label="Market notes"
+        placeholder="Add context for admins…"
+        description="Optional — same label stack as Input."
+        rows={3}
       />
       <Select
         label="Reporting period"

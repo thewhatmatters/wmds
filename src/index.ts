@@ -31,6 +31,13 @@ export {
   type InputStatus,
 } from "./components/atoms/Input/Input";
 export {
+  TextArea,
+  textareaResizes,
+  type TextAreaLayoutClassName,
+  type TextAreaProps,
+  type TextAreaResize,
+} from "./components/atoms/TextArea/TextArea";
+export {
   Skeleton,
   skeletonRadii,
   type SkeletonLayoutClassName,

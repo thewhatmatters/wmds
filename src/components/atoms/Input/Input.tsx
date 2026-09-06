@@ -6,8 +6,8 @@ import {
 } from "react";
 import { cn } from "../../../lib/cn";
 import { typographyClass } from "../../../lib/typography";
-import { InputStatusBanner } from "./InputStatusBanner";
-import { InputTrailingAffordance } from "./InputTrailingAffordance";
+import { InputStatusBanner } from "../inputShared/InputStatusBanner";
+import { InputTrailingAffordance } from "../inputShared/InputTrailingAffordance";
 import {
   inputAttachedFieldClasses,
   inputAttachedInputClasses,

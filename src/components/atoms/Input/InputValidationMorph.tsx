@@ -5,7 +5,7 @@ import { Button } from "../Button/Button";
 import { cn } from "../../../lib/cn";
 import { motionTransitionProp } from "../../../lib/motion";
 import { typographyClass } from "../../../lib/typography";
-import { InputStatusBanner } from "./InputStatusBanner";
+import { InputStatusBanner } from "../inputShared/InputStatusBanner";
 import {
   inputAttachedFieldClasses,
   inputAttachedInputClasses,
