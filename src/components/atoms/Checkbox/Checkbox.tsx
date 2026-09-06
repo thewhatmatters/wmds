@@ -19,6 +19,7 @@ import {
   checkboxIndeterminateBarSizeClasses,
   checkboxLabelClassesFor,
   checkboxLabelTextColumnClasses,
+  checkboxMarkClasses,
   checkboxRowBaseClasses,
   checkboxRowDisabledClasses,
   checkboxRowLabelOnlyClasses,
@@ -179,13 +180,27 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
         <span className={boxClasses} aria-hidden>
           {loading ? (
             <Loader2
-              className={cn(checkboxCheckIconSizeClasses[size], "animate-spin stroke-current")}
+              className={cn(
+                checkboxCheckIconSizeClasses[size],
+                checkboxMarkClasses,
+                "animate-spin",
+              )}
               strokeWidth={2}
             />
           ) : indeterminate ? (
-            <span className={cn(checkboxIndeterminateBarSizeClasses[size], "rounded-full bg-current")} />
+            <span
+              className={cn(
+                checkboxIndeterminateBarSizeClasses[size],
+                checkboxMarkClasses,
+                "rounded-full bg-current",
+              )}
+            />
           ) : resolvedChecked ? (
-            <Check className={checkboxCheckIconSizeClasses[size]} strokeWidth={3} aria-hidden />
+            <Check
+              className={cn(checkboxCheckIconSizeClasses[size], checkboxMarkClasses)}
+              strokeWidth={3}
+              aria-hidden
+            />
           ) : null}
         </span>
       </span>

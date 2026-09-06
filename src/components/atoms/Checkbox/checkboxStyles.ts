@@ -48,7 +48,10 @@ export const checkboxBoxUncheckedClasses =
   "border-border-emphasized bg-surface group-hover/checkbox:border-border-emphasized group-hover/checkbox:bg-body";
 
 export const checkboxBoxCheckedClasses =
-  "border-primary bg-primary text-on-primary group-hover/checkbox:border-primary group-hover/checkbox:bg-primary";
+  "border-primary bg-primary text-primary-foreground group-hover/checkbox:border-primary group-hover/checkbox:bg-primary";
+
+/** Check / indeterminate / spinner marks on the filled box. */
+export const checkboxMarkClasses = "stroke-current text-inherit";
 
 export const checkboxBoxDisabledClasses = "opacity-50";
 
