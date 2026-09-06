@@ -19,7 +19,6 @@ import {
   checkboxHitTargetSizeClasses,
   checkboxIndeterminateBarSizeClasses,
   checkboxLabelClassesFor,
-  checkboxLabelWithDescriptionClasses,
   checkboxMarkClasses,
   checkboxRowBaseClasses,
   checkboxRowDisabledClasses,
