@@ -34,7 +34,8 @@
 - **Dropdown:** shared menu panel (`p-0.5` inset) + three-slot rows (`start` | label | `end`) — composed by **Select**; action menus via **MoreMenu**.
 - **MoreMenu:** kebab **IconButton** + floating **Dropdown** action menu — Card header `end` slot; menu right-aligns to trigger; **`items`** + **`onAction`**. Sizes **`xs` | `sm` | `md` | `lg`** (**IconButton** scale). Not for single-select — **Select** / **SegmentedControl**.
 - **Dialog:** modal overlay — portal scrim, focus trap, scroll lock, **medium** enter/exit; composes **Card** shell + **IconButton** close ([Astryx Dialog](https://astryx.atmeta.com/components/Dialog)). **`Dialog.Content`** — `title`, `description`, `footer`, `size` (`sm` | `md` | `lg`); header/footer pinned, body scrolls; **no section hairlines** — brief/direct copy + `gap-4` section rhythm. **`AlertDialog`** — blocking confirm with cancel + confirm **Button** roles; `confirmRole="destructive"` for irreversible actions; scrim dismiss off by default ([Astryx AlertDialog](https://astryx.atmeta.com/components/AlertDialog)).
-- **Sheet:** dismissible edge overlay — `side="bottom" | "end" | "start"` only (**no `top`** — not a product pattern); same scrim/focus/scroll lock as **Dialog**; bottom drawer or side detail rail; header/footer pinned, body scrolls; **hairline borders** on scroll regions. Mobile **16px inset on trailing edge only** (e.g. `end` → left gap for scrim; entry/top/bottom flush); tablet+ side sheets fully edge-flush. **`Sheet.Content`** — Card header rhythm, scrollable body, optional footer. Future **Panel** = persistent flyover without full scrim (not this pass).
+- **Sheet:** dismissible edge overlay — `side="bottom" | "end" | "start"` only (**no `top`** — not a product pattern); same scrim/focus/scroll lock as **Dialog**; bottom drawer or side detail rail; header/footer pinned, body scrolls; **hairline borders** on scroll regions. Mobile **16px inset on trailing edge only** (e.g. `end` → left gap for scrim; entry/top/bottom flush); tablet+ side sheets fully edge-flush. **`Sheet.Content`** — Card header rhythm, scrollable body, optional footer.
+- **Panel:** persistent edge flyover — `side="end" | "start"` only; **no scrim**, **no scroll lock**, **no focus trap**; `aria-modal="false"`; page stays interactive. Same width tokens and hairline scroll chrome as **Sheet** side panels. Use for peek/detail rails; use **Sheet** when the canvas should block.
 - **Status:** fixed-scale indicators — **`variant="ring"`** (24px task progress: `active`, `step`) or **`variant="dot"`** (8px semantic: `tone`, `pulsing`). `besideLabel` / `label` for a11y. Not inside Badge.
 - **Skeleton:** layout placeholder blocks — Motion horizontal shimmer ([Motion skeleton shimmer](https://motion.dev/examples/react-skeleton-shimmer)); **`index`** staggers sweep. Compose to mirror resolved chrome (title, **Select**, well, footer). **`aria-busy`** on **Card** / page region; shapes **`aria-hidden`**. Not chart-mark state — swap region for **Chart.Loading** or live marks. See **Atoms/Skeleton**, **Organisms/Chart** Card pattern stories.
 - **Chart:** composes **[@visx/visx](https://airbnb.io/visx/)** primitives — peer dep, not bundled. WMDS owns shell, tooltip, legend, and **`chartTheme.ts`** token maps. Chart-type selection: **`.cursor/skills/wmds-visx-charts/lieflat-mapping.md`** (Lieflat catalog → WMDS patterns + example data; Lieflat HTML is reference-only). **`Chart.SegmentedBar`** — capacity meter only (no tooltip); **`animate="initial" | "none"`** spring fill on mount. **`Chart.Cartesian`** + **`Chart.Cartesian.Area`** — time series with crosshair tooltip + optional **`Chart.Legend`**; **`animate="initial" | "none"`** path draw + fade enter. **`Chart.Loading`** — spinner + copy for in-flight fetch (**Card.Body**; header stays mounted). Loading model: **Skeleton** (initial layout) → **Chart.Loading** (fetch) → live marks with enter animation. Series colors: semantic **`chartSeriesConfigFromTone`** or categorical **`chartSeriesConfigFromKeys`** / **`chartSeriesColor(index)`** (ADR-0013). Tooltip portal: visx **`unstyled`** — styling only on **`Chart.Tooltip.Content`**. Cartesian host needs explicit **height** for **`ParentSize`**. See **ADR-0012**, **ADR-0014**, **ADR-0015**.
@@ -71,18 +72,19 @@ When adding a component: create folder in the correct tier, match Storybook titl
 
 - **`src/examples/{Name}/`** — Storybook-only; never in `src/index.ts`.
 
-## Resume here (Chart loading + Card patterns)
+## Resume here (Overlay family)
 
-**Shipped on `main` (`bc3cf26`):** **Skeleton** atom (Motion shimmer); **Chart.Loading**; **Chart.Cartesian** / **Chart.SegmentedBar** enter motion (`animate="initial" | "none"`); **Organisms/Chart** Card pattern stories with **body-state** chips (skeleton → retrieving → resolved). KPI + history companions share inset well + header skeleton; KPI keeps **Card.Footer** skeleton on initial load. Prior: **Select** / **Dropdown**; **Chart.Cartesian** + tooltip + **Chart.Legend**; **Card** inset-well recipe. Full decision + gotchas: **ADR-0015**.
+**Shipped on `main`:** **Dialog** + **AlertDialog** + **Sheet** + **Panel**; shared `dialogOverlay.ts`; **Examples/Overlay flows**; **Foundation/Overlay interactions** (CI). ADR-0016.
 
 | Pick up in Storybook | Path |
 |---------------------|------|
-| Loading phases (KPI) | **Organisms/Chart → Pattern — occupancy KPI in Card** |
-| Loading phases (history) | **Organisms/Chart → Pattern — occupancy history in Card** |
-| Skeleton atom | **Atoms/Skeleton** |
-| Area chart + tooltip | **Organisms/Chart → Pattern — area (multi series + legend)** |
-| Card examples (no state toolbar) | **Molecules/Card → body slot (occupancy KPI / history)** |
-| Categorical palette | **Foundation/Charts** |
+| Overlay composition | **Examples/Overlay flows → Pattern — notification preferences** |
+| Modal / confirm | **Organisms/Dialog** |
+| Edge drawer | **Organisms/Sheet** |
+| Detail rail (no scrim) | **Organisms/Panel → Pattern — end detail rail** |
+| Interaction tests | **Foundation/Overlay interactions** |
+
+**Prior shipped:** **Skeleton** + **Chart** loading phases (ADR-0015); form controls through **Switch** / **CheckboxGroup**.
 
 **Next backlog (ADR-0015):** optional **Popover** extract; legend series toggle (non-goal v1).
 

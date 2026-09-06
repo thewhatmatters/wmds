@@ -31,7 +31,7 @@ Dismissible edge overlay — bottom drawer or side sheet. Shares portal scrim, f
 
 Mobile (< \`md\`): **16px inset on the trailing edge only** — \`end\` → \`pl-4\` (scrim on the left); entry + top/bottom flush. Tablet+ side sheets fully edge-flush.
 
-Future **Panel** (not this pass) — persistent flyover / drawer chrome without full modal scrim.
+Use **Panel** when the page should stay interactive without a scrim — see **Organisms/Panel**.
 
 ## Anatomy
 

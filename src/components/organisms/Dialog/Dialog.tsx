@@ -24,7 +24,6 @@ import {
   dialogOverlayRootClasses,
   dialogPanelSizeClasses,
   dialogSizes,
-  overlayPanelBodyScrollClasses,
   overlayPanelChromeClasses,
   overlayPanelDialogBodyScrollClasses,
   overlayPanelDialogFooterClasses,
@@ -259,6 +258,9 @@ function DialogContent({
   const hasTitle = title != null;
   const hasDescription = description != null;
   const hasScrollBody = children != null || (!hasTitle && hasDescription);
+  const hasFooter = footer != null;
+  /** Flex body slot — pins footer to panel bottom (same rhythm as **AlertDialog**). */
+  const showBodySlot = hasScrollBody || hasFooter;
 
   return (
     <DialogPortal
@@ -288,7 +290,7 @@ function DialogContent({
           onClose={() => onOpenChange(false)}
         />
 
-        {hasScrollBody ? (
+        {showBodySlot ? (
           <div className={overlayPanelDialogBodyScrollClasses}>
             {!hasTitle && hasDescription ? (
               <p id={descriptionId} className="text-muted">
@@ -299,7 +301,7 @@ function DialogContent({
           </div>
         ) : null}
 
-        {footer != null ? (
+        {hasFooter ? (
           <footer className={overlayPanelDialogFooterClasses}>{footer}</footer>
         ) : null}
       </Card>

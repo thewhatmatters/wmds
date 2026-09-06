@@ -1,7 +1,7 @@
 import { motionTransition } from "../../../lib/motion";
 import { typographyClass } from "../../../lib/typography";
 import { cn } from "../../../lib/cn";
-import { cardLayoutSectionInsetXClasses, cardSubtitleClasses, cardTitleClasses } from "../../molecules/Card/cardStyles";
+import { cardLayoutSectionInsetXClasses, cardTitleClasses } from "../../molecules/Card/cardStyles";
 
 export const dialogSizes = ["sm", "md", "lg"] as const;
 
@@ -24,14 +24,14 @@ export const dialogPanelSizeClasses: Record<DialogSize, string> = {
   lg: "w-full max-w-2xl",
 };
 
-/** AlertDialog title — **Card** subheading scale; brief confirm, not page section. */
-export const alertDialogTitleClasses = cardTitleClasses;
-
-/** AlertDialog description — caption under title; same inset as **Card.Header**. */
-export const alertDialogDescriptionClasses = cn(cardSubtitleClasses, "pt-1.5");
-
 /** Dialog body copy — typography only; horizontal inset comes from section stack / header. */
 export const dialogBodyCopyClasses = cn(typographyClass("body"), "text-fg");
+
+/** Muted copy in the dialog body slot — shared by **Dialog** and **AlertDialog**. */
+export const dialogBodyMutedClasses = cn(dialogBodyCopyClasses, "text-muted");
+
+/** AlertDialog title — **Card** subheading scale; brief confirm, not page section. */
+export const alertDialogTitleClasses = cardTitleClasses;
 
 /** @deprecated Prefer {@link dialogBodyCopyClasses} inside {@link overlayPanelBodyScrollClasses}. */
 export const dialogBodyClasses = cn(dialogBodyCopyClasses, "px-4");

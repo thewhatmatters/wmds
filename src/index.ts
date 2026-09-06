@@ -244,6 +244,16 @@ export {
   dialogFooterClasses,
 } from "./components/organisms/Dialog/dialogStyles";
 export {
+  Panel,
+  panelSides,
+  panelSizes,
+  type PanelContentProps,
+  type PanelLayoutClassName,
+  type PanelProps,
+  type PanelSide,
+  type PanelSize,
+} from "./components/organisms/Panel/Panel";
+export {
   Sheet,
   sheetSides,
   sheetSizes,

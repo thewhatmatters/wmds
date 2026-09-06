@@ -5,11 +5,12 @@ import { cn } from "../../../lib/cn";
 import { DialogPortal } from "./Dialog";
 import { DialogProvider, useDialogLabelIds } from "./DialogContext";
 import {
-  alertDialogDescriptionClasses,
   alertDialogTitleClasses,
   dialogPanelSizeClasses,
   dialogPanelShellClasses,
+  dialogBodyMutedClasses,
   overlayPanelChromeClasses,
+  overlayPanelDialogBodyScrollClasses,
   overlayPanelDialogFooterClasses,
   overlayPanelMaxHeightClasses,
 } from "./dialogStyles";
@@ -109,11 +110,17 @@ export function AlertDialog({
             titleId={titleId}
             descriptionId={descriptionId}
             title={title}
-            description={description}
             titleClassName={alertDialogTitleClasses}
-            descriptionClassName={alertDialogDescriptionClasses}
             showClose={false}
           />
+
+          <div className={overlayPanelDialogBodyScrollClasses}>
+            {description != null ? (
+              <p id={descriptionId} className={dialogBodyMutedClasses}>
+                {description}
+              </p>
+            ) : null}
+          </div>
 
           <footer className={overlayPanelDialogFooterClasses}>
             <Button
