@@ -14,13 +14,16 @@ import {
   checkboxCheckIconSizeClasses,
   checkboxDescriptionClasses,
   checkboxHiddenInputClasses,
+  checkboxHitTargetDescriptionAlignClasses,
   checkboxHitTargetSizeClasses,
   checkboxIndeterminateBarSizeClasses,
   checkboxLabelClassesFor,
   checkboxLabelTextColumnClasses,
-  checkboxRowClasses,
+  checkboxRowBaseClasses,
   checkboxRowDisabledClasses,
+  checkboxRowLabelOnlyClasses,
   checkboxRowSizeClasses,
+  checkboxRowWithDescriptionClasses,
   checkboxStatusBannerClassesFor,
   type CheckboxSize,
 } from "./checkboxStyles";
@@ -137,11 +140,14 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
     hasMessage ? undefined : status,
   );
 
+  const hasDescription = description != null && !labelHidden;
+
   const row = (
     <label
       htmlFor={controlId}
       className={cn(
-        checkboxRowClasses,
+        checkboxRowBaseClasses,
+        hasDescription ? checkboxRowWithDescriptionClasses : checkboxRowLabelOnlyClasses,
         checkboxRowSizeClasses[size],
         isDisabled && checkboxRowDisabledClasses,
         className,
@@ -151,6 +157,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
         className={cn(
           "relative flex shrink-0 items-center justify-center",
           checkboxHitTargetSizeClasses[size],
+          hasDescription && checkboxHitTargetDescriptionAlignClasses[size],
         )}
       >
         <input

@@ -58,8 +58,21 @@ export const checkboxDescriptionClasses = typographyClass("caption");
 
 export const checkboxLabelTextColumnClasses = "flex min-w-0 flex-col gap-0.5";
 
-export const checkboxRowClasses =
-  "group/checkbox relative flex w-full cursor-pointer items-start";
+export const checkboxRowBaseClasses =
+  "group/checkbox relative flex w-full cursor-pointer";
+
+/** Single-line label — vertically center with the box ([Astryx CheckboxInput](https://astryx.atmeta.com/components/CheckboxInput)). */
+export const checkboxRowLabelOnlyClasses = "items-center";
+
+/** Label + description — top-align; box nudged to label cap via {@link checkboxHitTargetDescriptionAlignClasses}. */
+export const checkboxRowWithDescriptionClasses = "items-start";
+
+export const checkboxHitTargetDescriptionAlignClasses: Record<CheckboxSize, string> = {
+  sm: "mt-px",
+  md: "mt-0.5",
+};
+
+export const checkboxRowClasses = cn(checkboxRowBaseClasses, checkboxRowLabelOnlyClasses);
 
 export const checkboxRowDisabledClasses = "cursor-not-allowed";
 
