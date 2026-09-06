@@ -45,6 +45,15 @@ export {
   type RadioSize,
 } from "./components/atoms/Radio/Radio";
 export {
+  Switch,
+  switchLayouts,
+  switchSizes,
+  type SwitchLayout,
+  type SwitchLayoutClassName,
+  type SwitchProps,
+  type SwitchSize,
+} from "./components/atoms/Switch/Switch";
+export {
   TextArea,
   textareaResizes,
   type TextAreaLayoutClassName,
@@ -110,6 +119,14 @@ export {
   type CardShape,
   type CardVariant,
 } from "./components/molecules/Card/Card";
+export {
+  CheckboxGroup,
+  checkboxGroupOrientations,
+  type CheckboxGroupItemProps,
+  type CheckboxGroupLayoutClassName,
+  type CheckboxGroupOrientation,
+  type CheckboxGroupProps,
+} from "./components/molecules/CheckboxGroup/CheckboxGroup";
 export {
   Dropdown,
   DropdownItem,

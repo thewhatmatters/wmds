@@ -9,7 +9,16 @@ export const radioGroupOrientations = ["vertical", "horizontal"] as const;
 
 export type RadioGroupOrientation = (typeof radioGroupOrientations)[number];
 
-export const radioGroupFieldStackClasses = "flex w-full flex-col gap-1.5";
+export const radioGroupFieldStackClasses = "flex w-full flex-col";
+
+/** Legend → first item — looser than title/subtitle rhythm inside the header. */
+export const radioGroupLegendLabelOnlySpacingClasses = "mb-2";
+
+export const radioGroupLegendWithDescriptionSpacingClasses = "pb-px";
+
+export const radioGroupDescriptionSpacingClasses = "mb-2";
+
+export const radioGroupMessageTopSpacingClasses = "mt-1.5";
 
 export const radioGroupLabelClasses = typographyClass("ui-label");
 

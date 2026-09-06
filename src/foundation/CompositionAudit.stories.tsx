@@ -179,7 +179,7 @@ export const Report: Story = {
 
 export const Gate: Story = {
   name: "Gate (test)",
-  tags: ["!autodocs"],
+  tags: ["!autodocs", "test"],
   parameters: {
     docs: { disable: true },
   },

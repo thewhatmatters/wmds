@@ -12,10 +12,11 @@ const atoms = [
   "Radio",
   "Skeleton",
   "Status",
+  "Switch",
   "TextArea",
 ] as const;
 
-const molecules = ["Accordion", "Card", "Chip", "Dropdown", "Field", "Pagination", "RadioGroup", "Search", "Select", "SegmentedControl", "TaskRows"] as const;
+const molecules = ["Accordion", "Card", "CheckboxGroup", "Chip", "Dropdown", "Field", "Pagination", "RadioGroup", "Search", "Select", "SegmentedControl", "TaskRows"] as const;
 
 const organisms = ["Carousel", "Chart", "MoreMenu", "Tab", "Table"] as const;
 

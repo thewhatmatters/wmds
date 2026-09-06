@@ -3,8 +3,10 @@ import { useState } from "react";
 import { MapPin } from "lucide-react";
 import { Input } from "../components/atoms/Input/Input";
 import { Checkbox } from "../components/atoms/Checkbox/Checkbox";
+import { Switch } from "../components/atoms/Switch/Switch";
 import { TextArea } from "../components/atoms/TextArea/TextArea";
 import { inputSizes } from "../components/atoms/Input/inputShellStyles";
+import { CheckboxGroup } from "../components/molecules/CheckboxGroup/CheckboxGroup";
 import { Field } from "../components/molecules/Field/Field";
 import { RadioGroup } from "../components/molecules/RadioGroup/RadioGroup";
 import { Search } from "../components/molecules/Search/Search";
@@ -41,8 +43,10 @@ WMDS ships **discrete components** — not a monolithic \`TextField\` or \`Input
 | **Input** | Atom | Single-line text — pill shell, optional label/status | **Atoms/Input** |
 | **TextArea** | Atom | Multiline — same optional chrome as Input | **Atoms/TextArea** |
 | **Checkbox** | Atom | Boolean toggle — label row + validation | **Atoms/Checkbox** |
+| **CheckboxGroup** | Molecule | Multi-select list — vertical / horizontal | **Molecules/CheckboxGroup** |
 | **Radio** | Atom | Single option — circle + label row | **Atoms/Radio** |
 | **RadioGroup** | Molecule | Pick one of N — vertical / horizontal | **Molecules/RadioGroup** |
+| **Switch** | Atom | Instant on/off — pill track + thumb | **Atoms/Switch** |
 | **Select** | Molecule | Pill trigger + floating listbox | **Molecules/Select** |
 | **Search** | Molecule | Hero search — inset button in one shell | **Molecules/Search** |
 | **Dropdown** | Molecule | Shared menu panel + three-slot rows | **Molecules/Dropdown** |
@@ -67,6 +71,8 @@ When \`label\` is omitted, **\`aria-label\` is required** (dev warn in Storybook
 | ZIP, email, plain text | **Input** |
 | Multiline copy | **TextArea** |
 | On/off consent, filters, settings toggles | **Checkbox** |
+| Multi-select from 2–5 visible options | **CheckboxGroup** |
+| Instant settings on/off (label left) | **Switch** \`layout="settings"\` |
 | Pick one of 2–5 visible options | **RadioGroup** |
 | Pick one of N discrete values (compact) | **Select** |
 | ZIP/city + "Use my location" / GO | **Search** |
@@ -136,6 +142,12 @@ export const ComponentMap: Story = {
             <td className="py-2 text-muted">Indeterminate, status band, loading</td>
           </tr>
           <tr className="border-b border-border">
+            <td className="py-2 pr-4 font-medium">CheckboxGroup</td>
+            <td className="py-2 pr-4 text-muted">Molecule</td>
+            <td className="py-2 pr-4 text-muted">Multi-select list — vertical / horizontal</td>
+            <td className="py-2 text-muted">Group legend + validation band</td>
+          </tr>
+          <tr className="border-b border-border">
             <td className="py-2 pr-4 font-medium">Radio</td>
             <td className="py-2 pr-4 text-muted">Atom</td>
             <td className="py-2 pr-4 text-muted">Circle + label row</td>
@@ -146,6 +158,12 @@ export const ComponentMap: Story = {
             <td className="py-2 pr-4 text-muted">Molecule</td>
             <td className="py-2 pr-4 text-muted">Pick-one list — vertical / horizontal</td>
             <td className="py-2 text-muted">Group legend + validation band</td>
+          </tr>
+          <tr className="border-b border-border">
+            <td className="py-2 pr-4 font-medium">Switch</td>
+            <td className="py-2 pr-4 text-muted">Atom</td>
+            <td className="py-2 pr-4 text-muted">Pill track + sliding thumb</td>
+            <td className="py-2 text-muted">`layout="settings"` — label left, switch right</td>
           </tr>
           <tr>
             <td className="py-2 pr-4 font-medium">Field</td>
@@ -320,6 +338,72 @@ export const CheckboxOptions: Story = {
       <Checkbox label="Weekly summary" />
     </div>
   ),
+};
+
+export const CheckboxGroupOptions: Story = {
+  name: "Specimen — checkbox group",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "**CheckboxGroup** owns the group label and validation — each **CheckboxGroup.Item** toggles a value in the shared `values` array.",
+      },
+    },
+  },
+  render: () => {
+    const [values, setValues] = useState(["email"]);
+    return (
+      <div className="mx-auto w-full max-w-md px-8 py-6">
+        <CheckboxGroup
+          label="Alert type"
+          description="Choose how we notify you."
+          values={values}
+          onValuesChange={setValues}
+        >
+          <CheckboxGroup.Item
+            value="email"
+            label="Email alerts"
+            description="Quote and SEC filing notifications."
+          />
+          <CheckboxGroup.Item value="push" label="Push notifications" />
+          <CheckboxGroup.Item value="weekly" label="Weekly summary" />
+        </CheckboxGroup>
+      </div>
+    );
+  },
+};
+
+export const SwitchSettings: Story = {
+  name: "Specimen — settings switches",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "**Switch** `layout=\"settings\"` — label + description left, control right (Astryx Switch).",
+      },
+    },
+  },
+  render: () => {
+    const [digest, setDigest] = useState(true);
+    const [marketing, setMarketing] = useState(false);
+    return (
+      <div className="mx-auto flex w-full max-w-md flex-col gap-4 px-8 py-6">
+        <Switch
+          layout="settings"
+          label="Weekly digest"
+          description="Summary email every Monday."
+          checked={digest}
+          onChange={(event) => setDigest(event.target.checked)}
+        />
+        <Switch
+          layout="settings"
+          label="Marketing emails"
+          checked={marketing}
+          onChange={(event) => setMarketing(event.target.checked)}
+        />
+      </div>
+    );
+  },
 };
 
 export const RadioGroupOptions: Story = {

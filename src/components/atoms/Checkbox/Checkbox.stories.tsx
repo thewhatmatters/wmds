@@ -68,7 +68,7 @@ const meta = {
 
 - **Do** keep \`label\` text meaningful — use \`labelHidden\` only when context is obvious.
 - **Do** use \`status\` + \`message\` for validation — not label asterisks.
-- **Do** pair with **Field** / **CheckboxGroup** (planned) for grouped options.
+- **Do** pair with **Field** / **CheckboxGroup** for grouped options.
 - **Don't** restyle the box with \`className\` — layout width only on the row.
         `.trim(),
       },

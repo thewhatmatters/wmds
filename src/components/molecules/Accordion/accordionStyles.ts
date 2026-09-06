@@ -29,7 +29,8 @@ export const accordionItemPlainClasses =
 
 /** Hairline + elevation via `shadow-raised` only — do not add `border`. */
 export const accordionItemCapsuleClasses =
-  "overflow-hidden bg-surface shadow-raised transition-[border-radius,background-color] duration-300 ease-standard";
+  "overflow-hidden bg-surface shadow-raised transition-[border-radius,background-color] " +
+  motionTransition("medium");
 
 /** Collapsed — full pill (h-11 row → R = 22px). */
 export const accordionItemCapsuleClosedClasses = capsuleRowRadiusClass;

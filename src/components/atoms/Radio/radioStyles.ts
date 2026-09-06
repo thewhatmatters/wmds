@@ -35,6 +35,7 @@ export const radioDotSizeClasses: Record<RadioSize, string> = {
 
 export const radioCircleBaseClasses = cn(
   "pointer-events-none flex items-center justify-center border shadow-none",
+  "transition-[background-color,border-color]",
   motionTransition("fast"),
 );
 

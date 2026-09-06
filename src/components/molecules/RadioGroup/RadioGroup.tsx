@@ -4,9 +4,13 @@ import { InputStatusBanner } from "../../atoms/inputShared/InputStatusBanner";
 import type { InputSize, InputStatus } from "../../atoms/Input/inputShellStyles";
 import {
   radioGroupDescriptionClasses,
+  radioGroupDescriptionSpacingClasses,
   radioGroupFieldStackClasses,
   radioGroupItemsClasses,
   radioGroupLabelClassesFor,
+  radioGroupLegendLabelOnlySpacingClasses,
+  radioGroupLegendWithDescriptionSpacingClasses,
+  radioGroupMessageTopSpacingClasses,
   radioGroupStatusBannerClassesFor,
   type RadioGroupOrientation,
   type RadioSize,
@@ -105,7 +109,9 @@ function RadioGroupRoot({
           className={cn(
             radioGroupLabelClassesFor(disabled),
             labelHidden && "sr-only",
-            (description != null || !labelHidden) && "pb-px",
+            description != null
+              ? radioGroupLegendWithDescriptionSpacingClasses
+              : radioGroupLegendLabelOnlySpacingClasses,
           )}
         >
           {label}
@@ -113,7 +119,10 @@ function RadioGroupRoot({
       ) : null}
 
       {description != null ? (
-        <p id={descriptionId} className={cn(radioGroupDescriptionClasses, "pb-1")}>
+        <p
+          id={descriptionId}
+          className={cn(radioGroupDescriptionClasses, radioGroupDescriptionSpacingClasses)}
+        >
           {description}
         </p>
       ) : null}
@@ -136,7 +145,10 @@ function RadioGroupRoot({
           messageId={messageId}
           size={statusBannerSizeForRadioGroup[size]}
           messagePosition="bottom"
-          bannerClassName={radioGroupStatusBannerClassesFor(status)}
+          bannerClassName={cn(
+            radioGroupStatusBannerClassesFor(status),
+            radioGroupMessageTopSpacingClasses,
+          )}
         />
       ) : null}
     </fieldset>

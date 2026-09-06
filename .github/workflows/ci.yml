@@ -25,11 +25,17 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium --with-deps
+
       - name: Composition audit
         run: npm run validate:composition
 
       - name: Unit tests
         run: npm run test:unit
+
+      - name: Storybook interaction tests
+        run: npm run test:interactions
 
       - name: Manifest
         run: npm run validate:manifest

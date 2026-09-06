@@ -304,6 +304,49 @@ export const LayoutAnimation: Story = {
   },
 };
 
+export const ComponentTierMap: Story = {
+  name: "Component tier map",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Where each pattern sources motion — **CSS + motionTransition()** for color/fill; **Motion + motionTransitionProp()** for sliding thumbs and layout. All easing is `--ease-standard`.",
+      },
+    },
+  },
+  render: () => (
+    <table className="w-full max-w-3xl border-collapse text-left text-sm">
+      <thead>
+        <tr className="border-b border-border text-muted">
+          <th className="py-2 pr-4 font-medium">Pattern</th>
+          <th className="py-2 pr-4 font-medium">Tier</th>
+          <th className="py-2 font-medium">Mechanism</th>
+        </tr>
+      </thead>
+      <tbody className="text-fg">
+        {[
+          ["Button, Chip, Input shell", "fast", "CSS transition — color, shadow, focus ring"],
+          ["Switch thumb, SegmentedControl thumb", "fast", "Motion — slide (`motionTransitionProp`)"] ,
+          ["Switch track, Checkbox/Radio fill", "fast", "CSS — background/border on check"],
+          ["Dropdown/Select row hover", "fast", "CSS — background-color"],
+          ["Accordion chevron", "medium", "CSS — `transition-transform`"],
+          ["Accordion capsule radius", "medium", "CSS — border-radius morph"],
+          ["motion-collapse panels", "medium", "CSS — grid-template-rows + opacity"],
+          ["Input validation band", "medium", "Motion — AnimatePresence height"],
+          ["Chart path enter", "slow", "Motion — pathLength draw (decorative)"],
+          ["Skeleton shimmer", "slow", "Motion — linear loop (ambient)"],
+        ].map(([pattern, tier, mechanism]) => (
+          <tr key={pattern} className="border-b border-border-emphasized">
+            <td className="py-2 pr-4 font-medium">{pattern}</td>
+            <td className="py-2 pr-4 font-mono text-xs text-muted">{tier}</td>
+            <td className="py-2 text-muted">{mechanism}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  ),
+};
+
 export const Principles: Story = {
   name: "When motion helps vs hurts",
   render: () => (
@@ -322,6 +365,8 @@ export const Principles: Story = {
         <ul className="list-disc space-y-1 pl-5 text-muted">
           <li>Button hover and press</li>
           <li>Chip filter toggle</li>
+          <li>Switch and SegmentedControl thumb slide</li>
+          <li>Checkbox/Radio fill on check</li>
           <li>Row highlight</li>
           <li>Focus rings</li>
         </ul>

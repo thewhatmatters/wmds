@@ -37,6 +37,8 @@ Single token: `--ease-standard: cubic-bezier(0.24, 1, 0.4, 1)`. Remove `ease-out
 |-----------|------|-----------|
 | Button, Chip | fast | High-frequency |
 | Input shell, focus ring | fast | Must not lag |
+| Switch thumb slide, SegmentedControl thumb | fast | Motion `x` / `layoutId` — same tier |
+| Switch track fill, Checkbox/Radio box fill | fast | CSS color transition |
 | Search expand morph | medium | Spatial rearrangement |
 | Input validation band | medium | Structural reveal |
 | motion-collapse | medium | Panel expand |

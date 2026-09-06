@@ -41,6 +41,7 @@ export const checkboxIndeterminateBarSizeClasses: Record<CheckboxSize, string> =
 
 export const checkboxBoxBaseClasses = cn(
   "pointer-events-none flex items-center justify-center border shadow-none",
+  "transition-[background-color,border-color,color]",
   motionTransition("fast"),
 );
 
