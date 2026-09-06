@@ -13,7 +13,7 @@ const atoms = [
   "TextArea",
 ] as const;
 
-const molecules = ["Accordion", "Card", "Chip", "Dropdown", "Pagination", "Search", "Select", "SegmentedControl", "TaskRows"] as const;
+const molecules = ["Accordion", "Card", "Chip", "Dropdown", "Field", "Pagination", "Search", "Select", "SegmentedControl", "TaskRows"] as const;
 
 const organisms = ["Carousel", "Chart", "MoreMenu", "Tab", "Table"] as const;
 

@@ -106,6 +106,13 @@ export {
   type DropdownMenuProps,
 } from "./components/molecules/Dropdown/Dropdown";
 export {
+  Field,
+  fieldOrientations,
+  type FieldLayoutClassName,
+  type FieldOrientation,
+  type FieldProps,
+} from "./components/molecules/Field/Field";
+export {
   Search,
   searchSizes,
   type SearchLayoutClassName,

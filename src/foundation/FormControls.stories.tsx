@@ -3,6 +3,7 @@ import { MapPin } from "lucide-react";
 import { Input } from "../components/atoms/Input/Input";
 import { TextArea } from "../components/atoms/TextArea/TextArea";
 import { inputSizes } from "../components/atoms/Input/inputShellStyles";
+import { Field } from "../components/molecules/Field/Field";
 import { Search } from "../components/molecules/Search/Search";
 import { Select } from "../components/molecules/Select/Select";
 import { cn } from "../lib/cn";
@@ -39,7 +40,7 @@ WMDS ships **discrete components** — not a monolithic \`TextField\` or \`Input
 | **Select** | Molecule | Pill trigger + floating listbox | **Molecules/Select** |
 | **Search** | Molecule | Hero search — inset button in one shell | **Molecules/Search** |
 | **Dropdown** | Molecule | Shared menu panel + three-slot rows | **Molecules/Dropdown** |
-| **Field** | Molecule | Label/layout wrapper — never required | *(planned)* |
+| **Field** | Molecule | Label/layout wrapper — never required | **Molecules/Field** |
 
 ### Shared internals (not exported)
 
@@ -62,7 +63,7 @@ When \`label\` is omitted, **\`aria-label\` is required** (dev warn in Storybook
 | Pick one of N discrete values | **Select** |
 | ZIP/city + "Use my location" / GO | **Search** |
 | Action menu, context menu, multi-select rows | **Dropdown** *(Select uses it today)* |
-| Label beside control, multi-control row | **Field** *(planned)* |
+| Label beside control, multi-control row | **Field** |
 
 **Anti-patterns:** \`Input type="select"\`, requiring **Field** for every labeled input, raw utility styling in apps — extend WMDS patterns instead.
 
@@ -121,10 +122,10 @@ export const ComponentMap: Story = {
             <td className="py-2 text-muted">Top-trailing status / loading; vertical resize</td>
           </tr>
           <tr>
-            <td className="py-2 pr-4 font-medium text-muted">Field</td>
+            <td className="py-2 pr-4 font-medium">Field</td>
             <td className="py-2 pr-4 text-muted">Molecule</td>
-            <td className="py-2 pr-4 text-muted">Planned — label/layout wrapper</td>
-            <td className="py-2 text-muted">Horizontal / multi-control rows</td>
+            <td className="py-2 pr-4 text-muted">Label/layout wrapper — no shell</td>
+            <td className="py-2 text-muted">Horizontal rows; multi-control groups</td>
           </tr>
         </tbody>
       </table>
@@ -242,6 +243,32 @@ export const OptionalLabel: Story = {
         defaultValue="month"
         options={periodOptions}
       />
+    </div>
+  ),
+};
+
+export const HorizontalField: Story = {
+  name: "Specimen — horizontal Field",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Label beside control — **Field** owns layout; child controls stay bare. Validation (`status`, `message`) stays on **Input**.",
+      },
+    },
+  },
+  render: () => (
+    <div className="mx-auto flex w-full max-w-md flex-col gap-5 px-8 py-6">
+      <Field label="ZIP code" description="5-digit US ZIP." orientation="horizontal">
+        <Input placeholder="97201" aria-label="ZIP code" />
+      </Field>
+      <Field label="Reporting period" orientation="horizontal">
+        <Select
+          aria-label="Reporting period"
+          defaultValue="month"
+          options={periodOptions}
+        />
+      </Field>
     </div>
   ),
 };
