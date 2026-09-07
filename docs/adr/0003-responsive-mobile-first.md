@@ -5,7 +5,7 @@
 
 ## Context
 
-WhatMatters products must work on **mobile, tablet, and desktop**. WMDS components and examples ship before app shells exist — responsive behaviour must be designed in from the first atom, not patched later.
+WhatMatters products must work on **mobile, tablet, and desktop**. WMDS components and examples ship before consuming product layouts exist — responsive behaviour must be designed in from the first atom, not patched later.
 
 ## Decision
 

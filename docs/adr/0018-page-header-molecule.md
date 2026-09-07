@@ -5,7 +5,7 @@
 
 ## Context
 
-App shell and dashboard pages need a shared horizontal chrome row — canvas title + cluster actions, in-page section titles, and compact filter/toolbars. **Card.Header** is in-card only. The App shell example hand-rolled **AppHeader** with local `*Styles.ts` recipes.
+Dashboard pages need a shared horizontal chrome row — page title + cluster actions, in-page section titles, and compact filter/toolbars. **Card.Header** is in-card only.
 
 Stat docs previously told apps to compose section chrome with raw heading utilities + **Button** — that duplicated layout and broke alignment with the 56px NavRail logo band.
 
@@ -23,7 +23,7 @@ Stat docs previously told apps to compose section chrome with raw heading utilit
 | **page** | `<header>` | Flexible row — section above content | `h2` |
 | **toolbar** | `role="toolbar"` | Cluster min-height row (`md` / 36px) | optional `span` (`ui-label`) |
 
-Export **`pageHeaderAppBandHeightClasses`** for shell examples that must align secondary nav / logo rows to the same 56px band.
+Export **`pageHeaderAppBandHeightClasses`** for layouts that must align adjacent navigation or identity rows to the same 56px band.
 
 ### Composition
 
@@ -38,12 +38,11 @@ Export **`pageHeaderAppBandHeightClasses`** for shell examples that must align s
 
 ## Consequences
 
-- **Positive:** App shell uses **PageHeader** `variant="app"` — one contract for canvas chrome.
+- **Positive:** Product layouts can use **PageHeader** `variant="app"` as one contract for page chrome.
 - **Positive:** Stat / insights docs can point to **PageHeader** instead of ad-hoc flex rows.
 - **Follow-up:** ~~**NavRail**, **SideNav** organisms~~ (ADR-0020, ADR-0019); mobile **TabBar**.
 
 ## References
 
-- **Examples/App shell** — `PageHeader variant="app"`
 - **Molecules/PageHeader** — Pattern stories (app, page, toolbar)
 - ADR-0011 (cluster pairing), ADR-0004 (pattern-first)

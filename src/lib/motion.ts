@@ -281,29 +281,6 @@ export const motionSubNavItemVariants: Variants = {
   },
 };
 
-/** Mobile nav dock menu — stagger children upward from the dock pill. */
-export const motionNavDockMenuVariants: Variants = {
-  hidden: { opacity: 1 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.05, staggerDirection: -1, delayChildren: 0.02 },
-  },
-};
-
-/** Mobile nav dock row — rise + fade on expand (vertical speed-dial, not radial). */
-export const motionNavDockItemVariants: Variants = {
-  hidden: { opacity: 0, y: 10, scale: 0.98 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: motionDurationFallbackMs.fast / 1000,
-      ease: ASTRYX_EASE_STANDARD,
-    },
-  },
-};
-
 /** Resolve live token values for Foundation docs (browser only). */
 export function resolveMotionTokenValues(root: Element | null = typeof document !== "undefined"
   ? document.documentElement

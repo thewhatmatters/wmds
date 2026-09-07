@@ -36,7 +36,7 @@ const meta = {
         component: `
 ## Usage
 
-Primary **icon-only rail** on \`bg-accent\` — brand band, centered main nav, optional footer (e.g. settings). Pairs with **NavList** secondary nav + **PageHeader** \`variant="app"\` in app shells.
+Primary **icon-only rail** on \`bg-accent\` — brand band, centered main nav, optional footer (e.g. settings). Use only in products whose navigation density warrants persistent rail chrome.
 
 | Pattern | Props |
 |---------|--------|

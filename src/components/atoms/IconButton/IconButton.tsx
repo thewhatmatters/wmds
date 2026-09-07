@@ -41,6 +41,7 @@ export interface IconButtonProps {
   className?: IconButtonLayoutClassName;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
+  "aria-current"?: React.AriaAttributes["aria-current"];
   "aria-haspopup"?: boolean | "menu" | "dialog" | "listbox" | "tree" | "grid";
   "aria-expanded"?: boolean;
   "aria-controls"?: string;
@@ -73,6 +74,7 @@ export function IconButton({
   className,
   onClick,
   onKeyDown,
+  "aria-current": ariaCurrent,
   "aria-haspopup": ariaHasPopup,
   "aria-expanded": ariaExpanded,
   "aria-controls": ariaControls,
@@ -96,6 +98,7 @@ export function IconButton({
       disabled={isDisabled}
       aria-busy={loading || undefined}
       aria-label={ariaLabel}
+      aria-current={ariaCurrent}
       aria-haspopup={ariaHasPopup}
       aria-expanded={ariaExpanded}
       aria-controls={ariaControls}

@@ -154,6 +154,12 @@ export {
   type FieldProps,
 } from "./components/molecules/Field/Field";
 export {
+  FloatingActionButton,
+  type FloatingActionButtonItem,
+  type FloatingActionButtonLayoutClassName,
+  type FloatingActionButtonProps,
+} from "./components/molecules/FloatingActionButton/FloatingActionButton";
+export {
   NavList,
   navListLabelAlignments,
   type NavListIcon,
@@ -237,19 +243,6 @@ export {
   type TaskRowsProps,
   type TaskRowsVariant,
 } from "./components/molecules/TaskRows/TaskRows";
-export {
-  AppShell,
-  AppShellBody,
-  AppShellMobile,
-  appShellBrandBandHeightClasses,
-  appShellChromeInsetClasses,
-  type AppShellBodyProps,
-  type AppShellLayoutClassName,
-  type AppShellMobileProps,
-  type AppShellNavItem,
-  type AppShellProps,
-  type AppShellSecondaryNavConfig,
-} from "./components/organisms/AppShell/AppShell";
 export {
   Chart,
   ChartCartesian,

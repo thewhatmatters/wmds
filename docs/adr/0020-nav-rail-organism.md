@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-Desktop app shells need a **primary icon-only rail** on `bg-accent` beside a `bg-body` gutter — brand mark, main destinations, optional footer (e.g. settings). The **Examples/App shell** story had example-tier `NavRail` / `NavRailBrandMark` with duplicated styles in `appShellStyles.ts`.
+Some dense desktop products need a **primary icon-only rail** on `bg-accent` — brand mark, main destinations, and an optional footer (e.g. settings).
 
 Secondary navigation is already **NavList** (ADR-0019). **PageHeader** `variant="app"` (ADR-0018) defines the shared 56px canvas band height aligned with the rail logo.
 
@@ -33,19 +33,16 @@ Ship **NavRail** as an **organism** under `src/components/organisms/NavRail/`.
 
 ### Styles
 
-- Class recipes in **`navRailStyles.ts`** — not scattered in examples
-- Example shell keeps workspace/canvas chrome only in **`appShellStyles.ts`**
+- Class recipes live in **`navRailStyles.ts`**
 
 ### Non-goals
 
 - No Motion `layoutId` thumb — instant active swap only
 - Not for secondary section lists — **NavList**
-- Mobile primary nav — **AppShell.Mobile** expandable dock (ADR-0021, ADR-0023)
+- Mobile navigation
 
 ## Consequences
 
-- **Examples/App shell** imports organism **NavRail** with `itemSurface="glass"`
-- Example `NavRail.tsx` / `NavRailBrandMark.tsx` removed
 - Storybook: **Organisms/NavRail → Pattern — accent rail (glass)** + flat reference
 - Exported from package manifest + `src/index.ts`
 
@@ -53,4 +50,3 @@ Ship **NavRail** as an **organism** under `src/components/organisms/NavRail/`.
 
 - ADR-0018 (PageHeader app band)
 - ADR-0019 (NavList secondary nav)
-- **Examples/App shell → Pattern — shell navigation (desktop)**

@@ -55,12 +55,11 @@ Ship **Tab** as an organism under `src/components/organisms/Tab/`.
 
 ## Consequences
 
-- **AppShell.Mobile** uses one responsive Tab row for Settings secondary pages.
+- Responsive settings and peer-page flows can use one Tab row without exposing a full section list.
 - SegmentedControl remains for settings values and view modes, not page navigation.
 - No horizontally scrolling tab track or clipped selected pill.
 
 ## References
 
 - ADR-0019 (NavList)
-- ADR-0021 (MobileNavDock)
 - **Organisms/Tab → Pattern — responsive overflow**

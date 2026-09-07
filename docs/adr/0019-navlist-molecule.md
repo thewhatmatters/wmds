@@ -5,7 +5,7 @@
 
 ## Context
 
-App shell **SideNav** was example-tier code with hand-rolled `<button>` inset pills — a composition audit gap. Settings-style secondary nav (section overlines, icon + label + count, selected pill) is a recurring product pattern distinct from **Card.Header**, **TaskRows** detail lines, and primary **NavRail** icons.
+Settings-style secondary navigation (section overlines, icon + label + count, selected pill) is a recurring product pattern distinct from **Card.Header**, **TaskRows** detail lines, and primary **NavRail** icons.
 
 ## Decision
 
@@ -30,12 +30,10 @@ App shell **SideNav** was example-tier code with hand-rolled `<button>` inset pi
 
 ## Consequences
 
-- **Positive:** App shell uses exported **NavList**; composition audit clean.
+- **Positive:** Consumers can use exported **NavList** without hand-rolled navigation rows.
 - **Positive:** **Button** `layout="nav"` is documented and reusable only through **NavList** in product docs.
-- **Follow-up:** ~~mobile **TabBar**~~ (**AppShell.Mobile**, ADR-0021, ADR-0023).
 
 ## References
 
 - **Molecules/NavList → Pattern — side nav (settings)**
-- **Examples/App shell** — `appShellSettingsSideNavSections`
 - ADR-0018 (**PageHeader** band height), ADR-0011 (cluster), ADR-0002 (composition)

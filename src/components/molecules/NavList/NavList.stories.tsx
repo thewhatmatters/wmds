@@ -76,11 +76,11 @@ NavList (nav)
 
 ## Best practices
 
-- **Do** use \`labelAlign="brand"\` on the first section when pairing with **PageHeader** \`variant="app"\` in an app shell.
+- **Do** use \`labelAlign="brand"\` when a first section must align with an adjacent 56px page-header band.
 - **Do** keep one \`activeId\` — instant swap; no Motion thumb on items.
 - **Do** pass \`aria-label\` when the nav landmark needs more context than section labels.
 - **Don't** hand-roll inset pill \`<button>\` rows — extend **Button** \`layout="nav"\` via **NavList**.
-- **Don't** use for primary app destinations — use **AppShell** desktop or mobile navigation.
+- **Don't** use for primary app destinations.
         `.trim(),
       },
     },

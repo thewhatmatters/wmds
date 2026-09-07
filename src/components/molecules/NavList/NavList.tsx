@@ -40,7 +40,7 @@ export interface NavListItemDef {
 
 export interface NavListSectionDef {
   label?: string;
-  /** First section in app shell — `brand` aligns overline to the 56px header band. */
+  /** `brand` aligns the first section overline to an adjacent 56px header band. */
   labelAlign?: NavListLabelAlignment;
   items: NavListItemDef[];
 }

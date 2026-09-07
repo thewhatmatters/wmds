@@ -76,6 +76,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "Dropdown.Item owns the menu/listbox row shell — not an action Button.",
   },
   {
+    file: "components/molecules/FloatingActionButton/FloatingActionButton.tsx",
+    ruleId: "lucide-import",
+    reason: "FloatingActionButton owns default Plus / X glyphs passed through IconButton.",
+  },
+  {
     file: "components/molecules/Select/Select.tsx",
     ruleId: "lucide-import",
     reason: "Select owns the combobox trigger chevron (ButtonIcon inside the molecule shell).",
@@ -114,16 +119,6 @@ export const compositionShellExceptions: CompositionShellException[] = [
     file: "components/organisms/Chart/ChartCartesian.tsx",
     ruleId: "inline-svg",
     reason: "Chart.Cartesian owns visx-composed SVG (Area, axes, grid, crosshair) — ADR-0012, ADR-0015.",
-  },
-  {
-    file: "components/organisms/AppShell/AppShell.tsx",
-    ruleId: "raw-button",
-    reason: "AppShell owns the pointer-driven WAI-ARIA separator used to cover secondary navigation.",
-  },
-  {
-    file: "components/organisms/AppShell/AppShell.tsx",
-    ruleId: "lucide-import",
-    reason: "AppShell owns the mobile dock disclosure glyphs inside IconButton.",
   },
   {
     file: "components/organisms/NavRail/NavRailBrandMark.tsx",
