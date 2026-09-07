@@ -31,6 +31,8 @@ export interface ButtonStatusButtonProps {
   type?: "button" | "submit" | "reset";
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   "aria-label"?: string;
+  "aria-pressed"?: boolean;
+  "aria-keyshortcuts"?: string;
   id?: string;
   name?: string;
   form?: string;
@@ -49,6 +51,8 @@ export function ButtonStatusButton({
   type = "button",
   onClick,
   "aria-label": ariaLabel,
+  "aria-pressed": ariaPressed,
+  "aria-keyshortcuts": ariaKeyShortcuts,
   id,
   name,
   form,
@@ -66,6 +70,8 @@ export function ButtonStatusButton({
       aria-busy={status === "loading" || undefined}
       aria-live="polite"
       aria-label={ariaLabel}
+      aria-pressed={ariaPressed}
+      aria-keyshortcuts={ariaKeyShortcuts}
       data-role={role}
       data-size={size}
       data-status={status}

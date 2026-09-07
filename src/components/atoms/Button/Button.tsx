@@ -55,6 +55,8 @@ export interface ButtonProps {
   className?: ButtonLayoutClassName;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   "aria-label"?: string;
+  "aria-pressed"?: boolean;
+  "aria-keyshortcuts"?: string;
   id?: string;
   name?: string;
   form?: string;
@@ -95,6 +97,8 @@ export function Button({
   className,
   onClick,
   "aria-label": ariaLabel,
+  "aria-pressed": ariaPressed,
+  "aria-keyshortcuts": ariaKeyShortcuts,
   id,
   name,
   form,
@@ -114,6 +118,8 @@ export function Button({
         type={type}
         onClick={onClick}
         aria-label={ariaLabel}
+        aria-pressed={ariaPressed}
+        aria-keyshortcuts={ariaKeyShortcuts}
         id={id}
         name={name}
         form={form}
@@ -130,6 +136,8 @@ export function Button({
         disabled={disabled}
         onClick={onClick}
         aria-label={ariaLabel}
+        aria-pressed={ariaPressed}
+        aria-keyshortcuts={ariaKeyShortcuts}
         id={id}
         name={name}
         form={form}
@@ -149,6 +157,8 @@ export function Button({
         disabled={disabled}
         onClick={onClick}
         aria-label={ariaLabel}
+        aria-pressed={ariaPressed}
+        aria-keyshortcuts={ariaKeyShortcuts}
         aria-current={selected ? "page" : undefined}
         id={id}
         name={name}
@@ -173,6 +183,8 @@ export function Button({
       disabled={disabled}
       onClick={onClick}
       aria-label={ariaLabel}
+      aria-pressed={ariaPressed}
+      aria-keyshortcuts={ariaKeyShortcuts}
       id={id}
       name={name}
       form={form}

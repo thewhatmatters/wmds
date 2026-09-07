@@ -10,6 +10,7 @@ const atoms = [
   "Checkbox",
   "IconButton",
   "Input",
+  "Kbd",
   "Radio",
   "Skeleton",
   "Status",
@@ -17,7 +18,7 @@ const atoms = [
   "TextArea",
 ] as const;
 
-const molecules = ["Accordion", "Card", "CheckboxGroup", "Chip", "Dropdown", "Field", "FloatingActionButton", "NavList", "PageHeader", "Pagination", "RadioGroup", "Search", "Select", "SegmentedControl", "Stat", "TaskRows"] as const;
+const molecules = ["Accordion", "Card", "CheckboxGroup", "Chip", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "NavList", "PageHeader", "Pagination", "RadioGroup", "Search", "Select", "SegmentedControl", "Stat", "TaskRows"] as const;
 
 const organisms = ["Carousel", "Chart", "Dialog", "MoreMenu", "NavRail", "Panel", "Sheet", "Tab", "Table"] as const;
 

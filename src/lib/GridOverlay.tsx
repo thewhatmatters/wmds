@@ -16,6 +16,8 @@ export interface GridOverlayProps {
   visible?: boolean;
   /** Called after `g` or when the consumer toggles. */
   onVisibleChange?: (visible: boolean) => void;
+  /** Listen for the global `g` shortcut. Disable when DisplayControls owns shortcuts. */
+  keyboardShortcut?: boolean;
   className?: string;
 }
 
@@ -27,6 +29,7 @@ export function GridOverlay({
   visibleByDefault = false,
   visible,
   onVisibleChange,
+  keyboardShortcut = true,
   className,
 }: GridOverlayProps) {
   const [uncontrolledOn, setUncontrolledOn] = useState(visibleByDefault);
@@ -53,6 +56,7 @@ export function GridOverlay({
   }, []);
 
   useEffect(() => {
+    if (!keyboardShortcut) return;
     const onKey = (event: KeyboardEvent) => {
       if (!gridOverlayKeyShouldToggle(event)) return;
       event.preventDefault();
@@ -60,7 +64,7 @@ export function GridOverlay({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [on, setOn]);
+  }, [keyboardShortcut, on, setOn]);
 
   useEffect(() => {
     setDocumentGridOn(on);
