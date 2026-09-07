@@ -92,11 +92,12 @@ WMDS ships a Müller-Brockmann **app** grid (`--profile=app`): column-line + 8px
 |-------|---------|
 | `--grid-cols` | 4 / 8 (`md`) / 12 (`lg`) |
 | `--grid-gutter` / `--grid-margin` | 16px mobile, 24px from `md` |
+| `--grid-column-gap` | Uniform inter-column gap override; defaults to `--grid-gutter` |
 | `--grid-baseline` | 8px (`calc(var(--spacing) * 2)`) |
 | `--leading-base` | 24px — also `leading-base` |
 | `--grid-max` | 80rem |
 
-Override on a wrap if a screen needs a different max width (`style={{ "--grid-max": "100%" }}`). Do not fork a second `--grid-*` set in Pitchkit.
+Override on a wrap if a screen needs a different max width (`style={{ "--grid-max": "100%" }}`) or column gap (`style={{ "--grid-column-gap": "16px" }}`). Responsive Tailwind arbitrary properties are also valid page layout: `[--grid-column-gap:12px] md:[--grid-column-gap:20px]`. Do not fork a second `--grid-*` set in Pitchkit.
 
 ### Band classes
 

@@ -14,6 +14,7 @@ WHA-304 asks for a **use-grid-system `--profile=app`** spine: column-line + 8px 
 - **`--spacing` stays 0.25rem (4px).** Do not re-scale it. Baseline is an even multiple: `--grid-baseline: calc(var(--spacing) * 2)` (8px). `--leading-base` is 3 × baseline (24px).
 - **Source of truth:** `src/theme/grid.css`, imported from `theme.css` so Storybook and `@whatmatters/wmds/styles.css` share one stack.
 - **Utilities:** `grid-page` (wrap + columns) and `band` (subgrid; `@supports` fallback repeats `--grid-cols`).
+- **Column-gap customization:** `--grid-column-gap` controls the uniform gap between tracks on a `grid-page`; it defaults to responsive `--grid-gutter` and is inherited by `band` and `GridOverlay`.
 - **Overlay:** `GridOverlay` is a child of `grid-page`. Press **g**. Same `--grid-*` tokens. Do not mount a viewport overlay (`tailwindcss-react-grid-overlay` as published paints the window — that is the misalignment bug).
 - **Not a product atom.** No Pitchkit layout lock. Design still owns look. Consumers copy `grid-page` / `band` / overlay from WMDS.
 - **Storybook:** **Foundation → Grid** owns the breakpoint × column scale. Do not keep a separate Breakpoints catalog — the two cannot drift.
@@ -21,6 +22,7 @@ WHA-304 asks for a **use-grid-system `--profile=app`** spine: column-line + 8px 
 ## Consequences
 
 - Page layout in apps uses `grid-page` + `band` + column-line placement (`col-start` / `col-span`), not a new WMDS Grid molecule.
+- Apps may tune `--grid-column-gap` per page or breakpoint without forking the grid geometry; individual seams do not vary independently.
 - Guide tints derive from existing primary/info roles — no parallel Swiss accent palette.
 - Probe record: `docs/grid-probe.json`. Agent-facing contract: **DESIGN.md → Grid**.
 

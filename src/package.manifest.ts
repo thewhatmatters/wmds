@@ -61,6 +61,7 @@ export const packageManifest = {
     "motion-collapse",
     "grid-page",
     "--grid-cols",
+    "--grid-column-gap",
     "--leading-base",
     "--cluster-height-sm",
     "--cluster-height-md",

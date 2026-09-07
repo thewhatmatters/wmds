@@ -23,6 +23,7 @@ Do **not** set `--spacing` to 8px on this live project. Re-scaling the spacing s
 |-------|------|
 | `--grid-cols` | **Same ladder as breakpoints** — 4 (default) → 8 (`md`) → 12 (`lg`). `sm:` does not add columns. |
 | `--grid-gutter` | 16px mobile / 24px `md+` (baseline multiples) |
+| `--grid-column-gap` | Consumer override for the uniform gap between column tracks; defaults to `--grid-gutter` |
 | `--grid-margin` | same as gutter |
 | `--grid-baseline` | `calc(var(--spacing) * 2)` |
 | `--grid-max` | 80rem (1280px) |
@@ -36,6 +37,7 @@ Guide tints (`--grid-guide-*`) mix **existing** `--color-primary` / `--color-inf
 - **`grid-page`** — centered wrap, padding = margin, column tracks from `--grid-cols`.
 - **`band`** — `grid-column: 1 / -1` + **subgrid** (fallback: repeat `--grid-cols`).
 - Place children on **column lines** (`col-start-*`, `col-span-*`, `col-end-*`).
+- Customize a page with `--grid-column-gap`; set responsive values on the same `grid-page` wrapper when needed. Every inter-column gap remains equal.
 
 ### Overlay
 

@@ -17,6 +17,7 @@ html {
   /* Geometry — 4-col mobile default; md/lg media queries below raise the count. */
   --grid-cols: 4;
   --grid-gutter: calc(var(--grid-baseline) * 2);
+  --grid-column-gap: var(--grid-gutter);
   --grid-margin: calc(var(--grid-baseline) * 2);
   --grid-baseline: calc(var(--spacing) * 2);
   --grid-max: 80rem;
@@ -62,7 +63,7 @@ html {
   padding-inline: var(--grid-margin);
   padding-block: var(--grid-pad);
   grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
-  column-gap: var(--grid-gutter);
+  column-gap: var(--grid-column-gap);
   row-gap: var(--grid-row-gap);
 }
 
@@ -74,7 +75,7 @@ html {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: subgrid;
-  column-gap: var(--grid-gutter);
+  column-gap: var(--grid-column-gap);
   row-gap: var(--grid-row-gap);
   align-items: start;
 }
@@ -113,7 +114,7 @@ html {
   left: var(--grid-margin);
   display: grid;
   grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
-  column-gap: var(--grid-gutter);
+  column-gap: var(--grid-column-gap);
 }
 
 /* CSS-only column fields when React has not painted numbered cells. */
@@ -122,12 +123,12 @@ html {
     to right,
     var(--grid-guide-col) 0,
     var(--grid-guide-col)
-      calc((100% - (var(--grid-cols) - 1) * var(--grid-gutter)) / var(--grid-cols)),
+      calc((100% - (var(--grid-cols) - 1) * var(--grid-column-gap)) / var(--grid-cols)),
     transparent
-      calc((100% - (var(--grid-cols) - 1) * var(--grid-gutter)) / var(--grid-cols)),
+      calc((100% - (var(--grid-cols) - 1) * var(--grid-column-gap)) / var(--grid-cols)),
     transparent
       calc(
-        (100% - (var(--grid-cols) - 1) * var(--grid-gutter)) / var(--grid-cols) + var(--grid-gutter)
+        (100% - (var(--grid-cols) - 1) * var(--grid-column-gap)) / var(--grid-cols) + var(--grid-column-gap)
       )
   );
 }

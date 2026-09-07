@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { GridOverlay } from "../lib/GridOverlay";
 import { readGridColumnCount } from "../lib/gridOverlayUtils";
@@ -105,6 +105,44 @@ export const Scale: Story = {
           ))}
         </tbody>
       </table>
+    </div>
+  ),
+};
+
+const columnGapExamples = [
+  { label: "Compact", value: "8px" },
+  { label: "Default desktop", value: "24px" },
+  { label: "Open", value: "32px" },
+] as const;
+
+export const ColumnGapCustomization: Story = {
+  name: "Customization — column gap",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Set `--grid-column-gap` on `grid-page` to override the space between every column. The nested `band` and **GridOverlay** inherit the same value, so track lines cannot drift.",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex flex-col gap-6">
+      {columnGapExamples.map((example) => (
+        <section key={example.value} className="flex flex-col gap-2">
+          <p className={cn(typographyClass("caption"), "text-muted")}>
+            {example.label} · <code>--grid-column-gap: {example.value}</code>
+          </p>
+          <div
+            className="grid-page min-h-28 overflow-hidden rounded-lg bg-body"
+            style={{ "--grid-column-gap": example.value } as CSSProperties}
+          >
+            <GridOverlay visible />
+            <div className="band min-h-20">
+              <div className="col-span-full rounded-md bg-surface shadow-hairline" />
+            </div>
+          </div>
+        </section>
+      ))}
     </div>
   ),
 };
