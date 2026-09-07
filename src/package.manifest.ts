@@ -16,6 +16,7 @@ const atoms = [
   "Status",
   "Switch",
   "TextArea",
+  "TextLink",
 ] as const;
 
 const molecules = ["Accordion", "Card", "CheckboxGroup", "Chip", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "NavList", "PageHeader", "Pagination", "RadioGroup", "Search", "Select", "SegmentedControl", "Stat", "TaskRows"] as const;

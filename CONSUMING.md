@@ -27,6 +27,8 @@ import "@whatmatters/wmds/styles.css";
 
 Browse patterns in Storybook under **Atoms/**, **Molecules/**, and **Examples/** — copy the named **Pattern** story JSX and state wiring; do not re-style with utilities. Examples are not exported from the package.
 
+Page-level Example canvases include a Storybook-only grid inspector while designs are being tuned. The **Show code** source freezes the approved `--grid-max` / `--grid-column-gap` values and omits that development panel, so the copied result contains only package exports and product layout.
+
 **Not this:**
 
 ```tsx

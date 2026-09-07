@@ -78,6 +78,11 @@ export {
   type TextAreaResize,
 } from "./components/atoms/TextArea/TextArea";
 export {
+  TextLink,
+  type TextLinkLayoutClassName,
+  type TextLinkProps,
+} from "./components/atoms/TextLink/TextLink";
+export {
   Skeleton,
   skeletonRadii,
   type SkeletonLayoutClassName,
