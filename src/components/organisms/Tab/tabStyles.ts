@@ -23,15 +23,15 @@ export const tabItemSizeClasses: Record<TabSize, string> = {
 export const tabItemClasses = cn(
   "relative z-10 inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full",
   typographyClass("ui-label"),
-  "font-medium text-muted transition-colors hover:text-fg",
+  "font-normal text-muted transition-colors hover:bg-ghost-hover hover:text-fg",
   motionTransition("fast"),
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-inset",
   "disabled:pointer-events-none disabled:opacity-50",
 );
 
-export const tabItemSelectedClasses = "bg-ghost-hover text-fg";
+export const tabItemSelectedClasses = "font-medium text-fg";
 
-/** Shared active rule — Motion moves one underline beneath the selected pill. */
+/** Shared active rule — Motion moves one underline beneath the selected label. */
 export const tabIndicatorClasses =
   "pointer-events-none absolute inset-x-3 bottom-[-2px] h-0.5 rounded-full bg-fg";
 

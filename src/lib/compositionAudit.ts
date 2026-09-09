@@ -150,6 +150,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     ruleId: "lucide-import",
     reason: "Tab owns the More overflow disclosure glyph inside its trigger shell.",
   },
+  {
+    file: "components/organisms/Toast/Toast.tsx",
+    ruleId: "lucide-import",
+    reason: "Toast owns built-in status glyphs passed to Badge and the dismiss glyph passed to IconButton.",
+  },
 ];
 
 /**

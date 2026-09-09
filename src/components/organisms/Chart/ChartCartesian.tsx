@@ -22,6 +22,7 @@ import { cn } from "../../../lib/cn";
 import {
   chartAreaPresets,
   chartCartesianMargins,
+  chartFormatAxisDateLabel,
   chartFormatAxisValue,
   chartFormatTooltipLabel,
   chartTooltipItemsFromConfig,
@@ -332,12 +333,13 @@ export function ChartCartesianAxisBottom() {
       hideAxisLine
       tickFormat={(value) => {
         const date = value instanceof Date ? value : new Date(value.valueOf());
-        return chartFormatTooltipLabel(date, periodKind);
+        return chartFormatAxisDateLabel(date, periodKind);
       }}
-      tickLabelProps={() => ({
+      tickLabelProps={(_value, index, ticks) => ({
         fill: chartUiTokens.tooltipMuted,
         fontSize: 11,
-        textAnchor: "middle",
+        textAnchor:
+          index === 0 ? "start" : index === ticks.length - 1 ? "end" : "middle",
         dy: 4,
         className: chartCartesianAxisTickLabelClasses,
       })}

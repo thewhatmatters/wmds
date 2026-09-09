@@ -15,8 +15,10 @@ import { SegmentedControl } from "../../components/molecules/SegmentedControl/Se
 import { Stat } from "../../components/molecules/Stat/Stat";
 import { Chart } from "../../components/organisms/Chart/Chart";
 import type { ChartRankedBarItem } from "../../components/organisms/Chart/ChartRankedBars";
+import { AlertDialog } from "../../components/organisms/Dialog/AlertDialog";
 import { MoreMenu } from "../../components/organisms/MoreMenu/MoreMenu";
 import { Tab } from "../../components/organisms/Tab/Tab";
+import { Toaster, toast } from "../../components/organisms/Toast/Toast";
 import { chartSeriesConfigFromKeys } from "../../lib/chartTheme";
 import { GridOverlay } from "../../lib/GridOverlay";
 import { ExampleGridControls } from "../ExampleGridControls/ExampleGridControls";
@@ -254,6 +256,9 @@ function ResolvedInsights() {
   const [proofMetric, setProofMetric] =
     useState<PitchKitProofMetric>("reach");
   const [postNotice, setPostNotice] = useState<string | null>(null);
+  const [pendingHidePostId, setPendingHidePostId] = useState<string | null>(
+    null,
+  );
   const rankedPosts = useMemo(
     () =>
       [...visiblePosts].sort(
@@ -266,11 +271,43 @@ function ResolvedInsights() {
 
   function handlePostAction(postId: string, actionId: string) {
     if (actionId === "hide") {
-      setVisiblePosts((posts) => posts.filter((post) => post.id !== postId));
-      setPostNotice("Post hidden from the shareable kit preview.");
+      setPendingHidePostId(postId);
       return;
     }
     setPostNotice("Choose a replacement from your recent Instagram posts.");
+  }
+
+  function handleConfirmHide() {
+    if (pendingHidePostId == null) return;
+    const hiddenPost = visiblePosts.find(
+      (post) => post.id === pendingHidePostId,
+    );
+    if (hiddenPost == null) {
+      setPendingHidePostId(null);
+      return;
+    }
+
+    setVisiblePosts((posts) =>
+      posts.filter((post) => post.id !== pendingHidePostId),
+    );
+    setPostNotice("Post hidden from the shareable kit preview.");
+    setPendingHidePostId(null);
+    toast.add({
+      title: "Post hidden from kit",
+      description: "It no longer appears in the shareable PitchKit.",
+      duration: 6000,
+      action: {
+        label: "Undo",
+        onClick: () => {
+          setVisiblePosts((posts) =>
+            posts.some((post) => post.id === hiddenPost.id)
+              ? posts
+              : [...posts, hiddenPost],
+          );
+          setPostNotice("Post restored to the shareable kit preview.");
+        },
+      },
+    });
   }
 
   function handleProofMetricChange(value: string) {
@@ -355,6 +392,17 @@ function ResolvedInsights() {
           ))}
         </div>
       </section>
+      <AlertDialog
+        open={pendingHidePostId != null}
+        onOpenChange={(open) => {
+          if (!open) setPendingHidePostId(null);
+        }}
+        title="Hide this post from PitchKit?"
+        description="It will no longer appear in the shareable PitchKit. You can add it back later."
+        cancelLabel="Keep post"
+        confirmLabel="Hide from kit"
+        onConfirm={handleConfirmHide}
+      />
     </>
   );
 }
@@ -406,7 +454,7 @@ function PitchKitPlaceholder() {
   return (
     <section className={pitchKitPlaceholderClasses}>
       <Badge variant="neutral" emphasis="muted">
-        Next design pass
+        Coming soon
       </Badge>
       <h1 className={pitchKitPlaceholderTitleClasses}>Shareable PitchKit</h1>
       <p className={pitchKitPlaceholderBodyClasses}>
@@ -502,6 +550,7 @@ export function PitchKitInsightsExample({
         defaultMaxWidth={1140}
         defaultColumnGap={8}
       />
+      <Toaster position="bottom-right" />
     </main>
   );
 }

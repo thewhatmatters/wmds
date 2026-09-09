@@ -88,6 +88,61 @@ export const RecentProofTabs: Story = {
   },
 };
 
+export const HidePostConfirmation: Story = {
+  name: "PitchKit — hide post confirmation",
+  render: () => <PitchKitInsightsExample />,
+  play: async ({ canvas }) => {
+    const trigger = canvas.getByRole("button", {
+      name: /manage ranked post 1/i,
+    });
+    await userEvent.click(trigger);
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+    expect(getComputedStyle(trigger).backgroundColor).not.toBe(
+      "rgba(0, 0, 0, 0)",
+    );
+
+    const menu = within(document.body).getByRole("menu");
+    await userEvent.click(
+      within(menu).getByRole("menuitem", { name: /hide from kit/i }),
+    );
+
+    const dialog = within(document.body).getByRole("alertdialog", {
+      name: /hide this post from pitchkit/i,
+    });
+    await waitFor(() => expect(dialog).toBeVisible());
+    expect(within(dialog).getByText(/you can add it back later/i)).toBeVisible();
+
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: /^hide from kit$/i }),
+    );
+
+    await waitFor(() => {
+      expect(
+        within(document.body).queryByRole("alertdialog"),
+      ).not.toBeInTheDocument();
+      expect(canvas.getByText(/post hidden from the shareable kit preview/i)).toBeVisible();
+      expect(canvas.getByText("5 shown")).toBeVisible();
+    });
+
+    const notifications = within(document.body).getByRole("list", {
+      name: /notifications/i,
+    });
+    await waitFor(() => {
+      expect(within(notifications).getByRole("status")).toHaveTextContent(
+        /post hidden from kit/i,
+      );
+    });
+
+    await userEvent.click(
+      within(notifications).getByRole("button", { name: /undo/i }),
+    );
+    await waitFor(() => {
+      expect(canvas.getByText(/post restored to the shareable kit preview/i)).toBeVisible();
+      expect(canvas.getByText("6 shown")).toBeVisible();
+    });
+  },
+};
+
 export const LiveColumnGap: Story = {
   name: "PitchKit — live column gap",
   render: () => <PitchKitInsightsExample />,
@@ -192,11 +247,13 @@ export const SharedCardBodyRadius: Story = {
     expect(getComputedStyle(audienceCard!).boxShadow).toBe("none");
     expect(
       reachCard!.getBoundingClientRect().bottom -
-        reachWell!.getBoundingClientRect().bottom,
+        reachWell!.getBoundingClientRect().bottom -
+        Number.parseFloat(getComputedStyle(reachCard!).borderBottomWidth),
     ).toBeCloseTo(2, 0);
     expect(
       audienceCard!.getBoundingClientRect().bottom -
-        audienceWell!.getBoundingClientRect().bottom,
+        audienceWell!.getBoundingClientRect().bottom -
+        Number.parseFloat(getComputedStyle(audienceCard!).borderBottomWidth),
     ).toBeCloseTo(2, 0);
     expect(postImages).toHaveLength(6);
     postImages.forEach((image) => {

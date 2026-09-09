@@ -41,7 +41,7 @@ Menu **right-aligns** to the trigger (\`align="end"\`) and clamps to the nearest
 
 ## Anatomy
 
-- **Trigger** — **IconButton** \`role="ghost"\` + vertical kebab (built-in)
+- **Trigger** — **IconButton** \`role="ghost"\` + vertical kebab (built-in); retains its ghost hover surface while the menu is expanded
 - **Menu** — **Dropdown.Menu** \`role="menu"\` — fixed position, **4px** below trigger
 - **Row** — **Dropdown.Item** \`role="menuitem"\` — \`start\` | label | \`end\`; hover/keyboard \`active\` fill only (no selection check)
 

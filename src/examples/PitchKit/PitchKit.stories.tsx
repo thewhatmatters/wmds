@@ -55,13 +55,16 @@ The dashboard answers four questions in order:
 - Page and card chrome — **PageHeader**, **Card**, **Badge**, **Avatar**, **Button**
 - Metrics and charts — **Stat**, **Chart.Cartesian**, **Chart.Legend**, **Chart.RankedBars**
 - Proof ranking — **Tab.Group** + **Tab**; one selected metric reorders the same supplied posts
-- Post management — **MoreMenu** with **ButtonIcon**
+- Post management — **MoreMenu** with **ButtonIcon**; **AlertDialog** confirms hiding a post
+- Outcome feedback — **Toaster** + **toast**; Undo restores the hidden post
 - Storybook development only — **ExampleGridControls** + **GridOverlay**
 
 ## Best practices
 
 - **Do** preserve the visual difference between typical performance and a spike.
 - **Do** keep all edit controls in owner-only Insights.
+- **Do** confirm post visibility changes with **AlertDialog** before mutating the ranked set.
+- **Do** pair the completed hide mutation with an actionable Undo toast.
 - **Do** use **Tab** for proof ranking because the page already uses one primary **SegmentedControl**.
 - **Do** freeze approved grid values into implementation code.
 - **Don't** copy **ExampleGridControls** into PitchKit production UI.
@@ -81,6 +84,7 @@ export const CreatorInsights: Story = {
   parameters: storyCopySource(`
 import { useState } from "react";
 import {
+  AlertDialog,
   Avatar,
   Badge,
   Button,
@@ -91,11 +95,13 @@ import {
   SegmentedControl,
   Stat,
   Tab,
+  Toaster,
   cardLayoutBodyOccupantInsetXClasses,
   cardLayoutBodyOccupantPadYClasses,
   cardLayoutBodyOccupantWellClasses,
   cardTitleClasses,
   chartSeriesConfigFromKeys,
+  toast,
 } from "@whatmatters/wmds";
 import { Share2 } from "lucide-react";
 
@@ -107,13 +113,36 @@ const reachConfig = chartSeriesConfigFromKeys([
 export function PitchKitInsightsPage({ reachData, audience, posts }) {
   const [view, setView] = useState("insights");
   const [proofMetric, setProofMetric] = useState("reach");
-  const rankedPosts = [...posts].sort((a, b) => {
+  const [visiblePosts, setVisiblePosts] = useState(posts);
+  const [pendingHidePostId, setPendingHidePostId] = useState<string | null>(null);
+  const rankedPosts = [...visiblePosts].sort((a, b) => {
     const value = (post) =>
       proofMetric === "engagement"
         ? post.likes + post.comments
         : post[proofMetric];
     return value(b) - value(a);
   });
+
+  function hidePendingPost() {
+    const hiddenPost = visiblePosts.find(
+      (post) => post.id === pendingHidePostId,
+    );
+    if (!hiddenPost) return;
+
+    setVisiblePosts((current) =>
+      current.filter((post) => post.id !== hiddenPost.id),
+    );
+    setPendingHidePostId(null);
+    toast.add({
+      title: "Post hidden from kit",
+      description: "It no longer appears in the shareable PitchKit.",
+      action: {
+        label: "Undo",
+        onClick: () =>
+          setVisiblePosts((current) => [...current, hiddenPost]),
+      },
+    });
+  }
 
   return (
     <main className="grid-page min-h-screen bg-body [--grid-column-gap:8px] [--grid-max:1140px] [padding-bottom:44px]">
@@ -198,15 +227,36 @@ export function PitchKitInsightsPage({ reachData, audience, posts }) {
                 <Card key={post.id} variant="outlined" shape="rounded" className="col-span-full min-w-0 md:col-span-4 lg:col-span-4">
                   <Card.Header
                     start={<Badge size="sm">#{index + 1}</Badge>}
-                    end={<MoreMenu aria-label={\`Manage post \${index + 1}\`} size="xs" items={post.actions} />}
+                    end={
+                      <MoreMenu
+                        aria-label={\`Manage post \${index + 1}\`}
+                        size="xs"
+                        items={post.actions}
+                        onAction={(actionId) => {
+                          if (actionId === "hide") setPendingHidePostId(post.id);
+                        }}
+                      />
+                    }
                   />
                   <Card.Body><img src={post.imageUrl} alt={post.imageAlt} className="aspect-[4/3] w-full object-cover" /></Card.Body>
                 </Card>
               ))}
             </div>
           </section>
+          <AlertDialog
+            open={pendingHidePostId != null}
+            onOpenChange={(open) => {
+              if (!open) setPendingHidePostId(null);
+            }}
+            title="Hide this post from PitchKit?"
+            description="It will no longer appear in the shareable PitchKit. You can add it back later."
+            cancelLabel="Keep post"
+            confirmLabel="Hide from kit"
+            onConfirm={hidePendingPost}
+          />
         </div>
       </div>
+      <Toaster position="bottom-right" />
     </main>
   );
 }

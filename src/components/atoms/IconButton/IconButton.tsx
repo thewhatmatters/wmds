@@ -9,7 +9,14 @@ import {
   type ButtonRole,
   type IconButtonSize,
 } from "../Button/buttonStyles";
-import { iconButtonFabClasses, iconButtonInsetFocusClasses, iconButtonInsetHitClasses, iconButtonInsetIconSizeClasses, iconButtonShapeClass } from "./iconButtonStyles";
+import {
+  iconButtonExpandedStyle,
+  iconButtonFabClasses,
+  iconButtonInsetFocusClasses,
+  iconButtonInsetHitClasses,
+  iconButtonInsetIconSizeClasses,
+  iconButtonShapeClass,
+} from "./iconButtonStyles";
 
 export type { ButtonRole, IconButtonSize } from "../Button/buttonStyles";
 export { buttonRoles } from "../Button/buttonStyles";
@@ -108,6 +115,7 @@ export function IconButton({
       id={id}
       name={name}
       form={form}
+      style={ariaExpanded && role === "ghost" ? iconButtonExpandedStyle : undefined}
       className={cn(
         buttonBaseClasses,
         buttonRoleClasses[role],

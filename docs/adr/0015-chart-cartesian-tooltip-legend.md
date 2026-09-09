@@ -144,7 +144,7 @@ All three use a measured `ParentSize` plot host: marks consume the full availabl
 
 ### Date formatting
 
-Default: **`chartFormatTooltipLabel(date, period?)`** in **`chartTheme.ts`** using `Intl.DateTimeFormat`. Apps may pass pre-formatted `label` strings.
+Axis ticks use **`chartFormatAxisDateLabel(date, period?)`**: compact month/day labels omit repeated years, while year views use month-only labels. The first and final ticks anchor inward so labels remain inside the plot. Tooltips retain period-aware full context through **`chartFormatTooltipLabel(date, period?)`**. Both use `Intl.DateTimeFormat`.
 
 ### Non-goals (v1)
 

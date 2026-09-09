@@ -1,5 +1,12 @@
+import type { CSSProperties } from "react";
+
 /** Circular icon-only control — square hit target from {@link iconButtonSizeClasses}. */
 export const iconButtonShapeClass = "shrink-0 rounded-full";
+
+/** Expanded disclosure/menu trigger — retain the ghost hover surface while open. */
+export const iconButtonExpandedStyle = {
+  backgroundColor: "color-mix(in srgb, currentColor 5%, transparent)",
+} satisfies CSSProperties;
 
 /** FAB pattern — raised elevation on primary fill. */
 export const iconButtonFabClasses = "shadow-md";

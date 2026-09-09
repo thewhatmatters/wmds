@@ -635,7 +635,22 @@ export function chartFormatAxisValue(value: number): string {
   return new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(value);
 }
 
-/** Default x-axis / header label for tooltip — period-aware date formatting. */
+/** Compact x-axis date — context carries the year; ticks prioritize scanability. */
+export function chartFormatAxisDateLabel(
+  date: Date,
+  periodKind?: ChartPeriodKind,
+): string {
+  if (periodKind === "year") {
+    return new Intl.DateTimeFormat(undefined, { month: "short" }).format(date);
+  }
+
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "numeric",
+  }).format(date);
+}
+
+/** Full tooltip date — period-aware precision without compact-axis constraints. */
 export function chartFormatTooltipLabel(date: Date, periodKind?: ChartPeriodKind): string {
   if (periodKind === "year") {
     return new Intl.DateTimeFormat(undefined, { month: "short", year: "numeric" }).format(date);
