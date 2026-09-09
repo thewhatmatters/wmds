@@ -57,6 +57,21 @@ atoms ← molecules ← organisms ← examples
 
 Molecules may compose atoms and other molecules (e.g. List row trailing `Chip`). Organisms compose molecules and atoms. Examples compose all lower tiers.
 
+### Card shape contract
+
+Card geometry is configured in `src/theme/shape.css`:
+
+- `--radius-card-shell: 16px`
+- `--radius-card-body: 14px`
+
+The body value preserves concentric corners inside Card’s 2px gutter. Body occupants use `cardLayoutBodyOccupantRadiusClasses`; filled wells use `cardLayoutBodyOccupantWellClasses`. Product examples do not repeat raw Card radius values.
+
+Layout Card surface hierarchy is selected through the component API:
+
+- `variant="surface"` — elevated shell with the WMDS drop shadow
+- `variant="outlined"` — `border-border` hairline matching Stat, with no shadow
+- `variant="ghost"` — transparent shell when surrounding layout owns the surface
+
 ## Consequences
 
 - `src/package.manifest.ts` and docs updated to match

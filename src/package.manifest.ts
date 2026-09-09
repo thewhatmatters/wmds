@@ -65,6 +65,8 @@ export const packageManifest = {
     "--grid-cols",
     "--grid-column-gap",
     "--leading-base",
+    "--radius-card-body",
+    "--radius-card-shell",
     "--cluster-height-sm",
     "--cluster-height-md",
     "--cluster-height-lg",

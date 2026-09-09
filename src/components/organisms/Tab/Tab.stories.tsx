@@ -38,7 +38,7 @@ When tabs exceed the available width, the final control becomes **More**. Select
 
 \`\`\`
 Tab.Group
-├── active bottom rule — one Motion indicator
+├── active pill surface + bottom rule — one Motion indicator
 ├── Tab × visible capacity
 └── More? → Dropdown.Menu → hidden tabs
 \`\`\`

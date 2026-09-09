@@ -34,7 +34,7 @@ export const statContentClasses = "flex min-w-0 flex-col gap-1";
 
 export const statLabelClasses = `${typographyClass("overline")} text-muted`;
 
-export const statValueRowClasses = "flex flex-wrap items-baseline gap-x-2 gap-y-1";
+export const statValueRowClasses = "flex flex-wrap items-center gap-x-2 gap-y-1";
 
 export const statValueSizeClasses: Record<StatSize, string> = {
   sm: `${typographyClass("section-heading")} tabular-nums tracking-tight text-fg`,

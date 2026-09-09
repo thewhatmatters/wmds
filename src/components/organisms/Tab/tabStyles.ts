@@ -8,7 +8,7 @@ export type TabSize = (typeof tabSizes)[number];
 
 export const tabRootClasses = "relative min-w-0";
 
-/** Plain label row. Overflow is resolved into More rather than horizontal scrolling. */
+/** Label row. Overflow is resolved into More rather than horizontal scrolling. */
 export const tabListClasses = cn(
   "relative inline-flex max-w-full items-stretch",
   motionTransition("fast"),
@@ -21,7 +21,7 @@ export const tabItemSizeClasses: Record<TabSize, string> = {
 };
 
 export const tabItemClasses = cn(
-  "relative z-10 inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-sm",
+  "relative z-10 inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full",
   typographyClass("ui-label"),
   "font-medium text-muted transition-colors hover:text-fg",
   motionTransition("fast"),
@@ -29,11 +29,11 @@ export const tabItemClasses = cn(
   "disabled:pointer-events-none disabled:opacity-50",
 );
 
-export const tabItemSelectedClasses = "text-fg";
+export const tabItemSelectedClasses = "bg-ghost-hover text-fg";
 
-/** Shared active rule — Motion moves one underline between visible tabs. */
+/** Shared active rule — Motion moves one underline beneath the selected pill. */
 export const tabIndicatorClasses =
-  "pointer-events-none absolute inset-x-2 bottom-0 h-0.5 rounded-full bg-fg";
+  "pointer-events-none absolute inset-x-3 bottom-[-2px] h-0.5 rounded-full bg-fg";
 
 export const tabItemContentClasses = "relative z-10";
 

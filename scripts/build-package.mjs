@@ -22,6 +22,7 @@ copyFileSync(path.join(root, "src/theme/motion.css"), path.join(dist, "motion.cs
 copyFileSync(path.join(root, "src/theme/typography.css"), path.join(dist, "typography.css"));
 copyFileSync(path.join(root, "src/theme/stateColors.css"), path.join(dist, "stateColors.css"));
 copyFileSync(path.join(root, "src/theme/grid.css"), path.join(dist, "grid.css"));
+copyFileSync(path.join(root, "src/theme/shape.css"), path.join(dist, "shape.css"));
 
 execSync("node scripts/validate-manifest.mjs", { cwd: root, stdio: "inherit" });
 

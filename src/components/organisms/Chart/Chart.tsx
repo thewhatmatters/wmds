@@ -17,6 +17,10 @@ import { chartFrameClasses, chartSegmentBarHostClasses } from "./chartStyles";
 import { ChartLegend } from "./ChartLegend";
 import { ChartTooltipContent } from "./ChartTooltipContent";
 import { ChartLoading } from "./ChartLoading";
+import { ChartRankedBars } from "./ChartRankedBars";
+import { ChartUnitGrid } from "./ChartUnitGrid";
+import { ChartDistributionStrip } from "./ChartDistributionStrip";
+import { ChartHeatmap } from "./ChartHeatmap";
 import {
   chartSegmentedBarSpringConfig,
   type ChartSegmentedBarAnimate,
@@ -326,6 +330,10 @@ function ChartSegmentedBar({
 export const Chart = Object.assign(ChartFrameRoot, {
   Frame: ChartFrameRoot,
   SegmentedBar: ChartSegmentedBar,
+  RankedBars: ChartRankedBars,
+  UnitGrid: ChartUnitGrid,
+  DistributionStrip: ChartDistributionStrip,
+  Heatmap: ChartHeatmap,
   Loading: ChartLoading,
   Cartesian: Object.assign(ChartCartesian, {
     Grid: ChartCartesianGrid,
@@ -349,11 +357,38 @@ export {
   ChartCartesianTooltipLayer,
   ChartLoading,
   ChartLegend,
+  ChartRankedBars,
+  ChartUnitGrid,
+  ChartDistributionStrip,
+  ChartHeatmap,
   ChartTooltipContent,
 };
 export type { ChartCartesianPoint, ChartCartesianProps } from "./ChartCartesian";
 export type { ChartLoadingLayoutClassName, ChartLoadingProps } from "./ChartLoading";
 export type { ChartLegendProps, ChartLegendLayoutClassName } from "./ChartLegend";
+export type {
+  ChartRankedBarItem,
+  ChartRankedBarsAnimate,
+  ChartRankedBarsLayoutClassName,
+  ChartRankedBarsProps,
+} from "./ChartRankedBars";
+export type {
+  ChartUnitGridLayoutClassName,
+  ChartUnitGridPart,
+  ChartUnitGridProps,
+} from "./ChartUnitGrid";
+export type {
+  ChartDistributionItem,
+  ChartDistributionReference,
+  ChartDistributionStripLayoutClassName,
+  ChartDistributionStripProps,
+} from "./ChartDistributionStrip";
+export type {
+  ChartHeatmapAxisItem,
+  ChartHeatmapCell,
+  ChartHeatmapLayoutClassName,
+  ChartHeatmapProps,
+} from "./ChartHeatmap";
 export type {
   ChartTooltipContentProps,
   ChartTooltipContentLayoutClassName,

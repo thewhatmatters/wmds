@@ -13,7 +13,7 @@ export const cardPaddings = ["none", "md", "lg"] as const;
 
 export type CardPadding = (typeof cardPaddings)[number];
 
-/** Default rounded — layout cards float with shell radius + shadow; use flush when parent owns chrome. */
+/** Card structure; surface treatment comes from the selected variant. */
 export const cardBaseClasses = "flex w-full flex-col font-sans text-fg";
 
 export const cardOverflowClasses = "overflow-hidden";
@@ -29,6 +29,12 @@ export const cardVariantClasses: Record<CardVariant, string> = {
   ghost: "bg-transparent",
 };
 
+export const cardLayoutVariantClasses: Record<CardVariant, string> = {
+  surface: "bg-surface shadow-md",
+  outlined: "border border-border bg-surface",
+  ghost: "bg-transparent",
+};
+
 export const cardRootPaddingClasses: Record<CardPadding, string> = {
   none: "",
   md: "p-4",
@@ -36,7 +42,7 @@ export const cardRootPaddingClasses: Record<CardPadding, string> = {
 };
 
 /** Layout shell — top pad 16px; bottom pad via {@link cardLayoutShellBottomClasses}. */
-export const cardLayoutShellClasses = "gap-3 bg-surface pt-4";
+export const cardLayoutShellClasses = "gap-3 pt-4";
 
 export function cardLayoutShellBottomClasses(bodyTerminal = false): string {
   return bodyTerminal ? "pb-[2px]" : "pb-4";
@@ -62,7 +68,7 @@ export const cardLayoutBodyOccupantPadYClasses = "py-[16px]";
 
 export const cardLayoutShellShapeClasses: Record<CardShape, string> = {
   flush: "",
-  rounded: "rounded-2xl shadow-md",
+  rounded: "rounded-[var(--radius-card-shell)]",
 };
 
 /** Header row — start | end. Occupants decide what lands in each slot. */
@@ -84,21 +90,29 @@ export const cardLayoutBodyWellClasses = [
   "flex min-h-0 w-full flex-col",
 ].join(" ");
 
+/** Terminal Body fills stretched cards; its single occupant consumes the remaining Body region. */
+export const cardLayoutTerminalBodyClasses =
+  "flex-1 [&>*]:min-h-0 [&>*]:flex-1";
+
 /** Opt-in muted body fill for occupants — e.g. `className={cardBodyWellClasses}` on content inside `Card.Body`. */
 export const cardBodyWellClasses = "bg-body p-0.5";
 
 /**
  * Inset body well — page-floor gray (`bg-body`) + concentric radius inside the Body gutter.
- * Shell `rounded-2xl` (16px) − 2px gutter → `rounded-[14px]`. See **Molecules/Card** docs.
+ * Shell radius (16px) − 2px gutter → body radius (14px). See **Molecules/Card** docs.
  */
-export const cardLayoutBodyOccupantWellClasses = "rounded-[14px] bg-body";
+export const cardLayoutBodyOccupantRadiusClasses =
+  "rounded-[var(--radius-card-body)]";
+
+export const cardLayoutBodyOccupantWellClasses =
+  `${cardLayoutBodyOccupantRadiusClasses} bg-body`;
 
 /**
  * Inset body well with dot-grid texture — same concentric radius + page-floor base as well;
  * dots add chart-canvas depth without a solid fill change.
  */
 export const cardLayoutBodyOccupantDotGridWellClasses = [
-  "rounded-[14px]",
+  cardLayoutBodyOccupantRadiusClasses,
   backgroundPatternDotGridClasses,
 ].join(" ");
 

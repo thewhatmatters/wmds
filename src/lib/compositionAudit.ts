@@ -121,6 +121,21 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "Chart.Cartesian owns visx-composed SVG (Area, axes, grid, crosshair) — ADR-0012, ADR-0015.",
   },
   {
+    file: "components/organisms/Chart/ChartDistributionStrip.tsx",
+    ruleId: "inline-svg",
+    reason: "Chart.DistributionStrip owns visx-composed SVG marks and axis — ADR-0015.",
+  },
+  {
+    file: "components/organisms/Chart/ChartHeatmap.tsx",
+    ruleId: "inline-svg",
+    reason: "Chart.Heatmap owns visx-composed SVG cells and categorical labels — ADR-0015.",
+  },
+  {
+    file: "components/organisms/Chart/ChartUnitGrid.tsx",
+    ruleId: "inline-svg",
+    reason: "Chart.UnitGrid owns visx-composed SVG unit marks — ADR-0015.",
+  },
+  {
     file: "components/organisms/NavRail/NavRailBrandMark.tsx",
     ruleId: "inline-svg",
     reason: "NavRailBrandMark owns the WhatMatters sparkle product glyph — brand asset, not Lucide.",

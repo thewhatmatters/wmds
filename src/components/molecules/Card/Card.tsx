@@ -1,5 +1,7 @@
 import {
+  Children,
   createContext,
+  isValidElement,
   useContext,
   type HTMLAttributes,
   type ReactNode,
@@ -14,12 +16,15 @@ import {
   cardLayoutBodyOccupantInsetXClasses,
   cardLayoutBodyOccupantPadYClasses,
   cardLayoutBodyOccupantDotGridWellClasses,
+  cardLayoutBodyOccupantRadiusClasses,
   cardLayoutBodyOccupantWellClasses,
   cardLayoutHeaderEndClasses,
   cardLayoutHeaderStartClasses,
   cardLayoutShellClasses,
   cardLayoutShellBottomClasses,
   cardLayoutShellShapeClasses,
+  cardLayoutTerminalBodyClasses,
+  cardLayoutVariantClasses,
   cardOverflowClasses,
   cardRootPaddingClasses,
   cardSectionPaddingClasses,
@@ -42,11 +47,11 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
   children: ReactNode;
   /** `rounded` (default) — shell + inset well with outer radius/shadow; `flush` when parent owns chrome. */
   shape?: CardShape;
-  /** Applies to simple padded cards only — layout cards use the body/surface shell pattern. */
+  /** Surface treatment: `surface` elevates layout cards; `outlined` uses a hairline with no shadow. */
   variant?: CardVariant;
   /** Root padding. Use `none` with `Card.Header` / `Card.Body` / `Card.Footer`. */
   padding?: CardPadding;
-  /** When `Card.Body` is the last section (no **Footer**), shell bottom inset is 2px — matches Body gutter. */
+  /** Overrides automatic terminal-Body detection. Normally omitted: Body without Footer gets a 2px bottom inset. */
   bodyTerminal?: boolean;
   as?: "div" | "article" | "section";
   className?: CardLayoutClassName;
@@ -65,6 +70,7 @@ export interface CardHeaderProps extends CardSectionProps {
 }
 
 const CardPaddingContext = createContext<CardPadding>("none");
+const CardBodyTerminalContext = createContext(false);
 
 function useCardPadding() {
   return useContext(CardPaddingContext);
@@ -74,41 +80,53 @@ function CardRoot({
   shape = "rounded",
   variant = "surface",
   padding = "none",
-  bodyTerminal = false,
+  bodyTerminal,
   as: Component = "div",
   className,
   children,
   ...props
 }: CardProps) {
   const isLayout = padding === "none";
+  const inferredBodyTerminal =
+    isLayout &&
+    Children.toArray(children).some(
+      (child) => isValidElement(child) && child.type === CardBody,
+    ) &&
+    !Children.toArray(children).some(
+      (child) => isValidElement(child) && child.type === CardFooter,
+    );
+  const terminalBody = bodyTerminal ?? inferredBodyTerminal;
 
   return (
     <CardPaddingContext.Provider value={padding}>
-      <Component
-        className={cn(
-          cardBaseClasses,
-          isLayout
-            ? cn(
-                cardLayoutShellClasses,
-                cardLayoutShellBottomClasses(bodyTerminal),
-                cardLayoutShellShapeClasses[shape],
-              )
-            : cn(
-                cardOverflowClasses,
-                cardShapeClasses[shape],
-                cardVariantClasses[variant],
-                cardRootPaddingClasses[padding],
-              ),
-          className,
-        )}
-        data-shape={shape}
-        data-variant={isLayout ? undefined : variant}
-        data-padding={padding}
-        data-layout={isLayout ? "shell" : undefined}
-        {...props}
-      >
-        {children}
-      </Component>
+      <CardBodyTerminalContext.Provider value={terminalBody}>
+        <Component
+          className={cn(
+            cardBaseClasses,
+            isLayout
+              ? cn(
+                  cardLayoutShellClasses,
+                  cardLayoutShellBottomClasses(terminalBody),
+                  cardLayoutShellShapeClasses[shape],
+                cardLayoutVariantClasses[variant],
+                )
+              : cn(
+                  cardOverflowClasses,
+                  cardShapeClasses[shape],
+                  cardVariantClasses[variant],
+                  cardRootPaddingClasses[padding],
+                ),
+            className,
+          )}
+          data-shape={shape}
+          data-variant={variant}
+          data-padding={padding}
+          data-layout={isLayout ? "shell" : undefined}
+          {...props}
+        >
+          {children}
+        </Component>
+      </CardBodyTerminalContext.Provider>
     </CardPaddingContext.Provider>
   );
 }
@@ -136,8 +154,16 @@ function CardHeader({
 /** Inset well — composition slot for any supporting content. */
 function CardBody({ className, children, ...props }: CardSectionProps) {
   const padding = useCardPadding();
+  const terminal = useContext(CardBodyTerminalContext);
   return (
-    <div className={cn(cardSectionPaddingClasses[padding].body, className)} {...props}>
+    <div
+      className={cn(
+        cardSectionPaddingClasses[padding].body,
+        padding === "none" && terminal && cardLayoutTerminalBodyClasses,
+        className,
+      )}
+      {...props}
+    >
       {children}
     </div>
   );
@@ -175,6 +201,7 @@ export {
   cardLayoutBodyOccupantInsetXClasses,
   cardLayoutBodyOccupantPadYClasses,
   cardLayoutBodyOccupantDotGridWellClasses,
+  cardLayoutBodyOccupantRadiusClasses,
   cardLayoutBodyOccupantWellClasses,
   cardSubtitleClasses,
   cardTitleClasses,

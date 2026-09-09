@@ -104,10 +104,11 @@ const meta = {
 | **Layout** | \`Card padding="none"\` + \`Card.Header\` / \`Card.Body\` / \`Card.Footer\` — default; shell + transparent Body slot |
 | **Header** | Horizontal \`start\` / \`end\` slots — title + subtitle, **SegmentedControl**, **MoreMenu**, filter **Chip** rail, Badge, or any cluster |
 | **Body slot** | TaskRows, form, **Chart** (SegmentedBar KPI or **Cartesian** history), or custom UI — occupant owns fill, radius, and padding |
-| **Inset well** | \`cardLayoutBodyOccupantWellClasses\` on the occupant — \`bg-body\` + concentric **14px** radius (\`rounded-[14px]\`); dot-grid → \`cardLayoutBodyOccupantDotGridWellClasses\` |
+| **Inset well** | \`cardLayoutBodyOccupantWellClasses\` on the occupant — \`bg-body\` + concentric **14px** radius (\`--radius-card-body\`); radius-only occupants → \`cardLayoutBodyOccupantRadiusClasses\`; dot-grid → \`cardLayoutBodyOccupantDotGridWellClasses\` |
+| **Outlined layout** | \`Card variant="outlined"\` — Stat-matched hairline border with no drop shadow |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
 
-Default \`shape="rounded"\` — \`rounded-2xl shadow-md\` on the shell. Use \`shape="flush"\` only when a parent owns outer radius and shadow.
+Default \`variant="surface"\` uses the elevated shell. Use \`variant="outlined"\` for the same hairline surface treatment as **Stat**, without a drop shadow. Default \`shape="rounded"\` uses \`--radius-card-shell\`; use \`shape="flush"\` only when a parent owns outer radius.
 
 ## Anatomy
 
@@ -115,20 +116,21 @@ Default \`shape="rounded"\` — \`rounded-2xl shadow-md\` on the shell. Use \`sh
 Card (bg-surface shell, py-4, gap-3)
 ├── Card.Header   — start | end slots — 16px horizontal inset (px-4)
 ├── Card.Body     — slot — 2px horizontal gutter (px-[2px]); transparent; occupant paints the region
-│   └── occupant  — e.g. cardLayoutBodyOccupantWellClasses (bg-body, rounded-[14px])
+│   └── occupant  — e.g. cardLayoutBodyOccupantWellClasses (bg-body, --radius-card-body)
 └── Card.Footer   — status, actions — 16px horizontal inset (px-4)
 \`\`\`
 
-**Inset well radius:** layout shell uses \`rounded-2xl\` (**16px**). **Card.Body** inset is **2px** on each side. Inner well radius = **16px − 2px = 14px** (\`rounded-[14px]\`) so corners stay concentric with the shell. Copy **Example — body slot (occupancy history)** or **Example — body slot (occupancy KPI, inset well)**.
+**Inset well radius:** layout shell uses \`--radius-card-shell\` (**16px**). **Card.Body** inset is **2px** on each side. Inner well radius = **16px − 2px = 14px** (\`--radius-card-body\`) so corners stay concentric with the shell. Copy **Example — body slot (occupancy history)** or **Example — body slot (occupancy KPI, inset well)**.
 
 ## Best practices
 
 - **Do** set \`padding="none"\` when using Header/Body/Footer.
 - **Do** put leading copy in \`start\` and trailing actions in \`end\` — do not hand-roll the header row.
 - **Do** use \`cardLayoutBodyOccupantPadYClasses\` (\`py-[16px]\`) + \`cardLayoutBodyOccupantInsetXClasses\` on body occupants — 16px vertical, horizontal aligns with **Header** (2px gutter + 14px).
-- **Do** paint inset body backgrounds with \`cardLayoutBodyOccupantWellClasses\` (\`bg-body\` + \`rounded-[14px]\`) — concentric with the shell (16px − 2px gutter); chart canvas texture → \`cardLayoutBodyOccupantDotGridWellClasses\`.
-- **Do** set \`bodyTerminal\` on layout cards when **Card.Body** is the last section — 2px bottom shell inset matches the Body gutter (inset well flush to card bottom).
+- **Do** paint inset body backgrounds with \`cardLayoutBodyOccupantWellClasses\` (\`bg-body\` + \`--radius-card-body\`) — concentric with the shell (16px − 2px gutter); radius-only media → \`cardLayoutBodyOccupantRadiusClasses\`; chart canvas texture → \`cardLayoutBodyOccupantDotGridWellClasses\`.
+- **Do** let a direct terminal **Card.Body** fill stretched cards automatically — when there is no **Footer**, Card applies the matching 2px bottom shell inset and expands the occupant through the remaining Body region. Use \`bodyTerminal\` only to override slot detection in a wrapper.
 - **Do** keep title, address, and meta in **Header**; primary actions in **Footer**.
+- **Do** use \`variant="outlined"\` when Cards should share Stat's flat bordered hierarchy.
 - **Do** use default \`shape="rounded"\` — detail overlays, dashboard widgets, map overlays.
 - **Do** use \`shape="flush"\` only when nested inside a parent that already owns radius and shadow.
 - **Don't** restrict the Body to TaskRows — that is one occupant, not the contract.
@@ -190,6 +192,54 @@ export const Layout: Story = {
           Find best time
         </Button>
       </Card.Footer>
+    </Card>
+  ),
+};
+
+export const OutlinedLayout: Story = {
+  name: "Pattern — outlined layout",
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "padded",
+      docs: {
+        description: {
+          story:
+            "Flat Card hierarchy — the same `border-border` hairline used by **Stat**, with no drop shadow. Use when dashboard Cards and metric tiles should read as one surface family.",
+        },
+      },
+    },
+    `
+import { Card, cardTitleClasses } from "@whatmatters/wmds";
+
+<Card variant="outlined" shape="rounded" className="max-w-lg">
+  <Card.Header
+    start={<h2 className={cardTitleClasses}>Audience fit</h2>}
+  />
+  <Card.Body>
+    <div className="min-h-32 px-3.5 py-4">
+      Card body occupant
+    </div>
+  </Card.Body>
+</Card>
+    `,
+  ),
+  render: () => (
+    <Card variant="outlined" shape="rounded" className="max-w-lg">
+      <Card.Header
+        start={
+          <>
+            <h2 className={cardTitleClasses}>Audience fit</h2>
+            <p className={cardSubtitleClasses}>Flat hierarchy beside Stat tiles.</p>
+          </>
+        }
+      />
+      <Card.Body>
+        <div className="flex min-h-32 items-center px-3.5 py-4">
+          <p className={mutedText(cardBodyTextClasses)}>
+            Hairline border · no drop shadow
+          </p>
+        </div>
+      </Card.Body>
     </Card>
   ),
 };
@@ -566,7 +616,7 @@ export const BodySlotOccupancyHistory: Story = {
       docs: {
         description: {
           story:
-            "**Chart.Cartesian** area history in the Body slot — **`cardLayoutBodyOccupantWellClasses`** inset well + **`bodyTerminal`** (2px bottom shell gutter when no **Footer**). Hover for crosshair tooltip.",
+            "**Chart.Cartesian** area history in the terminal Body slot — **`cardLayoutBodyOccupantWellClasses`** inset well + automatic 2px bottom shell gutter when no **Footer**. Hover for crosshair tooltip.",
         },
       },
     },
@@ -587,7 +637,7 @@ const config = chartSeriesConfigFromKeys([
   { key: "available", label: "Available units" },
 ]);
 
-<Card shape="rounded" bodyTerminal className="max-w-lg">
+<Card shape="rounded" className="max-w-lg">
   <Card.Header
     start={<h2 className={cardTitleClasses}>Occupancy history</h2>}
     end={<Select aria-label="Reporting period" size="sm" options={periodOptions} defaultValue="month" className="w-36" />}
@@ -610,7 +660,7 @@ const config = chartSeriesConfigFromKeys([
     );
 
     return (
-      <Card shape="rounded" bodyTerminal className="max-w-lg">
+      <Card shape="rounded" className="max-w-lg">
         <Card.Header
           start={<h2 className={cardTitleClasses}>Occupancy history</h2>}
           end={<OccupancyPeriodSelect value={period} onValueChange={setPeriod} />}

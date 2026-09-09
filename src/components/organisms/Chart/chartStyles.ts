@@ -1,5 +1,6 @@
 import { typographyClass } from "../../../lib/typography";
 import { cn } from "../../../lib/cn";
+import { motionTransition } from "../../../lib/motion";
 
 /** Responsive plot region — axis-agnostic; marks fill the frame. */
 export const chartFrameClasses = "relative w-full";
@@ -7,6 +8,50 @@ export const chartFrameClasses = "relative w-full";
 /** Segmented bar — fixed tick height; width comes from layout. */
 export const chartSegmentBarHostClasses =
   "relative block w-full min-w-0 [height:var(--chart-segment-height,2rem)]";
+
+/** Ranked percentage breakdown — audience fit, locations, and demographics. */
+export const chartRankedBarListClasses = "flex w-full min-w-0 flex-col gap-3";
+
+export const chartRankedBarRowClasses = "flex min-w-0 flex-col gap-1.5";
+
+export const chartRankedBarHeaderClasses =
+  "flex min-w-0 items-baseline justify-between gap-3";
+
+export const chartRankedBarLabelClasses = `${typographyClass("caption")} min-w-0 truncate text-fg`;
+
+export const chartRankedBarValueClasses =
+  "shrink-0 font-mono text-xs tabular-nums leading-none text-muted";
+
+export const chartRankedBarTrackClasses =
+  "h-1.5 w-full overflow-hidden rounded-full bg-border";
+
+export const chartRankedBarFillClasses =
+  "block h-full w-[var(--chart-ranked-bar-width)] origin-left rounded-full bg-primary";
+
+/** Experimental non-Cartesian chart patterns. */
+export const chartExplorationRootClasses =
+  "flex h-full w-full min-w-0 flex-col gap-3";
+export const chartExplorationPlotHostClasses =
+  "relative min-h-0 w-full min-w-0 flex-auto";
+export const chartExplorationSvgClasses =
+  "block h-full w-full overflow-visible select-none";
+export const chartUnitGridCellClasses =
+  `transition-[fill-opacity] motion-reduce:transition-none ${motionTransition("fast")}`;
+export const chartExplorationSummaryClasses = "sr-only";
+export const chartExplorationEmptyClasses =
+  `${typographyClass("body")} flex min-h-40 items-center justify-center rounded-lg border border-dashed border-border px-4 text-center text-muted`;
+export const chartExplorationLegendClasses =
+  "flex flex-wrap items-center gap-x-4 gap-y-2";
+export const chartExplorationLegendItemClasses =
+  "flex items-center gap-2";
+export const chartExplorationLegendSwatchClasses =
+  "size-2 shrink-0 rounded-sm";
+export const chartExplorationLegendLabelClasses =
+  `${typographyClass("caption")} text-muted`;
+export const chartHeatmapLegendScaleClasses =
+  "flex items-center gap-1";
+export const chartHeatmapLegendSwatchClasses =
+  "size-3 rounded-[2px] bg-primary";
 
 /** Occupancy-style KPI row — hero value + inline mono trend (no Badge). */
 export const chartKpiHeroRowClasses = "flex flex-wrap items-baseline gap-x-3 gap-y-1";

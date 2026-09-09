@@ -42,7 +42,7 @@ Ship **Tab** as an organism under `src/components/organisms/Tab/`.
 
 ### Interaction
 
-- Plain labels with one Motion shared-layout bottom rule
+- Labels with a muted active pill and one Motion shared-layout bottom rule
 - Arrow Left/Right and Home/End move through all enabled tabs
 - More supports pointer, Arrow Up/Down, Enter/Space, and Escape
 - Counts are compact inline text—not Badge
@@ -57,7 +57,7 @@ Ship **Tab** as an organism under `src/components/organisms/Tab/`.
 
 - Responsive settings and peer-page flows can use one Tab row without exposing a full section list.
 - SegmentedControl remains for settings values and view modes, not page navigation.
-- No horizontally scrolling tab track or clipped selected pill.
+- No horizontally scrolling tab track; selected pills stay fully visible or promote from More.
 
 ## References
 

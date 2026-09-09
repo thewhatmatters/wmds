@@ -64,6 +64,45 @@ const occupancyTooltipValues = { occupied: 144, available: 56 };
 
 const occupiedToneConfig = chartSeriesConfigFromTone("occupied", "Occupied units", "primary");
 
+const audienceCompositionConfig = chartSeriesConfigFromKeys([
+  { key: "women", label: "Women" },
+  { key: "men", label: "Men" },
+  { key: "unspecified", label: "Not specified" },
+]);
+
+const postReachDistribution = [
+  { id: "post-1", label: "#1", value: 48200 },
+  { id: "post-2", label: "#2", value: 41600 },
+  { id: "post-3", label: "#3", value: 38900 },
+  { id: "post-4", label: "#4", value: 35100 },
+  { id: "post-5", label: "#5", value: 33700 },
+  { id: "post-6", label: "#6", value: 30900 },
+];
+
+const heatmapRows = [
+  { key: "morning", label: "Morning" },
+  { key: "midday", label: "Midday" },
+  { key: "evening", label: "Evening" },
+];
+
+const heatmapColumns = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
+  (label) => ({ key: label.toLowerCase(), label }),
+);
+
+const heatmapValues = [
+  [18, 24, 31, 27, 38, 52, 46],
+  [34, 42, 39, 48, 55, 62, 58],
+  [44, 51, 47, 64, 72, 81, 76],
+];
+
+const heatmapCells = heatmapRows.flatMap((row, rowIndex) =>
+  heatmapColumns.map((column, columnIndex) => ({
+    rowKey: row.key,
+    columnKey: column.key,
+    value: heatmapValues[rowIndex]![columnIndex]!,
+  })),
+);
+
 function ChartCardBodyStateToolbar({
   bodyState,
   onBodyStateChange,
@@ -186,9 +225,13 @@ Dashboard visualizations on **visx v4** — WMDS owns the **shell**; patterns ow
 | Plot family | Pattern | Axes |
 |-------------|---------|------|
 | **Capacity meter** | \`Chart.SegmentedBar\` — \`value\` / \`max\`, \`fill="velocity"\` \| \`semantic\` | No |
+| **Ranked breakdown** | \`Chart.RankedBars\` — ordered labeled values such as audience country / age | No |
+| **Unit composition** | \`Chart.UnitGrid\` — exact part-to-whole units, typically 100 | Yes |
+| **Distribution strip** | \`Chart.DistributionStrip\` — independent entity values + reference | Yes |
+| **Heatmap** | \`Chart.Heatmap\` — row × column intensity matrix | Yes |
 | **Cartesian** | \`Chart.Cartesian\` + \`Chart.Cartesian.Area\` — daily / multi-series history | Yes |
 
-**Tooltip + legend** — **ADR-0015**. Hover a Cartesian plot for crosshair + frosted tooltip; **Chart.Legend** uses the same \`ChartSeriesConfig\` / \`chartSeriesColor\` palette (**ADR-0013**). **SegmentedBar** has no tooltip.
+**Tooltip + legend** — **ADR-0015**. Hover Cartesian plots, UnitGrid cells, DistributionStrip marks, or Heatmap cells for the shared frosted tooltip. **Chart.Legend** uses the same \`ChartSeriesConfig\` / \`chartSeriesColor\` palette (**ADR-0013**). **SegmentedBar** has no tooltip.
 
 **Card pattern stories** — use the state chips above each Card preview, or **Controls → Body state** (Docs and Canvas), to toggle initial skeleton, retrieving, and resolved.
 
@@ -208,6 +251,8 @@ Card.Header / Footer usually carry KPI copy; the chart mark sits in **Card.Body*
 - **Do** use \`chartFormatPercent(value, max)\` for headline percent copy.
 - **Do** pass \`label\` when \`role="meter"\` needs more context than a percent.
 - **Do** use \`Chart.SegmentedBar\` only for **capacity** — snapshot fill (\`value\` / \`max\`). Daily history → **Chart.Cartesian** + **Chart.Cartesian.Area** (ADR-0015).
+- **Do** use \`Chart.RankedBars\` for ordered percentage comparisons; sort the data before passing it.
+- **Do** use \`Chart.UnitGrid\` only for honest part-to-whole composition, \`Chart.DistributionStrip\` for one metric across peers, and \`Chart.Heatmap\` when both axes are categorical.
 - **Do** use \`fill="velocity"\` for occupancy-style capacity bars; \`fill="semantic"\` for RAG utilization meters (red → orange → yellow → green).
 - **Do** use **Chart.Loading** in **Card.Body** while chart data fetches — keep **Card.Header** mounted; swap the well for **Chart.Cartesian** when resolved (default \`animate="initial"\` fades the plot in once).
 - **Do** use **Skeleton** (**Atoms/Skeleton**) for initial page/card skeleton screens — mirror layout, then swap for **Chart.Loading** or live marks.
@@ -473,6 +518,195 @@ export const LegendReference: Story = {
     },
   },
   render: () => <Chart.Legend config={occupancySeriesConfig} />,
+};
+
+export const RankedAudienceBreakdown: Story = {
+  name: "Pattern — ranked audience breakdown",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Ordered percentage rows for audience fit. Each row exposes meter semantics; labels and formatted values remain visible without relying on the fill alone. Use `animate=\"initial\"` for a one-time staggered bar reveal after loading.",
+        },
+      },
+    },
+    `
+import { Chart } from "@whatmatters/wmds";
+
+<Chart.RankedBars
+  aria-label="Top audience countries"
+  items={[
+    { label: "United States", value: 42 },
+    { label: "United Kingdom", value: 18 },
+    { label: "Canada", value: 11 },
+    { label: "Australia", value: 8 },
+  ]}
+  animate="initial"
+/>
+    `,
+  ),
+  render: () => (
+    <Chart.RankedBars
+      className="max-w-sm"
+      aria-label="Top audience countries"
+      items={[
+        { label: "United States", value: 42 },
+        { label: "United Kingdom", value: 18 },
+        { label: "Canada", value: 11 },
+        { label: "Australia", value: 8 },
+      ]}
+      animate="initial"
+    />
+  ),
+};
+
+export const UnitGridComposition: Story = {
+  name: "Pattern — 100-unit composition",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Exact part-to-whole composition. Each square represents one unit; hover a cell for its category total and the other categories recede. Use when the supplied categories share one denominator and approximately sum to 100.",
+        },
+      },
+    },
+    `
+import { Chart, chartSeriesConfigFromKeys } from "@whatmatters/wmds";
+
+const config = chartSeriesConfigFromKeys([
+  { key: "women", label: "Women" },
+  { key: "men", label: "Men" },
+  { key: "unspecified", label: "Not specified" },
+]);
+
+<Chart.UnitGrid
+  aria-label="Audience gender: 68% women, 30% men, 2% not specified"
+  config={config}
+  parts={[
+    { key: "women", value: 68 },
+    { key: "men", value: 30 },
+    { key: "unspecified", value: 2 },
+  ]}
+  minHeight={240}
+/>
+    `,
+  ),
+  render: () => (
+    <Chart.UnitGrid
+      className="max-w-sm"
+      aria-label="Audience gender: 68% women, 30% men, 2% not specified"
+      config={audienceCompositionConfig}
+      parts={[
+        { key: "women", value: 68 },
+        { key: "men", value: 30 },
+        { key: "unspecified", value: 2 },
+      ]}
+      minHeight={240}
+    />
+  ),
+};
+
+export const PostReachDistribution: Story = {
+  name: "Pattern — distribution strip",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "One metric across peer entities, with an optional truthful reference. Hover a mark for its exact value. This specimen shows six recent posts against the creator's typical reach.",
+        },
+      },
+    },
+    `
+import { Chart } from "@whatmatters/wmds";
+
+<Chart.DistributionStrip
+  aria-label="Reach distribution for six recent posts"
+  items={posts.map((post, index) => ({
+    id: post.id,
+    label: \`#\${index + 1}\`,
+    value: post.reach,
+  }))}
+  metricLabel="Reach"
+  reference={{ value: 9300, label: "Typical 9.3K" }}
+  minHeight={240}
+/>
+    `,
+  ),
+  render: () => (
+    <Chart.DistributionStrip
+      className="max-w-2xl"
+      aria-label="Reach distribution for six recent posts"
+      items={postReachDistribution}
+      metricLabel="Reach"
+      reference={{ value: 9300, label: "Typical 9.3K" }}
+      minHeight={240}
+    />
+  ),
+};
+
+export const AudienceActivityHeatmap: Story = {
+  name: "Pattern — matrix heatmap",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Categorical row × column intensity. Hover a cell for its row, column, and exact value. The values here are illustrative posting-window data; do not infer this matrix from PitchKit's current Graph response.",
+        },
+      },
+    },
+    `
+import { Chart } from "@whatmatters/wmds";
+
+<Chart.Heatmap
+  aria-label="Illustrative audience activity by day and time"
+  rows={rows}
+  columns={columns}
+  cells={cells}
+  metricLabel="Activity"
+  minHeight={240}
+/>
+    `,
+  ),
+  render: () => (
+    <Chart.Heatmap
+      className="max-w-2xl"
+      aria-label="Illustrative audience activity by day and time"
+      rows={heatmapRows}
+      columns={heatmapColumns}
+      cells={heatmapCells}
+      metricLabel="Activity"
+      minHeight={240}
+    />
+  ),
+};
+
+export const ExplorationEdgeStates: Story = {
+  name: "Reference — exploration edge states",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Empty inputs render explicit regions. Identical distribution values receive a padded numeric domain so coincident marks remain valid rather than collapsing the scale.",
+      },
+    },
+  },
+  render: () => (
+    <div className="grid max-w-2xl gap-6">
+      <Chart.UnitGrid aria-label="Empty composition" config={{}} parts={[]} />
+      <Chart.DistributionStrip
+        aria-label="Identical peer values"
+        items={[
+          { id: "a", label: "A", value: 42000 },
+          { id: "b", label: "B", value: 42000 },
+        ]}
+      />
+      <Chart.Heatmap aria-label="Empty matrix" rows={[]} columns={[]} cells={[]} />
+    </div>
+  ),
 };
 
 export const TooltipLegendPairingReference: Story = {

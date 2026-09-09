@@ -21,6 +21,7 @@
     "./typography.css": "./dist/typography.css",
     "./stateColors.css": "./dist/stateColors.css",
     "./grid.css": "./dist/grid.css",
+    "./shape.css": "./dist/shape.css",
     "./package.json": "./package.json"
   },
   "sideEffects": [

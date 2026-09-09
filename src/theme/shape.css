@@ -1,0 +1,8 @@
+/**
+ * WMDS shape tokens — shared component geometry.
+ * Override on an experience wrapper only when that experience owns a documented shape mode.
+ */
+:root {
+  --radius-card-shell: 16px;
+  --radius-card-body: 14px;
+}
