@@ -13,7 +13,7 @@ import { Chip } from "../components/molecules/Chip/Chip";
 import { SegmentedControl } from "../components/molecules/SegmentedControl/SegmentedControl";
 
 const meta = {
-  title: "Foundation/Cluster",
+  title: "Foundations/Cluster",
   tags: ["autodocs"],
   parameters: {
     docs: {

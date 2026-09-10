@@ -10,7 +10,7 @@ function InputSpecimen({ children }: { children: ReactNode }) {
 }
 
 const meta = {
-  title: "Atoms/Input",
+  title: "Components/Forms/Input",
   component: Input,
   tags: ["autodocs"],
   decorators: [

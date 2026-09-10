@@ -10,7 +10,7 @@ import {
 } from "./SegmentedControl";
 
 const meta = {
-  title: "Molecules/SegmentedControl",
+  title: "Components/Forms/SegmentedControl",
   component: SegmentedControl,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),
@@ -44,7 +44,7 @@ Connected **segmented control** — one track, sliding inset thumb, mutually exc
 | **Equal-width rail** | \`layout="stretch"\` + \`className="w-full max-w-xs"\` on the track |
 | **Controlled** | \`value\` + \`onValueChange\` |
 
-**Sizes:** \`sm\` | \`md\` (default) | \`lg\` — **cluster tiers** (**Foundation → Cluster**): 28 / 36 / 44px outer track, same as **Chip**. Prop names match cluster directly (\`sm\` = cluster sm) — unlike **Button** (\`xs\` / \`sm\` / \`md\`). **Badge** \`sm\` / \`md\` is a smaller inline label scale — not header-cluster pairing.
+**Sizes:** \`sm\` | \`md\` (default) | \`lg\` — **cluster tiers** (**Foundations → Cluster**): 28 / 36 / 44px outer track, same as **Chip**. Prop names match cluster directly (\`sm\` = cluster sm) — unlike **Button** (\`xs\` / \`sm\` / \`md\`). **Badge** \`sm\` / \`md\` is a smaller inline label scale — not header-cluster pairing.
 
 **Not this pattern:** filter rails with gaps → **ChipFilterGroup**; primary actions → **Button**; many options or search → **Select**.
 

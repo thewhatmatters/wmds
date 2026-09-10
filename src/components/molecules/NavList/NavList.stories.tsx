@@ -39,7 +39,7 @@ const settingsSections = [
 ];
 
 const meta = {
-  title: "Molecules/NavList",
+  title: "Components/Navigation/NavList",
   component: NavList,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

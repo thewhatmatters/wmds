@@ -99,7 +99,7 @@ export const cardBodyWellClasses = "bg-body p-0.5";
 
 /**
  * Inset body well — page-floor gray (`bg-body`) + concentric radius inside the Body gutter.
- * Shell radius (16px) − 2px gutter → body radius (14px). See **Molecules/Card** docs.
+ * Shell radius (16px) − 2px gutter → body radius (14px). See **Components/Layout/Card** docs.
  */
 export const cardLayoutBodyOccupantRadiusClasses =
   "rounded-[var(--radius-card-body)]";

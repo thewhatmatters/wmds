@@ -9,7 +9,7 @@ import { dialogFooterActionsClasses } from "../Dialog/dialogStyles";
 import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySource";
 
 const meta = {
-  title: "Organisms/Sheet",
+  title: "Components/Overlays/Sheet",
   component: Sheet,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),
@@ -31,7 +31,7 @@ Dismissible edge overlay — bottom drawer or side sheet. Shares portal scrim, f
 
 Mobile (< \`md\`): **16px inset on the trailing edge only** — \`end\` → \`pl-4\` (scrim on the left); entry + top/bottom flush. Tablet+ side sheets fully edge-flush.
 
-Use **Panel** when the page should stay interactive without a scrim — see **Organisms/Panel**.
+Use **Panel** when the page should stay interactive without a scrim — see **Components/Overlays/Panel**.
 
 ## Anatomy
 

@@ -11,7 +11,7 @@ const actions = [
 ];
 
 const meta = {
-  title: "Molecules/FloatingActionButton",
+  title: "Components/Actions/FloatingActionButton",
   component: FloatingActionButton,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

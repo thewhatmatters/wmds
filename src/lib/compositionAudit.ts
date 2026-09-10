@@ -1,6 +1,6 @@
 /**
  * Static composition audit — molecules / organisms must compose atoms (ADR-0002, atomic-composition rule).
- * Run via Foundation → Composition audit (Storybook) or `npm run validate:composition`.
+ * Run via the hidden Internal/Audits/Composition fixture or `npm run validate:composition`.
  */
 
 export type CompositionTier = "molecules" | "organisms";

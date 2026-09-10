@@ -4,7 +4,7 @@ import { Button } from "../Button/Button";
 import { Badge, badgeVariants, type BadgeVariant } from "./Badge";
 
 const meta = {
-  title: "Atoms/Badge",
+  title: "Components/Feedback/Badge",
   component: Badge,
   tags: ["autodocs"],
   argTypes: {

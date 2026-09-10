@@ -4,7 +4,7 @@ import { typographyClass } from "../../../lib/typography";
 import { TextLink } from "./TextLink";
 
 const meta = {
-  title: "Atoms/TextLink",
+  title: "Components/Navigation/TextLink",
   component: TextLink,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

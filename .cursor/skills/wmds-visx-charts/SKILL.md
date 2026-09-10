@@ -2,7 +2,7 @@
 name: wmds-visx-charts
 description: >-
   Builds WMDS Chart organisms and dashboard visualizations with visx v4 and
-  chartTheme tokens. Use when authoring Organisms/Chart, visx compositions,
+  chartTheme tokens. Use when authoring the Chart organism, visx compositions,
   chart Storybook patterns, scales/axes/grid/tooltip work, choosing chart types
   from data shape (Lieflat catalog), or when the user mentions visx, dashboard
   charts, lieflat-charts, or WMDS chartTheme.
@@ -16,7 +16,7 @@ description: >-
 |-------|--------|
 | Marks, scales, axes math | **visx v4** (`@visx/*`) — peer dep, not bundled |
 | Colors, grid, margins, variants | **`src/lib/chartTheme.ts`** + `src/theme/colors.css` |
-| Shell, tooltip, legend, patterns | **WMDS `Organisms/Chart`** + Storybook |
+| Shell, tooltip, legend, patterns | **WMDS Chart organism** + **Components/Data display/Chart** in Storybook |
 | Motion | **`motionTransition()` / `motionTransitionProp()`** — not visx animation |
 
 See **ADR-0012**, **AGENTS.md** (Chart bullet), **`.cursor/rules/wmds-pattern-first.mdc`**.

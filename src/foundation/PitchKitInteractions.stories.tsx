@@ -3,8 +3,8 @@ import { expect, userEvent, waitFor, within } from "storybook/test";
 import { PitchKitInsightsExample } from "../examples/PitchKit/PitchKitExample";
 
 const meta = {
-  title: "Foundation/PitchKit interactions",
-  tags: ["test", "!autodocs"],
+  title: "Internal/Interactions/PitchKit",
+  tags: ["test", "!dev", "!autodocs"],
   parameters: {
     docs: { disable: true },
     wmdsLayout: "fullscreen",

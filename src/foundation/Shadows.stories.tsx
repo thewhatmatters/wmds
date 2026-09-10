@@ -8,7 +8,7 @@ const shadows: Array<{ name: string; className: string }> = [
 ];
 
 const meta = {
-  title: "Foundation/Shadows",
+  title: "Foundations/Shadows",
   tags: ["autodocs"],
   parameters: {
     docs: {

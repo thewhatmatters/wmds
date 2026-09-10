@@ -106,21 +106,33 @@ const preview: Preview = {
   parameters: {
     options: {
       /**
-       * Introduction → Foundation (designed) → Atoms → Molecules → Organisms → Examples.
-       * Nested `order` is a sibling array after the parent name — not `[parent, [children]]`.
-       * Comparator is the source of truth so Foundation cannot fall back to A–Z.
+       * Public navigation is organized by use intent. Atomic tiers remain an
+       * implementation detail of src/components and packageManifest.
        */
       storySort: (a, b) => {
-        const tiers = ["Introduction", "Foundation", "Atoms", "Molecules", "Organisms", "Examples"];
-        const foundation = [
+        const sections = ["Start Here", "Foundations", "Components", "Patterns", "Examples", "Internal"];
+        const foundations = [
           "Grid",
           "Colors",
           "Typography",
           "Spacing",
+          "Shape",
           "Shadows",
           "Motion",
           "Icons",
-          "Form controls",
+          "Charts",
+          "Cluster",
+          "Scroll fade",
+          "Background patterns",
+        ];
+        const componentCategories = [
+          "Actions",
+          "Forms",
+          "Navigation",
+          "Feedback",
+          "Overlays",
+          "Data display",
+          "Layout",
         ];
         const rank = (title, list) => {
           const index = list.indexOf(title);
@@ -130,13 +142,20 @@ const preview: Preview = {
         const bTitle = b.title ?? "";
         const aTier = aTitle.split("/")[0] ?? "";
         const bTier = bTitle.split("/")[0] ?? "";
-        const tierDelta = rank(aTier, tiers) - rank(bTier, tiers);
+        const tierDelta = rank(aTier, sections) - rank(bTier, sections);
         if (tierDelta !== 0) return tierDelta;
-        if (aTier === "Foundation") {
+        if (aTier === "Foundations") {
           const aName = aTitle.split("/")[1] ?? "";
           const bName = bTitle.split("/")[1] ?? "";
-          const foundationDelta = rank(aName, foundation) - rank(bName, foundation);
+          const foundationDelta = rank(aName, foundations) - rank(bName, foundations);
           if (foundationDelta !== 0) return foundationDelta;
+        }
+        if (aTier === "Components") {
+          const aCategory = aTitle.split("/")[1] ?? "";
+          const bCategory = bTitle.split("/")[1] ?? "";
+          const categoryDelta =
+            rank(aCategory, componentCategories) - rank(bCategory, componentCategories);
+          if (categoryDelta !== 0) return categoryDelta;
         }
         return aTitle.localeCompare(bTitle, undefined, { numeric: true });
       },

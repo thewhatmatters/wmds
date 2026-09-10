@@ -1,4 +1,9 @@
-import type { ReactNode } from "react";
+import {
+  forwardRef,
+  type ButtonHTMLAttributes,
+  type ComponentProps,
+  type ReactNode,
+} from "react";
 import { motion } from "motion/react";
 import { cn } from "../../../lib/cn";
 import { ButtonStatusIcon, ButtonStatusLabel } from "./ButtonStatusContent";
@@ -20,7 +25,11 @@ import {
   type ButtonSize,
 } from "./buttonStyles";
 
-export interface ButtonStatusButtonProps {
+export interface ButtonStatusButtonProps
+  extends Omit<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    "children" | "className" | "role" | "size"
+  > {
   status: ButtonStatus;
   role?: ButtonRole;
   size?: ButtonSize;
@@ -39,24 +48,28 @@ export interface ButtonStatusButtonProps {
   children: ReactNode;
 }
 
-export function ButtonStatusButton({
-  status,
-  role = "primary",
-  size = "md",
-  statusLabels,
-  disableOnError = false,
-  disabled,
-  className,
-  children,
-  type = "button",
-  onClick,
-  "aria-label": ariaLabel,
-  "aria-pressed": ariaPressed,
-  "aria-keyshortcuts": ariaKeyShortcuts,
-  id,
-  name,
-  form,
-}: ButtonStatusButtonProps) {
+export const ButtonStatusButton = forwardRef<
+  HTMLButtonElement,
+  ButtonStatusButtonProps
+>(function ButtonStatusButton({
+    status,
+    role = "primary",
+    size = "md",
+    statusLabels,
+    disableOnError = false,
+    disabled,
+    className,
+    children,
+    type = "button",
+    onClick,
+    "aria-label": ariaLabel,
+    "aria-pressed": ariaPressed,
+    "aria-keyshortcuts": ariaKeyShortcuts,
+    id,
+    name,
+    form,
+    ...buttonProps
+  }, ref) {
   const labels = resolveStatusLabels(children, statusLabels);
   const label = labels[status];
   const isDisabled = disabled || status === "loading" || (status === "error" && disableOnError);
@@ -64,6 +77,8 @@ export function ButtonStatusButton({
 
   return (
     <motion.button
+      {...(buttonProps as unknown as ComponentProps<typeof motion.button>)}
+      ref={ref}
       type={type}
       layout
       disabled={isDisabled}
@@ -97,4 +112,4 @@ export function ButtonStatusButton({
       <ButtonStatusLabel label={label} />
     </motion.button>
   );
-}
+});

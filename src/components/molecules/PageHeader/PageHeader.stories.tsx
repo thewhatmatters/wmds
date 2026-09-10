@@ -12,7 +12,7 @@ import { PageHeader, pageHeaderVariants } from "./PageHeader";
 const headerClusterTier = "sm" as const;
 
 const meta = {
-  title: "Molecules/PageHeader",
+  title: "Components/Layout/PageHeader",
   component: PageHeader,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),
@@ -56,7 +56,7 @@ PageHeader (header | [role=toolbar])
 
 - **Do** use \`variant="app"\` once per app canvas — **AppHeader** in shell examples maps to this pattern.
 - **Do** pass \`aria-label\` on toolbar-only rows when \`title\` is omitted.
-- **Do** keep one cluster tier per row — see **Foundation → Cluster**.
+- **Do** keep one cluster tier per row — see **Foundations → Cluster**.
 - **Don't** nest **PageHeader** inside **Card** for card titles — use **Card.Header**.
 - **Don't** re-theme with \`className\` — layout width/margin only.
         `.trim(),

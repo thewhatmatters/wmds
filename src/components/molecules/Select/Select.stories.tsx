@@ -21,7 +21,7 @@ const periodOptions: SelectOption[] = [
 ];
 
 const meta = {
-  title: "Molecules/Select",
+  title: "Components/Forms/Select",
   component: Select,
   tags: ["autodocs"],
   argTypes: {
@@ -54,7 +54,7 @@ Input-matched **pill trigger** + floating **listbox** panel — rounded menu, in
 | **Uncontrolled** | \`defaultValue\` |
 | **Rich options** | \`options[].start\` / \`options[].end\` — **Dropdown.Item** slots (icons, shortcuts) |
 
-**Sizes:** \`sm\` | \`md\` (default) | \`lg\` — align with **Input** and **Foundation → Cluster**.
+**Sizes:** \`sm\` | \`md\` (default) | \`lg\` — align with **Input** and **Foundations → Cluster**.
 
 ## Anatomy
 
@@ -66,7 +66,7 @@ Input-matched **pill trigger** + floating **listbox** panel — rounded menu, in
 
 - **Do** use \`size="sm"\` beside **Chip sm** / **IconButton xs** in Card headers.
 - **Do** pass stable \`value\` strings — \`label\` is trigger copy; \`start\` / \`end\` are menu-only.
-- **Do** read **Molecules/Dropdown** for row anatomy before custom menus.
+- **Do** read **Components/Overlays/Dropdown** for row anatomy before custom menus.
 - **Don't** restyle the menu with \`className\` — layout width/margin only on the root.
         `.trim(),
       },

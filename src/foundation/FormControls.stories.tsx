@@ -25,7 +25,7 @@ const periodOptions = [
 ];
 
 const meta = {
-  title: "Foundation/Form controls",
+  title: "Patterns/Form controls",
   tags: ["autodocs"],
   parameters: {
     wmdsLayout: "centered",
@@ -34,23 +34,23 @@ const meta = {
         component: `
 ## Form controls (ADR-0006)
 
-WMDS ships **discrete components** — not a monolithic \`TextField\` or \`Input type="select"\`. Atoms own text entry; molecules own selection, search rows, and shared menu chrome.
+WMDS ships **discrete components** — not a monolithic \`TextField\` or \`Input type="select"\`. Each control has one public role; compound controls own selection, search rows, and shared menu chrome.
 
 ### Public API
 
-| Export | Tier | Role | Storybook |
-|--------|------|------|-----------|
-| **Input** | Atom | Single-line text — pill shell, optional label/status | **Atoms/Input** |
-| **TextArea** | Atom | Multiline — same optional chrome as Input | **Atoms/TextArea** |
-| **Checkbox** | Atom | Boolean toggle — label row + validation | **Atoms/Checkbox** |
-| **CheckboxGroup** | Molecule | Multi-select list — vertical / horizontal | **Molecules/CheckboxGroup** |
-| **Radio** | Atom | Single option — circle + label row | **Atoms/Radio** |
-| **RadioGroup** | Molecule | Pick one of N — vertical / horizontal | **Molecules/RadioGroup** |
-| **Switch** | Atom | Instant on/off — pill track + thumb | **Atoms/Switch** |
-| **Select** | Molecule | Pill trigger + floating listbox | **Molecules/Select** |
-| **Search** | Molecule | Hero search — inset button in one shell | **Molecules/Search** |
-| **Dropdown** | Molecule | Shared menu panel + three-slot rows | **Molecules/Dropdown** |
-| **Field** | Molecule | Label/layout wrapper — never required | **Molecules/Field** |
+| Export | Role | Storybook |
+|--------|------|-----------|
+| **Input** | Single-line text — pill shell, optional label/status | **Components/Forms/Input** |
+| **TextArea** | Multiline — same optional chrome as Input | **Components/Forms/TextArea** |
+| **Checkbox** | Boolean toggle — label row + validation | **Components/Forms/Checkbox** |
+| **CheckboxGroup** | Multi-select list — vertical / horizontal | **Components/Forms/CheckboxGroup** |
+| **Radio** | Single option — circle + label row | **Components/Forms/Radio** |
+| **RadioGroup** | Pick one of N — vertical / horizontal | **Components/Forms/RadioGroup** |
+| **Switch** | Instant on/off — pill track + thumb | **Components/Forms/Switch** |
+| **Select** | Pill trigger + floating listbox | **Components/Forms/Select** |
+| **Search** | Hero search — inset button in one shell | **Components/Forms/Search** |
+| **Dropdown** | Shared menu panel + three-slot rows | **Components/Overlays/Dropdown** |
+| **Field** | Label/layout wrapper — never required | **Components/Forms/Field** |
 
 ### Shared internals (not exported)
 
@@ -81,7 +81,7 @@ When \`label\` is omitted, **\`aria-label\` is required** (dev warn in Storybook
 
 **Anti-patterns:** \`Input type="select"\`, requiring **Field** for every labeled input, raw utility styling in apps — extend WMDS patterns instead.
 
-See **Foundation → Cluster** for \`sm\` / \`md\` / \`lg\` heights in header rows.
+See **Foundations → Cluster** for \`sm\` / \`md\` / \`lg\` heights in header rows.
         `.trim(),
       },
     },
@@ -220,7 +220,7 @@ export const SizeScale: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Input and Select both expose `sm` | `md` | `lg` from `inputShellStyles`. Pair `sm` with **Foundation → Cluster** in Card headers.",
+        story: "Input and Select both expose `sm` | `md` | `lg` from `inputShellStyles`. Pair `sm` with **Foundations → Cluster** in Card headers.",
       },
     },
   },

@@ -11,7 +11,7 @@ import {
 } from "../lib/typography";
 
 const meta = {
-  title: "Foundation/Typography",
+  title: "Foundations/Typography",
   tags: ["autodocs"],
   parameters: {
     docs: {

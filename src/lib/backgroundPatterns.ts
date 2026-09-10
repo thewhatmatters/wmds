@@ -1,6 +1,6 @@
 /**
  * Background pattern library — named textures for Card occupants, chart canvases, empty states.
- * CSS lives in src/theme/patterns.css; Storybook specimens in Foundation/Patterns.
+ * CSS lives in src/theme/patterns.css; Storybook specimens in Foundations/Background patterns.
  */
 
 /** Dot grid — 14px pitch, 1px dots at 8% / 12% primary mix (light / dark). */

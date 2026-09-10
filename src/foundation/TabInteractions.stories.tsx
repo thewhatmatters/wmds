@@ -4,8 +4,8 @@ import { expect, userEvent, waitFor, within } from "storybook/test";
 import { Tab } from "../components/organisms/Tab/Tab";
 
 const meta = {
-  title: "Foundation/Tab interactions",
-  tags: ["test", "!autodocs"],
+  title: "Internal/Interactions/Tab",
+  tags: ["test", "!dev", "!autodocs"],
   parameters: {
     docs: { disable: true },
     wmdsLayout: "padded",

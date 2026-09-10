@@ -8,7 +8,7 @@ const SAMPLE_PHOTO =
   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=256&h=256&q=80";
 
 const meta = {
-  title: "Atoms/Avatar",
+  title: "Components/Data display/Avatar",
   component: Avatar,
   tags: ["autodocs"],
   argTypes: {

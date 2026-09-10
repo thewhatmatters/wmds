@@ -38,7 +38,7 @@ Do **not** map series color to Badge variants or status roles.
 
 ### Foundation
 
-**Foundation → Charts** documents the categorical swatch grid and tier separation.
+**Foundations → Charts** documents the categorical swatch grid and tier separation.
 
 ## Consequences
 

@@ -15,7 +15,7 @@ import {
 } from "../lib/motion";
 
 const meta = {
-  title: "Foundation/Motion",
+  title: "Foundations/Motion",
   tags: ["autodocs"],
   parameters: {
     docs: {

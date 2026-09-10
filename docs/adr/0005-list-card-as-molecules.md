@@ -26,7 +26,7 @@ Brad Frost **organisms** are distinct page regions (header, product grid). **Mol
 | **List** | Organism | **Molecule** |
 | **Card** | Organism | **Molecule** |
 
-Implement under `src/components/molecules/{Name}/`. Storybook: **`Molecules/{Name}`**. Exported from `src/index.ts`.
+Implement under `src/components/molecules/{Name}/`. Storybook uses the functional category from **ADR-0026**. Exported from `src/index.ts`.
 
 ### Tier rule (WMDS)
 

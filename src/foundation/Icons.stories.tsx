@@ -20,7 +20,7 @@ const buttonIconScale = {
 } as const;
 
 const meta = {
-  title: "Foundation/Icons",
+  title: "Foundations/Icons",
   tags: ["autodocs"],
   parameters: {
     docs: {

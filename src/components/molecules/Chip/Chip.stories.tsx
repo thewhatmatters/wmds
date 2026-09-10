@@ -4,7 +4,7 @@ import { CalendarDays, Dog, Leaf, MapPin } from "lucide-react";
 import { Chip, ChipFilterGroup, chipSizes } from "./Chip";
 
 const meta = {
-  title: "Molecules/Chip",
+  title: "Components/Forms/Chip",
   component: Chip,
   tags: ["autodocs"],
   argTypes: {

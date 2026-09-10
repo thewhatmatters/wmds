@@ -83,6 +83,22 @@ export {
   type TextLinkProps,
 } from "./components/atoms/TextLink/TextLink";
 export {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipRoot,
+  TooltipTrigger,
+  tooltipAlignments,
+  tooltipSides,
+  type TooltipAlignment,
+  type TooltipContentProps,
+  type TooltipOpenChangeDetails,
+  type TooltipProps,
+  type TooltipProviderProps,
+  type TooltipSide,
+  type TooltipTriggerProps,
+} from "./components/atoms/Tooltip/Tooltip";
+export {
   Skeleton,
   skeletonRadii,
   type SkeletonLayoutClassName,

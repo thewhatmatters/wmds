@@ -17,6 +17,7 @@ const atoms = [
   "Switch",
   "TextArea",
   "TextLink",
+  "Tooltip",
 ] as const;
 
 const molecules = ["Accordion", "Card", "CheckboxGroup", "Chip", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "NavList", "PageHeader", "Pagination", "RadioGroup", "Search", "Select", "SegmentedControl", "Stat", "TaskRows"] as const;
@@ -35,7 +36,7 @@ export const packageManifest = {
     { name: "GRID_ON_CLASS", path: "./lib/gridOverlayUtils", reexport: "GRID_ON_CLASS" },
   ] as const,
 
-  /** Atomic tiers — Storybook title must match: Atoms/{Name}, Molecules/{Name}, Organisms/{Name}. */
+  /** Internal filesystem/import tiers; Storybook uses ADR-0026 functional categories. */
   atomicExports: { atoms, molecules, organisms },
 
   /** All planned component exports (flat). */
@@ -50,6 +51,7 @@ export const packageManifest = {
     "motion",
     "motion/react",
     "@visx/visx",
+    "@base-ui/react/tooltip",
     "lucide-react",
   ] as const,
 

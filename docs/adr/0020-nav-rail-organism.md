@@ -43,7 +43,7 @@ Ship **NavRail** as an **organism** under `src/components/organisms/NavRail/`.
 
 ## Consequences
 
-- Storybook: **Organisms/NavRail → Pattern — accent rail (glass)** + flat reference
+- Storybook: **Components/Navigation/NavRail → Pattern — accent rail (glass)** + flat reference
 - Exported from package manifest + `src/index.ts`
 
 ## References

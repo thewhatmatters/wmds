@@ -28,7 +28,7 @@ const categories = [
 ];
 
 const meta = {
-  title: "Foundation/Scroll fade",
+  title: "Foundations/Scroll fade",
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),
   parameters: {

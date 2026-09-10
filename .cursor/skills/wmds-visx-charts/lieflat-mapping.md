@@ -47,7 +47,7 @@
 | **G5** | Pictorial Bar | `{ years: [{ year: 2024, count: 1200, iconUnit: 100 }] }` | **Backlog P3** | `Chart.PictorialBar` | `@visx/shape` Bar + symbol repeat | — |
 | **G6** | Circular Graph (small) | `{ nodes: [{ id, label }], edges: [{ source, target }] }` ≤12 nodes | **Reference** | — | `@visx/network` | — |
 | **G7** | Tree LR | `{ name: "Platform", children: [{ name: "API", children: [...] }] }` | **Backlog P3** | App diagram or `Chart.Tree` | `@visx/hierarchy` | — |
-| **G8** | Rainfall Dual Area | `{ points: [{ date, spend, signups }] }` two series, causal | **Partial** | **Chart.Cartesian** multi-series | `@visx/shape` AreaClosed ×2 | **Organisms/Chart → Pattern — area (multi series + legend)** |
+| **G8** | Rainfall Dual Area | `{ points: [{ date, spend, signups }] }` two series, causal | **Partial** | **Chart.Cartesian** multi-series | `@visx/shape` AreaClosed ×2 | **Components/Data display/Chart → Pattern — area (multi series + legend)** |
 | **G9** | Scatter Morph | `{ items: [{ id, x, y, z }] }` same entities, 3 dims | **Reference** | Motion morph between views | `@visx/shape` Circle + Motion | — |
 | **G10** | Diverging Bar | `{ items: [{ label: "EMEA", delta: -12 }, { label: "APAC", delta: 8 }] }` | **Backlog P1** | `Chart.DivergingBar` | `@visx/shape` Bar, `scaleLinear` domain symmetric | — |
 | **G11** | Force Graph (small) | `{ nodes, links }` center + satellites ≤15 | **Reference** | — | `@visx/network` | — |
@@ -167,7 +167,7 @@ const data = buildOccupancyAreaSeries(30); // { date, occupied, available }[]
 | **M1** | US Choropleth | `{ states: [{ id: "CA", value: 1200 }] }` | **Out of scope v1** | App-level GeoJSON + ECharts/maplibre; not WMDS Chart organism |
 | **M2** | World Choropleth | `{ countries: [{ id: "US", value: 900 }] }` | **Out of scope v1** | Same |
 
-If product requires maps: new **Examples** tier, not `Organisms/Chart` export, unless ADR amends scope.
+If product requires maps: new **Examples** tier, not a `Chart` organism export, unless ADR amends scope.
 
 ---
 

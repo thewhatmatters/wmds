@@ -10,7 +10,7 @@ import { storyMetaDocsDefaults } from "../lib/storyCopySource";
 import { typographyClass } from "../lib/typography";
 
 const meta = {
-  title: "Foundation/Shape",
+  title: "Foundations/Shape",
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),
   parameters: {

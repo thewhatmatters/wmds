@@ -1,6 +1,6 @@
 import { Meta } from "@storybook/addon-docs/blocks";
 
-<Meta title="Introduction" />
+<Meta title="Start Here" />
 
 export function DocTable({ rows }) {
   return (
@@ -46,9 +46,9 @@ export function TokenTable({ rows }) {
   );
 }
 
-# WhatMatters Design System (WMDS)
+# Start Here
 
-WMDS is our Tailwind v4 theme and Storybook catalog. **Storybook is canonical** — tokens, motion, and components are specified here first; Paper is for mockups only.
+WMDS is the WhatMatters Tailwind v4 theme, component library, and Storybook catalog. **Storybook is canonical** — tokens, motion, components, and approved compositions are specified here first; Paper is for mockups only.
 
 ## Stack
 
@@ -60,9 +60,22 @@ WMDS is our Tailwind v4 theme and Storybook catalog. **Storybook is canonical** 
     ["src/theme/grid.css", "App grid spine — --grid-* , grid-page / band, overlay"],
     ["src/theme/sources.css", "Tailwind content manifest for Storybook + package CSS"],
     ["src/lib/motion.ts", "Motion adapter — reads Theme CSS vars"],
-    ["Storybook", "Source of truth: Foundation → Components → Examples"],
+    ["Storybook", "Source of truth: Foundations → Components → Patterns → Examples"],
   ]}
 />
+
+## Find what you need
+
+<DocTable
+  rows={[
+    ["Foundations", "Design-language primitives: grid, color, type, spacing, shape, motion, icons, and related tokens"],
+    ["Components", "Reusable exports grouped by purpose: Actions, Forms, Navigation, Feedback, Overlays, Data display, and Layout"],
+    ["Patterns", "Cross-component guidance for choosing and combining related controls"],
+    ["Examples", "Approved page and flow compositions; use Pattern story Show code for implementation handoff"],
+  ]}
+/>
+
+Component pages retain the same contract: **Usage → Anatomy → Best practices → Examples**. Use the category directory to find the component, then copy a named **Pattern — …** story when one matches your task.
 
 ## Dark mode
 
@@ -138,7 +151,7 @@ import { motionTransitionProp } from "@whatmatters/wmds";
 
 **Stay on CSS for:** single-property `:hover` / `:focus` changes (fast tier).
 
-See **Foundation → Motion** and **ADR-0008** for tier guidance.
+See **Foundations → Motion** and **ADR-0008** for tier guidance.
 
 ## Accessibility — reduced motion
 
@@ -146,9 +159,9 @@ Storybook wraps stories in `<MotionConfig reducedMotion="user">`. `global.css` a
 
 For bespoke cases, use `useReducedMotion()` from `motion/react`.
 
-## Atomic design
+## Internal component architecture
 
-WMDS follows [Brad Frost's atomic design](https://atomicdesign.bradfrost.com/) for component composition. **Dependency flows one way** — never import up-tier.
+WMDS uses [Brad Frost's atomic design](https://atomicdesign.bradfrost.com/) for filesystem placement and one-way composition. These tiers are an **internal implementation architecture**, not the Storybook navigation model.
 
 <DocTable
   rows={[
@@ -164,9 +177,9 @@ WMDS follows [Brad Frost's atomic design](https://atomicdesign.bradfrost.com/) f
 1. Atoms import only `lib/`, Theme, and peers (`lucide-react`, `motion`) — no other WMDS components.
 2. Molecules compose atoms and other molecules; organisms compose molecules + atoms.
 3. Examples compose lower tiers — never imported by components.
-4. Storybook titles: `Atoms/Button`, `Molecules/Card`, `Organisms/Table`, `Examples/…`.
+4. Storybook component titles use intent categories such as `Components/Actions/Button`; the atomic tier remains declared by the file path and `package.manifest.ts`.
 
-Planned catalog: **`src/package.manifest.ts`** → `atomicExports`. **`docs/adr/0002-atomic-design.md`**; Card: **ADR-0005**; inputs: **ADR-0006**.
+Package architecture: **`src/package.manifest.ts`** → `atomicExports`. See **ADR-0002** for import tiers and **ADR-0026** for the catalog taxonomy.
 
 ## Responsive (mobile-first)
 
@@ -183,7 +196,7 @@ Every atom, molecule, organism, and example must work on **mobile, tablet, and d
 
 **Rules:** min **44×44px** touch targets on atoms; no hover-only actions; tables scroll horizontally or reflow on mobile; review in Storybook at **Mobile / Tablet / Desktop** viewports (default canvas = Mobile). Breakpoints and `--grid-cols` are the same scale.
 
-Reference: **`src/lib/viewports.ts`**, **Foundation → Grid**, **`docs/adr/0003-responsive-mobile-first.md`**.
+Reference: **`src/lib/viewports.ts`**, **Foundations → Grid**, **`docs/adr/0003-responsive-mobile-first.md`**.
 
 ## Project layout
 
@@ -210,13 +223,13 @@ npm run build       # dist/theme.css + dist/styles.css
 
 ## Next reads
 
-- **Foundation → Grid** — breakpoint × column scale, `grid-page` + **g** overlay
-- **Foundation → Colors** — roles and interaction states
-- **Foundation → Typography** — roles and letter spacing
-- **Foundation → Spacing** — 4px `--spacing` (do not re-scale; 8px baseline)
-- **Foundation → Shadows** — hairline, raised, inset
-- **Foundation → Motion** — durations, easing, live demos
-- **Foundation → Icons** — Lucide usage and sizing
+- **Foundations → Grid** — breakpoint × column scale, `grid-page` + **g** overlay
+- **Foundations → Colors** — roles and interaction states
+- **Foundations → Typography** — roles and letter spacing
+- **Foundations → Spacing** — 4px `--spacing` (do not re-scale; 8px baseline)
+- **Foundations → Shadows** — hairline, raised, inset
+- **Foundations → Motion** — durations, easing, live demos
+- **Foundations → Icons** — Lucide usage and sizing
 - **`docs/adr/0003-responsive-mobile-first.md`** — responsive rules per tier
 - **`docs/adr/0004-pattern-first-not-utility-first.md`** — components + props, not utility soup
 - **`CONSUMING.md`** — wiring the theme in other apps

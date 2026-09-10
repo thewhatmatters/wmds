@@ -19,7 +19,7 @@ WMDS ≠ “use Tailwind however you want.” Tailwind powers **component intern
 ## Building WMDS (this repo)
 
 - Put class recipes in **`*Styles.ts`** / **`semanticVariants.ts`** — not scattered one-offs in stories.
-- Foundation stories document **tokens**; component stories document **patterns** (Usage → Anatomy → Best practices → Examples).
+- **Foundations** stories document tokens; **Components** stories document component contracts and named patterns (Usage → Anatomy → Best practices → Examples); cross-component guidance belongs under **Patterns**.
 - **Storybook Show code** — see **`.cursor/rules/wmds-storybook-copy-source.mdc`**. Off by default; **Pattern — …** stories opt in with **`storyCopySource()`**.
 - Do not document “compose with utilities” as the primary path for app engineers.
 - **Molecules compose atoms** — no raw `<button>`, hand-rolled icons, or semantic fills in molecule TSX. See **`.cursor/rules/wmds-atomic-composition.mdc`**. Run **`npm run validate:composition`** before finishing; **`compositionTrackedOpenGaps`** must stay empty.

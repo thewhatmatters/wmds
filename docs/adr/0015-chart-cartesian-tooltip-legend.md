@@ -122,7 +122,7 @@ Styles live in **`chartStyles.ts`** (`chartTooltip*`, `chartTooltipAnchorAboveCl
 
 Data shape: **`ChartCartesianPoint[]`** — `{ date: Date; [seriesKey: number] }`. Sample builder: **`buildOccupancyAreaSeries()`** in **`chartSampleData.ts`**.
 
-**Card composition (occupancy history):** **`bodyTerminal`** on **Card** (no Footer → 2px shell bottom); occupant = **`cardLayoutBodyOccupantPadYClasses`** + **`cardLayoutBodyOccupantWellClasses`** + **`cardLayoutBodyOccupantInsetXClasses`**. See **Molecules/Card** docs (inset well radius = shell 16px − 2px gutter = **14px**).
+**Card composition (occupancy history):** **`bodyTerminal`** on **Card** (no Footer → 2px shell bottom); occupant = **`cardLayoutBodyOccupantPadYClasses`** + **`cardLayoutBodyOccupantWellClasses`** + **`cardLayoutBodyOccupantInsetXClasses`**. See **Components/Layout/Card** docs (inset well radius = shell 16px − 2px gutter = **14px**).
 
 **Not wired yet:** **Card.Header** **Select** period state → **`chartBucketPeriodData`** (stories use static 30-day sample).
 
@@ -159,7 +159,7 @@ Axis ticks use **`chartFormatAxisDateLabel(date, period?)`**: compact month/day 
 - **`chartUiTokens.tooltipBg`** → **`--color-background-popover`**; frosted panel in **`chartTooltipPanelClasses`**.  
 - **`Chart.stories.tsx`** — Reference (tooltip/legend) + Pattern (area, occupancy KPI/history Card with **body-state** toolbar). **`chartCardBodyStateStory.ts`** — story-only arg helpers. **`Card.stories.tsx`** — **Example — body slot (occupancy history / KPI)** (no state toolbar).
 - **`compositionShellExceptions`** includes **`ChartCartesian.tsx`** (visx SVG), same tier as SegmentedBar.  
-- **Foundation → Form controls** catalog documents Input / Select / Dropdown cross-tier map (ADR-0006).
+- **Patterns → Form controls** catalog documents Input / Select / Dropdown cross-tier map (ADR-0006).
 
 ### Loading phases (shipped)
 

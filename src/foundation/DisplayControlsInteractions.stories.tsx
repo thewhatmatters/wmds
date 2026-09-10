@@ -7,8 +7,8 @@ import {
 } from "../components/molecules/DisplayControls/DisplayControls";
 
 const meta = {
-  title: "Foundation/Display controls interactions",
-  tags: ["test", "!autodocs"],
+  title: "Internal/Interactions/Display controls",
+  tags: ["test", "!dev", "!autodocs"],
   parameters: {
     docs: { disable: true },
     wmdsLayout: "centered",

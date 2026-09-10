@@ -22,7 +22,7 @@ Primary **Button** `md` (44px) remains the default action size — cluster scale
 | **md** | `--cluster-height-md` | 36px (9× spacing) |
 | **lg** | `--cluster-height-lg` | 44px (11× spacing) |
 
-Class recipes live in **`src/lib/clusterScale.ts`**. Storybook: **Foundation → Cluster**.
+Class recipes live in **`src/lib/clusterScale.ts`**. Storybook: **Foundations → Cluster**.
 
 ### Component size props (canonical pairing)
 
@@ -49,7 +49,7 @@ Cluster heights derive from **7 / 9 / 11 × `--spacing`** (4px base). **Componen
 
 - Card header clusters: **`Chip sm` + `IconButton xs`** share 28px; **`Chip md` + `IconButton sm`** share 36px
 - **Button `sm`** moves from 32px → **36px** (cluster md) — intentional alignment break for early catalog
-- New header/toolbar patterns must reference Foundation → Cluster pairing table
+- New header/toolbar patterns must reference Foundations → Cluster pairing table
 - Tab organism (when shipped) should use cluster scale for segment controls
 
 ## Related

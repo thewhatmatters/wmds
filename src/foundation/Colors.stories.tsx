@@ -34,7 +34,7 @@ const statusTokens = [
 ] as const;
 
 const meta = {
-  title: "Foundation/Colors",
+  title: "Foundations/Colors",
   tags: ["autodocs"],
   parameters: {
     docs: {

@@ -12,8 +12,8 @@ import { Panel } from "../components/organisms/Panel/Panel";
  * Portals render to `document.body`; queries use `within(document.body)` after open.
  */
 const meta = {
-  title: "Foundation/Overlay interactions",
-  tags: ["test", "!autodocs"],
+  title: "Internal/Interactions/Overlay",
+  tags: ["test", "!dev", "!autodocs"],
   parameters: {
     docs: { disable: true },
     wmdsLayout: "centered",

@@ -139,11 +139,12 @@ function CompositionAuditReportView({ report }: { report: CompositionAuditReport
 }
 
 const meta = {
-  title: "Foundation/Composition audit",
-  tags: ["autodocs"],
+  title: "Internal/Audits/Composition",
+  tags: ["test", "!dev", "!autodocs"],
   parameters: {
     wmdsLayout: "padded",
     docs: {
+      disable: true,
       description: {
         component: `
 ## Usage

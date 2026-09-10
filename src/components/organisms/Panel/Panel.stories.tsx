@@ -15,7 +15,7 @@ import { cn } from "../../../lib/cn";
 import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySource";
 
 const meta = {
-  title: "Organisms/Panel",
+  title: "Components/Overlays/Panel",
   component: Panel,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

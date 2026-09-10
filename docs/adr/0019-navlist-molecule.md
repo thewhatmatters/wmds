@@ -35,5 +35,5 @@ Settings-style secondary navigation (section overlines, icon + label + count, se
 
 ## References
 
-- **Molecules/NavList → Pattern — side nav (settings)**
+- **Components/Navigation/NavList → Pattern — side nav (settings)**
 - ADR-0018 (**PageHeader** band height), ADR-0011 (cluster), ADR-0002 (composition)

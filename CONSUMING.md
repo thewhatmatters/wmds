@@ -25,7 +25,7 @@ import "@whatmatters/wmds/styles.css";
 </span>
 ```
 
-Browse patterns in Storybook under **Atoms/**, **Molecules/**, and **Examples/** — copy the named **Pattern** story JSX and state wiring; do not re-style with utilities. Examples are not exported from the package.
+Browse Storybook by intent under **Components/** and **Patterns/**, then use **Examples/** for approved flows — copy the named **Pattern** story JSX and state wiring; do not re-style with utilities. Examples are not exported from the package.
 
 Page-level Example canvases include a Storybook-only grid inspector while designs are being tuned. The **Show code** source freezes the approved `--grid-max` / `--grid-column-gap` values and omits that development panel, so the copied result contains only package exports and product layout.
 
@@ -49,7 +49,7 @@ For a list or rail that overflows its parent, apply **`scroll-fade-y`** or **`sc
 </div>
 ```
 
-The fade tracks the scroll boundary without JavaScript. See **Foundation → Scroll fade** for one-edge, RTL, and size controls.
+The fade tracks the scroll boundary without JavaScript. See **Foundations → Scroll fade** for one-edge, RTL, and size controls.
 
 ## Requirements
 
@@ -137,7 +137,7 @@ CSS-only (no React overlay): add `class="grid-on"` on `<html>` and an empty `<di
 
 - Press **g** (ignored in inputs). Optional `visible` / `visibleByDefault` / `onVisibleChange`.
 - Mount in Storybook and local demos. Do **not** lock Pitchkit chrome to the overlay.
-- Storybook: **Foundation → Grid**.
+- Storybook: **Foundations → Grid**.
 
 Pattern-first: apps **copy this wrap** from WMDS. No Pitchkit `Grid` / `Page` molecule.
 
@@ -167,16 +167,16 @@ import {
 
 | Component | Key props | Storybook |
 |-----------|-----------|-----------|
-| `Button` | `role`, `layout` (`pill` \| `row`), `size`, `status`, `icon`, `count` | Atoms/Button — copy a **Pattern** story (`row` for flat detail lines) |
-| `IconButton` | `icon`, `aria-label`, `role`, `size`, `fab`, `loading`, `title` | Atoms/IconButton — copy a **Pattern** story |
-| `Chip` | `size`, `value`, `selected`, `onRemove`, `icon`, `count`, `readOnly` | Molecules/Chip — use `ChipFilterGroup` for multi-select filters |
-| `Input` | `label`, `description`, `status`, `message`, `loading`, `endBadge`, `icon`, `size` | Atoms/Input — pill shell; Required via `endBadge={<Badge>…</Badge>}` |
-| `Search` | `size`, `placeholder`, `onSubmit` | Molecules/Search — inline input + button row |
-| `Card` | `variant`, `shape`, `padding` | Molecules/Card — `Card.Header` (`start` | `end`), **`Card.Body` slot** (no default fill), `Card.Footer` |
-| `Accordion` | `variant`, `Accordion.Item` `leading` / `label` / `trailing` / `open` | Molecules/Accordion — FAQ, settings sections |
-| `TaskRows` | `variant`, `status`, `meta`, `detailsLayout`, `TaskRows.Detail` | Molecules/TaskRows — **Pattern — status rows**, **capsules**, **action details** (`Detail variant="button"`), **tag chips** (`Chip readOnly size="sm"`), detail lines (`Detail` + `onPress` → `Button layout="row"`) |
-| `Badge` | `variant`, `size`, `emphasis`, `count`, `icon`, `iconOnly` | Atoms/Badge — copy a **Pattern** story |
-| `Status` | `variant`, `tone`, `label`, `besideLabel`, `pulsing`, `active`, `step` | Atoms/Status — `variant="ring"` or `variant="dot"` |
+| `Button` | `role`, `layout` (`pill` \| `row`), `size`, `status`, `icon`, `count` | Components/Actions/Button — copy a **Pattern** story (`row` for flat detail lines) |
+| `IconButton` | `icon`, `aria-label`, `role`, `size`, `fab`, `loading`, `title` | Components/Actions/IconButton — copy a **Pattern** story |
+| `Chip` | `size`, `value`, `selected`, `onRemove`, `icon`, `count`, `readOnly` | Components/Forms/Chip — use `ChipFilterGroup` for multi-select filters |
+| `Input` | `label`, `description`, `status`, `message`, `loading`, `endBadge`, `icon`, `size` | Components/Forms/Input — pill shell; Required via `endBadge={<Badge>…</Badge>}` |
+| `Search` | `size`, `placeholder`, `onSubmit` | Components/Forms/Search — inline input + button row |
+| `Card` | `variant`, `shape`, `padding` | Components/Layout/Card — `Card.Header` (`start` | `end`), **`Card.Body` slot** (no default fill), `Card.Footer` |
+| `Accordion` | `variant`, `Accordion.Item` `leading` / `label` / `trailing` / `open` | Components/Layout/Accordion — FAQ, settings sections |
+| `TaskRows` | `variant`, `status`, `meta`, `detailsLayout`, `TaskRows.Detail` | Components/Data display/TaskRows — **Pattern — status rows**, **capsules**, **action details** (`Detail variant="button"`), **tag chips** (`Chip readOnly size="sm"`), detail lines (`Detail` + `onPress` → `Button layout="row"`) |
+| `Badge` | `variant`, `size`, `emphasis`, `count`, `icon`, `iconOnly` | Components/Feedback/Badge — copy a **Pattern** story |
+| `Status` | `variant`, `tone`, `label`, `besideLabel`, `pulsing`, `active`, `step` | Components/Feedback/Status — `variant="ring"` or `variant="dot"` |
 
 Copy flow patterns from **Examples/** in Storybook when they ship. See **`src/package.manifest.ts`** for the export contract.
 
@@ -190,7 +190,7 @@ Inside expanded **TaskRows** (and other dense rows), use the **sm / xs** cluster
 | Tags / attributes | `Chip readOnly size="sm"` in `detailsLayout="chips"` |
 | Label / meta line with tap action | `TaskRows.Detail` + `onPress` → **Button** `layout="row"` `role="ghost"` |
 
-Card headers and filter rails use **sm / md / lg** cluster pairing — see **Foundation → Cluster** and **ADR-0011**.
+Card headers and filter rails use **sm / md / lg** cluster pairing — see **Foundations → Cluster** and **ADR-0011**.
 
 ## Icons
 

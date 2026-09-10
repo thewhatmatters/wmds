@@ -8,7 +8,7 @@ import { dialogFooterActionsClasses } from "./dialogStyles";
 import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySource";
 
 const meta = {
-  title: "Organisms/Dialog",
+  title: "Components/Overlays/Dialog",
   component: Dialog,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

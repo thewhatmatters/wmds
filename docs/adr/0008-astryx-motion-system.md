@@ -63,7 +63,7 @@ Single token: `--ease-standard: cubic-bezier(0.24, 1, 0.4, 1)`. Remove `ease-out
 
 - Springs in examples may be replaced with medium-tier tweens where layout is the primary effect.
 - New components pick a tier by intent, not by guessing milliseconds.
-- Foundation → Motion documents tiers and Astryx principles.
+- Foundations → Motion documents tiers and Astryx principles.
 
 ## Related
 

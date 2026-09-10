@@ -8,7 +8,7 @@ function RadioSpecimen({ children }: { children: ReactNode }) {
 }
 
 const meta = {
-  title: "Atoms/Radio",
+  title: "Components/Forms/Radio",
   component: Radio,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

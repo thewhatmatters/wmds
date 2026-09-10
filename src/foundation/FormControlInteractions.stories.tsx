@@ -12,8 +12,8 @@ import { SegmentedControl } from "../components/molecules/SegmentedControl/Segme
  * Tagged `test` so CI only executes these stories (not the full catalog).
  */
 const meta = {
-  title: "Foundation/Form control interactions",
-  tags: ["test", "!autodocs"],
+  title: "Internal/Interactions/Form controls",
+  tags: ["test", "!dev", "!autodocs"],
   parameters: {
     docs: { disable: true },
     wmdsLayout: "centered",

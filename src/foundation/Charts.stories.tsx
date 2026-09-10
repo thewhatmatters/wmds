@@ -11,7 +11,7 @@ const categoricalSwatches = Array.from({ length: chartCategoricalCount }, (_, in
 });
 
 const meta = {
-  title: "Foundation/Charts",
+  title: "Foundations/Charts",
   tags: ["autodocs"],
   parameters: {
     docs: {
@@ -21,7 +21,7 @@ const meta = {
           "**Semantic** tones (`ChartTone`) encode meaning — success, error, brand. " +
           "**Threshold / RAG** fills (`fill=\"semantic\"` on **Chart.SegmentedBar**) — red → orange → yellow → green via `--color-chart-rag-*`. " +
           "**Categorical** tokens (`--color-chart-categorical-*`) identify series with **no implied meaning** — resolve via **`chartSeriesColor(index)`**. " +
-          "See **ADR-0013** and **Organisms/Chart** — **ADR-0015** tooltip/legend reference stories.",
+          "See **ADR-0013** and **Components/Data display/Chart** — **ADR-0015** tooltip/legend reference stories.",
       },
     },
   },

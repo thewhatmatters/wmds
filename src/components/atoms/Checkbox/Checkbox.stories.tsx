@@ -8,7 +8,7 @@ function CheckboxSpecimen({ children }: { children: ReactNode }) {
 }
 
 const meta = {
-  title: "Atoms/Checkbox",
+  title: "Components/Forms/Checkbox",
   component: Checkbox,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

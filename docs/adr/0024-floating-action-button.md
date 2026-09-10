@@ -34,7 +34,7 @@ Ship exported **FloatingActionButton** as a molecule.
 ## Consequences
 
 - The action limit is intentional; larger action sets need a different pattern
-- Storybook contract lives at **Molecules/FloatingActionButton**
+- Storybook contract lives at **Components/Actions/FloatingActionButton**
 
 ## References
 

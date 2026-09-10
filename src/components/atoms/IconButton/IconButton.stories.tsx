@@ -5,7 +5,7 @@ import { IconButton, buttonRoles } from "./IconButton";
 import { iconButtonToolbarGroupClasses } from "./iconButtonStyles";
 
 const meta = {
-  title: "Atoms/IconButton",
+  title: "Components/Actions/IconButton",
   component: IconButton,
   tags: ["autodocs"],
   argTypes: {
@@ -42,7 +42,7 @@ const meta = {
 | **Async** | \`loading\` + \`aria-label\` |
 | **Inset dismiss** | \`inset\` + \`size="sm" \| "md" \| "lg"\` — removable Chip trailing × |
 
-Circular icon-only hit target; \`md\` = cluster lg (44×44px, ADR-0003). \`xs\` / \`sm\` / \`md\` map to cluster sm / md / lg — see **Foundation → Cluster** (ADR-0011).
+Circular icon-only hit target; \`md\` = cluster lg (44×44px, ADR-0003). \`xs\` / \`sm\` / \`md\` map to cluster sm / md / lg — see **Foundations → Cluster** (ADR-0011).
 
 ## Best practices
 

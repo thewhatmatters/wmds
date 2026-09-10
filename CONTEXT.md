@@ -16,13 +16,13 @@ Storybook token specimens only (`src/foundation/*.stories.tsx`, `Introduction.md
 Shared implementation behind component seams — `cn`, `motion`, `collapse.css`, `segmentedControl`, `shadows`, `typography`, `chartTheme`, `tableLayout`, `GridOverlay`. Exported sparingly from `src/index.ts`; see `src/package.manifest.ts`.
 
 **Atoms** (`src/components/atoms/`):
-Smallest UI units — Button, Input, Badge, etc. Import only `lib/` + Theme. Storybook: **`Atoms/{Name}`**. Exported.
+Smallest UI units — Button, Input, Badge, etc. Import only `lib/` + Theme. Storybook: **`Components/{purpose}/{Name}`**. Exported.
 
 **Molecules** (`src/components/molecules/`):
-Modular composed units — Field, Card, Chip, Search, etc. May compose atoms and other molecules. Storybook: **`Molecules/{Name}`**. Exported.
+Modular composed units — Field, Card, Chip, Search, etc. May compose atoms and other molecules. Storybook: **`Components/{purpose}/{Name}`**. Exported.
 
 **Organisms** (`src/components/organisms/`):
-Section-scale UI — Table, Tab, MoreMenu, etc. Storybook: **`Organisms/{Name}`**. Exported.
+Section-scale UI — Table, Tab, MoreMenu, etc. Storybook: **`Components/{purpose}/{Name}`**. Exported.
 
 **Examples** (`src/examples/`):
 Templates and pages — Storybook-only compositions. Storybook: **`Examples/{Name}`**. Never exported.
@@ -31,10 +31,10 @@ Templates and pages — Storybook-only compositions. Storybook: **`Examples/{Nam
 Components and Storybook Examples are the consumer API — not ad-hoc utility composition. Tailwind powers component internals and page layout only. See **`docs/adr/0004-pattern-first-not-utility-first.md`**.
 
 **Agents (this repo):**
-Read **`AGENTS.md`** and **`.cursor/rules/`** before authoring. Storybook **Pattern** stories are the contract. Molecules must compose atoms — **`npm run validate:composition`** (see **Foundation → Composition audit**). **`openGaps`** and **`compositionTrackedOpenGaps`** must stay empty.
+Read **`AGENTS.md`** and **`.cursor/rules/`** before authoring. Storybook **Pattern** stories are the contract. Molecules must compose atoms — **`npm run validate:composition`** (mirrored by the hidden **Internal/Audits/Composition** fixture). **`openGaps`** and **`compositionTrackedOpenGaps`** must stay empty.
 
 **Responsive:**
-Mobile-first by default — unprefixed Tailwind = mobile; scale with `sm:` / `md:` / `lg:`. Grid columns step on that same scale (4 / 8 / 12). Every component must work on mobile, tablet, and desktop. See **`docs/adr/0003-responsive-mobile-first.md`** and **Foundation → Grid**.
+Mobile-first by default — unprefixed Tailwind = mobile; scale with `sm:` / `md:` / `lg:`. Grid columns step on that same scale (4 / 8 / 12). Every component must work on mobile, tablet, and desktop. See **`docs/adr/0003-responsive-mobile-first.md`** and **Foundations → Grid**.
 
 ## Dark mode
 

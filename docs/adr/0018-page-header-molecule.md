@@ -44,5 +44,5 @@ Export **`pageHeaderAppBandHeightClasses`** for layouts that must align adjacent
 
 ## References
 
-- **Molecules/PageHeader** — Pattern stories (app, page, toolbar)
+- **Components/Layout/PageHeader** — Pattern stories (app, page, toolbar)
 - ADR-0011 (cluster pairing), ADR-0004 (pattern-first)

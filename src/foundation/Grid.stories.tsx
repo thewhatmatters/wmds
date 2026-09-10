@@ -12,7 +12,7 @@ import {
 } from "../lib/viewports";
 
 const meta = {
-  title: "Foundation/Grid",
+  title: "Foundations/Grid",
   tags: ["autodocs"],
   parameters: {
     wmdsLayout: "padded",

@@ -15,7 +15,7 @@ const settingsTabs = [
 ];
 
 const meta = {
-  title: "Organisms/Tab",
+  title: "Components/Navigation/Tab",
   component: Tab.Group,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

@@ -8,7 +8,7 @@ function SwitchSpecimen({ children }: { children: ReactNode }) {
 }
 
 const meta = {
-  title: "Atoms/Switch",
+  title: "Components/Forms/Switch",
   component: Switch,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

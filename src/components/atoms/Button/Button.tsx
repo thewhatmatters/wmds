@@ -1,4 +1,9 @@
-import type { ReactElement, ReactNode } from "react";
+import {
+  forwardRef,
+  type ButtonHTMLAttributes,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 import { cn } from "../../../lib/cn";
 import { ButtonBadge } from "./ButtonBadge";
 import { ButtonIcon } from "./ButtonIcon";
@@ -26,7 +31,11 @@ export { defaultStatusLabels, getNextButtonStatus } from "./buttonStatusStyles";
 /** Layout-only — not for colors, borders, or typography overrides. */
 export type ButtonLayoutClassName = string;
 
-export interface ButtonProps {
+export interface ButtonProps
+  extends Omit<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    "children" | "className" | "role" | "size"
+  > {
   /** Button label. */
   children: ReactNode;
   /** Action role — primary CTA, secondary, ghost, or destructive. Default: `primary`. */
@@ -81,33 +90,36 @@ function assertActionPattern(
   }
 }
 
-export function Button({
-  children,
-  role = "primary",
-  layout = "pill",
-  size = "md",
-  disabled,
-  type = "button",
-  status,
-  statusLabels,
-  disableOnError,
-  icon,
-  count,
-  selected = false,
-  className,
-  onClick,
-  "aria-label": ariaLabel,
-  "aria-pressed": ariaPressed,
-  "aria-keyshortcuts": ariaKeyShortcuts,
-  id,
-  name,
-  form,
-}: ButtonProps) {
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button({
+    children,
+    role = "primary",
+    layout = "pill",
+    size = "md",
+    disabled,
+    type = "button",
+    status,
+    statusLabels,
+    disableOnError,
+    icon,
+    count,
+    selected = false,
+    className,
+    onClick,
+    "aria-label": ariaLabel,
+    "aria-pressed": ariaPressed,
+    "aria-keyshortcuts": ariaKeyShortcuts,
+    id,
+    name,
+    form,
+    ...buttonProps
+  }, ref) {
   assertActionPattern({ status, icon, count, layout });
 
   if (status != null) {
     return (
       <ButtonStatusButton
+        {...buttonProps}
+        ref={ref}
         status={status}
         role={role}
         size={size}
@@ -132,6 +144,8 @@ export function Button({
   if (layout === "row") {
     return (
       <button
+        {...buttonProps}
+        ref={ref}
         type={type}
         disabled={disabled}
         onClick={onClick}
@@ -153,6 +167,8 @@ export function Button({
   if (layout === "nav") {
     return (
       <button
+        {...buttonProps}
+        ref={ref}
         type={type}
         disabled={disabled}
         onClick={onClick}
@@ -179,6 +195,8 @@ export function Button({
 
   return (
     <button
+      {...buttonProps}
+      ref={ref}
       type={type}
       disabled={disabled}
       onClick={onClick}
@@ -204,4 +222,4 @@ export function Button({
       {count != null ? <ButtonBadge value={count} /> : null}
     </button>
   );
-}
+});

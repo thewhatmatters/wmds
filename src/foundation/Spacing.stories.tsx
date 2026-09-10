@@ -20,13 +20,13 @@ const radii: Array<{ step: string; className: string }> = [
 ];
 
 const meta = {
-  title: "Foundation/Spacing",
+  title: "Foundations/Spacing",
   tags: ["autodocs"],
   parameters: {
     docs: {
       description: {
         component:
-          "Tailwind spacing scale (`--spacing: 0.25rem` / 4px base — **do not re-scale**). Even multiples = 8px grid baseline (`--grid-baseline`). Use **`p-*`**, **`gap-*`**, **`m-*`** in components; page spine is **Foundation → Grid**.",
+          "Tailwind spacing scale (`--spacing: 0.25rem` / 4px base — **do not re-scale**). Even multiples = 8px grid baseline (`--grid-baseline`). Use **`p-*`**, **`gap-*`**, **`m-*`** in components; page spine is **Foundations → Grid**.",
       },
     },
   },

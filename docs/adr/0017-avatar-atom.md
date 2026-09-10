@@ -32,7 +32,7 @@ Helper: **`avatarSizeForCluster(tier)`** maps cluster sm/md/lg → avatar sm/md/
 
 ### Documentation
 
-Storybook **Atoms/Avatar** is the product contract — Usage, Anatomy, Best practices, and **For agents building UIs**. No external design-system references in consumer-facing docs.
+Storybook **Components/Data display/Avatar** is the product contract — Usage, Anatomy, Best practices, and **For agents building UIs**. No external design-system references in consumer-facing docs.
 
 ### Non-goals (v1)
 

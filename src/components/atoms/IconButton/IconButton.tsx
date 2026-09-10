@@ -1,4 +1,4 @@
-import type { ReactElement } from "react";
+import { forwardRef, type ButtonHTMLAttributes, type ReactElement } from "react";
 import { cn } from "../../../lib/cn";
 import { ButtonIcon } from "../Button/ButtonIcon";
 import { ButtonSpinner } from "../Button/ButtonSpinner";
@@ -26,7 +26,11 @@ export type IconButtonInsetSize = "sm" | "md" | "lg";
 /** Layout-only — not for colors, borders, or typography overrides. */
 export type IconButtonLayoutClassName = string;
 
-export interface IconButtonProps {
+export interface IconButtonProps
+  extends Omit<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    "aria-label" | "children" | "className" | "role" | "size" | "title"
+  > {
   /** Lucide icon — `import { … } from "lucide-react"`. */
   icon: ReactElement;
   /** Required — specific action name for screen readers (e.g. "Delete conversation"). */
@@ -67,28 +71,29 @@ function assertIconButtonPattern(props: Pick<IconButtonProps, "fab" | "role">) {
  * Icon-only action control — circular hit target; **`aria-label` required**.
  * Use when space is tight and the icon is universally understood; otherwise use `Button` with a label.
  */
-export function IconButton({
-  icon,
-  "aria-label": ariaLabel,
-  role: roleProp,
-  size = "md",
-  inset = false,
-  title,
-  fab = false,
-  loading = false,
-  disabled,
-  type = "button",
-  className,
-  onClick,
-  onKeyDown,
-  "aria-current": ariaCurrent,
-  "aria-haspopup": ariaHasPopup,
-  "aria-expanded": ariaExpanded,
-  "aria-controls": ariaControls,
-  id,
-  name,
-  form,
-}: IconButtonProps) {
+export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(function IconButton({
+    icon,
+    "aria-label": ariaLabel,
+    role: roleProp,
+    size = "md",
+    inset = false,
+    title,
+    fab = false,
+    loading = false,
+    disabled,
+    type = "button",
+    className,
+    onClick,
+    onKeyDown,
+    "aria-current": ariaCurrent,
+    "aria-haspopup": ariaHasPopup,
+    "aria-expanded": ariaExpanded,
+    "aria-controls": ariaControls,
+    id,
+    name,
+    form,
+    ...buttonProps
+  }, ref) {
   assertIconButtonPattern({ fab, role: roleProp });
 
   const role = fab ? "primary" : (roleProp ?? "ghost");
@@ -101,6 +106,8 @@ export function IconButton({
 
   return (
     <button
+      {...buttonProps}
+      ref={ref}
       type={type}
       disabled={isDisabled}
       aria-busy={loading || undefined}
@@ -147,4 +154,4 @@ export function IconButton({
       )}
     </button>
   );
-}
+});

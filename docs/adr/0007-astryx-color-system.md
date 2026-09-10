@@ -67,7 +67,7 @@ Use solid + muted pairs — **no Tailwind `/10` opacity on semantic colors**:
 ## Consequences
 
 - Components reference semantic utilities in `*Styles.ts` — not raw hex or opacity hacks.
-- Foundation → Colors documents the full ladder and status-muted specimens.
+- Foundations → Colors documents the full ladder and status-muted specimens.
 - New semantic roles require ADR update + Foundation story before landing in `colors.css`.
 
 ## References

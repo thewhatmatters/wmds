@@ -57,7 +57,7 @@ Shared internals live in **`src/lib/dialogOverlay.ts`** (focus trap, scroll lock
 
 ### Interaction tests
 
-**`Foundation/Overlay interactions`** — Playwright via Storybook Vitest (`npm run test:interactions`):
+**`Internal/Interactions/Overlay`** (hidden with `!dev`) — Playwright via Storybook Vitest (`npm run test:interactions`):
 
 - **Dialog** — open, accessible name, close via **IconButton**
 - **AlertDialog** — cancel vs confirm paths; blocking (`dismissOnBackdrop={false}`)

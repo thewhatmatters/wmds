@@ -9,7 +9,7 @@ import { Toast, Toaster, toast } from "./Toast";
 import { toastPositions, type ToastPosition } from "./toastStyles";
 
 const meta = {
-  title: "Organisms/Toast",
+  title: "Components/Feedback/Toast",
   component: Toast,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

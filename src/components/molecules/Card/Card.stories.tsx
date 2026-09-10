@@ -75,7 +75,7 @@ function OccupancyPeriodSelect({
 }
 
 const meta = {
-  title: "Molecules/Card",
+  title: "Components/Layout/Card",
   component: Card,
   tags: ["autodocs"],
   argTypes: {
@@ -289,7 +289,7 @@ export const HeaderSlots: Story = {
     docs: {
       description: {
         story:
-          "**Header** is two horizontal slots. `start` and `end` take any cluster — title + subtitle, **SegmentedControl** view switcher, **MoreMenu** kebab, Badge. **SegmentedControl** / filter **Chip** at **`sm`** pair with **MoreMenu** / **IconButton** **`xs`** (cluster sm, 28px) — see **Foundation → Cluster**.",
+          "**Header** is two horizontal slots. `start` and `end` take any cluster — title + subtitle, **SegmentedControl** view switcher, **MoreMenu** kebab, Badge. **SegmentedControl** / filter **Chip** at **`sm`** pair with **MoreMenu** / **IconButton** **`xs`** (cluster sm, 28px) — see **Foundations → Cluster**.",
       },
     },
   },
@@ -566,7 +566,7 @@ export const BodySlotOccupancyKpiDotGridWell: Story = {
     docs: {
       description: {
         story:
-          "Occupancy KPI on **`cardLayoutBodyOccupantDotGridWellClasses`** — inset well with **Foundation → Patterns → Dot grid** texture (`backgroundPatternDotGridClasses`). Same stack spacing as the solid inset well.",
+          "Occupancy KPI on **`cardLayoutBodyOccupantDotGridWellClasses`** — inset well with **Foundations → Background patterns → Dot grid** texture (`backgroundPatternDotGridClasses`). Same stack spacing as the solid inset well.",
       },
     },
   },

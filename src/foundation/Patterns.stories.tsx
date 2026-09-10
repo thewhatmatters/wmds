@@ -6,7 +6,7 @@ import {
 } from "../lib/backgroundPatterns";
 
 const meta = {
-  title: "Foundation/Patterns",
+  title: "Foundations/Background patterns",
   tags: ["autodocs"],
   parameters: {
     docs: {

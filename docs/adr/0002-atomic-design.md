@@ -5,18 +5,18 @@
 
 ## Context
 
-WMDS is rebuilding components from Foundation up. [Brad Frost's atomic design](https://atomicdesign.bradfrost.com/) gives a composition hierarchy: atoms → molecules → organisms → templates/pages. We need explicit tiers before the first component lands so Storybook, exports, and import rules stay consistent.
+WMDS is rebuilding components from Foundation up. [Brad Frost's atomic design](https://atomicdesign.bradfrost.com/) gives a composition hierarchy: atoms → molecules → organisms → templates/pages. We need explicit tiers before the first component lands so filesystem placement, exports, and import rules stay consistent.
 
 ## Decision
 
 ### Tier folders
 
-| Tier | Path | Package export | Storybook title |
-|------|------|----------------|-----------------|
-| Atoms | `src/components/atoms/{Name}/` | Yes | `Atoms/{Name}` |
-| Molecules | `src/components/molecules/{Name}/` | Yes | `Molecules/{Name}` |
-| Organisms | `src/components/organisms/{Name}/` | Yes | `Organisms/{Name}` |
-| Templates / pages | `src/examples/{Name}/` | No | `Examples/{Name}` |
+| Tier | Path | Package export |
+|------|------|----------------|
+| Atoms | `src/components/atoms/{Name}/` | Yes |
+| Molecules | `src/components/molecules/{Name}/` | Yes |
+| Organisms | `src/components/organisms/{Name}/` | Yes |
+| Templates / pages | `src/examples/{Name}/` | No |
 
 ### Dependency rules
 
@@ -39,7 +39,7 @@ Reclassify only via ADR update — don't bikeshed per PR. **Card** is a molecule
 
 ### Storybook sidebar
 
-`Introduction → Foundation → Atoms → Molecules → Organisms → Examples`. Foundation is designed order (Grid → Colors → Typography → Spacing → Shadows → Motion → Icons). Other tiers stay alphabetical.
+Superseded on **2026-09-10** by **ADR-0026**. Storybook now uses an intent-based public taxonomy (`Start Here → Foundations → Components → Patterns → Examples`) while this ADR continues to govern filesystem placement, package tiers, and one-way imports.
 
 ### File convention per component
 
@@ -54,7 +54,7 @@ src/components/{tier}/{Name}/
 
 ## Consequences
 
-- New components must declare tier in `package.manifest.ts` and use matching Storybook title prefix
+- New components must declare their atomic tier in `package.manifest.ts`; their Storybook title uses the functional category defined by ADR-0026
 - Flat `src/components/{Name}/` is deprecated — do not add new flat paths
 - Examples remain Storybook-only; they map to templates/pages in atomic vocabulary
 
@@ -64,3 +64,4 @@ src/components/{tier}/{Name}/
 - ADR-0003 — responsive, mobile-first rules per tier
 - ADR-0005 — List and Card reclassified as molecules
 - ADR-0006 — Input architecture (optional labels, individual components)
+- ADR-0026 — intent-based Storybook catalog taxonomy

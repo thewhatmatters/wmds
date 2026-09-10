@@ -47,4 +47,4 @@ Header **Select** (period) scopes the **hero KPI and trend**, not the tick count
 - ADR-0012 (visx Chart organism)
 - ADR-0013 (chart color tiers)
 - `src/lib/chartTheme.ts` — `resolveCapacityBarLayout`, `chartSegmentTickSpec`
-- `Organisms/Chart` — Pattern — occupancy KPI in Card
+- `Components/Data display/Chart` — Pattern — occupancy KPI in Card

@@ -7,7 +7,7 @@ import { typographyClass } from "../../../lib/typography";
 import { Accordion, accordionVariants } from "./Accordion";
 
 const meta = {
-  title: "Molecules/Accordion",
+  title: "Components/Layout/Accordion",
   component: Accordion,
   tags: ["autodocs"],
   argTypes: {

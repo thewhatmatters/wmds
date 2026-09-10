@@ -15,7 +15,7 @@ const footerItems = [
 ];
 
 const meta = {
-  title: "Organisms/NavRail",
+  title: "Components/Navigation/NavRail",
   component: NavRail,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

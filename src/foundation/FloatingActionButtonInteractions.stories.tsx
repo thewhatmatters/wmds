@@ -5,8 +5,8 @@ import { expect, userEvent, waitFor } from "storybook/test";
 import { FloatingActionButton } from "../components/molecules/FloatingActionButton/FloatingActionButton";
 
 const meta = {
-  title: "Foundation/Floating action button interactions",
-  tags: ["test", "!autodocs"],
+  title: "Internal/Interactions/Floating action button",
+  tags: ["test", "!dev", "!autodocs"],
   parameters: {
     docs: { disable: true },
     wmdsLayout: "centered",

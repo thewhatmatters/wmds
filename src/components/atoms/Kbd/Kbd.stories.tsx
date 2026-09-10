@@ -5,7 +5,7 @@ import { typographyClass } from "../../../lib/typography";
 import { Kbd, kbdSizes } from "./Kbd";
 
 const meta = {
-  title: "Atoms/Kbd",
+  title: "Components/Data display/Kbd",
   component: Kbd,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

@@ -8,8 +8,8 @@ import {
 } from "../components/organisms/Toast/Toast";
 
 const meta = {
-  title: "Foundation/Toast interactions",
-  tags: ["test", "!autodocs"],
+  title: "Internal/Interactions/Toast",
+  tags: ["test", "!dev", "!autodocs"],
   parameters: {
     docs: { disable: true },
     wmdsLayout: "centered",

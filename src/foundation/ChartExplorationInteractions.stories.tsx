@@ -11,8 +11,8 @@ import {
 } from "../examples/ChartExplorations/chartExplorationsData";
 
 const meta = {
-  title: "Foundation/Chart exploration interactions",
-  tags: ["test", "!autodocs"],
+  title: "Internal/Interactions/Chart exploration",
+  tags: ["test", "!dev", "!autodocs"],
   parameters: {
     docs: { disable: true },
   },
