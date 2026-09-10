@@ -41,6 +41,16 @@ Use Tailwind in your app for **page layout** and spacing **between** WMDS compon
 
 New visuals require a WMDS component or Example pattern — see **`docs/adr/0004-pattern-first-not-utility-first.md`**.
 
+For a list or rail that overflows its parent, apply **`scroll-fade-y`** or **`scroll-fade-x`** to the scrolling element. Keep the parent surface and border on a wrapper so the mask only dissolves content:
+
+```tsx
+<div className="overflow-hidden rounded-lg border border-border bg-card">
+  <ul className="scroll-fade-y max-h-64 overflow-y-auto">…</ul>
+</div>
+```
+
+The fade tracks the scroll boundary without JavaScript. See **Foundation → Scroll fade** for one-edge, RTL, and size controls.
+
 ## Requirements
 
 - **React** 18 or 19

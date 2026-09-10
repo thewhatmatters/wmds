@@ -22,6 +22,7 @@
     "./stateColors.css": "./dist/stateColors.css",
     "./grid.css": "./dist/grid.css",
     "./shape.css": "./dist/shape.css",
+    "./scrollFade.css": "./dist/scrollFade.css",
     "./package.json": "./package.json"
   },
   "sideEffects": [

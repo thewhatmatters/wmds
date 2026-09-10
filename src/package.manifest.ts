@@ -70,6 +70,8 @@ export const packageManifest = {
     "--cluster-height-sm",
     "--cluster-height-md",
     "--cluster-height-lg",
+    "scroll-fade-y",
+    "scroll-fade-x",
   ] as const,
 } as const;
 

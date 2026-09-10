@@ -13,6 +13,7 @@
 @import "./cluster.css";
 @import "./shape.css";
 @import "./patterns.css";
+@import "./scrollFade.css";
 @import "./sources.css";
 
 @theme inline {
