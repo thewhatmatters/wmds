@@ -32,6 +32,7 @@ const nonResolvedStyleKeys = new Set([
   "pitchKitEmptyTitleClasses",
   "pitchKitHeaderSkeletonCopyClasses",
   "pitchKitHeaderSkeletonStackClasses",
+  "pitchKitReachEmptyCopyClasses",
   "pitchKitReachEmptyWellClasses",
   "pitchKitSkeletonLegendRowClasses",
 ]);

@@ -26,7 +26,6 @@ import {
   pitchKitAudienceSkeletonSectionClasses,
   pitchKitDashboardGridClasses,
   pitchKitEmptyBodyClasses,
-  pitchKitEmptyCopyClasses,
   pitchKitEmptyTitleClasses,
   pitchKitFormulaClasses,
   pitchKitHeaderCopyClasses,
@@ -55,6 +54,7 @@ import {
   pitchKitPostsTabsClasses,
   pitchKitReachCardClasses,
   pitchKitReachChartMinHeight,
+  pitchKitReachEmptyCopyClasses,
   pitchKitReachEmptyWellClasses,
   pitchKitSectionEyebrowClasses,
   pitchKitSkeletonLegendRowClasses,
@@ -248,7 +248,7 @@ The public kit answers four questions in order:
 - Engagement rate is exactly **(likes + comments) ÷ followers**.
 - Missing values render as em dashes, never zero.
 - **Unavailable** — Graph omitted optional chart, audience, and post regions. Copy **State — Graph data unavailable**: required **Stat** tiles stay empty (em dash); omit those optional bands. Do not invent a chart.
-- **Insufficient reach** — Graph returned the Insights page, but the account reach series is missing, too thin, or all-zero. Copy **State — insufficient reach data**: keep the Reach **Card** in the dashboard grid with the same header; **Card.Body** is the empty Pattern. Do not hide the band, do not draw zeros, and do not invent an empty chart.
+- **Insufficient reach** — The **reach series** cannot be plotted (missing, too thin, or all-zero — no usable reach to chart). Audience, Stats, and proof may still show. This is not whole-page Graph unavailable. Copy **State — insufficient reach data**: keep the Reach **Card** in the dashboard grid with the same header; **Card.Body** is the empty Pattern. Do not hide the band, do not draw zeros, and do not invent an empty chart.
 - **Loading** — Graph connect/refresh is in flight. Copy **Pattern — creator Insights (loading)** for the initial skeleton screen (**Stat** \`loading\`, **Skeleton** wells that mirror resolved chrome, proof placeholders). If chrome is already up and a fetch is in flight, keep **Card.Header** mounted and swap the well for **Chart.Loading**. Do not use the unavailable Pattern or zeros as loading. Controls → **Loading phase** on that story previews skeleton vs retrieving; Show code freezes the skeleton page.
 - Creator-entered contact and past-brand content belongs on the public PitchKit, not Insights.
 - The public kit has no owner edit toggle, **MoreMenu**, hide, or swap controls.
@@ -276,11 +276,11 @@ The public kit answers four questions in order:
 - **Do** use **Tab** for proof ranking because the page already uses one primary **SegmentedControl**.
 - **Do** freeze approved grid values into implementation code.
 - **Do** copy **Pattern — shareable PitchKit** for the public route and **Pattern — creator Insights** for the owner app.
-- **Do** keep the Reach band when history is insufficient — same shell and header, empty **Card.Body**.
+- **Do** keep the Reach band when the reach series cannot be plotted — same shell and header, empty **Card.Body**. Audience, Stats, and proof may still show.
 - **Do** copy **Pattern — creator Insights (loading)** for in-flight Graph; use **Skeleton** for the first layout and **Chart.Loading** only after chrome is up.
 - **Don't** copy **ExampleGridControls** into PitchKit production UI.
 - **Don't** expose owner edit state or management controls on the public kit.
-- **Don't** hide the Reach card when the series is thin, and do not use **Skeleton** or **Chart.Loading** for that empty.
+- **Don't** hide the Reach card when the reach series cannot be plotted, and do not use **Skeleton** or **Chart.Loading** for that empty.
 - **Don't** treat Graph-unavailable (omit optional regions) or zeros as the loading page.
         `.trim(),
       },
@@ -666,7 +666,7 @@ export const InsufficientReachData: Story = {
       docs: {
         description: {
           story:
-            "Show code is the product contract when the account reach series is missing, too thin, or all-zero. Keep the Reach Card in the Insights dashboard grid with the same header; the well is the empty Pattern. Do not hide the band, do not use Skeleton or Chart.Loading, and do not invent an empty chart. Copy that source into PitchKit. Do not reconstruct from PitchKitExample / pitchKitStyles, and do not ship ExampleGridControls.",
+            "Show code is the product contract when the reach series cannot be plotted — missing, too thin, or all-zero (no usable reach to chart). Audience, Stats, and proof may still show. This is not whole-page Graph unavailable. Keep the Reach Card in the Insights dashboard grid with the same header; the well is the empty Pattern. Do not hide the band, do not use Skeleton or Chart.Loading, and do not invent an empty chart. Copy that source into PitchKit. Do not reconstruct from PitchKitExample / pitchKitStyles, and do not ship ExampleGridControls.",
         },
       },
     },
@@ -856,12 +856,10 @@ export function PitchKitInsightsInsufficientReachPage({ audience, posts, contact
                         className="${pitchKitReachEmptyWellClasses}"
                         style={{ minHeight: ${pitchKitReachChartMinHeight} }}
                       >
-                        <div className="${pitchKitEmptyCopyClasses}">
-                          <h3 className="${pitchKitEmptyTitleClasses}">Not enough reach history yet</h3>
+                        <div className="${pitchKitReachEmptyCopyClasses}">
+                          <h3 className="${pitchKitEmptyTitleClasses}">No reach data yet</h3>
                           <p className="${pitchKitEmptyBodyClasses}">
-                            Instagram has not returned enough daily reach to plot the last 30 days.
-                            Keep this card in the dashboard — PitchKit does not invent a chart from a
-                            missing, thin, or all-zero series.
+                            Connect more Instagram activity to plot the last 30 days.
                           </p>
                         </div>
                       </div>

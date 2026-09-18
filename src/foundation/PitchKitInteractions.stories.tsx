@@ -110,8 +110,14 @@ export const InsufficientReachData: Story = {
       canvas.getByRole("heading", { name: /reach over 30 days/i }),
     ).toBeInTheDocument();
     expect(
-      canvas.getByRole("heading", { name: /not enough reach history yet/i }),
+      canvas.getByRole("heading", { name: /no reach data yet/i }),
     ).toBeInTheDocument();
+    expect(
+      canvas.getByText(/connect more instagram activity to plot the last 30 days/i),
+    ).toBeInTheDocument();
+    expect(
+      canvas.queryByText(/invent a chart from a/i),
+    ).not.toBeInTheDocument();
     expect(
       canvas.queryByRole("img", {
         name: /daily and typical instagram reach/i,

@@ -64,6 +64,7 @@ import {
   pitchKitPostsTabsClasses,
   pitchKitReachCardClasses,
   pitchKitReachChartMinHeight,
+  pitchKitReachEmptyCopyClasses,
   pitchKitReachEmptyWellClasses,
   pitchKitSectionEyebrowClasses,
   pitchKitSkeletonLegendRowClasses,
@@ -167,12 +168,10 @@ function ReachCard({
             className={pitchKitReachEmptyWellClasses}
             style={{ minHeight: pitchKitReachChartMinHeight }}
           >
-            <div className={pitchKitEmptyCopyClasses}>
-              <h3 className={pitchKitEmptyTitleClasses}>Not enough reach history yet</h3>
+            <div className={pitchKitReachEmptyCopyClasses}>
+              <h3 className={pitchKitEmptyTitleClasses}>No reach data yet</h3>
               <p className={pitchKitEmptyBodyClasses}>
-                Instagram has not returned enough daily reach to plot the last 30 days.
-                Keep this card in the dashboard — PitchKit does not invent a chart from a
-                missing, thin, or all-zero series.
+                Connect more Instagram activity to plot the last 30 days.
               </p>
             </div>
           </div>
