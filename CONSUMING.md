@@ -27,7 +27,9 @@ import "@whatmatters/wmds/styles.css";
 
 Browse Storybook by intent under **Components/** and **Patterns/**, then use **Examples/** for approved flows — copy the named **Pattern** story JSX and state wiring; do not re-style with utilities. Examples are not exported from the package.
 
-Page-level Example canvases include a Storybook-only grid inspector while designs are being tuned. The **Show code** source freezes the approved `--grid-max` / `--grid-column-gap` values and omits that development panel, so the copied result contains only package exports and product layout.
+**Show code is the product contract.** Pattern story **Show code** (`storyCopySource`) is the drop-in implementation for consuming apps. It must stay a literal mirror of the live Example canvas — same layout, chrome, spacing, and typography. Copy Show code; do not choose between the Storybook iframe and an older freeze, and do not reconstruct the page from Storybook-only example modules (`*Example.tsx`, `*Styles.ts`). When the canvas changes, Show code is updated to match; apps re-copy the new freeze.
+
+Page-level Example canvases include a Storybook-only grid inspector while designs are being tuned. Show code freezes the approved `--grid-max` / `--grid-column-gap` values and omits **ExampleGridControls** and other development chrome, so the copied result contains only `@whatmatters/wmds` exports and product layout.
 
 **Not this:**
 
