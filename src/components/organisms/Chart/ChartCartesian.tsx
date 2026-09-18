@@ -455,7 +455,7 @@ export function ChartCartesianAxisLeft() {
   );
 }
 
-const CARTESIAN_NO_DATA_HATCH_SIZE = 8;
+const CARTESIAN_NO_DATA_HATCH_SIZE = 10;
 
 export function ChartCartesianNoData() {
   const { gapBands, innerHeight, noDataLabel } = useChartCartesian();
@@ -473,18 +473,12 @@ export function ChartCartesianNoData() {
           width={CARTESIAN_NO_DATA_HATCH_SIZE}
           height={CARTESIAN_NO_DATA_HATCH_SIZE}
           patternUnits="userSpaceOnUse"
-          patternTransform="rotate(45)"
+          patternTransform="rotate(-45)"
         >
-          <rect
-            width={CARTESIAN_NO_DATA_HATCH_SIZE}
-            height={CARTESIAN_NO_DATA_HATCH_SIZE}
-            fill={chartUiTokens.noDataBand}
-            fillOpacity={0.72}
-          />
           <line
-            x1={0}
+            x1={1}
             y1={0}
-            x2={0}
+            x2={1}
             y2={CARTESIAN_NO_DATA_HATCH_SIZE}
             stroke={chartUiTokens.noDataStripe}
             strokeWidth={1}
@@ -498,6 +492,14 @@ export function ChartCartesianNoData() {
           aria-label={noDataLabel}
         >
           <title>{noDataLabel}</title>
+          <rect
+            x={band.x}
+            y={0}
+            width={band.width}
+            height={innerHeight}
+            fill={chartUiTokens.noDataBand}
+            fillOpacity={0.55}
+          />
           <rect
             x={band.x}
             y={0}

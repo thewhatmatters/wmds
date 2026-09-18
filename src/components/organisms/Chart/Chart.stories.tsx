@@ -21,6 +21,7 @@ import {
 import { backgroundPatternDotGridClasses } from "../../../lib/backgroundPatterns";
 import { cn } from "../../../lib/cn";
 import { withStoryCopySource } from "../../../lib/storyCopySource";
+import { lockedViewportGlobals } from "../../../lib/viewports";
 import {
   Chart,
   chartFormatPercent,
@@ -67,7 +68,7 @@ const occupiedToneConfig = chartSeriesConfigFromTone("occupied", "Occupied units
 const reachToneConfig = chartSeriesConfigFromTone("reach", "Reach", "primary");
 const reachLeadingGapData = buildCartesianSeriesWithLeadingGap();
 const reachInteriorGapData = buildCartesianSeriesWithLeadingGap({ gapDays: 0 }).map((point, index) =>
-  index >= 8 && index <= 12 ? { ...point, reach: null } : point,
+  index >= 10 && index <= 18 ? { ...point, reach: null } : point,
 );
 const reachMultiSeriesGapData = reachLeadingGapData.map((point) => ({
   ...point,
@@ -793,6 +794,7 @@ export const AreaSingleSeries: Story = {
 
 export const CartesianNoDataGaps: Story = {
   name: "Pattern — Cartesian no-data gaps",
+  globals: lockedViewportGlobals("desktop"),
   parameters: {
     ...withStoryCopySource(
       {
@@ -843,6 +845,7 @@ const data = Array.from({ length: 30 }, (_, index) => {
 
 export const CartesianGapModesReference: Story = {
   name: "Reference — Cartesian gap modes",
+  globals: lockedViewportGlobals("desktop"),
   parameters: {
     docs: {
       description: {

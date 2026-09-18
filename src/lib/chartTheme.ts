@@ -57,9 +57,9 @@ export const chartUiTokens = {
   tooltipMuted: "var(--color-text-secondary)",
   /** Error state tick fill — soft error wash across the track. */
   errorSegment: "var(--color-error-muted)",
-  /** In-series no-data hatch — skeleton wash + soft border stripe (ADR-0027). */
+  /** In-series no-data hatch — skeleton wash + primary-mix stripe (ADR-0027). */
   noDataBand: "var(--color-skeleton)",
-  noDataStripe: "color-mix(in srgb, var(--color-border-emphasized) 42%, transparent)",
+  noDataStripe: "color-mix(in srgb, var(--color-text-primary) 16%, transparent)",
 } as const;
 
 /** Dot-grid canvas — apply `backgroundPatternDotGridClasses` or Chart shell with grid. */
