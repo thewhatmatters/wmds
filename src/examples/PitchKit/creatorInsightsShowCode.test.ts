@@ -79,4 +79,11 @@ describe("Pattern — creator Insights Show code", () => {
     expect(showCodeSource).not.toContain("ExampleGridControls");
     expect(showCodeSource).not.toContain("GridOverlay");
   });
+
+  it("wires the pitchkit branch to the shareable kit, not a placeholder", () => {
+    expect(showCodeSource).toContain("<ShareablePitchKit");
+    expect(showCodeSource).toContain("${shareablePitchKitCopySource}");
+    expect(showCodeSource).not.toContain("Coming soon");
+    expect(showCodeSource).not.toContain("pitchKitPlaceholder");
+  });
 });

@@ -1,4 +1,8 @@
-import { cardLayoutBodyOccupantRadiusClasses } from "../../components/molecules/Card/Card";
+import {
+  cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantPadYClasses,
+  cardLayoutBodyOccupantRadiusClasses,
+} from "../../components/molecules/Card/Card";
 import { typographyClass } from "../../lib/typography";
 
 export const pitchKitPageClasses =
@@ -67,7 +71,20 @@ export const pitchKitEmptyCopyClasses = "flex max-w-lg flex-col gap-2";
 export const pitchKitEmptyTitleClasses = typographyClass("section-heading");
 export const pitchKitEmptyBodyClasses = `${typographyClass("body")} text-muted`;
 
-export const pitchKitPlaceholderClasses =
-  "col-span-full flex min-h-[60vh] flex-col items-center justify-center gap-3 text-center";
-export const pitchKitPlaceholderTitleClasses = typographyClass("page-heading");
-export const pitchKitPlaceholderBodyClasses = `${typographyClass("body")} max-w-md text-muted`;
+export const pitchKitIdentitySectionClasses = "col-span-full";
+export const pitchKitIdentityRowClasses =
+  "flex flex-wrap items-center gap-4";
+export const pitchKitIdentityCopyClasses = "flex min-w-0 flex-col gap-1";
+export const pitchKitIdentityTitleRowClasses =
+  "flex flex-wrap items-center gap-2";
+export const pitchKitIdentityNameClasses = typographyClass("section-heading");
+export const pitchKitKitStatClasses =
+  "col-span-2 md:col-span-4 lg:col-span-6";
+export const pitchKitKitPostMetricsClasses =
+  "grid w-full grid-cols-2 gap-3";
+export const pitchKitContactCardClasses = "col-span-full";
+export const pitchKitContactRowsClasses = "flex flex-col gap-3";
+export const pitchKitContactRowClasses =
+  "flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3";
+export const pitchKitBrandBodyClasses =
+  `${typographyClass("body")} text-muted ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantInsetXClasses}`;

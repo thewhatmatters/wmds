@@ -50,6 +50,52 @@ export const pitchKitAudience = {
   ] satisfies ChartRankedBarItem[],
 } as const;
 
+export const pitchKitCreator = {
+  name: "Avery Morgan",
+  handle: "@averymorgan",
+  platform: "Instagram",
+} as const;
+
+export const pitchKitSummary = {
+  followers: "84.2K",
+  engagementRate: "5.8%",
+} as const;
+
+export const pitchKitContact = {
+  email: "hello@averymorgan.com",
+  websiteHref: "https://averymorgan.com",
+  websiteLabel: "averymorgan.com",
+  location: "Los Angeles, CA",
+} as const;
+
+export interface PitchKitBrand {
+  id: string;
+  name: string;
+  year: string;
+  summary: string;
+}
+
+export const pitchKitBrands: PitchKitBrand[] = [
+  {
+    id: "hearth-home",
+    name: "Hearth & Home",
+    year: "2026",
+    summary: "Summer table campaign — 48.2K reach on the coastal dining set.",
+  },
+  {
+    id: "studio-line",
+    name: "Studio Line",
+    year: "2026",
+    summary: "Sunlit interiors series — 41.6K reach on the morning studio drop.",
+  },
+  {
+    id: "market-co",
+    name: "Market Co.",
+    year: "2025",
+    summary: "Seasonal florals — 38.9K reach from the outdoor market story.",
+  },
+];
+
 export const pitchKitPosts: PitchKitPost[] = [
   {
     id: "coastal-table",
@@ -118,3 +164,6 @@ export const pitchKitPosts: PitchKitPost[] = [
     comments: 910,
   },
 ];
+
+/** Public kit proof — a selected subset, not the owner-managed Insights ranking. */
+export const pitchKitSelectedPosts: PitchKitPost[] = pitchKitPosts.slice(0, 5);

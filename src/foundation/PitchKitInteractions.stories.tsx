@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { PitchKitInsightsExample } from "../examples/PitchKit/PitchKitExample";
+import { PitchKitShareableExample } from "../examples/PitchKit/PitchKitShareable";
 
 const meta = {
   title: "Internal/Interactions/PitchKit",
@@ -26,13 +27,62 @@ export const PrimaryNavigation: Story = {
       within(navigation).getByRole("radio", { name: /^pitchkit$/i }),
     );
     expect(
-      canvas.getByRole("heading", { name: /shareable pitchkit/i }),
+      canvas.getByRole("heading", { name: /avery morgan/i }),
     ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /selected posts/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /^contact$/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /past brands/i }),
+    ).toBeInTheDocument();
+    expect(canvas.queryByText(/coming soon/i)).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("button", { name: /edit/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("button", { name: /manage ranked post/i }),
+    ).not.toBeInTheDocument();
 
     await userEvent.click(
       within(navigation).getByRole("radio", { name: /^insights$/i }),
     );
     expect(canvas.getByRole("heading", { name: /^insights$/i })).toBeInTheDocument();
+  },
+};
+
+export const ShareableKit: Story = {
+  name: "PitchKit — shareable kit",
+  render: () => <PitchKitShareableExample />,
+  play: async ({ canvas }) => {
+    expect(
+      canvas.getByRole("heading", { name: /avery morgan/i }),
+    ).toBeInTheDocument();
+    expect(canvas.getByText("@averymorgan")).toBeInTheDocument();
+    expect(canvas.getByText("Verified")).toBeInTheDocument();
+    expect(
+      canvas.getByRole("group", { name: /verified instagram summary/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("link", { name: /hello@averymorgan.com/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /hearth & home/i }),
+    ).toBeInTheDocument();
+    expect(canvas.queryByText(/coming soon/i)).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("radiogroup", {
+        name: /pitchkit primary navigation/i,
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("button", { name: /edit/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("button", { name: /manage ranked post/i }),
+    ).not.toBeInTheDocument();
   },
 };
 
