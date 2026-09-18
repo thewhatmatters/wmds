@@ -7,24 +7,33 @@ import {
   PitchKitInsightsExample,
   type PitchKitDataState,
 } from "./PitchKitExample";
+import { PitchKitShareableExample } from "./PitchKitShareable";
 /** Interpolated into Show code so the freeze stays locked to the live canvas styles. */
 import {
   pitchKitAudienceCardClasses,
   pitchKitAudienceSectionClasses,
   pitchKitAudienceWellClasses,
+  pitchKitBrandBodyClasses,
   pitchKitBrandClasses,
   pitchKitCardWellClasses,
+  pitchKitContactCardClasses,
+  pitchKitContactRowClasses,
+  pitchKitContactRowsClasses,
   pitchKitContentBandClasses,
   pitchKitContentClasses,
   pitchKitDashboardGridClasses,
   pitchKitFormulaClasses,
   pitchKitHeaderCopyClasses,
   pitchKitHeaderSectionClasses,
+  pitchKitIdentityCopyClasses,
+  pitchKitIdentityNameClasses,
+  pitchKitIdentityRowClasses,
+  pitchKitIdentitySectionClasses,
+  pitchKitIdentityTitleRowClasses,
+  pitchKitKitPostMetricsClasses,
+  pitchKitKitStatClasses,
   pitchKitMetricsStackClasses,
   pitchKitPageClasses,
-  pitchKitPlaceholderBodyClasses,
-  pitchKitPlaceholderClasses,
-  pitchKitPlaceholderTitleClasses,
   pitchKitPostCardClasses,
   pitchKitPostHeaderStartClasses,
   pitchKitPostImageClasses,
@@ -45,6 +54,127 @@ import {
   pitchKitTopbarClasses,
   pitchKitTopbarEndClasses,
 } from "./pitchKitStyles";
+
+const shareablePitchKitCopySource = `
+function ShareablePitchKit({ posts, contact, brands }) {
+  return (
+    <>
+      <section className="${pitchKitIdentitySectionClasses}">
+        <div className="${pitchKitIdentityRowClasses}">
+          <Avatar name="Avery Morgan" size="lg" />
+          <div className="${pitchKitIdentityCopyClasses}">
+            <div className="${pitchKitIdentityTitleRowClasses}">
+              <h1 className="${pitchKitIdentityNameClasses}">Avery Morgan</h1>
+              <Badge variant="success" emphasis="muted" size="sm">Verified</Badge>
+              <Chip readOnly size="sm">Instagram</Chip>
+            </div>
+            <p className="${pitchKitSupportingClasses}">@averymorgan</p>
+          </div>
+        </div>
+      </section>
+
+      <div
+        role="group"
+        aria-label="Verified Instagram summary"
+        className="${pitchKitStatsBandClasses}"
+      >
+        <Stat className="${pitchKitKitStatClasses}" label="Followers" value="84.2K" />
+        <Stat className="${pitchKitKitStatClasses}" label="Engagement rate" value="5.8%" />
+      </div>
+
+      <section className="${pitchKitPostsSectionClasses}">
+        <div className="${pitchKitPostsHeaderClasses}">
+          <div>
+            <h2 className={cardTitleClasses}>Selected posts</h2>
+            <p className="${pitchKitSupportingClasses}">
+              Proof from the current Instagram set.
+            </p>
+          </div>
+        </div>
+        <div className="${pitchKitPostsPanelClasses}">
+          {posts.map((post) => (
+            <Card key={post.id} variant="outlined" shape="rounded" className="${pitchKitPostCardClasses}">
+              <Card.Body>
+                <img
+                  className="${pitchKitPostImageClasses}"
+                  src={post.imageUrl}
+                  alt={post.imageAlt}
+                />
+              </Card.Body>
+              <Card.Footer>
+                <div className="${pitchKitKitPostMetricsClasses}">
+                  {[
+                    ["Likes", post.likes],
+                    ["Comments", post.comments],
+                  ].map(([label, value]) => (
+                    <span key={label} className="${pitchKitPostMetricClasses}">
+                      <span className="${pitchKitPostMetricLabelClasses}">{label}</span>
+                      <span className="${pitchKitPostMetricValueClasses}">
+                        {compactNumber.format(value)}
+                      </span>
+                    </span>
+                  ))}
+                </div>
+              </Card.Footer>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      <section className="${pitchKitPostsSectionClasses}">
+        <div className="${pitchKitPostsHeaderClasses}">
+          <div>
+            <h2 className={cardTitleClasses}>Contact</h2>
+            <p className="${pitchKitSupportingClasses}">
+              Creator-entered details for brand outreach.
+            </p>
+          </div>
+        </div>
+        <Card variant="outlined" padding="md" shape="rounded" className="${pitchKitContactCardClasses}">
+          <div className="${pitchKitContactRowsClasses}">
+            <div className="${pitchKitContactRowClasses}">
+              <span className="${pitchKitSectionEyebrowClasses}">Email</span>
+              <TextLink href={\`mailto:\${contact.email}\`}>{contact.email}</TextLink>
+            </div>
+            <div className="${pitchKitContactRowClasses}">
+              <span className="${pitchKitSectionEyebrowClasses}">Website</span>
+              <TextLink href={contact.websiteHref} external>{contact.websiteLabel}</TextLink>
+            </div>
+            <div className="${pitchKitContactRowClasses}">
+              <span className="${pitchKitSectionEyebrowClasses}">Location</span>
+              <span className="${pitchKitSupportingClasses}">{contact.location}</span>
+            </div>
+          </div>
+        </Card>
+      </section>
+
+      <section className="${pitchKitPostsSectionClasses}">
+        <div className="${pitchKitPostsHeaderClasses}">
+          <div>
+            <h2 className={cardTitleClasses}>Past brands</h2>
+            <p className="${pitchKitSupportingClasses}">
+              Campaigns already shipped with this creator.
+            </p>
+          </div>
+        </div>
+        <div className="${pitchKitPostsPanelClasses}">
+          {brands.map((brand) => (
+            <Card key={brand.id} variant="outlined" shape="rounded" className="${pitchKitPostCardClasses}">
+              <Card.Header
+                start={<h3 className={cardTitleClasses}>{brand.name}</h3>}
+                end={<Badge variant="neutral" emphasis="muted" size="sm">{brand.year}</Badge>}
+              />
+              <Card.Body>
+                <p className="${pitchKitBrandBodyClasses}">{brand.summary}</p>
+              </Card.Body>
+            </Card>
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}
+`;
 
 const dataStates = ["resolved", "unavailable"] as const satisfies readonly PitchKitDataState[];
 
@@ -69,16 +199,23 @@ const meta = {
         component: `
 ## Usage
 
-Authenticated PitchKit **Insights** at a frozen 1140px grid maximum. The single top-level **SegmentedControl** switches between Insights and the future public PitchKit view; the second destination is intentionally a placeholder in this pass.
+Authenticated PitchKit at a frozen 1140px grid maximum. The single top-level **SegmentedControl** switches between owner **Insights** and a preview of the public **PitchKit**. Copy **Pattern — creator Insights** for the authenticated owner page and **Pattern — shareable PitchKit** for the public kit.
 
-**Show code** on **Pattern — creator Insights** is the product contract — a literal freeze of this canvas (layout, chrome, spacing, typography). Copy that source into PitchKit. Do not reconstruct the page from Storybook-only \`PitchKitExample\` / \`pitchKitStyles\`, and do not ship **ExampleGridControls**.
+**Show code** on each **Pattern** story is the product contract — a literal freeze of that canvas (layout, chrome, spacing, typography). Copy that source into PitchKit. Do not reconstruct the page from Storybook-only \`PitchKitExample\` / \`PitchKitShareable\` / \`pitchKitStyles\`, and do not ship **ExampleGridControls**.
 
-The dashboard answers four questions in order:
+The Insights dashboard answers four questions in order:
 
 1. **Scale and response** — **Stat** tiles on the page subgrid for followers, labeled engagement rate, typical reach, and saves.
 2. **Consistency** — one 30-day **Chart.Cartesian** comparing typical and daily reach, including visible spikes.
 3. **Audience fit** — **Chart.RankedBars** for Graph-supplied country, city, age, and gender percentages.
 4. **Proof** — six recent **Card** items with secondary **Tab** ranking by reach, engagement (likes + comments), or saves, plus persistent **MoreMenu** hide/swap controls.
+
+The public kit answers four questions in order:
+
+1. **Who** — **Avatar**, creator name, handle, muted **Verified** **Badge**, and a read-only Instagram **Chip**.
+2. **Scale** — verified **Stat** summary for followers and engagement rate. Same figures as Insights; no owner trends or chart chrome.
+3. **Selected posts** — the current Instagram proof set as **Card** images with likes and comments only.
+4. **Outreach** — creator-entered **Contact** (**TextLink** for email and website) and **Past brands** proof cards.
 
 ## Data contract
 
@@ -86,16 +223,18 @@ The dashboard answers four questions in order:
 - Missing values render as em dashes, never zero.
 - Optional chart, audience, and post sections are omitted when Graph did not provide them.
 - Creator-entered contact and past-brand content belongs on the public PitchKit, not Insights.
+- The public kit has no owner edit toggle, **MoreMenu**, hide, or swap controls.
 - No rates, Stories, logo scraping, marquees, donuts, or second Instagram connection path.
 
 ## Component map
 
 - Page layout — \`grid-page\`, \`band\`, \`--grid-max:1140px\`, \`--grid-column-gap:8px\`
-- Primary navigation — **SegmentedControl**
-- Page and card chrome — **PageHeader**, **Card**, **Badge**, **Avatar**, **Button**
+- Owner chrome — **SegmentedControl** + **Avatar**; public kit keeps the PitchKit wordmark only
+- Page and card chrome — **PageHeader**, **Card**, **Badge**, **Avatar**, **Button**, **Chip**
 - Metrics and charts — **Stat**, **Chart.Cartesian**, **Chart.Legend**, **Chart.RankedBars**
 - Proof ranking — **Tab.Group** + **Tab**; one selected metric reorders the same supplied posts
-- Post management — **MoreMenu** with **ButtonIcon**; **AlertDialog** confirms hiding a post
+- Post management — **MoreMenu** with **ButtonIcon**; **AlertDialog** confirms hiding a post (Insights only)
+- Public outreach — **TextLink** contact rows; outlined **Card** past-brand proof
 - Outcome feedback — **Toaster** + **toast**; Undo restores the hidden post
 - Storybook development only — **ExampleGridControls** + **GridOverlay**
 
@@ -108,6 +247,7 @@ The dashboard answers four questions in order:
 - **Do** pair the completed hide mutation with an actionable Undo toast.
 - **Do** use **Tab** for proof ranking because the page already uses one primary **SegmentedControl**.
 - **Do** freeze approved grid values into implementation code.
+- **Do** copy **Pattern — shareable PitchKit** for the public route and **Pattern — creator Insights** for the owner app.
 - **Don't** copy **ExampleGridControls** into PitchKit production UI.
 - **Don't** expose owner edit state or management controls on the public kit.
         `.trim(),
@@ -141,11 +281,13 @@ import {
   ButtonIcon,
   Card,
   Chart,
+  Chip,
   MoreMenu,
   PageHeader,
   SegmentedControl,
   Stat,
   Tab,
+  TextLink,
   Toaster,
   cardSubtitleClasses,
   cardTitleClasses,
@@ -188,7 +330,9 @@ function AudienceSection({ title, items }) {
   );
 }
 
-export function PitchKitInsightsPage({ reachData, audience, posts }) {
+${shareablePitchKitCopySource}
+
+export function PitchKitInsightsPage({ reachData, audience, posts, contact, brands }) {
   const [view, setView] = useState("insights");
   const [proofMetric, setProofMetric] = useState("reach");
   const [visiblePosts, setVisiblePosts] = useState(posts);
@@ -262,14 +406,7 @@ export function PitchKitInsightsPage({ reachData, audience, posts }) {
       <div className="${pitchKitContentBandClasses}">
         <div className="${pitchKitContentClasses}">
           {view === "pitchkit" ? (
-            <section className="${pitchKitPlaceholderClasses}">
-              <Badge variant="neutral" emphasis="muted">Coming soon</Badge>
-              <h1 className="${pitchKitPlaceholderTitleClasses}">Shareable PitchKit</h1>
-              <p className="${pitchKitPlaceholderBodyClasses}">
-                The public creator profile will bring verified insights, selected posts,
-                contact details, and past-brand proof into one brand-ready view.
-              </p>
-            </section>
+            <ShareablePitchKit posts={posts} contact={contact} brands={brands} />
           ) : (
             <>
               <section className="${pitchKitHeaderSectionClasses}">
@@ -484,4 +621,55 @@ export const GraphDataUnavailable: Story = {
       },
     },
   },
+};
+
+export const ShareablePitchKit: Story = {
+  name: "Pattern — shareable PitchKit",
+  render: () => <PitchKitShareableExample />,
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Show code is the product contract for the public kit — a literal freeze of this canvas (layout, chrome, spacing, typography). Copy that source into PitchKit. Do not reconstruct from Storybook-only example files, do not ship the grid inspector, and do not add owner management controls.",
+        },
+      },
+    },
+    `
+import {
+  Avatar,
+  Badge,
+  Card,
+  Chip,
+  Stat,
+  TextLink,
+  cardTitleClasses,
+} from "@whatmatters/wmds";
+
+const compactNumber = new Intl.NumberFormat("en", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+
+${shareablePitchKitCopySource}
+
+export function ShareablePitchKitPage({ posts, contact, brands }) {
+  return (
+    <main className="${pitchKitPageClasses}">
+      <div className="${pitchKitTopbarBandClasses}">
+        <header className="${pitchKitTopbarClasses}">
+          <span className="${pitchKitBrandClasses}">PitchKit</span>
+        </header>
+      </div>
+
+      <div className="${pitchKitContentBandClasses}">
+        <div className="${pitchKitContentClasses}">
+          <ShareablePitchKit posts={posts} contact={contact} brands={brands} />
+        </div>
+      </div>
+    </main>
+  );
+}
+`,
+  ),
 };

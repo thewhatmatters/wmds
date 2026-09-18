@@ -28,6 +28,7 @@ import {
   pitchKitReachData,
   type PitchKitPost,
 } from "./pitchKitData";
+import { ShareablePitchKit } from "./PitchKitShareable";
 import {
   pitchKitAudienceCardClasses,
   pitchKitAudienceSectionClasses,
@@ -45,9 +46,6 @@ import {
   pitchKitHeaderCopyClasses,
   pitchKitMetricsStackClasses,
   pitchKitPageClasses,
-  pitchKitPlaceholderBodyClasses,
-  pitchKitPlaceholderClasses,
-  pitchKitPlaceholderTitleClasses,
   pitchKitPostCardClasses,
   pitchKitPostImageClasses,
   pitchKitPostHeaderStartClasses,
@@ -450,21 +448,6 @@ function UnavailableInsights() {
   );
 }
 
-function PitchKitPlaceholder() {
-  return (
-    <section className={pitchKitPlaceholderClasses}>
-      <Badge variant="neutral" emphasis="muted">
-        Coming soon
-      </Badge>
-      <h1 className={pitchKitPlaceholderTitleClasses}>Shareable PitchKit</h1>
-      <p className={pitchKitPlaceholderBodyClasses}>
-        The public creator profile will bring verified insights, selected posts,
-        contact details, and past-brand proof into one brand-ready view.
-      </p>
-    </section>
-  );
-}
-
 export function PitchKitInsightsExample({
   dataState = "resolved",
 }: PitchKitInsightsExampleProps) {
@@ -529,7 +512,7 @@ export function PitchKitInsightsExample({
       <div className={pitchKitContentBandClasses}>
         <div className={pitchKitContentClasses}>
           {view === "pitchkit" ? (
-            <PitchKitPlaceholder />
+            <ShareablePitchKit />
           ) : dataState === "resolved" ? (
             <ResolvedInsights />
           ) : (
