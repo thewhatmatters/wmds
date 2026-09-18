@@ -161,11 +161,8 @@ export const InsufficientAudienceData: Story = {
     expect(
       canvas.getByRole("heading", { name: /reach over 30 days/i }),
     ).toBeInTheDocument();
-    expect(
-      canvas.getByRole("img", {
-        name: /daily and typical instagram reach/i,
-      }),
-    ).toBeInTheDocument();
+    expect(canvas.getAllByText("Typical reach").length).toBeGreaterThan(1);
+    expect(canvas.getByText("Daily reach")).toBeInTheDocument();
     expect(
       canvas.getByRole("heading", { name: /recent proof/i }),
     ).toBeInTheDocument();
