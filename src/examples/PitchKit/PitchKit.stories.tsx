@@ -1,12 +1,50 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  storyCopySource,
   storyMetaDocsDefaults,
+  withStoryCopySource,
 } from "../../lib/storyCopySource";
 import {
   PitchKitInsightsExample,
   type PitchKitDataState,
 } from "./PitchKitExample";
+/** Interpolated into Show code so the freeze stays locked to the live canvas styles. */
+import {
+  pitchKitAudienceCardClasses,
+  pitchKitAudienceSectionClasses,
+  pitchKitAudienceWellClasses,
+  pitchKitBrandClasses,
+  pitchKitCardWellClasses,
+  pitchKitContentBandClasses,
+  pitchKitContentClasses,
+  pitchKitDashboardGridClasses,
+  pitchKitFormulaClasses,
+  pitchKitHeaderCopyClasses,
+  pitchKitHeaderSectionClasses,
+  pitchKitMetricsStackClasses,
+  pitchKitPageClasses,
+  pitchKitPlaceholderBodyClasses,
+  pitchKitPlaceholderClasses,
+  pitchKitPlaceholderTitleClasses,
+  pitchKitPostCardClasses,
+  pitchKitPostHeaderStartClasses,
+  pitchKitPostImageClasses,
+  pitchKitPostMetricClasses,
+  pitchKitPostMetricLabelClasses,
+  pitchKitPostMetricsClasses,
+  pitchKitPostMetricValueClasses,
+  pitchKitPostsHeaderClasses,
+  pitchKitPostsPanelClasses,
+  pitchKitPostsSectionClasses,
+  pitchKitPostsTabsClasses,
+  pitchKitReachCardClasses,
+  pitchKitSectionEyebrowClasses,
+  pitchKitStatClasses,
+  pitchKitStatsBandClasses,
+  pitchKitSupportingClasses,
+  pitchKitTopbarBandClasses,
+  pitchKitTopbarClasses,
+  pitchKitTopbarEndClasses,
+} from "./pitchKitStyles";
 
 const dataStates = ["resolved", "unavailable"] as const satisfies readonly PitchKitDataState[];
 
@@ -32,6 +70,8 @@ const meta = {
 ## Usage
 
 Authenticated PitchKit **Insights** at a frozen 1140px grid maximum. The single top-level **SegmentedControl** switches between Insights and the future public PitchKit view; the second destination is intentionally a placeholder in this pass.
+
+**Show code** on **Pattern — creator Insights** is the product contract — a literal freeze of this canvas (layout, chrome, spacing, typography). Copy that source into PitchKit. Do not reconstruct the page from Storybook-only \`PitchKitExample\` / \`pitchKitStyles\`, and do not ship **ExampleGridControls**.
 
 The dashboard answers four questions in order:
 
@@ -61,6 +101,7 @@ The dashboard answers four questions in order:
 
 ## Best practices
 
+- **Do** treat **Show code** as the implementation contract; re-copy it when the canvas changes.
 - **Do** preserve the visual difference between typical performance and a spike.
 - **Do** keep all edit controls in owner-only Insights.
 - **Do** confirm post visibility changes with **AlertDialog** before mutating the ranked set.
@@ -81,13 +122,23 @@ type Story = StoryObj<typeof meta>;
 export const CreatorInsights: Story = {
   name: "Pattern — creator Insights",
   render: (args) => <PitchKitInsightsExample {...args} />,
-  parameters: storyCopySource(`
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Show code is the product contract — a literal freeze of this canvas (layout, chrome, spacing, typography). Copy that source into PitchKit. Do not reconstruct from PitchKitExample / pitchKitStyles, and do not ship ExampleGridControls.",
+        },
+      },
+    },
+    `
 import { useState } from "react";
 import {
   AlertDialog,
   Avatar,
   Badge,
   Button,
+  ButtonIcon,
   Card,
   Chart,
   MoreMenu,
@@ -96,59 +147,103 @@ import {
   Stat,
   Tab,
   Toaster,
-  cardLayoutBodyOccupantInsetXClasses,
-  cardLayoutBodyOccupantPadYClasses,
-  cardLayoutBodyOccupantWellClasses,
+  cardSubtitleClasses,
   cardTitleClasses,
   chartSeriesConfigFromKeys,
   toast,
 } from "@whatmatters/wmds";
-import { Share2 } from "lucide-react";
+import { EyeOff, Repeat2, Share2 } from "lucide-react";
 
 const reachConfig = chartSeriesConfigFromKeys([
   { key: "typical", label: "Typical reach" },
   { key: "reach", label: "Daily reach" },
 ]);
 
+const compactNumber = new Intl.NumberFormat("en", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+
+const proofMetricNotices = {
+  reach: "Ranked by Instagram reach.",
+  engagement: "Ranked by likes + comments.",
+  saves: "Ranked by Instagram saves.",
+};
+
+function proofMetricValue(post, metric) {
+  if (metric === "engagement") return post.likes + post.comments;
+  return post[metric];
+}
+
+function AudienceSection({ title, items }) {
+  return (
+    <section className="${pitchKitAudienceSectionClasses}">
+      <h3 className="${pitchKitSectionEyebrowClasses}">{title}</h3>
+      <Chart.RankedBars
+        aria-label={\`Audience by \${title.toLowerCase()}\`}
+        items={items}
+        animate="initial"
+      />
+    </section>
+  );
+}
+
 export function PitchKitInsightsPage({ reachData, audience, posts }) {
   const [view, setView] = useState("insights");
   const [proofMetric, setProofMetric] = useState("reach");
   const [visiblePosts, setVisiblePosts] = useState(posts);
-  const [pendingHidePostId, setPendingHidePostId] = useState<string | null>(null);
-  const rankedPosts = [...visiblePosts].sort((a, b) => {
-    const value = (post) =>
-      proofMetric === "engagement"
-        ? post.likes + post.comments
-        : post[proofMetric];
-    return value(b) - value(a);
-  });
+  const [postNotice, setPostNotice] = useState(null);
+  const [pendingHidePostId, setPendingHidePostId] = useState(null);
+  const rankedPosts = [...visiblePosts].sort(
+    (a, b) =>
+      proofMetricValue(b, proofMetric) - proofMetricValue(a, proofMetric),
+  );
+
+  function handlePostAction(postId, actionId) {
+    if (actionId === "hide") {
+      setPendingHidePostId(postId);
+      return;
+    }
+    setPostNotice("Choose a replacement from your recent Instagram posts.");
+  }
 
   function hidePendingPost() {
-    const hiddenPost = visiblePosts.find(
-      (post) => post.id === pendingHidePostId,
-    );
+    const hiddenPost = visiblePosts.find((post) => post.id === pendingHidePostId);
     if (!hiddenPost) return;
 
     setVisiblePosts((current) =>
       current.filter((post) => post.id !== hiddenPost.id),
     );
+    setPostNotice("Post hidden from the shareable kit preview.");
     setPendingHidePostId(null);
     toast.add({
       title: "Post hidden from kit",
       description: "It no longer appears in the shareable PitchKit.",
+      duration: 6000,
       action: {
         label: "Undo",
-        onClick: () =>
-          setVisiblePosts((current) => [...current, hiddenPost]),
+        onClick: () => {
+          setVisiblePosts((current) =>
+            current.some((post) => post.id === hiddenPost.id)
+              ? current
+              : [...current, hiddenPost],
+          );
+          setPostNotice("Post restored to the shareable kit preview.");
+        },
       },
     });
   }
 
+  function handleProofMetricChange(value) {
+    setProofMetric(value);
+    setPostNotice(null);
+  }
+
   return (
-    <main className="grid-page min-h-screen bg-body [--grid-column-gap:8px] [--grid-max:1140px] [padding-bottom:44px]">
-      <div className="band pb-4">
-        <header className="col-span-full grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-          <span className="type-ui-label text-fg">PitchKit</span>
+    <main className="${pitchKitPageClasses}">
+      <div className="${pitchKitTopbarBandClasses}">
+        <header className="${pitchKitTopbarClasses}">
+          <span className="${pitchKitBrandClasses}">PitchKit</span>
           <SegmentedControl
             aria-label="PitchKit primary navigation"
             size="sm"
@@ -158,109 +253,221 @@ export function PitchKitInsightsPage({ reachData, audience, posts }) {
             <SegmentedControl.Item value="insights">Insights</SegmentedControl.Item>
             <SegmentedControl.Item value="pitchkit">PitchKit</SegmentedControl.Item>
           </SegmentedControl>
-          <Avatar name="Avery Morgan" size="sm" className="justify-self-end" />
+          <span className="${pitchKitTopbarEndClasses}">
+            <Avatar name="Avery Morgan" size="sm" />
+          </span>
         </header>
       </div>
 
-      <div className="band pt-8">
-        <div className="band min-w-0 gap-y-8">
-          <section className="col-span-full">
-            <PageHeader
-              variant="page"
-              title="Insights"
-              end={<Button role="secondary" size="sm" icon={<Share2 />}>Share kit</Button>}
-            />
-            <p className="type-caption text-muted">
-              Engagement rate = (likes + comments) ÷ followers.
-            </p>
-          </section>
-
-          <div className="band gap-y-2">
-            <div
-              role="group"
-              aria-label="Instagram performance summary"
-              className="band gap-y-4"
-            >
-              <Stat className="col-span-2 md:col-span-4 lg:col-span-3" label="Followers" value="84.2K" />
-              <Stat className="col-span-2 md:col-span-4 lg:col-span-3" label="Engagement rate" value="5.8%" />
-              <Stat className="col-span-2 md:col-span-4 lg:col-span-3" label="Typical reach" value="9.3K" />
-              <Stat className="col-span-2 md:col-span-4 lg:col-span-3" label="Saves" value="6.1K" />
-            </div>
-
-            <div className="band min-w-0 gap-y-6 [align-items:stretch]">
-            <Card variant="outlined" shape="rounded" bodyTerminal className="col-span-full min-w-0 lg:col-span-6">
-              <Card.Header start={<h2 className={cardTitleClasses}>Reach over 30 days</h2>} />
-              <Card.Body>
-                <div className={\`flex flex-col gap-4 \${cardLayoutBodyOccupantPadYClasses} \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantInsetXClasses}\`}>
-                  <Chart.Cartesian data={reachData} config={reachConfig} periodKind="month" minHeight={344} />
-                  <Chart.Legend config={reachConfig} />
+      <div className="${pitchKitContentBandClasses}">
+        <div className="${pitchKitContentClasses}">
+          {view === "pitchkit" ? (
+            <section className="${pitchKitPlaceholderClasses}">
+              <Badge variant="neutral" emphasis="muted">Coming soon</Badge>
+              <h1 className="${pitchKitPlaceholderTitleClasses}">Shareable PitchKit</h1>
+              <p className="${pitchKitPlaceholderBodyClasses}">
+                The public creator profile will bring verified insights, selected posts,
+                contact details, and past-brand proof into one brand-ready view.
+              </p>
+            </section>
+          ) : (
+            <>
+              <section className="${pitchKitHeaderSectionClasses}">
+                <PageHeader
+                  variant="page"
+                  title="Insights"
+                  end={
+                    <Button role="secondary" size="sm" icon={<Share2 />}>
+                      Share kit
+                    </Button>
+                  }
+                />
+                <div className="${pitchKitHeaderCopyClasses}">
+                  <p className="${pitchKitSupportingClasses}">
+                    Verified Instagram performance, refreshed Sep 7 at 12:42 PM.
+                  </p>
+                  <p className="${pitchKitFormulaClasses}">
+                    Engagement rate = (likes + comments) ÷ followers.
+                  </p>
                 </div>
-              </Card.Body>
-            </Card>
+              </section>
 
-            <Card variant="outlined" shape="rounded" bodyTerminal className="col-span-full min-w-0 lg:col-span-6">
-              <Card.Header start={<h2 className={cardTitleClasses}>Audience fit</h2>} />
-              <Card.Body>
-                <div className={\`\${cardLayoutBodyOccupantPadYClasses} \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantInsetXClasses}\`}>
-                  <Chart.RankedBars aria-label="Audience by country" items={audience.countries} animate="initial" />
+              <div className="${pitchKitMetricsStackClasses}">
+                <div
+                  role="group"
+                  aria-label="Instagram performance summary"
+                  className="${pitchKitStatsBandClasses}"
+                >
+                  <Stat className="${pitchKitStatClasses}" label="Followers" value="84.2K" trend={{ value: "+2.4%", direction: "up" }} />
+                  <Stat className="${pitchKitStatClasses}" label="Engagement rate" value="5.8%" />
+                  <Stat className="${pitchKitStatClasses}" label="Typical reach" value="9.3K" />
+                  <Stat className="${pitchKitStatClasses}" label="Saves" value="6.1K" trend={{ value: "+8.1%", direction: "up" }} />
                 </div>
-              </Card.Body>
-            </Card>
-            </div>
-          </div>
 
-          <section className="band gap-y-4">
-            <h2 className={\`\${cardTitleClasses} col-span-full\`}>Recent proof</h2>
-            <Tab.Group
-              aria-label="Rank recent proof posts by"
-              value={proofMetric}
-              onValueChange={setProofMetric}
-              className="col-span-full"
-            >
-              <Tab value="reach" panelId="recent-proof-panel">Reach</Tab>
-              <Tab value="engagement" panelId="recent-proof-panel">Engagement</Tab>
-              <Tab value="saves" panelId="recent-proof-panel">Saves</Tab>
-            </Tab.Group>
+                <div className="${pitchKitDashboardGridClasses}">
+                  <Card variant="outlined" shape="rounded" bodyTerminal className="${pitchKitReachCardClasses}">
+                    <Card.Header
+                      start={
+                        <>
+                          <h2 className={cardTitleClasses}>Reach over 30 days</h2>
+                          <p className={cardSubtitleClasses}>
+                            Typical performance with unusual spikes left visible.
+                          </p>
+                        </>
+                      }
+                      end={
+                        <Badge variant="neutral" emphasis="muted" size="sm">
+                          Graph data
+                        </Badge>
+                      }
+                    />
+                    <Card.Body>
+                      <div className="${pitchKitCardWellClasses}">
+                        <Chart.Cartesian
+                          data={reachData}
+                          config={reachConfig}
+                          periodKind="month"
+                          minHeight={344}
+                          aria-label="Daily and typical Instagram reach over the last 30 days"
+                        />
+                        <Chart.Legend config={reachConfig} />
+                      </div>
+                    </Card.Body>
+                  </Card>
 
-            <div id="recent-proof-panel" role="tabpanel" className="band col-span-full gap-y-4">
-              {rankedPosts.map((post, index) => (
-                <Card key={post.id} variant="outlined" shape="rounded" className="col-span-full min-w-0 md:col-span-4 lg:col-span-4">
-                  <Card.Header
-                    start={<Badge size="sm">#{index + 1}</Badge>}
-                    end={
-                      <MoreMenu
-                        aria-label={\`Manage post \${index + 1}\`}
-                        size="xs"
-                        items={post.actions}
-                        onAction={(actionId) => {
-                          if (actionId === "hide") setPendingHidePostId(post.id);
-                        }}
+                  <Card variant="outlined" shape="rounded" bodyTerminal className="${pitchKitAudienceCardClasses}">
+                    <Card.Header
+                      start={
+                        <>
+                          <h2 className={cardTitleClasses}>Audience fit</h2>
+                          <p className={cardSubtitleClasses}>Ranked Instagram percentages.</p>
+                        </>
+                      }
+                    />
+                    <Card.Body>
+                      <div className="${pitchKitAudienceWellClasses}">
+                        <AudienceSection title="Countries" items={audience.countries} />
+                        <AudienceSection title="Cities" items={audience.cities} />
+                        <AudienceSection title="Age" items={audience.ages} />
+                        <AudienceSection title="Gender" items={audience.gender} />
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </div>
+              </div>
+
+              <section className="${pitchKitPostsSectionClasses}">
+                <div className="${pitchKitPostsHeaderClasses}">
+                  <div>
+                    <h2 className={cardTitleClasses}>Recent proof</h2>
+                    <p className="${pitchKitSupportingClasses}">
+                      {postNotice ?? proofMetricNotices[proofMetric]}
+                    </p>
+                  </div>
+                  <Badge variant="neutral" emphasis="muted" size="sm">
+                    {visiblePosts.length} shown
+                  </Badge>
+                </div>
+                <Tab.Group
+                  aria-label="Rank recent proof posts by"
+                  value={proofMetric}
+                  onValueChange={handleProofMetricChange}
+                  className="${pitchKitPostsTabsClasses}"
+                >
+                  <Tab value="reach" panelId="recent-proof-panel">Reach</Tab>
+                  <Tab value="engagement" panelId="recent-proof-panel">Engagement</Tab>
+                  <Tab value="saves" panelId="recent-proof-panel">Saves</Tab>
+                </Tab.Group>
+                <div
+                  id="recent-proof-panel"
+                  role="tabpanel"
+                  className="${pitchKitPostsPanelClasses}"
+                >
+                  {rankedPosts.map((post, index) => (
+                    <Card key={post.id} variant="outlined" shape="rounded" className="${pitchKitPostCardClasses}">
+                      <Card.Header
+                        start={
+                          <span className="${pitchKitPostHeaderStartClasses}">
+                            <Badge size="sm">#{index + 1}</Badge>
+                            <span className={cardSubtitleClasses}>{post.publishedAt}</span>
+                          </span>
+                        }
+                        end={
+                          <MoreMenu
+                            aria-label={\`Manage ranked post \${index + 1}\`}
+                            size="xs"
+                            items={[
+                              {
+                                id: "swap",
+                                label: "Swap post",
+                                start: (
+                                  <ButtonIcon size="sm">
+                                    <Repeat2 />
+                                  </ButtonIcon>
+                                ),
+                              },
+                              {
+                                id: "hide",
+                                label: "Hide from kit",
+                                start: (
+                                  <ButtonIcon size="sm">
+                                    <EyeOff />
+                                  </ButtonIcon>
+                                ),
+                              },
+                            ]}
+                            onAction={(actionId) => handlePostAction(post.id, actionId)}
+                          />
+                        }
                       />
-                    }
-                  />
-                  <Card.Body><img src={post.imageUrl} alt={post.imageAlt} className="aspect-[4/3] w-full object-cover" /></Card.Body>
-                </Card>
-              ))}
-            </div>
-          </section>
-          <AlertDialog
-            open={pendingHidePostId != null}
-            onOpenChange={(open) => {
-              if (!open) setPendingHidePostId(null);
-            }}
-            title="Hide this post from PitchKit?"
-            description="It will no longer appear in the shareable PitchKit. You can add it back later."
-            cancelLabel="Keep post"
-            confirmLabel="Hide from kit"
-            onConfirm={hidePendingPost}
-          />
+                      <Card.Body>
+                        <img
+                          className="${pitchKitPostImageClasses}"
+                          src={post.imageUrl}
+                          alt={post.imageAlt}
+                        />
+                      </Card.Body>
+                      <Card.Footer>
+                        <div className="${pitchKitPostMetricsClasses}">
+                          {[
+                            ["Saves", post.saves],
+                            ["Reach", post.reach],
+                            ["Likes", post.likes],
+                          ].map(([label, value]) => (
+                            <span key={label} className="${pitchKitPostMetricClasses}">
+                              <span className="${pitchKitPostMetricLabelClasses}">{label}</span>
+                              <span className="${pitchKitPostMetricValueClasses}">
+                                {compactNumber.format(value)}
+                              </span>
+                            </span>
+                          ))}
+                        </div>
+                      </Card.Footer>
+                    </Card>
+                  ))}
+                </div>
+              </section>
+              <AlertDialog
+                open={pendingHidePostId != null}
+                onOpenChange={(open) => {
+                  if (!open) setPendingHidePostId(null);
+                }}
+                title="Hide this post from PitchKit?"
+                description="It will no longer appear in the shareable PitchKit. You can add it back later."
+                cancelLabel="Keep post"
+                confirmLabel="Hide from kit"
+                onConfirm={hidePendingPost}
+              />
+            </>
+          )}
         </div>
       </div>
       <Toaster position="bottom-right" />
     </main>
   );
 }
-`),
+`,
+  ),
 };
 
 export const GraphDataUnavailable: Story = {

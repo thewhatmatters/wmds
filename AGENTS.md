@@ -89,6 +89,7 @@ When adding a component: create its folder in the correct atomic tier, place its
 - **`src/examples/{Name}/`** — Storybook-only; never in `src/index.ts`.
 - Page-level Examples start with `grid-page`, place content through `band` + responsive column spans, and mount **`ExampleGridControls`**.
 - Design with live grid values first. Once approved, freeze the selected `--grid-max` and `--grid-column-gap` values into the **Pattern** story’s `storyCopySource()`.
+- **Show code is the product contract.** Pattern `storyCopySource` must stay a literal mirror of the live Example canvas (layout, chrome, spacing, typography). Consuming apps copy Show code — not Storybook-only `*Example.tsx` / `*Styles.ts`.
 - Copy source and engineer handoff prompts include only exported package components, exact page-layout classes, state wiring, and approved grid values. Omit **`ExampleGridControls`** and all other Storybook-only development chrome.
 
 ## Resume here (Avatar + overlay family)
