@@ -57,6 +57,9 @@ export const chartUiTokens = {
   tooltipMuted: "var(--color-text-secondary)",
   /** Error state tick fill — soft error wash across the track. */
   errorSegment: "var(--color-error-muted)",
+  /** In-series no-data hatch — skeleton wash + soft border stripe (ADR-0027). */
+  noDataBand: "var(--color-skeleton)",
+  noDataStripe: "color-mix(in srgb, var(--color-border-emphasized) 42%, transparent)",
 } as const;
 
 /** Dot-grid canvas — apply `backgroundPatternDotGridClasses` or Chart shell with grid. */
@@ -683,7 +686,19 @@ export function chartTooltipItemsFromConfig(
 ): ChartTooltipItem[] {
   const order = keys ?? Object.keys(config);
   return order
-    .filter((key) => config[key] != null && values[key] != null && values[key] !== undefined)
+    .filter((key) => {
+      if (config[key] == null) {
+        return false;
+      }
+      const raw = values[key];
+      if (raw == null) {
+        return false;
+      }
+      if (typeof raw === "number" && !Number.isFinite(raw)) {
+        return false;
+      }
+      return true;
+    })
     .map((key) => {
       const entry = config[key]!;
       const raw = values[key]!;

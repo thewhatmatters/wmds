@@ -6,6 +6,7 @@ import type {
   ChartSeriesConfig,
   ChartVariant,
 } from "../../../lib/chartTheme";
+import type { ChartCartesianGapBand } from "./chartCartesianGaps";
 
 export type ChartCartesianPoint = {
   date: Date;
@@ -39,6 +40,9 @@ export type ChartCartesianContextValue = {
   verticalGrid: boolean;
   /** Y-axis tick formatter — defaults to chartFormatAxisValue. */
   yTickFormat?: (value: number) => string;
+  /** In-series hatch + pill — empty when `noData={false}` or no gaps. */
+  noDataLabel: string;
+  gapBands: ChartCartesianGapBand[];
 };
 
 const ChartCartesianContext = createContext<ChartCartesianContextValue | null>(null);

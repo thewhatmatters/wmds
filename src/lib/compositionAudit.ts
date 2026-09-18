@@ -118,7 +118,7 @@ export const compositionShellExceptions: CompositionShellException[] = [
   {
     file: "components/organisms/Chart/ChartCartesian.tsx",
     ruleId: "inline-svg",
-    reason: "Chart.Cartesian owns visx-composed SVG (Area, axes, grid, crosshair) — ADR-0012, ADR-0015.",
+    reason: "Chart.Cartesian owns visx-composed SVG (Area, axes, grid, no-data hatch, crosshair) — ADR-0012, ADR-0015, ADR-0027.",
   },
   {
     file: "components/organisms/Chart/ChartDistributionStrip.tsx",

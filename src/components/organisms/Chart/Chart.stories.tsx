@@ -14,6 +14,7 @@ import {
   chartTooltipItemsFromConfig,
 } from "../../../lib/chartTheme";
 import {
+  buildCartesianSeriesWithLeadingGap,
   buildOccupancyAreaSeries,
   occupancyAreaSeriesForSelectValue,
 } from "../../../lib/chartSampleData";
@@ -63,6 +64,19 @@ const occupancyAreaData = occupancyAreaSeriesForSelectValue(occupancyAreaSource,
 const occupancyTooltipValues = { occupied: 144, available: 56 };
 
 const occupiedToneConfig = chartSeriesConfigFromTone("occupied", "Occupied units", "primary");
+const reachToneConfig = chartSeriesConfigFromTone("reach", "Reach", "primary");
+const reachLeadingGapData = buildCartesianSeriesWithLeadingGap();
+const reachInteriorGapData = buildCartesianSeriesWithLeadingGap({ gapDays: 0 }).map((point, index) =>
+  index >= 8 && index <= 12 ? { ...point, reach: null } : point,
+);
+const reachMultiSeriesGapData = reachLeadingGapData.map((point) => ({
+  ...point,
+  typical: 4220,
+}));
+const reachMultiSeriesConfig = chartSeriesConfigFromKeys([
+  { key: "typical", label: "Typical reach" },
+  { key: "reach", label: "Daily reach" },
+]);
 
 const audienceCompositionConfig = chartSeriesConfigFromKeys([
   { key: "women", label: "Women" },
@@ -258,6 +272,9 @@ Card.Header / Footer usually carry KPI copy; the chart mark sits in **Card.Body*
 - **Do** use **Skeleton** (**Components/Feedback/Skeleton**) for initial page/card skeleton screens — mirror layout, then swap for **Chart.Loading** or live marks.
 - **Don't** use \`Chart.SegmentedBar\` for per-day or per-week strips — ticks are not calendar buckets.
 - **Do** use **Chart.Cartesian** hairline defaults — 1.5px stroke, light area fill, solid horizontal grid + dashed vertical columns at x-axis ticks; y-axis \`chartFormatAxisValue\` or \`yTickFormat\`; pass \`verticalGrid={false}\` only when columns add noise.
+- **Do** pass \`null\` (not \`0\`) for missing Cartesian points — the series breaks and a hatched **No data** band covers the x-run (**Pattern — Cartesian no-data gaps**, ADR-0027).
+- **Don't** use in-series gaps when nothing in the window is plottable — that is a Card.Body empty Pattern (Insights **State — insufficient reach data**), not a full-plot hatch.
+- **Don't** use gaps for fetch chrome — **Skeleton** / **Chart.Loading**.
 - **Don't** put axis assumptions in \`Chart.Frame\` — use \`Chart.Cartesian\` for time series (ADR-0015).
         `.trim(),
       },
@@ -771,6 +788,94 @@ export const AreaSingleSeries: Story = {
       periodKind="month"
       aria-label="Occupied units over time"
     />
+  ),
+};
+
+export const CartesianNoDataGaps: Story = {
+  name: "Pattern — Cartesian no-data gaps",
+  parameters: {
+    ...withStoryCopySource(
+      {
+        docs: {
+          description: {
+            story:
+              "Partial window with no values — hatch + muted **Badge** over the missing x-run; the series draws only where values exist. Default hatch rule: **gap when every plotted series key is null** at that x (`noData.mode=\"plotted\"`). Multi-series still breaks each line independently via `defined()`. Not the full-card empty (**State — insufficient reach data**) and not **Skeleton** / **Chart.Loading**. Copy Show code — do not invent hatch chrome.",
+          },
+        },
+      },
+      `
+import { Chart, chartSeriesConfigFromTone } from "@whatmatters/wmds";
+
+const config = chartSeriesConfigFromTone("reach", "Reach", "primary");
+
+const start = new Date(2026, 5, 1);
+const data = Array.from({ length: 30 }, (_, index) => {
+  const date = new Date(start);
+  date.setDate(start.getDate() + index);
+  const offset = index - 10;
+  const reach = index < 10 ? null : Math.round(4150 + Math.sin(offset / 4) * 80 + offset * 6);
+  return { date, reach };
+});
+
+<Chart.Cartesian
+  data={data}
+  config={config}
+  seriesKeys={["reach"]}
+  periodKind="month"
+  noData={{ label: "No data" }}
+  aria-label="Reach over 30 days. Early dates have no data."
+/>
+      `,
+    ),
+  },
+  render: () => (
+    <Chart.Cartesian
+      className="max-w-3xl"
+      data={reachLeadingGapData}
+      config={reachToneConfig}
+      seriesKeys={["reach"]}
+      periodKind="month"
+      noData={{ label: "No data" }}
+      aria-label="Reach over 30 days. Early dates have no data."
+    />
+  ),
+};
+
+export const CartesianGapModesReference: Story = {
+  name: "Reference — Cartesian gap modes",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Interior null run (single series) and multi-series **plotted** rule: hatch only when every key in `seriesKeys` is missing. Typical stays defined, so the leading reach nulls break that line without covering typical. `mode=\"all\"` would require every config key to be null. Full-window empty remains a Card.Body Pattern — not this hatch.",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex w-full max-w-3xl flex-col gap-8">
+      <div className="flex flex-col gap-2">
+        <span className={kpiMetaClasses}>Interior gap — plotted series null</span>
+        <Chart.Cartesian
+          data={reachInteriorGapData}
+          config={reachToneConfig}
+          seriesKeys={["reach"]}
+          periodKind="month"
+          noData={{ label: "No data" }}
+          aria-label="Reach with an interior no-data gap"
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <span className={kpiMetaClasses}>Multi-series — hatch when all plotted keys are null</span>
+        <Chart.Cartesian
+          data={reachMultiSeriesGapData}
+          config={reachMultiSeriesConfig}
+          periodKind="month"
+          noData={{ label: "No data" }}
+          aria-label="Typical and daily reach; daily series starts after a gap"
+        />
+        <Chart.Legend config={reachMultiSeriesConfig} />
+      </div>
+    </div>
   ),
 };
 

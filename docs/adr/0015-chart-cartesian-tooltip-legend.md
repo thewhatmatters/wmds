@@ -177,7 +177,8 @@ Three layout-level phases — not props on chart marks:
 
 - Wire occupancy **Select** → **`chartBucketPeriodData`** / period kind on **Chart.Cartesian**.  
 - Extract generic **Popover** molecule if tooltip + Select/menus need shared primitive.  
-- Legend series toggle (non-goal v1 — revisit with product need).
+- Legend series toggle (non-goal v1 — revisit with product need).  
+- **Shipped separately:** in-series Cartesian no-data hatch — **ADR-0027**.
 
 ## References
 

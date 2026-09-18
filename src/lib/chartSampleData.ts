@@ -79,6 +79,32 @@ export function occupancyAreaSeriesForPeriod(
   return bucketOccupancyAreaSeries(sliced, segmentCount, capacity);
 }
 
+/** 30-day reach-style series with a leading null run for Cartesian no-data stories. */
+export function buildCartesianSeriesWithLeadingGap({
+  dayCount = 30,
+  gapDays = 10,
+  key = "reach",
+  start = new Date(2026, 5, 1),
+}: {
+  dayCount?: number;
+  gapDays?: number;
+  key?: string;
+  start?: Date;
+} = {}): ChartCartesianPoint[] {
+  const origin = new Date(start);
+  origin.setHours(0, 0, 0, 0);
+
+  return Array.from({ length: dayCount }, (_, index) => {
+    const date = new Date(origin);
+    date.setDate(origin.getDate() + index);
+    const offset = index - gapDays;
+    const reach =
+      index < gapDays ? null : Math.round(4150 + Math.sin(offset / 4) * 80 + offset * 6);
+
+    return { date, [key]: reach };
+  });
+}
+
 /** Select value string → scoped Cartesian series (Card.Header period filter). */
 export function occupancyAreaSeriesForSelectValue(
   source: ChartCartesianPoint[],

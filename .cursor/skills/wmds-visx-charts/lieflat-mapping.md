@@ -117,7 +117,7 @@ const config = chartSeriesConfigFromKeys([
 |----|--------------|--------------|-------------|--------------|---------------|-----------|
 | **F1** | Rung Bars | `{ items: [{ label: "Pro", units: 42 }] }` ≤8 | **Backlog P1** | `Chart.Bar` countable vertical | `@visx/shape` Bar, `scaleBand` | — |
 | **F2** | Hairline Line | `{ points: [{ date, value }] }` ≤30 days | **Partial** | **Chart.Cartesian** line (area optional) | `LinePath`, `scaleTime` | **Pattern — area (single series)** |
-| **F3** | Hairline Area | `{ points: [{ date, value }] }` 30–60 days | **Shipped** | **Chart.Cartesian.Area** | `AreaClosed`, `curveMonotoneX` | **Pattern — area**, **occupancy history in Card** |
+| **F3** | Hairline Area | `{ points: [{ date, value }] }` 30–60 days | **Shipped** | **Chart.Cartesian.Area** | `AreaClosed`, `curveMonotoneX`, `defined()` gaps | **Pattern — area**, **Pattern — Cartesian no-data gaps**, **occupancy history in Card** |
 | **F4** | Tick Donut | `{ segments: [{ key, pct: 35 }] }` ≤6, sum 100 | **Backlog P2** | `Chart.Donut` unit ticks | `@visx/shape` Pie + custom ticks | — |
 | **F5** | Tick Rows | `{ items: [{ label, units: 12 }] }` horizontal rank | **Backlog P1** | `Chart.Bar` horizontal | `@visx/shape` Bar, `scaleBand` vertical | — |
 | **F6** | Paired Rungs | `{ items: [{ label, a: 10, b: 14 }] }` two series | **Backlog P2** | `Chart.GroupedBar` | `@visx/shape` BarGroup | — |

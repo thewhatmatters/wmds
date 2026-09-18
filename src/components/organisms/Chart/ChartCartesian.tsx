@@ -18,6 +18,7 @@ import {
   type PointerEvent,
   type ReactNode,
 } from "react";
+import { Badge } from "../../atoms/Badge/Badge";
 import { cn } from "../../../lib/cn";
 import {
   chartAreaPresets,
@@ -37,9 +38,20 @@ import {
   type ChartCartesianPoint,
   type ChartCartesianTooltipDatum,
 } from "./chartCartesianContext";
+import {
+  chartCartesianGapBands,
+  chartCartesianNoDataMinPillWidth,
+  isChartCartesianNumber,
+  isChartCartesianSeriesDefined,
+  resolveChartCartesianGapKeys,
+  resolveChartCartesianNoData,
+  type ChartCartesianNoDataProp,
+} from "./chartCartesianGaps";
 import { ChartTooltipContent } from "./ChartTooltipContent";
 import {
   chartCartesianHostClasses,
+  chartCartesianNoDataOverlayClasses,
+  chartCartesianNoDataPillSlotClasses,
   chartCartesianSvgClasses,
   chartCartesianAxisTickLabelClasses,
   chartTooltipActiveDotClasses,
@@ -61,6 +73,26 @@ import {
 export type { ChartCartesianAnimate } from "./chartCartesianMotion";
 
 export type { ChartCartesianPoint } from "./chartCartesianContext";
+export type {
+  ChartCartesianDefinedSegment,
+  ChartCartesianGapBand,
+  ChartCartesianGapMode,
+  ChartCartesianGapRange,
+  ChartCartesianGapRun,
+  ChartCartesianNoDataOptions,
+  ChartCartesianNoDataProp,
+} from "./chartCartesianGaps";
+export {
+  chartCartesianDefinedSegments,
+  chartCartesianGapBands,
+  chartCartesianGapRuns,
+  chartCartesianHasPlottableValues,
+  chartCartesianNoDataLabelDefault,
+  isChartCartesianNumber,
+  isChartCartesianSeriesDefined,
+  resolveChartCartesianGapKeys,
+  resolveChartCartesianNoData,
+} from "./chartCartesianGaps";
 
 /** Layout-only — width, min-height in dashboard grids. */
 export type ChartCartesianLayoutClassName = string;
@@ -76,6 +108,11 @@ export interface ChartCartesianProps {
   periodKind?: ChartPeriodKind;
   xAccessor?: (point: ChartCartesianPoint) => Date;
   yAccessor?: (point: ChartCartesianPoint, key: string) => number;
+  /**
+   * In-series no-data hatch. Default **on** — contiguous `null` / `undefined`
+   * runs get a hatched band + centered **Badge**. `false` disables.
+   */
+  noData?: ChartCartesianNoDataProp;
   /** Accessible chart summary. */
   "aria-label"?: string;
   /** Mount enter — `initial` fades the plot in once; `none` for static Storybook layouts. Period changes do not re-run. */
@@ -90,7 +127,7 @@ export interface ChartCartesianProps {
 
 function defaultYAccessor(point: ChartCartesianPoint, key: string): number {
   const value = point[key];
-  return typeof value === "number" && !Number.isNaN(value) ? value : 0;
+  return isChartCartesianNumber(value) ? value : Number.NaN;
 }
 
 function resolveYMax(
@@ -101,7 +138,10 @@ function resolveYMax(
   let max = 0;
   for (const point of data) {
     for (const key of seriesKeys) {
-      max = Math.max(max, yAccessor(point, key));
+      const value = yAccessor(point, key);
+      if (Number.isFinite(value)) {
+        max = Math.max(max, value);
+      }
     }
   }
   return max <= 0 ? 1 : max * 1.08;
@@ -117,6 +157,7 @@ function ChartCartesianInner({
   periodKind,
   xAccessor,
   yAccessor,
+  noData,
   "aria-label": ariaLabel,
   animateEnter,
   verticalGrid,
@@ -134,6 +175,12 @@ function ChartCartesianInner({
   const margin = chartCartesianMargins[variant ?? "hero"];
   const innerWidth = Math.max(0, width - margin.left - margin.right);
   const innerHeight = Math.max(0, height - margin.top - margin.bottom);
+  const noDataResolved = resolveChartCartesianNoData(noData);
+  const gapKeys = resolveChartCartesianGapKeys({
+    mode: noDataResolved.mode,
+    seriesKeys: keys,
+    configKeys: Object.keys(config),
+  });
 
   const xScale = useMemo(
     () =>
@@ -157,6 +204,31 @@ function ChartCartesianInner({
     [data, innerHeight, keys, yAccessor],
   );
 
+  const gapBands = useMemo(
+    () =>
+      noDataResolved.enabled
+        ? chartCartesianGapBands({
+            data,
+            keys: gapKeys,
+            xAccessor: xAccessor!,
+            xScale: (date) => xScale(date),
+            innerWidth,
+            yAccessor: yAccessor!,
+            ranges: noDataResolved.ranges,
+          })
+        : [],
+    [
+      data,
+      gapKeys,
+      innerWidth,
+      noDataResolved.enabled,
+      noDataResolved.ranges,
+      xAccessor,
+      xScale,
+      yAccessor,
+    ],
+  );
+
   const contextValue = useMemo(
     () => ({
       data,
@@ -177,6 +249,8 @@ function ChartCartesianInner({
       animateEnter,
       verticalGrid,
       yTickFormat,
+      noDataLabel: noDataResolved.label,
+      gapBands,
     }),
     [
       TooltipInPortal,
@@ -185,11 +259,13 @@ function ChartCartesianInner({
       yTickFormat,
       config,
       data,
+      gapBands,
       height,
       innerHeight,
       innerWidth,
       keys,
       margin,
+      noDataResolved.label,
       periodKind,
       variant,
       width,
@@ -221,6 +297,7 @@ function ChartCartesianInner({
           {children ?? (
             <>
               <ChartCartesianGrid />
+              <ChartCartesianNoData />
               <ChartCartesianAreaSeries />
               <ChartCartesianAxisLeft />
               <ChartCartesianAxisBottom />
@@ -229,6 +306,7 @@ function ChartCartesianInner({
           )}
         </Group>
       </motion.svg>
+      <ChartCartesianNoDataPills />
     </ChartCartesianProvider>
   );
 }
@@ -242,6 +320,7 @@ export function ChartCartesian({
   periodKind,
   xAccessor = (point) => point.date,
   yAccessor = defaultYAccessor,
+  noData,
   animate = "initial",
   verticalGrid = true,
   yTickFormat,
@@ -272,6 +351,7 @@ export function ChartCartesian({
               periodKind={periodKind}
               xAccessor={xAccessor}
               yAccessor={yAccessor}
+              noData={noData}
               aria-label={ariaLabel}
               animateEnter={shouldEnter}
               verticalGrid={verticalGrid}
@@ -375,6 +455,95 @@ export function ChartCartesianAxisLeft() {
   );
 }
 
+const CARTESIAN_NO_DATA_HATCH_SIZE = 8;
+
+export function ChartCartesianNoData() {
+  const { gapBands, innerHeight, noDataLabel } = useChartCartesian();
+  const patternId = `wmds-no-data-${useId().replace(/:/g, "")}`;
+
+  if (gapBands.length === 0) {
+    return null;
+  }
+
+  return (
+    <g pointerEvents="none">
+      <defs>
+        <pattern
+          id={patternId}
+          width={CARTESIAN_NO_DATA_HATCH_SIZE}
+          height={CARTESIAN_NO_DATA_HATCH_SIZE}
+          patternUnits="userSpaceOnUse"
+          patternTransform="rotate(45)"
+        >
+          <rect
+            width={CARTESIAN_NO_DATA_HATCH_SIZE}
+            height={CARTESIAN_NO_DATA_HATCH_SIZE}
+            fill={chartUiTokens.noDataBand}
+            fillOpacity={0.72}
+          />
+          <line
+            x1={0}
+            y1={0}
+            x2={0}
+            y2={CARTESIAN_NO_DATA_HATCH_SIZE}
+            stroke={chartUiTokens.noDataStripe}
+            strokeWidth={1}
+          />
+        </pattern>
+      </defs>
+      {gapBands.map((band) => (
+        <g
+          key={`${band.start.getTime()}-${band.end.getTime()}`}
+          role="img"
+          aria-label={noDataLabel}
+        >
+          <title>{noDataLabel}</title>
+          <rect
+            x={band.x}
+            y={0}
+            width={band.width}
+            height={innerHeight}
+            fill={`url(#${patternId})`}
+          />
+        </g>
+      ))}
+    </g>
+  );
+}
+
+function ChartCartesianNoDataPills() {
+  const { gapBands, innerHeight, margin, noDataLabel } = useChartCartesian();
+
+  if (gapBands.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className={chartCartesianNoDataOverlayClasses}>
+      {gapBands.map((band) =>
+        band.width >= chartCartesianNoDataMinPillWidth ? (
+          <div
+            key={`${band.start.getTime()}-${band.end.getTime()}`}
+            className={chartCartesianNoDataPillSlotClasses}
+            style={{
+              left: margin.left + band.x,
+              top: margin.top,
+              width: band.width,
+              height: innerHeight,
+            }}
+          >
+            <span aria-hidden>
+              <Badge variant="neutral" emphasis="muted" size="sm">
+                {noDataLabel}
+              </Badge>
+            </span>
+          </div>
+        ) : null,
+      )}
+    </div>
+  );
+}
+
 export function ChartCartesianAreaSeries() {
   const { data, config, seriesKeys, xScale, yScale, xAccessor, yAccessor, variant, animateEnter } =
     useChartCartesian();
@@ -386,8 +555,11 @@ export function ChartCartesianAreaSeries() {
       {seriesKeys.map((key) => {
         const color = config[key]?.color ?? chartUiTokens.axis;
         const gradientId = `wmds-area-${chartUid}-${key.replace(/[^a-z0-9]/gi, "")}`;
+        const seriesDefined = (point: ChartCartesianPoint) =>
+          isChartCartesianSeriesDefined(point, key, yAccessor);
         const linePath =
           line<ChartCartesianPoint>()
+            .defined(seriesDefined)
             .x((point) => xScale(xAccessor(point)) ?? 0)
             .y((point) => yScale(yAccessor(point, key)) ?? 0)
             .curve(curveMonotoneX)(data) ?? "";
@@ -410,6 +582,7 @@ export function ChartCartesianAreaSeries() {
               >
                 <AreaClosed
                   data={data}
+                  defined={seriesDefined}
                   x={(point) => xScale(xAccessor(point)) ?? 0}
                   y={(point) => yScale(yAccessor(point, key)) ?? 0}
                   yScale={yScale}
@@ -421,6 +594,7 @@ export function ChartCartesianAreaSeries() {
             ) : (
               <AreaClosed
                 data={data}
+                defined={seriesDefined}
                 x={(point) => xScale(xAccessor(point)) ?? 0}
                 y={(point) => yScale(yAccessor(point, key)) ?? 0}
                 yScale={yScale}
@@ -442,6 +616,7 @@ export function ChartCartesianAreaSeries() {
             ) : (
               <LinePath
                 data={data}
+                defined={seriesDefined}
                 x={(point) => xScale(xAccessor(point)) ?? 0}
                 y={(point) => yScale(yAccessor(point, key)) ?? 0}
                 stroke={color}
@@ -493,7 +668,17 @@ function resolveTooltipAnchorY(
   yScale: (value: number) => number,
   yAccessor: (point: ChartCartesianPoint, key: string) => number,
 ): number {
-  return Math.min(...seriesKeys.map((key) => yScale(yAccessor(point, key))));
+  const definedKeys = seriesKeys.filter((key) => isChartCartesianSeriesDefined(point, key, yAccessor));
+  const keys = definedKeys.length > 0 ? definedKeys : seriesKeys;
+  return Math.min(...keys.map((key) => yScale(yAccessor(point, key))));
+}
+
+function pointHasPlottableSeries(
+  point: ChartCartesianPoint,
+  seriesKeys: string[],
+  yAccessor: (point: ChartCartesianPoint, key: string) => number,
+): boolean {
+  return seriesKeys.some((key) => isChartCartesianSeriesDefined(point, key, yAccessor));
 }
 
 export function ChartCartesianTooltipLayer() {
@@ -541,6 +726,12 @@ export function ChartCartesianTooltipLayer() {
         return;
       }
 
+      if (!pointHasPlottableSeries(data[index]!, seriesKeys, yAccessor)) {
+        lastSnapIndexRef.current = null;
+        hideTooltip();
+        return;
+      }
+
       if (lastSnapIndexRef.current === index) {
         return;
       }
@@ -557,6 +748,7 @@ export function ChartCartesianTooltipLayer() {
     },
     [
       data,
+      hideTooltip,
       margin.left,
       margin.top,
       pointerGutterLeft,
@@ -573,8 +765,14 @@ export function ChartCartesianTooltipLayer() {
     tooltipData != null
       ? chartTooltipItemsFromConfig(
           config,
-          Object.fromEntries(seriesKeys.map((key) => [key, yAccessor(tooltipData.point, key)])),
-          seriesKeys,
+          Object.fromEntries(
+            seriesKeys
+              .filter((key) => isChartCartesianSeriesDefined(tooltipData.point, key, yAccessor))
+              .map((key) => [key, yAccessor(tooltipData.point, key)]),
+          ),
+          seriesKeys.filter((key) =>
+            isChartCartesianSeriesDefined(tooltipData.point, key, yAccessor),
+          ),
         )
       : [];
 
@@ -625,23 +823,25 @@ export function ChartCartesianTooltipLayer() {
         />
       ) : null}
       {tooltipOpen && crosshairX != null && tooltipData != null
-        ? seriesKeys.map((key) => {
-            const color = config[key]?.color ?? chartUiTokens.axis;
-            const y = yScale(yAccessor(tooltipData.point, key));
-            return (
-              <circle
-                key={key}
-                cx={crosshairX}
-                cy={y}
-                r={4}
-                fill={color}
-                className={chartTooltipActiveDotClasses}
-                aria-hidden
-              />
-            );
-          })
+        ? seriesKeys
+            .filter((key) => isChartCartesianSeriesDefined(tooltipData.point, key, yAccessor))
+            .map((key) => {
+              const color = config[key]?.color ?? chartUiTokens.axis;
+              const y = yScale(yAccessor(tooltipData.point, key));
+              return (
+                <circle
+                  key={key}
+                  cx={crosshairX}
+                  cy={y}
+                  r={4}
+                  fill={color}
+                  className={chartTooltipActiveDotClasses}
+                  aria-hidden
+                />
+              );
+            })
         : null}
-      {tooltipOpen && tooltipData != null ? (
+      {tooltipOpen && tooltipData != null && tooltipItems.length > 0 ? (
         <TooltipInPortal
           unstyled
           applyPositionStyle
@@ -667,5 +867,6 @@ export function ChartCartesianTooltipLayer() {
 ChartCartesian.Grid = ChartCartesianGrid;
 ChartCartesian.AxisBottom = ChartCartesianAxisBottom;
 ChartCartesian.AxisLeft = ChartCartesianAxisLeft;
+ChartCartesian.NoData = ChartCartesianNoData;
 ChartCartesian.Area = ChartCartesianAreaSeries;
 ChartCartesian.Tooltip = ChartCartesianTooltipLayer;
