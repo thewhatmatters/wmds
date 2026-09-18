@@ -4,6 +4,7 @@ import { Avatar } from "../../components/atoms/Avatar/Avatar";
 import { Badge } from "../../components/atoms/Badge/Badge";
 import { Button } from "../../components/atoms/Button/Button";
 import { ButtonIcon } from "../../components/atoms/Button/ButtonIcon";
+import { Skeleton } from "../../components/atoms/Skeleton/Skeleton";
 import {
   Card,
   cardSubtitleClasses,
@@ -36,6 +37,8 @@ import {
   pitchKitBrandClasses,
   pitchKitContentBandClasses,
   pitchKitContentClasses,
+  pitchKitAudienceSkeletonBarsClasses,
+  pitchKitAudienceSkeletonSectionClasses,
   pitchKitDashboardGridClasses,
   pitchKitEmptyBodyClasses,
   pitchKitEmptyCardClasses,
@@ -44,6 +47,8 @@ import {
   pitchKitFormulaClasses,
   pitchKitHeaderSectionClasses,
   pitchKitHeaderCopyClasses,
+  pitchKitHeaderSkeletonCopyClasses,
+  pitchKitHeaderSkeletonStackClasses,
   pitchKitMetricsStackClasses,
   pitchKitPageClasses,
   pitchKitPostCardClasses,
@@ -58,7 +63,10 @@ import {
   pitchKitPostsSectionClasses,
   pitchKitPostsTabsClasses,
   pitchKitReachCardClasses,
+  pitchKitReachChartMinHeight,
+  pitchKitReachEmptyWellClasses,
   pitchKitSectionEyebrowClasses,
+  pitchKitSkeletonLegendRowClasses,
   pitchKitStatClasses,
   pitchKitStatsBandClasses,
   pitchKitSupportingClasses,
@@ -68,12 +76,18 @@ import {
   pitchKitCardWellClasses,
 } from "./pitchKitStyles";
 
-export type PitchKitDataState = "resolved" | "unavailable";
+export type PitchKitDataState =
+  | "resolved"
+  | "unavailable"
+  | "insufficientReach"
+  | "loading";
+export type PitchKitLoadingPhase = "skeleton" | "retrieving";
 type PitchKitView = "insights" | "pitchkit";
 type PitchKitProofMetric = "reach" | "engagement" | "saves";
 
 export interface PitchKitInsightsExampleProps {
   dataState?: PitchKitDataState;
+  loadingPhase?: PitchKitLoadingPhase;
 }
 
 const reachSeriesConfig = chartSeriesConfigFromKeys([
@@ -119,35 +133,61 @@ function AudienceSection({
   );
 }
 
-function ReachCard() {
+function ReachCardHeader() {
+  return (
+    <Card.Header
+      start={
+        <>
+          <h2 className={cardTitleClasses}>Reach over 30 days</h2>
+          <p className={cardSubtitleClasses}>
+            Typical performance with unusual spikes left visible.
+          </p>
+        </>
+      }
+      end={
+        <Badge variant="neutral" emphasis="muted" size="sm">
+          Graph data
+        </Badge>
+      }
+    />
+  );
+}
+
+function ReachCard({
+  body = "chart",
+}: {
+  body?: "chart" | "empty";
+}) {
   return (
     <Card variant="outlined" shape="rounded" bodyTerminal className={pitchKitReachCardClasses}>
-      <Card.Header
-        start={
-          <>
-            <h2 className={cardTitleClasses}>Reach over 30 days</h2>
-            <p className={cardSubtitleClasses}>
-              Typical performance with unusual spikes left visible.
-            </p>
-          </>
-        }
-        end={
-          <Badge variant="neutral" emphasis="muted" size="sm">
-            Graph data
-          </Badge>
-        }
-      />
+      <ReachCardHeader />
       <Card.Body>
-        <div className={pitchKitCardWellClasses}>
-          <Chart.Cartesian
-            data={pitchKitReachData}
-            config={reachSeriesConfig}
-            periodKind="month"
-            minHeight={344}
-            aria-label="Daily and typical Instagram reach over the last 30 days"
-          />
-          <Chart.Legend config={reachSeriesConfig} />
-        </div>
+        {body === "empty" ? (
+          <div
+            className={pitchKitReachEmptyWellClasses}
+            style={{ minHeight: pitchKitReachChartMinHeight }}
+          >
+            <div className={pitchKitEmptyCopyClasses}>
+              <h3 className={pitchKitEmptyTitleClasses}>Not enough reach history yet</h3>
+              <p className={pitchKitEmptyBodyClasses}>
+                Instagram has not returned enough daily reach to plot the last 30 days.
+                Keep this card in the dashboard — PitchKit does not invent a chart from a
+                missing, thin, or all-zero series.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className={pitchKitCardWellClasses}>
+            <Chart.Cartesian
+              data={pitchKitReachData}
+              config={reachSeriesConfig}
+              periodKind="month"
+              minHeight={pitchKitReachChartMinHeight}
+              aria-label="Daily and typical Instagram reach over the last 30 days"
+            />
+            <Chart.Legend config={reachSeriesConfig} />
+          </div>
+        )}
       </Card.Body>
     </Card>
   );
@@ -249,7 +289,11 @@ function PostCard({
   );
 }
 
-function ResolvedInsights() {
+function ResolvedInsights({
+  reachBody = "chart",
+}: {
+  reachBody?: "chart" | "empty";
+}) {
   const [visiblePosts, setVisiblePosts] = useState(pitchKitPosts);
   const [proofMetric, setProofMetric] =
     useState<PitchKitProofMetric>("reach");
@@ -348,7 +392,7 @@ function ResolvedInsights() {
         </div>
 
         <div className={pitchKitDashboardGridClasses}>
-          <ReachCard />
+          <ReachCard body={reachBody} />
           <AudienceCard />
         </div>
       </div>
@@ -405,6 +449,269 @@ function ResolvedInsights() {
   );
 }
 
+const proofSkeletonCount = 6;
+const audienceSkeletonSections = [
+  { titleWidth: 72, bars: [100, 82, 64] },
+  { titleWidth: 56, bars: [92, 74, 58] },
+  { titleWidth: 40, bars: [88, 70, 52] },
+  { titleWidth: 60, bars: [96, 68, 44] },
+] as const;
+
+function LoadingReachCard({ phase }: { phase: PitchKitLoadingPhase }) {
+  if (phase === "retrieving") {
+    return (
+      <Card
+        variant="outlined"
+        shape="rounded"
+        bodyTerminal
+        className={pitchKitReachCardClasses}
+        aria-busy="true"
+        aria-label="Retrieving reach over 30 days"
+      >
+        <ReachCardHeader />
+        <Card.Body>
+          <div className={pitchKitCardWellClasses}>
+            <Chart.Loading minHeight={pitchKitReachChartMinHeight} />
+          </div>
+        </Card.Body>
+      </Card>
+    );
+  }
+
+  return (
+    <Card
+      variant="outlined"
+      shape="rounded"
+      bodyTerminal
+      className={pitchKitReachCardClasses}
+      aria-busy="true"
+      aria-label="Loading reach over 30 days"
+    >
+      <Card.Header
+        start={
+          <div className={pitchKitHeaderSkeletonStackClasses}>
+            <Skeleton width={168} height={18} radius="inner" index={0} />
+            <Skeleton width={240} height={14} radius="inner" index={1} />
+          </div>
+        }
+        end={<Skeleton width={88} height={28} radius="full" index={2} />}
+      />
+      <Card.Body>
+        <div className={pitchKitCardWellClasses}>
+          <Skeleton
+            width="100%"
+            height={pitchKitReachChartMinHeight}
+            radius="element"
+            index={3}
+          />
+          <div className={pitchKitSkeletonLegendRowClasses}>
+            <Skeleton width={112} height={12} radius="inner" index={4} />
+            <Skeleton width={96} height={12} radius="inner" index={5} />
+          </div>
+        </div>
+      </Card.Body>
+    </Card>
+  );
+}
+
+function LoadingAudienceCard({ phase }: { phase: PitchKitLoadingPhase }) {
+  if (phase === "retrieving") {
+    return (
+      <Card
+        variant="outlined"
+        shape="rounded"
+        bodyTerminal
+        className={pitchKitAudienceCardClasses}
+        aria-busy="true"
+        aria-label="Retrieving audience fit"
+      >
+        <Card.Header
+          start={
+            <>
+              <h2 className={cardTitleClasses}>Audience fit</h2>
+              <p className={cardSubtitleClasses}>Ranked Instagram percentages.</p>
+            </>
+          }
+        />
+        <Card.Body>
+          <div className={pitchKitAudienceWellClasses}>
+            <Chart.Loading minHeight={pitchKitReachChartMinHeight} />
+          </div>
+        </Card.Body>
+      </Card>
+    );
+  }
+
+  return (
+    <Card
+      variant="outlined"
+      shape="rounded"
+      bodyTerminal
+      className={pitchKitAudienceCardClasses}
+      aria-busy="true"
+      aria-label="Loading audience fit"
+    >
+      <Card.Header
+        start={
+          <div className={pitchKitHeaderSkeletonStackClasses}>
+            <Skeleton width={120} height={18} radius="inner" index={6} />
+            <Skeleton width={188} height={14} radius="inner" index={7} />
+          </div>
+        }
+      />
+      <Card.Body>
+        <div className={pitchKitAudienceWellClasses}>
+          {audienceSkeletonSections.map((section, sectionIndex) => (
+            <section
+              key={section.titleWidth}
+              className={pitchKitAudienceSkeletonSectionClasses}
+            >
+              <Skeleton
+                width={section.titleWidth}
+                height={12}
+                radius="inner"
+                index={8 + sectionIndex}
+              />
+              <div className={pitchKitAudienceSkeletonBarsClasses}>
+                {section.bars.map((width, barIndex) => (
+                  <Skeleton
+                    key={`${section.titleWidth}-${width}`}
+                    width={`${width}%`}
+                    height={16}
+                    radius="inner"
+                    index={12 + sectionIndex * 3 + barIndex}
+                  />
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      </Card.Body>
+    </Card>
+  );
+}
+
+function ProofSkeletonCard({ index }: { index: number }) {
+  const base = 24 + index * 8;
+
+  return (
+    <Card
+      variant="outlined"
+      shape="rounded"
+      className={pitchKitPostCardClasses}
+      aria-hidden
+    >
+      <Card.Header
+        start={
+          <span className={pitchKitPostHeaderStartClasses}>
+            <Skeleton width={28} height={20} radius="full" index={base} />
+            <Skeleton width={48} height={14} radius="inner" index={base + 1} />
+          </span>
+        }
+      />
+      <Card.Body>
+        <div className={pitchKitPostImageClasses}>
+          <Skeleton
+            width="100%"
+            height="100%"
+            radius="element"
+            className="h-full w-full"
+            index={base + 2}
+          />
+        </div>
+      </Card.Body>
+      <Card.Footer>
+        <div className={pitchKitPostMetricsClasses}>
+          {[0, 1, 2].map((metric) => (
+            <span key={metric} className={pitchKitPostMetricClasses}>
+              <Skeleton width={40} height={10} radius="inner" index={base + 3 + metric} />
+              <Skeleton width={56} height={16} radius="inner" index={base + 6 + metric} />
+            </span>
+          ))}
+        </div>
+      </Card.Footer>
+    </Card>
+  );
+}
+
+function LoadingInsights({ phase }: { phase: PitchKitLoadingPhase }) {
+  return (
+    <>
+      <section className={pitchKitHeaderSectionClasses}>
+        <PageHeader
+          variant="page"
+          title="Insights"
+          end={
+            <Button role="secondary" size="sm" icon={<Share2 />}>
+              Share kit
+            </Button>
+          }
+        />
+        {phase === "retrieving" ? (
+          <div className={pitchKitHeaderCopyClasses}>
+            <p className={pitchKitSupportingClasses}>
+              Connecting to Instagram Graph for the latest verified performance.
+            </p>
+            <p className={pitchKitFormulaClasses}>
+              Engagement rate = (likes + comments) ÷ followers.
+            </p>
+          </div>
+        ) : (
+          <div className={pitchKitHeaderSkeletonCopyClasses}>
+            <Skeleton width={280} height={16} radius="inner" index={20} />
+            <Skeleton width={220} height={12} radius="inner" index={21} />
+          </div>
+        )}
+      </section>
+
+      <div className={pitchKitMetricsStackClasses}>
+        <div
+          role="group"
+          aria-label="Loading Instagram performance summary"
+          className={pitchKitStatsBandClasses}
+        >
+          <Stat className={pitchKitStatClasses} label="Followers" value="" loading />
+          <Stat className={pitchKitStatClasses} label="Engagement rate" value="" loading />
+          <Stat className={pitchKitStatClasses} label="Typical reach" value="" loading />
+          <Stat className={pitchKitStatClasses} label="Saves" value="" loading />
+        </div>
+
+        <div className={pitchKitDashboardGridClasses}>
+          <LoadingReachCard phase={phase} />
+          <LoadingAudienceCard phase={phase} />
+        </div>
+      </div>
+
+      <section
+        className={pitchKitPostsSectionClasses}
+        aria-busy="true"
+        aria-label="Loading recent proof"
+      >
+        <div className={pitchKitPostsHeaderClasses}>
+          {phase === "retrieving" ? (
+            <div>
+              <h2 className={cardTitleClasses}>Recent proof</h2>
+              <p className={pitchKitSupportingClasses}>
+                Ranking recent Instagram posts once Graph returns them.
+              </p>
+            </div>
+          ) : (
+            <div className={pitchKitHeaderSkeletonCopyClasses}>
+              <Skeleton width={132} height={18} radius="inner" index={22} />
+              <Skeleton width={196} height={14} radius="inner" index={23} />
+            </div>
+          )}
+        </div>
+        <div className={pitchKitPostsPanelClasses}>
+          {Array.from({ length: proofSkeletonCount }, (_, index) => (
+            <ProofSkeletonCard key={index} index={index} />
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}
+
 function UnavailableInsights() {
   return (
     <>
@@ -448,8 +755,25 @@ function UnavailableInsights() {
   );
 }
 
+function insightsContent(
+  dataState: PitchKitDataState,
+  loadingPhase: PitchKitLoadingPhase,
+) {
+  switch (dataState) {
+    case "unavailable":
+      return <UnavailableInsights />;
+    case "insufficientReach":
+      return <ResolvedInsights reachBody="empty" />;
+    case "loading":
+      return <LoadingInsights phase={loadingPhase} />;
+    default:
+      return <ResolvedInsights />;
+  }
+}
+
 export function PitchKitInsightsExample({
   dataState = "resolved",
+  loadingPhase = "skeleton",
 }: PitchKitInsightsExampleProps) {
   const [view, setView] = useState<PitchKitView>("insights");
   const [gridVisible, setGridVisible] = useState(false);
@@ -513,10 +837,8 @@ export function PitchKitInsightsExample({
         <div className={pitchKitContentClasses}>
           {view === "pitchkit" ? (
             <ShareablePitchKit />
-          ) : dataState === "resolved" ? (
-            <ResolvedInsights />
           ) : (
-            <UnavailableInsights />
+            insightsContent(dataState, loadingPhase)
           )}
         </div>
       </div>

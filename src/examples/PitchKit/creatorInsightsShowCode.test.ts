@@ -22,16 +22,22 @@ const exampleStyleKeys = [
   ...exampleSource.matchAll(/^\s+(pitchKit\w+Classes),?$/gm),
 ].map((match) => match[1]);
 
-/** Unavailable empty-state tokens belong on the State story, not this Pattern freeze. */
-const unavailableStyleKeys = new Set([
+/** Empty / loading tokens belong on those State/Pattern freezes, not this resolved canvas. */
+const nonResolvedStyleKeys = new Set([
+  "pitchKitAudienceSkeletonBarsClasses",
+  "pitchKitAudienceSkeletonSectionClasses",
   "pitchKitEmptyBodyClasses",
   "pitchKitEmptyCardClasses",
   "pitchKitEmptyCopyClasses",
   "pitchKitEmptyTitleClasses",
+  "pitchKitHeaderSkeletonCopyClasses",
+  "pitchKitHeaderSkeletonStackClasses",
+  "pitchKitReachEmptyWellClasses",
+  "pitchKitSkeletonLegendRowClasses",
 ]);
 
 const resolvedCanvasStyleKeys = exampleStyleKeys.filter(
-  (key) => !unavailableStyleKeys.has(key),
+  (key) => !nonResolvedStyleKeys.has(key),
 );
 
 describe("Pattern — creator Insights Show code", () => {
