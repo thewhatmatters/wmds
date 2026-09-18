@@ -26,8 +26,15 @@ export const PrimaryNavigation: Story = {
       within(navigation).getByRole("radio", { name: /^pitchkit$/i }),
     );
     expect(
-      canvas.getByRole("heading", { name: /shareable pitchkit/i }),
+      canvas.getByRole("heading", { name: /avery morgan/i }),
     ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /selected posts/i }),
+    ).toBeInTheDocument();
+    expect(canvas.queryByText(/coming soon/i)).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("button", { name: /manage ranked post/i }),
+    ).not.toBeInTheDocument();
 
     await userEvent.click(
       within(navigation).getByRole("radio", { name: /^insights$/i }),
@@ -49,6 +56,60 @@ export const UnavailableData: Story = {
       }),
     ).not.toBeInTheDocument();
     expect(canvas.getByText(/never substitutes zero/i)).toBeInTheDocument();
+  },
+};
+
+export const ShareableKit: Story = {
+  name: "PitchKit — shareable kit",
+  render: () => <PitchKitInsightsExample initialView="pitchkit" />,
+  play: async ({ canvas }) => {
+    expect(
+      canvas.getByRole("heading", { name: /avery morgan/i }),
+    ).toBeInTheDocument();
+    expect(canvas.getByText("@averymorgan")).toBeInTheDocument();
+    expect(canvas.getByText("Instagram")).toBeInTheDocument();
+    expect(
+      canvas.getByRole("group", { name: /verified instagram summary/i }),
+    ).toBeInTheDocument();
+    expect(canvas.getByRole("link", { name: /hello@averymorgan.com/i })).toHaveAttribute(
+      "href",
+      "mailto:hello@averymorgan.com",
+    );
+    expect(
+      canvas.getByRole("link", { name: /averymorgan.com/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /past-brand proof/i }),
+    ).toBeInTheDocument();
+    expect(canvas.getByText("Brooklinen")).toBeInTheDocument();
+    expect(
+      canvas.queryByRole("button", { name: /manage ranked post/i }),
+    ).not.toBeInTheDocument();
+    expect(canvas.queryByText(/coming soon/i)).not.toBeInTheDocument();
+  },
+};
+
+export const ShareableKitWhenGraphUnavailable: Story = {
+  name: "PitchKit — shareable kit with unavailable Graph data",
+  render: () => (
+    <PitchKitInsightsExample dataState="unavailable" initialView="pitchkit" />
+  ),
+  play: async ({ canvas }) => {
+    expect(
+      canvas.getByRole("heading", { name: /avery morgan/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("group", { name: /verified instagram summary/i }),
+    ).toHaveTextContent("—");
+    expect(
+      canvas.queryByRole("heading", { name: /selected posts/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /contact/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /past-brand proof/i }),
+    ).toBeInTheDocument();
   },
 };
 

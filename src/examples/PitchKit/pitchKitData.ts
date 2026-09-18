@@ -50,6 +50,63 @@ export const pitchKitAudience = {
   ] satisfies ChartRankedBarItem[],
 } as const;
 
+export type PitchKitDataState = "resolved" | "unavailable";
+
+export interface PitchKitCreator {
+  name: string;
+  handle: string;
+  platform: string;
+}
+
+export interface PitchKitContact {
+  email: string;
+  emailHref: string;
+  websiteLabel: string;
+  websiteHref: string;
+}
+
+export interface PitchKitPastBrand {
+  id: string;
+  name: string;
+  proof: string;
+}
+
+export const pitchKitCreator: PitchKitCreator = {
+  name: "Avery Morgan",
+  handle: "@averymorgan",
+  platform: "Instagram",
+};
+
+export const pitchKitVerifiedStats = {
+  followers: "84.2K",
+  engagementRate: "5.8%",
+} as const;
+
+export const pitchKitContact: PitchKitContact = {
+  email: "hello@averymorgan.com",
+  emailHref: "mailto:hello@averymorgan.com",
+  websiteLabel: "averymorgan.com",
+  websiteHref: "https://averymorgan.com",
+};
+
+export const pitchKitPastBrands: PitchKitPastBrand[] = [
+  {
+    id: "brooklinen",
+    name: "Brooklinen",
+    proof: "Guest editorial for the summer linen drop.",
+  },
+  {
+    id: "food52",
+    name: "Food52",
+    proof: "Hosted a weekend table workshop in Brooklyn.",
+  },
+  {
+    id: "parachute",
+    name: "Parachute",
+    proof: "Home campaign for the coastal collection.",
+  },
+];
+
 export const pitchKitPosts: PitchKitPost[] = [
   {
     id: "coastal-table",

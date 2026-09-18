@@ -15,7 +15,7 @@ const exampleSource = readFileSync(
 const copySourceStart = storiesSource.indexOf(
   'import { useState } from "react";',
 );
-const copySourceEnd = storiesSource.indexOf("export const GraphDataUnavailable");
+const copySourceEnd = storiesSource.indexOf("export const ShareablePitchKit");
 const showCodeSource = storiesSource.slice(copySourceStart, copySourceEnd);
 
 const exampleStyleKeys = [
@@ -78,5 +78,12 @@ describe("Pattern — creator Insights Show code", () => {
   it("omits Storybook-only inspector chrome from Show code", () => {
     expect(showCodeSource).not.toContain("ExampleGridControls");
     expect(showCodeSource).not.toContain("GridOverlay");
+  });
+
+  it("renders the shareable kit on the PitchKit branch", () => {
+    expect(showCodeSource).toContain('shareableKitCopySource("visiblePosts")');
+    expect(showCodeSource).toContain("TextLink");
+    expect(showCodeSource).not.toContain("Coming soon");
+    expect(showCodeSource).not.toContain("Shareable PitchKit");
   });
 });
