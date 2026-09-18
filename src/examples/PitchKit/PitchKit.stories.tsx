@@ -22,9 +22,6 @@ import {
   pitchKitHeaderSectionClasses,
   pitchKitMetricsStackClasses,
   pitchKitPageClasses,
-  pitchKitPlaceholderBodyClasses,
-  pitchKitPlaceholderClasses,
-  pitchKitPlaceholderTitleClasses,
   pitchKitPostCardClasses,
   pitchKitPostHeaderStartClasses,
   pitchKitPostImageClasses,
@@ -38,6 +35,14 @@ import {
   pitchKitPostsTabsClasses,
   pitchKitReachCardClasses,
   pitchKitSectionEyebrowClasses,
+  pitchKitShareableAsideCardClasses,
+  pitchKitShareableBrandItemClasses,
+  pitchKitShareableBrandListClasses,
+  pitchKitShareableBrandNameClasses,
+  pitchKitShareableContactLineClasses,
+  pitchKitShareablePostMetricsClasses,
+  pitchKitShareableStackClasses,
+  pitchKitShareableStatClasses,
   pitchKitStatClasses,
   pitchKitStatsBandClasses,
   pitchKitSupportingClasses,
@@ -47,6 +52,140 @@ import {
 } from "./pitchKitStyles";
 
 const dataStates = ["resolved", "unavailable"] as const satisfies readonly PitchKitDataState[];
+const pitchKitViews = ["insights", "pitchkit"] as const;
+
+/** Shared kit body for both Pattern freezes — interpolate style tokens, not Storybook-only modules. */
+function shareableKitCopySource(postsBinding: string) {
+  return `
+            <section className="${pitchKitHeaderSectionClasses}">
+              <PageHeader
+                variant="page"
+                start={<Avatar name={creator.name} size="lg" />}
+                title={creator.name}
+                end={
+                  <Badge variant="neutral" emphasis="muted" size="sm">
+                    {creator.platform}
+                  </Badge>
+                }
+              />
+              <div className="${pitchKitHeaderCopyClasses}">
+                <p className="${pitchKitSupportingClasses}">{creator.handle}</p>
+                <p className="${pitchKitFormulaClasses}">
+                  Verified Instagram summary plus creator-entered contact and past-brand
+                  proof.
+                </p>
+              </div>
+            </section>
+
+            <div
+              role="group"
+              aria-label="Verified Instagram summary"
+              className="${pitchKitStatsBandClasses}"
+            >
+              <Stat className="${pitchKitShareableStatClasses}" label="Followers" value={creator.followers} />
+              <Stat className="${pitchKitShareableStatClasses}" label="Engagement rate" value={creator.engagementRate} />
+            </div>
+
+            <section className="${pitchKitPostsSectionClasses}">
+              <div className="${pitchKitPostsHeaderClasses}">
+                <div>
+                  <h2 className={cardTitleClasses}>Selected posts</h2>
+                  <p className="${pitchKitSupportingClasses}">
+                    Posts chosen for this kit.
+                  </p>
+                </div>
+              </div>
+              <div className="${pitchKitPostsPanelClasses}">
+                {${postsBinding}.map((post) => (
+                  <Card key={post.id} variant="outlined" shape="rounded" className="${pitchKitPostCardClasses}">
+                    <Card.Header
+                      start={<span className={cardSubtitleClasses}>{post.publishedAt}</span>}
+                    />
+                    <Card.Body>
+                      <img
+                        className="${pitchKitPostImageClasses}"
+                        src={post.imageUrl}
+                        alt={post.imageAlt}
+                      />
+                    </Card.Body>
+                    <Card.Footer>
+                      <div className="${pitchKitShareablePostMetricsClasses}">
+                        {[
+                          ["Likes", post.likes],
+                          ["Comments", post.comments],
+                        ].map(([label, value]) => (
+                          <span key={label} className="${pitchKitPostMetricClasses}">
+                            <span className="${pitchKitPostMetricLabelClasses}">{label}</span>
+                            <span className="${pitchKitPostMetricValueClasses}">
+                              {compactNumber.format(value)}
+                            </span>
+                          </span>
+                        ))}
+                      </div>
+                    </Card.Footer>
+                  </Card>
+                ))}
+              </div>
+            </section>
+
+            <div className="${pitchKitDashboardGridClasses}">
+              <Card variant="outlined" shape="rounded" bodyTerminal className="${pitchKitShareableAsideCardClasses}">
+                <Card.Header
+                  start={
+                    <>
+                      <h2 className={cardTitleClasses}>Contact</h2>
+                      <p className={cardSubtitleClasses}>Creator-entered.</p>
+                    </>
+                  }
+                />
+                <Card.Body>
+                  <div className="${pitchKitCardWellClasses}">
+                    <div className="${pitchKitShareableStackClasses}">
+                      <p className="${pitchKitSupportingClasses}">
+                        Brands use these details to get in touch.
+                      </p>
+                      <p className="${pitchKitShareableContactLineClasses}">
+                        Email{" "}
+                        <TextLink href={contact.emailHref}>{contact.email}</TextLink>
+                      </p>
+                      <p className="${pitchKitShareableContactLineClasses}">
+                        Site{" "}
+                        <TextLink href={contact.websiteHref} external>
+                          {contact.websiteLabel}
+                        </TextLink>
+                      </p>
+                    </div>
+                  </div>
+                </Card.Body>
+              </Card>
+
+              <Card variant="outlined" shape="rounded" bodyTerminal className="${pitchKitShareableAsideCardClasses}">
+                <Card.Header
+                  start={
+                    <>
+                      <h2 className={cardTitleClasses}>Past-brand proof</h2>
+                      <p className={cardSubtitleClasses}>
+                        Collaborations added to this kit.
+                      </p>
+                    </>
+                  }
+                />
+                <Card.Body>
+                  <div className="${pitchKitCardWellClasses}">
+                    <ul className="${pitchKitShareableBrandListClasses}">
+                      {brands.map((brand) => (
+                        <li key={brand.id} className="${pitchKitShareableBrandItemClasses}">
+                          <h3 className="${pitchKitShareableBrandNameClasses}">{brand.name}</h3>
+                          <p className="${pitchKitSupportingClasses}">{brand.proof}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </Card.Body>
+              </Card>
+            </div>
+`;
+}
 
 const meta = {
   title: "Examples/PitchKit",
@@ -58,9 +197,14 @@ const meta = {
       control: "select",
       options: dataStates,
     },
+    initialView: {
+      control: "select",
+      options: pitchKitViews,
+    },
   },
   args: {
     dataState: "resolved",
+    initialView: "insights",
   },
   parameters: {
     wmdsLayout: "fullscreen",
@@ -69,9 +213,12 @@ const meta = {
         component: `
 ## Usage
 
-Authenticated PitchKit **Insights** at a frozen 1140px grid maximum. The single top-level **SegmentedControl** switches between Insights and the future public PitchKit view; the second destination is intentionally a placeholder in this pass.
+Authenticated PitchKit at a frozen 1140px grid maximum. The single top-level **SegmentedControl** switches between owner **Insights** and the public **PitchKit** destination. Both Pattern stories use the same page spine (\`pitchKitPageClasses\`, topbar, content bands).
 
-**Show code** on **Pattern — creator Insights** is the product contract — a literal freeze of this canvas (layout, chrome, spacing, typography). Copy that source into PitchKit. Do not reconstruct the page from Storybook-only \`PitchKitExample\` / \`pitchKitStyles\`, and do not ship **ExampleGridControls**.
+**Show code** is the product contract — a literal freeze of the canvas (layout, chrome, spacing, typography). Copy that source into PitchKit. Do not reconstruct the page from Storybook-only \`PitchKitExample\` / \`pitchKitStyles\`, and do not ship **ExampleGridControls**.
+
+- **Pattern — creator Insights** — owner Insights dashboard, including the PitchKit branch that renders the shareable kit.
+- **Pattern — shareable PitchKit** — owner shell + kit body (identity, verified summary, selected posts, contact, past-brand proof). A public URL copies this body and may omit **SegmentedControl**; never add Edit or **MoreMenu**.
 
 The dashboard answers four questions in order:
 
@@ -92,10 +239,11 @@ The dashboard answers four questions in order:
 
 - Page layout — \`grid-page\`, \`band\`, \`--grid-max:1140px\`, \`--grid-column-gap:8px\`
 - Primary navigation — **SegmentedControl**
-- Page and card chrome — **PageHeader**, **Card**, **Badge**, **Avatar**, **Button**
+- Page and card chrome — **PageHeader**, **Card**, **Badge**, **Avatar**, **Button**, **TextLink**
 - Metrics and charts — **Stat**, **Chart.Cartesian**, **Chart.Legend**, **Chart.RankedBars**
 - Proof ranking — **Tab.Group** + **Tab**; one selected metric reorders the same supplied posts
-- Post management — **MoreMenu** with **ButtonIcon**; **AlertDialog** confirms hiding a post
+- Post management — **MoreMenu** with **ButtonIcon**; **AlertDialog** confirms hiding a post (Insights only)
+- Shareable kit — identity + two verified **Stat** tiles + selected-post **Card** grid + contact **TextLink**s + past-brand list
 - Outcome feedback — **Toaster** + **toast**; Undo restores the hidden post
 - Storybook development only — **ExampleGridControls** + **GridOverlay**
 
@@ -103,6 +251,7 @@ The dashboard answers four questions in order:
 
 - **Do** treat **Show code** as the implementation contract; re-copy it when the canvas changes.
 - **Do** preserve the visual difference between typical performance and a spike.
+- **Do** copy **Pattern — shareable PitchKit** for the public kit and the owner PitchKit destination.
 - **Do** keep all edit controls in owner-only Insights.
 - **Do** confirm post visibility changes with **AlertDialog** before mutating the ranked set.
 - **Do** pair the completed hide mutation with an actionable Undo toast.
@@ -127,7 +276,7 @@ export const CreatorInsights: Story = {
       docs: {
         description: {
           story:
-            "Show code is the product contract — a literal freeze of this canvas (layout, chrome, spacing, typography). Copy that source into PitchKit. Do not reconstruct from PitchKitExample / pitchKitStyles, and do not ship ExampleGridControls.",
+            "Show code is the product contract — a literal freeze of this canvas (layout, chrome, spacing, typography), including the PitchKit branch that renders the shareable kit. Copy that source into PitchKit. Do not reconstruct from PitchKitExample / pitchKitStyles, and do not ship ExampleGridControls.",
         },
       },
     },
@@ -146,6 +295,7 @@ import {
   SegmentedControl,
   Stat,
   Tab,
+  TextLink,
   Toaster,
   cardSubtitleClasses,
   cardTitleClasses,
@@ -188,7 +338,7 @@ function AudienceSection({ title, items }) {
   );
 }
 
-export function PitchKitInsightsPage({ reachData, audience, posts }) {
+export function PitchKitInsightsPage({ reachData, audience, posts, creator, contact, brands }) {
   const [view, setView] = useState("insights");
   const [proofMetric, setProofMetric] = useState("reach");
   const [visiblePosts, setVisiblePosts] = useState(posts);
@@ -262,14 +412,9 @@ export function PitchKitInsightsPage({ reachData, audience, posts }) {
       <div className="${pitchKitContentBandClasses}">
         <div className="${pitchKitContentClasses}">
           {view === "pitchkit" ? (
-            <section className="${pitchKitPlaceholderClasses}">
-              <Badge variant="neutral" emphasis="muted">Coming soon</Badge>
-              <h1 className="${pitchKitPlaceholderTitleClasses}">Shareable PitchKit</h1>
-              <p className="${pitchKitPlaceholderBodyClasses}">
-                The public creator profile will bring verified insights, selected posts,
-                contact details, and past-brand proof into one brand-ready view.
-              </p>
-            </section>
+            <>
+${shareableKitCopySource("visiblePosts")}
+            </>
           ) : (
             <>
               <section className="${pitchKitHeaderSectionClasses}">
@@ -463,6 +608,72 @@ export function PitchKitInsightsPage({ reachData, audience, posts }) {
         </div>
       </div>
       <Toaster position="bottom-right" />
+    </main>
+  );
+}
+`,
+  ),
+};
+
+export const ShareablePitchKit: Story = {
+  name: "Pattern — shareable PitchKit",
+  args: {
+    initialView: "pitchkit",
+  },
+  render: (args) => <PitchKitInsightsExample {...args} />,
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Show code is the owner PitchKit destination — the same grid-page 1140 / topbar / content-band chrome as Pattern — creator Insights, with the public kit as the body. The canvas starts on PitchKit and can still switch to Insights. A public URL copies this body and may omit SegmentedControl; do not add Edit or MoreMenu. Hide/swap controls stay on Insights only.",
+        },
+      },
+    },
+    `
+import {
+  Avatar,
+  Badge,
+  Card,
+  PageHeader,
+  SegmentedControl,
+  Stat,
+  TextLink,
+  cardSubtitleClasses,
+  cardTitleClasses,
+} from "@whatmatters/wmds";
+
+const compactNumber = new Intl.NumberFormat("en", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+
+export function PitchKitShareablePage({ creator, posts, contact, brands }) {
+  return (
+    <main className="${pitchKitPageClasses}">
+      <div className="${pitchKitTopbarBandClasses}">
+        <header className="${pitchKitTopbarClasses}">
+          <span className="${pitchKitBrandClasses}">PitchKit</span>
+          <SegmentedControl
+            aria-label="PitchKit primary navigation"
+            size="sm"
+            value="pitchkit"
+            onValueChange={() => {}}
+          >
+            <SegmentedControl.Item value="insights">Insights</SegmentedControl.Item>
+            <SegmentedControl.Item value="pitchkit">PitchKit</SegmentedControl.Item>
+          </SegmentedControl>
+          <span className="${pitchKitTopbarEndClasses}">
+            <Avatar name={creator.name} size="sm" />
+          </span>
+        </header>
+      </div>
+
+      <div className="${pitchKitContentBandClasses}">
+        <div className="${pitchKitContentClasses}">
+${shareableKitCopySource("posts")}
+        </div>
+      </div>
     </main>
   );
 }

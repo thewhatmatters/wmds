@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+  type CSSProperties,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { EyeOff, RefreshCw, Repeat2, Share2 } from "lucide-react";
 import { Avatar } from "../../components/atoms/Avatar/Avatar";
 import { Badge } from "../../components/atoms/Badge/Badge";
@@ -26,8 +33,10 @@ import {
   pitchKitAudience,
   pitchKitPosts,
   pitchKitReachData,
+  type PitchKitDataState,
   type PitchKitPost,
 } from "./pitchKitData";
+import { PitchKitShareableKit } from "./PitchKitShareableExample";
 import {
   pitchKitAudienceCardClasses,
   pitchKitAudienceSectionClasses,
@@ -45,9 +54,6 @@ import {
   pitchKitHeaderCopyClasses,
   pitchKitMetricsStackClasses,
   pitchKitPageClasses,
-  pitchKitPlaceholderBodyClasses,
-  pitchKitPlaceholderClasses,
-  pitchKitPlaceholderTitleClasses,
   pitchKitPostCardClasses,
   pitchKitPostImageClasses,
   pitchKitPostHeaderStartClasses,
@@ -70,12 +76,13 @@ import {
   pitchKitCardWellClasses,
 } from "./pitchKitStyles";
 
-export type PitchKitDataState = "resolved" | "unavailable";
+export type { PitchKitDataState };
 type PitchKitView = "insights" | "pitchkit";
 type PitchKitProofMetric = "reach" | "engagement" | "saves";
 
 export interface PitchKitInsightsExampleProps {
   dataState?: PitchKitDataState;
+  initialView?: PitchKitView;
 }
 
 const reachSeriesConfig = chartSeriesConfigFromKeys([
@@ -251,8 +258,13 @@ function PostCard({
   );
 }
 
-function ResolvedInsights() {
-  const [visiblePosts, setVisiblePosts] = useState(pitchKitPosts);
+function ResolvedInsights({
+  visiblePosts,
+  onVisiblePostsChange,
+}: {
+  visiblePosts: PitchKitPost[];
+  onVisiblePostsChange: Dispatch<SetStateAction<PitchKitPost[]>>;
+}) {
   const [proofMetric, setProofMetric] =
     useState<PitchKitProofMetric>("reach");
   const [postNotice, setPostNotice] = useState<string | null>(null);
@@ -287,7 +299,7 @@ function ResolvedInsights() {
       return;
     }
 
-    setVisiblePosts((posts) =>
+    onVisiblePostsChange((posts) =>
       posts.filter((post) => post.id !== pendingHidePostId),
     );
     setPostNotice("Post hidden from the shareable kit preview.");
@@ -299,7 +311,7 @@ function ResolvedInsights() {
       action: {
         label: "Undo",
         onClick: () => {
-          setVisiblePosts((posts) =>
+          onVisiblePostsChange((posts) =>
             posts.some((post) => post.id === hiddenPost.id)
               ? posts
               : [...posts, hiddenPost],
@@ -450,25 +462,12 @@ function UnavailableInsights() {
   );
 }
 
-function PitchKitPlaceholder() {
-  return (
-    <section className={pitchKitPlaceholderClasses}>
-      <Badge variant="neutral" emphasis="muted">
-        Coming soon
-      </Badge>
-      <h1 className={pitchKitPlaceholderTitleClasses}>Shareable PitchKit</h1>
-      <p className={pitchKitPlaceholderBodyClasses}>
-        The public creator profile will bring verified insights, selected posts,
-        contact details, and past-brand proof into one brand-ready view.
-      </p>
-    </section>
-  );
-}
-
 export function PitchKitInsightsExample({
   dataState = "resolved",
+  initialView = "insights",
 }: PitchKitInsightsExampleProps) {
-  const [view, setView] = useState<PitchKitView>("insights");
+  const [view, setView] = useState<PitchKitView>(initialView);
+  const [visiblePosts, setVisiblePosts] = useState(pitchKitPosts);
   const [gridVisible, setGridVisible] = useState(false);
   const [theme, setTheme] = useState<DisplayControlThemeMode>("auto");
   const [gridMax, setGridMax] = useState(1140);
@@ -529,9 +528,15 @@ export function PitchKitInsightsExample({
       <div className={pitchKitContentBandClasses}>
         <div className={pitchKitContentClasses}>
           {view === "pitchkit" ? (
-            <PitchKitPlaceholder />
+            <PitchKitShareableKit
+              dataState={dataState}
+              posts={visiblePosts}
+            />
           ) : dataState === "resolved" ? (
-            <ResolvedInsights />
+            <ResolvedInsights
+              visiblePosts={visiblePosts}
+              onVisiblePostsChange={setVisiblePosts}
+            />
           ) : (
             <UnavailableInsights />
           )}

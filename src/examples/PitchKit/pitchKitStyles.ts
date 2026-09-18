@@ -67,7 +67,14 @@ export const pitchKitEmptyCopyClasses = "flex max-w-lg flex-col gap-2";
 export const pitchKitEmptyTitleClasses = typographyClass("section-heading");
 export const pitchKitEmptyBodyClasses = `${typographyClass("body")} text-muted`;
 
-export const pitchKitPlaceholderClasses =
-  "col-span-full flex min-h-[60vh] flex-col items-center justify-center gap-3 text-center";
-export const pitchKitPlaceholderTitleClasses = typographyClass("page-heading");
-export const pitchKitPlaceholderBodyClasses = `${typographyClass("body")} max-w-md text-muted`;
+export const pitchKitShareableStatClasses =
+  "col-span-2 md:col-span-4 lg:col-span-6";
+export const pitchKitShareableAsideCardClasses =
+  "col-span-full min-w-0 lg:col-span-6";
+export const pitchKitShareableStackClasses = "flex min-w-0 flex-col gap-4";
+export const pitchKitShareableContactLineClasses = typographyClass("body");
+export const pitchKitShareableBrandListClasses = "flex min-w-0 flex-col gap-4";
+export const pitchKitShareableBrandItemClasses = "flex min-w-0 flex-col gap-1";
+export const pitchKitShareableBrandNameClasses = typographyClass("subheading");
+export const pitchKitShareablePostMetricsClasses =
+  "grid w-full grid-cols-2 gap-3";
