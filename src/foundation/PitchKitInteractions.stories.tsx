@@ -102,6 +102,95 @@ export const UnavailableData: Story = {
   },
 };
 
+export const InsufficientReachData: Story = {
+  name: "PitchKit — insufficient reach data",
+  render: () => <PitchKitInsightsExample dataState="insufficientReach" />,
+  play: async ({ canvas }) => {
+    expect(
+      canvas.getByRole("heading", { name: /reach over 30 days/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /not enough reach history yet/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.queryByRole("img", {
+        name: /daily and typical instagram reach/i,
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /audience fit/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /recent proof/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.queryByRole("heading", { name: /insights are unavailable/i }),
+    ).not.toBeInTheDocument();
+    expect(canvas.queryByText(/retrieving data/i)).not.toBeInTheDocument();
+  },
+};
+
+export const LoadingInsights: Story = {
+  name: "PitchKit — creator Insights loading",
+  render: () => <PitchKitInsightsExample dataState="loading" />,
+  play: async ({ canvas }) => {
+    expect(canvas.getByRole("heading", { name: /^insights$/i })).toBeInTheDocument();
+    expect(
+      canvas.getByRole("group", {
+        name: /loading instagram performance summary/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByLabelText(/loading reach over 30 days/i),
+    ).toHaveAttribute("aria-busy", "true");
+    expect(
+      canvas.getByLabelText(/loading audience fit/i),
+    ).toHaveAttribute("aria-busy", "true");
+    expect(
+      canvas.getByLabelText(/loading recent proof/i),
+    ).toHaveAttribute("aria-busy", "true");
+    expect(canvas.getByLabelText(/followers/i)).toHaveAttribute("aria-busy", "true");
+    expect(canvas.queryByText("84.2K")).not.toBeInTheDocument();
+    expect(canvas.queryByText("—")).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("heading", { name: /reach over 30 days/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("img", {
+        name: /daily and typical instagram reach/i,
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("heading", { name: /insights are unavailable/i }),
+    ).not.toBeInTheDocument();
+  },
+};
+
+export const RetrievingInsights: Story = {
+  name: "PitchKit — creator Insights retrieving",
+  render: () => (
+    <PitchKitInsightsExample dataState="loading" loadingPhase="retrieving" />
+  ),
+  play: async ({ canvas }) => {
+    expect(
+      canvas.getByRole("heading", { name: /reach over 30 days/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /audience fit/i }),
+    ).toBeInTheDocument();
+    expect(canvas.getAllByText(/retrieving data/i).length).toBeGreaterThan(0);
+    expect(
+      canvas.queryByRole("img", {
+        name: /daily and typical instagram reach/i,
+      }),
+    ).not.toBeInTheDocument();
+    expect(canvas.queryByText("84.2K")).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("heading", { name: /not enough reach history yet/i }),
+    ).not.toBeInTheDocument();
+  },
+};
+
 export const RecentProofTabs: Story = {
   name: "PitchKit — recent proof ranking tabs",
   render: () => <PitchKitInsightsExample />,

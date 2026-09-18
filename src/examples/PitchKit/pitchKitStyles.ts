@@ -37,8 +37,20 @@ export const pitchKitDashboardGridClasses =
 export const pitchKitReachCardClasses = "col-span-full min-w-0 lg:col-span-6";
 export const pitchKitAudienceCardClasses = "col-span-full min-w-0 lg:col-span-6";
 
+/** Matches **Chart.Cartesian** `minHeight` on the Reach well — keep empty/skeleton bands the same. */
+export const pitchKitReachChartMinHeight = 344;
+
 export const pitchKitCardWellClasses =
   `flex min-w-0 flex-col gap-4 bg-body px-3.5 py-4 ${cardLayoutBodyOccupantRadiusClasses}`;
+
+export const pitchKitReachEmptyWellClasses =
+  `${pitchKitCardWellClasses} justify-center`;
+
+export const pitchKitHeaderSkeletonCopyClasses = "flex max-w-2xl flex-col gap-2";
+export const pitchKitSkeletonLegendRowClasses = "flex flex-wrap gap-4";
+export const pitchKitAudienceSkeletonSectionClasses = "flex min-w-0 flex-col gap-3";
+export const pitchKitAudienceSkeletonBarsClasses = "flex min-w-0 flex-col gap-2";
+export const pitchKitHeaderSkeletonStackClasses = "flex flex-col gap-1";
 
 export const pitchKitAudienceWellClasses =
   `grid min-w-0 gap-y-6 bg-body px-3.5 py-4 [column-gap:var(--grid-column-gap)] sm:grid-cols-2 ${cardLayoutBodyOccupantRadiusClasses}`;
