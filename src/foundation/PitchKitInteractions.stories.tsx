@@ -76,8 +76,8 @@ export const ShareableKit: Story = {
       "mailto:hello@averymorgan.com",
     );
     expect(
-      canvas.getByRole("link", { name: /averymorgan.com/i }),
-    ).toBeInTheDocument();
+      canvas.getByRole("link", { name: /averymorgan.com \(opens in a new tab\)/i }),
+    ).toHaveAttribute("href", "https://averymorgan.com");
     expect(
       canvas.getByRole("heading", { name: /past-brand proof/i }),
     ).toBeInTheDocument();
