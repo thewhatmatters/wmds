@@ -24,6 +24,8 @@ const exampleStyleKeys = [
 
 /** Empty / loading tokens belong on those State/Pattern freezes, not this resolved canvas. */
 const nonResolvedStyleKeys = new Set([
+  "pitchKitAudienceEmptyCopyClasses",
+  "pitchKitAudienceEmptyWellClasses",
   "pitchKitAudienceSkeletonBarsClasses",
   "pitchKitAudienceSkeletonSectionClasses",
   "pitchKitEmptyBodyClasses",

@@ -46,6 +46,9 @@ export const pitchKitCardWellClasses =
 export const pitchKitReachEmptyWellClasses =
   `${pitchKitCardWellClasses} items-center justify-center text-center`;
 
+/** Same centered empty well as Reach — keep the Audience band when Graph has no series. */
+export const pitchKitAudienceEmptyWellClasses = pitchKitReachEmptyWellClasses;
+
 export const pitchKitHeaderSkeletonCopyClasses = "flex max-w-2xl flex-col gap-2";
 export const pitchKitSkeletonLegendRowClasses = "flex flex-wrap gap-4";
 export const pitchKitAudienceSkeletonSectionClasses = "flex min-w-0 flex-col gap-3";
@@ -82,6 +85,7 @@ export const pitchKitEmptyCardClasses =
 export const pitchKitEmptyCopyClasses = "flex max-w-lg flex-col gap-2";
 export const pitchKitReachEmptyCopyClasses =
   `${pitchKitEmptyCopyClasses} items-center text-center`;
+export const pitchKitAudienceEmptyCopyClasses = pitchKitReachEmptyCopyClasses;
 export const pitchKitEmptyTitleClasses = typographyClass("section-heading");
 export const pitchKitEmptyBodyClasses = `${typographyClass("body")} text-muted`;
 
