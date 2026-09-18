@@ -94,6 +94,6 @@ describe("Pattern — creator Insights (loading) Show code", () => {
     expect(showCodeSource).not.toContain("84.2K");
     expect(showCodeSource).not.toContain('value="—"');
     expect(showCodeSource).not.toContain("Insights are unavailable");
-    expect(showCodeSource).not.toContain("Not enough reach history yet");
+    expect(showCodeSource).not.toContain("No reach data yet");
   });
 });

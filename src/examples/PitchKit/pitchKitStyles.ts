@@ -44,7 +44,7 @@ export const pitchKitCardWellClasses =
   `flex min-w-0 flex-col gap-4 bg-body px-3.5 py-4 ${cardLayoutBodyOccupantRadiusClasses}`;
 
 export const pitchKitReachEmptyWellClasses =
-  `${pitchKitCardWellClasses} justify-center`;
+  `${pitchKitCardWellClasses} items-center justify-center text-center`;
 
 export const pitchKitHeaderSkeletonCopyClasses = "flex max-w-2xl flex-col gap-2";
 export const pitchKitSkeletonLegendRowClasses = "flex flex-wrap gap-4";
@@ -80,6 +80,8 @@ export const pitchKitPostMetricValueClasses =
 export const pitchKitEmptyCardClasses =
   "col-span-full flex min-h-72 flex-col items-start justify-center gap-4";
 export const pitchKitEmptyCopyClasses = "flex max-w-lg flex-col gap-2";
+export const pitchKitReachEmptyCopyClasses =
+  `${pitchKitEmptyCopyClasses} items-center text-center`;
 export const pitchKitEmptyTitleClasses = typographyClass("section-heading");
 export const pitchKitEmptyBodyClasses = `${typographyClass("body")} text-muted`;
 

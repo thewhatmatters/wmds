@@ -36,7 +36,7 @@ const insufficientStyleKeys = [
   "pitchKitDashboardGridClasses",
   "pitchKitReachCardClasses",
   "pitchKitReachEmptyWellClasses",
-  "pitchKitEmptyCopyClasses",
+  "pitchKitReachEmptyCopyClasses",
   "pitchKitEmptyTitleClasses",
   "pitchKitEmptyBodyClasses",
   "pitchKitAudienceCardClasses",
@@ -63,14 +63,29 @@ describe("State — insufficient reach data Show code", () => {
     expect(pitchKitStyles.pitchKitReachEmptyWellClasses).toContain(
       pitchKitStyles.pitchKitCardWellClasses,
     );
+    expect(pitchKitStyles.pitchKitReachEmptyWellClasses).toContain(
+      "items-center",
+    );
+    expect(pitchKitStyles.pitchKitReachEmptyWellClasses).toContain(
+      "text-center",
+    );
+    expect(pitchKitStyles.pitchKitReachEmptyCopyClasses).toContain(
+      "items-center",
+    );
+    expect(pitchKitStyles.pitchKitReachEmptyCopyClasses).toContain(
+      "text-center",
+    );
   });
 
   it("keeps the Reach band and empty body in the Insights shell", () => {
     expect(showCodeSource).toContain("export function PitchKitInsightsInsufficientReachPage");
     expect(showCodeSource).toContain("Reach over 30 days");
     expect(showCodeSource).toContain("Graph data");
-    expect(showCodeSource).toContain("Not enough reach history yet");
-    expect(showCodeSource).toContain("missing, thin, or all-zero series");
+    expect(showCodeSource).toContain("No reach data yet");
+    expect(showCodeSource).toContain(
+      "Connect more Instagram activity to plot the last 30 days.",
+    );
+    expect(showCodeSource).not.toContain("invent a chart from a");
     expect(showCodeSource).toContain("Audience fit");
     expect(showCodeSource).toContain("Recent proof");
     expect(showCodeSource).toContain("PitchKit primary navigation");
