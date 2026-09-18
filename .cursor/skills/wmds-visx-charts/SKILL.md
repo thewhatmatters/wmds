@@ -157,7 +157,7 @@ The [chrisvoncsefalvay d3-viz skill](https://github.com/chrisvoncsefalvay/claude
 3. If **Shipped / Partial** — compose existing **Chart.*** + **Card** from the mapping row.
 4. If **Backlog** — implement with listed `@visx/*` packages; add Pattern story; never ship raw gallery code.
 
-**Shipped today (see mapping):** `Chart.Cartesian.Area` (F2/F3/G8), `Chart.SegmentedBar` KPI (F11/G18), tooltip/legend, Card loading patterns (Skeleton → Chart.Loading → marks).
+**Shipped today (see mapping):** `Chart.Cartesian.Area` (F2/F3/G8), in-series no-data hatch (ADR-0027), `Chart.SegmentedBar` KPI (F11/G18), tooltip/legend, Card loading patterns (Skeleton → Chart.Loading → marks).
 
 ## External references
 

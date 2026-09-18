@@ -31,6 +31,7 @@ import {
   ChartCartesianAxisBottom,
   ChartCartesianAxisLeft,
   ChartCartesianGrid,
+  ChartCartesianNoData,
   ChartCartesianTooltipLayer,
 } from "./ChartCartesian";
 
@@ -326,7 +327,7 @@ function ChartSegmentedBar({
   );
 }
 
-/** Dashboard charts — axis-agnostic shell + scalar / Cartesian patterns. See ADR-0012, ADR-0015. */
+/** Dashboard charts — axis-agnostic shell + scalar / Cartesian patterns. See ADR-0012, ADR-0015, ADR-0027. */
 export const Chart = Object.assign(ChartFrameRoot, {
   Frame: ChartFrameRoot,
   SegmentedBar: ChartSegmentedBar,
@@ -339,6 +340,7 @@ export const Chart = Object.assign(ChartFrameRoot, {
     Grid: ChartCartesianGrid,
     AxisBottom: ChartCartesianAxisBottom,
     AxisLeft: ChartCartesianAxisLeft,
+    NoData: ChartCartesianNoData,
     Area: ChartCartesianAreaSeries,
     Tooltip: ChartCartesianTooltipLayer,
   }),
@@ -354,16 +356,30 @@ export {
   ChartCartesianAxisBottom,
   ChartCartesianAxisLeft,
   ChartCartesianGrid,
+  ChartCartesianNoData,
   ChartCartesianTooltipLayer,
-  ChartLoading,
-  ChartLegend,
-  ChartRankedBars,
-  ChartUnitGrid,
-  ChartDistributionStrip,
-  ChartHeatmap,
-  ChartTooltipContent,
-};
-export type { ChartCartesianPoint, ChartCartesianProps } from "./ChartCartesian";
+  chartCartesianDefinedSegments,
+  chartCartesianGapBands,
+  chartCartesianGapRuns,
+  chartCartesianHasPlottableValues,
+  chartCartesianNoDataLabelDefault,
+  isChartCartesianNumber,
+  isChartCartesianSeriesDefined,
+  resolveChartCartesianGapKeys,
+  resolveChartCartesianNoData,
+} from "./ChartCartesian";
+export type {
+  ChartCartesianDefinedSegment,
+  ChartCartesianGapBand,
+  ChartCartesianGapMode,
+  ChartCartesianGapRange,
+  ChartCartesianGapRun,
+  ChartCartesianNoDataOptions,
+  ChartCartesianNoDataProp,
+  ChartCartesianPoint,
+  ChartCartesianProps,
+} from "./ChartCartesian";
+export { ChartLoading, ChartLegend, ChartRankedBars, ChartUnitGrid, ChartDistributionStrip, ChartHeatmap, ChartTooltipContent };
 export type { ChartLoadingLayoutClassName, ChartLoadingProps } from "./ChartLoading";
 export type { ChartLegendProps, ChartLegendLayoutClassName } from "./ChartLegend";
 export type {

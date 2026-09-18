@@ -284,6 +284,7 @@ export {
 export {
   Chart,
   ChartCartesian,
+  ChartCartesianNoData,
   ChartDistributionStrip,
   ChartHeatmap,
   ChartLoading,
@@ -291,7 +292,16 @@ export {
   ChartRankedBars,
   ChartTooltipContent,
   ChartUnitGrid,
+  chartCartesianDefinedSegments,
+  chartCartesianGapBands,
+  chartCartesianGapRuns,
+  chartCartesianHasPlottableValues,
+  chartCartesianNoDataLabelDefault,
   chartFormatPercent,
+  isChartCartesianNumber,
+  isChartCartesianSeriesDefined,
+  resolveChartCartesianGapKeys,
+  resolveChartCartesianNoData,
   chartKpiHeroRowClasses,
   chartKpiHeroValueClasses,
   chartKpiTrendLabelClasses,
@@ -401,7 +411,18 @@ export {
   type ToastRecord,
   type ToastTone,
 } from "./components/organisms/Toast/Toast";
-export type { ChartCartesianAnimate, ChartCartesianPoint, ChartCartesianProps } from "./components/organisms/Chart/ChartCartesian";
+export type {
+  ChartCartesianAnimate,
+  ChartCartesianDefinedSegment,
+  ChartCartesianGapBand,
+  ChartCartesianGapMode,
+  ChartCartesianGapRange,
+  ChartCartesianGapRun,
+  ChartCartesianNoDataOptions,
+  ChartCartesianNoDataProp,
+  ChartCartesianPoint,
+  ChartCartesianProps,
+} from "./components/organisms/Chart/ChartCartesian";
 export type { ChartSegmentedBarAnimate } from "./components/organisms/Chart/chartSegmentedBarMotion";
 export type { ChartLoadingLayoutClassName, ChartLoadingProps } from "./components/organisms/Chart/ChartLoading";
 export type { ChartLegendLayoutClassName, ChartLegendProps } from "./components/organisms/Chart/ChartLegend";

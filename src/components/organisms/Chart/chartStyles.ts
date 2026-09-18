@@ -125,6 +125,13 @@ export const chartTooltipValueClasses =
 /** Cartesian host — ParentSize needs explicit height (not min-height alone). */
 export const chartCartesianHostClasses = "relative w-full min-w-0";
 
+/** HTML overlay for centered no-data pills — hatch lives in the SVG. */
+export const chartCartesianNoDataOverlayClasses =
+  "pointer-events-none absolute inset-0 z-[1]";
+
+export const chartCartesianNoDataPillSlotClasses =
+  "pointer-events-none absolute flex items-center justify-center";
+
 export const chartCartesianSvgClasses = "block max-w-full overflow-visible select-none";
 
 /** SVG axis tick labels — caption scale + tabular figures (Lieflat hairline / F3). */
