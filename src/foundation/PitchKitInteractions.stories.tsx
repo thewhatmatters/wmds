@@ -127,6 +127,82 @@ export const InsufficientReachData: Story = {
       canvas.getByRole("heading", { name: /audience fit/i }),
     ).toBeInTheDocument();
     expect(
+      canvas.getByRole("list", { name: /audience by countries/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.queryByRole("heading", { name: /no audience data yet/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /recent proof/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.queryByRole("heading", { name: /insights are unavailable/i }),
+    ).not.toBeInTheDocument();
+    expect(canvas.queryByText(/retrieving data/i)).not.toBeInTheDocument();
+  },
+};
+
+export const InsufficientAudienceData: Story = {
+  name: "PitchKit — insufficient audience data",
+  render: () => <PitchKitInsightsExample dataState="insufficientAudience" />,
+  play: async ({ canvas }) => {
+    expect(
+      canvas.getByRole("heading", { name: /audience fit/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /no audience data yet/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByText(/connect instagram insights demographics when available/i),
+    ).toBeInTheDocument();
+    expect(
+      canvas.queryByRole("list", { name: /audience by countries/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /reach over 30 days/i }),
+    ).toBeInTheDocument();
+    expect(canvas.getAllByText("Typical reach").length).toBeGreaterThan(1);
+    expect(canvas.getByText("Daily reach")).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /recent proof/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.queryByRole("heading", { name: /insights are unavailable/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("heading", { name: /no reach data yet/i }),
+    ).not.toBeInTheDocument();
+    expect(canvas.queryByText(/retrieving data/i)).not.toBeInTheDocument();
+  },
+};
+
+export const InsufficientReachAndAudienceData: Story = {
+  name: "PitchKit — insufficient reach and audience data",
+  render: () => (
+    <PitchKitInsightsExample dataState="insufficientReachAndAudience" />
+  ),
+  play: async ({ canvas }) => {
+    expect(
+      canvas.getByRole("heading", { name: /reach over 30 days/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /no reach data yet/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /audience fit/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /no audience data yet/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.queryByRole("img", {
+        name: /daily and typical instagram reach/i,
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("list", { name: /audience by countries/i }),
+    ).not.toBeInTheDocument();
+    expect(
       canvas.getByRole("heading", { name: /recent proof/i }),
     ).toBeInTheDocument();
     expect(
@@ -193,6 +269,12 @@ export const RetrievingInsights: Story = {
     expect(canvas.queryByText("84.2K")).not.toBeInTheDocument();
     expect(
       canvas.queryByRole("heading", { name: /not enough reach history yet/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("heading", { name: /no reach data yet/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("heading", { name: /no audience data yet/i }),
     ).not.toBeInTheDocument();
   },
 };

@@ -32,6 +32,8 @@ import {
 import { ShareablePitchKit } from "./PitchKitShareable";
 import {
   pitchKitAudienceCardClasses,
+  pitchKitAudienceEmptyCopyClasses,
+  pitchKitAudienceEmptyWellClasses,
   pitchKitAudienceSectionClasses,
   pitchKitAudienceWellClasses,
   pitchKitBrandClasses,
@@ -81,6 +83,8 @@ export type PitchKitDataState =
   | "resolved"
   | "unavailable"
   | "insufficientReach"
+  | "insufficientAudience"
+  | "insufficientReachAndAudience"
   | "loading";
 export type PitchKitLoadingPhase = "skeleton" | "retrieving";
 type PitchKitView = "insights" | "pitchkit";
@@ -192,24 +196,48 @@ function ReachCard({
   );
 }
 
-function AudienceCard() {
+function AudienceCardHeader() {
+  return (
+    <Card.Header
+      start={
+        <>
+          <h2 className={cardTitleClasses}>Audience fit</h2>
+          <p className={cardSubtitleClasses}>Ranked Instagram percentages.</p>
+        </>
+      }
+    />
+  );
+}
+
+function AudienceCard({
+  body = "bars",
+}: {
+  body?: "bars" | "empty";
+}) {
   return (
     <Card variant="outlined" shape="rounded" bodyTerminal className={pitchKitAudienceCardClasses}>
-      <Card.Header
-        start={
-          <>
-            <h2 className={cardTitleClasses}>Audience fit</h2>
-            <p className={cardSubtitleClasses}>Ranked Instagram percentages.</p>
-          </>
-        }
-      />
+      <AudienceCardHeader />
       <Card.Body>
-        <div className={pitchKitAudienceWellClasses}>
-          <AudienceSection title="Countries" items={[...pitchKitAudience.countries]} />
-          <AudienceSection title="Cities" items={[...pitchKitAudience.cities]} />
-          <AudienceSection title="Age" items={[...pitchKitAudience.ages]} />
-          <AudienceSection title="Gender" items={[...pitchKitAudience.gender]} />
-        </div>
+        {body === "empty" ? (
+          <div
+            className={pitchKitAudienceEmptyWellClasses}
+            style={{ minHeight: pitchKitReachChartMinHeight }}
+          >
+            <div className={pitchKitAudienceEmptyCopyClasses}>
+              <h3 className={pitchKitEmptyTitleClasses}>No audience data yet</h3>
+              <p className={pitchKitEmptyBodyClasses}>
+                Connect Instagram Insights demographics when available.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className={pitchKitAudienceWellClasses}>
+            <AudienceSection title="Countries" items={[...pitchKitAudience.countries]} />
+            <AudienceSection title="Cities" items={[...pitchKitAudience.cities]} />
+            <AudienceSection title="Age" items={[...pitchKitAudience.ages]} />
+            <AudienceSection title="Gender" items={[...pitchKitAudience.gender]} />
+          </div>
+        )}
       </Card.Body>
     </Card>
   );
@@ -290,8 +318,10 @@ function PostCard({
 
 function ResolvedInsights({
   reachBody = "chart",
+  audienceBody = "bars",
 }: {
   reachBody?: "chart" | "empty";
+  audienceBody?: "bars" | "empty";
 }) {
   const [visiblePosts, setVisiblePosts] = useState(pitchKitPosts);
   const [proofMetric, setProofMetric] =
@@ -392,7 +422,7 @@ function ResolvedInsights({
 
         <div className={pitchKitDashboardGridClasses}>
           <ReachCard body={reachBody} />
-          <AudienceCard />
+          <AudienceCard body={audienceBody} />
         </div>
       </div>
 
@@ -763,6 +793,10 @@ function insightsContent(
       return <UnavailableInsights />;
     case "insufficientReach":
       return <ResolvedInsights reachBody="empty" />;
+    case "insufficientAudience":
+      return <ResolvedInsights audienceBody="empty" />;
+    case "insufficientReachAndAudience":
+      return <ResolvedInsights reachBody="empty" audienceBody="empty" />;
     case "loading":
       return <LoadingInsights phase={loadingPhase} />;
     default:
