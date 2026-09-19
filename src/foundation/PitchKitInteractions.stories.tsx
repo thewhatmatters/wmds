@@ -109,6 +109,7 @@ export const InsufficientReachData: Story = {
     expect(
       canvas.getByRole("heading", { name: /reach over 30 days/i }),
     ).toBeInTheDocument();
+    expect(canvas.getByText("No data")).toBeInTheDocument();
     expect(
       canvas.getByRole("heading", { name: /no reach data yet/i }),
     ).toBeInTheDocument();
@@ -149,6 +150,7 @@ export const InsufficientAudienceData: Story = {
     expect(
       canvas.getByRole("heading", { name: /audience fit/i }),
     ).toBeInTheDocument();
+    expect(canvas.getByText("No data")).toBeInTheDocument();
     expect(
       canvas.getByRole("heading", { name: /no audience data yet/i }),
     ).toBeInTheDocument();
@@ -194,6 +196,7 @@ export const InsufficientReachAndAudienceData: Story = {
     expect(
       canvas.getByRole("heading", { name: /no audience data yet/i }),
     ).toBeInTheDocument();
+    expect(canvas.getAllByText("No data")).toHaveLength(2);
     expect(
       canvas.queryByRole("img", {
         name: /daily and typical instagram reach/i,

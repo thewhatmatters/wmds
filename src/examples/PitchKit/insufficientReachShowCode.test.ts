@@ -75,12 +75,16 @@ describe("State — insufficient reach data Show code", () => {
     expect(pitchKitStyles.pitchKitReachEmptyCopyClasses).toContain(
       "text-center",
     );
+    expect(pitchKitStyles.pitchKitReachEmptyCopyClasses).toContain("gap-3");
   });
 
   it("keeps the Reach band and empty body in the Insights shell", () => {
     expect(showCodeSource).toContain("export function PitchKitInsightsInsufficientReachPage");
     expect(showCodeSource).toContain("Reach over 30 days");
     expect(showCodeSource).toContain("Graph data");
+    expect(showCodeSource).toContain(
+      '<Badge variant="neutral" emphasis="muted">No data</Badge>',
+    );
     expect(showCodeSource).toContain("No reach data yet");
     expect(showCodeSource).toContain(
       "Connect more Instagram activity to plot the last 30 days.",

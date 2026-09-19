@@ -173,6 +173,7 @@ function ReachCard({
             style={{ minHeight: pitchKitReachChartMinHeight }}
           >
             <div className={pitchKitReachEmptyCopyClasses}>
+              <Badge variant="neutral" emphasis="muted">No data</Badge>
               <h3 className={pitchKitEmptyTitleClasses}>No reach data yet</h3>
               <p className={pitchKitEmptyBodyClasses}>
                 Connect more Instagram activity to plot the last 30 days.
@@ -224,6 +225,7 @@ function AudienceCard({
             style={{ minHeight: pitchKitReachChartMinHeight }}
           >
             <div className={pitchKitAudienceEmptyCopyClasses}>
+              <Badge variant="neutral" emphasis="muted">No data</Badge>
               <h3 className={pitchKitEmptyTitleClasses}>No audience data yet</h3>
               <p className={pitchKitEmptyBodyClasses}>
                 Connect Instagram Insights demographics when available.
