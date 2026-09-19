@@ -83,9 +83,9 @@ export const pitchKitPostMetricValueClasses =
 export const pitchKitEmptyCardClasses =
   "col-span-full flex min-h-72 flex-col items-start justify-center gap-4";
 export const pitchKitEmptyCopyClasses = "flex max-w-lg flex-col gap-2";
-/** Centered Badge → title → body — same stack as kit empty wells, tighter than page-empty. */
+/** Centered Badge → title → body — same 0.5rem (`gap-2`) stack as page-empty. */
 export const pitchKitReachEmptyCopyClasses =
-  "flex max-w-lg flex-col items-center gap-3 text-center";
+  `${pitchKitEmptyCopyClasses} items-center text-center`;
 export const pitchKitAudienceEmptyCopyClasses = pitchKitReachEmptyCopyClasses;
 export const pitchKitEmptyTitleClasses = typographyClass("section-heading");
 export const pitchKitEmptyBodyClasses = `${typographyClass("body")} text-muted`;
