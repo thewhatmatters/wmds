@@ -70,7 +70,11 @@ describe("State — insufficient reach and audience data Show code", () => {
     expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).toBe(
       pitchKitStyles.pitchKitReachEmptyCopyClasses,
     );
-    expect(pitchKitStyles.pitchKitReachEmptyCopyClasses).toContain("gap-3");
+    expect(pitchKitStyles.pitchKitReachEmptyCopyClasses).toContain(
+      pitchKitStyles.pitchKitEmptyCopyClasses,
+    );
+    expect(pitchKitStyles.pitchKitReachEmptyCopyClasses).toContain("gap-2");
+    expect(pitchKitStyles.pitchKitReachEmptyCopyClasses).not.toContain("gap-3");
   });
 
   it("keeps both empty Badge stacks in the Insights shell", () => {

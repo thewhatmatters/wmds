@@ -29,7 +29,7 @@ const meta = {
         component: `
 ## Usage
 
-Kebab **IconButton** + floating **Dropdown** action menu — Card header \`end\` slot, toolbars, row overflow.
+Kebab **IconButton** + floating **Dropdown** action menu — **Card.Header** \`end\` (right) slot, toolbars, row overflow. Never left-align the trigger.
 
 | Pattern | Props |
 |---------|--------|
@@ -50,6 +50,7 @@ Menu **right-aligns** to the trigger (\`align="end"\`) and clamps to the nearest
 - **Do** use for secondary actions (export, share, remove) — not primary CTAs (**Button**).
 - **Do** keep \`aria-label\` specific — "More market actions", not "Menu".
 - **Do** pass icons in \`start\` via **ButtonIcon** — not raw Lucide in app TSX against the organism.
+- **Do** mount the kebab in **Card.Header** \`end\` (right). \`end\` stays trailing when \`start\` is omitted — never left-align overflow actions.
 - **Don't** use for single-select lists — **Select** or **SegmentedControl**.
         `.trim(),
       },

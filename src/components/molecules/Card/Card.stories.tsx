@@ -126,6 +126,7 @@ Card (bg-surface shell, py-4, gap-3)
 
 - **Do** set \`padding="none"\` when using Header/Body/Footer.
 - **Do** put leading copy in \`start\` and trailing actions in \`end\` — do not hand-roll the header row.
+- **Do** put overflow / **MoreMenu** triggers in **Card.Header** \`end\` (right). \`end\` stays trailing even when \`start\` is omitted — never left-align kebab or flow-over actions.
 - **Do** use \`cardLayoutBodyOccupantPadYClasses\` (\`py-[16px]\`) + \`cardLayoutBodyOccupantInsetXClasses\` on body occupants — 16px vertical, horizontal aligns with **Header** (2px gutter + 14px).
 - **Do** paint inset body backgrounds with \`cardLayoutBodyOccupantWellClasses\` (\`bg-body\` + \`--radius-card-body\`) — concentric with the shell (16px − 2px gutter); radius-only media → \`cardLayoutBodyOccupantRadiusClasses\`; chart canvas texture → \`cardLayoutBodyOccupantDotGridWellClasses\`.
 - **Do** let a direct terminal **Card.Body** fill stretched cards automatically — when there is no **Footer**, Card applies the matching 2px bottom shell inset and expands the occupant through the remaining Body region. Use \`bodyTerminal\` only to override slot detection in a wrapper.
@@ -289,71 +290,94 @@ export const HeaderSlots: Story = {
     docs: {
       description: {
         story:
-          "**Header** is two horizontal slots. `start` and `end` take any cluster — title + subtitle, **SegmentedControl** view switcher, **MoreMenu** kebab, Badge. **SegmentedControl** / filter **Chip** at **`sm`** pair with **MoreMenu** / **IconButton** **`xs`** (cluster sm, 28px) — see **Foundations → Cluster**.",
+          "**Header** is two horizontal slots. `start` and `end` take any cluster — title + subtitle, **SegmentedControl** view switcher, **MoreMenu** kebab, Badge. **MoreMenu** and other overflow triggers always live in `end` (right), including when `start` is omitted. **SegmentedControl** / filter **Chip** at **`sm`** pair with **MoreMenu** / **IconButton** **`xs`** (cluster sm, 28px) — see **Foundations → Cluster**.",
       },
     },
   },
   render: function HeaderSlotsDemo() {
     const [view, setView] = useState("overview");
 
+    const overflowItems = [
+      {
+        id: "export",
+        label: "Export",
+        start: (
+          <ButtonIcon size="sm">
+            <Download strokeWidth={2} />
+          </ButtonIcon>
+        ),
+      },
+      {
+        id: "share",
+        label: "Share",
+        start: (
+          <ButtonIcon size="sm">
+            <Share2 strokeWidth={2} />
+          </ButtonIcon>
+        ),
+      },
+    ];
+
     return (
-      <Card shape="rounded" className="max-w-lg">
-        <Card.Header
-          start={
-            <>
-              <h2 className={cardTitleClasses}>Texas Farmers&apos; Market at Mueller</h2>
-              <p className={cardSubtitleClasses}>2006 Philomena St. · Austin, TX</p>
-            </>
-          }
-          end={
-            <>
-              <SegmentedControl
-                aria-label="Market detail view"
-                size="sm"
-                value={view}
-                onValueChange={setView}
-              >
-                <SegmentedControl.Item value="overview">Overview</SegmentedControl.Item>
-                <SegmentedControl.Item value="hours">Hours</SegmentedControl.Item>
-              </SegmentedControl>
+      <div className="flex max-w-lg flex-col gap-6">
+        <Card shape="rounded">
+          <Card.Header
+            start={
+              <>
+                <h2 className={cardTitleClasses}>Texas Farmers&apos; Market at Mueller</h2>
+                <p className={cardSubtitleClasses}>2006 Philomena St. · Austin, TX</p>
+              </>
+            }
+            end={
+              <>
+                <SegmentedControl
+                  aria-label="Market detail view"
+                  size="sm"
+                  value={view}
+                  onValueChange={setView}
+                >
+                  <SegmentedControl.Item value="overview">Overview</SegmentedControl.Item>
+                  <SegmentedControl.Item value="hours">Hours</SegmentedControl.Item>
+                </SegmentedControl>
+                <MoreMenu
+                  aria-label="More market actions"
+                  size={iconButtonSizeForCluster("sm")}
+                  items={overflowItems}
+                  onAction={() => undefined}
+                />
+              </>
+            }
+          />
+          <Card.Body>
+            <div className="flex min-h-32 items-center justify-center px-4 py-6">
+              <p className={mutedText(cardBodyTextClasses)}>
+                {view === "overview"
+                  ? "Overview — directions, services, and hours"
+                  : "Hours — Saturday 9am – 1pm"}
+              </p>
+            </div>
+          </Card.Body>
+        </Card>
+        <Card shape="rounded">
+          <Card.Header
+            end={
               <MoreMenu
-                aria-label="More market actions"
+                aria-label="More selected-post actions"
                 size={iconButtonSizeForCluster("sm")}
-                items={[
-                  {
-                    id: "export",
-                    label: "Export",
-                    start: (
-                      <ButtonIcon size="sm">
-                        <Download strokeWidth={2} />
-                      </ButtonIcon>
-                    ),
-                  },
-                  {
-                    id: "share",
-                    label: "Share",
-                    start: (
-                      <ButtonIcon size="sm">
-                        <Share2 strokeWidth={2} />
-                      </ButtonIcon>
-                    ),
-                  },
-                ]}
+                items={overflowItems}
                 onAction={() => undefined}
               />
-            </>
-          }
-        />
-        <Card.Body>
-          <div className="flex min-h-32 items-center justify-center px-4 py-6">
-            <p className={mutedText(cardBodyTextClasses)}>
-              {view === "overview"
-                ? "Overview — directions, services, and hours"
-                : "Hours — Saturday 9am – 1pm"}
-            </p>
-          </div>
-        </Card.Body>
-      </Card>
+            }
+          />
+          <Card.Body>
+            <div className="flex min-h-24 items-center justify-center px-4 py-6">
+              <p className={mutedText(cardBodyTextClasses)}>
+                End-only header — kebab stays trailing
+              </p>
+            </div>
+          </Card.Body>
+        </Card>
+      </div>
     );
   },
 };

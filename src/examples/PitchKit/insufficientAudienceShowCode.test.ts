@@ -75,12 +75,18 @@ describe("State — insufficient audience data Show code", () => {
       "text-center",
     );
     expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).toContain(
+      pitchKitStyles.pitchKitEmptyCopyClasses,
+    );
+    expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).toContain(
       "items-center",
     );
     expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).toContain(
       "text-center",
     );
-    expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).toContain("gap-3");
+    expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).toContain("gap-2");
+    expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).not.toContain(
+      "gap-3",
+    );
   });
 
   it("keeps the Audience band and empty body in the Insights shell", () => {

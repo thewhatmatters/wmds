@@ -5,6 +5,7 @@ import {
   ownerPitchKitBodyCopySource,
   ownerPitchKitPageCopySource,
 } from "./ownerPitchKitCopySource";
+import { cardLayoutHeaderEndClasses } from "../../components/molecules/Card/cardStyles";
 import * as pitchKitStyles from "./pitchKitStyles";
 
 const storiesSource = readFileSync(
@@ -79,6 +80,16 @@ describe("Pattern — owner PitchKit Show code", () => {
     expect(ownerPitchKitBodyCopySource).toContain("Hide from kit");
     expect(ownerPitchKitBodyCopySource).toContain("Manage selected post");
     expect(ownerPitchKitBodyCopySource).toContain("toast.add");
+    expect(ownerPitchKitBodyCopySource).toContain("<Card.Header");
+    expect(ownerPitchKitBodyCopySource).toContain(
+      `<Card.Header
+                end={`,
+    );
+    expect(ownerSource).toContain(
+      `<Card.Header
+                end={`,
+    );
+    expect(cardLayoutHeaderEndClasses).toContain("ml-auto");
   });
 
   it("keeps the fail-closed identity strip and omits public Verified chips", () => {

@@ -82,7 +82,8 @@ export const cardLayoutHeaderClasses = [
 /** Title + subtitle sit as one block — no flex gap; type leading is snug. */
 export const cardLayoutHeaderStartClasses = "flex min-w-0 flex-1 flex-col gap-0";
 
-export const cardLayoutHeaderEndClasses = "flex shrink-0 items-center gap-2";
+/** Trailing slot — `ml-auto` keeps kebab / actions on the right when `start` is absent. */
+export const cardLayoutHeaderEndClasses = "ml-auto flex shrink-0 items-center gap-2";
 
 /** Body slot — full width inside 2px shell gutter; transparent. Occupant paint dictates the region. */
 export const cardLayoutBodyWellClasses = [

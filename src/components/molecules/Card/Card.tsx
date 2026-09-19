@@ -65,7 +65,7 @@ export interface CardSectionProps extends HTMLAttributes<HTMLElement> {
 export interface CardHeaderProps extends CardSectionProps {
   /** Start slot — title + subtitle, or any leading cluster. */
   start?: ReactNode;
-  /** End slot — kebab, chips-as-tabs, Badge, or any trailing cluster. */
+  /** End slot — kebab, chips-as-tabs, Badge, or any trailing cluster. Always packs to the right. */
   end?: ReactNode;
 }
 
