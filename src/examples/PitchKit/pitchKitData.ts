@@ -56,6 +56,74 @@ export const pitchKitCreator = {
   platform: "Instagram",
 } as const;
 
+/** Graph professional account types unlocked for the identity chip. */
+export const pitchKitProfessionalAccounts = ["Business", "Creator"] as const;
+export type PitchKitProfessionalAccount =
+  (typeof pitchKitProfessionalAccounts)[number];
+
+/**
+ * Unlocked Graph / derived identity — fail closed.
+ * Omit `displayName`, `profilePictureUrl`, and `followersCount` when Graph did not return them.
+ */
+export interface PitchKitCreatorIdentity {
+  /** Graph `name` — hide the heading when missing; never invent. */
+  displayName?: string;
+  /** Frozen handle without `@` — display as `@handle`, share as `/k/[handle]`. */
+  handle: string;
+  /** Graph `profile_picture_url` — omit when missing (Avatar falls back). */
+  profilePictureUrl?: string;
+  /** Graph `followers_count` — context on the strip, not a hero Stat. */
+  followersCount?: number;
+  /** Owner: Business / Creator. Optional on the public nameplate. */
+  professionalAccount?: PitchKitProfessionalAccount;
+  /** Owner Settings connection state. */
+  connected?: boolean;
+  lastSyncedLabel?: string;
+}
+
+export const pitchKitCreatorIdentity = {
+  displayName: "Avery Morgan",
+  handle: "averymorgan",
+  profilePictureUrl:
+    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&h=256&q=80",
+  followersCount: 84200,
+  professionalAccount: "Creator",
+  connected: true,
+  lastSyncedLabel: "Sep 7 at 12:42 PM",
+} as const satisfies PitchKitCreatorIdentity;
+
+export function pitchKitHandleLabel(handle: string): string {
+  return `@${handle}`;
+}
+
+export function pitchKitShareKitPath(handle: string): string {
+  return `/k/${handle}`;
+}
+
+export const pitchKitCreatorIdentityStates = [
+  "resolved",
+  "loading",
+  "missingPhoto",
+  "missingName",
+] as const;
+
+export type PitchKitCreatorIdentityState =
+  (typeof pitchKitCreatorIdentityStates)[number];
+
+/** Fail-closed Graph identity for Example canvases — `null` while loading. */
+export function identityFromState(
+  state: PitchKitCreatorIdentityState,
+): PitchKitCreatorIdentity | null {
+  if (state === "loading") return null;
+  if (state === "missingPhoto") {
+    return { ...pitchKitCreatorIdentity, profilePictureUrl: undefined };
+  }
+  if (state === "missingName") {
+    return { ...pitchKitCreatorIdentity, displayName: undefined };
+  }
+  return pitchKitCreatorIdentity;
+}
+
 export const pitchKitSummary = {
   followers: "84.2K",
   engagementRate: "5.8%",
