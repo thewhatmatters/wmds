@@ -235,3 +235,115 @@ export const pitchKitPosts: PitchKitPost[] = [
 
 /** Public kit proof — a selected subset, not the owner-managed Insights ranking. */
 export const pitchKitSelectedPosts: PitchKitPost[] = pitchKitPosts.slice(0, 5);
+
+/** Pitchkit-owned kit intro — not Instagram `biography`. Soft 160 / hard 280. */
+export const PITCHKIT_INTRO_SOFT_LIMIT = 160;
+export const PITCHKIT_INTRO_HARD_LIMIT = 280;
+
+export const pitchKitIntroFilled =
+  "I create sunlit home stories for people who host — tables, rooms, and weekend rituals.";
+
+export const pitchKitIntroStates = [
+  "empty",
+  "filled",
+  "softLimit",
+  "hardLimit",
+] as const;
+
+export type PitchKitIntroState = (typeof pitchKitIntroStates)[number];
+
+export function pitchKitIntroAtLength(length: number): string {
+  const seed = "I create sunlit home stories for people who host. ";
+  if (length <= 0) return "";
+  return seed.repeat(Math.ceil(length / seed.length)).slice(0, length);
+}
+
+export function introFromState(state: PitchKitIntroState): string {
+  if (state === "empty") return "";
+  if (state === "softLimit") return pitchKitIntroAtLength(PITCHKIT_INTRO_SOFT_LIMIT);
+  if (state === "hardLimit") return pitchKitIntroAtLength(PITCHKIT_INTRO_HARD_LIMIT);
+  return pitchKitIntroFilled;
+}
+
+export function pitchKitIntroIsEmpty(intro: string): boolean {
+  return intro.trim().length === 0;
+}
+
+export function pitchKitIntroStatus(
+  intro: string,
+): "warning" | "error" | undefined {
+  const length = intro.length;
+  if (length >= PITCHKIT_INTRO_HARD_LIMIT) return "error";
+  if (length >= PITCHKIT_INTRO_SOFT_LIMIT) return "warning";
+  return undefined;
+}
+
+/**
+ * Creator-entered past brand — ordered `{ id, name }` only.
+ * Letter Avatar from `name`. No logo, year, summary, or KPIs.
+ */
+export interface PitchKitPastBrand {
+  id: string;
+  name: string;
+}
+
+export const PITCHKIT_BRANDS_MAX = 8;
+export const PITCHKIT_BRAND_NAME_MAX = 40;
+
+export const pitchKitPastBrands: PitchKitPastBrand[] = [
+  { id: "hearth-home", name: "Hearth & Home" },
+  { id: "studio-line", name: "Studio Line" },
+  { id: "market-co", name: "Market Co." },
+];
+
+export const pitchKitPastBrandStates = ["empty", "filled"] as const;
+export type PitchKitPastBrandState = (typeof pitchKitPastBrandStates)[number];
+
+export function pastBrandsFromState(
+  state: PitchKitPastBrandState,
+): PitchKitPastBrand[] {
+  return state === "empty" ? [] : [...pitchKitPastBrands];
+}
+
+export function movePastBrand(
+  brands: readonly PitchKitPastBrand[],
+  id: string,
+  direction: -1 | 1,
+): PitchKitPastBrand[] {
+  const index = brands.findIndex((brand) => brand.id === id);
+  const nextIndex = index + direction;
+  if (index < 0 || nextIndex < 0 || nextIndex >= brands.length) {
+    return [...brands];
+  }
+  const next = [...brands];
+  const [item] = next.splice(index, 1);
+  next.splice(nextIndex, 0, item);
+  return next;
+}
+
+export function reorderPastBrand(
+  brands: readonly PitchKitPastBrand[],
+  sourceId: string,
+  targetId: string,
+): PitchKitPastBrand[] {
+  if (sourceId === targetId) return [...brands];
+  const from = brands.findIndex((brand) => brand.id === sourceId);
+  const to = brands.findIndex((brand) => brand.id === targetId);
+  if (from < 0 || to < 0) return [...brands];
+  const next = [...brands];
+  const [item] = next.splice(from, 1);
+  next.splice(to, 0, item);
+  return next;
+}
+
+export function pastBrandIdFromName(name: string, usedIds: readonly string[]): string {
+  const base =
+    name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "brand";
+  if (!usedIds.includes(base)) return base;
+  let suffix = 2;
+  while (usedIds.includes(`${base}-${suffix}`)) suffix += 1;
+  return `${base}-${suffix}`;
+}

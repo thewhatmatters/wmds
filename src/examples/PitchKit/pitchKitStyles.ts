@@ -132,3 +132,16 @@ export const pitchKitUserSettingsActionsClasses =
 export const pitchKitCalloutCardClasses = "col-span-full";
 export const pitchKitCalloutBodyClasses = `flex min-w-0 flex-col gap-4 ${cardLayoutBodyOccupantInsetXClasses} ${cardLayoutBodyOccupantPadYClasses}`;
 export const pitchKitCalloutActionsClasses = "flex flex-wrap items-center gap-3";
+
+/** Pitchkit-owned intro under the identity nameplate. */
+export const pitchKitIntroStackClasses = "flex min-w-0 flex-col gap-3";
+export const pitchKitIntroClasses = `${typographyClass("body")} text-fg`;
+
+/** Past brands — `{ id, name }` rows with letter Avatar. Not campaign KPI cards. */
+export const pitchKitBrandListClasses =
+  "flex col-span-full min-w-0 flex-col gap-3";
+export const pitchKitBrandCardClasses = "col-span-full min-w-0";
+export const pitchKitBrandRowStartClasses =
+  "flex min-w-0 items-center gap-3";
+export const pitchKitBrandNameClasses = typographyClass("ui-label");
+export const pitchKitBrandReorderClasses = "flex shrink-0 items-center";
