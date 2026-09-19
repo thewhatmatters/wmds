@@ -53,7 +53,7 @@ function CreatePitchKitProfileCallout() {
       className="${pitchKitCalloutCardClasses}"
     >
       <Card.Header
-        start={<h2 className={cardTitleClasses}>Create your PitchKit Profile</h2>}
+        start={<h2 className={cardTitleClasses}>Create your PitchKit</h2>}
       />
       <Card.Body>
         <div className="${pitchKitCalloutBodyClasses}">
@@ -62,8 +62,9 @@ function CreatePitchKitProfileCallout() {
           </p>
           <div className="${pitchKitCalloutActionsClasses}">
             <Button role="primary" icon={<UserPlus />}>
-              Get started
+              Create your PitchKit
             </Button>
+            <Button role="secondary">Continue with Instagram</Button>
           </div>
         </div>
       </Card.Body>

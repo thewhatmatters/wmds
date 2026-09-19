@@ -50,6 +50,8 @@ describe("Pattern — user settings (owner) Show code", () => {
     expect(storiesSource).toContain("export const UserSettingsOwner");
     expect(storiesSource).toContain("userSettingsOwnerCopySource");
     expect(usageSource).toContain("Pattern — user settings (owner)");
+    expect(storiesSource).toContain("remove footer delete");
+    expect(usageSource).toContain("remove footer delete");
   });
 
   it("interpolates every UserSettings example pitchKitStyles token", () => {

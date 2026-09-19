@@ -75,9 +75,16 @@ describe("Pattern — create PitchKit profile callout Show code", () => {
       "export function CreatePitchKitProfileCalloutPage",
     );
     expect(createPitchKitProfileCalloutCopySource).toContain(
+      "Create your PitchKit",
+    );
+    expect(createPitchKitProfileCalloutCopySource).not.toContain(
       "Create your PitchKit Profile",
     );
-    expect(createPitchKitProfileCalloutCopySource).toContain("Get started");
+    expect(createPitchKitProfileCalloutCopySource).not.toContain("Get started");
+    expect(createPitchKitProfileCalloutCopySource).toContain(
+      "Continue with Instagram",
+    );
+    expect(createPitchKitProfileCalloutCopySource).toContain('role="secondary"');
     expect(createPitchKitProfileCalloutCopySource).toContain("UserPlus");
     expect(createPitchKitProfileCalloutCopySource).toContain(
       "<TruncatedShareablePitchKit",

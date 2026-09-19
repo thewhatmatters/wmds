@@ -27,7 +27,7 @@ export const UserSettingsOwner: Story = {
       docs: {
         description: {
           story:
-            "Show code is the product contract for owner chrome User settings — topbar Avatar (wrapped in Button) opens Dialog titled User settings. Body stays thin: existing account display name and email only. Delete account lives inside this Dialog and confirms with AlertDialog confirmRole=\"destructive\". Not Settings → Connected Instagram. Copy that source into PitchKit. Do not reconstruct from Storybook-only example files, and do not ship ExampleGridControls.",
+            "Show code is the product contract for owner chrome account / User settings — topbar Avatar (wrapped in Button) opens Dialog titled User settings. Body stays thin: existing account display name and email only. Delete account is the last action in this Dialog and confirms with AlertDialog confirmRole=\"destructive\". The app footer is not the delete destination — remove footer delete when copying this freeze. Not Settings → Connected Instagram. Copy that source into PitchKit. Do not reconstruct from Storybook-only example files, and do not ship ExampleGridControls.",
         },
       },
     },
@@ -43,7 +43,7 @@ export const CreatePitchkitProfileCallout: Story = {
       docs: {
         description: {
           story:
-            "Show code is the product contract for unsigned visitors on the public `/k/[handle]` kit — a Card callout titled Create your PitchKit Profile with supporting copy and a primary Get started Button, composed below a truncated shareable kit (identity, kit Stats, two selected posts). Public chrome only: PitchKit wordmark, no owner Avatar, MoreMenu, or edit controls. Do not invent KPI metrics. Copy that source into PitchKit. Do not reconstruct from Storybook-only example files, and do not ship ExampleGridControls.",
+            "Show code is the product contract for unsigned / no-account visitors on the public `/k/[handle]` kit — a Card band titled Create your PitchKit (RE memo: “Create your Pitchkit”; WMDS uses joined PitchKit) with two CTAs: primary Create your PitchKit and secondary Continue with Instagram. Composed below a truncated shareable kit (identity, kit Stats, two selected posts). Public chrome only: PitchKit wordmark, no owner Avatar, MoreMenu, or edit controls. Do not invent KPI metrics. Copy that source into PitchKit. Do not reconstruct from Storybook-only example files, and do not ship ExampleGridControls.",
         },
       },
     },

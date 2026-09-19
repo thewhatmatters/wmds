@@ -679,10 +679,13 @@ export const CreatePitchKitProfileCallout: Story = {
       canvas.getByRole("heading", { name: /avery morgan/i }),
     ).toBeInTheDocument();
     expect(
-      canvas.getByRole("heading", { name: /create your pitchkit profile/i }),
+      canvas.getByRole("heading", { name: /^create your pitchkit$/i }),
     ).toBeInTheDocument();
     expect(
-      canvas.getByRole("button", { name: /get started/i }),
+      canvas.getByRole("button", { name: /^create your pitchkit$/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("button", { name: /continue with instagram/i }),
     ).toBeInTheDocument();
     expect(
       canvas.getByRole("group", { name: /verified instagram summary/i }),
