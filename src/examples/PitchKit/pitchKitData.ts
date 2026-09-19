@@ -124,10 +124,48 @@ export function identityFromState(
   return pitchKitCreatorIdentity;
 }
 
+/** Honest empty — never invent 0 or EXAMPLE %. */
+export const PITCHKIT_MISSING_VALUE = "—";
+
+export const pitchKitThemes = ["light", "dark", "soft"] as const;
+export type PitchKitTheme = (typeof pitchKitThemes)[number];
+export const PITCHKIT_THEME_DEFAULT: PitchKitTheme = "light";
+
+export const pitchKitPublicReachStates = ["resolved", "insufficient"] as const;
+export type PitchKitPublicReachState =
+  (typeof pitchKitPublicReachStates)[number];
+
+/** Graph / derived public KPIs — same figures as Insights, no owner trends. */
 export const pitchKitSummary = {
   followers: "84.2K",
   engagementRate: "5.8%",
+  typicalReach: "9.3K",
+  typicalSaves: "6.1K",
 } as const;
+
+/** Public kit hides engagement rate when the reach series cannot be plotted. */
+export function publicEngagementRate(
+  reachState: PitchKitPublicReachState,
+): string | null {
+  return reachState === "resolved" ? pitchKitSummary.engagementRate : null;
+}
+
+export function publicTypicalReach(
+  reachState: PitchKitPublicReachState,
+): string {
+  return reachState === "resolved"
+    ? pitchKitSummary.typicalReach
+    : PITCHKIT_MISSING_VALUE;
+}
+
+/** Public kit — top 3 Graph countries only. Never invent example percentages. */
+export const PITCHKIT_PUBLIC_COUNTRIES_MAX = 3;
+
+export function publicCountries(
+  countries: readonly ChartRankedBarItem[],
+): ChartRankedBarItem[] {
+  return countries.slice(0, PITCHKIT_PUBLIC_COUNTRIES_MAX);
+}
 
 export const pitchKitContact = {
   email: "hello@averymorgan.com",
@@ -233,8 +271,16 @@ export const pitchKitPosts: PitchKitPost[] = [
   },
 ];
 
-/** Public kit proof — a selected subset, not the owner-managed Insights ranking. */
-export const pitchKitSelectedPosts: PitchKitPost[] = pitchKitPosts.slice(0, 5);
+/** Public kit proof — selected Instagram set, cap 6. */
+export const PITCHKIT_PUBLIC_POSTS_MAX = 6;
+export const pitchKitSelectedPosts: PitchKitPost[] = pitchKitPosts.slice(
+  0,
+  PITCHKIT_PUBLIC_POSTS_MAX,
+);
+
+export const pitchKitPublicCountries = publicCountries(
+  pitchKitAudience.countries,
+);
 
 /** Pitchkit-owned kit intro — not Instagram `biography`. Soft 160 / hard 280. */
 export const PITCHKIT_INTRO_SOFT_LIMIT = 160;

@@ -1,6 +1,7 @@
 /**
  * WMDS color sheet — Astryx-aligned semantic roles.
  * Light defaults on :root; dark swaps the same names under [data-theme="dark"].
+ * PitchKit kit appearance also uses [data-theme="soft"] — same role names, warmer paper.
  * Reference: https://astryx.atmeta.com/docs/color
  *
  * Surface hierarchy: body → surface → card → popover.
@@ -165,4 +166,35 @@
 
   --shadow-drop-sm: 0 1px 2px rgb(0 0 0 / 30%);
   --shadow-drop-md: 0 1px 2px rgb(0 0 0 / 20%), 0 2px 6px rgb(0 0 0 / 20%);
+}
+
+/**
+ * PitchKit public-kit appearance — not a new semantic role set.
+ * Same --color-* names as light, remapped to a warmer paper floor.
+ */
+[data-theme="soft"] {
+  --color-background-body: #f3eee6;
+  --color-background-surface: #fffaf4;
+  --color-background-card: #fffaf4;
+  --color-background-popover: #fffaf4;
+  --color-background-muted: #ebe4d8;
+
+  --color-text-primary: #2a241c;
+  --color-text-secondary: #5c5348;
+  --color-text-disabled: #a39888;
+  --color-text-accent: #3d3429;
+
+  --color-accent: #3d3429;
+  --color-accent-muted: #ebe4d8;
+  --color-on-accent: #fffaf4;
+
+  --color-neutral: #2a241c14;
+  --color-overlay: #2a241c80;
+  --color-overlay-hover: #2a241c0d;
+  --color-overlay-pressed: #2a241c1a;
+
+  --color-border: #2a241c18;
+  --color-border-emphasized: #cfc4b4;
+
+  --color-skeleton: color-mix(in srgb, var(--color-text-primary) 8%, var(--color-background-muted));
 }

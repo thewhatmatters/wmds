@@ -52,7 +52,7 @@ function BrandMark({ name }: { name: string }) {
   return <Avatar name={name} size="sm" />;
 }
 
-function PublicPastBrands({ brands }: { brands: readonly PitchKitPastBrand[] }) {
+export function PublicPastBrands({ brands }: { brands: readonly PitchKitPastBrand[] }) {
   if (brands.length === 0) return null;
 
   return (
