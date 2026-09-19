@@ -9,13 +9,11 @@ const storiesSource = readFileSync(
 );
 
 const storyStart = storiesSource.indexOf(
-  'name: "State — insufficient audience data"',
+  'name: "State — insufficient reach and audience data"',
 );
-const storyEnd = storiesSource.indexOf(
-  "export const InsufficientReachAndAudienceData",
-);
+const storyEnd = storiesSource.indexOf("export const CreatorInsightsLoading");
 const copySourceStart = storiesSource.indexOf(
-  "export function PitchKitInsightsInsufficientAudiencePage",
+  "export function PitchKitInsightsInsufficientReachAndAudiencePage",
   storyStart,
 );
 const showCodeSource = storiesSource.slice(copySourceStart, storyEnd);
@@ -37,22 +35,26 @@ const insufficientStyleKeys = [
   "pitchKitStatClasses",
   "pitchKitDashboardGridClasses",
   "pitchKitReachCardClasses",
-  "pitchKitCardWellClasses",
+  "pitchKitReachEmptyWellClasses",
+  "pitchKitReachEmptyCopyClasses",
+  "pitchKitEmptyTitleClasses",
+  "pitchKitEmptyBodyClasses",
   "pitchKitAudienceCardClasses",
   "pitchKitAudienceEmptyWellClasses",
   "pitchKitAudienceEmptyCopyClasses",
-  "pitchKitEmptyTitleClasses",
-  "pitchKitEmptyBodyClasses",
 ] as const;
 
-describe("State — insufficient audience data Show code", () => {
+const noDataBadge =
+  '<Badge variant="neutral" emphasis="muted">No data</Badge>';
+
+describe("State — insufficient reach and audience data Show code", () => {
   it("extracts the State Show code snippet", () => {
     expect(storyStart).toBeGreaterThan(-1);
     expect(copySourceStart).toBeGreaterThan(storyStart);
     expect(storyEnd).toBeGreaterThan(copySourceStart);
   });
 
-  it("interpolates Audience-empty and Insights page tokens", () => {
+  it("interpolates both empty well tokens", () => {
     for (const key of insufficientStyleKeys) {
       expect(showCodeSource, key).toContain(`\${${key}}`);
       expect(
@@ -68,51 +70,39 @@ describe("State — insufficient audience data Show code", () => {
     expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).toBe(
       pitchKitStyles.pitchKitReachEmptyCopyClasses,
     );
-    expect(pitchKitStyles.pitchKitAudienceEmptyWellClasses).toContain(
-      "items-center",
-    );
-    expect(pitchKitStyles.pitchKitAudienceEmptyWellClasses).toContain(
-      "text-center",
-    );
-    expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).toContain(
-      "items-center",
-    );
-    expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).toContain(
-      "text-center",
-    );
-    expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).toContain("gap-3");
+    expect(pitchKitStyles.pitchKitReachEmptyCopyClasses).toContain("gap-3");
   });
 
-  it("keeps the Audience band and empty body in the Insights shell", () => {
+  it("keeps both empty Badge stacks in the Insights shell", () => {
     expect(showCodeSource).toContain(
-      "export function PitchKitInsightsInsufficientAudiencePage",
+      "export function PitchKitInsightsInsufficientReachAndAudiencePage",
+    );
+    expect(showCodeSource).toContain("Reach over 30 days");
+    expect(showCodeSource).toContain("Graph data");
+    expect(showCodeSource).toContain("No reach data yet");
+    expect(showCodeSource).toContain(
+      "Connect more Instagram activity to plot the last 30 days.",
     );
     expect(showCodeSource).toContain("Audience fit");
-    expect(showCodeSource).toContain("Ranked Instagram percentages");
-    expect(showCodeSource).toContain(
-      '<Badge variant="neutral" emphasis="muted">No data</Badge>',
-    );
     expect(showCodeSource).toContain("No audience data yet");
     expect(showCodeSource).toContain(
       "Connect Instagram Insights demographics when available.",
     );
-    expect(showCodeSource).toContain("Reach over 30 days");
-    expect(showCodeSource).toContain("Graph data");
-    expect(showCodeSource).toContain("Chart.Cartesian");
+    expect(showCodeSource).toContain(noDataBadge);
+    expect(showCodeSource.split(noDataBadge)).toHaveLength(3);
     expect(showCodeSource).toContain("Recent proof");
     expect(showCodeSource).toContain("PitchKit primary navigation");
   });
 
-  it("does not invent bars, loading, or Storybook chrome", () => {
+  it("does not invent a chart, bars, loading, or Storybook chrome", () => {
+    expect(showCodeSource).not.toContain("Chart.Cartesian");
     expect(showCodeSource).not.toContain("Chart.RankedBars");
     expect(showCodeSource).not.toContain("AudienceSection");
     expect(showCodeSource).not.toContain("Chart.Loading");
+    expect(showCodeSource).not.toContain("Chart.Legend");
     expect(showCodeSource).not.toContain("<Skeleton");
     expect(showCodeSource).not.toContain("ExampleGridControls");
     expect(showCodeSource).not.toContain("GridOverlay");
     expect(showCodeSource).not.toContain("Insights are unavailable");
-    expect(showCodeSource).not.toContain("No reach data yet");
-    expect(showCodeSource).not.toContain("United States");
-    expect(showCodeSource).not.toContain("value: 42");
   });
 });
