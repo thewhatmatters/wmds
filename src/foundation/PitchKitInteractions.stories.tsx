@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
+import { PitchKitCreateProfileCalloutExample } from "../examples/PitchKit/PitchKitCreateProfileCallout";
 import {
   PitchKitInsightsExample,
   PitchKitOwnerExample,
 } from "../examples/PitchKit/PitchKitExample";
 import { PitchKitShareableExample } from "../examples/PitchKit/PitchKitShareable";
+import { PitchKitUserSettingsOwnerExample } from "../examples/PitchKit/PitchKitUserSettings";
 
 const meta = {
   title: "Internal/Interactions/PitchKit",
@@ -596,5 +598,112 @@ export const SharedCardBodyRadius: Story = {
     postImages.forEach((image) => {
       expect(getComputedStyle(image).borderRadius).toBe("14px");
     });
+  },
+};
+
+export const UserSettingsOwner: Story = {
+  name: "PitchKit — user settings (owner)",
+  render: () => <PitchKitUserSettingsOwnerExample />,
+  play: async ({ canvas }) => {
+    const portal = within(document.body);
+
+    await userEvent.click(
+      canvas.getByRole("button", { name: /open user settings/i }),
+    );
+
+    await waitFor(() => {
+      expect(portal.getByRole("dialog")).toBeInTheDocument();
+    });
+
+    const settings = portal.getByRole("dialog");
+    await expect(settings).toHaveAccessibleName(/user settings/i);
+    expect(within(settings).getByText("Avery Morgan")).toBeInTheDocument();
+    expect(
+      within(settings).getByText("hello@averymorgan.com"),
+    ).toBeInTheDocument();
+    expect(
+      within(settings).queryByRole("textbox"),
+    ).not.toBeInTheDocument();
+    expect(within(settings).queryByText(/bio/i)).not.toBeInTheDocument();
+
+    await userEvent.click(
+      within(settings).getByRole("button", { name: /^delete account$/i }),
+    );
+
+    await waitFor(() => {
+      expect(portal.getByRole("alertdialog")).toBeInTheDocument();
+    });
+
+    const confirm = portal.getByRole("alertdialog");
+    await expect(confirm).toHaveAccessibleName(/delete account/i);
+    expect(
+      within(confirm).getByText(/permanently removes your pitchkit account/i),
+    ).toBeVisible();
+
+    await userEvent.click(
+      within(confirm).getByRole("button", { name: /keep account/i }),
+    );
+
+    await waitFor(() => {
+      expect(portal.queryByRole("alertdialog")).not.toBeInTheDocument();
+    });
+    expect(portal.getByRole("dialog")).toBeInTheDocument();
+
+    await userEvent.click(
+      within(portal.getByRole("dialog")).getByRole("button", {
+        name: /^delete account$/i,
+      }),
+    );
+    await waitFor(() => {
+      expect(portal.getByRole("alertdialog")).toBeInTheDocument();
+    });
+
+    await userEvent.click(
+      within(portal.getByRole("alertdialog")).getByRole("button", {
+        name: /^delete account$/i,
+      }),
+    );
+
+    await waitFor(() => {
+      expect(portal.queryByRole("alertdialog")).not.toBeInTheDocument();
+      expect(portal.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+  },
+};
+
+export const CreatePitchKitProfileCallout: Story = {
+  name: "PitchKit — create PitchKit profile callout",
+  render: () => <PitchKitCreateProfileCalloutExample />,
+  play: async ({ canvas }) => {
+    expect(
+      canvas.getByRole("heading", { name: /avery morgan/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /create your pitchkit profile/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("button", { name: /get started/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("group", { name: /verified instagram summary/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /selected posts/i }),
+    ).toBeInTheDocument();
+    expect(canvas.queryByRole("heading", { name: /^contact$/i })).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("heading", { name: /past brands/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("button", { name: /open user settings/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("button", { name: /manage selected post/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("radiogroup", {
+        name: /pitchkit primary navigation/i,
+      }),
+    ).not.toBeInTheDocument();
   },
 };

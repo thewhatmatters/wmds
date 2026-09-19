@@ -122,3 +122,16 @@ export const pitchKitContactRowClasses =
   "flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3";
 export const pitchKitBrandBodyClasses =
   `${typographyClass("body")} text-muted ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantInsetXClasses}`;
+
+/** User settings Dialog body — thin account identity + destructive delete. */
+export const pitchKitUserSettingsBodyClasses = "flex flex-col gap-4";
+export const pitchKitUserSettingsIdentityClasses =
+  "flex min-w-0 flex-wrap items-center gap-3";
+export const pitchKitUserSettingsIdentityCopyClasses =
+  "flex min-w-0 flex-col gap-1";
+export const pitchKitUserSettingsNameClasses = typographyClass("ui-label");
+
+/** Public kit unsigned callout — Card occupant under identity / truncated proof. */
+export const pitchKitCalloutCardClasses = "col-span-full";
+export const pitchKitCalloutBodyClasses = `flex min-w-0 flex-col gap-4 ${cardLayoutBodyOccupantInsetXClasses} ${cardLayoutBodyOccupantPadYClasses}`;
+export const pitchKitCalloutActionsClasses = "flex flex-wrap items-center gap-3";

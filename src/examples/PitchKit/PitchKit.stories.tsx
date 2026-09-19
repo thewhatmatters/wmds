@@ -237,6 +237,8 @@ Identity is one shared strip composed into two surrounding chromes — copy thes
 
 1. **Pattern — creator identity (public)** — \`/k/[handle]\` brand nameplate (avatar, Graph name when present, frozen @handle, follower context, optional professional **Chip**).
 2. **Pattern — creator identity (owner settings)** — Settings → **Connected Instagram** card (same strip + professional **Chip** + Share kit \`/k/[handle]\` + Copy + connected / last sync).
+3. **Pattern — user settings (owner)** — topbar **Avatar** opens **Dialog** titled User settings (account display name + email from existing sample data). **Delete account** lives in this Dialog and confirms with **AlertDialog** \`confirmRole="destructive"\`. Not Connected Instagram and not an app footer.
+4. **Pattern — create PitchKit profile callout** — unsigned visitors on \`/k/[handle]\`: **Card** titled Create your PitchKit Profile + primary Get started, composed below a truncated shareable kit.
 
 Then copy **Pattern — creator Insights** for the authenticated owner dashboard, **Pattern — owner PitchKit** for the authenticated PitchKit tab (same kit sections as public, plus hide/restore on selected posts), and **Pattern — shareable PitchKit** for the public kit **body**. Do not lift kit Stats, charts, bio, website, rates, geo, or contact onto the identity Patterns.
 
@@ -255,6 +257,7 @@ The public kit answers four questions in order:
 2. **Scale** — kit **Stat** tiles for followers and engagement rate live on **Pattern — shareable PitchKit**, not on the identity nameplate. Same figures as Insights; no owner trends or chart chrome.
 3. **Selected posts** — the current Instagram proof set as **Card** images with likes and comments only.
 4. **Outreach** — creator-entered **Contact** (**TextLink** for email and website) and **Past brands** proof cards.
+5. **Unsigned conversion** — copy **Pattern — create PitchKit profile callout** below a truncated kit (identity + kit Stats + selected posts). No owner edit controls. Do not invent KPI metrics or a second Insights page.
 
 The authenticated owner kit answers the same four questions, with Graph identity and hide/restore:
 
@@ -276,6 +279,7 @@ The authenticated owner kit answers the same four questions, with Graph identity
 - Creator-entered contact and past-brand content belongs on the kit body (public and owner), not Insights and not the identity strip. Owner kit contact and past brands stay display-only.
 - Identity fails closed: hide Graph \`name\` when missing; **Avatar** falls back when \`profile_picture_url\` is omitted; omit follower context when \`followers_count\` is omitted. Never invent a bio, website, or display name.
 - Owner connection state (Connected / last sync) and Share kit Copy belong on **Pattern — creator identity (owner settings)** only.
+- Account-level User settings (display name / email, Delete account) belong on **Pattern — user settings (owner)** — Avatar → **Dialog**, not the Connected Instagram page and not the app footer.
 - The public kit has no owner edit toggle, **MoreMenu**, hide, or swap controls.
 - Owner PitchKit edit affordance is hide/restore on selected posts only. Do not add bio, website, rates, geo, contact, or section-visibility editors.
 - No rates, Stories, logo scraping, marquees, donuts, online heatmap, or second Instagram connection path.
@@ -285,12 +289,13 @@ The authenticated owner kit answers the same four questions, with Graph identity
 
 - Page layout — \`grid-page\`, \`band\`, \`--grid-max:1140px\`, \`--grid-column-gap:8px\`
 - Creator identity — shared strip (**Avatar** \`lg\`, Graph name, @handle, follower context, optional **Chip**); public nameplate vs owner **Card** + **PageHeader** Settings
-- Owner chrome — **SegmentedControl** + **Avatar** on Insights and owner PitchKit; Settings keeps the PitchKit wordmark + **Avatar**; public kit keeps the PitchKit wordmark only
+- Owner chrome — **SegmentedControl** + **Avatar** on Insights and owner PitchKit; Settings keeps the PitchKit wordmark + **Avatar**; the **Avatar** wraps in **Button** to open **Pattern — user settings (owner)**; public kit keeps the PitchKit wordmark only
 - Page and card chrome — **PageHeader**, **Card**, **Badge**, **Avatar**, **Button**, **Chip**, **TextLink**
 - Metrics and charts — **Stat**, **Chart.Cartesian**, **Chart.Legend**, **Chart.RankedBars**; loading uses **Stat** \`loading\`, **Skeleton**, and **Chart.Loading**
 - Proof ranking — **Tab.Group** + **Tab**; one selected metric reorders the same supplied posts
 - Post management — **MoreMenu** with **ButtonIcon**; **AlertDialog** confirms hiding a post (Insights Recent proof and owner PitchKit selected posts)
-- Public outreach — **TextLink** contact rows; outlined **Card** past-brand proof
+- Public outreach — **TextLink** contact rows; outlined **Card** past-brand proof; unsigned **Card** callout (**Pattern — create PitchKit profile callout**)
+- Account settings — **Dialog** + **AlertDialog** \`confirmRole="destructive"\` for Delete account (**Pattern — user settings (owner)**)
 - Outcome feedback — **Toaster** + **toast**; Undo restores the hidden post
 - Storybook development only — **ExampleGridControls** + **GridOverlay**
 
@@ -304,6 +309,8 @@ The authenticated owner kit answers the same four questions, with Graph identity
 - **Do** use **Tab** for proof ranking because the page already uses one primary **SegmentedControl**.
 - **Do** freeze approved grid values into implementation code.
 - **Do** copy **Pattern — creator identity (public)** for the \`/k/[handle]\` header and **Pattern — creator identity (owner settings)** for Settings → Connected Instagram.
+- **Do** copy **Pattern — user settings (owner)** for Avatar → User settings **Dialog** and Delete account **AlertDialog**.
+- **Do** copy **Pattern — create PitchKit profile callout** for unsigned visitors on the public kit — not a second Insights page.
 - **Do** copy **Pattern — shareable PitchKit** for the public kit body, **Pattern — owner PitchKit** for the authenticated PitchKit tab, and **Pattern — creator Insights** for the owner Insights app.
 - **Do** keep the Reach band when the reach series cannot be plotted — same shell and header, empty **Card.Body** (muted **Badge** “No data” → title → body). Audience, Stats, and proof may still show.
 - **Do** keep the Audience band when demographics cannot be ranked — same shell and header, empty **Card.Body** (same **Badge** stack). Reach, Stats, and proof may still show.
@@ -311,6 +318,8 @@ The authenticated owner kit answers the same four questions, with Graph identity
 - **Don't** copy **ExampleGridControls** into PitchKit production UI.
 - **Don't** put bio, website, rates, geo, contact CTAs, heatmaps, example percentages, or kit **Stat** / chart tiles on the identity Patterns.
 - **Don't** expose owner edit state or management controls on the public kit.
+- **Don't** put Delete account in the app footer — it confirms from User settings.
+- **Don't** invent bio, rates, website, or KPI metrics on User settings or the public callout.
 - **Don't** hide the Reach card when the reach series cannot be plotted, and do not use **Skeleton** or **Chart.Loading** for that empty.
 - **Don't** hide the Audience card when Graph has no demographic series, invent example percentages, or use **Skeleton** / **Chart.Loading** for that empty.
 - **Don't** treat Graph-unavailable (omit optional regions), insufficient-data empties, or zeros as the loading page.
