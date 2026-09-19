@@ -5,9 +5,11 @@ import {
 } from "../../lib/storyCopySource";
 import {
   PitchKitInsightsExample,
+  PitchKitOwnerExample,
   type PitchKitDataState,
   type PitchKitLoadingPhase,
 } from "./PitchKitExample";
+import { ownerPitchKitBodyCopySource, ownerPitchKitPageCopySource } from "./ownerPitchKitCopySource";
 import { PitchKitShareableExample } from "./PitchKitShareable";
 /** Interpolated into Show code so the freeze stays locked to the live canvas styles. */
 import {
@@ -229,16 +231,16 @@ const meta = {
         component: `
 ## Usage
 
-Authenticated PitchKit at a frozen 1140px grid maximum. The single top-level **SegmentedControl** switches between owner **Insights** and a preview of the public **PitchKit**.
+Authenticated PitchKit at a frozen 1140px grid maximum. The single top-level **SegmentedControl** switches between owner **Insights** and owner **PitchKit**.
 
 Identity is one shared strip composed into two surrounding chromes — copy these before kit body or Insights:
 
 1. **Pattern — creator identity (public)** — \`/k/[handle]\` brand nameplate (avatar, Graph name when present, frozen @handle, follower context, optional professional **Chip**).
 2. **Pattern — creator identity (owner settings)** — Settings → **Connected Instagram** card (same strip + professional **Chip** + Share kit \`/k/[handle]\` + Copy + connected / last sync).
 
-Then copy **Pattern — creator Insights** for the authenticated owner dashboard and **Pattern — shareable PitchKit** for the public kit **body** (selected posts, contact, past brands, kit **Stat** tiles). Do not lift kit Stats, charts, bio, website, rates, geo, or contact onto the identity Patterns.
+Then copy **Pattern — creator Insights** for the authenticated owner dashboard, **Pattern — owner PitchKit** for the authenticated PitchKit tab (same kit sections as public, plus hide/restore on selected posts), and **Pattern — shareable PitchKit** for the public kit **body**. Do not lift kit Stats, charts, bio, website, rates, geo, or contact onto the identity Patterns.
 
-**Show code** on each **Pattern** story is the product contract — a literal freeze of that canvas (layout, chrome, spacing, typography). Copy that source into PitchKit. Do not reconstruct the page from Storybook-only \`PitchKitExample\` / \`PitchKitShareable\` / \`PitchKitCreatorIdentity\` / \`pitchKitStyles\`, and do not ship **ExampleGridControls**.
+**Show code** on each **Pattern** story is the product contract — a literal freeze of that canvas (layout, chrome, spacing, typography). Copy that source into PitchKit. Do not reconstruct the page from Storybook-only \`PitchKitExample\` / \`PitchKitOwner\` / \`PitchKitShareable\` / \`PitchKitCreatorIdentity\` / \`pitchKitStyles\`, and do not ship **ExampleGridControls**.
 
 The Insights dashboard answers four questions in order:
 
@@ -254,6 +256,13 @@ The public kit answers four questions in order:
 3. **Selected posts** — the current Instagram proof set as **Card** images with likes and comments only.
 4. **Outreach** — creator-entered **Contact** (**TextLink** for email and website) and **Past brands** proof cards.
 
+The authenticated owner kit answers the same four questions, with Graph identity and hide/restore:
+
+1. **Who** — **CreatorIdentityStrip** on **Pattern — owner PitchKit** (same Graph fields as the creator-identity Patterns). Not the public Verified + Instagram chips.
+2. **Scale** — the same kit **Stat** tiles as the public kit.
+3. **Selected posts** — the same proof cards, plus **MoreMenu** hide/restore (**AlertDialog** + Undo toast). No swap-post on this surface.
+4. **Outreach** — the same display-only **Contact** and **Past brands**. Not editors.
+
 ## Data contract
 
 - Engagement rate is exactly **(likes + comments) ÷ followers**.
@@ -264,22 +273,23 @@ The public kit answers four questions in order:
 - **Insufficient audience** — Graph returned Insights, but demographic series are missing or empty (no country, city, age, or gender breakdown to rank). Reach, Stats, and proof may still show. Copy **State — insufficient audience data**: keep the Audience **Card** in the dashboard grid with the same header (“Audience fit” / supporting copy); **Card.Body** is the empty Pattern (same **Badge** stack). Do not hide the band, do not invent example %, and do not draw **Chart.RankedBars** from an empty series.
 - **Insufficient reach and audience** — both series are unusable. Keep both Cards. Copy **State — insufficient reach and audience data** (or each empty Pattern). Never omit a chart/card band because Graph has no series.
 - **Loading** — Graph connect/refresh is in flight. Copy **Pattern — creator Insights (loading)** for the initial skeleton screen (**Stat** \`loading\`, **Skeleton** wells that mirror resolved chrome, proof placeholders). If chrome is already up and a fetch is in flight, keep **Card.Header** mounted and swap the well for **Chart.Loading**. Do not use the unavailable Pattern, insufficient-data empties, or zeros as loading. Controls → **Loading phase** on that story previews skeleton vs retrieving; Show code freezes the skeleton page.
-- Creator-entered contact and past-brand content belongs on the public PitchKit body, not Insights and not the identity strip.
+- Creator-entered contact and past-brand content belongs on the kit body (public and owner), not Insights and not the identity strip. Owner kit contact and past brands stay display-only.
 - Identity fails closed: hide Graph \`name\` when missing; **Avatar** falls back when \`profile_picture_url\` is omitted; omit follower context when \`followers_count\` is omitted. Never invent a bio, website, or display name.
 - Owner connection state (Connected / last sync) and Share kit Copy belong on **Pattern — creator identity (owner settings)** only.
 - The public kit has no owner edit toggle, **MoreMenu**, hide, or swap controls.
+- Owner PitchKit edit affordance is hide/restore on selected posts only. Do not add bio, website, rates, geo, contact, or section-visibility editors.
 - No rates, Stories, logo scraping, marquees, donuts, online heatmap, or second Instagram connection path.
-- Do not expand the PitchKit **Coming soon** surface into a kit editor.
+- The authenticated PitchKit tab is **Pattern — owner PitchKit**, not a Coming soon placeholder.
 
 ## Component map
 
 - Page layout — \`grid-page\`, \`band\`, \`--grid-max:1140px\`, \`--grid-column-gap:8px\`
 - Creator identity — shared strip (**Avatar** \`lg\`, Graph name, @handle, follower context, optional **Chip**); public nameplate vs owner **Card** + **PageHeader** Settings
-- Owner chrome — **SegmentedControl** + **Avatar** on Insights; Settings keeps the PitchKit wordmark + **Avatar**; public kit keeps the PitchKit wordmark only
+- Owner chrome — **SegmentedControl** + **Avatar** on Insights and owner PitchKit; Settings keeps the PitchKit wordmark + **Avatar**; public kit keeps the PitchKit wordmark only
 - Page and card chrome — **PageHeader**, **Card**, **Badge**, **Avatar**, **Button**, **Chip**, **TextLink**
 - Metrics and charts — **Stat**, **Chart.Cartesian**, **Chart.Legend**, **Chart.RankedBars**; loading uses **Stat** \`loading\`, **Skeleton**, and **Chart.Loading**
 - Proof ranking — **Tab.Group** + **Tab**; one selected metric reorders the same supplied posts
-- Post management — **MoreMenu** with **ButtonIcon**; **AlertDialog** confirms hiding a post (Insights only)
+- Post management — **MoreMenu** with **ButtonIcon**; **AlertDialog** confirms hiding a post (Insights Recent proof and owner PitchKit selected posts)
 - Public outreach — **TextLink** contact rows; outlined **Card** past-brand proof
 - Outcome feedback — **Toaster** + **toast**; Undo restores the hidden post
 - Storybook development only — **ExampleGridControls** + **GridOverlay**
@@ -288,13 +298,13 @@ The public kit answers four questions in order:
 
 - **Do** treat **Show code** as the implementation contract; re-copy it when the canvas changes.
 - **Do** preserve the visual difference between typical performance and a spike.
-- **Do** keep all edit controls in owner-only Insights.
-- **Do** confirm post visibility changes with **AlertDialog** before mutating the ranked set.
+- **Do** keep edit controls on owner Insights and owner PitchKit — never on the public kit.
+- **Do** confirm post visibility changes with **AlertDialog** before mutating the ranked or selected set.
 - **Do** pair the completed hide mutation with an actionable Undo toast.
 - **Do** use **Tab** for proof ranking because the page already uses one primary **SegmentedControl**.
 - **Do** freeze approved grid values into implementation code.
 - **Do** copy **Pattern — creator identity (public)** for the \`/k/[handle]\` header and **Pattern — creator identity (owner settings)** for Settings → Connected Instagram.
-- **Do** copy **Pattern — shareable PitchKit** for the public kit body and **Pattern — creator Insights** for the owner Insights app.
+- **Do** copy **Pattern — shareable PitchKit** for the public kit body, **Pattern — owner PitchKit** for the authenticated PitchKit tab, and **Pattern — creator Insights** for the owner Insights app.
 - **Do** keep the Reach band when the reach series cannot be plotted — same shell and header, empty **Card.Body** (muted **Badge** “No data” → title → body). Audience, Stats, and proof may still show.
 - **Do** keep the Audience band when demographics cannot be ranked — same shell and header, empty **Card.Body** (same **Badge** stack). Reach, Stats, and proof may still show.
 - **Do** copy **Pattern — creator Insights (loading)** for in-flight Graph; use **Skeleton** for the first layout and **Chart.Loading** only after chrome is up.
@@ -384,9 +394,9 @@ function AudienceSection({ title, items }) {
   );
 }
 
-${shareablePitchKitCopySource}
+${ownerPitchKitBodyCopySource}
 
-export function PitchKitInsightsPage({ reachData, audience, posts, contact, brands }) {
+export function PitchKitInsightsPage({ reachData, audience, posts, contact, brands, identity, kitPosts }) {
   const [view, setView] = useState("insights");
   const [proofMetric, setProofMetric] = useState("reach");
   const [visiblePosts, setVisiblePosts] = useState(posts);
@@ -460,7 +470,7 @@ export function PitchKitInsightsPage({ reachData, audience, posts, contact, bran
       <div className="${pitchKitContentBandClasses}">
         <div className="${pitchKitContentClasses}">
           {view === "pitchkit" ? (
-            <ShareablePitchKit posts={posts} contact={contact} brands={brands} />
+            <OwnerPitchKit identity={identity} posts={kitPosts} contact={contact} brands={brands} />
           ) : (
             <>
               <section className="${pitchKitHeaderSectionClasses}">
@@ -745,9 +755,9 @@ function AudienceSection({ title, items }) {
   );
 }
 
-${shareablePitchKitCopySource}
+${ownerPitchKitBodyCopySource}
 
-export function PitchKitInsightsInsufficientReachPage({ audience, posts, contact, brands }) {
+export function PitchKitInsightsInsufficientReachPage({ audience, posts, contact, brands, identity, kitPosts }) {
   const [view, setView] = useState("insights");
   const [proofMetric, setProofMetric] = useState("reach");
   const [visiblePosts, setVisiblePosts] = useState(posts);
@@ -821,7 +831,7 @@ export function PitchKitInsightsInsufficientReachPage({ audience, posts, contact
       <div className="${pitchKitContentBandClasses}">
         <div className="${pitchKitContentClasses}">
           {view === "pitchkit" ? (
-            <ShareablePitchKit posts={posts} contact={contact} brands={brands} />
+            <OwnerPitchKit identity={identity} posts={kitPosts} contact={contact} brands={brands} />
           ) : (
             <>
               <section className="${pitchKitHeaderSectionClasses}">
@@ -1085,9 +1095,9 @@ function proofMetricValue(post, metric) {
   return post[metric];
 }
 
-${shareablePitchKitCopySource}
+${ownerPitchKitBodyCopySource}
 
-export function PitchKitInsightsInsufficientAudiencePage({ reachData, posts, contact, brands }) {
+export function PitchKitInsightsInsufficientAudiencePage({ reachData, posts, contact, brands, identity, kitPosts }) {
   const [view, setView] = useState("insights");
   const [proofMetric, setProofMetric] = useState("reach");
   const [visiblePosts, setVisiblePosts] = useState(posts);
@@ -1161,7 +1171,7 @@ export function PitchKitInsightsInsufficientAudiencePage({ reachData, posts, con
       <div className="${pitchKitContentBandClasses}">
         <div className="${pitchKitContentClasses}">
           {view === "pitchkit" ? (
-            <ShareablePitchKit posts={posts} contact={contact} brands={brands} />
+            <OwnerPitchKit identity={identity} posts={kitPosts} contact={contact} brands={brands} />
           ) : (
             <>
               <section className="${pitchKitHeaderSectionClasses}">
@@ -1422,9 +1432,9 @@ function proofMetricValue(post, metric) {
   return post[metric];
 }
 
-${shareablePitchKitCopySource}
+${ownerPitchKitBodyCopySource}
 
-export function PitchKitInsightsInsufficientReachAndAudiencePage({ posts, contact, brands }) {
+export function PitchKitInsightsInsufficientReachAndAudiencePage({ posts, contact, brands, identity, kitPosts }) {
   const [view, setView] = useState("insights");
   const [proofMetric, setProofMetric] = useState("reach");
   const [visiblePosts, setVisiblePosts] = useState(posts);
@@ -1498,7 +1508,7 @@ export function PitchKitInsightsInsufficientReachAndAudiencePage({ posts, contac
       <div className="${pitchKitContentBandClasses}">
         <div className="${pitchKitContentClasses}">
           {view === "pitchkit" ? (
-            <ShareablePitchKit posts={posts} contact={contact} brands={brands} />
+            <OwnerPitchKit identity={identity} posts={kitPosts} contact={contact} brands={brands} />
           ) : (
             <>
               <section className="${pitchKitHeaderSectionClasses}">
@@ -1733,19 +1743,24 @@ export const CreatorInsightsLoading: Story = {
     `
 import { useState } from "react";
 import {
+  AlertDialog,
   Avatar,
   Badge,
   Button,
+  ButtonIcon,
   Card,
   Chip,
+  MoreMenu,
   PageHeader,
   SegmentedControl,
   Skeleton,
   Stat,
   TextLink,
   Toaster,
+  cardTitleClasses,
+  toast,
 } from "@whatmatters/wmds";
-import { Share2 } from "lucide-react";
+import { EyeOff, Share2 } from "lucide-react";
 
 const proofSkeletonCount = 6;
 const audienceSkeletonSections = [
@@ -1755,9 +1770,9 @@ const audienceSkeletonSections = [
   { titleWidth: 60, bars: [96, 68, 44] },
 ];
 
-${shareablePitchKitCopySource}
+${ownerPitchKitBodyCopySource}
 
-export function PitchKitInsightsLoadingPage({ posts, contact, brands }) {
+export function PitchKitInsightsLoadingPage({ posts, contact, brands, identity, kitPosts }) {
   const [view, setView] = useState("insights");
 
   return (
@@ -1783,7 +1798,7 @@ export function PitchKitInsightsLoadingPage({ posts, contact, brands }) {
       <div className="${pitchKitContentBandClasses}">
         <div className="${pitchKitContentClasses}">
           {view === "pitchkit" ? (
-            <ShareablePitchKit posts={posts} contact={contact} brands={brands} />
+            <OwnerPitchKit identity={identity} posts={kitPosts} contact={contact} brands={brands} />
           ) : (
             <>
               <section className="${pitchKitHeaderSectionClasses}">
@@ -2012,5 +2027,21 @@ export function ShareablePitchKitPage({ posts, contact, brands }) {
   );
 }
 `,
+  ),
+};
+
+export const OwnerPitchKit: Story = {
+  name: "Pattern — owner PitchKit",
+  render: (args) => <PitchKitOwnerExample {...args} />,
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Show code is the product contract for the authenticated PitchKit tab — a literal freeze of this canvas (layout, chrome, spacing, typography). Same kit sections as Pattern — shareable PitchKit, with CreatorIdentityStrip and MoreMenu hide/restore on selected posts. Contact and past brands stay display-only. Copy that source into PitchKit. Do not reconstruct from Storybook-only example files, do not ship the grid inspector, and do not add bio, website, rates, geo, or contact editors.",
+        },
+      },
+    },
+    ownerPitchKitPageCopySource,
   ),
 };

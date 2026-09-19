@@ -29,7 +29,7 @@ import {
   pitchKitReachData,
   type PitchKitPost,
 } from "./pitchKitData";
-import { ShareablePitchKit } from "./PitchKitShareable";
+import { OwnerPitchKit } from "./PitchKitOwner";
 import {
   pitchKitAudienceCardClasses,
   pitchKitAudienceEmptyCopyClasses,
@@ -93,6 +93,7 @@ type PitchKitProofMetric = "reach" | "engagement" | "saves";
 export interface PitchKitInsightsExampleProps {
   dataState?: PitchKitDataState;
   loadingPhase?: PitchKitLoadingPhase;
+  initialView?: PitchKitView;
 }
 
 const reachSeriesConfig = chartSeriesConfigFromKeys([
@@ -806,11 +807,25 @@ function insightsContent(
   }
 }
 
+export function PitchKitOwnerExample({
+  dataState,
+  loadingPhase,
+}: Omit<PitchKitInsightsExampleProps, "initialView">) {
+  return (
+    <PitchKitInsightsExample
+      dataState={dataState}
+      loadingPhase={loadingPhase}
+      initialView="pitchkit"
+    />
+  );
+}
+
 export function PitchKitInsightsExample({
   dataState = "resolved",
   loadingPhase = "skeleton",
+  initialView = "insights",
 }: PitchKitInsightsExampleProps) {
-  const [view, setView] = useState<PitchKitView>("insights");
+  const [view, setView] = useState<PitchKitView>(initialView);
   const [gridVisible, setGridVisible] = useState(false);
   const [theme, setTheme] = useState<DisplayControlThemeMode>("auto");
   const [gridMax, setGridMax] = useState(1140);
@@ -871,7 +886,7 @@ export function PitchKitInsightsExample({
       <div className={pitchKitContentBandClasses}>
         <div className={pitchKitContentClasses}>
           {view === "pitchkit" ? (
-            <ShareablePitchKit />
+            <OwnerPitchKit />
           ) : (
             insightsContent(dataState, loadingPhase)
           )}

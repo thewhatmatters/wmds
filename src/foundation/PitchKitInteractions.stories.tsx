@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
-import { PitchKitInsightsExample } from "../examples/PitchKit/PitchKitExample";
+import {
+  PitchKitInsightsExample,
+  PitchKitOwnerExample,
+} from "../examples/PitchKit/PitchKitExample";
 import { PitchKitShareableExample } from "../examples/PitchKit/PitchKitShareable";
 
 const meta = {
@@ -43,8 +46,13 @@ export const PrimaryNavigation: Story = {
       canvas.queryByRole("button", { name: /edit/i }),
     ).not.toBeInTheDocument();
     expect(
+      canvas.getByRole("button", { name: /manage selected post 1/i }),
+    ).toBeInTheDocument();
+    expect(
       canvas.queryByRole("button", { name: /manage ranked post/i }),
     ).not.toBeInTheDocument();
+    expect(canvas.getByText("Creator")).toBeInTheDocument();
+    expect(canvas.queryByText("Verified")).not.toBeInTheDocument();
 
     await userEvent.click(
       within(navigation).getByRole("radio", { name: /^insights$/i }),
@@ -82,6 +90,9 @@ export const ShareableKit: Story = {
     ).not.toBeInTheDocument();
     expect(
       canvas.queryByRole("button", { name: /manage ranked post/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("button", { name: /manage selected post/i }),
     ).not.toBeInTheDocument();
   },
 };
@@ -314,6 +325,102 @@ export const RecentProofTabs: Story = {
       expect(within(panel).getAllByRole("img")[0]).toHaveAccessibleName(
         /bright kitchen with a coastal dining table/i,
       );
+    });
+  },
+};
+
+export const OwnerKit: Story = {
+  name: "PitchKit — owner kit",
+  render: () => <PitchKitOwnerExample />,
+  play: async ({ canvas }) => {
+    expect(
+      canvas.getByRole("heading", { name: /avery morgan/i }),
+    ).toBeInTheDocument();
+    expect(canvas.getByText(/@averymorgan · 84.2K followers/i)).toBeInTheDocument();
+    expect(canvas.getByText("Creator")).toBeInTheDocument();
+    expect(canvas.queryByText("Verified")).not.toBeInTheDocument();
+    expect(
+      canvas.getByRole("group", { name: /verified instagram summary/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /selected posts/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("button", { name: /manage selected post 1/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.queryByRole("button", { name: /manage ranked post/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.getByRole("link", { name: /hello@averymorgan.com/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /past brands/i }),
+    ).toBeInTheDocument();
+    expect(canvas.queryByText(/coming soon/i)).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("menuitem", { name: /swap post/i }),
+    ).not.toBeInTheDocument();
+  },
+};
+
+export const OwnerHidePostConfirmation: Story = {
+  name: "PitchKit — owner kit hide post",
+  render: () => <PitchKitOwnerExample />,
+  play: async ({ canvas }) => {
+    const trigger = canvas.getByRole("button", {
+      name: /manage selected post 1/i,
+    });
+    await userEvent.click(trigger);
+
+    const menu = within(document.body).getByRole("menu");
+    expect(
+      within(menu).queryByRole("menuitem", { name: /swap post/i }),
+    ).not.toBeInTheDocument();
+    await userEvent.click(
+      within(menu).getByRole("menuitem", { name: /hide from kit/i }),
+    );
+
+    const dialog = within(document.body).getByRole("alertdialog", {
+      name: /hide this post from pitchkit/i,
+    });
+    await waitFor(() => expect(dialog).toBeVisible());
+
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: /^hide from kit$/i }),
+    );
+
+    await waitFor(() => {
+      expect(
+        within(document.body).queryByRole("alertdialog"),
+      ).not.toBeInTheDocument();
+      expect(
+        canvas.getByText(/post hidden from the shareable kit/i),
+      ).toBeVisible();
+      expect(
+        canvas.queryByRole("button", { name: /manage selected post 5/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    const notifications = within(document.body).getByRole("list", {
+      name: /notifications/i,
+    });
+    await waitFor(() => {
+      expect(within(notifications).getByRole("status")).toHaveTextContent(
+        /post hidden from kit/i,
+      );
+    });
+
+    await userEvent.click(
+      within(notifications).getByRole("button", { name: /undo/i }),
+    );
+    await waitFor(() => {
+      expect(
+        canvas.getByText(/post restored to the shareable kit/i),
+      ).toBeVisible();
+      expect(
+        canvas.getByRole("button", { name: /manage selected post 5/i }),
+      ).toBeInTheDocument();
     });
   },
 };
