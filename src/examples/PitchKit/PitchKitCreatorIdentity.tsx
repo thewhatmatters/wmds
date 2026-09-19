@@ -256,7 +256,7 @@ function OwnerSettingsCard({
   );
 }
 
-function IdentityExampleShell({
+export function IdentityExampleShell({
   topbarEnd,
   children,
 }: {
