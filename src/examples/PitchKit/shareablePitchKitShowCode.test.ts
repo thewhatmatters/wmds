@@ -64,6 +64,15 @@ describe("Pattern — shareable PitchKit Show code", () => {
     expect(kitFreezeSource).toContain("Chip readOnly");
     expect(kitFreezeSource).toContain('label="Followers"');
     expect(kitFreezeSource).toContain('label="Engagement rate"');
+    expect(kitFreezeSource).toContain("Create your Pitchkit");
+    expect(kitFreezeSource).toContain(
+      "Turn your Instagram into a shareable media kit.",
+    );
+    expect(kitFreezeSource).toContain("Continue with Instagram");
+    expect(kitFreezeSource).toContain("showCreateBand");
+    expect(kitFreezeSource).not.toContain("Get started");
+    expect(kitFreezeSource).not.toContain("Create your PitchKit Profile");
+    expect(shareableStorySource).toContain("showCreateBand");
   });
 
   it("omits owner management and Storybook-only chrome", () => {

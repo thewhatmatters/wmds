@@ -5,6 +5,7 @@ import {
   PitchKitOwnerExample,
 } from "../examples/PitchKit/PitchKitExample";
 import { PitchKitShareableExample } from "../examples/PitchKit/PitchKitShareable";
+import { PitchKitUserSettingsOwnerExample } from "../examples/PitchKit/PitchKitUserSettings";
 
 const meta = {
   title: "Internal/Interactions/PitchKit",
@@ -93,6 +94,18 @@ export const ShareableKit: Story = {
     ).not.toBeInTheDocument();
     expect(
       canvas.queryByRole("button", { name: /manage selected post/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /^create your pitchkit$/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByText(/turn your instagram into a shareable media kit/i),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("button", { name: /continue with instagram/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.queryByRole("button", { name: /^create your pitchkit$/i }),
     ).not.toBeInTheDocument();
   },
 };
@@ -595,6 +608,84 @@ export const SharedCardBodyRadius: Story = {
     expect(postImages).toHaveLength(6);
     postImages.forEach((image) => {
       expect(getComputedStyle(image).borderRadius).toBe("14px");
+    });
+  },
+};
+
+export const UserSettingsOwner: Story = {
+  name: "PitchKit — account settings (owner)",
+  render: () => <PitchKitUserSettingsOwnerExample />,
+  play: async ({ canvas }) => {
+    const portal = within(document.body);
+
+    await userEvent.click(
+      canvas.getByRole("button", { name: /account settings/i }),
+    );
+
+    await waitFor(() => {
+      expect(portal.getByRole("dialog")).toBeInTheDocument();
+    });
+
+    const settings = portal.getByRole("dialog");
+    await expect(settings).toHaveAccessibleName(/account settings/i);
+    expect(
+      within(settings).getByRole("heading", { name: /connected instagram/i }),
+    ).toBeInTheDocument();
+    expect(within(settings).getByText("Avery Morgan")).toBeInTheDocument();
+    expect(within(settings).getByText("Creator")).toBeInTheDocument();
+    expect(within(settings).getByText(/last synced/i)).toBeInTheDocument();
+    expect(within(settings).getByText("Share kit")).toBeInTheDocument();
+    expect(within(settings).getByRole("button", { name: /^copy$/i })).toBeInTheDocument();
+    expect(within(settings).getByRole("button", { name: /sign out/i })).toBeInTheDocument();
+    expect(within(settings).getByRole("button", { name: /disconnect/i })).toBeInTheDocument();
+    expect(within(settings).queryByText(/bio/i)).not.toBeInTheDocument();
+
+    await userEvent.click(
+      within(settings).getByRole("button", { name: /^delete account$/i }),
+    );
+
+    await waitFor(() => {
+      expect(portal.getByRole("alertdialog")).toBeInTheDocument();
+    });
+
+    const confirm = portal.getByRole("alertdialog");
+    await expect(confirm).toHaveAccessibleName(/delete your pitchkit account/i);
+    expect(
+      within(confirm).getByText(
+        /permanently deletes your kit, stored media copies, and connection/i,
+      ),
+    ).toBeVisible();
+    expect(
+      within(confirm).getByText(/your instagram account is not deleted/i),
+    ).toBeVisible();
+
+    await userEvent.click(
+      within(confirm).getByRole("button", { name: /^cancel$/i }),
+    );
+
+    await waitFor(() => {
+      expect(portal.queryByRole("alertdialog")).not.toBeInTheDocument();
+    });
+    expect(portal.getByRole("dialog")).toBeInTheDocument();
+
+    await userEvent.click(
+      within(portal.getByRole("dialog")).getByRole("button", {
+        name: /^delete account$/i,
+      }),
+    );
+    await waitFor(() => {
+      expect(portal.getByRole("alertdialog")).toBeInTheDocument();
+    });
+
+    await userEvent.click(
+      within(portal.getByRole("alertdialog")).getByRole("button", {
+        name: /^delete account$/i,
+      }),
+    );
+
+    await waitFor(() => {
+      expect(portal.queryByRole("alertdialog")).not.toBeInTheDocument();
+      expect(portal.queryByRole("dialog")).not.toBeInTheDocument();
     });
   },
 };

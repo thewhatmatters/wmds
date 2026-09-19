@@ -122,3 +122,13 @@ export const pitchKitContactRowClasses =
   "flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3";
 export const pitchKitBrandBodyClasses =
   `${typographyClass("body")} text-muted ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantInsetXClasses}`;
+
+/** Account settings Dialog body — Connected Instagram → Share kit → account actions. */
+export const pitchKitUserSettingsBodyClasses = "flex w-full min-w-0 flex-col gap-4";
+export const pitchKitUserSettingsActionsClasses =
+  "flex flex-col items-start gap-2";
+
+/** Public kit unsigned CTA band — compose into shareable PitchKit only. */
+export const pitchKitCalloutCardClasses = "col-span-full";
+export const pitchKitCalloutBodyClasses = `flex min-w-0 flex-col gap-4 ${cardLayoutBodyOccupantInsetXClasses} ${cardLayoutBodyOccupantPadYClasses}`;
+export const pitchKitCalloutActionsClasses = "flex flex-wrap items-center gap-3";

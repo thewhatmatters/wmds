@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Avatar } from "../../components/atoms/Avatar/Avatar";
 import { Badge } from "../../components/atoms/Badge/Badge";
+import { Button } from "../../components/atoms/Button/Button";
 import { TextLink } from "../../components/atoms/TextLink/TextLink";
 import {
   Card,
@@ -23,6 +24,9 @@ import {
 import {
   pitchKitBrandBodyClasses,
   pitchKitBrandClasses,
+  pitchKitCalloutActionsClasses,
+  pitchKitCalloutBodyClasses,
+  pitchKitCalloutCardClasses,
   pitchKitContactCardClasses,
   pitchKitContactRowClasses,
   pitchKitContactRowsClasses,
@@ -60,12 +64,43 @@ export interface ShareablePitchKitProps {
   posts?: readonly PitchKitPost[];
   contact?: typeof pitchKitContact;
   brands?: readonly PitchKitBrand[];
+  /**
+   * Unsigned visitor who is not the kit owner.
+   * Omit for the kit owner and for signed-in viewers of someone else's kit.
+   */
+  showCreateBand?: boolean;
+}
+
+export function PublicCreatePitchkitBand() {
+  return (
+    <Card
+      variant="outlined"
+      shape="rounded"
+      bodyTerminal
+      className={pitchKitCalloutCardClasses}
+    >
+      <Card.Header
+        start={<h2 className={cardTitleClasses}>Create your Pitchkit</h2>}
+      />
+      <Card.Body>
+        <div className={pitchKitCalloutBodyClasses}>
+          <p className={pitchKitSupportingClasses}>
+            Turn your Instagram into a shareable media kit.
+          </p>
+          <div className={pitchKitCalloutActionsClasses}>
+            <Button role="primary">Continue with Instagram</Button>
+          </div>
+        </div>
+      </Card.Body>
+    </Card>
+  );
 }
 
 export function ShareablePitchKit({
   posts = pitchKitSelectedPosts,
   contact = pitchKitContact,
   brands = pitchKitBrands,
+  showCreateBand = true,
 }: ShareablePitchKitProps) {
   return (
     <>
@@ -214,6 +249,8 @@ export function ShareablePitchKit({
           ))}
         </div>
       </section>
+
+      {showCreateBand ? <PublicCreatePitchkitBand /> : null}
     </>
   );
 }
