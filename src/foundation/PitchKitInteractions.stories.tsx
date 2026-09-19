@@ -70,7 +70,9 @@ export const ShareableKit: Story = {
     expect(
       canvas.getByRole("heading", { name: /avery morgan/i }),
     ).toBeInTheDocument();
-    expect(canvas.getByText(/@averymorgan/)).toBeInTheDocument();
+    expect(
+      canvas.getByText(/@averymorgan · 84.2K followers/i),
+    ).toBeInTheDocument();
     expect(canvas.queryByText("Verified")).not.toBeInTheDocument();
     expect(
       canvas.getByRole("group", { name: /instagram performance summary/i }),
@@ -422,7 +424,7 @@ export const OwnerHidePostConfirmation: Story = {
         canvas.getByText(/post hidden from the shareable kit/i),
       ).toBeVisible();
       expect(
-        canvas.queryByRole("button", { name: /manage selected post 5/i }),
+        canvas.queryByRole("button", { name: /manage selected post 6/i }),
       ).not.toBeInTheDocument();
     });
 
@@ -443,7 +445,7 @@ export const OwnerHidePostConfirmation: Story = {
         canvas.getByText(/post restored to the shareable kit/i),
       ).toBeVisible();
       expect(
-        canvas.getByRole("button", { name: /manage selected post 5/i }),
+        canvas.getByRole("button", { name: /manage selected post 6/i }),
       ).toBeInTheDocument();
     });
   },
