@@ -29,7 +29,7 @@ export interface PitchKitIntroExampleProps {
   chrome?: "public" | "owner";
 }
 
-function PublicIntro({ intro }: { intro: string }) {
+export function PublicIntro({ intro }: { intro: string }) {
   if (pitchKitIntroIsEmpty(intro)) return null;
 
   return <p className={pitchKitIntroClasses}>{intro}</p>;

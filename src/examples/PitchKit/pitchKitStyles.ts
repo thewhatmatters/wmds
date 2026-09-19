@@ -40,6 +40,9 @@ export const pitchKitAudienceCardClasses = "col-span-full min-w-0 lg:col-span-6"
 /** Matches **Chart.Cartesian** `minHeight` on the Reach well — keep empty/skeleton bands the same. */
 export const pitchKitReachChartMinHeight = 344;
 
+/** Compact public-kit 30-day reach — same empty contract, shorter well. */
+export const pitchKitPublicReachChartMinHeight = 220;
+
 export const pitchKitCardWellClasses =
   `flex min-w-0 flex-col gap-4 bg-body px-3.5 py-4 ${cardLayoutBodyOccupantRadiusClasses}`;
 
@@ -145,3 +148,16 @@ export const pitchKitBrandRowStartClasses =
   "flex min-w-0 items-center gap-3";
 export const pitchKitBrandNameClasses = typographyClass("ui-label");
 export const pitchKitBrandReorderClasses = "flex shrink-0 items-center";
+
+/** Owner theme picker — draft SegmentedControl + explicit Save. */
+export const pitchKitThemeToolbarClasses =
+  "col-span-full flex flex-wrap items-end justify-between gap-3";
+export const pitchKitThemePreviewLabelClasses = `${typographyClass("overline")} text-muted`;
+export const pitchKitThemePreviewClasses =
+  `col-span-full overflow-hidden border border-border bg-body ${cardLayoutBodyOccupantRadiusClasses}`;
+export const pitchKitThemePreviewPageClasses =
+  "grid-page bg-body [--grid-column-gap:8px] [--grid-max:1140px]";
+
+/** Public kit 4-up Graph KPIs — same spine as Insights Stats. */
+export const pitchKitPublicStatClasses = pitchKitStatClasses;
+export const pitchKitCountriesCardClasses = pitchKitAudienceCardClasses;

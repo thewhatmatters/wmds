@@ -11,6 +11,7 @@ import {
 } from "./PitchKitExample";
 import { ownerPitchKitBodyCopySource, ownerPitchKitPageCopySource } from "./ownerPitchKitCopySource";
 import { PitchKitShareableExample } from "./PitchKitShareable";
+import { shareablePitchKitPageCopySource } from "./shareablePitchKitCopySource";
 /** Interpolated into Show code so the freeze stays locked to the live canvas styles. */
 import {
   pitchKitAudienceCardClasses,
@@ -18,15 +19,8 @@ import {
   pitchKitAudienceEmptyWellClasses,
   pitchKitAudienceSectionClasses,
   pitchKitAudienceWellClasses,
-  pitchKitBrandBodyClasses,
   pitchKitBrandClasses,
-  pitchKitCalloutActionsClasses,
-  pitchKitCalloutBodyClasses,
-  pitchKitCalloutCardClasses,
   pitchKitCardWellClasses,
-  pitchKitContactCardClasses,
-  pitchKitContactRowClasses,
-  pitchKitContactRowsClasses,
   pitchKitContentBandClasses,
   pitchKitContentClasses,
   pitchKitAudienceSkeletonBarsClasses,
@@ -39,13 +33,6 @@ import {
   pitchKitHeaderSectionClasses,
   pitchKitHeaderSkeletonCopyClasses,
   pitchKitHeaderSkeletonStackClasses,
-  pitchKitIdentityCopyClasses,
-  pitchKitIdentityNameClasses,
-  pitchKitIdentityRowClasses,
-  pitchKitIdentitySectionClasses,
-  pitchKitIdentityTitleRowClasses,
-  pitchKitKitPostMetricsClasses,
-  pitchKitKitStatClasses,
   pitchKitMetricsStackClasses,
   pitchKitPageClasses,
   pitchKitPostCardClasses,
@@ -72,154 +59,6 @@ import {
   pitchKitTopbarClasses,
   pitchKitTopbarEndClasses,
 } from "./pitchKitStyles";
-
-const shareablePitchKitCopySource = `
-function PublicCreatePitchkitBand() {
-  return (
-    <Card
-      variant="outlined"
-      shape="rounded"
-      bodyTerminal
-      className="${pitchKitCalloutCardClasses}"
-    >
-      <Card.Header
-        start={<h2 className={cardTitleClasses}>Create your Pitchkit</h2>}
-      />
-      <Card.Body>
-        <div className="${pitchKitCalloutBodyClasses}">
-          <p className="${pitchKitSupportingClasses}">
-            Turn your Instagram into a shareable media kit.
-          </p>
-          <div className="${pitchKitCalloutActionsClasses}">
-            <Button role="primary">Continue with Instagram</Button>
-          </div>
-        </div>
-      </Card.Body>
-    </Card>
-  );
-}
-
-function ShareablePitchKit({ posts, contact, brands, showCreateBand = true }) {
-  return (
-    <>
-      <section className="${pitchKitIdentitySectionClasses}">
-        <div className="${pitchKitIdentityRowClasses}">
-          <Avatar name="Avery Morgan" size="lg" />
-          <div className="${pitchKitIdentityCopyClasses}">
-            <div className="${pitchKitIdentityTitleRowClasses}">
-              <h1 className="${pitchKitIdentityNameClasses}">Avery Morgan</h1>
-              <Badge variant="success" emphasis="muted" size="sm">Verified</Badge>
-              <Chip readOnly size="sm">Instagram</Chip>
-            </div>
-            <p className="${pitchKitSupportingClasses}">@averymorgan</p>
-          </div>
-        </div>
-      </section>
-
-      <div
-        role="group"
-        aria-label="Verified Instagram summary"
-        className="${pitchKitStatsBandClasses}"
-      >
-        <Stat className="${pitchKitKitStatClasses}" label="Followers" value="84.2K" />
-        <Stat className="${pitchKitKitStatClasses}" label="Engagement rate" value="5.8%" />
-      </div>
-
-      <section className="${pitchKitPostsSectionClasses}">
-        <div className="${pitchKitPostsHeaderClasses}">
-          <div>
-            <h2 className={cardTitleClasses}>Selected posts</h2>
-            <p className="${pitchKitSupportingClasses}">
-              Proof from the current Instagram set.
-            </p>
-          </div>
-        </div>
-        <div className="${pitchKitPostsPanelClasses}">
-          {posts.map((post) => (
-            <Card key={post.id} variant="outlined" shape="rounded" className="${pitchKitPostCardClasses}">
-              <Card.Body>
-                <img
-                  className="${pitchKitPostImageClasses}"
-                  src={post.imageUrl}
-                  alt={post.imageAlt}
-                />
-              </Card.Body>
-              <Card.Footer>
-                <div className="${pitchKitKitPostMetricsClasses}">
-                  {[
-                    ["Likes", post.likes],
-                    ["Comments", post.comments],
-                  ].map(([label, value]) => (
-                    <span key={label} className="${pitchKitPostMetricClasses}">
-                      <span className="${pitchKitPostMetricLabelClasses}">{label}</span>
-                      <span className="${pitchKitPostMetricValueClasses}">
-                        {compactNumber.format(value)}
-                      </span>
-                    </span>
-                  ))}
-                </div>
-              </Card.Footer>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      <section className="${pitchKitPostsSectionClasses}">
-        <div className="${pitchKitPostsHeaderClasses}">
-          <div>
-            <h2 className={cardTitleClasses}>Contact</h2>
-            <p className="${pitchKitSupportingClasses}">
-              Creator-entered details for brand outreach.
-            </p>
-          </div>
-        </div>
-        <Card variant="outlined" padding="md" shape="rounded" className="${pitchKitContactCardClasses}">
-          <div className="${pitchKitContactRowsClasses}">
-            <div className="${pitchKitContactRowClasses}">
-              <span className="${pitchKitSectionEyebrowClasses}">Email</span>
-              <TextLink href={\`mailto:\${contact.email}\`}>{contact.email}</TextLink>
-            </div>
-            <div className="${pitchKitContactRowClasses}">
-              <span className="${pitchKitSectionEyebrowClasses}">Website</span>
-              <TextLink href={contact.websiteHref} external>{contact.websiteLabel}</TextLink>
-            </div>
-            <div className="${pitchKitContactRowClasses}">
-              <span className="${pitchKitSectionEyebrowClasses}">Location</span>
-              <span className="${pitchKitSupportingClasses}">{contact.location}</span>
-            </div>
-          </div>
-        </Card>
-      </section>
-
-      <section className="${pitchKitPostsSectionClasses}">
-        <div className="${pitchKitPostsHeaderClasses}">
-          <div>
-            <h2 className={cardTitleClasses}>Past brands</h2>
-            <p className="${pitchKitSupportingClasses}">
-              Campaigns already shipped with this creator.
-            </p>
-          </div>
-        </div>
-        <div className="${pitchKitPostsPanelClasses}">
-          {brands.map((brand) => (
-            <Card key={brand.id} variant="outlined" shape="rounded" className="${pitchKitPostCardClasses}">
-              <Card.Header
-                start={<h3 className={cardTitleClasses}>{brand.name}</h3>}
-                end={<Badge variant="neutral" emphasis="muted" size="sm">{brand.year}</Badge>}
-              />
-              <Card.Body>
-                <p className="${pitchKitBrandBodyClasses}">{brand.summary}</p>
-              </Card.Body>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {showCreateBand ? <PublicCreatePitchkitBand /> : null}
-    </>
-  );
-}
-`;
 
 const dataStates = [
   "resolved",
@@ -269,7 +108,7 @@ Identity is one shared strip composed into two surrounding chromes — copy thes
 2. **Pattern — creator identity (owner settings)** — Settings → **Connected Instagram** card (same strip + professional **Chip** + Share kit \`/k/[handle]\` + Copy + connected / last sync).
 3. **Pattern — account settings (owner)** — topbar **Avatar** opens **Dialog** titled Account settings. Body: **Connected Instagram** (same strip as owner settings) → **Share kit** → Sign out → Disconnect → **Delete account** last. Delete confirms with **AlertDialog** “Delete your Pitchkit account?”. Remove app footer delete when copying.
 
-Then copy **Pattern — creator Insights** for the authenticated owner dashboard, **Pattern — owner PitchKit** for the authenticated PitchKit tab (same kit sections as public, plus hide/restore on selected posts), and **Pattern — shareable PitchKit** for the public kit **body**. Do not lift kit Stats, charts, bio, website, rates, geo, or contact onto the identity Patterns.
+Then copy **Pattern — creator Insights** for the authenticated owner dashboard, **Pattern — owner PitchKit** for the authenticated PitchKit tab (same kit sections as public, plus hide/restore on selected posts), **Pattern — shareable PitchKit** for the public kit **body**, and **Pattern — theme picker (owner)** for Light | Dark | Soft with an explicit **Save theme** (preview is the public kit 1:1). Do not lift kit Stats, charts, bio, website, rates, geo, or contact onto the identity Patterns.
 
 **Show code** on each **Pattern** story is the product contract — a literal freeze of that canvas (layout, chrome, spacing, typography). Copy that source into PitchKit. Do not reconstruct the page from Storybook-only \`PitchKitExample\` / \`PitchKitOwner\` / \`PitchKitShareable\` / \`PitchKitCreatorIdentity\` / \`pitchKitStyles\`, and do not ship **ExampleGridControls**.
 
@@ -280,13 +119,14 @@ The Insights dashboard answers four questions in order:
 3. **Audience fit** — **Chart.RankedBars** for Graph-supplied country, city, age, and gender percentages.
 4. **Proof** — six recent **Card** items with secondary **Tab** ranking by reach, engagement (likes + comments), or saves, plus persistent **MoreMenu** hide/swap controls.
 
-The public kit answers four questions in order:
+The public kit answers these questions in order on **Pattern — shareable PitchKit** (do not fork a second public kit):
 
-1. **Who** — copy **Pattern — creator identity (public)** for the \`/k/[handle]\` nameplate. Unlocked Graph / derived fields only: **Avatar** (\`profile_picture_url\`), Graph \`name\` (hide if missing), frozen @handle, \`followers_count\` as supporting context (not a hero **Stat**), optional professional **Chip** (Business / Creator). Optional Pitchkit-owned \`intro\` sits under that nameplate — copy **Pattern — intro (public)**. Omit the intro block when empty. Never treat \`intro\` as Instagram biography.
-2. **Scale** — kit **Stat** tiles for followers and engagement rate live on **Pattern — shareable PitchKit**, not on the identity nameplate. Same figures as Insights; no owner trends or chart chrome.
-3. **Selected posts** — the current Instagram proof set as **Card** images with likes and comments only.
+1. **Who** — **CreatorIdentityStrip** / public nameplate. Unlocked Graph / derived fields only: **Avatar** (\`profile_picture_url\`), Graph \`name\` (hide if missing), frozen @handle, \`followers_count\` as supporting context (not a hero **Stat**), optional professional **Chip** (Business / Creator). Optional Pitchkit-owned \`intro\` sits under that nameplate — copy **Pattern — intro (public)**. Omit the intro block when empty. Never treat \`intro\` as Instagram biography.
+2. **Scale** — Graph-only **Stat** tiles: Followers · Engagement rate (**hide if no reach**) · Typical reach · Typical saves. Same figures as Insights; no owner trends. Compact 30-day **Chart.Cartesian** reuses the Insights reach Pattern (keep the Reach **Card** + empty well when the series cannot be plotted). **Top 3 countries** only (**Chart.RankedBars**); omit the band when Graph has no country series. Do not invent EXAMPLE %, impressions, heatmaps, or metrics beyond this list.
+3. **Selected posts** — the current Instagram proof set as **Card** images with likes and comments only, cap **6**.
 4. **Outreach** — creator-entered **Contact** (**TextLink** for email and website) and **Past brands**. Public Past brands copy **Pattern — past brands (public)** — ordered \`{ id, name }\` + letter **Avatar**. Omit the section when empty. Do not invent year, summary, logo, or KPIs.
-5. **Unsigned conversion** — on **Pattern — shareable PitchKit** only, when the visitor is not the kit owner and is not signed in: **Create your Pitchkit** band + one **Continue with Instagram** Button. Omit the band for the owner and for signed-in viewers of someone else's kit. Do not invent KPI metrics or a second public-kit Pattern.
+5. **Unsigned conversion** — when the visitor is not the kit owner and is not signed in: **Create your Pitchkit** band + one **Continue with Instagram** Button. Omit the band for the owner and for signed-in viewers of someone else's kit (\`showCreateBand={false}\`).
+6. **Theme** — owner picks Light | Dark | Soft on **Pattern — theme picker (owner)**. Preview is this public kit 1:1. **Save theme** persists the draft (fixtures until persist lands). Do not auto-save on pick.
 
 The authenticated owner kit answers the same four questions, with Graph identity and hide/restore:
 
@@ -313,7 +153,8 @@ The authenticated owner kit answers the same four questions, with Graph identity
 - Account settings belong on **Pattern — account settings (owner)** — Avatar → **Dialog** (Connected Instagram, Share kit, Sign out, Disconnect, Delete account). Remove app footer delete when copying this Pattern.
 - The public kit has no owner edit toggle, **MoreMenu**, hide, or swap controls.
 - Owner PitchKit post edit affordance is hide/restore on selected posts only. Intro and Past brands editors live on **Pattern — intro (owner)** and **Pattern — past brands (owner)** — not bio, website, rates, geo, contact, or section-visibility editors.
-- No rates, Stories, logo scraping, marquees, donuts, online heatmap, or second Instagram connection path.
+- Public kit theme is \`light\` | \`dark\` | \`soft\`, default \`light\`. Copy **Pattern — theme picker (owner)**. Pick updates the preview only; **Save theme** applies the fixture. Soft remaps the same semantic color roles to a warmer paper floor (\`[data-theme="soft"]\`).
+- No rates editors, Stories, logo scraping, marquees, donuts, online heatmap, impressions, EXAMPLE %, or second Instagram connection path.
 - The authenticated PitchKit tab is **Pattern — owner PitchKit**, not a Coming soon placeholder.
 
 ## Component map
@@ -322,7 +163,8 @@ The authenticated owner kit answers the same four questions, with Graph identity
 - Creator identity — shared strip (**Avatar** \`lg\`, Graph name, @handle, follower context, optional **Chip**); public nameplate vs owner **Card** + **PageHeader** Settings; optional \`intro\` under the nameplate (**TextArea** on owner, omit on public when empty)
 - Owner chrome — **SegmentedControl** + **Avatar** on Insights and owner PitchKit; Settings keeps the PitchKit wordmark + **Avatar**; the **Avatar** wraps in **Button** to open **Pattern — account settings (owner)**; public kit keeps the PitchKit wordmark only
 - Page and card chrome — **PageHeader**, **Card**, **Badge**, **Avatar**, **Button**, **Chip**, **TextLink**
-- Metrics and charts — **Stat**, **Chart.Cartesian**, **Chart.Legend**, **Chart.RankedBars**; loading uses **Stat** \`loading\`, **Skeleton**, and **Chart.Loading**
+- Metrics and charts — **Stat**, **Chart.Cartesian**, **Chart.Legend**, **Chart.RankedBars**; public kit uses the same reach empty contract at a compact height; loading uses **Stat** \`loading\`, **Skeleton**, and **Chart.Loading**
+- Kit theme — **SegmentedControl** Light | Dark | Soft + **Save theme** **Button** on **Pattern — theme picker (owner)**; preview composes **Pattern — shareable PitchKit**
 - Proof ranking — **Tab.Group** + **Tab**; one selected metric reorders the same supplied posts
 - Post management — **MoreMenu** with **ButtonIcon**; **AlertDialog** confirms hiding a post (Insights Recent proof and owner PitchKit selected posts)
 - Public outreach — **TextLink** contact rows; outlined **Card** past-brand rows (\`name\` + letter **Avatar**); unsigned **Create your Pitchkit** band on **Pattern — shareable PitchKit**
@@ -345,7 +187,7 @@ The authenticated owner kit answers the same four questions, with Graph identity
 - **Do** copy **Pattern — account settings (owner)** for Avatar → Account settings **Dialog** and Delete account **AlertDialog**. Remove footer delete when copying.
 - **Do** copy **Pattern — intro (public)** / **Pattern — intro (owner)** for the Pitchkit-owned \`intro\` under the nameplate.
 - **Do** copy **Pattern — past brands (public)** / **Pattern — past brands (owner)** for \`{ id, name }\` proof — not the older campaign-card fields.
-- **Do** copy **Pattern — shareable PitchKit** for the public kit body (including the unsigned **Create your Pitchkit** band), **Pattern — owner PitchKit** for the authenticated PitchKit tab, and **Pattern — creator Insights** for the owner Insights app. Do not fork a second public-kit Pattern.
+- **Do** copy **Pattern — shareable PitchKit** for the public kit body (Graph KPIs, compact reach, top 3 countries, ≤6 posts, intro / past brands omit-if-empty, unsigned **Create your Pitchkit** band). **Pattern — theme picker (owner)** for Light | Dark | Soft + **Save theme**. **Pattern — owner PitchKit** for the authenticated PitchKit tab, and **Pattern — creator Insights** for the owner Insights app. Do not fork a second public-kit Pattern.
 - **Do** keep the Reach band when the reach series cannot be plotted — same shell and header, empty **Card.Body** (muted **Badge** “No data” → title → body). Audience, Stats, and proof may still show.
 - **Do** keep the Audience band when demographics cannot be ranked — same shell and header, empty **Card.Body** (same **Badge** stack). Reach, Stats, and proof may still show.
 - **Do** copy **Pattern — creator Insights (loading)** for in-flight Graph; use **Skeleton** for the first layout and **Chart.Loading** only after chrome is up.
@@ -353,7 +195,8 @@ The authenticated owner kit answers the same four questions, with Graph identity
 - **Don't** put Instagram biography, website, rates, geo, contact CTAs, heatmaps, example percentages, or kit **Stat** / chart tiles on the identity Patterns. \`intro\` is Pitchkit-owned and lives on the intro Patterns only.
 - **Don't** expose owner edit state or management controls on the public kit.
 - **Don't** put Delete account in the app footer — it is last in Account settings and confirms with **AlertDialog**. Remove footer delete when copying.
-- **Don't** invent bio, rates, website, or KPI metrics on Account settings or the public CTA band.
+- **Don't** invent bio, rates, website, impressions, EXAMPLE %, or KPI metrics beyond Followers / Engagement rate / Typical reach / Typical saves on the public kit, Account settings, or the public CTA band.
+- **Don't** auto-save the kit theme on pick — **Save theme** is required.
 - **Don't** hide the Reach card when the reach series cannot be plotted, and do not use **Skeleton** or **Chart.Loading** for that empty.
 - **Don't** hide the Audience card when Graph has no demographic series, invent example percentages, or use **Skeleton** / **Chart.Loading** for that empty.
 - **Don't** treat Graph-unavailable (omit optional regions), insufficient-data empties, or zeros as the loading page.
@@ -2030,53 +1873,25 @@ export const ShareablePitchKit: Story = {
       docs: {
         description: {
           story:
-            "Show code is the product contract for the public kit — a literal freeze of this canvas (layout, chrome, spacing, typography). For unsigned visitors who are not the kit owner, compose the Create your Pitchkit band (one Continue with Instagram Button). Omit the band for the kit owner and for signed-in viewers of someone else's kit (`showCreateBand={false}`). Do not invent KPI metrics. Copy that source into PitchKit. Do not reconstruct from Storybook-only example files, do not ship the grid inspector, and do not add owner management controls.",
+            "Show code is the product contract for the public kit — a literal freeze of this canvas (layout, chrome, spacing, typography). Graph-only KPIs: Followers, Engagement rate (hide if no reach), Typical reach, Typical saves. Compact 30-day Chart.Cartesian reuses the Insights reach Pattern (keep the Reach Card + empty well when the series cannot be plotted). Top 3 countries only; omit when Graph has no country series. ≤6 proof posts. Intro and Past brands copy their public Patterns (omit if empty). For unsigned visitors who are not the kit owner, compose the Create your Pitchkit band (one Continue with Instagram Button). Omit the band for the kit owner and for signed-in viewers of someone else's kit (`showCreateBand={false}`). Do not invent KPI metrics, EXAMPLE %, impressions, or a heatmap. Copy that source into PitchKit. Do not reconstruct from Storybook-only example files, do not ship the grid inspector, and do not add owner management controls.",
         },
       },
     },
-    `
-import {
-  Avatar,
-  Badge,
-  Button,
-  Card,
-  Chip,
-  Stat,
-  TextLink,
-  cardTitleClasses,
-} from "@whatmatters/wmds";
-
-const compactNumber = new Intl.NumberFormat("en", {
-  notation: "compact",
-  maximumFractionDigits: 1,
-});
-
-${shareablePitchKitCopySource}
-
-export function ShareablePitchKitPage({ posts, contact, brands, showCreateBand = true }) {
-  return (
-    <main className="${pitchKitPageClasses}">
-      <div className="${pitchKitTopbarBandClasses}">
-        <header className="${pitchKitTopbarClasses}">
-          <span className="${pitchKitBrandClasses}">PitchKit</span>
-        </header>
-      </div>
-
-      <div className="${pitchKitContentBandClasses}">
-        <div className="${pitchKitContentClasses}">
-          <ShareablePitchKit
-            posts={posts}
-            contact={contact}
-            brands={brands}
-            showCreateBand={showCreateBand}
-          />
-        </div>
-      </div>
-    </main>
-  );
-}
-`,
+    shareablePitchKitPageCopySource,
   ),
+};
+
+export const ShareableInsufficientReach: Story = {
+  name: "State — shareable insufficient reach",
+  render: () => <PitchKitShareableExample reachState="insufficient" />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Public kit when the reach series cannot be plotted. Keep the compact Reach Card with the Insights empty well (muted Badge “No data” → title → body). Hide Engagement rate. Typical reach is an em dash. Followers, Typical saves, countries, proof, contact, and past brands may still show. Do not invent a chart, EXAMPLE %, or zeros.",
+      },
+    },
+  },
 };
 
 export const OwnerPitchKit: Story = {

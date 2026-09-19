@@ -1,44 +1,57 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
-import { Avatar } from "../../components/atoms/Avatar/Avatar";
 import { Badge } from "../../components/atoms/Badge/Badge";
 import { Button } from "../../components/atoms/Button/Button";
 import { TextLink } from "../../components/atoms/TextLink/TextLink";
 import {
   Card,
+  cardSubtitleClasses,
   cardTitleClasses,
 } from "../../components/molecules/Card/Card";
-import { Chip } from "../../components/molecules/Chip/Chip";
 import type { DisplayControlThemeMode } from "../../components/molecules/DisplayControls/DisplayControls";
 import { Stat } from "../../components/molecules/Stat/Stat";
+import { Chart } from "../../components/organisms/Chart/Chart";
+import type { ChartRankedBarItem } from "../../components/organisms/Chart/ChartRankedBars";
+import { chartSeriesConfigFromKeys } from "../../lib/chartTheme";
 import { GridOverlay } from "../../lib/GridOverlay";
 import { ExampleGridControls } from "../ExampleGridControls/ExampleGridControls";
+import { CreatorIdentityStrip } from "./PitchKitCreatorIdentity";
+import { PublicIntro } from "./PitchKitIntro";
+import { PublicPastBrands } from "./PitchKitPastBrands";
 import {
-  pitchKitBrands,
   pitchKitContact,
-  pitchKitCreator,
+  pitchKitCreatorIdentity,
+  pitchKitIntroFilled,
+  pitchKitPastBrands,
+  pitchKitPublicCountries,
+  pitchKitReachData,
   pitchKitSelectedPosts,
   pitchKitSummary,
-  type PitchKitBrand,
+  publicCountries,
+  publicEngagementRate,
+  publicTypicalReach,
+  type PitchKitCreatorIdentity,
+  type PitchKitPastBrand,
   type PitchKitPost,
+  type PitchKitPublicReachState,
 } from "./pitchKitData";
 import {
-  pitchKitBrandBodyClasses,
   pitchKitBrandClasses,
   pitchKitCalloutActionsClasses,
   pitchKitCalloutBodyClasses,
   pitchKitCalloutCardClasses,
+  pitchKitCardWellClasses,
   pitchKitContactCardClasses,
   pitchKitContactRowClasses,
   pitchKitContactRowsClasses,
   pitchKitContentBandClasses,
   pitchKitContentClasses,
-  pitchKitIdentityCopyClasses,
-  pitchKitIdentityNameClasses,
-  pitchKitIdentityRowClasses,
-  pitchKitIdentitySectionClasses,
-  pitchKitIdentityTitleRowClasses,
+  pitchKitCountriesCardClasses,
+  pitchKitDashboardGridClasses,
+  pitchKitEmptyBodyClasses,
+  pitchKitEmptyTitleClasses,
+  pitchKitIdentityNameplateClasses,
+  pitchKitIntroStackClasses,
   pitchKitKitPostMetricsClasses,
-  pitchKitKitStatClasses,
   pitchKitPageClasses,
   pitchKitPostCardClasses,
   pitchKitPostImageClasses,
@@ -48,6 +61,11 @@ import {
   pitchKitPostsHeaderClasses,
   pitchKitPostsPanelClasses,
   pitchKitPostsSectionClasses,
+  pitchKitPublicReachChartMinHeight,
+  pitchKitPublicStatClasses,
+  pitchKitReachCardClasses,
+  pitchKitReachEmptyCopyClasses,
+  pitchKitReachEmptyWellClasses,
   pitchKitSectionEyebrowClasses,
   pitchKitStatsBandClasses,
   pitchKitSupportingClasses,
@@ -60,10 +78,19 @@ const compactNumber = new Intl.NumberFormat("en", {
   maximumFractionDigits: 1,
 });
 
+const publicReachConfig = chartSeriesConfigFromKeys([
+  { key: "typical", label: "Typical reach" },
+  { key: "reach", label: "Daily reach" },
+]);
+
 export interface ShareablePitchKitProps {
+  identity?: PitchKitCreatorIdentity;
+  intro?: string;
   posts?: readonly PitchKitPost[];
   contact?: typeof pitchKitContact;
-  brands?: readonly PitchKitBrand[];
+  brands?: readonly PitchKitPastBrand[];
+  countries?: readonly ChartRankedBarItem[];
+  reachState?: PitchKitPublicReachState;
   /**
    * Unsigned visitor who is not the kit owner.
    * Omit for the kit owner and for signed-in viewers of someone else's kit.
@@ -96,47 +123,162 @@ export function PublicCreatePitchkitBand() {
   );
 }
 
+function PublicReachCard({
+  reachState,
+}: {
+  reachState: PitchKitPublicReachState;
+}) {
+  return (
+    <Card
+      variant="outlined"
+      shape="rounded"
+      bodyTerminal
+      className={pitchKitReachCardClasses}
+    >
+      <Card.Header
+        start={
+          <>
+            <h2 className={cardTitleClasses}>Reach over 30 days</h2>
+            <p className={cardSubtitleClasses}>
+              Typical performance with unusual spikes left visible.
+            </p>
+          </>
+        }
+        end={
+          <Badge variant="neutral" emphasis="muted" size="sm">
+            Graph data
+          </Badge>
+        }
+      />
+      <Card.Body>
+        {reachState === "insufficient" ? (
+          <div
+            className={pitchKitReachEmptyWellClasses}
+            style={{ minHeight: pitchKitPublicReachChartMinHeight }}
+          >
+            <div className={pitchKitReachEmptyCopyClasses}>
+              <Badge variant="neutral" emphasis="muted">
+                No data
+              </Badge>
+              <h3 className={pitchKitEmptyTitleClasses}>No reach data yet</h3>
+              <p className={pitchKitEmptyBodyClasses}>
+                Connect more Instagram activity to plot the last 30 days.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className={pitchKitCardWellClasses}>
+            <Chart.Cartesian
+              data={pitchKitReachData}
+              config={publicReachConfig}
+              periodKind="month"
+              minHeight={pitchKitPublicReachChartMinHeight}
+              aria-label="Daily and typical Instagram reach over the last 30 days"
+            />
+            <Chart.Legend config={publicReachConfig} />
+          </div>
+        )}
+      </Card.Body>
+    </Card>
+  );
+}
+
+function PublicCountries({
+  countries,
+}: {
+  countries: readonly ChartRankedBarItem[];
+}) {
+  const topCountries = publicCountries(countries);
+  if (topCountries.length === 0) return null;
+
+  return (
+    <Card
+      variant="outlined"
+      shape="rounded"
+      bodyTerminal
+      className={pitchKitCountriesCardClasses}
+    >
+      <Card.Header
+        start={
+          <>
+            <h2 className={cardTitleClasses}>Top countries</h2>
+            <p className={cardSubtitleClasses}>
+              Top 3 from Instagram Insights.
+            </p>
+          </>
+        }
+      />
+      <Card.Body>
+        <div className={pitchKitCardWellClasses}>
+          <Chart.RankedBars
+            aria-label="Audience by country"
+            items={topCountries}
+            animate="initial"
+          />
+        </div>
+      </Card.Body>
+    </Card>
+  );
+}
+
 export function ShareablePitchKit({
+  identity = pitchKitCreatorIdentity,
+  intro = pitchKitIntroFilled,
   posts = pitchKitSelectedPosts,
   contact = pitchKitContact,
-  brands = pitchKitBrands,
+  brands = pitchKitPastBrands,
+  countries = pitchKitPublicCountries,
+  reachState = "resolved",
   showCreateBand = true,
 }: ShareablePitchKitProps) {
+  const engagementRate = publicEngagementRate(reachState);
+  const typicalReach = publicTypicalReach(reachState);
+
   return (
     <>
-      <section className={pitchKitIdentitySectionClasses}>
-        <div className={pitchKitIdentityRowClasses}>
-          <Avatar name={pitchKitCreator.name} size="lg" />
-          <div className={pitchKitIdentityCopyClasses}>
-            <div className={pitchKitIdentityTitleRowClasses}>
-              <h1 className={pitchKitIdentityNameClasses}>{pitchKitCreator.name}</h1>
-              <Badge variant="success" emphasis="muted" size="sm">
-                Verified
-              </Badge>
-              <Chip readOnly size="sm">
-                {pitchKitCreator.platform}
-              </Chip>
-            </div>
-            <p className={pitchKitSupportingClasses}>{pitchKitCreator.handle}</p>
-          </div>
+      <section className={pitchKitIdentityNameplateClasses}>
+        <div className={pitchKitIntroStackClasses}>
+          <CreatorIdentityStrip
+            identity={identity}
+            nameAs="h1"
+            showProfessionalChip
+          />
+          <PublicIntro intro={intro} />
         </div>
       </section>
 
       <div
         role="group"
-        aria-label="Verified Instagram summary"
+        aria-label="Instagram performance summary"
         className={pitchKitStatsBandClasses}
       >
         <Stat
-          className={pitchKitKitStatClasses}
+          className={pitchKitPublicStatClasses}
           label="Followers"
           value={pitchKitSummary.followers}
         />
+        {engagementRate != null ? (
+          <Stat
+            className={pitchKitPublicStatClasses}
+            label="Engagement rate"
+            value={engagementRate}
+          />
+        ) : null}
         <Stat
-          className={pitchKitKitStatClasses}
-          label="Engagement rate"
-          value={pitchKitSummary.engagementRate}
+          className={pitchKitPublicStatClasses}
+          label="Typical reach"
+          value={typicalReach}
         />
+        <Stat
+          className={pitchKitPublicStatClasses}
+          label="Typical saves"
+          value={pitchKitSummary.typicalSaves}
+        />
+      </div>
+
+      <div className={pitchKitDashboardGridClasses}>
+        <PublicReachCard reachState={reachState} />
+        <PublicCountries countries={countries} />
       </div>
 
       <section className={pitchKitPostsSectionClasses}>
@@ -170,7 +312,9 @@ export function ShareablePitchKit({
                     ["Comments", post.comments],
                   ].map(([label, value]) => (
                     <span key={label} className={pitchKitPostMetricClasses}>
-                      <span className={pitchKitPostMetricLabelClasses}>{label}</span>
+                      <span className={pitchKitPostMetricLabelClasses}>
+                        {label}
+                      </span>
                       <span className={pitchKitPostMetricValueClasses}>
                         {compactNumber.format(value as number)}
                       </span>
@@ -217,45 +361,20 @@ export function ShareablePitchKit({
         </Card>
       </section>
 
-      <section className={pitchKitPostsSectionClasses}>
-        <div className={pitchKitPostsHeaderClasses}>
-          <div>
-            <h2 className={cardTitleClasses}>Past brands</h2>
-            <p className={pitchKitSupportingClasses}>
-              Campaigns already shipped with this creator.
-            </p>
-          </div>
-        </div>
-        <div className={pitchKitPostsPanelClasses}>
-          {brands.map((brand) => (
-            <Card
-              key={brand.id}
-              variant="outlined"
-              shape="rounded"
-              className={pitchKitPostCardClasses}
-            >
-              <Card.Header
-                start={<h3 className={cardTitleClasses}>{brand.name}</h3>}
-                end={
-                  <Badge variant="neutral" emphasis="muted" size="sm">
-                    {brand.year}
-                  </Badge>
-                }
-              />
-              <Card.Body>
-                <p className={pitchKitBrandBodyClasses}>{brand.summary}</p>
-              </Card.Body>
-            </Card>
-          ))}
-        </div>
-      </section>
+      <PublicPastBrands brands={brands} />
 
       {showCreateBand ? <PublicCreatePitchkitBand /> : null}
     </>
   );
 }
 
-export function PitchKitShareableExample() {
+export function PitchKitShareableExample({
+  reachState = "resolved",
+  showCreateBand = true,
+}: {
+  reachState?: PitchKitPublicReachState;
+  showCreateBand?: boolean;
+}) {
   const [gridVisible, setGridVisible] = useState(false);
   const [theme, setTheme] = useState<DisplayControlThemeMode>("auto");
   const [gridMax, setGridMax] = useState(1140);
@@ -303,7 +422,10 @@ export function PitchKitShareableExample() {
 
       <div className={pitchKitContentBandClasses}>
         <div className={pitchKitContentClasses}>
-          <ShareablePitchKit />
+          <ShareablePitchKit
+            reachState={reachState}
+            showCreateBand={showCreateBand}
+          />
         </div>
       </div>
 

@@ -5,6 +5,7 @@ import {
   PitchKitOwnerExample,
 } from "../examples/PitchKit/PitchKitExample";
 import { PitchKitShareableExample } from "../examples/PitchKit/PitchKitShareable";
+import { PitchKitThemePickerOwnerExample } from "../examples/PitchKit/PitchKitThemePicker";
 import { PitchKitUserSettingsOwnerExample } from "../examples/PitchKit/PitchKitUserSettings";
 
 const meta = {
@@ -69,10 +70,20 @@ export const ShareableKit: Story = {
     expect(
       canvas.getByRole("heading", { name: /avery morgan/i }),
     ).toBeInTheDocument();
-    expect(canvas.getByText("@averymorgan")).toBeInTheDocument();
-    expect(canvas.getByText("Verified")).toBeInTheDocument();
+    expect(canvas.getByText(/@averymorgan/)).toBeInTheDocument();
+    expect(canvas.queryByText("Verified")).not.toBeInTheDocument();
     expect(
-      canvas.getByRole("group", { name: /verified instagram summary/i }),
+      canvas.getByRole("group", { name: /instagram performance summary/i }),
+    ).toBeInTheDocument();
+    expect(canvas.getByText("Followers")).toBeInTheDocument();
+    expect(canvas.getByText("Engagement rate")).toBeInTheDocument();
+    expect(canvas.getByText("Typical reach")).toBeInTheDocument();
+    expect(canvas.getByText("Typical saves")).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /reach over 30 days/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /top countries/i }),
     ).toBeInTheDocument();
     expect(
       canvas.getByRole("link", { name: /hello@averymorgan.com/i }),
@@ -687,5 +698,65 @@ export const UserSettingsOwner: Story = {
       expect(portal.queryByRole("alertdialog")).not.toBeInTheDocument();
       expect(portal.queryByRole("dialog")).not.toBeInTheDocument();
     });
+  },
+};
+
+export const ThemePickerOwner: Story = {
+  name: "PitchKit — theme picker owner",
+  render: () => <PitchKitThemePickerOwnerExample />,
+  play: async ({ canvas }) => {
+    const themeGroup = canvas.getByRole("radiogroup", { name: /kit theme/i });
+    const save = canvas.getByRole("button", { name: /save theme/i });
+    const preview = canvas.getByLabelText(/public kit preview/i);
+
+    expect(save).toBeDisabled();
+    expect(preview).toHaveAttribute("data-theme", "light");
+    expect(
+      canvas.getByRole("heading", { name: /avery morgan/i }),
+    ).toBeInTheDocument();
+    expect(canvas.getByText("Typical saves")).toBeInTheDocument();
+    expect(
+      canvas.queryByRole("heading", { name: /^create your pitchkit$/i }),
+    ).not.toBeInTheDocument();
+
+    await userEvent.click(within(themeGroup).getByRole("radio", { name: /^dark$/i }));
+    expect(preview).toHaveAttribute("data-theme", "dark");
+    expect(save).toBeEnabled();
+
+    await userEvent.click(save);
+    await waitFor(() => {
+      expect(save).toBeDisabled();
+    });
+    const notifications = within(document.body).getByRole("list", {
+      name: /notifications/i,
+    });
+    await waitFor(() => {
+      expect(within(notifications).getByRole("status")).toHaveTextContent(
+        /theme saved/i,
+      );
+    });
+
+    await userEvent.click(within(themeGroup).getByRole("radio", { name: /^soft$/i }));
+    expect(preview).toHaveAttribute("data-theme", "soft");
+    expect(save).toBeEnabled();
+  },
+};
+
+export const ShareableInsufficientReach: Story = {
+  name: "PitchKit — shareable insufficient reach",
+  render: () => <PitchKitShareableExample reachState="insufficient" />,
+  play: async ({ canvas }) => {
+    expect(
+      canvas.getByRole("heading", { name: /reach over 30 days/i }),
+    ).toBeInTheDocument();
+    expect(canvas.getByText("No data")).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /no reach data yet/i }),
+    ).toBeInTheDocument();
+    expect(canvas.queryByText("Engagement rate")).not.toBeInTheDocument();
+    expect(canvas.getByText("Typical reach")).toBeInTheDocument();
+    expect(canvas.getByText("—")).toBeInTheDocument();
+    expect(canvas.getByText("Followers")).toBeInTheDocument();
+    expect(canvas.getByText("Typical saves")).toBeInTheDocument();
   },
 };
