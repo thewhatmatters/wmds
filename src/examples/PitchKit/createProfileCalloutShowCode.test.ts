@@ -51,7 +51,7 @@ describe("Pattern — create PitchKit profile callout Show code", () => {
     expect(storiesSource).toContain(
       'name: "Pattern — create PitchKit profile callout"',
     );
-    expect(storiesSource).toContain("export const CreatePitchKitProfileCallout");
+    expect(storiesSource).toContain("export const CreatePitchkitProfileCallout");
     expect(storiesSource).toContain("createPitchKitProfileCalloutCopySource");
     expect(usageSource).toContain("Pattern — create PitchKit profile callout");
   });

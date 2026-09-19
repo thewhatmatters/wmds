@@ -143,6 +143,7 @@ export const pitchKitContact = {
 export const pitchKitAccount = {
   displayName: pitchKitCreator.name,
   email: pitchKitContact.email,
+  profilePictureUrl: pitchKitCreatorIdentity.profilePictureUrl,
 } as const;
 
 export interface PitchKitBrand {

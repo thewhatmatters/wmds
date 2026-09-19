@@ -35,7 +35,11 @@ export function UserSettingsDialog({
         >
           <div className={pitchKitUserSettingsBodyClasses}>
             <div className={pitchKitUserSettingsIdentityClasses}>
-              <Avatar name={account.displayName} size="md" />
+              <Avatar
+                name={account.displayName}
+                src={account.profilePictureUrl}
+                size="md"
+              />
               <div className={pitchKitUserSettingsIdentityCopyClasses}>
                 <p className={pitchKitUserSettingsNameClasses}>{account.displayName}</p>
                 <p className={pitchKitSupportingClasses}>{account.email}</p>
@@ -86,7 +90,11 @@ export function PitchKitUserSettingsOwnerExample() {
               aria-expanded={settingsOpen}
               onClick={() => setSettingsOpen(true)}
             >
-              <Avatar name={pitchKitAccount.displayName} size="sm" />
+              <Avatar
+                name={pitchKitAccount.displayName}
+                src={pitchKitAccount.profilePictureUrl}
+                size="sm"
+              />
             </Button>
           </span>
         </>

@@ -35,7 +35,7 @@ export const UserSettingsOwner: Story = {
   ),
 };
 
-export const CreatePitchKitProfileCallout: Story = {
+export const CreatePitchkitProfileCallout: Story = {
   name: "Pattern — create PitchKit profile callout",
   render: () => <PitchKitCreateProfileCalloutExample />,
   parameters: withStoryCopySource(

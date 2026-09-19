@@ -124,7 +124,7 @@ export const pitchKitBrandBodyClasses =
   `${typographyClass("body")} text-muted ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantInsetXClasses}`;
 
 /** User settings Dialog body — thin account identity + destructive delete. */
-export const pitchKitUserSettingsBodyClasses = "flex flex-col gap-4";
+export const pitchKitUserSettingsBodyClasses = "flex flex-col items-start gap-4";
 export const pitchKitUserSettingsIdentityClasses =
   "flex min-w-0 flex-wrap items-center gap-3";
 export const pitchKitUserSettingsIdentityCopyClasses =

@@ -75,6 +75,7 @@ describe("Pattern — user settings (owner) Show code", () => {
     expect(userSettingsOwnerCopySource).toContain("Account details for this PitchKit.");
     expect(userSettingsOwnerCopySource).toContain("{account.displayName}");
     expect(userSettingsOwnerCopySource).toContain("{account.email}");
+    expect(userSettingsOwnerCopySource).toContain("{account.profilePictureUrl}");
     expect(userSettingsOwnerCopySource).toContain("Delete account");
     expect(userSettingsOwnerCopySource).toContain('title="Delete account?"');
     expect(userSettingsOwnerCopySource).toContain('confirmRole="destructive"');

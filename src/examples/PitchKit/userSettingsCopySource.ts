@@ -35,7 +35,11 @@ export function UserSettingsOwnerPage({ account }) {
               aria-expanded={settingsOpen}
               onClick={() => setSettingsOpen(true)}
             >
-              <Avatar name={account.displayName} size="sm" />
+              <Avatar
+                name={account.displayName}
+                src={account.profilePictureUrl}
+                size="sm"
+              />
             </Button>
           </span>
         </header>
@@ -49,7 +53,11 @@ export function UserSettingsOwnerPage({ account }) {
         >
           <div className="${pitchKitUserSettingsBodyClasses}">
             <div className="${pitchKitUserSettingsIdentityClasses}">
-              <Avatar name={account.displayName} size="md" />
+              <Avatar
+                name={account.displayName}
+                src={account.profilePictureUrl}
+                size="md"
+              />
               <div className="${pitchKitUserSettingsIdentityCopyClasses}">
                 <p className="${pitchKitUserSettingsNameClasses}">{account.displayName}</p>
                 <p className="${pitchKitSupportingClasses}">{account.email}</p>
