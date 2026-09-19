@@ -229,9 +229,16 @@ const meta = {
         component: `
 ## Usage
 
-Authenticated PitchKit at a frozen 1140px grid maximum. The single top-level **SegmentedControl** switches between owner **Insights** and a preview of the public **PitchKit**. Copy **Pattern — creator Insights** for the authenticated owner page and **Pattern — shareable PitchKit** for the public kit.
+Authenticated PitchKit at a frozen 1140px grid maximum. The single top-level **SegmentedControl** switches between owner **Insights** and a preview of the public **PitchKit**.
 
-**Show code** on each **Pattern** story is the product contract — a literal freeze of that canvas (layout, chrome, spacing, typography). Copy that source into PitchKit. Do not reconstruct the page from Storybook-only \`PitchKitExample\` / \`PitchKitShareable\` / \`pitchKitStyles\`, and do not ship **ExampleGridControls**.
+Identity is one shared strip composed into two surrounding chromes — copy these before kit body or Insights:
+
+1. **Pattern — creator identity (public)** — \`/k/[handle]\` brand nameplate (avatar, Graph name when present, frozen @handle, follower context, optional professional **Chip**).
+2. **Pattern — creator identity (owner settings)** — Settings → **Connected Instagram** card (same strip + professional **Chip** + Share kit \`/k/[handle]\` + Copy + connected / last sync).
+
+Then copy **Pattern — creator Insights** for the authenticated owner dashboard and **Pattern — shareable PitchKit** for the public kit **body** (selected posts, contact, past brands, kit **Stat** tiles). Do not lift kit Stats, charts, bio, website, rates, geo, or contact onto the identity Patterns.
+
+**Show code** on each **Pattern** story is the product contract — a literal freeze of that canvas (layout, chrome, spacing, typography). Copy that source into PitchKit. Do not reconstruct the page from Storybook-only \`PitchKitExample\` / \`PitchKitShareable\` / \`PitchKitCreatorIdentity\` / \`pitchKitStyles\`, and do not ship **ExampleGridControls**.
 
 The Insights dashboard answers four questions in order:
 
@@ -242,8 +249,8 @@ The Insights dashboard answers four questions in order:
 
 The public kit answers four questions in order:
 
-1. **Who** — **Avatar**, creator name, handle, muted **Verified** **Badge**, and a read-only Instagram **Chip**.
-2. **Scale** — verified **Stat** summary for followers and engagement rate. Same figures as Insights; no owner trends or chart chrome.
+1. **Who** — copy **Pattern — creator identity (public)** for the \`/k/[handle]\` nameplate. Unlocked Graph / derived fields only: **Avatar** (\`profile_picture_url\`), Graph \`name\` (hide if missing), frozen @handle, \`followers_count\` as supporting context (not a hero **Stat**), optional professional **Chip** (Business / Creator).
+2. **Scale** — kit **Stat** tiles for followers and engagement rate live on **Pattern — shareable PitchKit**, not on the identity nameplate. Same figures as Insights; no owner trends or chart chrome.
 3. **Selected posts** — the current Instagram proof set as **Card** images with likes and comments only.
 4. **Outreach** — creator-entered **Contact** (**TextLink** for email and website) and **Past brands** proof cards.
 
@@ -257,15 +264,19 @@ The public kit answers four questions in order:
 - **Insufficient audience** — Graph returned Insights, but demographic series are missing or empty (no country, city, age, or gender breakdown to rank). Reach, Stats, and proof may still show. Copy **State — insufficient audience data**: keep the Audience **Card** in the dashboard grid with the same header (“Audience fit” / supporting copy); **Card.Body** is the empty Pattern. Do not hide the band, do not invent example %, and do not draw **Chart.RankedBars** from an empty series.
 - **Insufficient reach and audience** — both series are unusable. Keep both Cards. Copy each empty Pattern (or preview Controls → **dataState** \`insufficientReachAndAudience\`). Never omit a chart/card band because Graph has no series.
 - **Loading** — Graph connect/refresh is in flight. Copy **Pattern — creator Insights (loading)** for the initial skeleton screen (**Stat** \`loading\`, **Skeleton** wells that mirror resolved chrome, proof placeholders). If chrome is already up and a fetch is in flight, keep **Card.Header** mounted and swap the well for **Chart.Loading**. Do not use the unavailable Pattern, insufficient-data empties, or zeros as loading. Controls → **Loading phase** on that story previews skeleton vs retrieving; Show code freezes the skeleton page.
-- Creator-entered contact and past-brand content belongs on the public PitchKit, not Insights.
+- Creator-entered contact and past-brand content belongs on the public PitchKit body, not Insights and not the identity strip.
+- Identity fails closed: hide Graph \`name\` when missing; **Avatar** falls back when \`profile_picture_url\` is omitted; omit follower context when \`followers_count\` is omitted. Never invent a bio, website, or display name.
+- Owner connection state (Connected / last sync) and Share kit Copy belong on **Pattern — creator identity (owner settings)** only.
 - The public kit has no owner edit toggle, **MoreMenu**, hide, or swap controls.
-- No rates, Stories, logo scraping, marquees, donuts, or second Instagram connection path.
+- No rates, Stories, logo scraping, marquees, donuts, online heatmap, or second Instagram connection path.
+- Do not expand the PitchKit **Coming soon** surface into a kit editor.
 
 ## Component map
 
 - Page layout — \`grid-page\`, \`band\`, \`--grid-max:1140px\`, \`--grid-column-gap:8px\`
-- Owner chrome — **SegmentedControl** + **Avatar**; public kit keeps the PitchKit wordmark only
-- Page and card chrome — **PageHeader**, **Card**, **Badge**, **Avatar**, **Button**, **Chip**
+- Creator identity — shared strip (**Avatar** \`lg\`, Graph name, @handle, follower context, optional **Chip**); public nameplate vs owner **Card** + **PageHeader** Settings
+- Owner chrome — **SegmentedControl** + **Avatar** on Insights; Settings keeps the PitchKit wordmark + **Avatar**; public kit keeps the PitchKit wordmark only
+- Page and card chrome — **PageHeader**, **Card**, **Badge**, **Avatar**, **Button**, **Chip**, **TextLink**
 - Metrics and charts — **Stat**, **Chart.Cartesian**, **Chart.Legend**, **Chart.RankedBars**; loading uses **Stat** \`loading\`, **Skeleton**, and **Chart.Loading**
 - Proof ranking — **Tab.Group** + **Tab**; one selected metric reorders the same supplied posts
 - Post management — **MoreMenu** with **ButtonIcon**; **AlertDialog** confirms hiding a post (Insights only)
@@ -282,11 +293,13 @@ The public kit answers four questions in order:
 - **Do** pair the completed hide mutation with an actionable Undo toast.
 - **Do** use **Tab** for proof ranking because the page already uses one primary **SegmentedControl**.
 - **Do** freeze approved grid values into implementation code.
-- **Do** copy **Pattern — shareable PitchKit** for the public route and **Pattern — creator Insights** for the owner app.
+- **Do** copy **Pattern — creator identity (public)** for the \`/k/[handle]\` header and **Pattern — creator identity (owner settings)** for Settings → Connected Instagram.
+- **Do** copy **Pattern — shareable PitchKit** for the public kit body and **Pattern — creator Insights** for the owner Insights app.
 - **Do** keep the Reach band when the reach series cannot be plotted — same shell and header, empty **Card.Body**. Audience, Stats, and proof may still show.
 - **Do** keep the Audience band when demographics cannot be ranked — same shell and header, empty **Card.Body**. Reach, Stats, and proof may still show.
 - **Do** copy **Pattern — creator Insights (loading)** for in-flight Graph; use **Skeleton** for the first layout and **Chart.Loading** only after chrome is up.
 - **Don't** copy **ExampleGridControls** into PitchKit production UI.
+- **Don't** put bio, website, rates, geo, contact CTAs, heatmaps, example percentages, or kit **Stat** / chart tiles on the identity Patterns.
 - **Don't** expose owner edit state or management controls on the public kit.
 - **Don't** hide the Reach card when the reach series cannot be plotted, and do not use **Skeleton** or **Chart.Loading** for that empty.
 - **Don't** hide the Audience card when Graph has no demographic series, invent example percentages, or use **Skeleton** / **Chart.Loading** for that empty.

@@ -96,6 +96,21 @@ export const pitchKitIdentityCopyClasses = "flex min-w-0 flex-col gap-1";
 export const pitchKitIdentityTitleRowClasses =
   "flex flex-wrap items-center gap-2";
 export const pitchKitIdentityNameClasses = typographyClass("section-heading");
+
+/** Public `/k/[handle]` surrounding chrome — same strip, nameplate band. */
+export const pitchKitIdentityNameplateClasses =
+  "col-span-full border-b border-border pb-6";
+export const pitchKitIdentitySkeletonCopyClasses =
+  "flex min-w-0 flex-col gap-2";
+export const pitchKitIdentityAvatarSkeletonPx = 48;
+
+/** Owner Settings surrounding chrome — same strip, connection card. */
+export const pitchKitSettingsCardClasses = "col-span-full";
+export const pitchKitSettingsBodyClasses = `flex min-w-0 flex-col gap-4 ${cardLayoutBodyOccupantInsetXClasses} ${cardLayoutBodyOccupantPadYClasses}`;
+export const pitchKitShareKitStackClasses = "flex min-w-0 flex-col gap-2";
+export const pitchKitShareKitActionsClasses =
+  "flex min-w-0 flex-wrap items-center gap-3";
+export const pitchKitConnectionMetaClasses = `${typographyClass("caption")} text-muted`;
 export const pitchKitKitStatClasses =
   "col-span-2 md:col-span-4 lg:col-span-6";
 export const pitchKitKitPostMetricsClasses =
