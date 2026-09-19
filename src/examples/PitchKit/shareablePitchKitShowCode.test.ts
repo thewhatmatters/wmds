@@ -21,7 +21,13 @@ const kitFreezeSource = storiesSource.slice(kitFreezeStart, kitFreezeEnd);
 const shareableStoryStart = storiesSource.indexOf(
   'name: "Pattern — shareable PitchKit"',
 );
-const shareableStorySource = storiesSource.slice(shareableStoryStart);
+const ownerStoryStart = storiesSource.indexOf(
+  'name: "Pattern — owner PitchKit"',
+);
+const shareableStorySource = storiesSource.slice(
+  shareableStoryStart,
+  ownerStoryStart > shareableStoryStart ? ownerStoryStart : undefined,
+);
 
 const shareableContractSource = `${kitFreezeSource}\n${shareableStorySource}`;
 
