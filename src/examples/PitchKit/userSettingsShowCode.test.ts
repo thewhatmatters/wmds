@@ -27,15 +27,18 @@ const pageStyleKeys = [
   "pitchKitTopbarClasses",
   "pitchKitBrandClasses",
   "pitchKitTopbarEndClasses",
+  "pitchKitUserSettingsBodyClasses",
+  "pitchKitSettingsCardClasses",
+  "pitchKitSettingsBodyClasses",
+  "pitchKitShareKitStackClasses",
+  "pitchKitShareKitActionsClasses",
+  "pitchKitUserSettingsActionsClasses",
 ] as const;
 
 const outOfPattern = [
   "ExampleGridControls",
   "GridOverlay",
   "Coming soon",
-  "Connected Instagram",
-  "Share kit",
-  "Last synced",
   "MoreMenu",
   "Hide from kit",
   "Swap post",
@@ -44,18 +47,18 @@ const outOfPattern = [
   "website",
 ] as const;
 
-describe("Pattern — user settings (owner) Show code", () => {
+describe("Pattern — account settings (owner) Show code", () => {
   it("wires the Pattern story to the freeze", () => {
-    expect(storiesSource).toContain('name: "Pattern — user settings (owner)"');
-    expect(storiesSource).toContain("export const UserSettingsOwner");
+    expect(storiesSource).toContain('name: "Pattern — account settings (owner)"');
+    expect(storiesSource).toContain("export const AccountSettingsOwner");
     expect(storiesSource).toContain("userSettingsOwnerCopySource");
-    expect(usageSource).toContain("Pattern — user settings (owner)");
-    expect(storiesSource).toContain("remove footer delete");
-    expect(usageSource).toContain("remove footer delete");
+    expect(usageSource).toContain("Pattern — account settings (owner)");
+    expect(storiesSource.toLowerCase()).toContain("remove footer delete");
+    expect(usageSource.toLowerCase()).toContain("remove footer delete");
   });
 
-  it("interpolates every UserSettings example pitchKitStyles token", () => {
-    expect(exampleStyleKeys.length).toBeGreaterThan(4);
+  it("interpolates every Account settings example pitchKitStyles token", () => {
+    expect(exampleStyleKeys.length).toBeGreaterThan(6);
     for (const key of exampleStyleKeys) {
       expect(userSettingsOwnerCopySource, key).toContain(
         String(pitchKitStyles[key as keyof typeof pitchKitStyles]),
@@ -63,28 +66,44 @@ describe("Pattern — user settings (owner) Show code", () => {
     }
   });
 
-  it("locks owner chrome, Dialog, and destructive delete confirm", () => {
+  it("locks chrome, Connected Instagram, Share kit, and delete confirm copy", () => {
     for (const key of pageStyleKeys) {
       expect(userSettingsOwnerCopySource, key).toContain(
         String(pitchKitStyles[key]),
       );
     }
     expect(userSettingsOwnerCopySource).toContain(
-      "export function UserSettingsOwnerPage",
+      "export function AccountSettingsOwnerPage",
     );
-    expect(userSettingsOwnerCopySource).toContain('aria-label="Open user settings"');
-    expect(userSettingsOwnerCopySource).toContain('title="User settings"');
-    expect(userSettingsOwnerCopySource).toContain("Account details for this PitchKit.");
-    expect(userSettingsOwnerCopySource).toContain("{account.displayName}");
-    expect(userSettingsOwnerCopySource).toContain("{account.email}");
-    expect(userSettingsOwnerCopySource).toContain("{account.profilePictureUrl}");
+    expect(userSettingsOwnerCopySource).toContain('aria-label="Account settings"');
+    expect(userSettingsOwnerCopySource).toContain('title="Account settings"');
+    expect(userSettingsOwnerCopySource).toContain("Connected Instagram");
+    expect(userSettingsOwnerCopySource).toContain("CreatorIdentityStrip");
+    expect(userSettingsOwnerCopySource).toContain("showProfessionalChip");
+    expect(userSettingsOwnerCopySource).toContain("Share kit");
+    expect(userSettingsOwnerCopySource).toContain("Sign out");
+    expect(userSettingsOwnerCopySource).toContain("Disconnect");
     expect(userSettingsOwnerCopySource).toContain("Delete account");
-    expect(userSettingsOwnerCopySource).toContain('title="Delete account?"');
+    expect(userSettingsOwnerCopySource).toContain(
+      'title="Delete your Pitchkit account?"',
+    );
+    expect(userSettingsOwnerCopySource).toContain(
+      "This permanently deletes your kit, stored media copies, and connection. Your Instagram account is not deleted. This cannot be undone.",
+    );
+    expect(userSettingsOwnerCopySource).toContain('cancelLabel="Cancel"');
     expect(userSettingsOwnerCopySource).toContain('confirmRole="destructive"');
     expect(userSettingsOwnerCopySource).toContain("from \"@whatmatters/wmds\"");
+    expect(userSettingsOwnerCopySource).toContain("from \"lucide-react\"");
+
+    const signOutAt = userSettingsOwnerCopySource.indexOf("Sign out");
+    const disconnectAt = userSettingsOwnerCopySource.indexOf("Disconnect");
+    const deleteAt = userSettingsOwnerCopySource.lastIndexOf("Delete account");
+    expect(signOutAt).toBeGreaterThan(-1);
+    expect(disconnectAt).toBeGreaterThan(signOutAt);
+    expect(deleteAt).toBeGreaterThan(disconnectAt);
   });
 
-  it("omits Connected Instagram, kit editors, and Storybook-only chrome", () => {
+  it("omits kit editors and Storybook-only chrome", () => {
     for (const token of outOfPattern) {
       expect(userSettingsOwnerCopySource, token).not.toContain(token);
     }

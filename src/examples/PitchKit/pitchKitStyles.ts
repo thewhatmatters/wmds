@@ -123,15 +123,12 @@ export const pitchKitContactRowClasses =
 export const pitchKitBrandBodyClasses =
   `${typographyClass("body")} text-muted ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantInsetXClasses}`;
 
-/** User settings Dialog body — thin account identity + destructive delete. */
-export const pitchKitUserSettingsBodyClasses = "flex flex-col items-start gap-4";
-export const pitchKitUserSettingsIdentityClasses =
-  "flex min-w-0 flex-wrap items-center gap-3";
-export const pitchKitUserSettingsIdentityCopyClasses =
-  "flex min-w-0 flex-col gap-1";
-export const pitchKitUserSettingsNameClasses = typographyClass("ui-label");
+/** Account settings Dialog body — Connected Instagram → Share kit → account actions. */
+export const pitchKitUserSettingsBodyClasses = "flex w-full min-w-0 flex-col gap-4";
+export const pitchKitUserSettingsActionsClasses =
+  "flex flex-col items-start gap-2";
 
-/** Public kit unsigned callout — Card occupant under identity / truncated proof. */
+/** Public kit unsigned CTA band — compose into shareable PitchKit only. */
 export const pitchKitCalloutCardClasses = "col-span-full";
 export const pitchKitCalloutBodyClasses = `flex min-w-0 flex-col gap-4 ${cardLayoutBodyOccupantInsetXClasses} ${cardLayoutBodyOccupantPadYClasses}`;
 export const pitchKitCalloutActionsClasses = "flex flex-wrap items-center gap-3";

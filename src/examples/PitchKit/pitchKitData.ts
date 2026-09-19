@@ -136,16 +136,6 @@ export const pitchKitContact = {
   location: "Los Angeles, CA",
 } as const;
 
-/**
- * Owner account identity for User settings — existing sample name + contact email.
- * Do not invent a bio, website, or a second address.
- */
-export const pitchKitAccount = {
-  displayName: pitchKitCreator.name,
-  email: pitchKitContact.email,
-  profilePictureUrl: pitchKitCreatorIdentity.profilePictureUrl,
-} as const;
-
 export interface PitchKitBrand {
   id: string;
   name: string;

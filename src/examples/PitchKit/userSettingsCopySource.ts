@@ -1,23 +1,57 @@
+import { creatorIdentityStripCopySource } from "./creatorIdentityCopySource";
 import {
   pitchKitBrandClasses,
+  pitchKitConnectionMetaClasses,
   pitchKitPageClasses,
-  pitchKitSupportingClasses,
+  pitchKitSectionEyebrowClasses,
+  pitchKitSettingsBodyClasses,
+  pitchKitSettingsCardClasses,
+  pitchKitShareKitActionsClasses,
+  pitchKitShareKitStackClasses,
   pitchKitTopbarBandClasses,
   pitchKitTopbarClasses,
   pitchKitTopbarEndClasses,
+  pitchKitUserSettingsActionsClasses,
   pitchKitUserSettingsBodyClasses,
-  pitchKitUserSettingsIdentityClasses,
-  pitchKitUserSettingsIdentityCopyClasses,
-  pitchKitUserSettingsNameClasses,
 } from "./pitchKitStyles";
 
 export const userSettingsOwnerCopySource = `
 import { useState } from "react";
-import { AlertDialog, Avatar, Button, Dialog } from "@whatmatters/wmds";
+import {
+  AlertDialog,
+  Avatar,
+  Badge,
+  Button,
+  Card,
+  Chip,
+  Dialog,
+  TextLink,
+  Toaster,
+  cardTitleClasses,
+  toast,
+} from "@whatmatters/wmds";
+import { Copy } from "lucide-react";
 
-export function UserSettingsOwnerPage({ account }) {
+const compactNumber = new Intl.NumberFormat("en", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+
+${creatorIdentityStripCopySource}
+
+export function AccountSettingsOwnerPage({ identity }) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const sharePath = \`/k/\${identity.handle}\`;
+
+  function copyShareKitUrl() {
+    void navigator.clipboard.writeText(sharePath);
+    toast.add({
+      title: "Kit URL copied",
+      description: sharePath,
+      tone: "success",
+    });
+  }
 
   return (
     <main className="${pitchKitPageClasses}">
@@ -30,14 +64,14 @@ export function UserSettingsOwnerPage({ account }) {
               type="button"
               role="ghost"
               size="sm"
-              aria-label="Open user settings"
+              aria-label="Account settings"
               aria-haspopup="dialog"
               aria-expanded={settingsOpen}
               onClick={() => setSettingsOpen(true)}
             >
               <Avatar
-                name={account.displayName}
-                src={account.profilePictureUrl}
+                name={identity.displayName ?? identity.handle}
+                src={identity.profilePictureUrl}
                 size="sm"
               />
             </Button>
@@ -46,39 +80,65 @@ export function UserSettingsOwnerPage({ account }) {
       </div>
 
       <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
-        <Dialog.Content
-          size="sm"
-          title="User settings"
-          description="Account details for this PitchKit."
-        >
+        <Dialog.Content size="md" title="Account settings">
           <div className="${pitchKitUserSettingsBodyClasses}">
-            <div className="${pitchKitUserSettingsIdentityClasses}">
-              <Avatar
-                name={account.displayName}
-                src={account.profilePictureUrl}
-                size="md"
+            <Card variant="outlined" shape="rounded" bodyTerminal className="${pitchKitSettingsCardClasses}">
+              <Card.Header
+                start={<h2 className={cardTitleClasses}>Connected Instagram</h2>}
+                end={
+                  identity.connected ? (
+                    <Badge variant="success" emphasis="muted" size="sm">
+                      Connected
+                    </Badge>
+                  ) : null
+                }
               />
-              <div className="${pitchKitUserSettingsIdentityCopyClasses}">
-                <p className="${pitchKitUserSettingsNameClasses}">{account.displayName}</p>
-                <p className="${pitchKitSupportingClasses}">{account.email}</p>
+              <Card.Body>
+                <div className="${pitchKitSettingsBodyClasses}">
+                  <CreatorIdentityStrip
+                    identity={identity}
+                    nameAs="p"
+                    showProfessionalChip
+                  />
+                  {identity.lastSyncedLabel != null ? (
+                    <p className="${pitchKitConnectionMetaClasses}">
+                      Last synced {identity.lastSyncedLabel}
+                    </p>
+                  ) : null}
+                </div>
+              </Card.Body>
+            </Card>
+
+            <div className="${pitchKitShareKitStackClasses}">
+              <span className="${pitchKitSectionEyebrowClasses}">Share kit</span>
+              <div className="${pitchKitShareKitActionsClasses}">
+                <TextLink href={sharePath}>{sharePath}</TextLink>
+                <Button role="secondary" size="sm" icon={<Copy />} onClick={copyShareKitUrl}>
+                  Copy
+                </Button>
               </div>
             </div>
-            <Button
-              role="destructive"
-              size="sm"
-              onClick={() => setDeleteOpen(true)}
-            >
-              Delete account
-            </Button>
+
+            <div className="${pitchKitUserSettingsActionsClasses}">
+              <Button role="secondary" size="sm">Sign out</Button>
+              <Button role="secondary" size="sm">Disconnect</Button>
+              <Button
+                role="destructive"
+                size="sm"
+                onClick={() => setDeleteOpen(true)}
+              >
+                Delete account
+              </Button>
+            </div>
           </div>
         </Dialog.Content>
       </Dialog>
       <AlertDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title="Delete account?"
-        description="This permanently removes your PitchKit account. You cannot undo this action."
-        cancelLabel="Keep account"
+        title="Delete your Pitchkit account?"
+        description="This permanently deletes your kit, stored media copies, and connection. Your Instagram account is not deleted. This cannot be undone."
+        cancelLabel="Cancel"
         confirmLabel="Delete account"
         confirmRole="destructive"
         onConfirm={() => {
@@ -86,6 +146,7 @@ export function UserSettingsOwnerPage({ account }) {
           setSettingsOpen(false);
         }}
       />
+      <Toaster position="bottom-right" />
     </main>
   );
 }
