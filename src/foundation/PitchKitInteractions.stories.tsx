@@ -74,13 +74,13 @@ export const ShareableKit: Story = {
       canvas.getByText(/@averymorgan · 84.2K followers/i),
     ).toBeInTheDocument();
     expect(canvas.queryByText("Verified")).not.toBeInTheDocument();
-    expect(
-      canvas.getByRole("group", { name: /instagram performance summary/i }),
-    ).toBeInTheDocument();
-    expect(canvas.getByText("Followers")).toBeInTheDocument();
-    expect(canvas.getByText("Engagement rate")).toBeInTheDocument();
-    expect(canvas.getByText("Typical reach")).toBeInTheDocument();
-    expect(canvas.getByText("Typical saves")).toBeInTheDocument();
+    const summary = canvas.getByRole("group", {
+      name: /instagram performance summary/i,
+    });
+    expect(within(summary).getByText("Followers")).toBeInTheDocument();
+    expect(within(summary).getByText("Engagement rate")).toBeInTheDocument();
+    expect(within(summary).getByText("Typical reach")).toBeInTheDocument();
+    expect(within(summary).getByText("Typical saves")).toBeInTheDocument();
     expect(
       canvas.getByRole("heading", { name: /reach over 30 days/i }),
     ).toBeInTheDocument();
