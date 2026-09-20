@@ -34,7 +34,7 @@ describe("Pattern — theme picker (owner) Show code", () => {
   });
 
   it("interpolates every theme-picker pitchKitStyles token", () => {
-    expect(themeStyleKeys.length).toBeGreaterThan(8);
+    expect(themeStyleKeys.length).toBeGreaterThan(4);
     for (const key of themeStyleKeys) {
       const value = pitchKitStyles[key as keyof typeof pitchKitStyles];
       expect(String(value).length, key).toBeGreaterThan(0);
@@ -42,28 +42,35 @@ describe("Pattern — theme picker (owner) Show code", () => {
     }
   });
 
-  it("freezes explicit Save, enum, and public-kit preview", () => {
+  it("freezes explicit Save, enum, and in-page public kit", () => {
     expect(themePickerOwnerCopySource).toContain("export function ThemePickerOwnerPage");
     expect(themePickerOwnerCopySource).toContain("Save theme");
     expect(themePickerOwnerCopySource).toContain('aria-label="Kit theme"');
     expect(themePickerOwnerCopySource).toContain('["light", "dark", "soft"]');
     expect(themePickerOwnerCopySource).toContain('useState("light")');
-    expect(themePickerOwnerCopySource).toContain("data-theme={draftTheme}");
+    expect(themePickerOwnerCopySource).toContain(
+      "<main data-theme={draftTheme}",
+    );
     expect(themePickerOwnerCopySource).toContain("showCreateBand={false}");
     expect(themePickerOwnerCopySource).toContain("<ShareablePitchKit");
-    expect(themePickerOwnerCopySource).toContain("Public kit preview");
     expect(themePickerOwnerCopySource).toContain("Changes apply when you save.");
     expect(themePickerOwnerCopySource).toContain("disabled={!dirty}");
     expect(themePickerOwnerCopySource).toContain("Theme saved");
+    expect(storiesSource).toContain("no nested preview frame");
   });
 
-  it("omits auto-save, invented metrics, and Storybook-only chrome", () => {
+  it("omits nested preview frame, auto-save, and invented metrics", () => {
+    expect(themePickerOwnerCopySource).not.toContain("Public kit preview");
+    expect(themePickerOwnerCopySource).not.toContain("onDraftThemeChange");
     expect(themePickerOwnerCopySource).not.toContain("ExampleGridControls");
     expect(themePickerOwnerCopySource).not.toContain("GridOverlay");
     expect(themePickerOwnerCopySource).not.toContain("heatmap");
     expect(themePickerOwnerCopySource).not.toContain("EXAMPLE");
     expect(themePickerOwnerCopySource).not.toContain("impressions");
     expect(exampleSource).toContain("Save theme");
+    expect(exampleSource).toContain("<ShareablePitchKit showCreateBand={false} />");
+    expect(exampleSource).not.toContain("Public kit preview");
+    expect(exampleSource).not.toContain("pitchKitThemePreview");
     expect(exampleSource).not.toContain("onValueChange={setSavedTheme}");
   });
 });

@@ -7,9 +7,6 @@ import {
   pitchKitHeaderSectionClasses,
   pitchKitPageClasses,
   pitchKitSupportingClasses,
-  pitchKitThemePreviewClasses,
-  pitchKitThemePreviewLabelClasses,
-  pitchKitThemePreviewPageClasses,
   pitchKitThemeToolbarClasses,
   pitchKitTopbarBandClasses,
   pitchKitTopbarClasses,
@@ -66,7 +63,7 @@ export function ThemePickerOwnerPage({ identity, intro, posts, contact, brands, 
   }
 
   return (
-    <main className="${pitchKitPageClasses}">
+    <main data-theme={draftTheme} className="${pitchKitPageClasses}">
       <div className="${pitchKitTopbarBandClasses}">
         <header className="${pitchKitTopbarClasses}">
           <span className="${pitchKitBrandClasses}">PitchKit</span>
@@ -124,37 +121,16 @@ export function ThemePickerOwnerPage({ identity, intro, posts, contact, brands, 
             </SegmentedControl>
           </div>
 
-          <div className="${pitchKitHeaderSectionClasses}">
-            <p className="${pitchKitThemePreviewLabelClasses}">Public kit preview</p>
-          </div>
-
-          <div
-            data-theme={draftTheme}
-            className="${pitchKitThemePreviewClasses}"
-            aria-label="Public kit preview"
-          >
-            <div className="${pitchKitThemePreviewPageClasses}">
-              <div className="${pitchKitTopbarBandClasses}">
-                <header className="${pitchKitTopbarClasses}">
-                  <span className="${pitchKitBrandClasses}">PitchKit</span>
-                </header>
-              </div>
-              <div className="${pitchKitContentBandClasses}">
-                <div className="${pitchKitContentClasses}">
-                  <ShareablePitchKit
-                    identity={identity}
-                    intro={intro}
-                    posts={posts}
-                    contact={contact}
-                    brands={brands}
-                    countries={countries}
-                    reachData={reachData}
-                    showCreateBand={false}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+          <ShareablePitchKit
+            identity={identity}
+            intro={intro}
+            posts={posts}
+            contact={contact}
+            brands={brands}
+            countries={countries}
+            reachData={reachData}
+            showCreateBand={false}
+          />
         </div>
       </div>
       <Toaster position="bottom-right" />

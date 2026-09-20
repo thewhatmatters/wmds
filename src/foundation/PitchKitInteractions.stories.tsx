@@ -709,10 +709,12 @@ export const ThemePickerOwner: Story = {
   play: async ({ canvas }) => {
     const themeGroup = canvas.getByRole("radiogroup", { name: /kit theme/i });
     const save = canvas.getByRole("button", { name: /save theme/i });
-    const preview = canvas.getByLabelText(/public kit preview/i);
+    const page = canvas.getByRole("main");
 
     expect(save).toBeDisabled();
-    expect(preview).toHaveAttribute("data-theme", "light");
+    expect(page).toHaveAttribute("data-theme", "light");
+    expect(canvas.queryByText("Public kit preview")).not.toBeInTheDocument();
+    expect(canvas.getAllByText("PitchKit")).toHaveLength(2);
     expect(
       canvas.getByRole("heading", { name: /avery morgan/i }),
     ).toBeInTheDocument();
@@ -722,7 +724,7 @@ export const ThemePickerOwner: Story = {
     ).not.toBeInTheDocument();
 
     await userEvent.click(within(themeGroup).getByRole("radio", { name: /^dark$/i }));
-    expect(preview).toHaveAttribute("data-theme", "dark");
+    expect(page).toHaveAttribute("data-theme", "dark");
     expect(save).toBeEnabled();
 
     await userEvent.click(save);
@@ -739,7 +741,7 @@ export const ThemePickerOwner: Story = {
     });
 
     await userEvent.click(within(themeGroup).getByRole("radio", { name: /^soft$/i }));
-    expect(preview).toHaveAttribute("data-theme", "soft");
+    expect(page).toHaveAttribute("data-theme", "soft");
     expect(save).toBeEnabled();
   },
 };

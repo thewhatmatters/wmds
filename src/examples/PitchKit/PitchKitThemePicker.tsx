@@ -13,29 +13,28 @@ import {
   type PitchKitTheme,
 } from "./pitchKitData";
 import {
-  pitchKitBrandClasses,
-  pitchKitContentBandClasses,
-  pitchKitContentClasses,
   pitchKitHeaderCopyClasses,
   pitchKitHeaderSectionClasses,
   pitchKitSupportingClasses,
-  pitchKitThemePreviewClasses,
-  pitchKitThemePreviewLabelClasses,
-  pitchKitThemePreviewPageClasses,
   pitchKitThemeToolbarClasses,
-  pitchKitTopbarBandClasses,
-  pitchKitTopbarClasses,
   pitchKitTopbarEndClasses,
 } from "./pitchKitStyles";
 
 export function ThemePickerOwner({
   savedTheme: savedThemeProp = PITCHKIT_THEME_DEFAULT,
+  onDraftThemeChange,
 }: {
   savedTheme?: PitchKitTheme;
+  onDraftThemeChange?: (theme: PitchKitTheme) => void;
 }) {
   const [draftTheme, setDraftTheme] = useState<PitchKitTheme>(savedThemeProp);
   const [savedTheme, setSavedTheme] = useState<PitchKitTheme>(savedThemeProp);
   const dirty = draftTheme !== savedTheme;
+
+  function updateDraftTheme(theme: PitchKitTheme) {
+    setDraftTheme(theme);
+    onDraftThemeChange?.(theme);
+  }
 
   function saveTheme() {
     if (!dirty) return;
@@ -76,7 +75,7 @@ export function ThemePickerOwner({
           aria-label="Kit theme"
           size="sm"
           value={draftTheme}
-          onValueChange={(value) => setDraftTheme(value as PitchKitTheme)}
+          onValueChange={(value) => updateDraftTheme(value as PitchKitTheme)}
         >
           {pitchKitThemes.map((theme) => (
             <SegmentedControl.Item key={theme} value={theme}>
@@ -86,28 +85,7 @@ export function ThemePickerOwner({
         </SegmentedControl>
       </div>
 
-      <div className={pitchKitHeaderSectionClasses}>
-        <p className={pitchKitThemePreviewLabelClasses}>Public kit preview</p>
-      </div>
-
-      <div
-        data-theme={draftTheme}
-        className={pitchKitThemePreviewClasses}
-        aria-label="Public kit preview"
-      >
-        <div className={pitchKitThemePreviewPageClasses}>
-          <div className={pitchKitTopbarBandClasses}>
-            <header className={pitchKitTopbarClasses}>
-              <span className={pitchKitBrandClasses}>PitchKit</span>
-            </header>
-          </div>
-          <div className={pitchKitContentBandClasses}>
-            <div className={pitchKitContentClasses}>
-              <ShareablePitchKit showCreateBand={false} />
-            </div>
-          </div>
-        </div>
-      </div>
+      <ShareablePitchKit showCreateBand={false} />
     </>
   );
 }
@@ -115,9 +93,13 @@ export function ThemePickerOwner({
 export function PitchKitThemePickerOwnerExample() {
   const topbarName =
     pitchKitCreatorIdentity.displayName ?? pitchKitCreatorIdentity.handle;
+  const [pageTheme, setPageTheme] = useState<PitchKitTheme>(
+    PITCHKIT_THEME_DEFAULT,
+  );
 
   return (
     <PitchKitExampleShell
+      dataTheme={pageTheme}
       topbarEnd={
         <>
           <SegmentedControl
@@ -140,7 +122,7 @@ export function PitchKitThemePickerOwnerExample() {
       }
       overlay={<Toaster position="bottom-right" />}
     >
-      <ThemePickerOwner />
+      <ThemePickerOwner onDraftThemeChange={setPageTheme} />
     </PitchKitExampleShell>
   );
 }

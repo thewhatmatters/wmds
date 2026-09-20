@@ -149,14 +149,9 @@ export const pitchKitBrandRowStartClasses =
 export const pitchKitBrandNameClasses = typographyClass("ui-label");
 export const pitchKitBrandReorderClasses = "flex shrink-0 items-center";
 
-/** Owner theme picker — draft SegmentedControl + explicit Save. */
+/** Owner theme picker — draft SegmentedControl + explicit Save. Kit body is in-page. */
 export const pitchKitThemeToolbarClasses =
   "col-span-full flex flex-wrap items-end justify-between gap-3";
-export const pitchKitThemePreviewLabelClasses = `${typographyClass("overline")} text-muted`;
-export const pitchKitThemePreviewClasses =
-  `col-span-full overflow-hidden border border-border bg-body ${cardLayoutBodyOccupantRadiusClasses}`;
-export const pitchKitThemePreviewPageClasses =
-  "grid-page bg-body [--grid-column-gap:8px] [--grid-max:1140px]";
 
 /** Public kit 4-up Graph KPIs — same spine as Insights Stats. */
 export const pitchKitPublicStatClasses = pitchKitStatClasses;
