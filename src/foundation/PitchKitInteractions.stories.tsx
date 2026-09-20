@@ -5,6 +5,7 @@ import {
   PitchKitOwnerExample,
 } from "../examples/PitchKit/PitchKitExample";
 import { PitchKitShareableExample } from "../examples/PitchKit/PitchKitShareable";
+import { PitchKitPastBrandsExample } from "../examples/PitchKit/PitchKitPastBrands";
 import { PitchKitThemePickerOwnerExample } from "../examples/PitchKit/PitchKitThemePicker";
 import { PitchKitUserSettingsOwnerExample } from "../examples/PitchKit/PitchKitUserSettings";
 
@@ -100,8 +101,11 @@ export const ShareableKit: Story = {
       canvas.getByRole("link", { name: /hello@averymorgan.com/i }),
     ).toBeInTheDocument();
     expect(
-      canvas.getByRole("heading", { name: /hearth & home/i }),
+      canvas.getByRole("heading", { name: /past brands/i }),
     ).toBeInTheDocument();
+    const publicBrands = canvas.getByRole("list", { name: /^past brands$/i });
+    expect(publicBrands).toHaveTextContent(/hearth & home/i);
+    expect(publicBrands).toHaveTextContent(/3\.2x roas/i);
     expect(canvas.queryByText(/coming soon/i)).not.toBeInTheDocument();
     expect(
       canvas.queryByRole("radiogroup", {
@@ -741,6 +745,88 @@ export const ThemePickerOwner: Story = {
     await userEvent.click(within(themeGroup).getByRole("radio", { name: /^soft$/i }));
     expect(page).toHaveAttribute("data-theme", "soft");
     expect(save).toBeEnabled();
+  },
+};
+
+export const PastBrandsOwnerResult: Story = {
+  name: "PitchKit — past brands owner result",
+  render: () => <PitchKitPastBrandsExample chrome="owner" brandState="filled" />,
+  play: async ({ canvas }) => {
+    const portal = within(document.body);
+
+    expect(
+      canvas.getByRole("heading", { name: /past brands/i }),
+    ).toBeInTheDocument();
+    expect(canvas.getByText("3.2x ROAS")).toBeInTheDocument();
+    expect(canvas.getByText("+12% CTR")).toBeInTheDocument();
+    expect(canvas.queryByText("—")).not.toBeInTheDocument();
+
+    await userEvent.click(
+      canvas.getByRole("button", { name: /manage studio line/i }),
+    );
+    const addMenu = portal.getByRole("menu");
+    await userEvent.click(
+      within(addMenu).getByRole("menuitem", { name: /add result/i }),
+    );
+
+    const dialog = await waitFor(() => portal.getByRole("dialog"));
+    await expect(dialog).toHaveAccessibleName(/past brands/i);
+    expect(within(dialog).getByLabelText(/brand name/i)).toHaveValue("Studio Line");
+    const result = within(dialog).getByLabelText(/^result$/i);
+    await userEvent.type(result, "1.4M views");
+    await userEvent.click(within(dialog).getByRole("button", { name: /^save$/i }));
+
+    await waitFor(() => {
+      expect(portal.queryByRole("dialog")).not.toBeInTheDocument();
+      expect(canvas.getByText("1.4M views")).toBeInTheDocument();
+    });
+
+    await userEvent.click(
+      canvas.getByRole("button", { name: /manage hearth & home/i }),
+    );
+    const clearMenu = portal.getByRole("menu");
+    await userEvent.click(
+      within(clearMenu).getByRole("menuitem", { name: /clear result/i }),
+    );
+    await waitFor(() => {
+      expect(canvas.queryByText("3.2x ROAS")).not.toBeInTheDocument();
+    });
+  },
+};
+
+export const PastBrandsPublicOmit: Story = {
+  name: "PitchKit — past brands public omit",
+  render: () => <PitchKitPastBrandsExample chrome="public" brandState="empty" />,
+  play: async ({ canvas }) => {
+    expect(
+      canvas.queryByRole("heading", { name: /past brands/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("button", { name: /add brands you've worked with/i }),
+    ).not.toBeInTheDocument();
+  },
+};
+
+export const PastBrandsPublicOverflow: Story = {
+  name: "PitchKit — past brands public overflow",
+  render: () => (
+    <PitchKitPastBrandsExample chrome="public" brandState="overflow" />
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    expect(
+      canvas.getByRole("heading", { name: /past brands/i }),
+    ).toBeInTheDocument();
+    const overflowBrands = canvas.getByRole("list", { name: /^past brands$/i });
+    expect(overflowBrands).toHaveTextContent("Nike");
+    expect(overflowBrands).toHaveTextContent("+12% CTR");
+    const rail = canvasElement.querySelector("[data-overflow]");
+    expect(rail).not.toBeNull();
+    await waitFor(() => {
+      expect(rail).toHaveAttribute("data-overflow", "true");
+    });
+    expect(
+      canvas.queryByRole("button", { name: /add result/i }),
+    ).not.toBeInTheDocument();
   },
 };
 

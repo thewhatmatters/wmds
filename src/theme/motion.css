@@ -40,3 +40,29 @@
     background-color: color-mix(in srgb, var(--color-skeleton) 70%, var(--color-text-primary) 30%);
   }
 }
+
+/** Overflow-only marquee — pause on hover / focus; never run under reduced motion. */
+@keyframes wmds-marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@utility marquee-track {
+  animation: wmds-marquee var(--marquee-duration, 24s) linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.group:hover .marquee-track,
+.group:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none !important;
+  }
+}

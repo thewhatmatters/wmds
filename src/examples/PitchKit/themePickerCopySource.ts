@@ -15,7 +15,7 @@ import {
 } from "./pitchKitStyles";
 
 export const themePickerOwnerCopySource = `
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import {
   AlertDialog,
   Avatar,

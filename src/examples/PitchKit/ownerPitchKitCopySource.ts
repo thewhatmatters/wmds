@@ -1,11 +1,8 @@
 import { creatorIdentityStripCopySource } from "./creatorIdentityCopySource";
 import { ownerAccountChromeCopySource } from "./ownerChromeCopySource";
+import { publicPastBrandsCopySource } from "./pastBrandsCopySource";
 import {
-  pitchKitBrandCardClasses,
   pitchKitBrandClasses,
-  pitchKitBrandListClasses,
-  pitchKitBrandNameClasses,
-  pitchKitBrandRowStartClasses,
   pitchKitCardWellClasses,
   pitchKitContactCardClasses,
   pitchKitContactRowClasses,
@@ -47,6 +44,7 @@ import {
 /** Authenticated kit body — Graph KPIs + hide/restore on selected posts. */
 export const ownerPitchKitBodyCopySource = `
 ${creatorIdentityStripCopySource}
+${publicPastBrandsCopySource}
 
 function pitchKitIntroIsEmpty(intro) {
   return intro.trim().length === 0;
@@ -55,37 +53,6 @@ function pitchKitIntroIsEmpty(intro) {
 function PublicIntro({ intro }) {
   if (pitchKitIntroIsEmpty(intro)) return null;
   return <p className="${pitchKitIntroClasses}">{intro}</p>;
-}
-
-function PublicPastBrands({ brands }) {
-  if (brands.length === 0) return null;
-
-  return (
-    <section className="${pitchKitPostsSectionClasses}">
-      <div className="${pitchKitPostsHeaderClasses}">
-        <h2 className={cardTitleClasses}>Past brands</h2>
-      </div>
-      <div className="${pitchKitBrandListClasses}">
-        {brands.map((brand) => (
-          <Card
-            key={brand.id}
-            variant="outlined"
-            shape="rounded"
-            className="${pitchKitBrandCardClasses}"
-          >
-            <Card.Header
-              start={
-                <div className="${pitchKitBrandRowStartClasses}">
-                  <Avatar name={brand.name} size="sm" />
-                  <h3 className="${pitchKitBrandNameClasses}">{brand.name}</h3>
-                </div>
-              }
-            />
-          </Card>
-        ))}
-      </div>
-    </section>
-  );
 }
 
 function OwnerReachCard({ reachState, reachData }) {
@@ -358,7 +325,7 @@ function OwnerPitchKit({ identity, intro, posts, contact, brands, countries, rea
 `;
 
 export const ownerPitchKitPageCopySource = `
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import {
   AlertDialog,
   Avatar,
