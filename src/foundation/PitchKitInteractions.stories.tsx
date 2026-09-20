@@ -561,7 +561,9 @@ export const SharedCardBodyRadius: Story = {
       .closest('[data-layout="shell"]');
     const reachWell = reachCard?.querySelector(":scope > div > div");
     const audienceWell = audienceCard?.querySelector(":scope > div > div");
-    const postImages = Array.from(canvasElement.querySelectorAll("img"));
+    const postImages = Array.from(
+      canvasElement.querySelectorAll('[data-layout="shell"] img'),
+    );
 
     expect(main).not.toBeNull();
     expect(
@@ -658,14 +660,11 @@ export const UserSettingsOwner: Story = {
 
     const confirm = portal.getByRole("alertdialog");
     await expect(confirm).toHaveAccessibleName(/delete your pitchkit account/i);
-    expect(
-      within(confirm).getByText(
-        /permanently deletes your kit, stored media copies, and connection/i,
-      ),
-    ).toBeVisible();
-    expect(
-      within(confirm).getByText(/your instagram account is not deleted/i),
-    ).toBeVisible();
+    await expect(confirm).toHaveAccessibleDescription(
+      /permanently deletes your kit, stored media copies, and connection/i,
+    );
+    expect(confirm).toHaveTextContent(/your instagram account is not deleted/i);
+    expect(confirm).toHaveTextContent(/this cannot be undone/i);
 
     await userEvent.click(
       within(confirm).getByRole("button", { name: /^cancel$/i }),
