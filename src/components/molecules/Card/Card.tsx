@@ -22,6 +22,7 @@ import {
   cardLayoutHeaderStartClasses,
   cardLayoutShellClasses,
   cardLayoutShellBottomClasses,
+  cardLayoutShellTopClasses,
   cardLayoutShellShapeClasses,
   cardLayoutTerminalBodyClasses,
   cardLayoutVariantClasses,
@@ -53,6 +54,8 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
   padding?: CardPadding;
   /** Overrides automatic terminal-Body detection. Normally omitted: Body without Footer gets a 2px bottom inset. */
   bodyTerminal?: boolean;
+  /** Overrides automatic headerless detection. Normally omitted: Body without Header gets a 2px top inset. */
+  headerless?: boolean;
   as?: "div" | "article" | "section";
   className?: CardLayoutClassName;
 }
@@ -81,21 +84,27 @@ function CardRoot({
   variant = "surface",
   padding = "none",
   bodyTerminal,
+  headerless,
   as: Component = "div",
   className,
   children,
   ...props
 }: CardProps) {
   const isLayout = padding === "none";
-  const inferredBodyTerminal =
-    isLayout &&
-    Children.toArray(children).some(
-      (child) => isValidElement(child) && child.type === CardBody,
-    ) &&
-    !Children.toArray(children).some(
-      (child) => isValidElement(child) && child.type === CardFooter,
-    );
+  const childList = Children.toArray(children);
+  const hasHeader = childList.some(
+    (child) => isValidElement(child) && child.type === CardHeader,
+  );
+  const hasBody = childList.some(
+    (child) => isValidElement(child) && child.type === CardBody,
+  );
+  const hasFooter = childList.some(
+    (child) => isValidElement(child) && child.type === CardFooter,
+  );
+  const inferredBodyTerminal = isLayout && hasBody && !hasFooter;
+  const inferredHeaderless = isLayout && hasBody && !hasHeader;
   const terminalBody = bodyTerminal ?? inferredBodyTerminal;
+  const omitHeader = headerless ?? inferredHeaderless;
 
   return (
     <CardPaddingContext.Provider value={padding}>
@@ -106,9 +115,10 @@ function CardRoot({
             isLayout
               ? cn(
                   cardLayoutShellClasses,
+                  cardLayoutShellTopClasses(!omitHeader),
                   cardLayoutShellBottomClasses(terminalBody),
                   cardLayoutShellShapeClasses[shape],
-                cardLayoutVariantClasses[variant],
+                  cardLayoutVariantClasses[variant],
                 )
               : cn(
                   cardOverflowClasses,
@@ -184,8 +194,9 @@ function CardDivider({ className, ...props }: HTMLAttributes<HTMLHRElement>) {
 
 /**
  * Content surface — **Header**, **Body**, **Footer** composition slots.
- * Layout cards (`padding="none"`) — shell + **Header** (`start` | `end`) + **Body** slot
+ * Layout cards (`padding="none"`) — shell + optional **Header** (`start` | `end`) + **Body** slot
  * (2px gutter, square, transparent — occupant owns fill and chrome).
+ * Headerless Body densifies shell top to 2px; footerless / `bodyTerminal` densifies shell bottom to 2px.
  */
 export const Card = Object.assign(CardRoot, {
   Header: CardHeader,

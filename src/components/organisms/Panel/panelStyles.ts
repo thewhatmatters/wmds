@@ -1,5 +1,9 @@
 import { cn } from "../../../lib/cn";
-import { cardBaseClasses, cardLayoutShellClasses } from "../../molecules/Card/cardStyles";
+import {
+  cardBaseClasses,
+  cardLayoutShellClasses,
+  cardLayoutShellTopClasses,
+} from "../../molecules/Card/cardStyles";
 import { dialogBackdropClasses } from "../Dialog/dialogStyles";
 import {
   sheetPanelMotionTransition,
@@ -28,6 +32,7 @@ export const panelBackdropClasses = cn(dialogBackdropClasses, "pointer-events-no
 export const panelShellClasses = cn(
   cardBaseClasses,
   cardLayoutShellClasses,
+  cardLayoutShellTopClasses(),
   "pointer-events-auto relative z-[1] h-full max-h-full min-h-0 bg-surface shadow-md",
 );
 
