@@ -103,8 +103,9 @@ export const ShareableKit: Story = {
     expect(
       canvas.getByRole("heading", { name: /past brands/i }),
     ).toBeInTheDocument();
-    expect(canvas.getByText(/hearth & home/i)).toBeInTheDocument();
-    expect(canvas.getByText("3.2x ROAS")).toBeInTheDocument();
+    const publicBrands = canvas.getByRole("list", { name: /^past brands$/i });
+    expect(publicBrands).toHaveTextContent(/hearth & home/i);
+    expect(publicBrands).toHaveTextContent(/3\.2x roas/i);
     expect(canvas.queryByText(/coming soon/i)).not.toBeInTheDocument();
     expect(
       canvas.queryByRole("radiogroup", {
@@ -815,8 +816,9 @@ export const PastBrandsPublicOverflow: Story = {
     expect(
       canvas.getByRole("heading", { name: /past brands/i }),
     ).toBeInTheDocument();
-    expect(canvas.getByText("Nike")).toBeInTheDocument();
-    expect(canvas.getByText("+12% CTR")).toBeInTheDocument();
+    const overflowBrands = canvas.getByRole("list", { name: /^past brands$/i });
+    expect(overflowBrands).toHaveTextContent("Nike");
+    expect(overflowBrands).toHaveTextContent("+12% CTR");
     const rail = canvasElement.querySelector("[data-overflow]");
     expect(rail).not.toBeNull();
     await waitFor(() => {
