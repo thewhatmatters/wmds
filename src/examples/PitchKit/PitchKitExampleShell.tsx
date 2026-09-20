@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from
 import type { DisplayControlThemeMode } from "../../components/molecules/DisplayControls/DisplayControls";
 import { GridOverlay } from "../../lib/GridOverlay";
 import { ExampleGridControls } from "../ExampleGridControls/ExampleGridControls";
+import { PitchKitPageFooter } from "./PitchKitOwnerChrome";
 import {
   pitchKitBrandClasses,
   pitchKitContentBandClasses,
@@ -75,6 +76,8 @@ export function PitchKitExampleShell({
           <div className={pitchKitContentClasses}>{children}</div>
         </div>
       ) : null}
+
+      <PitchKitPageFooter />
 
       {overlay}
 

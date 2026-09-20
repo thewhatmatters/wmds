@@ -118,7 +118,7 @@ function PitchKitIntroCanvas({
               <Avatar
                 name={topbarName}
                 src={identity?.profilePictureUrl}
-                size="sm"
+                size="md"
               />
             </span>
           </>

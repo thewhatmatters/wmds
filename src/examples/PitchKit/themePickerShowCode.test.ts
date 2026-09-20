@@ -31,6 +31,7 @@ describe("Pattern — theme picker (owner) Show code", () => {
     expect(storiesSource).toContain("themePickerOwnerCopySource");
     expect(storiesSource).toContain("export const ThemePickerOwner");
     expect(usageSource).toContain("Pattern — theme picker (owner)");
+    expect(storiesSource).toContain("not PitchKit tab chrome");
   });
 
   it("interpolates every theme-picker pitchKitStyles token", () => {
@@ -42,7 +43,7 @@ describe("Pattern — theme picker (owner) Show code", () => {
     }
   });
 
-  it("freezes explicit Save, enum, and in-page public kit", () => {
+  it("freezes explicit Save, enum, and in-page public kit off the PitchKit tab", () => {
     expect(themePickerOwnerCopySource).toContain("export function ThemePickerOwnerPage");
     expect(themePickerOwnerCopySource).toContain("Save theme");
     expect(themePickerOwnerCopySource).toContain('aria-label="Kit theme"');
@@ -56,6 +57,7 @@ describe("Pattern — theme picker (owner) Show code", () => {
     expect(themePickerOwnerCopySource).toContain("Changes apply when you save.");
     expect(themePickerOwnerCopySource).toContain("disabled={!dirty}");
     expect(themePickerOwnerCopySource).toContain("Theme saved");
+    expect(themePickerOwnerCopySource).not.toContain("PitchKit primary navigation");
     expect(storiesSource).toContain("no nested preview frame");
   });
 
@@ -72,6 +74,7 @@ describe("Pattern — theme picker (owner) Show code", () => {
     expect(exampleSource).not.toContain("Public kit preview");
     expect(exampleSource).not.toContain("pitchKitThemePreview");
     expect(exampleSource).not.toContain("onValueChange={setSavedTheme}");
+    expect(exampleSource).not.toContain("PitchKit primary navigation");
   });
 });
 

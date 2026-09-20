@@ -249,7 +249,7 @@ export function PastBrandsOwnerPage({ identity, brands, onBrandsChange }) {
             <Avatar
               name={identity.displayName ?? identity.handle}
               src={identity.profilePictureUrl}
-              size="sm"
+              size="md"
             />
           </span>
         </header>

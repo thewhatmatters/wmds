@@ -1,3 +1,4 @@
+import { ownerAccountChromeCopySource } from "./ownerChromeCopySource";
 import { shareablePitchKitBodyCopySource } from "./shareablePitchKitCopySource";
 import {
   pitchKitBrandClasses,
@@ -16,12 +17,15 @@ import {
 export const themePickerOwnerCopySource = `
 import { useState } from "react";
 import {
+  AlertDialog,
   Avatar,
   Badge,
   Button,
   Card,
   Chart,
   Chip,
+  Dialog,
+  Dropdown,
   PageHeader,
   SegmentedControl,
   Stat,
@@ -45,6 +49,7 @@ const compactNumber = new Intl.NumberFormat("en", {
 
 const pitchKitThemes = ["light", "dark", "soft"];
 
+${ownerAccountChromeCopySource}
 ${shareablePitchKitBodyCopySource}
 
 export function ThemePickerOwnerPage({ identity, intro, posts, contact, brands, countries, reachData }) {
@@ -67,17 +72,9 @@ export function ThemePickerOwnerPage({ identity, intro, posts, contact, brands, 
       <div className="${pitchKitTopbarBandClasses}">
         <header className="${pitchKitTopbarClasses}">
           <span className="${pitchKitBrandClasses}">PitchKit</span>
-          <SegmentedControl
-            aria-label="PitchKit primary navigation"
-            size="sm"
-            value="pitchkit"
-            onValueChange={() => undefined}
-          >
-            <SegmentedControl.Item value="insights">Insights</SegmentedControl.Item>
-            <SegmentedControl.Item value="pitchkit">PitchKit</SegmentedControl.Item>
-          </SegmentedControl>
+          <span />
           <span className="${pitchKitTopbarEndClasses}">
-            <Avatar name="Avery Morgan" size="sm" />
+            <OwnerAccountMenu identity={identity} />
           </span>
         </header>
       </div>
@@ -133,6 +130,7 @@ export function ThemePickerOwnerPage({ identity, intro, posts, contact, brands, 
           />
         </div>
       </div>
+      <PitchKitPageFooter />
       <Toaster position="bottom-right" />
     </main>
   );

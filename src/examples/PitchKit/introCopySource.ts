@@ -73,7 +73,7 @@ export function IntroOwnerPage({ identity, intro, onIntroChange }) {
             <Avatar
               name={identity.displayName ?? identity.handle}
               src={identity.profilePictureUrl}
-              size="sm"
+              size="md"
             />
           </span>
         </header>

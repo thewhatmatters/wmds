@@ -365,7 +365,7 @@ export function PitchKitCreatorIdentityOwnerExample({
             <Avatar
               name={topbarName}
               src={identity?.profilePictureUrl}
-              size="sm"
+              size="md"
             />
           </span>
         </>

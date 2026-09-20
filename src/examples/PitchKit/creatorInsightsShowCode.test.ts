@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { creatorInsightsPageCopySource } from "./insightsCopySource";
 import * as pitchKitStyles from "./pitchKitStyles";
 
 const storiesSource = readFileSync(
@@ -11,12 +12,6 @@ const exampleSource = readFileSync(
   join(import.meta.dirname, "PitchKitExample.tsx"),
   "utf8",
 );
-
-const copySourceStart = storiesSource.indexOf(
-  'import { useState } from "react";',
-);
-const copySourceEnd = storiesSource.indexOf("export const GraphDataUnavailable");
-const showCodeSource = storiesSource.slice(copySourceStart, copySourceEnd);
 
 const exampleStyleKeys = [
   ...exampleSource.matchAll(/^\s+(pitchKit\w+Classes),?$/gm),
@@ -44,19 +39,17 @@ const resolvedCanvasStyleKeys = exampleStyleKeys.filter(
 );
 
 describe("Pattern — creator Insights Show code", () => {
-  it("extracts the Pattern Show code snippet", () => {
-    expect(copySourceStart).toBeGreaterThan(-1);
-    expect(copySourceEnd).toBeGreaterThan(copySourceStart);
+  it("wires the Pattern story to the Insights freeze", () => {
+    expect(storiesSource).toContain("creatorInsightsPageCopySource");
+    expect(storiesSource).toContain("Pattern — creator Insights");
   });
 
   it("interpolates every resolved-canvas pitchKitStyles token", () => {
     expect(resolvedCanvasStyleKeys.length).toBeGreaterThan(20);
     for (const key of resolvedCanvasStyleKeys) {
-      expect(showCodeSource, key).toContain(`\${${key}}`);
-      expect(
-        pitchKitStyles[key as keyof typeof pitchKitStyles].length,
-        key,
-      ).toBeGreaterThan(0);
+      expect(creatorInsightsPageCopySource, key).toContain(
+        String(pitchKitStyles[key as keyof typeof pitchKitStyles]),
+      );
     }
   });
 
@@ -73,27 +66,41 @@ describe("Pattern — creator Insights Show code", () => {
   });
 
   it("mirrors canvas chrome that the previous freeze omitted", () => {
-    expect(showCodeSource).toContain("{visiblePosts.length} shown");
-    expect(showCodeSource).toContain('label="Followers"');
-    expect(showCodeSource).toContain('trend={{ value: "+2.4%"');
-    expect(showCodeSource).toContain("Verified Instagram performance");
-    expect(showCodeSource).toContain("Ranked Instagram percentages");
-    expect(showCodeSource).toContain("Graph data");
-    expect(showCodeSource).toContain("AudienceSection");
-    expect(showCodeSource).toContain("Card.Footer");
-    expect(showCodeSource).toContain("<Toaster position=\"bottom-right\" />");
+    expect(creatorInsightsPageCopySource).toContain("{rankedPosts.length} shown");
+    expect(creatorInsightsPageCopySource).toContain('label="Followers"');
+    expect(creatorInsightsPageCopySource).toContain('trend={{ value: "+2.4%"');
+    expect(creatorInsightsPageCopySource).toContain("Verified Instagram performance");
+    expect(creatorInsightsPageCopySource).toContain("Ranked Instagram percentages");
+    expect(creatorInsightsPageCopySource).toContain("Graph data");
+    expect(creatorInsightsPageCopySource).toContain("AudienceSection");
+    expect(creatorInsightsPageCopySource).toContain("Card.Footer");
+    expect(creatorInsightsPageCopySource).toContain("<Toaster position=\"bottom-right\" />");
+    expect(creatorInsightsPageCopySource).toContain("My account");
+    expect(creatorInsightsPageCopySource).toContain("Privacy");
+    expect(creatorInsightsPageCopySource).toContain("Support");
+  });
+
+  it("keeps Insights proof read-only and omits Share kit from PageHeader", () => {
+    expect(creatorInsightsPageCopySource).toContain(
+      '<PageHeader variant="page" title="Insights" />',
+    );
+    expect(creatorInsightsPageCopySource).not.toContain("Manage ranked post");
+    expect(creatorInsightsPageCopySource).not.toContain("Swap post");
+    expect(exampleSource).not.toContain("Share kit");
+    expect(exampleSource).not.toContain("Manage ranked post");
+    expect(exampleSource).not.toContain("Swap post");
   });
 
   it("omits Storybook-only inspector chrome from Show code", () => {
-    expect(showCodeSource).not.toContain("ExampleGridControls");
-    expect(showCodeSource).not.toContain("GridOverlay");
+    expect(creatorInsightsPageCopySource).not.toContain("ExampleGridControls");
+    expect(creatorInsightsPageCopySource).not.toContain("GridOverlay");
   });
 
   it("wires the pitchkit branch to the owner kit, not a placeholder", () => {
-    expect(showCodeSource).toContain("<OwnerPitchKit");
-    expect(showCodeSource).toContain("${ownerPitchKitBodyCopySource}");
-    expect(showCodeSource).not.toContain("<ShareablePitchKit");
-    expect(showCodeSource).not.toContain("Coming soon");
-    expect(showCodeSource).not.toContain("pitchKitPlaceholder");
+    expect(creatorInsightsPageCopySource).toContain("<OwnerPitchKit");
+    expect(creatorInsightsPageCopySource).toContain("Your Pitchkit");
+    expect(creatorInsightsPageCopySource).not.toContain("<ShareablePitchKit");
+    expect(creatorInsightsPageCopySource).not.toContain("Coming soon");
+    expect(creatorInsightsPageCopySource).not.toContain("pitchKitPlaceholder");
   });
 });

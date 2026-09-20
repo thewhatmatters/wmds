@@ -32,6 +32,9 @@ export const PrimaryNavigation: Story = {
       within(navigation).getByRole("radio", { name: /^pitchkit$/i }),
     );
     expect(
+      canvas.getByRole("heading", { name: /your pitchkit/i }),
+    ).toBeInTheDocument();
+    expect(
       canvas.getByRole("heading", { name: /avery morgan/i }),
     ).toBeInTheDocument();
     expect(
@@ -60,6 +63,12 @@ export const PrimaryNavigation: Story = {
       within(navigation).getByRole("radio", { name: /^insights$/i }),
     );
     expect(canvas.getByRole("heading", { name: /^insights$/i })).toBeInTheDocument();
+    expect(
+      canvas.queryByRole("button", { name: /share kit/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      canvas.queryByRole("button", { name: /manage ranked post/i }),
+    ).not.toBeInTheDocument();
   },
 };
 
@@ -366,7 +375,18 @@ export const OwnerKit: Story = {
     expect(canvas.getByText("Creator")).toBeInTheDocument();
     expect(canvas.queryByText("Verified")).not.toBeInTheDocument();
     expect(
-      canvas.getByRole("group", { name: /verified instagram summary/i }),
+      canvas.getByRole("heading", { name: /your pitchkit/i }),
+    ).toBeInTheDocument();
+    expect(canvas.getByText(/edit what brands see/i)).toBeInTheDocument();
+    expect(
+      canvas.getByRole("group", { name: /instagram performance summary/i }),
+    ).toBeInTheDocument();
+    expect(canvas.getByText("Typical saves")).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /reach over 30 days/i }),
+    ).toBeInTheDocument();
+    expect(
+      canvas.getByRole("heading", { name: /top countries/i }),
     ).toBeInTheDocument();
     expect(
       canvas.getByRole("heading", { name: /selected posts/i }),
@@ -447,61 +467,6 @@ export const OwnerHidePostConfirmation: Story = {
       expect(
         canvas.getByRole("button", { name: /manage selected post 6/i }),
       ).toBeInTheDocument();
-    });
-  },
-};
-
-export const HidePostConfirmation: Story = {
-  name: "PitchKit — hide post confirmation",
-  render: () => <PitchKitInsightsExample />,
-  play: async ({ canvas }) => {
-    const trigger = canvas.getByRole("button", {
-      name: /manage ranked post 1/i,
-    });
-    await userEvent.click(trigger);
-    expect(trigger).toHaveAttribute("aria-expanded", "true");
-    expect(getComputedStyle(trigger).backgroundColor).not.toBe(
-      "rgba(0, 0, 0, 0)",
-    );
-
-    const menu = within(document.body).getByRole("menu");
-    await userEvent.click(
-      within(menu).getByRole("menuitem", { name: /hide from kit/i }),
-    );
-
-    const dialog = within(document.body).getByRole("alertdialog", {
-      name: /hide this post from pitchkit/i,
-    });
-    await waitFor(() => expect(dialog).toBeVisible());
-    expect(within(dialog).getByText(/you can add it back later/i)).toBeVisible();
-
-    await userEvent.click(
-      within(dialog).getByRole("button", { name: /^hide from kit$/i }),
-    );
-
-    await waitFor(() => {
-      expect(
-        within(document.body).queryByRole("alertdialog"),
-      ).not.toBeInTheDocument();
-      expect(canvas.getByText(/post hidden from the shareable kit preview/i)).toBeVisible();
-      expect(canvas.getByText("5 shown")).toBeVisible();
-    });
-
-    const notifications = within(document.body).getByRole("list", {
-      name: /notifications/i,
-    });
-    await waitFor(() => {
-      expect(within(notifications).getByRole("status")).toHaveTextContent(
-        /post hidden from kit/i,
-      );
-    });
-
-    await userEvent.click(
-      within(notifications).getByRole("button", { name: /undo/i }),
-    );
-    await waitFor(() => {
-      expect(canvas.getByText(/post restored to the shareable kit preview/i)).toBeVisible();
-      expect(canvas.getByText("6 shown")).toBeVisible();
     });
   },
 };
@@ -596,7 +561,9 @@ export const SharedCardBodyRadius: Story = {
       .closest('[data-layout="shell"]');
     const reachWell = reachCard?.querySelector(":scope > div > div");
     const audienceWell = audienceCard?.querySelector(":scope > div > div");
-    const postImages = Array.from(canvasElement.querySelectorAll("img"));
+    const postImages = Array.from(
+      canvasElement.querySelectorAll('[data-layout="shell"] img'),
+    );
 
     expect(main).not.toBeNull();
     expect(
@@ -632,7 +599,29 @@ export const UserSettingsOwner: Story = {
     const portal = within(document.body);
 
     await userEvent.click(
-      canvas.getByRole("button", { name: /account settings/i }),
+      canvas.getByRole("button", { name: /my account/i }),
+    );
+
+    const menu = await waitFor(() => portal.getByRole("menu", { name: /my account/i }));
+    expect(within(menu).getByText("My account")).toBeInTheDocument();
+    expect(
+      within(menu).getByRole("menuitem", { name: /account settings/i }),
+    ).toBeInTheDocument();
+    expect(
+      within(menu).getByRole("menuitem", { name: /share kit/i }),
+    ).toBeInTheDocument();
+    expect(
+      within(menu).getByRole("menuitem", { name: /sign out/i }),
+    ).toBeInTheDocument();
+    expect(
+      within(menu).getByRole("menuitem", { name: /disconnect/i }),
+    ).toBeInTheDocument();
+    expect(
+      within(menu).getByRole("menuitem", { name: /^delete$/i }),
+    ).toBeInTheDocument();
+
+    await userEvent.click(
+      within(menu).getByRole("menuitem", { name: /account settings/i }),
     );
 
     await waitFor(() => {
@@ -647,14 +636,22 @@ export const UserSettingsOwner: Story = {
     expect(within(settings).getByText("Avery Morgan")).toBeInTheDocument();
     expect(within(settings).getByText("Creator")).toBeInTheDocument();
     expect(within(settings).getByText(/last synced/i)).toBeInTheDocument();
-    expect(within(settings).getByText("Share kit")).toBeInTheDocument();
-    expect(within(settings).getByRole("button", { name: /^copy$/i })).toBeInTheDocument();
-    expect(within(settings).getByRole("button", { name: /sign out/i })).toBeInTheDocument();
-    expect(within(settings).getByRole("button", { name: /disconnect/i })).toBeInTheDocument();
+    expect(within(settings).queryByRole("button", { name: /^copy$/i })).not.toBeInTheDocument();
+    expect(within(settings).queryByRole("button", { name: /sign out/i })).not.toBeInTheDocument();
     expect(within(settings).queryByText(/bio/i)).not.toBeInTheDocument();
 
     await userEvent.click(
-      within(settings).getByRole("button", { name: /^delete account$/i }),
+      within(settings).getByRole("button", { name: /close/i }),
+    );
+    await waitFor(() => {
+      expect(portal.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(
+      canvas.getByRole("button", { name: /my account/i }),
+    );
+    await userEvent.click(
+      within(portal.getByRole("menu")).getByRole("menuitem", { name: /^delete$/i }),
     );
 
     await waitFor(() => {
@@ -663,14 +660,11 @@ export const UserSettingsOwner: Story = {
 
     const confirm = portal.getByRole("alertdialog");
     await expect(confirm).toHaveAccessibleName(/delete your pitchkit account/i);
-    expect(
-      within(confirm).getByText(
-        /permanently deletes your kit, stored media copies, and connection/i,
-      ),
-    ).toBeVisible();
-    expect(
-      within(confirm).getByText(/your instagram account is not deleted/i),
-    ).toBeVisible();
+    await expect(confirm).toHaveAccessibleDescription(
+      /permanently deletes your kit, stored media copies, and connection/i,
+    );
+    expect(confirm).toHaveTextContent(/your instagram account is not deleted/i);
+    expect(confirm).toHaveTextContent(/this cannot be undone/i);
 
     await userEvent.click(
       within(confirm).getByRole("button", { name: /^cancel$/i }),
@@ -679,12 +673,13 @@ export const UserSettingsOwner: Story = {
     await waitFor(() => {
       expect(portal.queryByRole("alertdialog")).not.toBeInTheDocument();
     });
-    expect(portal.getByRole("dialog")).toBeInTheDocument();
+    expect(portal.queryByRole("dialog")).not.toBeInTheDocument();
 
     await userEvent.click(
-      within(portal.getByRole("dialog")).getByRole("button", {
-        name: /^delete account$/i,
-      }),
+      canvas.getByRole("button", { name: /my account/i }),
+    );
+    await userEvent.click(
+      within(portal.getByRole("menu")).getByRole("menuitem", { name: /^delete$/i }),
     );
     await waitFor(() => {
       expect(portal.getByRole("alertdialog")).toBeInTheDocument();
@@ -714,7 +709,10 @@ export const ThemePickerOwner: Story = {
     expect(save).toBeDisabled();
     expect(page).toHaveAttribute("data-theme", "light");
     expect(canvas.queryByText("Public kit preview")).not.toBeInTheDocument();
-    expect(canvas.getAllByText("PitchKit")).toHaveLength(2);
+    expect(
+      canvas.queryByRole("radiogroup", { name: /pitchkit primary navigation/i }),
+    ).not.toBeInTheDocument();
+    expect(canvas.getAllByText("PitchKit")).toHaveLength(1);
     expect(
       canvas.getByRole("heading", { name: /avery morgan/i }),
     ).toBeInTheDocument();

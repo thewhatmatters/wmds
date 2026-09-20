@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { creatorInsightsLoadingPageCopySource } from "./insightsCopySource";
 import * as pitchKitStyles from "./pitchKitStyles";
 
 const storiesSource = readFileSync(
@@ -8,17 +9,10 @@ const storiesSource = readFileSync(
   "utf8",
 );
 
-const storyStart = storiesSource.indexOf(
-  'name: "Pattern — creator Insights (loading)"',
+const showCodeSource = creatorInsightsLoadingPageCopySource;
+const insightsSlice = showCodeSource.slice(
+  showCodeSource.indexOf("export function PitchKitInsightsLoadingPage"),
 );
-const storyEnd = storiesSource.indexOf(
-  'name: "Pattern — shareable PitchKit"',
-);
-const copySourceStart = storiesSource.indexOf(
-  "export function PitchKitInsightsLoadingPage",
-  storyStart,
-);
-const showCodeSource = storiesSource.slice(copySourceStart, storyEnd);
 
 const loadingStyleKeys = [
   "pitchKitPageClasses",
@@ -53,48 +47,45 @@ const loadingStyleKeys = [
 ] as const;
 
 describe("Pattern — creator Insights (loading) Show code", () => {
-  it("extracts the Pattern Show code snippet", () => {
-    expect(storyStart).toBeGreaterThan(-1);
-    expect(copySourceStart).toBeGreaterThan(storyStart);
-    expect(storyEnd).toBeGreaterThan(copySourceStart);
+  it("wires the Pattern story to the freeze", () => {
+    expect(storiesSource).toContain("creatorInsightsLoadingPageCopySource");
+    expect(storiesSource).toContain('name: "Pattern — creator Insights (loading)"');
   });
 
   it("interpolates every loading-canvas pitchKitStyles token", () => {
     for (const key of loadingStyleKeys) {
-      expect(showCodeSource, key).toContain(`\${${key}}`);
-      expect(
-        String(pitchKitStyles[key as keyof typeof pitchKitStyles]).length,
-        key,
-      ).toBeGreaterThan(0);
+      expect(showCodeSource, key).toContain(String(pitchKitStyles[key]));
     }
-    expect(showCodeSource).toContain("${pitchKitReachChartMinHeight}");
+    expect(showCodeSource).toContain(
+      String(pitchKitStyles.pitchKitReachChartMinHeight),
+    );
   });
 
   it("freezes Stat loading, Skeleton wells, and proof placeholders", () => {
-    expect(showCodeSource).toContain("export function PitchKitInsightsLoadingPage");
-    expect(showCodeSource).toContain('label="Followers" value="" loading');
-    expect(showCodeSource).toContain('label="Engagement rate" value="" loading');
-    expect(showCodeSource).toContain('label="Typical reach" value="" loading');
-    expect(showCodeSource).toContain('label="Saves" value="" loading');
-    expect(showCodeSource).toContain('aria-label="Loading reach over 30 days"');
-    expect(showCodeSource).toContain('aria-label="Loading audience fit"');
-    expect(showCodeSource).toContain('aria-label="Loading recent proof"');
-    expect(showCodeSource).toContain("length: proofSkeletonCount");
-    expect(showCodeSource).toContain("<Skeleton");
-    expect(showCodeSource).toContain("PitchKit primary navigation");
+    expect(insightsSlice).toContain("export function PitchKitInsightsLoadingPage");
+    expect(insightsSlice).toContain('label="Followers" value="" loading');
+    expect(insightsSlice).toContain('label="Engagement rate" value="" loading');
+    expect(insightsSlice).toContain('label="Typical reach" value="" loading');
+    expect(insightsSlice).toContain('label="Saves" value="" loading');
+    expect(insightsSlice).toContain('aria-label="Loading reach over 30 days"');
+    expect(insightsSlice).toContain('aria-label="Loading audience fit"');
+    expect(insightsSlice).toContain('aria-label="Loading recent proof"');
+    expect(insightsSlice).toContain("length: proofSkeletonCount");
+    expect(insightsSlice).toContain("<Skeleton");
+    expect(insightsSlice).toContain("PitchKit primary navigation");
   });
 
   it("omits resolved marks, retrieving UI, zeros, and Storybook chrome", () => {
-    expect(showCodeSource).not.toContain("Chart.Cartesian");
-    expect(showCodeSource).not.toContain("Chart.Loading");
-    expect(showCodeSource).not.toContain("Chart.Legend");
-    expect(showCodeSource).not.toContain("Chart.RankedBars");
+    expect(insightsSlice).not.toContain("Chart.Cartesian");
+    expect(insightsSlice).not.toContain("Chart.Loading");
+    expect(insightsSlice).not.toContain("Chart.Legend");
+    expect(insightsSlice).not.toContain("Chart.RankedBars");
     expect(showCodeSource).not.toContain("ExampleGridControls");
     expect(showCodeSource).not.toContain("GridOverlay");
-    expect(showCodeSource).not.toContain("84.2K");
-    expect(showCodeSource).not.toContain('value="—"');
-    expect(showCodeSource).not.toContain("Insights are unavailable");
-    expect(showCodeSource).not.toContain("No reach data yet");
-    expect(showCodeSource).not.toContain("No audience data yet");
+    expect(insightsSlice).not.toContain("84.2K");
+    expect(insightsSlice).not.toContain('value="—"');
+    expect(insightsSlice).not.toContain("Insights are unavailable");
+    expect(insightsSlice).not.toContain("No reach data yet");
+    expect(insightsSlice).not.toContain("No audience data yet");
   });
 });
