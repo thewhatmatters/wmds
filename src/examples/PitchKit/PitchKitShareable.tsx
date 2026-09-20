@@ -123,17 +123,19 @@ export function PublicCreatePitchkitBand() {
   );
 }
 
-function PublicReachCard({
+export function PublicReachCard({
   reachState,
+  className = pitchKitReachCardClasses,
 }: {
   reachState: PitchKitPublicReachState;
+  className?: string;
 }) {
   return (
     <Card
       variant="outlined"
       shape="rounded"
       bodyTerminal
-      className={pitchKitReachCardClasses}
+      className={className}
     >
       <Card.Header
         start={
@@ -183,10 +185,12 @@ function PublicReachCard({
   );
 }
 
-function PublicCountries({
+export function PublicCountries({
   countries,
+  className = pitchKitCountriesCardClasses,
 }: {
   countries: readonly ChartRankedBarItem[];
+  className?: string;
 }) {
   const topCountries = publicCountries(countries);
   if (topCountries.length === 0) return null;
@@ -196,7 +200,7 @@ function PublicCountries({
       variant="outlined"
       shape="rounded"
       bodyTerminal
-      className={pitchKitCountriesCardClasses}
+      className={className}
     >
       <Card.Header
         start={

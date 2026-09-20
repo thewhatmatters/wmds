@@ -68,8 +68,12 @@ describe("Pattern — owner PitchKit Show code", () => {
     );
     expect(ownerPitchKitPageCopySource).toContain("<OwnerPitchKit");
     expect(ownerPitchKitPageCopySource).toContain("PitchKit primary navigation");
+    expect(ownerPitchKitPageCopySource).toContain("My account");
+    expect(ownerPitchKitPageCopySource).toContain("Privacy");
     expect(ownerPitchKitBodyCopySource).toContain("CreatorIdentityStrip");
-    expect(ownerPitchKitBodyCopySource).toContain("Verified Instagram summary");
+    expect(ownerPitchKitBodyCopySource).toContain("Your Pitchkit");
+    expect(ownerPitchKitBodyCopySource).toContain("Edit what brands see");
+    expect(ownerPitchKitBodyCopySource).toContain("Instagram performance summary");
     expect(ownerPitchKitBodyCopySource).toContain("Selected posts");
     expect(ownerPitchKitBodyCopySource).toContain("Past brands");
     expect(ownerPitchKitBodyCopySource).toContain(
@@ -77,6 +81,10 @@ describe("Pattern — owner PitchKit Show code", () => {
     );
     expect(ownerPitchKitBodyCopySource).toContain('label="Followers"');
     expect(ownerPitchKitBodyCopySource).toContain('label="Engagement rate"');
+    expect(ownerPitchKitBodyCopySource).toContain('label="Typical reach"');
+    expect(ownerPitchKitBodyCopySource).toContain('label="Typical saves"');
+    expect(ownerPitchKitBodyCopySource).toContain("Reach over 30 days");
+    expect(ownerPitchKitBodyCopySource).toContain("Top countries");
     expect(ownerPitchKitBodyCopySource).toContain("Hide from kit");
     expect(ownerPitchKitBodyCopySource).toContain("Manage selected post");
     expect(ownerPitchKitBodyCopySource).toContain("toast.add");
@@ -99,7 +107,7 @@ describe("Pattern — owner PitchKit Show code", () => {
     expect(ownerPitchKitBodyCopySource).not.toContain("Instagram</Chip>");
   });
 
-  it("omits swap, identity editors, and Storybook-only chrome", () => {
+  it("omits swap, identity editors, theme tab chrome, and Storybook-only chrome", () => {
     const combined = `${ownerPitchKitBodyCopySource}\n${ownerPitchKitPageCopySource}`;
     expect(combined).not.toContain("ExampleGridControls");
     expect(combined).not.toContain("GridOverlay");
@@ -107,7 +115,8 @@ describe("Pattern — owner PitchKit Show code", () => {
     expect(combined).not.toContain("Swap post");
     expect(combined).not.toContain("bio");
     expect(combined).not.toContain("rates");
-    expect(combined).not.toContain("Chart.");
+    expect(combined).not.toContain('aria-label="Kit theme"');
+    expect(combined).not.toContain("Save theme");
     expect(ownerPitchKitPageCopySource).not.toContain("export const");
     expect(ownerPitchKitPageCopySource).not.toContain("parameters:");
   });

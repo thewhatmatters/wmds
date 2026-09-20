@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
-import { EyeOff, RefreshCw, Repeat2, Share2 } from "lucide-react";
-import { Avatar } from "../../components/atoms/Avatar/Avatar";
+import { RefreshCw } from "lucide-react";
 import { Badge } from "../../components/atoms/Badge/Badge";
 import { Button } from "../../components/atoms/Button/Button";
-import { ButtonIcon } from "../../components/atoms/Button/ButtonIcon";
 import { Skeleton } from "../../components/atoms/Skeleton/Skeleton";
 import {
   Card,
@@ -16,10 +14,8 @@ import { SegmentedControl } from "../../components/molecules/SegmentedControl/Se
 import { Stat } from "../../components/molecules/Stat/Stat";
 import { Chart } from "../../components/organisms/Chart/Chart";
 import type { ChartRankedBarItem } from "../../components/organisms/Chart/ChartRankedBars";
-import { AlertDialog } from "../../components/organisms/Dialog/AlertDialog";
-import { MoreMenu } from "../../components/organisms/MoreMenu/MoreMenu";
 import { Tab } from "../../components/organisms/Tab/Tab";
-import { Toaster, toast } from "../../components/organisms/Toast/Toast";
+import { Toaster } from "../../components/organisms/Toast/Toast";
 import { chartSeriesConfigFromKeys } from "../../lib/chartTheme";
 import { GridOverlay } from "../../lib/GridOverlay";
 import { ExampleGridControls } from "../ExampleGridControls/ExampleGridControls";
@@ -29,6 +25,7 @@ import {
   pitchKitReachData,
   type PitchKitPost,
 } from "./pitchKitData";
+import { OwnerAccountMenu, PitchKitPageFooter } from "./PitchKitOwnerChrome";
 import { OwnerPitchKit } from "./PitchKitOwner";
 import {
   pitchKitAudienceCardClasses,
@@ -249,11 +246,9 @@ function AudienceCard({
 function PostCard({
   post,
   displayRank,
-  onAction,
 }: {
   post: PitchKitPost;
   displayRank: number;
-  onAction: (postId: string, actionId: string) => void;
 }) {
   return (
     <Card variant="outlined" shape="rounded" className={pitchKitPostCardClasses}>
@@ -263,33 +258,6 @@ function PostCard({
             <Badge size="sm">#{displayRank}</Badge>
             <span className={cardSubtitleClasses}>{post.publishedAt}</span>
           </span>
-        }
-        end={
-          <MoreMenu
-            aria-label={`Manage ranked post ${displayRank}`}
-            size="xs"
-            items={[
-              {
-                id: "swap",
-                label: "Swap post",
-                start: (
-                  <ButtonIcon size="sm">
-                    <Repeat2 />
-                  </ButtonIcon>
-                ),
-              },
-              {
-                id: "hide",
-                label: "Hide from kit",
-                start: (
-                  <ButtonIcon size="sm">
-                    <EyeOff />
-                  </ButtonIcon>
-                ),
-              },
-            ]}
-            onAction={(actionId) => onAction(post.id, actionId)}
-          />
         }
       />
       <Card.Body>
@@ -326,81 +294,26 @@ function ResolvedInsights({
   reachBody?: "chart" | "empty";
   audienceBody?: "bars" | "empty";
 }) {
-  const [visiblePosts, setVisiblePosts] = useState(pitchKitPosts);
   const [proofMetric, setProofMetric] =
     useState<PitchKitProofMetric>("reach");
-  const [postNotice, setPostNotice] = useState<string | null>(null);
-  const [pendingHidePostId, setPendingHidePostId] = useState<string | null>(
-    null,
-  );
   const rankedPosts = useMemo(
     () =>
-      [...visiblePosts].sort(
+      [...pitchKitPosts].sort(
         (a, b) =>
           proofMetricValue(b, proofMetric) -
           proofMetricValue(a, proofMetric),
       ),
-    [proofMetric, visiblePosts],
+    [proofMetric],
   );
-
-  function handlePostAction(postId: string, actionId: string) {
-    if (actionId === "hide") {
-      setPendingHidePostId(postId);
-      return;
-    }
-    setPostNotice("Choose a replacement from your recent Instagram posts.");
-  }
-
-  function handleConfirmHide() {
-    if (pendingHidePostId == null) return;
-    const hiddenPost = visiblePosts.find(
-      (post) => post.id === pendingHidePostId,
-    );
-    if (hiddenPost == null) {
-      setPendingHidePostId(null);
-      return;
-    }
-
-    setVisiblePosts((posts) =>
-      posts.filter((post) => post.id !== pendingHidePostId),
-    );
-    setPostNotice("Post hidden from the shareable kit preview.");
-    setPendingHidePostId(null);
-    toast.add({
-      title: "Post hidden from kit",
-      description: "It no longer appears in the shareable PitchKit.",
-      duration: 6000,
-      action: {
-        label: "Undo",
-        onClick: () => {
-          setVisiblePosts((posts) =>
-            posts.some((post) => post.id === hiddenPost.id)
-              ? posts
-              : [...posts, hiddenPost],
-          );
-          setPostNotice("Post restored to the shareable kit preview.");
-        },
-      },
-    });
-  }
 
   function handleProofMetricChange(value: string) {
     setProofMetric(value as PitchKitProofMetric);
-    setPostNotice(null);
   }
 
   return (
     <>
       <section className={pitchKitHeaderSectionClasses}>
-        <PageHeader
-          variant="page"
-          title="Insights"
-          end={
-            <Button role="secondary" size="sm" icon={<Share2 />}>
-              Share kit
-            </Button>
-          }
-        />
+        <PageHeader variant="page" title="Insights" />
         <div className={pitchKitHeaderCopyClasses}>
           <p className={pitchKitSupportingClasses}>
             Verified Instagram performance, refreshed Sep 7 at 12:42 PM.
@@ -434,11 +347,11 @@ function ResolvedInsights({
           <div>
             <h2 className={cardTitleClasses}>Recent proof</h2>
             <p className={pitchKitSupportingClasses}>
-              {postNotice ?? proofMetricNotices[proofMetric]}
+              {proofMetricNotices[proofMetric]}
             </p>
           </div>
           <Badge variant="neutral" emphasis="muted" size="sm">
-            {visiblePosts.length} shown
+            {rankedPosts.length} shown
           </Badge>
         </div>
         <Tab.Group
@@ -461,22 +374,10 @@ function ResolvedInsights({
               key={post.id}
               post={post}
               displayRank={index + 1}
-              onAction={handlePostAction}
             />
           ))}
         </div>
       </section>
-      <AlertDialog
-        open={pendingHidePostId != null}
-        onOpenChange={(open) => {
-          if (!open) setPendingHidePostId(null);
-        }}
-        title="Hide this post from PitchKit?"
-        description="It will no longer appear in the shareable PitchKit. You can add it back later."
-        cancelLabel="Keep post"
-        confirmLabel="Hide from kit"
-        onConfirm={handleConfirmHide}
-      />
     </>
   );
 }
@@ -670,15 +571,7 @@ function LoadingInsights({ phase }: { phase: PitchKitLoadingPhase }) {
   return (
     <>
       <section className={pitchKitHeaderSectionClasses}>
-        <PageHeader
-          variant="page"
-          title="Insights"
-          end={
-            <Button role="secondary" size="sm" icon={<Share2 />}>
-              Share kit
-            </Button>
-          }
-        />
+        <PageHeader variant="page" title="Insights" />
         {phase === "retrieving" ? (
           <div className={pitchKitHeaderCopyClasses}>
             <p className={pitchKitSupportingClasses}>
@@ -878,7 +771,7 @@ export function PitchKitInsightsExample({
             <SegmentedControl.Item value="pitchkit">PitchKit</SegmentedControl.Item>
           </SegmentedControl>
           <span className={pitchKitTopbarEndClasses}>
-            <Avatar name="Avery Morgan" size="sm" />
+            <OwnerAccountMenu />
           </span>
         </header>
       </div>
@@ -892,6 +785,8 @@ export function PitchKitInsightsExample({
           )}
         </div>
       </div>
+
+      <PitchKitPageFooter />
 
       <ExampleGridControls
         gridVisible={gridVisible}

@@ -1,35 +1,47 @@
 import { useState } from "react";
 import { EyeOff } from "lucide-react";
-import { Badge } from "../../components/atoms/Badge/Badge";
 import { ButtonIcon } from "../../components/atoms/Button/ButtonIcon";
 import { TextLink } from "../../components/atoms/TextLink/TextLink";
 import {
   Card,
   cardTitleClasses,
 } from "../../components/molecules/Card/Card";
+import { PageHeader } from "../../components/molecules/PageHeader/PageHeader";
 import { Stat } from "../../components/molecules/Stat/Stat";
 import { AlertDialog } from "../../components/organisms/Dialog/AlertDialog";
 import { MoreMenu } from "../../components/organisms/MoreMenu/MoreMenu";
 import { toast } from "../../components/organisms/Toast/Toast";
 import { CreatorIdentityStrip } from "./PitchKitCreatorIdentity";
+import { PublicIntro } from "./PitchKitIntro";
+import { PublicPastBrands } from "./PitchKitPastBrands";
+import { PublicCountries, PublicReachCard } from "./PitchKitShareable";
 import {
-  pitchKitBrands,
   pitchKitContact,
   pitchKitCreatorIdentity,
+  pitchKitIntroFilled,
+  pitchKitPastBrands,
+  pitchKitPublicCountries,
   pitchKitSelectedPosts,
   pitchKitSummary,
-  type PitchKitBrand,
+  publicEngagementRate,
+  publicTypicalReach,
   type PitchKitCreatorIdentity,
+  type PitchKitPastBrand,
   type PitchKitPost,
+  type PitchKitPublicReachState,
 } from "./pitchKitData";
 import {
-  pitchKitBrandBodyClasses,
   pitchKitContactCardClasses,
   pitchKitContactRowClasses,
   pitchKitContactRowsClasses,
-  pitchKitIdentitySectionClasses,
+  pitchKitDashboardGridClasses,
+  pitchKitHeaderCopyClasses,
+  pitchKitHeaderSectionClasses,
+  pitchKitIdentityNameplateClasses,
+  pitchKitIntroStackClasses,
   pitchKitKitPostMetricsClasses,
-  pitchKitKitStatClasses,
+  pitchKitOwnerCountriesCardClasses,
+  pitchKitOwnerReachCardClasses,
   pitchKitPostCardClasses,
   pitchKitPostImageClasses,
   pitchKitPostMetricClasses,
@@ -38,6 +50,7 @@ import {
   pitchKitPostsHeaderClasses,
   pitchKitPostsPanelClasses,
   pitchKitPostsSectionClasses,
+  pitchKitPublicStatClasses,
   pitchKitSectionEyebrowClasses,
   pitchKitStatsBandClasses,
   pitchKitSupportingClasses,
@@ -50,22 +63,30 @@ const compactNumber = new Intl.NumberFormat("en", {
 
 export interface OwnerPitchKitProps {
   identity?: PitchKitCreatorIdentity;
+  intro?: string;
   posts?: readonly PitchKitPost[];
   contact?: typeof pitchKitContact;
-  brands?: readonly PitchKitBrand[];
+  brands?: readonly PitchKitPastBrand[];
+  countries?: typeof pitchKitPublicCountries;
+  reachState?: PitchKitPublicReachState;
 }
 
 export function OwnerPitchKit({
   identity = pitchKitCreatorIdentity,
+  intro = pitchKitIntroFilled,
   posts = pitchKitSelectedPosts,
   contact = pitchKitContact,
-  brands = pitchKitBrands,
+  brands = pitchKitPastBrands,
+  countries = pitchKitPublicCountries,
+  reachState = "resolved",
 }: OwnerPitchKitProps) {
   const [visiblePosts, setVisiblePosts] = useState(() => [...posts]);
   const [postNotice, setPostNotice] = useState<string | null>(null);
   const [pendingHidePostId, setPendingHidePostId] = useState<string | null>(
     null,
   );
+  const engagementRate = publicEngagementRate(reachState);
+  const typicalReach = publicTypicalReach(reachState);
 
   function handlePostAction(postId: string, actionId: string) {
     if (actionId === "hide") {
@@ -104,28 +125,61 @@ export function OwnerPitchKit({
 
   return (
     <>
-      <section className={pitchKitIdentitySectionClasses}>
-        <CreatorIdentityStrip
-          identity={identity}
-          nameAs="h1"
-          showProfessionalChip
-        />
+      <section className={pitchKitHeaderSectionClasses}>
+        <PageHeader variant="page" title="Your Pitchkit" />
+        <div className={pitchKitHeaderCopyClasses}>
+          <p className={pitchKitSupportingClasses}>Edit what brands see</p>
+        </div>
+      </section>
+
+      <section className={pitchKitIdentityNameplateClasses}>
+        <div className={pitchKitIntroStackClasses}>
+          <CreatorIdentityStrip
+            identity={identity}
+            nameAs="h1"
+            showProfessionalChip
+          />
+          <PublicIntro intro={intro} />
+        </div>
       </section>
 
       <div
         role="group"
-        aria-label="Verified Instagram summary"
+        aria-label="Instagram performance summary"
         className={pitchKitStatsBandClasses}
       >
         <Stat
-          className={pitchKitKitStatClasses}
+          className={pitchKitPublicStatClasses}
           label="Followers"
           value={pitchKitSummary.followers}
         />
+        {engagementRate != null ? (
+          <Stat
+            className={pitchKitPublicStatClasses}
+            label="Engagement rate"
+            value={engagementRate}
+          />
+        ) : null}
         <Stat
-          className={pitchKitKitStatClasses}
-          label="Engagement rate"
-          value={pitchKitSummary.engagementRate}
+          className={pitchKitPublicStatClasses}
+          label="Typical reach"
+          value={typicalReach}
+        />
+        <Stat
+          className={pitchKitPublicStatClasses}
+          label="Typical saves"
+          value={pitchKitSummary.typicalSaves}
+        />
+      </div>
+
+      <div className={pitchKitDashboardGridClasses}>
+        <PublicReachCard
+          reachState={reachState}
+          className={pitchKitOwnerReachCardClasses}
+        />
+        <PublicCountries
+          countries={countries}
+          className={pitchKitOwnerCountriesCardClasses}
         />
       </div>
 
@@ -229,38 +283,7 @@ export function OwnerPitchKit({
         </Card>
       </section>
 
-      <section className={pitchKitPostsSectionClasses}>
-        <div className={pitchKitPostsHeaderClasses}>
-          <div>
-            <h2 className={cardTitleClasses}>Past brands</h2>
-            <p className={pitchKitSupportingClasses}>
-              Campaigns already shipped with this creator.
-            </p>
-          </div>
-        </div>
-        <div className={pitchKitPostsPanelClasses}>
-          {brands.map((brand) => (
-            <Card
-              key={brand.id}
-              variant="outlined"
-              shape="rounded"
-              className={pitchKitPostCardClasses}
-            >
-              <Card.Header
-                start={<h3 className={cardTitleClasses}>{brand.name}</h3>}
-                end={
-                  <Badge variant="neutral" emphasis="muted" size="sm">
-                    {brand.year}
-                  </Badge>
-                }
-              />
-              <Card.Body>
-                <p className={pitchKitBrandBodyClasses}>{brand.summary}</p>
-              </Card.Body>
-            </Card>
-          ))}
-        </div>
-      </section>
+      <PublicPastBrands brands={brands} />
       <AlertDialog
         open={pendingHidePostId != null}
         onOpenChange={(open) => {

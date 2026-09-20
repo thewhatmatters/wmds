@@ -8,8 +8,8 @@ const storiesSource = readFileSync(
   join(import.meta.dirname, "PitchKitAccount.stories.tsx"),
   "utf8",
 );
-const exampleSource = readFileSync(
-  join(import.meta.dirname, "PitchKitUserSettings.tsx"),
+const chromeSource = readFileSync(
+  join(import.meta.dirname, "PitchKitOwnerChrome.tsx"),
   "utf8",
 );
 const usageSource = readFileSync(
@@ -17,8 +17,8 @@ const usageSource = readFileSync(
   "utf8",
 );
 
-const exampleStyleKeys = [
-  ...exampleSource.matchAll(/^\s+(pitchKit\w+Classes),?$/gm),
+const chromeStyleKeys = [
+  ...chromeSource.matchAll(/^\s+(pitchKit\w+Classes),?$/gm),
 ].map((match) => match[1]);
 
 const pageStyleKeys = [
@@ -30,9 +30,6 @@ const pageStyleKeys = [
   "pitchKitUserSettingsBodyClasses",
   "pitchKitSettingsCardClasses",
   "pitchKitSettingsBodyClasses",
-  "pitchKitShareKitStackClasses",
-  "pitchKitShareKitActionsClasses",
-  "pitchKitUserSettingsActionsClasses",
 ] as const;
 
 const outOfPattern = [
@@ -53,20 +50,20 @@ describe("Pattern — account settings (owner) Show code", () => {
     expect(storiesSource).toContain("export const AccountSettingsOwner");
     expect(storiesSource).toContain("userSettingsOwnerCopySource");
     expect(usageSource).toContain("Pattern — account settings (owner)");
-    expect(storiesSource.toLowerCase()).toContain("remove footer delete");
-    expect(usageSource.toLowerCase()).toContain("remove footer delete");
+    expect(storiesSource.toLowerCase()).toContain("privacy + support");
+    expect(usageSource.toLowerCase()).toContain("privacy + support");
   });
 
-  it("interpolates every Account settings example pitchKitStyles token", () => {
-    expect(exampleStyleKeys.length).toBeGreaterThan(6);
-    for (const key of exampleStyleKeys) {
+  it("interpolates every Account settings chrome pitchKitStyles token", () => {
+    expect(chromeStyleKeys.length).toBeGreaterThan(6);
+    for (const key of chromeStyleKeys) {
       expect(userSettingsOwnerCopySource, key).toContain(
         String(pitchKitStyles[key as keyof typeof pitchKitStyles]),
       );
     }
   });
 
-  it("locks chrome, Connected Instagram, Share kit, and delete confirm copy", () => {
+  it("locks chrome, Connected Instagram, menu actions, and delete confirm copy", () => {
     for (const key of pageStyleKeys) {
       expect(userSettingsOwnerCopySource, key).toContain(
         String(pitchKitStyles[key]),
@@ -75,15 +72,19 @@ describe("Pattern — account settings (owner) Show code", () => {
     expect(userSettingsOwnerCopySource).toContain(
       "export function AccountSettingsOwnerPage",
     );
-    expect(userSettingsOwnerCopySource).toContain('aria-label="Account settings"');
+    expect(userSettingsOwnerCopySource).toContain('aria-label="My account"');
+    expect(userSettingsOwnerCopySource).toContain("size=\"md\"");
     expect(userSettingsOwnerCopySource).toContain('title="Account settings"');
     expect(userSettingsOwnerCopySource).toContain("Connected Instagram");
     expect(userSettingsOwnerCopySource).toContain("CreatorIdentityStrip");
     expect(userSettingsOwnerCopySource).toContain("showProfessionalChip");
     expect(userSettingsOwnerCopySource).toContain("Share kit");
+    expect(userSettingsOwnerCopySource).toContain("Account settings");
     expect(userSettingsOwnerCopySource).toContain("Sign out");
     expect(userSettingsOwnerCopySource).toContain("Disconnect");
-    expect(userSettingsOwnerCopySource).toContain("Delete account");
+    expect(userSettingsOwnerCopySource).toContain(">Delete<");
+    expect(userSettingsOwnerCopySource).toContain("Privacy");
+    expect(userSettingsOwnerCopySource).toContain("Support");
     expect(userSettingsOwnerCopySource).toContain(
       'title="Delete your Pitchkit account?"',
     );
@@ -93,12 +94,15 @@ describe("Pattern — account settings (owner) Show code", () => {
     expect(userSettingsOwnerCopySource).toContain('cancelLabel="Cancel"');
     expect(userSettingsOwnerCopySource).toContain('confirmRole="destructive"');
     expect(userSettingsOwnerCopySource).toContain("from \"@whatmatters/wmds\"");
-    expect(userSettingsOwnerCopySource).toContain("from \"lucide-react\"");
 
+    const settingsAt = userSettingsOwnerCopySource.indexOf("Account settings");
+    const shareAt = userSettingsOwnerCopySource.indexOf("Share kit");
     const signOutAt = userSettingsOwnerCopySource.indexOf("Sign out");
     const disconnectAt = userSettingsOwnerCopySource.indexOf("Disconnect");
-    const deleteAt = userSettingsOwnerCopySource.lastIndexOf("Delete account");
-    expect(signOutAt).toBeGreaterThan(-1);
+    const deleteAt = userSettingsOwnerCopySource.indexOf(">Delete<");
+    expect(settingsAt).toBeGreaterThan(-1);
+    expect(shareAt).toBeGreaterThan(settingsAt);
+    expect(signOutAt).toBeGreaterThan(shareAt);
     expect(disconnectAt).toBeGreaterThan(signOutAt);
     expect(deleteAt).toBeGreaterThan(disconnectAt);
   });

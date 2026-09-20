@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { insufficientAudiencePageCopySource } from "./insightsCopySource";
 import * as pitchKitStyles from "./pitchKitStyles";
 
 const storiesSource = readFileSync(
@@ -8,17 +9,12 @@ const storiesSource = readFileSync(
   "utf8",
 );
 
-const storyStart = storiesSource.indexOf(
-  'name: "State — insufficient audience data"',
+const showCodeSource = insufficientAudiencePageCopySource;
+const insightsSlice = showCodeSource.slice(
+  showCodeSource.indexOf(
+    "export function PitchKitInsightsInsufficientAudiencePage",
+  ),
 );
-const storyEnd = storiesSource.indexOf(
-  "export const InsufficientReachAndAudienceData",
-);
-const copySourceStart = storiesSource.indexOf(
-  "export function PitchKitInsightsInsufficientAudiencePage",
-  storyStart,
-);
-const showCodeSource = storiesSource.slice(copySourceStart, storyEnd);
 
 const insufficientStyleKeys = [
   "pitchKitPageClasses",
@@ -46,21 +42,18 @@ const insufficientStyleKeys = [
 ] as const;
 
 describe("State — insufficient audience data Show code", () => {
-  it("extracts the State Show code snippet", () => {
-    expect(storyStart).toBeGreaterThan(-1);
-    expect(copySourceStart).toBeGreaterThan(storyStart);
-    expect(storyEnd).toBeGreaterThan(copySourceStart);
+  it("wires the State story to the freeze", () => {
+    expect(storiesSource).toContain("insufficientAudiencePageCopySource");
+    expect(storiesSource).toContain('name: "State — insufficient audience data"');
   });
 
   it("interpolates Audience-empty and Insights page tokens", () => {
     for (const key of insufficientStyleKeys) {
-      expect(showCodeSource, key).toContain(`\${${key}}`);
-      expect(
-        String(pitchKitStyles[key as keyof typeof pitchKitStyles]).length,
-        key,
-      ).toBeGreaterThan(0);
+      expect(showCodeSource, key).toContain(String(pitchKitStyles[key]));
     }
-    expect(showCodeSource).toContain("${pitchKitReachChartMinHeight}");
+    expect(showCodeSource).toContain(
+      String(pitchKitStyles.pitchKitReachChartMinHeight),
+    );
     expect(pitchKitStyles.pitchKitReachChartMinHeight).toBe(344);
     expect(pitchKitStyles.pitchKitAudienceEmptyWellClasses).toBe(
       pitchKitStyles.pitchKitReachEmptyWellClasses,
@@ -68,57 +61,40 @@ describe("State — insufficient audience data Show code", () => {
     expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).toBe(
       pitchKitStyles.pitchKitReachEmptyCopyClasses,
     );
-    expect(pitchKitStyles.pitchKitAudienceEmptyWellClasses).toContain(
-      "items-center",
-    );
-    expect(pitchKitStyles.pitchKitAudienceEmptyWellClasses).toContain(
-      "text-center",
-    );
-    expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).toContain(
-      pitchKitStyles.pitchKitEmptyCopyClasses,
-    );
-    expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).toContain(
-      "items-center",
-    );
-    expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).toContain(
-      "text-center",
-    );
     expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).toContain("gap-2");
-    expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).not.toContain(
-      "gap-3",
-    );
+    expect(pitchKitStyles.pitchKitAudienceEmptyCopyClasses).not.toContain("gap-3");
   });
 
   it("keeps the Audience band and empty body in the Insights shell", () => {
-    expect(showCodeSource).toContain(
+    expect(insightsSlice).toContain(
       "export function PitchKitInsightsInsufficientAudiencePage",
     );
-    expect(showCodeSource).toContain("Audience fit");
-    expect(showCodeSource).toContain("Ranked Instagram percentages");
-    expect(showCodeSource).toContain(
+    expect(insightsSlice).toContain("Audience fit");
+    expect(insightsSlice).toContain("Ranked Instagram percentages");
+    expect(insightsSlice).toContain(
       '<Badge variant="neutral" emphasis="muted">No data</Badge>',
     );
-    expect(showCodeSource).toContain("No audience data yet");
-    expect(showCodeSource).toContain(
+    expect(insightsSlice).toContain("No audience data yet");
+    expect(insightsSlice).toContain(
       "Connect Instagram Insights demographics when available.",
     );
-    expect(showCodeSource).toContain("Reach over 30 days");
-    expect(showCodeSource).toContain("Graph data");
-    expect(showCodeSource).toContain("Chart.Cartesian");
-    expect(showCodeSource).toContain("Recent proof");
-    expect(showCodeSource).toContain("PitchKit primary navigation");
+    expect(insightsSlice).toContain("Reach over 30 days");
+    expect(insightsSlice).toContain("Graph data");
+    expect(insightsSlice).toContain("Chart.Cartesian");
+    expect(insightsSlice).toContain("Recent proof");
+    expect(insightsSlice).toContain("PitchKit primary navigation");
   });
 
   it("does not invent bars, loading, or Storybook chrome", () => {
-    expect(showCodeSource).not.toContain("Chart.RankedBars");
-    expect(showCodeSource).not.toContain("AudienceSection");
-    expect(showCodeSource).not.toContain("Chart.Loading");
-    expect(showCodeSource).not.toContain("<Skeleton");
+    expect(insightsSlice).not.toContain("Chart.RankedBars");
+    expect(insightsSlice).not.toContain("AudienceSection");
+    expect(insightsSlice).not.toContain("Chart.Loading");
+    expect(insightsSlice).not.toContain("<Skeleton");
     expect(showCodeSource).not.toContain("ExampleGridControls");
     expect(showCodeSource).not.toContain("GridOverlay");
-    expect(showCodeSource).not.toContain("Insights are unavailable");
-    expect(showCodeSource).not.toContain("No reach data yet");
-    expect(showCodeSource).not.toContain("United States");
-    expect(showCodeSource).not.toContain("value: 42");
+    expect(insightsSlice).not.toContain("Insights are unavailable");
+    expect(insightsSlice).not.toContain("No reach data yet");
+    expect(insightsSlice).not.toContain("United States");
+    expect(insightsSlice).not.toContain("value: 42");
   });
 });

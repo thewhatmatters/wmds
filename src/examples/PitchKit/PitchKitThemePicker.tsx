@@ -1,14 +1,13 @@
 import { useState } from "react";
-import { Avatar } from "../../components/atoms/Avatar/Avatar";
 import { Button } from "../../components/atoms/Button/Button";
 import { PageHeader } from "../../components/molecules/PageHeader/PageHeader";
 import { SegmentedControl } from "../../components/molecules/SegmentedControl/SegmentedControl";
 import { Toaster, toast } from "../../components/organisms/Toast/Toast";
 import { PitchKitExampleShell } from "./PitchKitExampleShell";
+import { OwnerAccountMenu } from "./PitchKitOwnerChrome";
 import { ShareablePitchKit } from "./PitchKitShareable";
 import {
   PITCHKIT_THEME_DEFAULT,
-  pitchKitCreatorIdentity,
   pitchKitThemes,
   type PitchKitTheme,
 } from "./pitchKitData";
@@ -91,8 +90,6 @@ export function ThemePickerOwner({
 }
 
 export function PitchKitThemePickerOwnerExample() {
-  const topbarName =
-    pitchKitCreatorIdentity.displayName ?? pitchKitCreatorIdentity.handle;
   const [pageTheme, setPageTheme] = useState<PitchKitTheme>(
     PITCHKIT_THEME_DEFAULT,
   );
@@ -102,21 +99,9 @@ export function PitchKitThemePickerOwnerExample() {
       dataTheme={pageTheme}
       topbarEnd={
         <>
-          <SegmentedControl
-            aria-label="PitchKit primary navigation"
-            size="sm"
-            value="pitchkit"
-            onValueChange={() => undefined}
-          >
-            <SegmentedControl.Item value="insights">Insights</SegmentedControl.Item>
-            <SegmentedControl.Item value="pitchkit">PitchKit</SegmentedControl.Item>
-          </SegmentedControl>
+          <span />
           <span className={pitchKitTopbarEndClasses}>
-            <Avatar
-              name={topbarName}
-              src={pitchKitCreatorIdentity.profilePictureUrl}
-              size="sm"
-            />
+            <OwnerAccountMenu />
           </span>
         </>
       }

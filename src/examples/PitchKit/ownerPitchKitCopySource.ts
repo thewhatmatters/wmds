@@ -1,15 +1,28 @@
 import { creatorIdentityStripCopySource } from "./creatorIdentityCopySource";
+import { ownerAccountChromeCopySource } from "./ownerChromeCopySource";
 import {
-  pitchKitBrandBodyClasses,
+  pitchKitBrandCardClasses,
   pitchKitBrandClasses,
+  pitchKitBrandListClasses,
+  pitchKitBrandNameClasses,
+  pitchKitBrandRowStartClasses,
+  pitchKitCardWellClasses,
   pitchKitContactCardClasses,
   pitchKitContactRowClasses,
   pitchKitContactRowsClasses,
   pitchKitContentBandClasses,
   pitchKitContentClasses,
-  pitchKitIdentitySectionClasses,
+  pitchKitDashboardGridClasses,
+  pitchKitEmptyBodyClasses,
+  pitchKitEmptyTitleClasses,
+  pitchKitHeaderCopyClasses,
+  pitchKitHeaderSectionClasses,
+  pitchKitIdentityNameplateClasses,
+  pitchKitIntroClasses,
+  pitchKitIntroStackClasses,
   pitchKitKitPostMetricsClasses,
-  pitchKitKitStatClasses,
+  pitchKitOwnerCountriesCardClasses,
+  pitchKitOwnerReachCardClasses,
   pitchKitPageClasses,
   pitchKitPostCardClasses,
   pitchKitPostImageClasses,
@@ -19,6 +32,10 @@ import {
   pitchKitPostsHeaderClasses,
   pitchKitPostsPanelClasses,
   pitchKitPostsSectionClasses,
+  pitchKitPublicReachChartMinHeight,
+  pitchKitPublicStatClasses,
+  pitchKitReachEmptyCopyClasses,
+  pitchKitReachEmptyWellClasses,
   pitchKitSectionEyebrowClasses,
   pitchKitStatsBandClasses,
   pitchKitSupportingClasses,
@@ -27,14 +44,144 @@ import {
   pitchKitTopbarEndClasses,
 } from "./pitchKitStyles";
 
-/** Authenticated kit body — same sections as the public kit, plus hide/restore. */
+/** Authenticated kit body — Graph KPIs + hide/restore on selected posts. */
 export const ownerPitchKitBodyCopySource = `
 ${creatorIdentityStripCopySource}
 
-function OwnerPitchKit({ identity, posts, contact, brands }) {
+function pitchKitIntroIsEmpty(intro) {
+  return intro.trim().length === 0;
+}
+
+function PublicIntro({ intro }) {
+  if (pitchKitIntroIsEmpty(intro)) return null;
+  return <p className="${pitchKitIntroClasses}">{intro}</p>;
+}
+
+function PublicPastBrands({ brands }) {
+  if (brands.length === 0) return null;
+
+  return (
+    <section className="${pitchKitPostsSectionClasses}">
+      <div className="${pitchKitPostsHeaderClasses}">
+        <h2 className={cardTitleClasses}>Past brands</h2>
+      </div>
+      <div className="${pitchKitBrandListClasses}">
+        {brands.map((brand) => (
+          <Card
+            key={brand.id}
+            variant="outlined"
+            shape="rounded"
+            className="${pitchKitBrandCardClasses}"
+          >
+            <Card.Header
+              start={
+                <div className="${pitchKitBrandRowStartClasses}">
+                  <Avatar name={brand.name} size="sm" />
+                  <h3 className="${pitchKitBrandNameClasses}">{brand.name}</h3>
+                </div>
+              }
+            />
+          </Card>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function OwnerReachCard({ reachState, reachData }) {
+  return (
+    <Card
+      variant="outlined"
+      shape="rounded"
+      bodyTerminal
+      className="${pitchKitOwnerReachCardClasses}"
+    >
+      <Card.Header
+        start={
+          <>
+            <h2 className={cardTitleClasses}>Reach over 30 days</h2>
+            <p className={cardSubtitleClasses}>
+              Typical performance with unusual spikes left visible.
+            </p>
+          </>
+        }
+        end={
+          <Badge variant="neutral" emphasis="muted" size="sm">
+            Graph data
+          </Badge>
+        }
+      />
+      <Card.Body>
+        {reachState === "insufficient" ? (
+          <div
+            className="${pitchKitReachEmptyWellClasses}"
+            style={{ minHeight: ${pitchKitPublicReachChartMinHeight} }}
+          >
+            <div className="${pitchKitReachEmptyCopyClasses}">
+              <Badge variant="neutral" emphasis="muted">No data</Badge>
+              <h3 className="${pitchKitEmptyTitleClasses}">No reach data yet</h3>
+              <p className="${pitchKitEmptyBodyClasses}">
+                Connect more Instagram activity to plot the last 30 days.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="${pitchKitCardWellClasses}">
+            <Chart.Cartesian
+              data={reachData}
+              config={reachConfig}
+              periodKind="month"
+              minHeight={${pitchKitPublicReachChartMinHeight}}
+              aria-label="Daily and typical Instagram reach over the last 30 days"
+            />
+            <Chart.Legend config={reachConfig} />
+          </div>
+        )}
+      </Card.Body>
+    </Card>
+  );
+}
+
+function OwnerCountries({ countries }) {
+  const topCountries = countries.slice(0, 3);
+  if (topCountries.length === 0) return null;
+
+  return (
+    <Card
+      variant="outlined"
+      shape="rounded"
+      bodyTerminal
+      className="${pitchKitOwnerCountriesCardClasses}"
+    >
+      <Card.Header
+        start={
+          <>
+            <h2 className={cardTitleClasses}>Top countries</h2>
+            <p className={cardSubtitleClasses}>
+              Top 3 from Instagram Insights.
+            </p>
+          </>
+        }
+      />
+      <Card.Body>
+        <div className="${pitchKitCardWellClasses}">
+          <Chart.RankedBars
+            aria-label="Audience by country"
+            items={topCountries}
+            animate="initial"
+          />
+        </div>
+      </Card.Body>
+    </Card>
+  );
+}
+
+function OwnerPitchKit({ identity, intro, posts, contact, brands, countries, reachData, reachState = "resolved" }) {
   const [visiblePosts, setVisiblePosts] = useState(posts);
   const [postNotice, setPostNotice] = useState(null);
   const [pendingHidePostId, setPendingHidePostId] = useState(null);
+  const engagementRate = reachState === "resolved" ? "5.8%" : null;
+  const typicalReach = reachState === "resolved" ? "9.3K" : "—";
 
   function handlePostAction(postId, actionId) {
     if (actionId === "hide") {
@@ -71,21 +218,40 @@ function OwnerPitchKit({ identity, posts, contact, brands }) {
 
   return (
     <>
-      <section className="${pitchKitIdentitySectionClasses}">
-        <CreatorIdentityStrip
-          identity={identity}
-          nameAs="h1"
-          showProfessionalChip
-        />
+      <section className="${pitchKitHeaderSectionClasses}">
+        <PageHeader variant="page" title="Your Pitchkit" />
+        <div className="${pitchKitHeaderCopyClasses}">
+          <p className="${pitchKitSupportingClasses}">Edit what brands see</p>
+        </div>
+      </section>
+
+      <section className="${pitchKitIdentityNameplateClasses}">
+        <div className="${pitchKitIntroStackClasses}">
+          <CreatorIdentityStrip
+            identity={identity}
+            nameAs="h1"
+            showProfessionalChip
+          />
+          <PublicIntro intro={intro} />
+        </div>
       </section>
 
       <div
         role="group"
-        aria-label="Verified Instagram summary"
+        aria-label="Instagram performance summary"
         className="${pitchKitStatsBandClasses}"
       >
-        <Stat className="${pitchKitKitStatClasses}" label="Followers" value="84.2K" />
-        <Stat className="${pitchKitKitStatClasses}" label="Engagement rate" value="5.8%" />
+        <Stat className="${pitchKitPublicStatClasses}" label="Followers" value="84.2K" />
+        {engagementRate != null ? (
+          <Stat className="${pitchKitPublicStatClasses}" label="Engagement rate" value={engagementRate} />
+        ) : null}
+        <Stat className="${pitchKitPublicStatClasses}" label="Typical reach" value={typicalReach} />
+        <Stat className="${pitchKitPublicStatClasses}" label="Typical saves" value="6.1K" />
+      </div>
+
+      <div className="${pitchKitDashboardGridClasses}">
+        <OwnerReachCard reachState={reachState} reachData={reachData} />
+        <OwnerCountries countries={countries} />
       </div>
 
       <section className="${pitchKitPostsSectionClasses}">
@@ -174,29 +340,7 @@ function OwnerPitchKit({ identity, posts, contact, brands }) {
         </Card>
       </section>
 
-      <section className="${pitchKitPostsSectionClasses}">
-        <div className="${pitchKitPostsHeaderClasses}">
-          <div>
-            <h2 className={cardTitleClasses}>Past brands</h2>
-            <p className="${pitchKitSupportingClasses}">
-              Campaigns already shipped with this creator.
-            </p>
-          </div>
-        </div>
-        <div className="${pitchKitPostsPanelClasses}">
-          {brands.map((brand) => (
-            <Card key={brand.id} variant="outlined" shape="rounded" className="${pitchKitPostCardClasses}">
-              <Card.Header
-                start={<h3 className={cardTitleClasses}>{brand.name}</h3>}
-                end={<Badge variant="neutral" emphasis="muted" size="sm">{brand.year}</Badge>}
-              />
-              <Card.Body>
-                <p className="${pitchKitBrandBodyClasses}">{brand.summary}</p>
-              </Card.Body>
-            </Card>
-          ))}
-        </div>
-      </section>
+      <PublicPastBrands brands={brands} />
       <AlertDialog
         open={pendingHidePostId != null}
         onOpenChange={(open) => {
@@ -219,27 +363,40 @@ import {
   AlertDialog,
   Avatar,
   Badge,
+  Button,
   ButtonIcon,
   Card,
+  Chart,
   Chip,
+  Dialog,
+  Dropdown,
   MoreMenu,
+  PageHeader,
   SegmentedControl,
   Stat,
   TextLink,
   Toaster,
+  cardSubtitleClasses,
   cardTitleClasses,
+  chartSeriesConfigFromKeys,
   toast,
 } from "@whatmatters/wmds";
 import { EyeOff } from "lucide-react";
+
+const reachConfig = chartSeriesConfigFromKeys([
+  { key: "typical", label: "Typical reach" },
+  { key: "reach", label: "Daily reach" },
+]);
 
 const compactNumber = new Intl.NumberFormat("en", {
   notation: "compact",
   maximumFractionDigits: 1,
 });
 
+${ownerAccountChromeCopySource}
 ${ownerPitchKitBodyCopySource}
 
-export function OwnerPitchKitPage({ identity, posts, contact, brands }) {
+export function OwnerPitchKitPage({ identity, intro, posts, contact, brands, countries, reachData }) {
   const [view, setView] = useState("pitchkit");
 
   return (
@@ -257,7 +414,7 @@ export function OwnerPitchKitPage({ identity, posts, contact, brands }) {
             <SegmentedControl.Item value="pitchkit">PitchKit</SegmentedControl.Item>
           </SegmentedControl>
           <span className="${pitchKitTopbarEndClasses}">
-            <Avatar name="Avery Morgan" size="sm" />
+            <OwnerAccountMenu identity={identity} />
           </span>
         </header>
       </div>
@@ -267,13 +424,17 @@ export function OwnerPitchKitPage({ identity, posts, contact, brands }) {
           {view === "pitchkit" ? (
             <OwnerPitchKit
               identity={identity}
+              intro={intro}
               posts={posts}
               contact={contact}
               brands={brands}
+              countries={countries}
+              reachData={reachData}
             />
           ) : null}
         </div>
       </div>
+      <PitchKitPageFooter />
       <Toaster position="bottom-right" />
     </main>
   );

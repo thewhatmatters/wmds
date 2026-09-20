@@ -14,8 +14,23 @@ export const pitchKitTopbarBandClasses =
 export const pitchKitTopbarClasses =
   "col-span-full grid grid-cols-[1fr_auto_1fr] items-center gap-3";
 
-export const pitchKitBrandClasses = `${typographyClass("ui-label")} text-fg`;
+export const pitchKitBrandClasses = `${typographyClass("subheading")} text-fg`;
 export const pitchKitTopbarEndClasses = "justify-self-end";
+
+/** Circular Avatar trigger — hug `size="md"` (36px), no offset ring. */
+export const pitchKitAvatarTriggerClasses =
+  "size-9 min-h-9 gap-0 px-0 py-0 focus-visible:ring-offset-0";
+export const pitchKitAccountMenuRootClasses = "relative";
+export const pitchKitAccountMenuPanelClasses =
+  "absolute end-0 top-full mt-1 min-w-56";
+export const pitchKitMenuHeaderClasses = `${typographyClass("overline")} px-3.5 py-2`;
+export const pitchKitMenuSeparatorClasses =
+  "mx-1.5 my-0.5 border-0 border-t border-border";
+
+/** Owner Insights / PitchKit page footer — Privacy + Support only. */
+export const pitchKitFooterBandClasses = "band pb-6 pt-10";
+export const pitchKitFooterClasses =
+  "col-span-full flex items-center justify-center gap-4";
 
 export const pitchKitContentBandClasses = "band pt-6 sm:pt-8";
 export const pitchKitContentClasses =
@@ -126,10 +141,14 @@ export const pitchKitContactRowClasses =
 export const pitchKitBrandBodyClasses =
   `${typographyClass("body")} text-muted ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantInsetXClasses}`;
 
-/** Account settings Dialog body — Connected Instagram → Share kit → account actions. */
+/** Account settings Dialog body — Connected Instagram only; account actions live on the Avatar menu. */
 export const pitchKitUserSettingsBodyClasses = "flex w-full min-w-0 flex-col gap-4";
 export const pitchKitUserSettingsActionsClasses =
   "flex flex-col items-start gap-2";
+
+/** Owner PitchKit tab — compact reach + countries stack full width. */
+export const pitchKitOwnerReachCardClasses = "col-span-full min-w-0";
+export const pitchKitOwnerCountriesCardClasses = "col-span-full min-w-0";
 
 /** Public kit unsigned CTA band — compose into shareable PitchKit only. */
 export const pitchKitCalloutCardClasses = "col-span-full";
