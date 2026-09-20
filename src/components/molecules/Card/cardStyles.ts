@@ -41,8 +41,13 @@ export const cardRootPaddingClasses: Record<CardPadding, string> = {
   lg: "p-6",
 };
 
-/** Layout shell — top pad 16px; bottom pad via {@link cardLayoutShellBottomClasses}. */
-export const cardLayoutShellClasses = "gap-3 pt-4";
+/** Layout shell stack — gap only. Vertical pad via {@link cardLayoutShellTopClasses} / {@link cardLayoutShellBottomClasses}. */
+export const cardLayoutShellClasses = "gap-3";
+
+/** Layout shell top pad — 16px beside Header; 2px when Header is omitted. */
+export function cardLayoutShellTopClasses(hasHeader = true): string {
+  return hasHeader ? "pt-4" : "pt-[2px]";
+}
 
 export function cardLayoutShellBottomClasses(bodyTerminal = false): string {
   return bodyTerminal ? "pb-[2px]" : "pb-4";

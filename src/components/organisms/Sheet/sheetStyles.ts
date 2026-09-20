@@ -1,7 +1,11 @@
 import type { Variants } from "motion/react";
 import { cn } from "../../../lib/cn";
 import { motionTransitionProp } from "../../../lib/motion";
-import { cardBaseClasses, cardLayoutShellClasses } from "../../molecules/Card/cardStyles";
+import {
+  cardBaseClasses,
+  cardLayoutShellClasses,
+  cardLayoutShellTopClasses,
+} from "../../molecules/Card/cardStyles";
 import {
   dialogBackdropClasses,
   overlayPanelFooterDelineatedInnerClasses,
@@ -66,6 +70,7 @@ export const sheetPanelSizeClasses: Record<SheetSide, Record<SheetSize, string>>
 export const sheetPanelBaseClasses = [
   cardBaseClasses,
   cardLayoutShellClasses,
+  cardLayoutShellTopClasses(),
   "max-h-full min-h-0 bg-surface shadow-md",
 ].join(" ");
 
