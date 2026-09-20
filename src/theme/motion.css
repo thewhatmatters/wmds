@@ -50,6 +50,10 @@
 
 @utility marquee-track {
   animation: wmds-marquee var(--marquee-duration, 24s) linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
 .group:hover .marquee-track,
@@ -59,6 +63,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .marquee-track {
-    animation: none;
+    animation: none !important;
   }
 }
