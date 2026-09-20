@@ -108,7 +108,7 @@ Identity is one shared strip composed into two surrounding chromes — copy thes
 2. **Pattern — creator identity (owner settings)** — Settings → **Connected Instagram** card (same strip + professional **Chip** + Share kit \`/k/[handle]\` + Copy + connected / last sync).
 3. **Pattern — account settings (owner)** — topbar **Avatar** opens **Dialog** titled Account settings. Body: **Connected Instagram** (same strip as owner settings) → **Share kit** → Sign out → Disconnect → **Delete account** last. Delete confirms with **AlertDialog** “Delete your Pitchkit account?”. Remove app footer delete when copying.
 
-Then copy **Pattern — creator Insights** for the authenticated owner dashboard, **Pattern — owner PitchKit** for the authenticated PitchKit tab (same kit sections as public, plus hide/restore on selected posts), **Pattern — shareable PitchKit** for the public kit **body**, and **Pattern — theme picker (owner)** for Light | Dark | Soft with an explicit **Save theme** (preview is the public kit 1:1). Do not lift kit Stats, charts, bio, website, rates, geo, or contact onto the identity Patterns.
+Then copy **Pattern — creator Insights** for the authenticated owner dashboard, **Pattern — owner PitchKit** for the authenticated PitchKit tab (same kit sections as public, plus hide/restore on selected posts), **Pattern — shareable PitchKit** for the public kit **body**, and **Pattern — theme picker (owner)** for Light | Dark | Soft with an explicit **Save theme** (kit body is in-page, public kit 1:1 — no nested preview frame). Do not lift kit Stats, charts, bio, website, rates, geo, or contact onto the identity Patterns.
 
 **Show code** on each **Pattern** story is the product contract — a literal freeze of that canvas (layout, chrome, spacing, typography). Copy that source into PitchKit. Do not reconstruct the page from Storybook-only \`PitchKitExample\` / \`PitchKitOwner\` / \`PitchKitShareable\` / \`PitchKitCreatorIdentity\` / \`pitchKitStyles\`, and do not ship **ExampleGridControls**.
 
@@ -126,7 +126,7 @@ The public kit answers these questions in order on **Pattern — shareable Pitch
 3. **Selected posts** — the current Instagram proof set as **Card** images with likes and comments only, cap **6**.
 4. **Outreach** — creator-entered **Contact** (**TextLink** for email and website) and **Past brands**. Public Past brands copy **Pattern — past brands (public)** — ordered \`{ id, name }\` + letter **Avatar**. Omit the section when empty. Do not invent year, summary, logo, or KPIs.
 5. **Unsigned conversion** — when the visitor is not the kit owner and is not signed in: **Create your Pitchkit** band + one **Continue with Instagram** Button. Omit the band for the owner and for signed-in viewers of someone else's kit (\`showCreateBand={false}\`).
-6. **Theme** — owner picks Light | Dark | Soft on **Pattern — theme picker (owner)**. Preview is this public kit 1:1. **Save theme** persists the draft (fixtures until persist lands). Do not auto-save on pick.
+6. **Theme** — owner picks Light | Dark | Soft on **Pattern — theme picker (owner)**. The kit body sits on this same page (no nested preview frame or inner PitchKit wordmark) and stays 1:1 with the public kit. **Save theme** persists the draft (fixtures until persist lands). Do not auto-save on pick.
 
 The authenticated owner kit answers the same four questions, with Graph identity and hide/restore:
 
@@ -153,7 +153,7 @@ The authenticated owner kit answers the same four questions, with Graph identity
 - Account settings belong on **Pattern — account settings (owner)** — Avatar → **Dialog** (Connected Instagram, Share kit, Sign out, Disconnect, Delete account). Remove app footer delete when copying this Pattern.
 - The public kit has no owner edit toggle, **MoreMenu**, hide, or swap controls.
 - Owner PitchKit post edit affordance is hide/restore on selected posts only. Intro and Past brands editors live on **Pattern — intro (owner)** and **Pattern — past brands (owner)** — not bio, website, rates, geo, contact, or section-visibility editors.
-- Public kit theme is \`light\` | \`dark\` | \`soft\`, default \`light\`. Copy **Pattern — theme picker (owner)**. Pick updates the preview only; **Save theme** applies the fixture. Soft remaps the same semantic color roles to a warmer paper floor (\`[data-theme="soft"]\`).
+- Public kit theme is \`light\` | \`dark\` | \`soft\`, default \`light\`. Copy **Pattern — theme picker (owner)**. Pick updates the in-page kit only; **Save theme** applies the fixture. Soft remaps the same semantic color roles to a warmer paper floor (\`[data-theme="soft"]\`). Do not nest a preview frame or a second PitchKit wordmark.
 - No rates editors, Stories, logo scraping, marquees, donuts, online heatmap, impressions, EXAMPLE %, or second Instagram connection path.
 - The authenticated PitchKit tab is **Pattern — owner PitchKit**, not a Coming soon placeholder.
 
@@ -164,7 +164,7 @@ The authenticated owner kit answers the same four questions, with Graph identity
 - Owner chrome — **SegmentedControl** + **Avatar** on Insights and owner PitchKit; Settings keeps the PitchKit wordmark + **Avatar**; the **Avatar** wraps in **Button** to open **Pattern — account settings (owner)**; public kit keeps the PitchKit wordmark only
 - Page and card chrome — **PageHeader**, **Card**, **Badge**, **Avatar**, **Button**, **Chip**, **TextLink**
 - Metrics and charts — **Stat**, **Chart.Cartesian**, **Chart.Legend**, **Chart.RankedBars**; public kit uses the same reach empty contract at a compact height; loading uses **Stat** \`loading\`, **Skeleton**, and **Chart.Loading**
-- Kit theme — **SegmentedControl** Light | Dark | Soft + **Save theme** **Button** on **Pattern — theme picker (owner)**; preview composes **Pattern — shareable PitchKit**
+- Kit theme — **SegmentedControl** Light | Dark | Soft + **Save theme** **Button** on **Pattern — theme picker (owner)**; in-page kit body composes **Pattern — shareable PitchKit** (no nested preview frame)
 - Proof ranking — **Tab.Group** + **Tab**; one selected metric reorders the same supplied posts
 - Post management — **MoreMenu** with **ButtonIcon**; **AlertDialog** confirms hiding a post (Insights Recent proof and owner PitchKit selected posts)
 - Public outreach — **TextLink** contact rows; outlined **Card** past-brand rows (\`name\` + letter **Avatar**); unsigned **Create your Pitchkit** band on **Pattern — shareable PitchKit**

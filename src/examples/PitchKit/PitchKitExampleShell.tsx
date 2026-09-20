@@ -14,11 +14,14 @@ import {
 export function PitchKitExampleShell({
   topbarEnd,
   overlay,
+  dataTheme,
   children,
 }: {
   topbarEnd?: ReactNode;
   /** Portaled overlays — not wrapped in the content band. */
   overlay?: ReactNode;
+  /** Kit draft theme — paints the page (`main`) so the kit body stays in-page. */
+  dataTheme?: string;
   children?: ReactNode;
 }) {
   const [gridVisible, setGridVisible] = useState(false);
@@ -50,7 +53,7 @@ export function PitchKitExampleShell({
 
   return (
     <main
-      data-theme={theme === "auto" ? undefined : theme}
+      data-theme={dataTheme ?? (theme === "auto" ? undefined : theme)}
       className={pitchKitPageClasses}
       style={pageStyle}
     >
