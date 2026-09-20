@@ -1,10 +1,7 @@
 import { creatorIdentityStripCopySource } from "./creatorIdentityCopySource";
+import { publicPastBrandsCopySource } from "./pastBrandsCopySource";
 import {
-  pitchKitBrandCardClasses,
   pitchKitBrandClasses,
-  pitchKitBrandListClasses,
-  pitchKitBrandNameClasses,
-  pitchKitBrandRowStartClasses,
   pitchKitCalloutActionsClasses,
   pitchKitCalloutBodyClasses,
   pitchKitCalloutCardClasses,
@@ -54,37 +51,7 @@ function PublicIntro({ intro }) {
   if (pitchKitIntroIsEmpty(intro)) return null;
   return <p className="${pitchKitIntroClasses}">{intro}</p>;
 }
-
-function PublicPastBrands({ brands }) {
-  if (brands.length === 0) return null;
-
-  return (
-    <section className="${pitchKitPostsSectionClasses}">
-      <div className="${pitchKitPostsHeaderClasses}">
-        <h2 className={cardTitleClasses}>Past brands</h2>
-      </div>
-      <div className="${pitchKitBrandListClasses}">
-        {brands.map((brand) => (
-          <Card
-            key={brand.id}
-            variant="outlined"
-            shape="rounded"
-            className="${pitchKitBrandCardClasses}"
-          >
-            <Card.Header
-              start={
-                <div className="${pitchKitBrandRowStartClasses}">
-                  <Avatar name={brand.name} size="sm" />
-                  <h3 className="${pitchKitBrandNameClasses}">{brand.name}</h3>
-                </div>
-              }
-            />
-          </Card>
-        ))}
-      </div>
-    </section>
-  );
-}
+${publicPastBrandsCopySource}
 
 function PublicCreatePitchkitBand() {
   return (
@@ -319,6 +286,7 @@ function ShareablePitchKit({
 `;
 
 export const shareablePitchKitPageCopySource = `
+import { useLayoutEffect, useRef, useState } from "react";
 import {
   Avatar,
   Badge,

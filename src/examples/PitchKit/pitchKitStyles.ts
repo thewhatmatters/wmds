@@ -159,7 +159,7 @@ export const pitchKitCalloutActionsClasses = "flex flex-wrap items-center gap-3"
 export const pitchKitIntroStackClasses = "flex min-w-0 flex-col gap-3";
 export const pitchKitIntroClasses = `${typographyClass("body")} text-fg`;
 
-/** Past brands — `{ id, name }` rows with letter Avatar. Not campaign KPI cards. */
+/** Past brands — owner editor stack. Not campaign KPI cards. */
 export const pitchKitBrandListClasses =
   "flex col-span-full min-w-0 flex-col gap-3";
 export const pitchKitBrandCardClasses = "col-span-full min-w-0";
@@ -167,6 +167,26 @@ export const pitchKitBrandRowStartClasses =
   "flex min-w-0 items-center gap-3";
 export const pitchKitBrandNameClasses = typographyClass("ui-label");
 export const pitchKitBrandReorderClasses = "flex shrink-0 items-center";
+
+/** Public rail — static row when items fit; wrap only for reduced motion. */
+export const pitchKitBrandRailHostClasses = "relative col-span-full min-w-0";
+export const pitchKitBrandRailMeasureClasses =
+  "pointer-events-none invisible absolute flex w-max items-center gap-3";
+export const pitchKitBrandRailRowClasses =
+  "flex min-w-0 items-center gap-3";
+export const pitchKitBrandRailWrapClasses =
+  "flex min-w-0 flex-wrap items-center gap-3";
+export const pitchKitBrandRailCardClasses = "w-max max-w-full shrink-0";
+export const pitchKitBrandMarqueeViewportClasses =
+  "group overflow-hidden";
+export const pitchKitBrandMarqueeTrackClasses =
+  "marquee-track flex w-max items-center";
+export const pitchKitBrandMarkClasses = [
+  "flex size-6 shrink-0 items-center justify-center rounded-full bg-fg",
+  typographyClass("caption"),
+  "font-medium uppercase leading-none text-bg",
+].join(" ");
+export const pitchKitBrandDialogFieldsClasses = "flex w-full min-w-0 flex-col gap-4";
 
 /** Owner theme picker — draft SegmentedControl + explicit Save. Kit body is in-page. */
 export const pitchKitThemeToolbarClasses =

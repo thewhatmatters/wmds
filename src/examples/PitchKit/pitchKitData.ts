@@ -325,30 +325,169 @@ export function pitchKitIntroStatus(
 }
 
 /**
- * Creator-entered past brand — ordered `{ id, name }` only.
- * Letter Avatar from `name`. No logo, year, summary, or KPIs.
+ * Creator-entered past brand — ordered `{ id, name, logo_key?, result_label? }`.
+ * `name` required. Letter Avatar when `logo_key` is missing or unknown.
+ * `result_label` is a short creator phrase — omit when empty. Not Graph.
  */
 export interface PitchKitPastBrand {
   id: string;
   name: string;
+  logo_key?: PitchKitBrandLogoKey;
+  result_label?: string;
 }
 
 export const PITCHKIT_BRANDS_MAX = 8;
 export const PITCHKIT_BRAND_NAME_MAX = 40;
+export const PITCHKIT_BRAND_RESULT_MAX = 24;
+export const PITCHKIT_BRAND_LOGO_LETTER = "letter";
+
+export const PITCHKIT_BRAND_RESULT_HINTS =
+  "+12% CTR · 3.2x ROAS · 1.4M views · Sold out in 48h · Series A launch";
+
+/** Curated WMDS mark keys — slug only. Not creator upload. */
+export const pitchKitBrandLogoKeys = [
+  "nike",
+  "adidas",
+  "apple",
+  "google",
+  "meta",
+  "amazon",
+  "spotify",
+  "netflix",
+  "sephora",
+  "glossier",
+  "nordstrom",
+  "target",
+  "walmart",
+  "starbucks",
+  "coca-cola",
+  "pepsi",
+  "samsung",
+  "microsoft",
+  "adobe",
+  "shopify",
+  "uber",
+  "airbnb",
+  "disney",
+  "lululemon",
+  "reebok",
+  "puma",
+  "dior",
+  "chanel",
+  "bmw",
+  "ford",
+  "chase",
+  "visa",
+] as const;
+
+export type PitchKitBrandLogoKey = (typeof pitchKitBrandLogoKeys)[number];
+
+const pitchKitBrandLogoKeySet = new Set<string>(pitchKitBrandLogoKeys);
+
+export function isPitchKitBrandLogoKey(value: string): value is PitchKitBrandLogoKey {
+  return pitchKitBrandLogoKeySet.has(value);
+}
+
+/** Unknown, empty, or `letter` → letter Avatar fallback. */
+export function resolvePastBrandLogoKey(
+  logoKey: string | undefined | null,
+): PitchKitBrandLogoKey | undefined {
+  if (logoKey == null || logoKey === "" || logoKey === PITCHKIT_BRAND_LOGO_LETTER) {
+    return undefined;
+  }
+  return isPitchKitBrandLogoKey(logoKey) ? logoKey : undefined;
+}
+
+export function pastBrandLogoKeyLabel(logoKey: PitchKitBrandLogoKey): string {
+  return logoKey
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("-");
+}
+
+/** Knockout monogram for a curated key — not a scraped trademark. */
+export function pastBrandLogoMonogram(logoKey: PitchKitBrandLogoKey): string {
+  const parts = logoKey.split("-");
+  if (parts.length > 1) {
+    return parts
+      .map((part) => part.charAt(0).toUpperCase())
+      .join("")
+      .slice(0, 2);
+  }
+  return logoKey.slice(0, 1).toUpperCase();
+}
+
+const pastBrandResultUrlPattern = /https?:\/\/|www\./i;
+const pastBrandResultHandlePattern = /(^|[\s])@[a-z0-9._]+/i;
+const pastBrandResultEmojiPattern = /\p{Extended_Pictographic}/gu;
+
+export function normalizePastBrandResult(
+  value: string | undefined | null,
+): string | undefined {
+  const trimmed = value?.trim() ?? "";
+  if (trimmed.length === 0) return undefined;
+  return trimmed.slice(0, PITCHKIT_BRAND_RESULT_MAX);
+}
+
+export function pastBrandResultIssues(value: string): string | undefined {
+  if (/[\n\r]/.test(value)) {
+    return "Keep the result on one line.";
+  }
+  if (pastBrandResultUrlPattern.test(value)) {
+    return "Links are not allowed in a result.";
+  }
+  if (pastBrandResultHandlePattern.test(value)) {
+    return "@handles are not allowed in a result.";
+  }
+  const emojiCount = value.match(pastBrandResultEmojiPattern)?.length ?? 0;
+  if (emojiCount >= 3) {
+    return "Skip emoji spam — use a short phrase.";
+  }
+  return undefined;
+}
+
+export function pastBrandResultStatus(
+  value: string,
+): "error" | undefined {
+  return pastBrandResultIssues(value) == null ? undefined : "error";
+}
 
 export const pitchKitPastBrands: PitchKitPastBrand[] = [
-  { id: "hearth-home", name: "Hearth & Home" },
-  { id: "studio-line", name: "Studio Line" },
-  { id: "market-co", name: "Market Co." },
+  { id: "hearth-home", name: "Hearth & Home", result_label: "3.2x ROAS" },
+  { id: "studio-line", name: "Studio Line", logo_key: "adobe" },
+  { id: "market-co", name: "Market Co.", result_label: "+12% CTR" },
 ];
 
-export const pitchKitPastBrandStates = ["empty", "filled"] as const;
+/** Eight brands — overflows a desktop rail; used to preview marquee. */
+export const pitchKitPastBrandsOverflow: PitchKitPastBrand[] = [
+  { id: "nike", name: "Nike", logo_key: "nike", result_label: "+12% CTR" },
+  { id: "adidas", name: "Adidas", logo_key: "adidas", result_label: "3.2x ROAS" },
+  { id: "apple", name: "Apple", logo_key: "apple" },
+  { id: "google", name: "Google", logo_key: "google", result_label: "1.4M views" },
+  {
+    id: "sephora",
+    name: "Sephora",
+    logo_key: "sephora",
+    result_label: "Sold out in 48h",
+  },
+  {
+    id: "hearth-home",
+    name: "Hearth & Home",
+    result_label: "Series A launch",
+  },
+  { id: "studio-line", name: "Studio Line" },
+  { id: "market-co", name: "Market Co.", logo_key: "shopify" },
+];
+
+export const pitchKitPastBrandStates = ["empty", "filled", "overflow"] as const;
 export type PitchKitPastBrandState = (typeof pitchKitPastBrandStates)[number];
 
 export function pastBrandsFromState(
   state: PitchKitPastBrandState,
 ): PitchKitPastBrand[] {
-  return state === "empty" ? [] : [...pitchKitPastBrands];
+  if (state === "empty") return [];
+  if (state === "overflow") return [...pitchKitPastBrandsOverflow];
+  return [...pitchKitPastBrands];
 }
 
 export function movePastBrand(
