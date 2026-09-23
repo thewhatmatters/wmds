@@ -57,14 +57,27 @@ Semantic work uses **`type-*`**, not `text-sm`.
 
 ### Letter spacing
 
-WMDS keeps three tracking rules (`tight`, `normal`, `wider`) applied via roles — Astryx extension for Geist/WhatMatters.
+WMDS keeps three tracking rules (`tight`, `normal`, `wider`) applied via roles — Astryx extension for Geist/WhatMatters. **display-1** also bakes `--text-display-1-tracking` into `type-display-1`.
+
+### Fluid display scale (amendment 2026-09-23)
+
+Display styles (`type-display-1` / `2` / `3`) use **`clamp(min, preferred, max)`** so size grows with viewport:
+
+| Style | Mobile floor | Desktop ceiling |
+|-------|--------------|-----------------|
+| display-1 | 2.5rem (40px) | **5rem (80px)** |
+| display-2 | 2rem | 3.15rem |
+| display-3 | 1.5rem | 2.1875rem |
+
+Review at Mobile 390 / Tablet 768 / Desktop 1280. Headings and body stay on the fixed geometric ramp until a later pass.
 
 ## Consequences
 
 - **Phase 1–3 (this ADR):** tokens, `typographyClass()`, Foundation story
 - **Phase 4:** migrate Button/Chip/Input/Badge to `type-control`
-- **Optional later:** `Text` / `Heading` atoms with `type` prop (Astryx parity)
-- Adjust **`--type-scale-base`** / **`--type-scale-ratio`** to shift the entire ramp — do not tweak individual heading sizes
+- **Optional later:** `Text` / `Heading` atoms with `type` prop (Astryx parity); fluid headings if marketing needs it
+- Adjust **`--type-scale-base`** / **`--type-scale-ratio`** to shift the fixed ramp — display ceilings use **`--text-display-*-size-max`** instead
+- Adjust **`--text-display-1-size-min` / `max`** (and the clamp preferred) to retune hero size without touching UI chrome
 
 ## Related
 

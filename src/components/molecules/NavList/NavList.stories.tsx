@@ -53,7 +53,7 @@ const meta = {
         component: `
 ## Usage
 
-Sectioned **secondary navigation** — inset pills on \`bg-body\` gutter with optional Lucide icons and trailing counts. Not primary **NavRail** (icon-only) and not **SegmentedControl** (mutually exclusive segments).
+Sectioned **secondary navigation** — inset pills on \`bg-body\` gutter with optional Lucide icons and trailing counts. Not primary app navigation and not **SegmentedControl** (mutually exclusive segments).
 
 | Pattern | API |
 |---------|-----|

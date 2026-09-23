@@ -24,6 +24,7 @@
   --font-size-3xl: 1.8125rem;
   --font-size-4xl: 2.1875rem;
   --font-size-5xl: 2.625rem;
+  --font-size-6xl: 3.15rem;
 
   /* Semantic weights */
   --font-weight-normal: 400;
@@ -56,18 +57,37 @@
   --text-heading-6-weight: var(--font-weight-semibold);
   --text-heading-6-leading: 1.6;
 
-  /* Display */
-  --text-display-1-size: var(--font-size-5xl);
-  --text-display-1-weight: var(--font-weight-semibold);
-  --text-display-1-leading: 1.2381;
+  /* Display — fluid size: mobile floor → desktop ceiling (review at 390 / 768 / 1280). */
+  --text-display-1-size-min: 2.5rem; /* 40px — mobile */
+  --text-display-1-size-max: 5rem; /* 80px — desktop */
+  --text-display-1-size: clamp(
+    var(--text-display-1-size-min),
+    calc(1.4rem + 4.5vw),
+    var(--text-display-1-size-max)
+  );
+  --text-display-1-weight: var(--font-weight-bold);
+  --text-display-1-leading: 1.15;
+  --text-display-1-tracking: -0.04em;
 
-  --text-display-2-size: var(--font-size-4xl);
+  --text-display-2-size-min: 2rem;
+  --text-display-2-size-max: 3.15rem;
+  --text-display-2-size: clamp(
+    var(--text-display-2-size-min),
+    calc(1.25rem + 2.4vw),
+    var(--text-display-2-size-max)
+  );
   --text-display-2-weight: var(--font-weight-semibold);
-  --text-display-2-leading: 1.2571;
+  --text-display-2-leading: 1.2;
 
-  --text-display-3-size: var(--font-size-3xl);
+  --text-display-3-size-min: 1.5rem;
+  --text-display-3-size-max: 2.1875rem;
+  --text-display-3-size: clamp(
+    var(--text-display-3-size-min),
+    calc(1.1rem + 1.4vw),
+    var(--text-display-3-size-max)
+  );
   --text-display-3-weight: var(--font-weight-semibold);
-  --text-display-3-leading: 1.2414;
+  --text-display-3-leading: 1.24;
 
   /* Body & UI */
   --text-large-size: var(--font-size-lg);
@@ -102,6 +122,7 @@
   font-size: var(--text-display-1-size);
   font-weight: var(--text-display-1-weight);
   line-height: var(--text-display-1-leading);
+  letter-spacing: var(--text-display-1-tracking);
 }
 
 @utility type-display-2 {

@@ -6,7 +6,7 @@ export const pageHeaderVariants = ["app", "page", "toolbar"] as const;
 
 export type PageHeaderVariant = (typeof pageHeaderVariants)[number];
 
-/** 56px — app canvas band; pairs with accent **NavRail** logo square in shell examples. */
+/** 56px — app canvas band; shared by **NavList** `labelAlign="brand"` in shell examples. */
 export const pageHeaderAppBandHeightClasses = "h-[56px] min-h-[56px] max-h-[56px]";
 
 export const pageHeaderShellClasses: Record<PageHeaderVariant, string> = {

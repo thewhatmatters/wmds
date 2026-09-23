@@ -22,7 +22,7 @@ const atoms = [
 
 const molecules = ["Accordion", "Card", "CheckboxGroup", "Chip", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "NavList", "PageHeader", "Pagination", "RadioGroup", "Search", "Select", "SegmentedControl", "Stat", "TaskRows"] as const;
 
-const organisms = ["Carousel", "Chart", "Dialog", "MoreMenu", "NavRail", "Panel", "Sheet", "Tab", "Table", "Toast"] as const;
+const organisms = ["Carousel", "Chart", "Dialog", "MoreMenu", "Panel", "Sheet", "SiteNav", "Tab", "Table", "Toast"] as const;
 
 export const packageManifest = {
   /** Modules exported from src/index.ts today. */
@@ -34,6 +34,7 @@ export const packageManifest = {
     { name: "pressScaleClass", path: "./lib/motion", reexport: "pressScaleClass" },
     { name: "GridOverlay", path: "./lib/GridOverlay" },
     { name: "GRID_ON_CLASS", path: "./lib/gridOverlayUtils", reexport: "GRID_ON_CLASS" },
+    { name: "useScrollThreshold", path: "./lib/useScrollThreshold", reexport: "useScrollThreshold" },
   ] as const,
 
   /** Internal filesystem/import tiers; Storybook uses ADR-0026 functional categories. */
@@ -52,6 +53,8 @@ export const packageManifest = {
     "motion/react",
     "@visx/visx",
     "@base-ui/react/tooltip",
+    "@base-ui/react/use-render",
+    "@base-ui/react/navigation-menu",
     "lucide-react",
   ] as const,
 

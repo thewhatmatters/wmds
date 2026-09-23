@@ -1,3 +1,4 @@
+import { useRender } from "@base-ui/react/use-render";
 import {
   forwardRef,
   type ButtonHTMLAttributes,
@@ -60,6 +61,12 @@ export interface ButtonProps
   count?: number;
   /** Inset nav row — `layout="nav"` only. Sets quiet selected fill + `aria-current`. */
   selected?: boolean;
+  /**
+   * Compose Button chrome onto another element (Base UI `render`) — e.g.
+   * `render={<a href="/docs" />}` for navigation links. Pill layout only; not with `status`.
+   * `disabled` maps to `aria-disabled` on non-button elements.
+   */
+  render?: ReactElement;
   /** Layout-only: width, margin, flex placement. */
   className?: ButtonLayoutClassName;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -72,7 +79,7 @@ export interface ButtonProps
 }
 
 function assertActionPattern(
-  props: Pick<ButtonProps, "status" | "icon" | "count" | "layout">,
+  props: Pick<ButtonProps, "status" | "icon" | "count" | "layout" | "render">,
 ) {
   if (
     (props.layout === "row" || props.layout === "nav") &&
@@ -88,7 +95,40 @@ function assertActionPattern(
       console.warn("[WMDS Button] `status` is mutually exclusive with `icon` and `count`.");
     }
   }
+
+  if (props.render != null && (props.layout !== "pill" || props.status != null)) {
+    console.warn("[WMDS Button] `render` is supported on `layout=\"pill\"` without `status` only.");
+  }
 }
+
+interface ButtonPillProps
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children" | "className" | "role"> {
+  render?: ReactElement;
+  className: string;
+  children: ReactNode;
+  "data-role": ButtonRole;
+  "data-size": ButtonSize;
+}
+
+/** Pill shell — a `<button>` by default, or Button chrome composed onto `render` (Base UI). */
+const ButtonPill = forwardRef<HTMLButtonElement, ButtonPillProps>(function ButtonPill(
+  { render, type, disabled, ...props },
+  ref,
+) {
+  return useRender({
+    render,
+    ref,
+    defaultTagName: "button",
+    props: render
+      ? {
+          ...props,
+          "aria-disabled": disabled ? true : undefined,
+          "data-disabled": disabled ? "" : undefined,
+          tabIndex: disabled ? -1 : props.tabIndex,
+        }
+      : { ...props, type, disabled },
+  });
+});
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button({
     children,
@@ -103,6 +143,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     icon,
     count,
     selected = false,
+    render,
     className,
     onClick,
     "aria-label": ariaLabel,
@@ -113,7 +154,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     form,
     ...buttonProps
   }, ref) {
-  assertActionPattern({ status, icon, count, layout });
+  assertActionPattern({ status, icon, count, layout, render });
 
   if (status != null) {
     return (
@@ -194,9 +235,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   }
 
   return (
-    <button
+    <ButtonPill
       {...buttonProps}
       ref={ref}
+      render={render}
       type={type}
       disabled={disabled}
       onClick={onClick}
@@ -220,6 +262,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       {icon ? <ButtonIcon size={size}>{icon}</ButtonIcon> : null}
       <span>{children}</span>
       {count != null ? <ButtonBadge value={count} /> : null}
-    </button>
+    </ButtonPill>
   );
 });

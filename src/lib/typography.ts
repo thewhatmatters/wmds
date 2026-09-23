@@ -91,14 +91,15 @@ export const geometricScale: GeometricScaleStep[] = [
   { token: "--font-size-2xl", value: "1.5rem", sample: "24px — heading-1" },
   { token: "--font-size-3xl", value: "1.8125rem", sample: "29px step" },
   { token: "--font-size-4xl", value: "2.1875rem", sample: "35px step" },
-  { token: "--font-size-5xl", value: "2.625rem", sample: "42px — display-1" },
+  { token: "--font-size-5xl", value: "2.625rem", sample: "42px step" },
+  { token: "--font-size-6xl", value: "3.15rem", sample: "50.4px step" },
 ];
 
 export const fontWeights = [
   { token: "--font-weight-normal", value: "400", role: "Body, code, supporting" },
   { token: "--font-weight-medium", value: "500", role: "Labels, overline" },
-  { token: "--font-weight-semibold", value: "600", role: "Headings, display" },
-  { token: "--font-weight-bold", value: "700", role: "Strong emphasis" },
+  { token: "--font-weight-semibold", value: "600", role: "Headings, display-2/3" },
+  { token: "--font-weight-bold", value: "700", role: "Display-1, strong emphasis" },
 ] as const;
 
 /** @deprecated Use geometricScale — kept for Storybook compat during migration. */
@@ -113,13 +114,13 @@ export const typographyStyles: TypographyStyle[] = [
   {
     role: "display",
     label: "Display",
-    description: "Hero / marketing headlines",
+    description: "Hero / marketing headlines — fluid 2.5rem → 5rem (desktop)",
     astryxType: "display-1",
-    className: "type-display-1 text-fg tracking-tight",
+    className: "type-display-1 text-fg",
     tracking: "tight",
     trackingClass: "tracking-tight",
     sample: "WhatMatters",
-    usedIn: ["Marketing pages (future)"],
+    usedIn: ["Marketing pages", "SiteNav / landing heroes"],
   },
   {
     role: "page-heading",
@@ -207,9 +208,9 @@ export const astryxTypeScale: Array<{
   weight: string;
   leading: string;
 }> = [
-  { type: "display-1", utility: "type-display-1", size: "2.625rem", weight: "600", leading: "1.24" },
-  { type: "display-2", utility: "type-display-2", size: "2.1875rem", weight: "600", leading: "1.26" },
-  { type: "display-3", utility: "type-display-3", size: "1.8125rem", weight: "600", leading: "1.24" },
+  { type: "display-1", utility: "type-display-1", size: "clamp(2.5rem → 5rem)", weight: "700", leading: "1.15" },
+  { type: "display-2", utility: "type-display-2", size: "clamp(2rem → 3.15rem)", weight: "600", leading: "1.2" },
+  { type: "display-3", utility: "type-display-3", size: "clamp(1.5rem → 2.1875rem)", weight: "600", leading: "1.24" },
   { type: "heading-1", utility: "type-heading-1", size: "1.5rem", weight: "600", leading: "1.33" },
   { type: "heading-2", utility: "type-heading-2", size: "1.25rem", weight: "600", leading: "1.4" },
   { type: "heading-3", utility: "type-heading-3", size: "1.0625rem", weight: "600", leading: "1.41" },

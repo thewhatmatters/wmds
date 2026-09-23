@@ -342,17 +342,6 @@ export {
   type MoreMenuProps,
 } from "./components/organisms/MoreMenu/MoreMenu";
 export {
-  NavRail,
-  NavRailBrandMark,
-  navRailClusterTier,
-  navRailItemStackGapClasses,
-  navRailItemSurfaces,
-  type NavRailItem,
-  type NavRailItemSurface,
-  type NavRailLayoutClassName,
-  type NavRailProps,
-} from "./components/organisms/NavRail/NavRail";
-export {
   AlertDialog,
   alertDialogConfirmRoles,
   type AlertDialogConfirmRole,
@@ -391,6 +380,25 @@ export {
   type SheetSide,
   type SheetSize,
 } from "./components/organisms/Sheet/Sheet";
+export {
+  SiteNav,
+  siteNavCompactLayouts,
+  siteNavDefaultCollapseAt,
+  siteNavExpandedHeightClasses,
+  siteNavPlacements,
+  siteNavStates,
+  type SiteNavBrandProps,
+  type SiteNavCompactLayout,
+  type SiteNavLinkProps,
+  type SiteNavLinksProps,
+  type SiteNavMenuLinkProps,
+  type SiteNavMenuProps,
+  type SiteNavMenuSectionProps,
+  type SiteNavMobileLinkProps,
+  type SiteNavPlacement,
+  type SiteNavProps,
+  type SiteNavState,
+} from "./components/organisms/SiteNav/SiteNav";
 export {
   Tab,
   tabSizes,
@@ -482,3 +490,4 @@ export {
   type MotionDuration,
   type MotionEase,
 } from "./lib/motion";
+export { useScrollThreshold, type UseScrollThresholdOptions } from "./lib/useScrollThreshold";

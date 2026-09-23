@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Superseded — **NavRail** was removed from the package on 2026-09-23 (no product adopted the primary icon-only rail; **NavList** + **PageHeader** `variant="app"` remain the navigation contract). The 56px app band height (`pageHeaderAppBandHeightClasses`) stays defined by **PageHeader** (ADR-0018).
 
 ## Context
 

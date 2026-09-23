@@ -44,6 +44,7 @@ const meta = {
 | **With icon** | \`icon\` (Lucide) + \`role\` |
 | **With count** | \`count\` + \`role\` (inbox / notifications) |
 | **Submit / async** | \`status\` + optional \`statusLabels\` |
+| **Link** | \`render={<a href />}\` — Button chrome on a real anchor (nav links, header CTAs) |
 
 Pill-shaped by default (\`layout="pill"\`). **Row layout** is flat full-width — for TaskRows detail lines and settings rows. **Roles:** \`primary\` (main CTA), \`secondary\`, \`ghost\`, \`destructive\`. No semantic color variants — success/error live on \`status\` morph only.
 
@@ -133,6 +134,42 @@ import { Button } from "@whatmatters/wmds";
 <Button role="ghost">Learn more</Button>
   `),
   args: { role: "ghost", children: "Learn more" },
+};
+
+export const LinkRender: Story = {
+  name: "Pattern — link",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Navigation that looks like an action: compose Button chrome onto a real anchor with `render`. Pill layout only; `disabled` becomes `aria-disabled`. Used by **SiteNav** links and header CTAs. Prose links stay **TextLink**.",
+        },
+      },
+    },
+    `
+import { Button } from "@whatmatters/wmds";
+
+<Button role="ghost" size="sm" render={<a href="/docs" />}>Docs</Button>
+<Button size="sm" render={<a href="/signup" />}>Get started</Button>
+    `,
+  ),
+  render: () => (
+    <div className="flex items-center gap-2">
+      <Button role="ghost" size="sm" render={<a href="#docs" />}>
+        Docs
+      </Button>
+      <Button role="ghost" size="sm" render={<a href="#platform" />} aria-current="page">
+        Platform
+      </Button>
+      <Button size="sm" render={<a href="#signup" />}>
+        Get started
+      </Button>
+      <Button role="secondary" size="sm" disabled render={<a href="#soon" />}>
+        Coming soon
+      </Button>
+    </div>
+  ),
 };
 
 export const RowLayout: Story = {

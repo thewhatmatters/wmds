@@ -28,7 +28,9 @@ export const buttonBaseClasses =
   pressScaleClass +
   " " +
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body " +
-  "disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50";
+  "disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50 " +
+  "aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none aria-disabled:opacity-50 " +
+  "no-underline";
 
 export const buttonRoleClasses: Record<ButtonRole, string> = {
   primary:

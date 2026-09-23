@@ -11,7 +11,7 @@ export const navListShellClasses = "flex h-full min-h-0 w-52 flex-col";
 
 export const navListSectionClasses = "flex flex-col gap-1";
 
-/** 56px band — first section label aligns with **PageHeader** `variant="app"` + **NavRail** logo. */
+/** 56px band — first section label aligns with **PageHeader** `variant="app"`. */
 export const navListSectionBrandBandClasses = cn(
   "box-border flex shrink-0 items-center px-4",
   pageHeaderAppBandHeightClasses,

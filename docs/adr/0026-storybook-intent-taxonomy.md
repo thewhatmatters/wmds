@@ -23,7 +23,7 @@ Components use `Components/{category}/{Name}`:
 
 - **Actions:** Button, IconButton, FloatingActionButton, MoreMenu
 - **Forms:** Checkbox, CheckboxGroup, Chip, Field, Input, Radio, RadioGroup, Search, SegmentedControl, Select, Switch, TextArea
-- **Navigation:** NavList, NavRail, Tab, TextLink; future Pagination
+- **Navigation:** NavList, SiteNav, Tab, TextLink; future Pagination (NavRail removed — ADR-0020 superseded)
 - **Feedback:** Badge, Skeleton, Status, Toast, Tooltip
 - **Overlays:** Dialog, Dropdown, Panel, Sheet
 - **Data display:** Avatar, Chart, Kbd, Stat, TaskRows; future Carousel and Table
