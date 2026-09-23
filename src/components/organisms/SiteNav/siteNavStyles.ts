@@ -10,8 +10,8 @@ export type SiteNavState = (typeof siteNavStates)[number];
 export const siteNavPlacements = ["fixed", "inline"] as const;
 export type SiteNavPlacement = (typeof siteNavPlacements)[number];
 
-/** Compact pill width — `grid` fills `--grid-max`; `hug` shrinks to its items. */
-export const siteNavCompactLayouts = ["grid", "hug"] as const;
+/** Compact pill width — `hug` shrinks to its items (default, narrower than grid); `grid` fills `--grid-max`. */
+export const siteNavCompactLayouts = ["hug", "grid"] as const;
 export type SiteNavCompactLayout = (typeof siteNavCompactLayouts)[number];
 
 /** Scroll distance (px) that flips expanded → compact. */
@@ -20,24 +20,24 @@ export const siteNavDefaultCollapseAt = 48;
 /** Expanded band height — pages that start under the nav reserve this with `pt-16`. */
 export const siteNavExpandedHeightClasses = "h-16 min-h-16";
 
-/** Compact pill height — cluster lg + 12px breathing room. */
-export const siteNavCompactHeightClasses = "h-14 min-h-14";
+/** Compact pill — height hugs controls; equal shell inset (`p-1`) all around. */
 
 /** Compact pill offset from the viewport top. */
 export const siteNavCompactTopOffsetClasses = "mt-4";
 
-/** Outer chrome — full-width fixed strip; only the bar itself accepts pointer events. */
+/** Outer chrome — full-width fixed strip; only the bar itself accepts pointer events.
+ * `z-50` keeps the bar above the mega-menu backdrop (`z-40`). */
 export const siteNavRootClasses: Record<SiteNavPlacement, string> = {
-  fixed: "pointer-events-none fixed inset-x-0 top-0 z-40",
-  inline: "relative w-full",
+  fixed: "pointer-events-none fixed inset-x-0 top-0 z-50",
+  inline: "relative z-50 w-full",
 };
 
-/** Centered content column shared by both states — the mega-menu anchor. */
+/** Centered content column — mega-menu anchor; fills `--grid-max` in expanded. */
 export const siteNavContainerClasses = "mx-auto w-full max-w-[var(--grid-max)]";
 
 /** Bar shell — surface, radius, and shadow morph between states (Motion `layout` handles geometry). */
 export const siteNavBarBaseClasses = cn(
-  "pointer-events-auto relative flex w-full items-center overflow-hidden",
+  "pointer-events-auto relative z-[1] flex w-full items-center",
   "transition-[background-color,box-shadow,border-color,backdrop-filter]",
   motionTransition("medium"),
 );
@@ -48,21 +48,40 @@ export const siteNavBarStateClasses: Record<SiteNavState, string> = {
     "w-full border border-transparent bg-transparent px-[var(--grid-margin)] shadow-none",
   ),
   compact: cn(
-    siteNavCompactHeightClasses,
-    "border border-border bg-surface/80 px-2 shadow-raised backdrop-blur-md",
+    "box-border border border-border bg-surface/80 p-1.5 shadow-sm backdrop-blur-md",
     "supports-[backdrop-filter]:bg-surface/80",
   ),
 };
 
-/** Compact width — grid-contained (default) or hugging the items. */
+/** Compact width — hugging the items (default) or grid-contained. */
 export const siteNavBarCompactLayoutClasses: Record<SiteNavCompactLayout, string> = {
-  grid: "w-full",
   hug: "mx-auto w-max max-w-full",
+  grid: "w-full",
 };
 
-/** Slot rail — start/end hug; middle fills and may overflow into More. */
+/**
+ * Mega-menu focus layer — light dim over the page (not Dialog `bg-overlay`).
+ * Pointer-events none so hover dismiss still works; under the bar/popup (`z-50`).
+ */
+export const siteNavMenuBackdropClasses = cn(
+  "fixed inset-0 z-40 bg-fg/15 pointer-events-none",
+  "transition-opacity",
+  motionTransition("medium"),
+  "data-[starting-style]:opacity-0 data-[ending-style]:opacity-0",
+);
+
+/** Mega open — same pill chrome as compact (radius via Motion); keeps grid width when expanded. */
+export const siteNavBarMenuOpenClasses = cn(
+  "box-border border-border! bg-surface/80! p-1.5! shadow-sm! backdrop-blur-md!",
+  "supports-[backdrop-filter]:bg-surface/80!",
+);
+
+/**
+ * Slot rail — equal thirds so middle links stay optically centered; start/end hug their edges.
+ * Middle `minmax(0,1fr)` still lets SiteNav.Links measure overflow for More.
+ */
 export const siteNavSlotsClasses = {
-  three: "grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3",
+  three: "grid w-full grid-cols-3 items-center gap-3",
   ends: "flex w-full items-center justify-between gap-4",
   middleOnly: "flex w-full min-w-0 items-center justify-center",
   startOnly: "flex w-full items-center justify-start",
@@ -78,12 +97,17 @@ export const siteNavEndClasses = "flex shrink-0 flex-nowrap items-center gap-2 j
 export const siteNavMiddleResponsiveClasses = "hidden md:flex min-w-0 w-full";
 export const siteNavMobileTriggerClasses = "md:hidden";
 
-/** Brand — icon or wordmark. Ink override uses `!` (cn does not merge against role classes). */
-export const siteNavBrandClasses =
-  "text-fg! whitespace-nowrap px-2 [&>span]:inline-flex [&>span]:items-center [&>svg]:size-5 [&>span>svg]:size-5";
+/**
+ * Brand — layout only when wordmark **Button**; icon brands use **IconButton** (circular).
+ */
+export const siteNavBrandClasses = "text-fg!";
 
-/** Links cluster — shrinks inside the middle track; hosts list + More. */
-export const siteNavLinksRootClasses = "relative flex min-w-0 w-full max-w-full items-center gap-1";
+/** Links cluster — full middle track width for overflow measure; cluster centered inside. */
+export const siteNavLinksRootClasses =
+  "relative flex min-w-0 w-full max-w-full items-center justify-center gap-1";
+
+/** NavigationMenu root — hug the list so justify-center on the parent can center it. */
+export const siteNavNavigationRootClasses = "flex min-w-0 max-w-full justify-center";
 
 /** Link list — Base UI NavigationMenu list. */
 export const siteNavLinkListClasses =
@@ -130,12 +154,12 @@ export const siteNavTriggerIconClasses = cn(
   motionTransition("fast"),
 );
 
-/** Portal positioner — width follows the anchor (nav container or compact pill). */
-export const siteNavMenuPositionerClasses = "z-50 w-[var(--anchor-width)] outline-none";
+/** Portal positioner — width follows the anchor; above the focus backdrop. */
+export const siteNavMenuPositionerClasses = "z-[51] w-[var(--anchor-width)] outline-none";
 
-/** Mega-menu popup — Card shell radius, popover fill, Dropdown elevation; height animates to content. */
+/** Mega-menu popup — soft pill-family radius (not a sharp card); height animates to content. */
 export const siteNavMenuPopupClasses = cn(
-  "relative box-border w-full overflow-hidden rounded-2xl border border-border bg-popover shadow-md",
+  "relative box-border w-full overflow-hidden rounded-3xl border border-border bg-popover shadow-md",
   "h-[var(--popup-height)] origin-top",
   "transition-[height,opacity,transform]",
   motionTransition("medium"),

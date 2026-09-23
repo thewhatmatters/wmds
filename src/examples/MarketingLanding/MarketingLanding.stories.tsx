@@ -68,9 +68,11 @@ function MarketingLandingPage() {
       <GridOverlay visible={gridVisible} onVisibleChange={setGridVisible} keyboardShortcut={false} />
       <SiteNav
         start={
-          <SiteNav.Brand href="#home" aria-label="WhatMatters">
-            <Sparkles strokeWidth={2} aria-hidden />
-          </SiteNav.Brand>
+          <SiteNav.Brand
+            href="#home"
+            aria-label="WhatMatters"
+            icon={<Sparkles strokeWidth={2} />}
+          />
         }
         middle={
           <SiteNav.Links>
@@ -179,9 +181,7 @@ export function MarketingLanding() {
     <main className="grid-page min-h-screen bg-body pt-16 [--grid-column-gap:24px] [--grid-max:80rem]">
       <SiteNav
         start={
-          <SiteNav.Brand href="/" aria-label="WhatMatters">
-            <Sparkles aria-hidden />
-          </SiteNav.Brand>
+          <SiteNav.Brand href="/" aria-label="WhatMatters" icon={<Sparkles />} />
         }
         middle={
           <SiteNav.Links>

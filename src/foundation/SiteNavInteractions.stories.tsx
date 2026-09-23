@@ -20,9 +20,7 @@ export const CompactStateToggle: Story = {
       placement="inline"
       state="compact"
       start={
-        <SiteNav.Brand href="#home" aria-label="WhatMatters">
-          <Sparkles aria-hidden />
-        </SiteNav.Brand>
+        <SiteNav.Brand href="#home" aria-label="WhatMatters" icon={<Sparkles />} />
       }
       middle={
         <SiteNav.Links>
@@ -54,9 +52,7 @@ export const MegaMenuKeyboard: Story = {
         placement="inline"
         state="expanded"
         start={
-          <SiteNav.Brand href="#home" aria-label="WhatMatters">
-          <Sparkles aria-hidden />
-        </SiteNav.Brand>
+          <SiteNav.Brand href="#home" aria-label="WhatMatters" icon={<Sparkles />} />
         }
         middle={
           <SiteNav.Links>

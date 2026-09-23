@@ -1,3 +1,4 @@
+import { useRender } from "@base-ui/react/use-render";
 import { forwardRef, type ButtonHTMLAttributes, type ReactElement } from "react";
 import { cn } from "../../../lib/cn";
 import { ButtonIcon } from "../Button/ButtonIcon";
@@ -41,7 +42,7 @@ export interface IconButtonProps
   size?: IconButtonSize | IconButtonInsetSize;
   /** Inset dismiss — compact hit target for chip innards; `size` uses sm | md | lg inset scale. */
   inset?: boolean;
-  /** Native tooltip for sighted users — defaults to `aria-label`. */
+  /** Native tooltip for sighted users — defaults to `aria-label`. Pass `""` to suppress. */
   title?: string;
   /** FAB pattern — primary fill + elevated shadow. */
   fab?: boolean;
@@ -49,6 +50,12 @@ export interface IconButtonProps
   loading?: boolean;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
+  /**
+   * Compose IconButton chrome onto another element (Base UI `render`) — e.g.
+   * `render={<a href="/" />}` for a circular brand mark. Not with `fab` or `inset`.
+   * `disabled` maps to `aria-disabled` on non-button elements.
+   */
+  render?: ReactElement;
   className?: IconButtonLayoutClassName;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
@@ -61,9 +68,14 @@ export interface IconButtonProps
   form?: string;
 }
 
-function assertIconButtonPattern(props: Pick<IconButtonProps, "fab" | "role">) {
+function assertIconButtonPattern(
+  props: Pick<IconButtonProps, "fab" | "role" | "render" | "inset">,
+) {
   if (props.fab && props.role != null && props.role !== "primary") {
     console.warn("[WMDS IconButton] `fab` uses primary role — omit `role` or set `primary`.");
+  }
+  if (props.render != null && (props.fab || props.inset)) {
+    console.warn("[WMDS IconButton] `render` is not supported with `fab` or `inset`.");
   }
 }
 
@@ -71,7 +83,8 @@ function assertIconButtonPattern(props: Pick<IconButtonProps, "fab" | "role">) {
  * Icon-only action control — circular hit target; **`aria-label` required**.
  * Use when space is tight and the icon is universally understood; otherwise use `Button` with a label.
  */
-export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(function IconButton({
+export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(function IconButton(
+  {
     icon,
     "aria-label": ariaLabel,
     role: roleProp,
@@ -82,6 +95,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
     loading = false,
     disabled,
     type = "button",
+    render,
     className,
     onClick,
     onKeyDown,
@@ -93,65 +107,98 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
     name,
     form,
     ...buttonProps
-  }, ref) {
-  assertIconButtonPattern({ fab, role: roleProp });
+  },
+  ref,
+) {
+  assertIconButtonPattern({ fab, role: roleProp, render, inset });
 
   const role = fab ? "primary" : (roleProp ?? "ghost");
   const isDisabled = disabled || loading;
-  const tooltip = title ?? ariaLabel;
+  const tooltip = title === undefined ? ariaLabel : title;
   const insetSize = inset ? (size as IconButtonInsetSize) : null;
   const hitClass = inset
     ? iconButtonInsetHitClasses[insetSize ?? "md"]
     : iconButtonSizeClasses[size as IconButtonSize];
 
-  return (
-    <button
-      {...buttonProps}
-      ref={ref}
-      type={type}
-      disabled={isDisabled}
-      aria-busy={loading || undefined}
-      aria-label={ariaLabel}
-      aria-current={ariaCurrent}
-      aria-haspopup={ariaHasPopup}
-      aria-expanded={ariaExpanded}
-      aria-controls={ariaControls}
-      title={tooltip}
-      onClick={onClick}
-      onKeyDown={onKeyDown}
-      id={id}
-      name={name}
-      form={form}
-      style={ariaExpanded && role === "ghost" ? iconButtonExpandedStyle : undefined}
-      className={cn(
-        buttonBaseClasses,
-        buttonRoleClasses[role],
-        hitClass,
-        iconButtonShapeClass,
-        inset && iconButtonInsetFocusClasses,
-        fab && iconButtonFabClasses,
-        className,
-      )}
-      data-role={role}
-      data-size={size}
-      data-pattern={fab ? "fab" : inset ? "inset" : "icon"}
-      data-loading={loading || undefined}
-    >
-      {loading ? (
-        <ButtonSpinner size={inset ? "xs" : (size as IconButtonSize)} />
-      ) : inset ? (
-        <span
-          className={cn(
-            "inline-flex shrink-0 items-center justify-center text-inherit [&>svg]:size-full",
-            iconButtonInsetIconSizeClasses[insetSize ?? "md"],
-          )}
-          aria-hidden
-        >
-          {icon}
-        </span>
-      ) : (
-        <ButtonIcon size={size as IconButtonSize}>{icon}</ButtonIcon>
-      )}
-    </button>
+  const classNameMerged = cn(
+    buttonBaseClasses,
+    buttonRoleClasses[role],
+    hitClass,
+    iconButtonShapeClass,
+    inset && iconButtonInsetFocusClasses,
+    fab && iconButtonFabClasses,
+    className,
   );
+
+  const content = loading ? (
+    <ButtonSpinner size={inset ? "xs" : (size as IconButtonSize)} />
+  ) : inset ? (
+    <span
+      className={cn(
+        "inline-flex shrink-0 items-center justify-center text-inherit [&>svg]:size-full",
+        iconButtonInsetIconSizeClasses[insetSize ?? "md"],
+      )}
+      aria-hidden
+    >
+      {icon}
+    </span>
+  ) : (
+    <ButtonIcon size={size as IconButtonSize}>{icon}</ButtonIcon>
+  );
+
+  return useRender({
+    render,
+    ref,
+    defaultTagName: "button",
+    props: render
+      ? {
+          ...buttonProps,
+          className: classNameMerged,
+          "aria-label": ariaLabel,
+          "aria-current": ariaCurrent,
+          "aria-haspopup": ariaHasPopup,
+          "aria-expanded": ariaExpanded,
+          "aria-controls": ariaControls,
+          "aria-busy": loading || undefined,
+          "aria-disabled": isDisabled ? true : undefined,
+          "data-disabled": isDisabled ? "" : undefined,
+          "data-role": role,
+          "data-size": size,
+          "data-pattern": fab ? "fab" : inset ? "inset" : "icon",
+          "data-loading": loading || undefined,
+          title: tooltip === "" ? undefined : tooltip,
+          tabIndex: isDisabled ? -1 : buttonProps.tabIndex,
+          onClick,
+          onKeyDown,
+          id,
+          name,
+          form,
+          style: ariaExpanded && role === "ghost" ? iconButtonExpandedStyle : undefined,
+          children: content,
+        }
+      : {
+          ...buttonProps,
+          className: classNameMerged,
+          type,
+          disabled: isDisabled,
+          "aria-busy": loading || undefined,
+          "aria-label": ariaLabel,
+          "aria-current": ariaCurrent,
+          "aria-haspopup": ariaHasPopup,
+          "aria-expanded": ariaExpanded,
+          "aria-controls": ariaControls,
+          title: tooltip === "" ? undefined : tooltip,
+          onClick,
+          onKeyDown,
+          id,
+          name,
+          form,
+          style: ariaExpanded && role === "ghost" ? iconButtonExpandedStyle : undefined,
+          "data-role": role,
+          "data-size": size,
+          "data-pattern": fab ? "fab" : inset ? "inset" : "icon",
+          "data-loading": loading || undefined,
+          children: content,
+        },
+  });
 });

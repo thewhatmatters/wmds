@@ -19,6 +19,7 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
+import { createPortal } from "react-dom";
 import { cn } from "../../../lib/cn";
 import { motionTransitionProp } from "../../../lib/motion";
 import { useScrollThreshold } from "../../../lib/useScrollThreshold";
@@ -31,6 +32,7 @@ import { Sheet } from "../Sheet/Sheet";
 import {
   siteNavBarBaseClasses,
   siteNavBarCompactLayoutClasses,
+  siteNavBarMenuOpenClasses,
   siteNavBarStateClasses,
   siteNavBrandClasses,
   siteNavContainerClasses,
@@ -40,6 +42,7 @@ import {
   siteNavLinkListClasses,
   siteNavLinksRootClasses,
   siteNavMeasureRailClasses,
+  siteNavMenuBackdropClasses,
   siteNavMenuContentClasses,
   siteNavMenuLinkClasses,
   siteNavMenuLinkGridClasses,
@@ -58,6 +61,7 @@ import {
   siteNavMeasureMoreClasses,
   siteNavMoreIconClasses,
   siteNavMoreTriggerClasses,
+  siteNavNavigationRootClasses,
   siteNavRootClasses,
   siteNavSlotsClasses,
   siteNavStartClasses,
@@ -100,7 +104,7 @@ export interface SiteNavProps {
   /** Controlled state — overrides scroll detection (Storybook specimens, tests). */
   state?: SiteNavState;
   onStateChange?: (state: SiteNavState) => void;
-  /** Compact pill width — `grid` (default, fills `--grid-max`) or `hug`. */
+  /** Compact (scrolled) pill width — `hug` (default, narrower) or `grid` (same as expanded `--grid-max`). */
   compactLayout?: SiteNavCompactLayout;
   /** `fixed` page chrome (default) or `inline` static specimen (no scroll detection). */
   placement?: SiteNavPlacement;
@@ -114,6 +118,8 @@ export interface SiteNavProps {
 interface SiteNavContextValue {
   state: SiteNavState;
   anchorRef: RefObject<HTMLDivElement | null>;
+  menuOpen: boolean;
+  setMenuOpen: (open: boolean) => void;
 }
 
 const SiteNavContext = createContext<SiteNavContextValue | null>(null);
@@ -128,7 +134,7 @@ function slotsLayoutClass(hasStart: boolean, hasMiddle: boolean, hasEnd: boolean
 
 /**
  * Marketing site header — full-width band at the top of the page that collapses into a
- * grid-contained floating pill once the reader scrolls past `collapseAt`.
+ * floating pill (hugs content by default) once the reader scrolls past `collapseAt`.
  */
 function SiteNavRoot({
   start,
@@ -139,7 +145,7 @@ function SiteNavRoot({
   collapseAt = siteNavDefaultCollapseAt,
   state: controlledState,
   onStateChange,
-  compactLayout = "grid",
+  compactLayout = "hug",
   placement = "fixed",
   scrollContainer,
   "aria-label": ariaLabel = "Site",
@@ -154,6 +160,7 @@ function SiteNavRoot({
   const state: SiteNavState = controlledState ?? (scrolled ? "compact" : "expanded");
   const compact = state === "compact";
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const previousState = useRef(state);
   useEffect(() => {
@@ -181,19 +188,20 @@ function SiteNavRoot({
   ) : null;
 
   return (
-    <SiteNavContext.Provider value={{ state, anchorRef }}>
+    <SiteNavContext.Provider value={{ state, anchorRef, menuOpen, setMenuOpen }}>
       <header
         aria-label={ariaLabel}
         data-state={state}
+        data-menu={menuOpen ? "open" : "closed"}
         className={cn(siteNavRootClasses[placement], className)}
       >
-        <div className={cn(siteNavContainerClasses, compact && "px-[var(--grid-margin)]")}>
+        <div className={cn(siteNavContainerClasses, (compact || menuOpen) && "px-[var(--grid-margin)]")}>
           <motion.div
             ref={anchorRef}
             layout={!shouldReduceMotion}
             animate={{
-              borderRadius: compact ? 28 : 0,
-              marginTop: compact ? 16 : 0,
+              borderRadius: compact || menuOpen ? 28 : 0,
+              marginTop: compact || menuOpen ? 16 : 0,
             }}
             transition={
               shouldReduceMotion
@@ -205,6 +213,7 @@ function SiteNavRoot({
               siteNavBarBaseClasses,
               siteNavBarStateClasses[state],
               compact && siteNavBarCompactLayoutClasses[compactLayout],
+              menuOpen && siteNavBarMenuOpenClasses,
             )}
           >
             <div className={slotsLayoutClass(hasStart, hasMiddle, hasEnd)}>
@@ -242,14 +251,36 @@ function SiteNavRoot({
 
 export interface SiteNavBrandProps {
   href: string;
-  /** Logo mark + wordmark, or a plain wordmark. */
-  children: ReactNode;
-  /** Accessible name when `children` is a mark without text. */
+  /**
+   * Lucide mark for a circular **IconButton** brand. Prefer this over putting an
+   * icon in `children`.
+   */
+  icon?: ReactElement;
+  /** Wordmark text, or a Lucide icon when `icon` is omitted (still requires `aria-label`). */
+  children?: ReactNode;
+  /** Required when the brand is icon-only. */
   "aria-label"?: string;
 }
 
-/** Brand link — ghost **Button** anchor with logo spacing. */
-function SiteNavBrand({ href, children, "aria-label": ariaLabel }: SiteNavBrandProps) {
+/** Brand link — circular **IconButton** for marks, or ghost **Button** for wordmarks. */
+function SiteNavBrand({ href, icon, children, "aria-label": ariaLabel }: SiteNavBrandProps) {
+  const mark =
+    icon ?? (isValidElement(children) && children.type !== undefined ? children : null);
+
+  if (mark != null) {
+    return (
+      <IconButton
+        icon={mark as ReactElement}
+        aria-label={ariaLabel ?? "Home"}
+        role="ghost"
+        size="sm"
+        title=""
+        render={<a href={href} />}
+        className={siteNavBrandClasses}
+      />
+    );
+  }
+
   return (
     <Button
       role="ghost"
@@ -316,6 +347,7 @@ function SiteNavLinks({
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const moreRef = useRef<HTMLButtonElement>(null);
+  const overflowMenuRef = useRef<HTMLUListElement>(null);
   const measureMoreRef = useRef<HTMLSpanElement>(null);
   const measureRefs = useRef(new Map<string, HTMLSpanElement>());
 
@@ -398,9 +430,11 @@ function SiteNavLinks({
     if (!menuOpen) return undefined;
 
     function handlePointerDown(event: MouseEvent) {
-      if (rootRef.current != null && !rootRef.current.contains(event.target as Node)) {
-        closeMenu();
+      const target = event.target as Node;
+      if (rootRef.current?.contains(target) || overflowMenuRef.current?.contains(target)) {
+        return;
       }
+      closeMenu();
     }
 
     function handleEscape(event: globalThis.KeyboardEvent) {
@@ -493,9 +527,16 @@ function SiteNavLinks({
 
   return (
     <div ref={rootRef} className={siteNavLinksRootClasses}>
-      <NavigationMenu.Root aria-label={ariaLabel} delay={delay} closeDelay={closeDelay}>
+      <NavigationMenu.Root
+        aria-label={ariaLabel}
+        delay={delay}
+        closeDelay={closeDelay}
+        className={siteNavNavigationRootClasses}
+        onValueChange={(value) => context?.setMenuOpen(value != null)}
+      >
         <NavigationMenu.List className={siteNavLinkListClasses}>{visibleItems}</NavigationMenu.List>
         <NavigationMenu.Portal>
+          <NavigationMenu.Backdrop className={siteNavMenuBackdropClasses} />
           <NavigationMenu.Positioner
             anchor={context?.anchorRef}
             side="bottom"
@@ -564,25 +605,34 @@ function SiteNavLinks({
         </span>
       </div>
 
-      {menuOpen && menuStyle != null ? (
-        <Dropdown.Menu id={menuId} role="menu" aria-label={`${ariaLabel} overflow`} style={menuStyle}>
-          {overflowItems.flatMap(overflowRows).map((row, index) => (
-            <li key={row.id} role="presentation">
-              <Dropdown.Item
-                role="menuitem"
-                tabIndex={-1}
-                truncate={false}
-                selected={Boolean(row.current)}
-                active={index === menuActiveIndex}
-                onMouseEnter={() => setMenuActiveIndex(index)}
-                onClick={() => activateOverflowHref(row.href)}
-              >
-                {row.label}
-              </Dropdown.Item>
-            </li>
-          ))}
-        </Dropdown.Menu>
-      ) : null}
+      {menuOpen && menuStyle != null
+        ? createPortal(
+            <Dropdown.Menu
+              ref={overflowMenuRef}
+              id={menuId}
+              role="menu"
+              aria-label={`${ariaLabel} overflow`}
+              style={menuStyle}
+            >
+              {overflowItems.flatMap(overflowRows).map((row, index) => (
+                <li key={row.id} role="presentation">
+                  <Dropdown.Item
+                    role="menuitem"
+                    tabIndex={-1}
+                    truncate={false}
+                    selected={Boolean(row.current)}
+                    active={index === menuActiveIndex}
+                    onMouseEnter={() => setMenuActiveIndex(index)}
+                    onClick={() => activateOverflowHref(row.href)}
+                  >
+                    {row.label}
+                  </Dropdown.Item>
+                </li>
+              ))}
+            </Dropdown.Menu>,
+            document.body,
+          )
+        : null}
     </div>
   );
 }
