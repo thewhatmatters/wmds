@@ -60,11 +60,22 @@
   --color-info-muted: #c4ddfb;
   --color-on-info: #ffffff;
 
-  /* Brand / primary actions (WhatMatters) */
+  /*
+   * Brand / primary actions (WhatMatters default).
+   *
+   * Consumer brand override — the ONLY per-app color hook. An app may set
+   * `--color-primary` (and optionally `--color-on-primary`) on `:root` and on
+   * `[data-theme="dark"]` in a stylesheet imported AFTER `@whatmatters/wmds/styles.css`.
+   * `--color-focus-ring` and the primary hover / active mixes (stateColors.css) derive
+   * from `--color-primary`, so one light value and one dark value re-brand every
+   * primary control. Accent, status, chart, type, and grid tokens are not overridable
+   * per app — see CONSUMING.md → Brand override.
+   */
   --color-primary: #39485c;
   --color-on-primary: #fafafa;
 
-  --color-focus-ring: rgb(57 72 92 / 45%);
+  /* Derived from --color-primary — equals rgb(57 72 92 / 45%) on the default brand */
+  --color-focus-ring: color-mix(in srgb, var(--color-primary) 45%, transparent);
 
   /*
    * Chart — categorical series (no semantic meaning).
@@ -144,7 +155,15 @@
   --color-primary: #5a6d85;
   --color-on-primary: #fafaf8;
 
-  --color-focus-ring: rgb(242 243 244 / 35%);
+  /*
+   * Derived from --color-primary: lift the brand toward white so the ring stays
+   * visible on dark surfaces, then apply ring alpha. Follows a consumer override.
+   */
+  --color-focus-ring: color-mix(
+    in srgb,
+    color-mix(in oklch, var(--color-primary) 30%, white) 40%,
+    transparent
+  );
 
   --color-chart-categorical-1: #8aadd4;
   --color-chart-categorical-2: #52c4c4;

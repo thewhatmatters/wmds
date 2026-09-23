@@ -5,6 +5,11 @@
 :root {
   --color-ghost-foreground: var(--color-text-accent);
 
+  /*
+   * Primary hover / active derive from --color-primary so a consumer brand override
+   * (colors.css → "Consumer brand override") re-tints them automatically. Keep these
+   * as mixes — never hard-code a hex here.
+   */
   --color-primary-hover: color-mix(in oklch, var(--color-primary) 82%, black);
   --color-primary-active: color-mix(in oklch, var(--color-primary) 68%, black);
 
@@ -35,7 +40,8 @@
 [data-theme="dark"] {
   --color-ghost-foreground: var(--color-text-primary);
 
-  --color-primary-hover: color-mix(in oklch, var(--color-primary) 112%, white);
+  /* Dark lifts toward white on hover (12%) — percentages above 100% are invalid color-mix */
+  --color-primary-hover: color-mix(in oklch, var(--color-primary) 88%, white);
   --color-primary-active: color-mix(in oklch, var(--color-primary) 92%, black);
 
   --color-secondary-hover: var(--color-overlay-hover);

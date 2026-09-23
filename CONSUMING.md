@@ -208,4 +208,47 @@ Browse [lucide.dev/icons](https://lucide.dev/icons/).
 
 ## Customization
 
-Brand theming: edit semantic roles in **`src/theme/colors.css`**, rebuild, bump the package. Do **not** fork component visuals with per-app utility overrides — extend WMDS via new variants/patterns in the design system repo.
+### Brand override (`--color-primary`)
+
+The **only** per-app color hook is the primary brand color. The WhatMatters default palette stays in **`src/theme/colors.css`**; an app overrides it by redefining the allowlisted tokens on `:root` (light) and `[data-theme="dark"]` (dark) in a stylesheet imported **after** `@whatmatters/wmds/styles.css`.
+
+**Allowlist**
+
+| Token | Required | Notes |
+|-------|----------|-------|
+| `--color-primary` | Yes | One light value on `:root`, one dark value on `[data-theme="dark"]`. |
+| `--color-on-primary` | No | Ink on primary fills. Default `#fafafa` / `#fafaf8`; set it when your brand primary is light enough to fail contrast against near-white. |
+
+Everything else is derived, so you set two values and every primary control follows:
+
+- `--color-primary-hover` / `--color-primary-active` — `color-mix` of `--color-primary` (light darkens toward black; dark lifts toward white on hover).
+- `--color-focus-ring` — `--color-primary` at 45% alpha (light); lifted toward white then 40% alpha (dark) so the ring stays visible on dark surfaces.
+
+**Snippet — `brand.css`, imported after `styles.css`**
+
+```tsx
+// app entry
+import "@whatmatters/wmds/styles.css";
+import "./brand.css"; // must come after styles.css
+```
+
+```css
+/* brand.css — keep unlayered so it wins the cascade against WMDS defaults */
+:root {
+  --color-primary: #7a2e8e;
+  /* --color-on-primary: #ffffff;  optional */
+}
+
+[data-theme="dark"] {
+  --color-primary: #c48ad4;
+  /* --color-on-primary: #171717;  optional */
+}
+```
+
+Rules:
+
+- Import order matters — the override must load after `styles.css` (or after `@import "@whatmatters/wmds/theme.css"` if you configure Tailwind yourself). Do not wrap it in a `@layer`; WMDS defaults are unlayered author styles and a layered override would lose.
+- Set both the light and the dark value. Leaving `[data-theme="dark"]` unset falls back to the WhatMatters dark primary, not to your light value.
+- Check contrast for `--color-on-primary` on your primary and for `--color-primary` on `--color-body` in both themes.
+
+**Not overridable per app:** accent (`--color-accent*`, `--color-on-accent`), status (`--color-error*`, `--color-success*`, `--color-warning*`, `--color-info*`), chart series, typography (`--font-*`, `--line-height-*`, `type-*`), and grid (`--grid-*`, `--spacing`). Those roles are the shared WMDS contract — change them in `src/theme/`, rebuild, and bump the package. Do **not** fork component visuals with per-app utility overrides — extend WMDS via new variants/patterns in the design system repo.
