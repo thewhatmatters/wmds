@@ -32,7 +32,6 @@ import { Sheet } from "../Sheet/Sheet";
 import {
   siteNavBarBaseClasses,
   siteNavBarCompactLayoutClasses,
-  siteNavBarMenuOpenClasses,
   siteNavBarStateClasses,
   siteNavBrandClasses,
   siteNavContainerClasses,
@@ -48,11 +47,13 @@ import {
   siteNavMenuLinkGridClasses,
   siteNavMenuPopupClasses,
   siteNavMenuPositionerClasses,
+  siteNavMenuSideOffsetPx,
   siteNavMenuSectionClasses,
   siteNavMenuSectionLabelClasses,
   siteNavMenuSectionSpanClasses,
   siteNavMenuViewportClasses,
   siteNavMiddleClasses,
+  siteNavMiddleHugClasses,
   siteNavMobileLinkClasses,
   siteNavMiddleResponsiveClasses,
   siteNavMobileListClasses,
@@ -117,6 +118,7 @@ export interface SiteNavProps {
 
 interface SiteNavContextValue {
   state: SiteNavState;
+  /** Mega-menu width/position anchor — the grid container (not the hug pill). */
   anchorRef: RefObject<HTMLDivElement | null>;
   menuOpen: boolean;
   setMenuOpen: (open: boolean) => void;
@@ -124,8 +126,15 @@ interface SiteNavContextValue {
 
 const SiteNavContext = createContext<SiteNavContextValue | null>(null);
 
-function slotsLayoutClass(hasStart: boolean, hasMiddle: boolean, hasEnd: boolean): string {
-  if (hasMiddle && (hasStart || hasEnd)) return siteNavSlotsClasses.three;
+function slotsLayoutClass(
+  hasStart: boolean,
+  hasMiddle: boolean,
+  hasEnd: boolean,
+  hugCluster: boolean,
+): string {
+  if (hasMiddle && (hasStart || hasEnd)) {
+    return hugCluster ? siteNavSlotsClasses.threeHug : siteNavSlotsClasses.three;
+  }
   if (hasMiddle) return siteNavSlotsClasses.middleOnly;
   if (hasStart && hasEnd) return siteNavSlotsClasses.ends;
   if (hasStart) return siteNavSlotsClasses.startOnly;
@@ -151,7 +160,7 @@ function SiteNavRoot({
   "aria-label": ariaLabel = "Site",
   className,
 }: SiteNavProps) {
-  const anchorRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const shouldReduceMotion = useReducedMotion() ?? false;
   const scrolled = useScrollThreshold(collapseAt, {
     container: scrollContainer,
@@ -161,6 +170,8 @@ function SiteNavRoot({
   const compact = state === "compact";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  /** Pill morph is scroll-only — mega open must not change expanded chrome. */
+  const hugCluster = compact && compactLayout === "hug";
 
   const previousState = useRef(state);
   useEffect(() => {
@@ -188,20 +199,22 @@ function SiteNavRoot({
   ) : null;
 
   return (
-    <SiteNavContext.Provider value={{ state, anchorRef, menuOpen, setMenuOpen }}>
+    <SiteNavContext.Provider value={{ state, anchorRef: containerRef, menuOpen, setMenuOpen }}>
       <header
         aria-label={ariaLabel}
         data-state={state}
         data-menu={menuOpen ? "open" : "closed"}
         className={cn(siteNavRootClasses[placement], className)}
       >
-        <div className={cn(siteNavContainerClasses, (compact || menuOpen) && "px-[var(--grid-margin)]")}>
+        <div
+          ref={containerRef}
+          className={cn(siteNavContainerClasses, compact && "px-[var(--grid-margin)]")}
+        >
           <motion.div
-            ref={anchorRef}
             layout={!shouldReduceMotion}
             animate={{
-              borderRadius: compact || menuOpen ? 28 : 0,
-              marginTop: compact || menuOpen ? 16 : 0,
+              borderRadius: compact ? 28 : 0,
+              marginTop: compact ? 16 : 0,
             }}
             transition={
               shouldReduceMotion
@@ -213,15 +226,14 @@ function SiteNavRoot({
               siteNavBarBaseClasses,
               siteNavBarStateClasses[state],
               compact && siteNavBarCompactLayoutClasses[compactLayout],
-              menuOpen && siteNavBarMenuOpenClasses,
             )}
           >
-            <div className={slotsLayoutClass(hasStart, hasMiddle, hasEnd)}>
+            <div className={slotsLayoutClass(hasStart, hasMiddle, hasEnd, hugCluster)}>
               {hasStart ? <div className={siteNavStartClasses}>{start}</div> : null}
               {hasMiddle ? (
                 <div
                   className={cn(
-                    siteNavMiddleClasses,
+                    hugCluster ? siteNavMiddleHugClasses : siteNavMiddleClasses,
                     hasMobile && siteNavMiddleResponsiveClasses,
                   )}
                 >
@@ -343,7 +355,6 @@ function SiteNavLinks({
   closeDelay = 150,
 }: SiteNavLinksProps) {
   const context = useContext(SiteNavContext);
-  const compact = context?.state === "compact";
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const moreRef = useRef<HTMLButtonElement>(null);
@@ -539,10 +550,11 @@ function SiteNavLinks({
           <NavigationMenu.Backdrop className={siteNavMenuBackdropClasses} />
           <NavigationMenu.Positioner
             anchor={context?.anchorRef}
+            positionMethod="fixed"
             side="bottom"
             align="center"
-            sideOffset={compact ? 8 : 4}
-            collisionPadding={16}
+            sideOffset={siteNavMenuSideOffsetPx}
+            collisionPadding={8}
             className={siteNavMenuPositionerClasses}
           >
             <NavigationMenu.Popup className={siteNavMenuPopupClasses}>

@@ -48,11 +48,13 @@ Three slots — \`start\` | \`middle\` | \`end\` — in any combination. **SiteN
 
 | Prop | Purpose |
 |------|---------|
-| \`collapseAt\` | Scroll distance that flips expanded → compact (default 48) |
+| \`collapseAt\` | Scroll distance that flips expanded → compact pill (default **48px**) |
 | \`state\` / \`onStateChange\` | Controlled state for specimens and tests |
-| \`compactLayout\` | Scrolled pill only: \`hug\` (default, narrower) or \`grid\` (same \`--grid-max\` as expanded) |
+| \`compactLayout\` | Scrolled pill only: \`hug\` (default, narrower content cluster) or \`grid\` (same \`--grid-max\` as expanded) |
 | \`placement\` | \`fixed\` page chrome (default) or \`inline\` static specimen |
 | \`scrollContainer\` | Ref to the scrolling element when the window does not scroll |
+
+**Two separate switches:** scroll compact ≠ More overflow. More only appears when the middle link track cannot fit every item (usually viewport-clamped). Compact hug no longer uses equal thirds, so empty brand/CTA columns do not starve links into More early.
 
 Reserve the expanded band on the page with \`pt-16\` (**\`siteNavExpandedHeightClasses\`**) so hero copy does not start underneath the nav.
 

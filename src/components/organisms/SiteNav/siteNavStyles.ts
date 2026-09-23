@@ -32,8 +32,9 @@ export const siteNavRootClasses: Record<SiteNavPlacement, string> = {
   inline: "relative z-50 w-full",
 };
 
-/** Centered content column — mega-menu anchor; fills `--grid-max` in expanded. */
-export const siteNavContainerClasses = "mx-auto w-full max-w-[var(--grid-max)]";
+/** Centered content column — bar host + mega vertical anchor; always grid-wide even when the pill hugs. */
+export const siteNavContainerClasses =
+  "relative mx-auto w-full max-w-[var(--grid-max)]";
 
 /** Bar shell — surface, radius, and shadow morph between states (Motion `layout` handles geometry). */
 export const siteNavBarBaseClasses = cn(
@@ -70,18 +71,16 @@ export const siteNavMenuBackdropClasses = cn(
   "data-[starting-style]:opacity-0 data-[ending-style]:opacity-0",
 );
 
-/** Mega open — same pill chrome as compact (radius via Motion); keeps grid width when expanded. */
-export const siteNavBarMenuOpenClasses = cn(
-  "box-border border-border! bg-surface/80! p-1.5! shadow-sm! backdrop-blur-md!",
-  "supports-[backdrop-filter]:bg-surface/80!",
-);
+/** Gap between the bar and the mega panel — 0.5rem. */
+export const siteNavMenuSideOffsetPx = 8;
 
 /**
- * Slot rail — equal thirds so middle links stay optically centered; start/end hug their edges.
- * Middle `minmax(0,1fr)` still lets SiteNav.Links measure overflow for More.
+ * Slot rail — expanded / compact-grid use equal thirds so middle links stay optically centered.
+ * Compact hug uses a content cluster so the middle track is not starved to 1/3 (avoids early More).
  */
 export const siteNavSlotsClasses = {
   three: "grid w-full grid-cols-3 items-center gap-3",
+  threeHug: "flex w-max max-w-full items-center gap-3",
   ends: "flex w-full items-center justify-between gap-4",
   middleOnly: "flex w-full min-w-0 items-center justify-center",
   startOnly: "flex w-full items-center justify-start",
@@ -91,6 +90,8 @@ export const siteNavSlotsClasses = {
 export const siteNavStartClasses = "flex shrink-0 items-center gap-2 justify-self-start";
 export const siteNavMiddleClasses =
   "flex min-w-0 w-full items-center justify-center justify-self-stretch";
+/** Compact hug middle — content-sized; can shrink only when the pill hits `max-w-full`. */
+export const siteNavMiddleHugClasses = "flex min-w-0 max-w-full items-center justify-center";
 export const siteNavEndClasses = "flex shrink-0 flex-nowrap items-center gap-2 justify-self-end";
 
 /** Middle slot hides below `md` when a `mobile` menu is supplied. */
@@ -154,8 +155,9 @@ export const siteNavTriggerIconClasses = cn(
   motionTransition("fast"),
 );
 
-/** Portal positioner — width follows the anchor; above the focus backdrop. */
-export const siteNavMenuPositionerClasses = "z-[51] w-[var(--anchor-width)] outline-none";
+/** Portal positioner — always `--grid-max` wide (not the hug pill). Centered via Floating UI. */
+export const siteNavMenuPositionerClasses =
+  "z-[51] w-[min(var(--grid-max),calc(100vw_-_2_*_var(--grid-margin)))] outline-none";
 
 /** Mega-menu popup — soft pill-family radius (not a sharp card); height animates to content. */
 export const siteNavMenuPopupClasses = cn(

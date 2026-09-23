@@ -14,7 +14,7 @@ Ship **SiteNav** as an organism under **Components/Navigation**:
 - slots `start` | `middle` | `end` in any combination;
 - scroll-driven `expanded` → `compact` via `useScrollThreshold` (default `collapseAt` 48px); controlled `state` for specimens;
 - expanded band fills `--grid-max`; compact (scrolled) pill hugs content by default — narrower than the grid (`compactLayout="grid"` optional to match expanded width);
-- **SiteNav.Links** / **Link** / **Menu** / **MenuSection** / **MenuLink** on Base UI **NavigationMenu**; mega-menu width matches the nav bar (grid when expanded, hug when compact); open menu paints a light focus backdrop under the bar (`bg-fg/15`); middle track uses Tab-style **More** + **Dropdown** when items overflow;
+- **SiteNav.Links** / **Link** / **Menu** / **MenuSection** / **MenuLink** on Base UI **NavigationMenu**; mega-menu panel is always **`--grid-max` wide** (pill can be narrower); open menu paints a light focus backdrop under the bar (`bg-fg/15`); middle track uses Tab-style **More** + **Dropdown** when items overflow;
 - chrome via **Button** (`render` for anchors), **IconButton**, **Sheet** `side="end"` for `mobile` below `md`; brand may be icon-only with `aria-label`;
 - Motion `layout` morph with `borderRadius` + medium-tier surface transitions; reduced motion disables layout animation.
 
