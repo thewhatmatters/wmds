@@ -46,7 +46,7 @@ const meta = {
         component: `
 ## Usage
 
-Marketing site header. At the top of the page it is a full-width transparent band aligned to the grid margins. Once the reader scrolls past half the scrollport (or an explicit \`collapseAt\` in px), a separate floating hug pill **slides in from the top** with **44px** offset; the expanded band does not morph.
+Marketing site header. Expanded is **in document flow** (scrolls away with the page). After the reader scrolls past half the scrollport (or an explicit \`collapseAt\` in px), a separate floating hug pill **pins 1rem from the top**; the expanded band does not morph.
 
 Three slots — \`start\` | \`middle\` | \`end\` — in any combination. **SiteNav.Brand** goes in \`start\`, **SiteNav.Links** in \`middle\`, secondary link + primary **Button** in \`end\`. Supply \`mobile\` to swap the middle slot for a **Menu** IconButton and an end **Sheet** below \`md\`.
 
@@ -55,28 +55,30 @@ Three slots — \`start\` | \`middle\` | \`end\` — in any combination. **SiteN
 | \`collapseAt\` | Scroll distance in px that reveals the compact pill. **Omit** for **50%** of the scrollport height (\`siteNavDefaultCollapseRatio\`) |
 | \`state\` / \`onStateChange\` | Controlled state for specimens and tests |
 | \`compactLayout\` | Scrolled pill only: \`hug\` (default, narrower content cluster) or \`grid\` (same \`--grid-max\` as expanded) |
-| \`placement\` | \`fixed\` page chrome (default) or \`inline\` static specimen |
-| \`scrollContainer\` | Ref to the scrolling element when the window does not scroll |
+| \`placement\` | \`fixed\` page chrome (in-flow expanded → fixed compact) or \`inline\` static specimen |
+| \`scrollContainer\` | Ref to the scrolling element when the window does not scroll (compact uses sticky inside it) |
+
+**Do not** reserve \`pt-16\` under SiteNav on product pages — the expanded band is in normal flow and owns its height. \`siteNavExpandedHeightClasses\` is only for the in-flow spacer while the compact pill is pinned.
 
 **Two separate switches:** scroll compact ≠ More overflow. More only appears when the middle link track cannot fit every item (usually viewport-clamped). Expanded and compact-grid give the middle the leftover space after brand/CTA (not equal thirds), so both states show the same links when they fit.
-
-Reserve the expanded band on the page with \`pt-16\` (**\`siteNavExpandedHeightClasses\`**) so hero copy does not start underneath the nav.
 
 ## Anatomy
 
 \`\`\`
-SiteNav (header, fixed, pointer-events-none)
-└── container — max-w-[--grid-max]; mega-menu anchor
-    └── bar — expanded = full grid; compact (scrolled) = hug / narrower by default
-        ├── start  → SiteNav.Brand (IconButton circular → <a>, or Button wordmark)
-        ├── middle → SiteNav.Links (NavigationMenu)
-        │   ├── SiteNav.Link  (Button ghost sm → <a>, aria-current)
-        │   └── SiteNav.Menu  (Button ghost sm trigger + chevron)
-        │       └── SiteNav.MenuSection × n
-        │           ├── Featured → image + h2 + p + TextLink
-        │           ├── Read → \`siteNavMenuReadRowClasses\` (stack below md) + TextLink
-        │           └── Links → SiteNav.MenuLinkGrid → SiteNav.MenuLink (1-col below md)
-        └── end    → Button ghost sm (sign in) + Button primary sm (CTA) + Menu IconButton (mobile)
+SiteNav (header)
+├── expanded — relative / in flow (scrolls away)
+└── compact  — fixed (window) or sticky (scrollContainer), 1rem from top
+    └── container — max-w-[--grid-max]; mega-menu anchor
+        └── bar — expanded = full grid; compact = hug / narrower by default
+            ├── start  → SiteNav.Brand (IconButton circular → <a>, or Button wordmark)
+            ├── middle → SiteNav.Links (NavigationMenu)
+            │   ├── SiteNav.Link  (Button ghost sm → <a>, aria-current)
+            │   └── SiteNav.Menu  (Button ghost sm trigger + chevron)
+            │       └── SiteNav.MenuSection × n
+            │           ├── Featured → image + h2 + p + TextLink
+            │           ├── Read → \`siteNavMenuReadRowClasses\` (stack below md) + TextLink
+            │           └── Links → SiteNav.MenuLinkGrid → SiteNav.MenuLink (1-col below md)
+            └── end    → Button ghost sm (sign in) + Button primary sm (CTA) + Menu IconButton (mobile)
 Sheet side="end" → SiteNav.MobileLink rows          (only when \`mobile\` is set)
 \`\`\`
 
@@ -255,13 +257,13 @@ function ScrollPanel({
       ref={scrollerRef}
       className="h-[min(48rem,80vh)] overflow-y-auto rounded-2xl border border-border bg-body"
     >
-      <div className="sticky top-0 z-40">{nav(scrollerRef)}</div>
+      {nav(scrollerRef)}
       <div className="flex flex-col gap-6 px-6 pb-24 pt-4">
         <p className={typographyClass("overline")}>Scroll this panel to collapse</p>
         <h1 className="type-heading-2 text-fg">Plan the week around what matters.</h1>
         <p className="type-body max-w-prose text-muted">
-          WhatMatters turns a noisy backlog into one calm list. Scroll past the nav height to see the
-          compact pill slide in from the top.
+          WhatMatters turns a noisy backlog into one calm list. The expanded nav scrolls away with
+          the page; past half the panel height the compact pill pins 1rem from the top.
         </p>
         <div className="h-64 rounded-xl bg-secondary/40" aria-hidden />
         <p className="type-body text-muted">Keep scrolling — compact pill should stay pinned above.</p>
@@ -281,7 +283,7 @@ export const MarketingHeader: Story = {
       docs: {
         description: {
           story:
-            "Scroll inside the panel (not the Storybook canvas): past **half the panel height**, a floating hug pill slides in with **44px** top offset. **Resources** mega body must match **Pattern — mega menu** Show code (Featured / Read / Links) — do not substitute a bare MenuLinkGrid.",
+            "Scroll inside the panel: expanded nav scrolls away with the content; past **half the panel height** a hug pill pins **1rem** from the top. **Resources** mega must match **Pattern — mega menu** Show code.",
         },
       },
     },
@@ -376,7 +378,7 @@ export function MarketingHeader() {
           </>
         }
       />
-      <main className="grid-page pt-16">{/* page content */}</main>
+      <main className="grid-page">{/* page content — no pt-16; SiteNav is in flow */}</main>
     </>
   );
 }

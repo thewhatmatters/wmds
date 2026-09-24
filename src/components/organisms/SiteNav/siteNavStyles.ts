@@ -25,14 +25,32 @@ export const siteNavExpandedHeightClasses = "h-16 min-h-16";
 
 /** Compact pill — height hugs controls; equal shell inset (`p-1`) all around. */
 
-/** Compact pill offset from the viewport top — 44px breathing room. */
-export const siteNavCompactTopOffsetClasses = "mt-11";
+/** Compact pill offset from the scrollport top — 1rem (`top-4` on fixed/sticky root). */
+export const siteNavCompactViewportTopClasses = "top-4";
 
-/** Outer chrome — full-width fixed strip; only the bar itself accepts pointer events.
- * `z-50` keeps the bar above the mega-menu backdrop (`z-40`). */
+/**
+ * Root chrome.
+ * - `flow` — expanded page header: in document flow, scrolls away with content.
+ * - `fixed` — compact page overlay: pinned to the viewport.
+ * - `sticky` — compact inside a `scrollContainer`: sticks within that scroller.
+ * - `inline` — static Storybook specimen (no scroll-driven positioning).
+ */
+export const siteNavRootFlowClasses =
+  "pointer-events-none relative z-50 w-full";
+export const siteNavRootFixedClasses = cn(
+  "pointer-events-none fixed inset-x-0 z-50",
+  siteNavCompactViewportTopClasses,
+);
+export const siteNavRootStickyClasses = cn(
+  "pointer-events-none sticky z-50 w-full",
+  siteNavCompactViewportTopClasses,
+);
+export const siteNavRootInlineClasses = "relative z-50 w-full";
+
+/** @deprecated Use flow / fixed / sticky / inline class exports. */
 export const siteNavRootClasses: Record<SiteNavPlacement, string> = {
-  fixed: "pointer-events-none fixed inset-x-0 top-0 z-50",
-  inline: "relative z-50 w-full",
+  fixed: siteNavRootFixedClasses,
+  inline: siteNavRootInlineClasses,
 };
 
 /** Centered content column — bar host + mega vertical anchor; always grid-wide even when the pill hugs. */

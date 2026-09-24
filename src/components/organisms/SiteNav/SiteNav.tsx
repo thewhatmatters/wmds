@@ -1,6 +1,6 @@
 import { NavigationMenu } from "@base-ui/react/navigation-menu";
 import { ChevronDown, Menu as MenuIcon } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   Children,
   createContext,
@@ -34,10 +34,10 @@ import {
   siteNavBarCompactLayoutClasses,
   siteNavBarStateClasses,
   siteNavBrandClasses,
-  siteNavCompactTopOffsetClasses,
   siteNavContainerClasses,
   siteNavDefaultCollapseRatio,
   siteNavEndClasses,
+  siteNavExpandedHeightClasses,
   siteNavLinkClasses,
   siteNavLinkListClasses,
   siteNavLinksRootClasses,
@@ -64,7 +64,10 @@ import {
   siteNavMoreIconClasses,
   siteNavMoreTriggerClasses,
   siteNavNavigationRootClasses,
-  siteNavRootClasses,
+  siteNavRootFixedClasses,
+  siteNavRootFlowClasses,
+  siteNavRootInlineClasses,
+  siteNavRootStickyClasses,
   siteNavSlotsClasses,
   siteNavStartClasses,
   siteNavTriggerClasses,
@@ -114,7 +117,7 @@ export interface SiteNavProps {
   onStateChange?: (state: SiteNavState) => void;
   /** Compact (scrolled) pill width — `hug` (default, narrower) or `grid` (same as expanded `--grid-max`). */
   compactLayout?: SiteNavCompactLayout;
-  /** `fixed` page chrome (default) or `inline` static specimen (no scroll detection). */
+  /** `fixed` page chrome (default: in-flow expanded → fixed/sticky compact) or `inline` static specimen. */
   placement?: SiteNavPlacement;
   /** Scroll container when the page does not scroll the window. */
   scrollContainer?: RefObject<HTMLElement | null>;
@@ -149,9 +152,9 @@ function slotsLayoutClass(
 }
 
 /**
- * Marketing site header — full-width expanded band at the top of the page. Once the
+ * Marketing site header — in-flow expanded band that scrolls away with the page. Once the
  * reader scrolls past half the viewport (or `collapseAt` px), a separate floating pill
- * slides in from the top with a 44px offset. Expanded chrome does not morph.
+ * pins 1rem from the top (`fixed` on the window, `sticky` inside a `scrollContainer`).
  */
 function SiteNavRoot({
   start,
@@ -181,9 +184,17 @@ function SiteNavRoot({
   const [menuOpen, setMenuOpen] = useState(false);
   /** Compact hug is scroll-only — mega open must not change expanded chrome. */
   const hugCluster = compact && compactLayout === "hug";
+  /** Slide + fade together — pixel `y` so the move stays readable; opacity feathers the edges. */
+  const compactHidden = { y: -72, opacity: 0 } as const;
+  const compactVisible = { y: 0, opacity: 1 } as const;
   const barTransition = shouldReduceMotion
     ? { duration: 0 }
-    : motionTransitionProp("medium");
+    : { ...motionTransitionProp("medium"), type: "tween" as const };
+
+  const pageChrome = placement === "fixed";
+  const hasScrollContainer = scrollContainer != null;
+  /** Page / scroll-panel chrome: compact pins; expanded stays in normal document flow. */
+  const isScrollChrome = pageChrome || hasScrollContainer;
 
   const previousState = useRef(state);
   useEffect(() => {
@@ -234,44 +245,123 @@ function SiteNavRoot({
     );
   }
 
+  const compactBarClassName = cn(
+    siteNavBarBaseClasses,
+    siteNavBarStateClasses.compact,
+    siteNavBarCompactLayoutClasses[compactLayout],
+  );
+
+  const expandedBar = (
+    <div
+      data-state="expanded"
+      className={cn(siteNavBarBaseClasses, siteNavBarStateClasses.expanded)}
+    >
+      {renderSlots(false)}
+    </div>
+  );
+
+  const compactShell = (
+    <div
+      ref={containerRef}
+      className={cn(siteNavContainerClasses, "px-[var(--grid-margin)]")}
+    >
+      <div data-state="compact" className={compactBarClassName}>
+        {renderSlots(hugCluster)}
+      </div>
+    </div>
+  );
+
   return (
     <SiteNavContext.Provider value={{ state, anchorRef: containerRef, menuOpen, setMenuOpen }}>
-      <header
-        aria-label={ariaLabel}
-        data-state={state}
-        data-menu={menuOpen ? "open" : "closed"}
-        className={cn(siteNavRootClasses[placement], className)}
-      >
-        <div
-          ref={containerRef}
-          className={cn(siteNavContainerClasses, compact && "px-[var(--grid-margin)]")}
-        >
+      {isScrollChrome ? (
+        <>
+          <AnimatePresence>
+            {compact ? (
+              hasScrollContainer ? (
+                <motion.div
+                  key="site-nav-compact"
+                  initial={shouldReduceMotion ? false : compactHidden}
+                  animate={compactVisible}
+                  exit={shouldReduceMotion ? compactVisible : compactHidden}
+                  transition={barTransition}
+                  className={cn(siteNavRootStickyClasses, "h-0 w-full overflow-visible")}
+                >
+                  <header
+                    aria-label={ariaLabel}
+                    data-state="compact"
+                    data-menu={menuOpen ? "open" : "closed"}
+                    className={cn("pointer-events-none w-full", className)}
+                  >
+                    {compactShell}
+                  </header>
+                </motion.div>
+              ) : (
+                <motion.header
+                  key="site-nav-compact"
+                  aria-label={ariaLabel}
+                  data-state="compact"
+                  data-menu={menuOpen ? "open" : "closed"}
+                  initial={shouldReduceMotion ? false : compactHidden}
+                  animate={compactVisible}
+                  exit={shouldReduceMotion ? compactVisible : compactHidden}
+                  transition={barTransition}
+                  className={cn(siteNavRootFixedClasses, className)}
+                >
+                  {compactShell}
+                </motion.header>
+              )
+            ) : null}
+          </AnimatePresence>
+
           {compact ? (
-            <motion.div
-              key="compact"
-              initial={shouldReduceMotion ? false : { y: -20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={barTransition}
-              data-state="compact"
-              className={cn(
-                siteNavBarBaseClasses,
-                siteNavBarStateClasses.compact,
-                siteNavBarCompactLayoutClasses[compactLayout],
-                siteNavCompactTopOffsetClasses,
-              )}
-            >
-              {renderSlots(hugCluster)}
-            </motion.div>
-          ) : (
-            <div
+            <div className={cn(siteNavExpandedHeightClasses, "w-full")} aria-hidden />
+          ) : null}
+
+          {!compact ? (
+            <header
+              aria-label={ariaLabel}
               data-state="expanded"
-              className={cn(siteNavBarBaseClasses, siteNavBarStateClasses.expanded)}
+              data-menu={menuOpen ? "open" : "closed"}
+              className={cn(siteNavRootFlowClasses, className)}
             >
-              {renderSlots(false)}
-            </div>
-          )}
-        </div>
-      </header>
+              <div ref={containerRef} className={siteNavContainerClasses}>
+                {expandedBar}
+              </div>
+            </header>
+          ) : null}
+        </>
+      ) : (
+        <header
+          aria-label={ariaLabel}
+          data-state={state}
+          data-menu={menuOpen ? "open" : "closed"}
+          className={cn(siteNavRootInlineClasses, className)}
+        >
+          <div
+            ref={containerRef}
+            className={cn(siteNavContainerClasses, compact && "px-[var(--grid-margin)]")}
+          >
+            <AnimatePresence initial={false} mode="popLayout">
+              {compact ? (
+                <motion.div
+                  key="compact"
+                  initial={shouldReduceMotion ? false : compactHidden}
+                  animate={compactVisible}
+                  exit={shouldReduceMotion ? compactVisible : compactHidden}
+                  transition={barTransition}
+                  data-state="compact"
+                  className={compactBarClassName}
+                >
+                  {renderSlots(true)}
+                </motion.div>
+              ) : (
+                <div key="expanded">{expandedBar}</div>
+              )}
+            </AnimatePresence>
+          </div>
+        </header>
+      )}
+
       {hasMobile ? (
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <Sheet.Content side="end" title={mobileTitle}>

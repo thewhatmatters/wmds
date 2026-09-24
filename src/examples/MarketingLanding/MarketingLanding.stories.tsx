@@ -41,7 +41,7 @@ Page composition: **SiteNav** + \`grid-page\` hero. Scroll collapse: **Component
 ## Anatomy
 
 \`\`\`
-SiteNav (fixed) — Brand | Links + Menu | Sign in + CTA | mobile Sheet
+SiteNav — Brand | Links + Menu | Sign in + CTA | mobile Sheet (expanded in flow; compact pins after scroll)
 grid-page + band — hero + stacked sections
 ExampleGridControls — Storybook-only
 \`\`\`
@@ -169,7 +169,7 @@ function MarketingLandingPage() {
 
   return (
     <main
-      className="grid-page bg-body pb-16 pt-16 [--grid-column-gap:24px] [--grid-max:80rem]"
+      className="grid-page bg-body pb-16 [--grid-column-gap:24px] [--grid-max:80rem]"
       style={
         {
           "--grid-max": `${gridMax}px`,
@@ -276,7 +276,7 @@ import { BookOpen, FileText, History, Mic, Sparkles, Target, Video } from "lucid
 
 export function MarketingLanding() {
   return (
-    <main className="grid-page min-h-screen bg-body pt-16 [--grid-column-gap:24px] [--grid-max:80rem]">
+    <main className="grid-page min-h-screen bg-body [--grid-column-gap:24px] [--grid-max:80rem]">
       <SiteNav
         start={
           <SiteNav.Brand href="/" aria-label="WhatMatters" icon={<Sparkles />} />
