@@ -34,8 +34,9 @@ import {
   siteNavBarCompactLayoutClasses,
   siteNavBarStateClasses,
   siteNavBrandClasses,
+  siteNavCompactTopOffsetClasses,
   siteNavContainerClasses,
-  siteNavDefaultCollapseAt,
+  siteNavDefaultCollapseRatio,
   siteNavEndClasses,
   siteNavLinkClasses,
   siteNavLinkListClasses,
@@ -78,7 +79,10 @@ export type { SiteNavCompactLayout, SiteNavPlacement, SiteNavState } from "./sit
 export {
   siteNavCompactLayouts,
   siteNavDefaultCollapseAt,
+  siteNavDefaultCollapseRatio,
   siteNavExpandedHeightClasses,
+  siteNavMenuReadRowClasses,
+  siteNavMenuReadThumbClasses,
   siteNavPlacements,
   siteNavStates,
 } from "./siteNavStyles";
@@ -100,7 +104,10 @@ export interface SiteNavProps {
   mobile?: ReactNode;
   /** Sheet title for the mobile menu. Default: `"Menu"`. */
   mobileTitle?: ReactNode;
-  /** Scroll distance (px) that flips expanded → compact. Default: `48`. */
+  /**
+   * Scroll distance (px) that reveals the compact pill. Omit to use half the scrollport
+   * height (`siteNavDefaultCollapseRatio` — 50% of the window or `scrollContainer`).
+   */
   collapseAt?: number;
   /** Controlled state — overrides scroll detection (Storybook specimens, tests). */
   state?: SiteNavState;
@@ -142,8 +149,9 @@ function slotsLayoutClass(
 }
 
 /**
- * Marketing site header — full-width band at the top of the page that collapses into a
- * floating pill (hugs content by default) once the reader scrolls past `collapseAt`.
+ * Marketing site header — full-width expanded band at the top of the page. Once the
+ * reader scrolls past half the viewport (or `collapseAt` px), a separate floating pill
+ * slides in from the top with a 44px offset. Expanded chrome does not morph.
  */
 function SiteNavRoot({
   start,
@@ -151,7 +159,7 @@ function SiteNavRoot({
   end,
   mobile,
   mobileTitle = "Menu",
-  collapseAt = siteNavDefaultCollapseAt,
+  collapseAt,
   state: controlledState,
   onStateChange,
   compactLayout = "hug",
@@ -162,7 +170,8 @@ function SiteNavRoot({
 }: SiteNavProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const shouldReduceMotion = useReducedMotion() ?? false;
-  const scrolled = useScrollThreshold(collapseAt, {
+  const collapseThresholdPx = useCollapseThresholdPx(collapseAt, scrollContainer);
+  const scrolled = useScrollThreshold(collapseThresholdPx, {
     container: scrollContainer,
     disabled: controlledState != null || (placement === "inline" && scrollContainer == null),
   });
@@ -170,8 +179,11 @@ function SiteNavRoot({
   const compact = state === "compact";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  /** Pill morph is scroll-only — mega open must not change expanded chrome. */
+  /** Compact hug is scroll-only — mega open must not change expanded chrome. */
   const hugCluster = compact && compactLayout === "hug";
+  const barTransition = shouldReduceMotion
+    ? { duration: 0 }
+    : motionTransitionProp("medium");
 
   const previousState = useRef(state);
   useEffect(() => {
@@ -198,6 +210,30 @@ function SiteNavRoot({
     />
   ) : null;
 
+  function renderSlots(useHugCluster: boolean) {
+    return (
+      <div className={slotsLayoutClass(hasStart, hasMiddle, hasEnd, useHugCluster)}>
+        {hasStart ? <div className={siteNavStartClasses}>{start}</div> : null}
+        {hasMiddle ? (
+          <div
+            className={cn(
+              useHugCluster ? siteNavMiddleHugClasses : siteNavMiddleClasses,
+              hasMobile && siteNavMiddleResponsiveClasses,
+            )}
+          >
+            {middle}
+          </div>
+        ) : null}
+        {hasEnd ? (
+          <div className={siteNavEndClasses}>
+            {end}
+            {mobileTrigger}
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <SiteNavContext.Provider value={{ state, anchorRef: containerRef, menuOpen, setMenuOpen }}>
       <header
@@ -210,44 +246,30 @@ function SiteNavRoot({
           ref={containerRef}
           className={cn(siteNavContainerClasses, compact && "px-[var(--grid-margin)]")}
         >
-          <motion.div
-            layout={!shouldReduceMotion}
-            animate={{
-              borderRadius: compact ? 28 : 0,
-              marginTop: compact ? 16 : 0,
-            }}
-            transition={
-              shouldReduceMotion
-                ? { duration: 0 }
-                : { ...motionTransitionProp("medium"), layout: motionTransitionProp("medium") }
-            }
-            data-state={state}
-            className={cn(
-              siteNavBarBaseClasses,
-              siteNavBarStateClasses[state],
-              compact && siteNavBarCompactLayoutClasses[compactLayout],
-            )}
-          >
-            <div className={slotsLayoutClass(hasStart, hasMiddle, hasEnd, hugCluster)}>
-              {hasStart ? <div className={siteNavStartClasses}>{start}</div> : null}
-              {hasMiddle ? (
-                <div
-                  className={cn(
-                    hugCluster ? siteNavMiddleHugClasses : siteNavMiddleClasses,
-                    hasMobile && siteNavMiddleResponsiveClasses,
-                  )}
-                >
-                  {middle}
-                </div>
-              ) : null}
-              {hasEnd ? (
-                <div className={siteNavEndClasses}>
-                  {end}
-                  {mobileTrigger}
-                </div>
-              ) : null}
+          {compact ? (
+            <motion.div
+              key="compact"
+              initial={shouldReduceMotion ? false : { y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={barTransition}
+              data-state="compact"
+              className={cn(
+                siteNavBarBaseClasses,
+                siteNavBarStateClasses.compact,
+                siteNavBarCompactLayoutClasses[compactLayout],
+                siteNavCompactTopOffsetClasses,
+              )}
+            >
+              {renderSlots(hugCluster)}
+            </motion.div>
+          ) : (
+            <div
+              data-state="expanded"
+              className={cn(siteNavBarBaseClasses, siteNavBarStateClasses.expanded)}
+            >
+              {renderSlots(false)}
             </div>
-          </motion.div>
+          )}
         </div>
       </header>
       {hasMobile ? (
@@ -259,6 +281,45 @@ function SiteNavRoot({
       ) : null}
     </SiteNavContext.Provider>
   );
+}
+
+/**
+ * Resolve compact reveal distance — explicit `collapseAt` px, or half the scrollport height.
+ * Until the scrollport is measured, returns `Infinity` so the pill does not flash on mount.
+ */
+function useCollapseThresholdPx(
+  collapseAt: number | undefined,
+  container?: RefObject<HTMLElement | null>,
+): number {
+  const [measured, setMeasured] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (collapseAt != null) return;
+
+    const measure = () => {
+      const root = container?.current;
+      const height =
+        root?.clientHeight ??
+        (typeof window !== "undefined" ? window.innerHeight : 0);
+      setMeasured(Math.round(height * siteNavDefaultCollapseRatio));
+    };
+
+    measure();
+    window.addEventListener("resize", measure, { passive: true });
+    const root = container?.current;
+    let observer: ResizeObserver | undefined;
+    if (root != null && typeof ResizeObserver !== "undefined") {
+      observer = new ResizeObserver(measure);
+      observer.observe(root);
+    }
+    return () => {
+      window.removeEventListener("resize", measure);
+      observer?.disconnect();
+    };
+  }, [collapseAt, container]);
+
+  if (collapseAt != null) return collapseAt;
+  return measured ?? Number.POSITIVE_INFINITY;
 }
 
 export interface SiteNavBrandProps {

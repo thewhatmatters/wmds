@@ -14,16 +14,19 @@ export type SiteNavPlacement = (typeof siteNavPlacements)[number];
 export const siteNavCompactLayouts = ["hug", "grid"] as const;
 export type SiteNavCompactLayout = (typeof siteNavCompactLayouts)[number];
 
-/** Scroll distance (px) that flips expanded → compact. */
-export const siteNavDefaultCollapseAt = 48;
+/** Fraction of the scrollport height before the compact pill appears (when `collapseAt` is omitted). */
+export const siteNavDefaultCollapseRatio = 0.5;
+
+/** @deprecated Prefer omitting `collapseAt` (half-viewport) or pass an explicit px value. */
+export const siteNavDefaultCollapseAt = 64;
 
 /** Expanded band height — pages that start under the nav reserve this with `pt-16`. */
 export const siteNavExpandedHeightClasses = "h-16 min-h-16";
 
 /** Compact pill — height hugs controls; equal shell inset (`p-1`) all around. */
 
-/** Compact pill offset from the viewport top. */
-export const siteNavCompactTopOffsetClasses = "mt-4";
+/** Compact pill offset from the viewport top — 44px breathing room. */
+export const siteNavCompactTopOffsetClasses = "mt-11";
 
 /** Outer chrome — full-width fixed strip; only the bar itself accepts pointer events.
  * `z-50` keeps the bar above the mega-menu backdrop (`z-40`). */
@@ -36,11 +39,9 @@ export const siteNavRootClasses: Record<SiteNavPlacement, string> = {
 export const siteNavContainerClasses =
   "relative mx-auto w-full max-w-[var(--grid-max)]";
 
-/** Bar shell — surface, radius, and shadow morph between states (Motion `layout` handles geometry). */
+/** Bar shell — expanded stays static; compact is a separate layer that slides in. */
 export const siteNavBarBaseClasses = cn(
   "pointer-events-auto relative z-[1] flex w-full items-center",
-  "transition-[background-color,box-shadow,border-color,backdrop-filter]",
-  motionTransition("medium"),
 );
 
 export const siteNavBarStateClasses: Record<SiteNavState, string> = {
@@ -49,7 +50,7 @@ export const siteNavBarStateClasses: Record<SiteNavState, string> = {
     "w-full border border-transparent bg-transparent px-[var(--grid-margin)] shadow-none",
   ),
   compact: cn(
-    "box-border border border-border bg-surface/80 p-1.5 shadow-sm backdrop-blur-md",
+    "box-border rounded-full border border-border bg-surface/80 p-1.5 shadow-sm backdrop-blur-md",
     "supports-[backdrop-filter]:bg-surface/80",
   ),
 };
@@ -75,11 +76,12 @@ export const siteNavMenuBackdropClasses = cn(
 export const siteNavMenuSideOffsetPx = 8;
 
 /**
- * Slot rail — expanded / compact-grid use equal thirds so middle links stay optically centered.
- * Compact hug uses a content cluster so the middle track is not starved to 1/3 (avoids early More).
+ * Slot rail — start/end hug content; middle takes the leftover track so links are not
+ * starved into More by equal thirds (expanded vs compact must show the same items when
+ * the viewport can fit them). Compact hug uses a content cluster (`threeHug`).
  */
 export const siteNavSlotsClasses = {
-  three: "grid w-full grid-cols-3 items-center gap-3",
+  three: "flex w-full min-w-0 items-center gap-3",
   threeHug: "flex w-max max-w-full items-center gap-3",
   ends: "flex w-full items-center justify-between gap-4",
   middleOnly: "flex w-full min-w-0 items-center justify-center",
@@ -87,12 +89,12 @@ export const siteNavSlotsClasses = {
   endOnly: "flex w-full items-center justify-end",
 } as const;
 
-export const siteNavStartClasses = "flex shrink-0 items-center gap-2 justify-self-start";
+export const siteNavStartClasses = "flex shrink-0 items-center gap-2";
 export const siteNavMiddleClasses =
-  "flex min-w-0 w-full items-center justify-center justify-self-stretch";
+  "flex min-w-0 flex-1 items-center justify-center";
 /** Compact hug middle — content-sized; can shrink only when the pill hits `max-w-full`. */
 export const siteNavMiddleHugClasses = "flex min-w-0 max-w-full items-center justify-center";
-export const siteNavEndClasses = "flex shrink-0 flex-nowrap items-center gap-2 justify-self-end";
+export const siteNavEndClasses = "flex shrink-0 flex-nowrap items-center gap-2";
 
 /** Middle slot hides below `md` when a `mobile` menu is supplied. */
 export const siteNavMiddleResponsiveClasses = "hidden md:flex min-w-0 w-full";
@@ -171,9 +173,10 @@ export const siteNavMenuPopupClasses = cn(
 
 export const siteNavMenuViewportClasses = "relative h-full w-full overflow-hidden";
 
-/** One trigger's content — columns with hairline dividers; sections set their own span. */
+/** One trigger's content — stacked sections below `md`; columns with hairline dividers from `md` up. */
 export const siteNavMenuContentClasses = cn(
-  "grid w-full grid-flow-col auto-cols-fr divide-x divide-border",
+  "grid w-full grid-cols-1 divide-y divide-border",
+  "md:grid-cols-none md:grid-flow-col md:auto-cols-fr md:divide-x md:divide-y-0",
   "transition-opacity",
   motionTransition("fast"),
   "data-[starting-style]:opacity-0 data-[ending-style]:opacity-0",
@@ -183,8 +186,8 @@ export const siteNavMenuSectionClasses = "flex min-w-0 flex-col gap-4 p-6";
 
 export const siteNavMenuSectionSpanClasses: Record<1 | 2 | 3, string> = {
   1: "col-span-1",
-  2: "col-span-2",
-  3: "col-span-3",
+  2: "col-span-1 md:col-span-2",
+  3: "col-span-1 md:col-span-3",
 };
 
 export const siteNavMenuSectionLabelClasses = typographyClass("overline");
@@ -192,8 +195,19 @@ export const siteNavMenuSectionLabelClasses = typographyClass("overline");
 /** Menu link row — ghost **Button** anchor pulled flush with the section edge (sm pill `px-4`). */
 export const siteNavMenuLinkClasses = "-mx-4 justify-start! self-start";
 
-/** Menu link grid — two quiet columns of icon + label rows. */
-export const siteNavMenuLinkGridClasses = "grid grid-cols-2 gap-x-6 gap-y-1";
+/** Menu link grid — single column below `md`; two quiet columns from `md` up. */
+export const siteNavMenuLinkGridClasses =
+  "grid grid-cols-1 gap-y-1 md:grid-cols-2 md:gap-x-6";
+
+/**
+ * Read thumb row — media stacks above title/description/link below `md`;
+ * horizontal thumb + copy from `md` up.
+ */
+export const siteNavMenuReadRowClasses = "flex flex-col gap-3 md:flex-row md:gap-4";
+
+/** Read thumb media — full-bleed band below `md`; 64px square from `md` up. */
+export const siteNavMenuReadThumbClasses =
+  "aspect-[16/10] w-full shrink-0 md:aspect-auto md:size-16";
 
 /** Mobile sheet body — stacked links. */
 export const siteNavMobileListClasses = "flex flex-col gap-1";

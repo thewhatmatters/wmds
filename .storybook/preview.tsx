@@ -82,7 +82,7 @@ const preview: Preview = {
       description: "WMDS viewport tier — matches Tailwind breakpoints in src/lib/viewports.ts",
       toolbar: {
         title: "Viewport",
-        icon: "mobile",
+        icon: "desktop",
         items: [
           { value: "mobile", title: "Mobile (390px)", icon: "mobile" },
           { value: "tablet", title: "Tablet (768px)", icon: "tablet" },
@@ -186,7 +186,7 @@ const preview: Preview = {
     },
   },
   initialGlobals: {
-    viewport: { value: "mobile", isRotated: false },
+    viewport: { value: "desktop", isRotated: false },
   },
 };
 

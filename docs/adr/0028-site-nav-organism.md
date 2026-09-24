@@ -12,11 +12,11 @@ Marketing surfaces need a site header that starts as a full-width band and colla
 Ship **SiteNav** as an organism under **Components/Navigation**:
 
 - slots `start` | `middle` | `end` in any combination;
-- scroll-driven `expanded` → `compact` via `useScrollThreshold` (default `collapseAt` 48px); controlled `state` for specimens;
-- expanded band fills `--grid-max`; compact (scrolled) pill hugs content by default — narrower than the grid (`compactLayout="grid"` optional to match expanded width);
+- scroll-driven `expanded` → `compact` via `useScrollThreshold` (default **50% of scrollport height** when `collapseAt` is omitted; explicit px override supported); controlled `state` for specimens;
+- expanded band fills `--grid-max` and stays static (no layout morph); compact (scrolled) is a **separate** hug pill that **slides in from the top** with **44px** offset (`compactLayout="grid"` optional to match expanded width);
 - **SiteNav.Links** / **Link** / **Menu** / **MenuSection** / **MenuLink** on Base UI **NavigationMenu**; mega-menu panel is always **`--grid-max` wide** (pill can be narrower); open menu paints a light focus backdrop under the bar (`bg-fg/15`); middle track uses Tab-style **More** + **Dropdown** when items overflow;
 - chrome via **Button** (`render` for anchors), **IconButton**, **Sheet** `side="end"` for `mobile` below `md`; brand may be icon-only with `aria-label`;
-- Motion `layout` morph with `borderRadius` + medium-tier surface transitions; reduced motion disables layout animation.
+- Motion: compact pill mounts with a short medium-tier `y` + opacity enter; expanded is a static swap (no crossfade, one chrome at a time); reduced motion skips the slide.
 
 ## Non-goals for v1
 

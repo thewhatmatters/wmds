@@ -18,6 +18,10 @@ import {
 import { storyCopySource, storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { typographyClass } from "../../../lib/typography";
 import { SiteNav, siteNavCompactLayouts, siteNavStates, type SiteNavState } from "./SiteNav";
+import {
+  siteNavMenuReadRowClasses,
+  siteNavMenuReadThumbClasses,
+} from "./siteNavStyles";
 
 const meta = {
   title: "Components/Navigation/SiteNav",
@@ -42,19 +46,19 @@ const meta = {
         component: `
 ## Usage
 
-Marketing site header. At the top of the page it is a full-width transparent band aligned to the grid margins; once the reader scrolls past \`collapseAt\` (48px) it morphs into a floating pill inside \`--grid-max\` with a blurred surface, hairline, and raised shadow.
+Marketing site header. At the top of the page it is a full-width transparent band aligned to the grid margins. Once the reader scrolls past half the scrollport (or an explicit \`collapseAt\` in px), a separate floating hug pill **slides in from the top** with **44px** offset; the expanded band does not morph.
 
 Three slots — \`start\` | \`middle\` | \`end\` — in any combination. **SiteNav.Brand** goes in \`start\`, **SiteNav.Links** in \`middle\`, secondary link + primary **Button** in \`end\`. Supply \`mobile\` to swap the middle slot for a **Menu** IconButton and an end **Sheet** below \`md\`.
 
 | Prop | Purpose |
 |------|---------|
-| \`collapseAt\` | Scroll distance that flips expanded → compact pill (default **48px**) |
+| \`collapseAt\` | Scroll distance in px that reveals the compact pill. **Omit** for **50%** of the scrollport height (\`siteNavDefaultCollapseRatio\`) |
 | \`state\` / \`onStateChange\` | Controlled state for specimens and tests |
 | \`compactLayout\` | Scrolled pill only: \`hug\` (default, narrower content cluster) or \`grid\` (same \`--grid-max\` as expanded) |
 | \`placement\` | \`fixed\` page chrome (default) or \`inline\` static specimen |
 | \`scrollContainer\` | Ref to the scrolling element when the window does not scroll |
 
-**Two separate switches:** scroll compact ≠ More overflow. More only appears when the middle link track cannot fit every item (usually viewport-clamped). Compact hug no longer uses equal thirds, so empty brand/CTA columns do not starve links into More early.
+**Two separate switches:** scroll compact ≠ More overflow. More only appears when the middle link track cannot fit every item (usually viewport-clamped). Expanded and compact-grid give the middle the leftover space after brand/CTA (not equal thirds), so both states show the same links when they fit.
 
 Reserve the expanded band on the page with \`pt-16\` (**\`siteNavExpandedHeightClasses\`**) so hero copy does not start underneath the nav.
 
@@ -70,8 +74,8 @@ SiteNav (header, fixed, pointer-events-none)
         │   └── SiteNav.Menu  (Button ghost sm trigger + chevron)
         │       └── SiteNav.MenuSection × n
         │           ├── Featured → image + h2 + p + TextLink
-        │           ├── Read → thumb rows + TextLink
-        │           └── Links → SiteNav.MenuLinkGrid → SiteNav.MenuLink
+        │           ├── Read → \`siteNavMenuReadRowClasses\` (stack below md) + TextLink
+        │           └── Links → SiteNav.MenuLinkGrid → SiteNav.MenuLink (1-col below md)
         └── end    → Button ghost sm (sign in) + Button primary sm (CTA) + Menu IconButton (mobile)
 Sheet side="end" → SiteNav.MobileLink rows          (only when \`mobile\` is set)
 \`\`\`
@@ -80,7 +84,8 @@ Sheet side="end" → SiteNav.MobileLink rows          (only when \`mobile\` is s
 
 - One **primary** CTA in \`end\`; everything else ghost.
 - Keep top-level links to five or fewer; move the long tail into a **SiteNav.Menu**.
-- Mega-menu sections: Featured is image + heading + copy + **TextLink** (no **Card**); then quiet link grids — no forms.
+- Mega-menu sections: Featured is image + heading + copy + **TextLink** (no **Card**); **Read** uses \`siteNavMenuReadRowClasses\` / \`siteNavMenuReadThumbClasses\` (stack below \`md\`); **MenuLinkGrid** is 1-col below \`md\`, 2-col from \`md\` — no forms.
+- **Engineer contract:** paste **Pattern — mega menu** Show code for the Resources panel. Do not invent a one-section \`MenuLinkGrid\` shortcut — that is not the mega pattern.
 - Do not put **SegmentedControl** or **Tab** in the middle slot — those switch views, not pages.
 - Mark the current page with \`current\` so it gets \`aria-current="page"\`.
         `.trim(),
@@ -140,10 +145,10 @@ function ResourcesMenu() {
       <SiteNav.MenuSection label="Read">
         <ul className="m-0 flex list-none flex-col p-0">
           <li className="-mx-6 border-b border-border px-6 pb-5">
-            <div className="flex gap-4">
+            <div className={siteNavMenuReadRowClasses}>
               <MediaPlaceholder
                 label="Docs imagery"
-                className={`size-16 shrink-0 ${cardLayoutBodyOccupantRadiusClasses}`}
+                className={`${siteNavMenuReadThumbClasses} ${cardLayoutBodyOccupantRadiusClasses}`}
               />
               <div className="flex min-w-0 flex-col gap-1 type-body">
                 <h3 className="type-heading-3 text-fg">Docs</h3>
@@ -155,10 +160,10 @@ function ResourcesMenu() {
             </div>
           </li>
           <li className="px-0 pt-5">
-            <div className="flex gap-4">
+            <div className={siteNavMenuReadRowClasses}>
               <MediaPlaceholder
                 label="Opinion imagery"
-                className={`size-16 shrink-0 ${cardLayoutBodyOccupantRadiusClasses}`}
+                className={`${siteNavMenuReadThumbClasses} ${cardLayoutBodyOccupantRadiusClasses}`}
               />
               <div className="flex min-w-0 flex-col gap-1 type-body">
                 <h3 className="type-heading-3 text-fg">Opinion articles</h3>
@@ -235,8 +240,8 @@ function MobileLinks() {
 }
 
 /**
- * Compact scroll panel — collapses SiteNav inside a short frame so Storybook
- * canvases stay short. Apps still use `placement="fixed"` on the page.
+ * Scroll demo frame — tall enough to clear `collapseAt` and keep scrolling.
+ * Apps still use `placement="fixed"` on the page.
  */
 function ScrollPanel({
   nav,
@@ -248,18 +253,21 @@ function ScrollPanel({
   return (
     <div
       ref={scrollerRef}
-      className="h-[28rem] overflow-y-auto rounded-2xl border border-border bg-body"
+      className="h-[min(48rem,80vh)] overflow-y-auto rounded-2xl border border-border bg-body"
     >
       <div className="sticky top-0 z-40">{nav(scrollerRef)}</div>
-      <div className="flex flex-col gap-4 px-6 pb-10 pt-4">
+      <div className="flex flex-col gap-6 px-6 pb-24 pt-4">
         <p className={typographyClass("overline")}>Scroll this panel to collapse</p>
         <h1 className="type-heading-2 text-fg">Plan the week around what matters.</h1>
         <p className="type-body max-w-prose text-muted">
-          WhatMatters turns a noisy backlog into one calm list. Scroll a little to see the
-          pill morph — the canvas stays short on purpose.
+          WhatMatters turns a noisy backlog into one calm list. Scroll past the nav height to see the
+          compact pill slide in from the top.
         </p>
-        <div className="h-40 rounded-xl bg-secondary/40" aria-hidden />
-        <p className="type-body text-muted">Compact state should be active above.</p>
+        <div className="h-64 rounded-xl bg-secondary/40" aria-hidden />
+        <p className="type-body text-muted">Keep scrolling — compact pill should stay pinned above.</p>
+        <div className="h-64 rounded-xl bg-secondary/30" aria-hidden />
+        <p className="type-body text-muted">Still more room below so the threshold is easy to clear.</p>
+        <div className="h-80 rounded-xl bg-secondary/20" aria-hidden />
       </div>
     </div>
   );
@@ -273,13 +281,13 @@ export const MarketingHeader: Story = {
       docs: {
         description: {
           story:
-            "Scroll inside the panel (not the Storybook canvas): the band collapses into a floating hug pill after 48px. Hover **Resources** for the mega menu (page dims behind).",
+            "Scroll inside the panel (not the Storybook canvas): past **half the panel height**, a floating hug pill slides in with **44px** top offset. **Resources** mega body must match **Pattern — mega menu** Show code (Featured / Read / Links) — do not substitute a bare MenuLinkGrid.",
         },
       },
     },
     `
-import { Button, SiteNav } from "@whatmatters/wmds";
-import { BookOpen, Newspaper, Sparkles, Users } from "lucide-react";
+import { Button, SiteNav, TextLink, cardLayoutBodyOccupantRadiusClasses, cardLayoutBodyOccupantWellClasses, siteNavMenuReadRowClasses, siteNavMenuReadThumbClasses } from "@whatmatters/wmds";
+import { BookOpen, FileText, History, Mic, Sparkles, Target, Video } from "lucide-react";
 
 export function MarketingHeader() {
   return (
@@ -294,11 +302,60 @@ export function MarketingHeader() {
             <SiteNav.Link href="/pricing">Pricing</SiteNav.Link>
             <SiteNav.Link href="/customers">Customers</SiteNav.Link>
             <SiteNav.Menu label="Resources">
-              <SiteNav.MenuSection label="Read" span={2}>
+              <SiteNav.MenuSection label="Featured">
+                <div className="flex flex-col gap-1 type-body">
+                  <div
+                    role="img"
+                    aria-label="Featured story imagery"
+                    className={\`aspect-[16/10] w-full \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantRadiusClasses}\`}
+                  />
+                  <h2 className="type-heading-2 text-fg">WhatMatters named a Best Software Award winner</h2>
+                  <p className="text-muted">
+                    How teams cut meeting load without losing alignment — and what we shipped next.
+                  </p>
+                  <TextLink href="/featured">Read now</TextLink>
+                </div>
+              </SiteNav.MenuSection>
+              <SiteNav.MenuSection label="Read">
+                <ul className="m-0 flex list-none flex-col p-0">
+                  <li className="-mx-6 border-b border-border px-6 pb-5">
+                    <div className={siteNavMenuReadRowClasses}>
+                      <div
+                        role="img"
+                        aria-label="Docs imagery"
+                        className={\`\${siteNavMenuReadThumbClasses} \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantRadiusClasses}\`}
+                      />
+                      <div className="flex min-w-0 flex-col gap-1 type-body">
+                        <h3 className="type-heading-3 text-fg">Docs</h3>
+                        <p className="text-muted">Patterns and APIs for building calm product surfaces.</p>
+                        <TextLink href="/docs">Read now</TextLink>
+                      </div>
+                    </div>
+                  </li>
+                  <li className="px-0 pt-5">
+                    <div className={siteNavMenuReadRowClasses}>
+                      <div
+                        role="img"
+                        aria-label="Opinion imagery"
+                        className={\`\${siteNavMenuReadThumbClasses} \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantRadiusClasses}\`}
+                      />
+                      <div className="flex min-w-0 flex-col gap-1 type-body">
+                        <h3 className="type-heading-3 text-fg">Opinion articles</h3>
+                        <p className="text-muted">Notes on focus, backlog shape, and shipping what matters.</p>
+                        <TextLink href="/opinion">Read now</TextLink>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </SiteNav.MenuSection>
+              <SiteNav.MenuSection label="Links">
                 <SiteNav.MenuLinkGrid>
-                  <SiteNav.MenuLink href="/blog" icon={<Newspaper />}>Blog</SiteNav.MenuLink>
-                  <SiteNav.MenuLink href="/docs" icon={<BookOpen />}>Documentation</SiteNav.MenuLink>
-                  <SiteNav.MenuLink href="/community" icon={<Users />}>Community</SiteNav.MenuLink>
+                  <SiteNav.MenuLink href="/podcast" icon={<Mic />}>Podcast</SiteNav.MenuLink>
+                  <SiteNav.MenuLink href="https://youtube.com" icon={<Video />} external>YouTube</SiteNav.MenuLink>
+                  <SiteNav.MenuLink href="/webinars" icon={<Target />}>Webinars</SiteNav.MenuLink>
+                  <SiteNav.MenuLink href="/changelog" icon={<History />}>Changelog</SiteNav.MenuLink>
+                  <SiteNav.MenuLink href="/blog" icon={<FileText />}>Blog</SiteNav.MenuLink>
+                  <SiteNav.MenuLink href="/docs" icon={<BookOpen />}>Docs</SiteNav.MenuLink>
                 </SiteNav.MenuLinkGrid>
               </SiteNav.MenuSection>
             </SiteNav.Menu>
@@ -413,12 +470,12 @@ export const MegaMenu: Story = {
       docs: {
         description: {
           story:
-            "Hover or focus **Resources**. Three columns — **Featured** (image + `h2` + `p` + **TextLink**), **Read** (thumb + copy + **TextLink**), **Links** (**SiteNav.MenuLinkGrid**). Open menu dims the page with a light focus backdrop. No **Card** in Featured.",
+            "Hover or focus **Resources**. Below `md`, sections stack and **Read** rows go media → title → copy; **MenuLinkGrid** is one column. From `md` up: three columns — **Featured**, **Read** (thumb beside copy), **Links** (two columns). Open menu dims the page. No **Card** in Featured.",
         },
       },
     },
     `
-import { SiteNav, TextLink, cardLayoutBodyOccupantRadiusClasses, cardLayoutBodyOccupantWellClasses } from "@whatmatters/wmds";
+import { SiteNav, TextLink, cardLayoutBodyOccupantRadiusClasses, cardLayoutBodyOccupantWellClasses, siteNavMenuReadRowClasses, siteNavMenuReadThumbClasses } from "@whatmatters/wmds";
 import { BookOpen, FileText, History, Mic, Target, Video } from "lucide-react";
 
 export function ResourcesMenu() {
@@ -439,7 +496,36 @@ export function ResourcesMenu() {
         </div>
       </SiteNav.MenuSection>
       <SiteNav.MenuSection label="Read">
-        {/* thumb + title + caption + TextLink rows, hairline between */}
+        <ul className="m-0 flex list-none flex-col p-0">
+          <li className="-mx-6 border-b border-border px-6 pb-5">
+            <div className={siteNavMenuReadRowClasses}>
+              <div
+                role="img"
+                aria-label="Docs imagery"
+                className={\`\${siteNavMenuReadThumbClasses} \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantRadiusClasses}\`}
+              />
+              <div className="flex min-w-0 flex-col gap-1 type-body">
+                <h3 className="type-heading-3 text-fg">Docs</h3>
+                <p className="text-muted">Patterns and APIs for building calm product surfaces.</p>
+                <TextLink href="/docs">Read now</TextLink>
+              </div>
+            </div>
+          </li>
+          <li className="px-0 pt-5">
+            <div className={siteNavMenuReadRowClasses}>
+              <div
+                role="img"
+                aria-label="Opinion imagery"
+                className={\`\${siteNavMenuReadThumbClasses} \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantRadiusClasses}\`}
+              />
+              <div className="flex min-w-0 flex-col gap-1 type-body">
+                <h3 className="type-heading-3 text-fg">Opinion articles</h3>
+                <p className="text-muted">Notes on focus, backlog shape, and shipping what matters.</p>
+                <TextLink href="/opinion">Read now</TextLink>
+              </div>
+            </div>
+          </li>
+        </ul>
       </SiteNav.MenuSection>
       <SiteNav.MenuSection label="Links">
         <SiteNav.MenuLinkGrid>
@@ -567,7 +653,7 @@ export const States: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Flip between `expanded` and `compact` to see the Motion layout morph without scrolling.",
+        story: "Flip between `expanded` and `compact` to see the compact pill slide in without scrolling.",
       },
     },
   },
