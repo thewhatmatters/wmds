@@ -24,8 +24,7 @@ function readScrollTop(container?: HTMLElement | null): number {
 /**
  * `true` once the scroller has moved `threshold`px or more down the page.
  * Passive `scroll` listener throttled to one read per frame; SSR-safe (starts `false`).
- * Used by **SiteNav** to reveal the compact pill after scroll past half the viewport
- * (or an explicit `collapseAt` px override).
+ * Internal — consumed by SiteNav collapse (`useSiteNavCollapse`); not a package export.
  */
 export function useScrollThreshold(
   threshold: number,

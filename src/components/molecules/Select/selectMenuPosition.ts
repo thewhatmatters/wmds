@@ -1,17 +1,9 @@
 import type { CSSProperties, ReactNode } from "react";
 import {
-  dropdownMenuMaxOutsideFraction,
   type DropdownMenuMeasureRow,
-  findDropdownMenuBoundary,
   measureDropdownMenuContentWidth,
   measureDropdownMenuStyle,
 } from "../Dropdown/dropdownMenuPosition";
-
-/** @deprecated Use {@link findDropdownMenuBoundary}. */
-export const findSelectMenuBoundary = findDropdownMenuBoundary;
-
-/** @deprecated Use {@link dropdownMenuMaxOutsideFraction}. */
-export const selectMenuMaxOutsideFraction = dropdownMenuMaxOutsideFraction;
 
 type SelectMenuMeasureOption = {
   label: string;

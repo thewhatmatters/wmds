@@ -22,9 +22,13 @@ import {
 import { createPortal } from "react-dom";
 import { cn } from "../../../lib/cn";
 import { motionTransitionProp } from "../../../lib/motion";
-import { useScrollThreshold } from "../../../lib/useScrollThreshold";
 import { Button, type ButtonSize } from "../../atoms/Button/Button";
 import { IconButton } from "../../atoms/IconButton/IconButton";
+import { TextLink } from "../../atoms/TextLink/TextLink";
+import {
+  cardLayoutBodyOccupantRadiusClasses,
+  cardLayoutBodyOccupantWellClasses,
+} from "../../molecules/Card/Card";
 import { Dropdown } from "../../molecules/Dropdown/Dropdown";
 import { measureDropdownMenuStyle } from "../../molecules/Dropdown/dropdownMenuPosition";
 import { resolveTabOverflow } from "../Tab/tabOverflow";
@@ -35,7 +39,6 @@ import {
   siteNavBarStateClasses,
   siteNavBrandClasses,
   siteNavContainerClasses,
-  siteNavDefaultCollapseRatio,
   siteNavEndClasses,
   siteNavExpandedHeightClasses,
   siteNavLinkClasses,
@@ -53,6 +56,8 @@ import {
   siteNavMenuSectionLabelClasses,
   siteNavMenuSectionSpanClasses,
   siteNavMenuViewportClasses,
+  siteNavMenuReadRowClasses,
+  siteNavMenuReadThumbClasses,
   siteNavMiddleClasses,
   siteNavMiddleHugClasses,
   siteNavMobileLinkClasses,
@@ -77,6 +82,7 @@ import {
   type SiteNavPlacement,
   type SiteNavState,
 } from "./siteNavStyles";
+import { useSiteNavCollapse } from "./useSiteNavCollapse";
 
 export type { SiteNavCompactLayout, SiteNavPlacement, SiteNavState } from "./siteNavStyles";
 export {
@@ -117,9 +123,9 @@ export interface SiteNavProps {
   onStateChange?: (state: SiteNavState) => void;
   /** Compact (scrolled) pill width — `hug` (default, narrower) or `grid` (same as expanded `--grid-max`). */
   compactLayout?: SiteNavCompactLayout;
-  /** `fixed` page chrome (default: in-flow expanded → fixed/sticky compact) or `inline` static specimen. */
+  /** Page chrome (`fixed`, default) or static specimen (`inline`). Pair `inline` + `scrollContainer` for scroll demos. */
   placement?: SiteNavPlacement;
-  /** Scroll container when the page does not scroll the window. */
+  /** When set, compact pins sticky inside this scroller (page chrome) instead of `fixed` to the window. */
   scrollContainer?: RefObject<HTMLElement | null>;
   /** Accessible name for the `<header>`. Default: `"Site"`. */
   "aria-label"?: string;
@@ -155,6 +161,10 @@ function slotsLayoutClass(
  * Marketing site header — in-flow expanded band that scrolls away with the page. Once the
  * reader scrolls past half the viewport (or `collapseAt` px), a separate floating pill
  * pins 1rem from the top (`fixed` on the window, `sticky` inside a `scrollContainer`).
+ *
+ * Mental model: **page chrome** (`placement="fixed"`, optional `scrollContainer`) vs
+ * **specimen** (`placement="inline"` without a scroller). Collapse ownership lives in
+ * {@link useSiteNavCollapse}.
  */
 function SiteNavRoot({
   start,
@@ -173,13 +183,13 @@ function SiteNavRoot({
 }: SiteNavProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const shouldReduceMotion = useReducedMotion() ?? false;
-  const collapseThresholdPx = useCollapseThresholdPx(collapseAt, scrollContainer);
-  const scrolled = useScrollThreshold(collapseThresholdPx, {
-    container: scrollContainer,
-    disabled: controlledState != null || (placement === "inline" && scrollContainer == null),
+  const { state, compact } = useSiteNavCollapse({
+    collapseAt,
+    scrollContainer,
+    controlledState,
+    placement,
+    onStateChange,
   });
-  const state: SiteNavState = controlledState ?? (scrolled ? "compact" : "expanded");
-  const compact = state === "compact";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   /** Compact hug is scroll-only — mega open must not change expanded chrome. */
@@ -191,18 +201,9 @@ function SiteNavRoot({
     ? { duration: 0 }
     : { ...motionTransitionProp("medium"), type: "tween" as const };
 
-  const pageChrome = placement === "fixed";
   const hasScrollContainer = scrollContainer != null;
   /** Page / scroll-panel chrome: compact pins; expanded stays in normal document flow. */
-  const isScrollChrome = pageChrome || hasScrollContainer;
-
-  const previousState = useRef(state);
-  useEffect(() => {
-    if (previousState.current !== state) {
-      previousState.current = state;
-      onStateChange?.(state);
-    }
-  }, [state, onStateChange]);
+  const isPageChrome = placement === "fixed" || hasScrollContainer;
 
   const hasMobile = mobile != null;
   const hasStart = start != null;
@@ -271,45 +272,38 @@ function SiteNavRoot({
     </div>
   );
 
+  const compactMotionProps = {
+    key: "site-nav-compact" as const,
+    initial: shouldReduceMotion ? false : compactHidden,
+    animate: compactVisible,
+    exit: shouldReduceMotion ? compactVisible : compactHidden,
+    transition: barTransition,
+  };
+
+  /** Page chrome: one AnimatePresence path; sticky pins inside a scroller, fixed pins to the window. */
+  const pageCompactRootClass = hasScrollContainer
+    ? cn(siteNavRootStickyClasses, "h-0 w-full overflow-visible")
+    : siteNavRootFixedClasses;
+
   return (
     <SiteNavContext.Provider value={{ state, anchorRef: containerRef, menuOpen, setMenuOpen }}>
-      {isScrollChrome ? (
+      {isPageChrome ? (
         <>
           <AnimatePresence>
             {compact ? (
-              hasScrollContainer ? (
-                <motion.div
-                  key="site-nav-compact"
-                  initial={shouldReduceMotion ? false : compactHidden}
-                  animate={compactVisible}
-                  exit={shouldReduceMotion ? compactVisible : compactHidden}
-                  transition={barTransition}
-                  className={cn(siteNavRootStickyClasses, "h-0 w-full overflow-visible")}
-                >
-                  <header
-                    aria-label={ariaLabel}
-                    data-state="compact"
-                    data-menu={menuOpen ? "open" : "closed"}
-                    className={cn("pointer-events-none w-full", className)}
-                  >
-                    {compactShell}
-                  </header>
-                </motion.div>
-              ) : (
-                <motion.header
-                  key="site-nav-compact"
+              <motion.div
+                {...compactMotionProps}
+                className={cn(pageCompactRootClass, !hasScrollContainer && className)}
+              >
+                <header
                   aria-label={ariaLabel}
                   data-state="compact"
                   data-menu={menuOpen ? "open" : "closed"}
-                  initial={shouldReduceMotion ? false : compactHidden}
-                  animate={compactVisible}
-                  exit={shouldReduceMotion ? compactVisible : compactHidden}
-                  transition={barTransition}
-                  className={cn(siteNavRootFixedClasses, className)}
+                  className={cn(hasScrollContainer && cn("w-full", className))}
                 >
                   {compactShell}
-                </motion.header>
-              )
+                </header>
+              </motion.div>
             ) : null}
           </AnimatePresence>
 
@@ -371,45 +365,6 @@ function SiteNavRoot({
       ) : null}
     </SiteNavContext.Provider>
   );
-}
-
-/**
- * Resolve compact reveal distance — explicit `collapseAt` px, or half the scrollport height.
- * Until the scrollport is measured, returns `Infinity` so the pill does not flash on mount.
- */
-function useCollapseThresholdPx(
-  collapseAt: number | undefined,
-  container?: RefObject<HTMLElement | null>,
-): number {
-  const [measured, setMeasured] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (collapseAt != null) return;
-
-    const measure = () => {
-      const root = container?.current;
-      const height =
-        root?.clientHeight ??
-        (typeof window !== "undefined" ? window.innerHeight : 0);
-      setMeasured(Math.round(height * siteNavDefaultCollapseRatio));
-    };
-
-    measure();
-    window.addEventListener("resize", measure, { passive: true });
-    const root = container?.current;
-    let observer: ResizeObserver | undefined;
-    if (root != null && typeof ResizeObserver !== "undefined") {
-      observer = new ResizeObserver(measure);
-      observer.observe(root);
-    }
-    return () => {
-      window.removeEventListener("resize", measure);
-      observer?.disconnect();
-    };
-  }, [collapseAt, container]);
-
-  if (collapseAt != null) return collapseAt;
-  return measured ?? Number.POSITIVE_INFINITY;
 }
 
 export interface SiteNavBrandProps {
@@ -498,7 +453,11 @@ function siteNavCurrentId(items: SiteNavChild[]): string {
   return items[0] != null ? siteNavItemId(items[0]) : "";
 }
 
-/** Primary link cluster — NavigationMenu + Tab-style More when items overflow the middle track. */
+/**
+ * Primary link cluster — NavigationMenu + Tab-style More when items overflow.
+ * Overflow math is shared ({@link resolveTabOverflow}); More UI stays here so mega flatten
+ * and NavigationMenu triggers stay local (full shared More track deferred).
+ */
 function SiteNavLinks({
   children,
   "aria-label": ariaLabel = "Primary",
@@ -913,6 +872,88 @@ function SiteNavMenuLinkGrid({ children }: { children: ReactNode }) {
   return <div className={siteNavMenuLinkGridClasses}>{children}</div>;
 }
 
+export interface SiteNavMenuMediaProps {
+  /** Spoken name for the placeholder / image. */
+  label: string;
+  /** `featured` = wide band; `thumb` = responsive read-row media (default). */
+  variant?: "featured" | "thumb";
+  className?: string;
+}
+
+/** Quiet media well for mega Featured / Read — owns Card occupant + responsive thumb recipes. */
+function SiteNavMenuMedia({
+  label,
+  variant = "thumb",
+  className,
+}: SiteNavMenuMediaProps) {
+  return (
+    <div
+      role="img"
+      aria-label={label}
+      className={cn(
+        cardLayoutBodyOccupantWellClasses,
+        cardLayoutBodyOccupantRadiusClasses,
+        variant === "featured" ? "aspect-[16/10] w-full" : siteNavMenuReadThumbClasses,
+        className,
+      )}
+    />
+  );
+}
+
+export interface SiteNavFeaturedProps {
+  media: ReactNode;
+  title: ReactNode;
+  description?: ReactNode;
+  href: string;
+  linkLabel?: ReactNode;
+}
+
+/** Featured mega column body — media + heading + copy + **TextLink** (no **Card**). */
+function SiteNavFeatured({
+  media,
+  title,
+  description,
+  href,
+  linkLabel = "Read now",
+}: SiteNavFeaturedProps) {
+  return (
+    <div className="flex flex-col gap-1 type-body">
+      {media}
+      <h2 className="type-heading-2 text-fg">{title}</h2>
+      {description != null ? <p className="text-muted">{description}</p> : null}
+      <TextLink href={href}>{linkLabel}</TextLink>
+    </div>
+  );
+}
+
+export interface SiteNavReadRowProps {
+  media: ReactNode;
+  title: ReactNode;
+  description?: ReactNode;
+  href: string;
+  linkLabel?: ReactNode;
+}
+
+/** Read mega row — stacks media → copy below `md`; thumb beside copy from `md` up. */
+function SiteNavReadRow({
+  media,
+  title,
+  description,
+  href,
+  linkLabel = "Read now",
+}: SiteNavReadRowProps) {
+  return (
+    <div className={siteNavMenuReadRowClasses}>
+      {media}
+      <div className="flex min-w-0 flex-col gap-1 type-body">
+        <h3 className="type-heading-3 text-fg">{title}</h3>
+        {description != null ? <p className="text-muted">{description}</p> : null}
+        <TextLink href={href}>{linkLabel}</TextLink>
+      </div>
+    </div>
+  );
+}
+
 export interface SiteNavMobileLinkProps {
   href: string;
   children: ReactNode;
@@ -942,5 +983,8 @@ export const SiteNav = Object.assign(SiteNavRoot, {
   MenuSection: SiteNavMenuSection,
   MenuLink: SiteNavMenuLink,
   MenuLinkGrid: SiteNavMenuLinkGrid,
+  MenuMedia: SiteNavMenuMedia,
+  Featured: SiteNavFeatured,
+  ReadRow: SiteNavReadRow,
   MobileLink: SiteNavMobileLink,
 });

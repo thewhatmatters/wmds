@@ -6,7 +6,7 @@ import { typographyClass } from "../../../lib/typography";
 export const siteNavStates = ["expanded", "compact"] as const;
 export type SiteNavState = (typeof siteNavStates)[number];
 
-/** `fixed` — page chrome (default). `inline` — static specimen for docs and tests; no scroll detection. */
+/** `fixed` — page chrome (in-flow expanded → pinned compact). `inline` — static specimen; pair with `scrollContainer` for scroll demos. */
 export const siteNavPlacements = ["fixed", "inline"] as const;
 export type SiteNavPlacement = (typeof siteNavPlacements)[number];
 

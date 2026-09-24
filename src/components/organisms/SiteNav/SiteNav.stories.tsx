@@ -1,27 +1,14 @@
 import { useRef, useState, type ReactNode, type RefObject } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  BookOpen,
-  FileText,
-  History,
-  Mic,
-  Sparkles,
-  Target,
-  Video,
-} from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { Button } from "../../atoms/Button/Button";
-import { TextLink } from "../../atoms/TextLink/TextLink";
-import {
-  cardLayoutBodyOccupantRadiusClasses,
-  cardLayoutBodyOccupantWellClasses,
-} from "../../molecules/Card/Card";
 import { storyCopySource, storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { typographyClass } from "../../../lib/typography";
 import { SiteNav, siteNavCompactLayouts, siteNavStates, type SiteNavState } from "./SiteNav";
 import {
-  siteNavMenuReadRowClasses,
-  siteNavMenuReadThumbClasses,
-} from "./siteNavStyles";
+  SiteNavResourcesMenu,
+  indentSiteNavResourcesMenuCopySource,
+} from "./siteNavResourcesSpecimen";
 
 const meta = {
   title: "Components/Navigation/SiteNav",
@@ -48,6 +35,8 @@ const meta = {
 
 Marketing site header. Expanded is **in document flow** (scrolls away with the page). After the reader scrolls past half the scrollport (or an explicit \`collapseAt\` in px), a separate floating hug pill **pins 1rem from the top**; the expanded band does not morph.
 
+**Page chrome** (\`placement="fixed"\`, optional \`scrollContainer\`) vs **specimen** (\`placement="inline"\` without a scroller). Do not invent a third positioning mode.
+
 Three slots — \`start\` | \`middle\` | \`end\` — in any combination. **SiteNav.Brand** goes in \`start\`, **SiteNav.Links** in \`middle\`, secondary link + primary **Button** in \`end\`. Supply \`mobile\` to swap the middle slot for a **Menu** IconButton and an end **Sheet** below \`md\`.
 
 | Prop | Purpose |
@@ -55,12 +44,12 @@ Three slots — \`start\` | \`middle\` | \`end\` — in any combination. **SiteN
 | \`collapseAt\` | Scroll distance in px that reveals the compact pill. **Omit** for **50%** of the scrollport height (\`siteNavDefaultCollapseRatio\`) |
 | \`state\` / \`onStateChange\` | Controlled state for specimens and tests |
 | \`compactLayout\` | Scrolled pill only: \`hug\` (default, narrower content cluster) or \`grid\` (same \`--grid-max\` as expanded) |
-| \`placement\` | \`fixed\` page chrome (in-flow expanded → fixed compact) or \`inline\` static specimen |
+| \`placement\` | \`fixed\` page chrome (in-flow expanded → pinned compact) or \`inline\` static specimen |
 | \`scrollContainer\` | Ref to the scrolling element when the window does not scroll (compact uses sticky inside it) |
 
-**Do not** reserve \`pt-16\` under SiteNav on product pages — the expanded band is in normal flow and owns its height. \`siteNavExpandedHeightClasses\` is only for the in-flow spacer while the compact pill is pinned.
+**Do not** reserve \`pt-16\` under SiteNav on product pages — the expanded band is in normal flow and owns its height.
 
-**Two separate switches:** scroll compact ≠ More overflow. More only appears when the middle link track cannot fit every item (usually viewport-clamped). Expanded and compact-grid give the middle the leftover space after brand/CTA (not equal thirds), so both states show the same links when they fit.
+**Two separate switches:** scroll compact ≠ More overflow. More only appears when the middle link track cannot fit every item.
 
 ## Anatomy
 
@@ -68,28 +57,25 @@ Three slots — \`start\` | \`middle\` | \`end\` — in any combination. **SiteN
 SiteNav (header)
 ├── expanded — relative / in flow (scrolls away)
 └── compact  — fixed (window) or sticky (scrollContainer), 1rem from top
-    └── container — max-w-[--grid-max]; mega-menu anchor
-        └── bar — expanded = full grid; compact = hug / narrower by default
-            ├── start  → SiteNav.Brand (IconButton circular → <a>, or Button wordmark)
-            ├── middle → SiteNav.Links (NavigationMenu)
-            │   ├── SiteNav.Link  (Button ghost sm → <a>, aria-current)
-            │   └── SiteNav.Menu  (Button ghost sm trigger + chevron)
-            │       └── SiteNav.MenuSection × n
-            │           ├── Featured → image + h2 + p + TextLink
-            │           ├── Read → \`siteNavMenuReadRowClasses\` (stack below md) + TextLink
-            │           └── Links → SiteNav.MenuLinkGrid → SiteNav.MenuLink (1-col below md)
-            └── end    → Button ghost sm (sign in) + Button primary sm (CTA) + Menu IconButton (mobile)
-Sheet side="end" → SiteNav.MobileLink rows          (only when \`mobile\` is set)
+    └── bar
+        ├── start  → SiteNav.Brand
+        ├── middle → SiteNav.Links
+        │   ├── SiteNav.Link
+        │   └── SiteNav.Menu
+        │       └── SiteNav.MenuSection
+        │           ├── SiteNav.Featured + SiteNav.MenuMedia
+        │           ├── SiteNav.ReadRow + SiteNav.MenuMedia
+        │           └── SiteNav.MenuLinkGrid → SiteNav.MenuLink
+        └── end    → Buttons + mobile Menu IconButton
+Sheet → SiteNav.MobileLink
 \`\`\`
 
 ## Best practices
 
 - One **primary** CTA in \`end\`; everything else ghost.
-- Keep top-level links to five or fewer; move the long tail into a **SiteNav.Menu**.
-- Mega-menu sections: Featured is image + heading + copy + **TextLink** (no **Card**); **Read** uses \`siteNavMenuReadRowClasses\` / \`siteNavMenuReadThumbClasses\` (stack below \`md\`); **MenuLinkGrid** is 1-col below \`md\`, 2-col from \`md\` — no forms.
-- **Engineer contract:** paste **Pattern — mega menu** Show code for the Resources panel. Do not invent a one-section \`MenuLinkGrid\` shortcut — that is not the mega pattern.
-- Do not put **SegmentedControl** or **Tab** in the middle slot — those switch views, not pages.
-- Mark the current page with \`current\` so it gets \`aria-current="page"\`.
+- Mega body: compose **SiteNav.Featured** / **ReadRow** / **MenuMedia** / **MenuLinkGrid** — paste **Pattern — mega menu** Show code. Do not assemble Card occupant class strings by hand.
+- Do not put **SegmentedControl** or **Tab** in the middle slot.
+- Mark the current page with \`current\`.
         `.trim(),
       },
     },
@@ -109,109 +95,13 @@ function BrandMark() {
   );
 }
 
-function MediaPlaceholder({
-  className,
-  label = "Image placeholder",
-}: {
-  className?: string;
-  label?: string;
-}) {
-  return (
-    <div
-      role="img"
-      aria-label={label}
-      className={`${cardLayoutBodyOccupantWellClasses} ${className ?? ""}`}
-    />
-  );
-}
-
-function ResourcesMenu() {
-  return (
-    <SiteNav.Menu label="Resources">
-      <SiteNav.MenuSection label="Featured">
-        <div className="flex flex-col gap-1 type-body">
-          <MediaPlaceholder
-            label="Featured story imagery"
-            className={`aspect-[16/10] w-full ${cardLayoutBodyOccupantRadiusClasses}`}
-          />
-          <h2 className="type-heading-2 text-fg">
-            WhatMatters named a Best Software Award winner
-          </h2>
-          <p className="text-muted">
-            How teams cut meeting load without losing alignment — and what we shipped next.
-          </p>
-          <TextLink href="#featured">Read now</TextLink>
-        </div>
-      </SiteNav.MenuSection>
-
-      <SiteNav.MenuSection label="Read">
-        <ul className="m-0 flex list-none flex-col p-0">
-          <li className="-mx-6 border-b border-border px-6 pb-5">
-            <div className={siteNavMenuReadRowClasses}>
-              <MediaPlaceholder
-                label="Docs imagery"
-                className={`${siteNavMenuReadThumbClasses} ${cardLayoutBodyOccupantRadiusClasses}`}
-              />
-              <div className="flex min-w-0 flex-col gap-1 type-body">
-                <h3 className="type-heading-3 text-fg">Docs</h3>
-                <p className="text-muted">
-                  Patterns and APIs for building calm product surfaces.
-                </p>
-                <TextLink href="#docs">Read now</TextLink>
-              </div>
-            </div>
-          </li>
-          <li className="px-0 pt-5">
-            <div className={siteNavMenuReadRowClasses}>
-              <MediaPlaceholder
-                label="Opinion imagery"
-                className={`${siteNavMenuReadThumbClasses} ${cardLayoutBodyOccupantRadiusClasses}`}
-              />
-              <div className="flex min-w-0 flex-col gap-1 type-body">
-                <h3 className="type-heading-3 text-fg">Opinion articles</h3>
-                <p className="text-muted">
-                  Notes on focus, backlog shape, and shipping what matters.
-                </p>
-                <TextLink href="#opinion">Read now</TextLink>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </SiteNav.MenuSection>
-
-      <SiteNav.MenuSection label="Links">
-        <SiteNav.MenuLinkGrid>
-          <SiteNav.MenuLink href="#podcast" icon={<Mic />}>
-            Podcast
-          </SiteNav.MenuLink>
-          <SiteNav.MenuLink href="https://youtube.com" icon={<Video />} external>
-            YouTube
-          </SiteNav.MenuLink>
-          <SiteNav.MenuLink href="#webinars" icon={<Target />}>
-            Webinars
-          </SiteNav.MenuLink>
-          <SiteNav.MenuLink href="#changelog" icon={<History />}>
-            Changelog
-          </SiteNav.MenuLink>
-          <SiteNav.MenuLink href="#blog" icon={<FileText />}>
-            Blog
-          </SiteNav.MenuLink>
-          <SiteNav.MenuLink href="#docs" icon={<BookOpen />}>
-            Docs
-          </SiteNav.MenuLink>
-        </SiteNav.MenuLinkGrid>
-      </SiteNav.MenuSection>
-    </SiteNav.Menu>
-  );
-}
-
 function PrimaryLinks({ menu = true }: { menu?: boolean }) {
   return (
     <SiteNav.Links>
       <SiteNav.Link href="#product" current>Product</SiteNav.Link>
       <SiteNav.Link href="#pricing">Pricing</SiteNav.Link>
       <SiteNav.Link href="#customers">Customers</SiteNav.Link>
-      {menu ? <ResourcesMenu /> : null}
+      {menu ? <SiteNavResourcesMenu /> : null}
     </SiteNav.Links>
   );
 }
@@ -288,7 +178,7 @@ export const MarketingHeader: Story = {
       },
     },
     `
-import { Button, SiteNav, TextLink, cardLayoutBodyOccupantRadiusClasses, cardLayoutBodyOccupantWellClasses, siteNavMenuReadRowClasses, siteNavMenuReadThumbClasses } from "@whatmatters/wmds";
+import { Button, SiteNav } from "@whatmatters/wmds";
 import { BookOpen, FileText, History, Mic, Sparkles, Target, Video } from "lucide-react";
 
 export function MarketingHeader() {
@@ -303,64 +193,7 @@ export function MarketingHeader() {
             <SiteNav.Link href="/product" current>Product</SiteNav.Link>
             <SiteNav.Link href="/pricing">Pricing</SiteNav.Link>
             <SiteNav.Link href="/customers">Customers</SiteNav.Link>
-            <SiteNav.Menu label="Resources">
-              <SiteNav.MenuSection label="Featured">
-                <div className="flex flex-col gap-1 type-body">
-                  <div
-                    role="img"
-                    aria-label="Featured story imagery"
-                    className={\`aspect-[16/10] w-full \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantRadiusClasses}\`}
-                  />
-                  <h2 className="type-heading-2 text-fg">WhatMatters named a Best Software Award winner</h2>
-                  <p className="text-muted">
-                    How teams cut meeting load without losing alignment — and what we shipped next.
-                  </p>
-                  <TextLink href="/featured">Read now</TextLink>
-                </div>
-              </SiteNav.MenuSection>
-              <SiteNav.MenuSection label="Read">
-                <ul className="m-0 flex list-none flex-col p-0">
-                  <li className="-mx-6 border-b border-border px-6 pb-5">
-                    <div className={siteNavMenuReadRowClasses}>
-                      <div
-                        role="img"
-                        aria-label="Docs imagery"
-                        className={\`\${siteNavMenuReadThumbClasses} \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantRadiusClasses}\`}
-                      />
-                      <div className="flex min-w-0 flex-col gap-1 type-body">
-                        <h3 className="type-heading-3 text-fg">Docs</h3>
-                        <p className="text-muted">Patterns and APIs for building calm product surfaces.</p>
-                        <TextLink href="/docs">Read now</TextLink>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="px-0 pt-5">
-                    <div className={siteNavMenuReadRowClasses}>
-                      <div
-                        role="img"
-                        aria-label="Opinion imagery"
-                        className={\`\${siteNavMenuReadThumbClasses} \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantRadiusClasses}\`}
-                      />
-                      <div className="flex min-w-0 flex-col gap-1 type-body">
-                        <h3 className="type-heading-3 text-fg">Opinion articles</h3>
-                        <p className="text-muted">Notes on focus, backlog shape, and shipping what matters.</p>
-                        <TextLink href="/opinion">Read now</TextLink>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </SiteNav.MenuSection>
-              <SiteNav.MenuSection label="Links">
-                <SiteNav.MenuLinkGrid>
-                  <SiteNav.MenuLink href="/podcast" icon={<Mic />}>Podcast</SiteNav.MenuLink>
-                  <SiteNav.MenuLink href="https://youtube.com" icon={<Video />} external>YouTube</SiteNav.MenuLink>
-                  <SiteNav.MenuLink href="/webinars" icon={<Target />}>Webinars</SiteNav.MenuLink>
-                  <SiteNav.MenuLink href="/changelog" icon={<History />}>Changelog</SiteNav.MenuLink>
-                  <SiteNav.MenuLink href="/blog" icon={<FileText />}>Blog</SiteNav.MenuLink>
-                  <SiteNav.MenuLink href="/docs" icon={<BookOpen />}>Docs</SiteNav.MenuLink>
-                </SiteNav.MenuLinkGrid>
-              </SiteNav.MenuSection>
-            </SiteNav.Menu>
+${indentSiteNavResourcesMenuCopySource(12)}
           </SiteNav.Links>
         }
         end={
@@ -472,74 +305,17 @@ export const MegaMenu: Story = {
       docs: {
         description: {
           story:
-            "Hover or focus **Resources**. Below `md`, sections stack and **Read** rows go media → title → copy; **MenuLinkGrid** is one column. From `md` up: three columns — **Featured**, **Read** (thumb beside copy), **Links** (two columns). Open menu dims the page. No **Card** in Featured.",
+            "Hover or focus **Resources**. Compose **SiteNav.Featured** / **ReadRow** / **MenuMedia** / **MenuLinkGrid**. Below `md`, sections stack and **Read** rows go media → title → copy; **MenuLinkGrid** is one column. From `md` up: three columns. Open menu dims the page. No **Card** in Featured.",
         },
       },
     },
     `
-import { SiteNav, TextLink, cardLayoutBodyOccupantRadiusClasses, cardLayoutBodyOccupantWellClasses, siteNavMenuReadRowClasses, siteNavMenuReadThumbClasses } from "@whatmatters/wmds";
+import { SiteNav } from "@whatmatters/wmds";
 import { BookOpen, FileText, History, Mic, Target, Video } from "lucide-react";
 
 export function ResourcesMenu() {
   return (
-    <SiteNav.Menu label="Resources">
-      <SiteNav.MenuSection label="Featured">
-        <div className="flex flex-col gap-1 type-body">
-          <div
-            role="img"
-            aria-label="Featured story imagery"
-            className={\`aspect-[16/10] w-full \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantRadiusClasses}\`}
-          />
-          <h2 className="type-heading-2 text-fg">WhatMatters named a Best Software Award winner</h2>
-          <p className="text-muted">
-            How teams cut meeting load without losing alignment — and what we shipped next.
-          </p>
-          <TextLink href="/featured">Read now</TextLink>
-        </div>
-      </SiteNav.MenuSection>
-      <SiteNav.MenuSection label="Read">
-        <ul className="m-0 flex list-none flex-col p-0">
-          <li className="-mx-6 border-b border-border px-6 pb-5">
-            <div className={siteNavMenuReadRowClasses}>
-              <div
-                role="img"
-                aria-label="Docs imagery"
-                className={\`\${siteNavMenuReadThumbClasses} \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantRadiusClasses}\`}
-              />
-              <div className="flex min-w-0 flex-col gap-1 type-body">
-                <h3 className="type-heading-3 text-fg">Docs</h3>
-                <p className="text-muted">Patterns and APIs for building calm product surfaces.</p>
-                <TextLink href="/docs">Read now</TextLink>
-              </div>
-            </div>
-          </li>
-          <li className="px-0 pt-5">
-            <div className={siteNavMenuReadRowClasses}>
-              <div
-                role="img"
-                aria-label="Opinion imagery"
-                className={\`\${siteNavMenuReadThumbClasses} \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantRadiusClasses}\`}
-              />
-              <div className="flex min-w-0 flex-col gap-1 type-body">
-                <h3 className="type-heading-3 text-fg">Opinion articles</h3>
-                <p className="text-muted">Notes on focus, backlog shape, and shipping what matters.</p>
-                <TextLink href="/opinion">Read now</TextLink>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </SiteNav.MenuSection>
-      <SiteNav.MenuSection label="Links">
-        <SiteNav.MenuLinkGrid>
-          <SiteNav.MenuLink href="/podcast" icon={<Mic />}>Podcast</SiteNav.MenuLink>
-          <SiteNav.MenuLink href="https://youtube.com" icon={<Video />} external>YouTube</SiteNav.MenuLink>
-          <SiteNav.MenuLink href="/webinars" icon={<Target />}>Webinars</SiteNav.MenuLink>
-          <SiteNav.MenuLink href="/changelog" icon={<History />}>Changelog</SiteNav.MenuLink>
-          <SiteNav.MenuLink href="/blog" icon={<FileText />}>Blog</SiteNav.MenuLink>
-          <SiteNav.MenuLink href="/docs" icon={<BookOpen />}>Docs</SiteNav.MenuLink>
-        </SiteNav.MenuLinkGrid>
-      </SiteNav.MenuSection>
-    </SiteNav.Menu>
+${indentSiteNavResourcesMenuCopySource(4)}
   );
 }
 `,

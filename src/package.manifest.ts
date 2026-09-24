@@ -34,7 +34,6 @@ export const packageManifest = {
     { name: "pressScaleClass", path: "./lib/motion", reexport: "pressScaleClass" },
     { name: "GridOverlay", path: "./lib/GridOverlay" },
     { name: "GRID_ON_CLASS", path: "./lib/gridOverlayUtils", reexport: "GRID_ON_CLASS" },
-    { name: "useScrollThreshold", path: "./lib/useScrollThreshold", reexport: "useScrollThreshold" },
   ] as const,
 
   /** Internal filesystem/import tiers; Storybook uses ADR-0026 functional categories. */

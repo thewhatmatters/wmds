@@ -392,14 +392,17 @@ export {
   siteNavStates,
   type SiteNavBrandProps,
   type SiteNavCompactLayout,
+  type SiteNavFeaturedProps,
   type SiteNavLinkProps,
   type SiteNavLinksProps,
   type SiteNavMenuLinkProps,
+  type SiteNavMenuMediaProps,
   type SiteNavMenuProps,
   type SiteNavMenuSectionProps,
   type SiteNavMobileLinkProps,
   type SiteNavPlacement,
   type SiteNavProps,
+  type SiteNavReadRowProps,
   type SiteNavState,
 } from "./components/organisms/SiteNav/SiteNav";
 export {
@@ -493,4 +496,3 @@ export {
   type MotionDuration,
   type MotionEase,
 } from "./lib/motion";
-export { useScrollThreshold, type UseScrollThresholdOptions } from "./lib/useScrollThreshold";

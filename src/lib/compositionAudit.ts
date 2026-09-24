@@ -229,6 +229,10 @@ export function shouldScanCompositionFile(path: string): boolean {
   if (normalized.endsWith(".stories.tsx")) {
     return false;
   }
+  /** Storybook-only specimens colocated with the organism (icons allowed at the fixture). */
+  if (/Specimen\.tsx?$/.test(normalized)) {
+    return false;
+  }
   if (normalized.endsWith("Styles.ts") || normalized.endsWith("styles.ts")) {
     return false;
   }
