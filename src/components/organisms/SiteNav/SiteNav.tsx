@@ -358,7 +358,6 @@ function SiteNavLinks({
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const moreRef = useRef<HTMLButtonElement>(null);
-  const overflowMenuRef = useRef<HTMLUListElement>(null);
   const measureMoreRef = useRef<HTMLSpanElement>(null);
   const measureRefs = useRef(new Map<string, HTMLSpanElement>());
 
@@ -442,9 +441,9 @@ function SiteNavLinks({
 
     function handlePointerDown(event: MouseEvent) {
       const target = event.target as Node;
-      if (rootRef.current?.contains(target) || overflowMenuRef.current?.contains(target)) {
-        return;
-      }
+      if (rootRef.current?.contains(target)) return;
+      const menu = document.getElementById(menuId);
+      if (menu?.contains(target)) return;
       closeMenu();
     }
 
@@ -620,7 +619,6 @@ function SiteNavLinks({
       {menuOpen && menuStyle != null
         ? createPortal(
             <Dropdown.Menu
-              ref={overflowMenuRef}
               id={menuId}
               role="menu"
               aria-label={`${ariaLabel} overflow`}
