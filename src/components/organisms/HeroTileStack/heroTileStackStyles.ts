@@ -6,22 +6,33 @@
  * into a scroll container, so `overflow-y: visible` still lets cards leave
  * the stack vertically. The row itself does not clip.
  *
- * Tile size tracks the root container (`14cqi`), clamped to a hero scale.
+ * Tile size is `--hero-tile-size`: a square, at most `--hero-tile-max`
+ * (400px), and a fraction of the stack width. Below `md` the overlap
+ * tightens into a pile.
  */
 
 /** Outer frame — full width of the hero, clips inline overflow only. */
 export const heroTileStackRootClasses =
   "relative isolate w-full max-w-full overflow-x-clip overflow-y-visible @container";
 
-/** Resting hit area. Scattered cards paint outside this box. */
-export const heroTileStackRowClasses =
-  "relative mx-auto flex w-fit max-w-full touch-manipulation select-none items-center justify-center overflow-visible px-3 py-6";
+/**
+ * Resting hit area. Sets `--hero-tile-size` and `--hero-tile-overlap` from the
+ * parent inline-size container. Below `md`: a tight pile. From `md`: the fan,
+ * capped by `--hero-tile-max` (default 400px).
+ */
+export const heroTileStackRowClasses = [
+  "relative mx-auto flex w-fit max-w-full touch-manipulation select-none items-center justify-center overflow-visible px-1 py-6 md:px-3",
+  "[--hero-tile-size:min(var(--hero-tile-max,400px),58cqi)]",
+  "[--hero-tile-overlap:calc(var(--hero-tile-size)*-0.82)]",
+  "md:[--hero-tile-size:min(var(--hero-tile-max,400px),34cqi)]",
+  "md:[--hero-tile-overlap:calc(var(--hero-tile-size)*-0.44)]",
+].join(" ");
 
-/** Square tile. Width is the container-relative hero size. */
-export const heroTileStackTileSize = "clamp(6rem, 14cqi, 12.5rem)";
+/** Square tile. Width is `--hero-tile-size`. */
+export const heroTileStackTileSize = "var(--hero-tile-size)";
 
-/** Overlap that pulls the next tile over this one (~44% of the tile). */
-export const heroTileStackTileOverlap = "calc(clamp(6rem, 14cqi, 12.5rem) * -0.44)";
+/** Negative inline margin. The CSS variable is already negative. */
+export const heroTileStackTileOverlap = "var(--hero-tile-overlap)";
 
 export const heroTileStackSlotClasses = "relative aspect-square shrink-0";
 

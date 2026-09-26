@@ -4,7 +4,9 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { HeroTileStack } from "../components/organisms/HeroTileStack/HeroTileStack";
 import {
   heroTileRepel,
+  heroTileStackDefaultFalloff,
   heroTileStackDefaultStrength,
+  heroTileStackSizeScale,
 } from "../components/organisms/HeroTileStack/heroTileScatter";
 
 /**
@@ -82,12 +84,14 @@ function expectedFromGeometry(root: HTMLElement, clientX: number, clientY: numbe
   const surfaces = surfacesOf(root);
   return slots.map((slot, index) => {
     const box = slot.getBoundingClientRect();
+    const scale = heroTileStackSizeScale(box.width);
     const repel = heroTileRepel({
       pointerX: clientX - rowBox.left,
       pointerY: clientY - rowBox.top,
       centerX: box.left + box.width / 2 - rowBox.left,
       centerY: box.top + box.height / 2 - rowBox.top,
-      strength: heroTileStackDefaultStrength,
+      strength: heroTileStackDefaultStrength * scale,
+      falloff: heroTileStackDefaultFalloff * scale,
     });
     const surface = surfaces[index];
     if (!surface) throw new Error(`Hero tile surface ${index} is missing`);
@@ -131,7 +135,8 @@ export const PointerScatter: Story = {
           const actual = readScatter(pair.surface);
           expect(Math.sign(actual.x)).toBe(Math.sign(pair.repel.x));
           expect(Math.abs(actual.x)).toBeGreaterThan(Math.abs(pair.repel.x) * 0.7);
-          expect(Math.abs(actual.x)).toBeLessThan(180);
+          const scale = heroTileStackSizeScale(pair.surface.parentElement?.getBoundingClientRect().width ?? 0);
+          expect(Math.abs(actual.x)).toBeLessThan(180 * scale);
           expect(Math.abs(actual.y)).toBeLessThan(8);
           expect(getComputedStyle(pair.surface).transform).not.toBe("none");
         }

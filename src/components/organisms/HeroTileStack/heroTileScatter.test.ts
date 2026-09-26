@@ -7,8 +7,11 @@ import {
   heroTileStackDefaultMaxVertical,
   heroTileStackDefaultSpring,
   heroTileStackDefaultStrength,
+  heroTileStackDefaultTileSize,
   heroTileStackDefaultVelocityFactor,
   heroTileStackIsOneShot,
+  heroTileStackReferenceSize,
+  heroTileStackSizeScale,
   heroTileStackMaxTilt,
   heroTileStackTapHoldMs,
   heroTileStackVelocityXShare,
@@ -234,6 +237,17 @@ describe("heroTileRestingLayout", () => {
   });
 });
 
+describe("heroTileStackSizeScale", () => {
+  it("scales scatter distances with the painted tile", () => {
+    expect(heroTileStackReferenceSize).toBe(200);
+    expect(heroTileStackSizeScale(200)).toBe(1);
+    expect(heroTileStackSizeScale(400)).toBe(2);
+    expect(heroTileStackSizeScale(100)).toBe(0.5);
+    expect(heroTileStackSizeScale(0)).toBe(1);
+    expect(heroTileStackSizeScale(Number.NaN)).toBe(1);
+  });
+});
+
 describe("heroTileStack pointer mode", () => {
   it("treats touch and coarse pointers as a one-shot", () => {
     expect(heroTileStackIsOneShot("touch", false)).toBe(true);
@@ -258,8 +272,15 @@ describe("hero tile stack shell", () => {
     expect(heroTileStackSurfaceClasses).toContain("rounded-[var(--radius-card-shell)]");
     expect(heroTileStackSurfaceClasses).toContain("shadow-soft-card");
     expect(heroTileStackSurfaceClasses).toContain("pointer-events-none");
-    expect(heroTileStackTileSize).toContain("14cqi");
-    expect(heroTileStackTileOverlap).toContain("-0.44");
+    expect(heroTileStackTileSize).toBe("var(--hero-tile-size)");
+    expect(heroTileStackTileOverlap).toBe("var(--hero-tile-overlap)");
+    expect(heroTileStackDefaultTileSize).toBe(400);
+    expect(heroTileStackRowClasses).toContain("58cqi");
+    expect(heroTileStackRowClasses).toContain("34cqi");
+    expect(heroTileStackRowClasses).toContain("400px");
+    expect(heroTileStackRowClasses).toContain("-0.82");
+    expect(heroTileStackRowClasses).toContain("-0.44");
+    expect(heroTileStackRowClasses).toContain("md:[--hero-tile-size:");
     expect(heroTileStackImageClasses).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
     const shell = [
       heroTileStackRootClasses,

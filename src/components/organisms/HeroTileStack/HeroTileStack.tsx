@@ -26,11 +26,14 @@ import { cn } from "../../../lib/cn";
 import {
   heroTileRepel,
   heroTileRestingLayout,
+  heroTileStackDefaultFalloff,
   heroTileStackDefaultMaxVertical,
   heroTileStackDefaultSpring,
   heroTileStackDefaultStrength,
+  heroTileStackDefaultTileSize,
   heroTileStackDefaultVelocityFactor,
   heroTileStackIsOneShot,
+  heroTileStackSizeScale,
   heroTileStackTapHoldMs,
   heroTileVelocityY,
   type HeroTileRestingLayout,
@@ -52,7 +55,10 @@ export {
   heroTileStackDefaultMaxVertical,
   heroTileStackDefaultSpring,
   heroTileStackDefaultStrength,
+  heroTileStackDefaultTileSize,
   heroTileStackDefaultVelocityFactor,
+  heroTileStackReferenceSize,
+  heroTileStackSizeScale,
   heroTileStackTapHoldMs,
   heroTileStackVelocityXShare,
   heroTileVelocityY,
@@ -101,8 +107,14 @@ export interface HeroTileStackProps {
    * velocity contributes a smaller share. `0` disables the nudge.
    */
   velocityFactor?: number;
-  /** Clamp for the velocity nudge, in px. */
+  /** Clamp for the velocity nudge, in px. Scales with the painted tile. */
   maxVertical?: number;
+  /**
+   * Max square edge in px. The painted size is `min(tileSize, a fraction of
+   * the stack)` via `--hero-tile-size`, and never wider than the stack.
+   * Default `400`. Below `md` the overlap tightens into a pile.
+   */
+  tileSize?: number;
   /** Spring used for x, y, and rotate. Defaults to a soft, slightly underdamped spring. */
   spring?: HeroTileStackSpring;
   className?: HeroTileStackLayoutClassName;
@@ -273,6 +285,7 @@ export function HeroTileStack({
   strength = heroTileStackDefaultStrength,
   velocityFactor = heroTileStackDefaultVelocityFactor,
   maxVertical = heroTileStackDefaultMaxVertical,
+  tileSize = heroTileStackDefaultTileSize,
   spring: springProp,
   className,
 }: HeroTileStackProps) {
@@ -286,6 +299,7 @@ export function HeroTileStack({
   const strengthRef = useRef(strength);
   const velocityFactorRef = useRef(velocityFactor);
   const maxVerticalRef = useRef(maxVertical);
+  const tileScaleRef = useRef(1);
   const reduceMotionRef = useRef(false);
   strengthRef.current = strength;
   velocityFactorRef.current = velocityFactor;
@@ -295,14 +309,15 @@ export function HeroTileStack({
   const pointerY = useMotionValue(0);
   const velocityX = useVelocity(pointerX);
   const velocityY = useVelocity(pointerY);
-  const velocityNudge = useTransform([velocityX, velocityY], ([vx, vy]: number[]) =>
-    heroTileVelocityY({
+  const velocityNudge = useTransform([velocityX, velocityY], ([vx, vy]: number[]) => {
+    const scale = tileScaleRef.current;
+    return heroTileVelocityY({
       velocityX: vx,
       velocityY: vy,
-      velocityFactor: velocityFactorRef.current,
-      maxVertical: maxVerticalRef.current,
-    }),
-  );
+      velocityFactor: velocityFactorRef.current * scale,
+      maxVertical: maxVerticalRef.current * scale,
+    });
+  });
 
   const { reducedMotion: reducedMotionConfig } = useContext(MotionConfigContext);
   const reduceMotion = useReducedMotion() === true || reducedMotionConfig === "always";
@@ -325,12 +340,15 @@ export function HeroTileStack({
     const stack = stackRef.current;
     if (!stack) return;
     const origin = stack.getBoundingClientRect();
+    let tileWidth = 0;
     for (const binding of bindings.current) {
       if (!binding) continue;
       const box = binding.slot.getBoundingClientRect();
+      if (tileWidth === 0) tileWidth = box.width;
       binding.centerX.set(box.left + box.width / 2 - origin.left);
       binding.centerY.set(box.top + box.height / 2 - origin.top);
     }
+    tileScaleRef.current = heroTileStackSizeScale(tileWidth);
   };
 
   const scatterAt = (x: number, y: number, active: boolean, nudgeOverride?: number) => {
@@ -348,12 +366,14 @@ export function HeroTileStack({
         binding.targetRotate.set(rest);
         continue;
       }
+      const scale = tileScaleRef.current;
       const repel = heroTileRepel({
         pointerX: x,
         pointerY: y,
         centerX: binding.centerX.get(),
         centerY: binding.centerY.get(),
-        strength: strengthRef.current,
+        strength: strengthRef.current * scale,
+        falloff: heroTileStackDefaultFalloff * scale,
       });
       binding.targetX.set(repel.x);
       binding.targetY.set(repel.y + nudge);
@@ -501,11 +521,19 @@ export function HeroTileStack({
     ));
   }
 
+  const resolvedTileSize =
+    Number.isFinite(tileSize) && tileSize > 0 ? tileSize : heroTileStackDefaultTileSize;
+
   return (
     <HeroTileStackContext.Provider value={contextValue}>
       <div
         className={cn(heroTileStackRootClasses, className)}
-        style={{ containerType: "inline-size" }}
+        style={
+          {
+            containerType: "inline-size",
+            "--hero-tile-max": `${resolvedTileSize}px`,
+          } as CSSProperties
+        }
         data-hero-tile-stack=""
       >
         <div
