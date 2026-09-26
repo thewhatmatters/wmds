@@ -58,7 +58,7 @@ export const inputSizeClasses: Record<InputSize, string> = {
   lg: "min-h-12 px-4 text-base leading-none",
 };
 
-export const inputShellBorderClasses = "border border-border";
+export const inputShellBorderClasses = "border border-border-control";
 
 export const inputShellElevationClasses = "shadow-raised";
 
@@ -196,7 +196,7 @@ export const inputCompoundOuterPaddingClasses: Record<InputSize, string> = {
 
 /** @deprecated Use {@link inputCompoundInnerFieldClassesFor}. */
 export const inputCompoundInnerClasses =
-  "relative flex w-full items-center rounded-full border bg-surface";
+  "relative flex w-full items-center rounded-full border border-border-control bg-surface";
 
 /** @deprecated Use {@link inputStatusShellClasses}. */
 export const inputCompoundInnerBorderClasses: Record<InputStatus, string> = inputStatusShellClasses;

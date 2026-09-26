@@ -760,7 +760,7 @@ function SiteNavLinks({
 export interface SiteNavLinkProps {
   href: string;
   children: ReactNode;
-  /** Marks the current page — full ink + `aria-current="page"`. */
+  /** Marks the current page — selected fill pill + `aria-current="page"`. */
   current?: boolean;
   /** Stable id for overflow measurement. Defaults to `href`. */
   value?: string;

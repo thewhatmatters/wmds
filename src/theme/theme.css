@@ -46,6 +46,8 @@
   /* Borders */
   --color-border: var(--color-border);
   --color-border-emphasized: var(--color-border-emphasized);
+  --color-border-control: var(--color-border-control);
+  --color-fill-selected: var(--color-fill-selected);
   --color-skeleton: var(--color-skeleton);
 
   /* Status — error */
@@ -145,8 +147,10 @@
   --font-weight-semibold: var(--font-weight-semibold);
   --font-weight-bold: var(--font-weight-bold);
 
-  /* Semantic shadows — raised = hairline border + drop; hairline = inset labels (chips) */
+  /* Semantic shadows — md/lg are diffuse elevation; raised = hairline + tight drop (ADR-0029) */
   --shadow-sm: var(--shadow-drop-sm);
+  --shadow-md: var(--shadow-drop-md);
+  --shadow-lg: var(--shadow-drop-lg);
   --shadow-hairline: 0 0 0 1px var(--color-border);
   --shadow-raised: 0 0 0 1px var(--color-border), var(--shadow-drop-sm);
   --shadow-inset-highlight: inset 0 1px 0 rgb(255 255 255 / 14%);

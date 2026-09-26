@@ -5,7 +5,7 @@ export const searchSizes = ["sm", "md"] as const;
 export type SearchSize = (typeof searchSizes)[number];
 
 const searchShellBaseClasses =
-  "flex w-full items-center rounded-full border border-border bg-surface " +
+  "flex w-full items-center rounded-full border border-border-control bg-surface " +
   "focus-within:outline-none focus-within:ring-2 focus-within:ring-focus-ring focus-within:ring-offset-2 focus-within:ring-offset-body " +
   focusRingTransitionClasses;
 

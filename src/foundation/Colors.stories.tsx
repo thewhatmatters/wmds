@@ -43,7 +43,7 @@ const meta = {
           "Semantic color roles from **`src/theme/colors.css`**. Surface hierarchy: **body → surface → card → popover**. " +
           "Status roles use solid + **`*-muted`** tints — not Tailwind opacity modifiers. " +
           "Interaction states derive in **`src/theme/stateColors.css`**. Dark mode swaps values under **`[data-theme=\"dark\"]`** — same utility names. " +
-          "See **ADR-0007**.",
+          "See **ADR-0007** and **ADR-0029** (softer hairlines, field borders, selected fill).",
       },
     },
   },
@@ -159,10 +159,16 @@ export const Borders: Story = {
   render: () => (
     <div className="flex max-w-md flex-col gap-3">
       <div className="rounded-lg border border-border bg-surface p-4 text-sm text-fg">
-        <span className="font-mono text-xs text-muted">border-border</span> — default hairline (alpha)
+        <span className="font-mono text-xs text-muted">border-border</span> — decorative hairline (4% ink)
       </div>
       <div className="rounded-lg border border-border-emphasized bg-surface p-4 text-sm text-fg">
-        <span className="font-mono text-xs text-muted">border-border-emphasized</span> — section dividers
+        <span className="font-mono text-xs text-muted">border-border-emphasized</span> — section rules
+      </div>
+      <div className="rounded-lg border border-border-control bg-surface p-4 text-sm text-fg">
+        <span className="font-mono text-xs text-muted">border-border-control</span> — input, select, and search edges (3:1)
+      </div>
+      <div className="rounded-full bg-fill-selected px-4 py-2 text-sm text-fg">
+        <span className="font-mono text-xs text-muted">bg-fill-selected</span> — current nav pill
       </div>
     </div>
   ),

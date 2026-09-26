@@ -30,7 +30,7 @@ export const cardVariantClasses: Record<CardVariant, string> = {
 };
 
 export const cardLayoutVariantClasses: Record<CardVariant, string> = {
-  surface: "bg-surface shadow-md",
+  surface: "border border-border bg-surface shadow-md",
   outlined: "border border-border bg-surface",
   ghost: "bg-transparent",
 };
