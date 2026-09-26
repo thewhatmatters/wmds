@@ -11,6 +11,16 @@
 export const heroTileStackDefaultFalloff = 150;
 
 /**
+ * Edge length the default `strength`, `falloff`, and `maxVertical` were tuned
+ * against. Scatter px scale by measured tile width / this value, so a 400px
+ * tile travels twice as far as a 200px tile and the fan keeps its proportions.
+ */
+export const heroTileStackReferenceSize = 200;
+
+/** Largest square edge, in px. `tileSize` and `--hero-tile-max` override the fluid cap. */
+export const heroTileStackDefaultTileSize = 400;
+
+/**
  * Gentle horizontal shift. Cards near the pointer stay on screen, close to
  * the stack. Raise `strength` for a wider scatter.
  */
@@ -201,6 +211,15 @@ export function heroTileRestingLayout(
     rotate: overrides?.rotate ?? preset.rotate,
     zIndex: overrides?.zIndex ?? preset.zIndex,
   };
+}
+
+/**
+ * Scale scatter distances with the painted tile. `1` at
+ * `heroTileStackReferenceSize`. Non-positive or non-finite widths stay at `1`.
+ */
+export function heroTileStackSizeScale(tileWidth: number): number {
+  if (!finite(tileWidth) || tileWidth <= 0) return 1;
+  return tileWidth / heroTileStackReferenceSize;
 }
 
 /** Coarse pointers and touch get one scatter from the tap, then a spring back. */

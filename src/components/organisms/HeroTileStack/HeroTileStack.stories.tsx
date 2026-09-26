@@ -8,6 +8,7 @@ import {
   HeroTileStack,
   heroTileStackDefaultMaxVertical,
   heroTileStackDefaultStrength,
+  heroTileStackDefaultTileSize,
   heroTileStackDefaultVelocityFactor,
   type HeroTileStackTile,
 } from "./HeroTileStack";
@@ -38,7 +39,9 @@ const meta = {
 
 Marketing hero fan. Pass \`tiles\` (\`src\` and \`alt\`, plus optional resting \`offsetX\`, \`offsetY\`, \`rotate\`, and \`zIndex\`). While a fine pointer is over the stack, every card springs left or right away from the pointer. Closer cards travel farther, and the push adds a little tilt. A still pointer does not move the cards vertically. A quick pointer move — most of all a vertical one — adds a small springy vertical nudge that returns to 0 when the pointer slows. Leaving the stack springs the cards back to the resting fan. There is no scale change, dimming, reorder, click action, or idle motion.
 
-\`strength\` multiplies the horizontal push. The default keeps tiles near the stack. Raise it when the fan should travel farther. \`0\` holds the resting stack. \`velocityFactor\` is px of vertical nudge per px/s of vertical pointer velocity. \`maxVertical\` clamps that nudge. \`spring\` overrides stiffness, damping, and mass.
+Tiles are square. \`--hero-tile-size\` is \`min(tileSize, a fraction of the stack width)\`, capped at **400px** (\`tileSize\`, also \`--hero-tile-max\`). Resting overlap and the scatter distances scale with that painted size, so the fan keeps its proportions. Below \`md\` the overlap tightens into a pile that fits the viewport. The root still clips the inline axis.
+
+\`strength\` multiplies the horizontal push, then scales with the tile. The default keeps tiles near the stack. Raise it for a wider scatter. \`0\` holds the resting stack. \`velocityFactor\` is px of vertical nudge per px/s of vertical pointer velocity. \`maxVertical\` clamps that nudge. Both scale with the tile. \`spring\` overrides stiffness, damping, and mass.
 
 \`prefers-reduced-motion\`, and \`MotionConfig\` \`reducedMotion="always"\`, render the resting fan and ignore the pointer.
 
@@ -61,8 +64,8 @@ HeroTileStack — full width, overflow-x clip, overflow-y visible
 
 - Give every image an \`alt\`. The scatter is decorative: it does not trap focus and it does not hide the images.
 - Place **HeroTileStack** in a full-width hero. The component clips inline overflow. Do not add \`overflow-hidden\` on the stack — that clips the scatter and can turn the block axis into a scroll container.
-- The first four tiles use the default fan (alternating tilt, a small vertical nudge, later tiles in front). Override \`rotate\`, \`offsetX\`, \`offsetY\`, or \`zIndex\` per tile when the fan should differ.
-- Default \`strength\` is a gentle horizontal shift. Use the **Strength** story to raise it when cards should travel farther.
+- The first four tiles use the default fan (alternating tilt, a small vertical nudge, later tiles in front). Override \`rotate\`, \`offsetX\`, \`offsetY\`, or \`zIndex\` per tile when the fan should differ. Below \`md\` the same tilts sit in a tighter pile.
+- Default \`strength\` is a gentle horizontal shift, scaled to the painted tile. Use the **Strength** story to raise it when cards should travel farther. \`tileSize\` caps the square (default 400).
 - Shadows travel with the cards. The surface uses \`shadow-soft-card\` and \`--radius-card-shell\`.
         `.trim(),
       },
@@ -115,7 +118,7 @@ export function MarketingHero() {
       <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body px-[var(--grid-margin)] py-16 text-center">
         <div className="flex w-full flex-col items-center gap-6">
           <h1 className="type-display-1 text-fg">We Are WhatMatters</h1>
-          <p className="type-large leading-loose text-muted">
+          <p className="type-large leading-normal text-muted">
             <span className="block">
               Your brand is already{" "}
               <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>.
@@ -165,7 +168,7 @@ function MarketingHero() {
       <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body px-[var(--grid-margin)] py-16 text-center">
         <div className="flex w-full flex-col items-center gap-6">
           <h1 className="type-display-1 text-fg">We Are WhatMatters</h1>
-          <p className="type-large leading-loose text-muted">
+          <p className="type-large leading-normal text-muted">
             <span className="block">
               Your brand is already{" "}
               <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>.
@@ -191,7 +194,7 @@ export const MarketingHeroPattern: Story = {
       docs: {
         description: {
           story:
-            "SiteNav sits above the hero in normal flow. The hero section is min-h-[calc(100svh-var(--site-nav-height))] and centers its content, so the nav plus the hero fill the viewport. The headline is a plain h1 (We Are WhatMatters) and stays larger than the type-large subtext. The subtext is one p with two block lines (the online sentence, then the impossible-to-ignore sentence) so the break stays the same at every width. It has two inline md Badges — the one sanctioned decorative use. Each badge leads with a round Avatar. The globe and eye files in public/hero-badges/ are playful placeholders. The badges are not clickable, alt is empty so the sentence still reads in order, and the images are not announced. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
+            "SiteNav sits above the hero in normal flow. The hero section is min-h-[calc(100svh-var(--site-nav-height))] and centers its content, so the nav plus the hero fill the viewport. The headline is a plain h1 (We Are WhatMatters) and stays larger than the type-large subtext. The subtext is one p with two block lines (the online sentence, then the impossible-to-ignore sentence) at leading-normal, so the lines sit close and the md Badges do not collide. The break stays the same at every width. It has two inline md Badges — the one sanctioned decorative use. Each badge leads with a round Avatar. The globe and eye files in public/hero-badges/ are playful placeholders. The badges are not clickable, alt is empty so the sentence still reads in order, and the images are not announced. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
         },
       },
     },
@@ -206,8 +209,12 @@ export const Strength: Story = {
     strength: heroTileStackDefaultStrength,
     velocityFactor: heroTileStackDefaultVelocityFactor,
     maxVertical: heroTileStackDefaultMaxVertical,
+    tileSize: heroTileStackDefaultTileSize,
   },
   argTypes: {
+    tileSize: {
+      control: { type: "range", min: 160, max: 400, step: 8 },
+    },
     strength: {
       control: { type: "range", min: 0, max: 1400, step: 10 },
     },
@@ -223,7 +230,7 @@ export const Strength: Story = {
     docs: {
       description: {
         story:
-          "Drag **strength** for the horizontal push. The default shifts tiles sideways and keeps them near the stack. Higher values travel farther, until cards can leave the viewport. `0` does not move. **velocityFactor** and **maxVertical** tune the springy vertical nudge from pointer velocity.",
+          "Drag **strength** for the horizontal push. It scales with the painted tile, so a 400px tile travels farther in px than a smaller one and the fan keeps its proportions. The default shifts tiles sideways and keeps them near the stack. Higher values travel farther, until cards can leave the viewport. `0` does not move. **tileSize** caps the square (default 400). Below md the stack is a tighter pile. **velocityFactor** and **maxVertical** tune the springy vertical nudge from pointer velocity, and they scale with the tile too.",
       },
     },
   },
@@ -234,6 +241,7 @@ export const Strength: Story = {
         strength={args.strength}
         velocityFactor={args.velocityFactor}
         maxVertical={args.maxVertical}
+        tileSize={args.tileSize}
       />
     </div>
   ),
