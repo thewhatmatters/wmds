@@ -430,9 +430,13 @@ export {
   heroTileRepel,
   heroTileRestingLayout,
   heroTileStackDefaultFalloff,
+  heroTileStackDefaultMaxVertical,
   heroTileStackDefaultSpring,
   heroTileStackDefaultStrength,
+  heroTileStackDefaultVelocityFactor,
   heroTileStackTapHoldMs,
+  heroTileStackVelocityXShare,
+  heroTileVelocityY,
   type HeroTileRepel,
   type HeroTileRepelInput,
   type HeroTileRestingLayout,
@@ -440,6 +444,7 @@ export {
   type HeroTileStackProps,
   type HeroTileStackSpring,
   type HeroTileStackTile,
+  type HeroTileVelocityInput,
 } from "./components/organisms/HeroTileStack/HeroTileStack";
 export {
   Tab,

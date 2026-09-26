@@ -4,11 +4,15 @@ import {
   heroTileRepel,
   heroTileRestingLayout,
   heroTileStackDefaultFalloff,
+  heroTileStackDefaultMaxVertical,
   heroTileStackDefaultSpring,
   heroTileStackDefaultStrength,
+  heroTileStackDefaultVelocityFactor,
   heroTileStackIsOneShot,
   heroTileStackMaxTilt,
   heroTileStackTapHoldMs,
+  heroTileStackVelocityXShare,
+  heroTileVelocityY,
 } from "./heroTileScatter";
 import {
   heroTileStackImageClasses,
@@ -62,25 +66,51 @@ describe("heroTileRepel", () => {
     expect(Math.hypot(near.x, near.y)).toBeGreaterThan(Math.hypot(far.x, far.y));
   });
 
-  it("scales x and y linearly with strength below the tilt clamp", () => {
+  it("scales x and tilt linearly with strength and keeps y at rest", () => {
     const soft = heroTileRepel({ ...origin, centerX: 420, strength: 100 });
     const firm = heroTileRepel({ ...origin, centerX: 420, strength: 250 });
+    expect(soft.y).toBe(0);
+    expect(firm.y).toBe(0);
     expect(firm.x).toBeCloseTo(soft.x * 2.5);
-    expect(firm.y).toBeCloseTo(soft.y * 2.5);
     expect(firm.rotate).toBeCloseTo(soft.rotate * 2.5);
     expect(Math.abs(firm.rotate)).toBeLessThan(heroTileStackMaxTilt);
   });
 
-  it("clamps added tilt", () => {
+  it("ignores vertical separation — a still pointer does not offset y", () => {
+    const flat = heroTileRepel({ ...origin, strength: 200 });
+    const below = heroTileRepel({ ...origin, centerY: 240, strength: 200 });
+    expect(below.x).toBeCloseTo(flat.x);
+    expect(below.y).toBe(0);
+    expect(below.rotate).toBeCloseTo(flat.rotate);
+    expect(
+      heroTileRepel({
+        pointerX: 40,
+        pointerY: 0,
+        centerX: 40,
+        centerY: 180,
+        strength: 400,
+      }),
+    ).toEqual({ x: 0, y: 0, rotate: 0 });
+  });
+
+  it("clamps added tilt when strength is turned up", () => {
     const repel = heroTileRepel({
+      pointerX: 0,
+      pointerY: 0,
+      centerX: 8,
+      centerY: 0,
+      strength: 800,
+    });
+    expect(repel.rotate).toBe(heroTileStackMaxTilt);
+    const gentle = heroTileRepel({
       pointerX: 0,
       pointerY: 0,
       centerX: 8,
       centerY: 0,
       strength: heroTileStackDefaultStrength,
     });
-    expect(repel.rotate).toBe(heroTileStackMaxTilt);
-    expect(repel.rotate).toBeLessThanOrEqual(heroTileStackMaxTilt);
+    expect(Math.abs(gentle.rotate)).toBeLessThan(heroTileStackMaxTilt);
+    expect(Math.abs(gentle.x)).toBeLessThan(160);
   });
 
   it("is still at strength 0 and ignores non-finite input", () => {
@@ -104,15 +134,83 @@ describe("heroTileRepel", () => {
     expect(implicit).toEqual(explicit);
   });
 
-  it("ships a wild default strength", () => {
+  it("ships a gentle default that stays near the stack", () => {
     const near = heroTileRepel({
       pointerX: 0,
-      pointerY: 0,
+      pointerY: 10,
       centerX: 48,
-      centerY: 0,
+      centerY: 90,
       strength: heroTileStackDefaultStrength,
     });
-    expect(near.x).toBeGreaterThan(500);
+    expect(heroTileStackDefaultStrength).toBeLessThan(400);
+    expect(near.y).toBe(0);
+    expect(near.x).toBeGreaterThan(40);
+    expect(near.x).toBeLessThan(100);
+    expect(near.rotate).toBeGreaterThan(4);
+    expect(near.rotate).toBeLessThan(heroTileStackMaxTilt / 2);
+  });
+});
+
+describe("heroTileVelocityY", () => {
+  it("returns 0 for a still pointer", () => {
+    expect(heroTileVelocityY({ velocityX: 0, velocityY: 0 })).toBe(0);
+  });
+
+  it("nudges y from vertical velocity and clamps it", () => {
+    const gentle = heroTileVelocityY({ velocityX: 0, velocityY: 400 });
+    expect(gentle).toBeCloseTo(400 * heroTileStackDefaultVelocityFactor);
+    expect(gentle).toBeGreaterThan(0);
+    expect(gentle).toBeLessThan(heroTileStackDefaultMaxVertical);
+    expect(heroTileVelocityY({ velocityX: 0, velocityY: 8000 })).toBe(heroTileStackDefaultMaxVertical);
+    expect(heroTileVelocityY({ velocityX: 0, velocityY: -8000 })).toBe(-heroTileStackDefaultMaxVertical);
+  });
+
+  it("weights vertical velocity more than horizontal", () => {
+    const vertical = heroTileVelocityY({
+      velocityX: 0,
+      velocityY: 500,
+      velocityFactor: 0.02,
+      maxVertical: 80,
+    });
+    const horizontal = heroTileVelocityY({
+      velocityX: 500,
+      velocityY: 0,
+      velocityFactor: 0.02,
+      maxVertical: 80,
+    });
+    expect(vertical).toBeCloseTo(10);
+    expect(horizontal).toBeCloseTo(10 * heroTileStackVelocityXShare);
+    expect(Math.abs(vertical)).toBeGreaterThan(Math.abs(horizontal));
+    const both = heroTileVelocityY({
+      velocityX: 500,
+      velocityY: 500,
+      velocityFactor: 0.02,
+      maxVertical: 80,
+    });
+    expect(both).toBeCloseTo(vertical + horizontal);
+  });
+
+  it("scales with the factor and uses the defaults", () => {
+    const implicit = heroTileVelocityY({ velocityX: 120, velocityY: 200 });
+    const explicit = heroTileVelocityY({
+      velocityX: 120,
+      velocityY: 200,
+      velocityFactor: heroTileStackDefaultVelocityFactor,
+      maxVertical: heroTileStackDefaultMaxVertical,
+    });
+    expect(implicit).toBeCloseTo(explicit);
+    expect(heroTileStackDefaultMaxVertical).toBeLessThan(40);
+    expect(heroTileStackDefaultVelocityFactor).toBeGreaterThan(0);
+    expect(heroTileStackVelocityXShare).toBeGreaterThan(0);
+    expect(heroTileStackVelocityXShare).toBeLessThan(1);
+  });
+
+  it("is still at factor 0, max 0, and non-finite input", () => {
+    expect(heroTileVelocityY({ velocityX: 400, velocityY: 400, velocityFactor: 0 })).toBe(0);
+    expect(heroTileVelocityY({ velocityX: 400, velocityY: 400, maxVertical: 0 })).toBe(0);
+    expect(heroTileVelocityY({ velocityX: 400, velocityY: Number.NaN })).toBe(0);
+    expect(heroTileVelocityY({ velocityX: Number.POSITIVE_INFINITY, velocityY: 40 })).toBe(0);
+    expect(heroTileVelocityY({ velocityX: 40, velocityY: 40, velocityFactor: Number.NaN })).toBe(0);
   });
 });
 
@@ -178,7 +276,9 @@ describe("hero tile stack shell", () => {
     expect(source.startsWith('"use client"')).toBe(true);
     expect(source).toContain("useSpring");
     expect(source).toContain("useMotionValue");
+    expect(source).toContain("useVelocity");
     expect(source).toContain("heroTileRepel");
+    expect(source).toContain("heroTileVelocityY");
     expect(source).toContain("alt={tile.alt}");
     expect(source).not.toContain("<" + "button");
     expect(source).not.toContain("<style");
