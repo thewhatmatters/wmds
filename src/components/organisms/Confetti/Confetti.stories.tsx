@@ -21,20 +21,24 @@ const meta = {
         component: `
 ## Usage
 
-Mount **ConfettiProvider** once at the app root. After an async success, call \`fire()\` from \`useConfetti()\`. The burst is not tied to a button — pass \`origin\` as the control's ref (its center), an element, or a viewport \`{ x, y }\` point. Omit \`origin\` to start at the viewport center.
+Mount **ConfettiProvider** once at the app root. After an async success, render the confirmation surface and call \`useConfettiOnMount()\`. Do not fire from the submit click. Pass \`origin\` as an element, a ref (its center), or a viewport \`{ x, y }\` point. Omit \`origin\` to start at the viewport center. A page celebration uses the top-center of the viewport and a wide \`spread\`.
 
-\`fire()\` does nothing when the reader prefers reduced motion, or when \`MotionConfig\` \`reducedMotion\` is \`"always"\`. There is no fallback fade.
+\`useConfettiOnMount()\` calls \`fire()\` once per mount. A ref skips React StrictMode's extra effect run and later re-renders. \`fire()\` does nothing when the reader prefers reduced motion, or when \`MotionConfig\` \`reducedMotion\` is \`"always"\`. There is no fallback fade.
 
 Overlapping calls each spawn their own burst. A burst leaves the overlay \`duration + 0.5s\` after it starts. Unmounting the provider cancels in-flight animations.
 
 \`\`\`tsx
-const submitRef = useRef<HTMLButtonElement>(null);
-const { fire } = useConfetti();
+function RequestReceived() {
+  useConfettiOnMount({
+    spread: 180,
+    origin: { x: window.innerWidth / 2, y: 0 },
+  });
+
+  return <h1>Request received</h1>;
+}
 
 <ConfettiProvider>
-  <Button ref={submitRef} type="button" onClick={() => fire({ origin: submitRef })}>
-    Submit request
-  </Button>
+  <RequestReceived />
 </ConfettiProvider>
 \`\`\`
 
@@ -49,10 +53,10 @@ ConfettiProvider — context + portal
 
 ## Best practices
 
-- One provider per app. Call \`fire()\` when the action succeeds, not when the button is pressed, if the work is async.
-- Pass the triggering control as \`origin\` so the burst reads as coming from that control.
+- One provider per app. After the async action resolves, render the confirmation surface and call \`useConfettiOnMount()\` there — not from the submit click.
+- For a page celebration, pass a top-center viewport \`origin\` and a wide \`spread\` so the burst rains over the page.
 - Default colors are \`confettiDefaultColors\` (chart categorical 1–7). Pass \`colors\` to override. Do not invent a second celebratory palette.
-- Do not build a one-off trigger. Compose **Button** and call \`fire()\`. See **Examples/RFP submitted → Pattern — RFP submitted**.
+- Do not build a one-off trigger. See **Examples/RFP submitted → Pattern — RFP submitted**.
         `.trim(),
       },
     },
@@ -111,7 +115,7 @@ export const Playground: StoryObj<PhysicsArgs> = {
     docs: {
       description: {
         story:
-          "Adjust the physics, then press Celebrate. The burst starts at the button. Reduced motion skips the burst.",
+          "Physics specimen. Adjust the controls, then press Celebrate — this burst starts at the button so the values are easy to compare. The product pattern fires once from the confirmation surface. Reduced motion skips the burst.",
       },
     },
   },

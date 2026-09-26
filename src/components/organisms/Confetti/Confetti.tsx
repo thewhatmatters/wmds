@@ -10,6 +10,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -72,10 +73,32 @@ export function useConfetti(): ConfettiContextValue {
 }
 
 /**
- * App-root overlay for celebratory bursts. Mount once. Call `useConfetti().fire()`
- * after an async success (form submit, send, publish). Bursts may overlap.
- * Each burst is removed `duration + 0.5s` after it starts. Unmount cancels
- * in-flight animations.
+ * Fire one burst when this component mounts.
+ * A ref skips React StrictMode's extra effect run and later re-renders.
+ * Leaving the surface and mounting it again fires again.
+ * `fire()` still does nothing when reduced motion is on.
+ */
+export function useConfettiOnMount(options?: ConfettiFireOptions) {
+  const { fire } = useConfetti();
+  const fired = useRef(false);
+  const optionsRef = useRef(options);
+  optionsRef.current = options;
+
+  useEffect(() => {
+    if (fired.current) {
+      return;
+    }
+    fired.current = true;
+    fire(optionsRef.current);
+  }, [fire]);
+}
+
+/**
+ * App-root overlay for celebratory bursts. Mount once. After an async success,
+ * render the confirmation surface and call `useConfettiOnMount()` there.
+ * `useConfetti().fire()` is the same burst when the moment is not a mount.
+ * Bursts may overlap. Each burst is removed `duration + 0.5s` after it starts.
+ * Unmount cancels in-flight animations.
  */
 export function ConfettiProvider({ children }: ConfettiProviderProps) {
   const [bursts, setBursts] = useState<ConfettiBurst[]>([]);
