@@ -68,6 +68,7 @@
     "@vitejs/plugin-react": "^6.0.4",
     "@vitest/browser-playwright": "latest",
     "@vitest/coverage-v8": "latest",
+    "happy-dom": "^20.14.5",
     "lucide-react": "^1.33.0",
     "motion": "^13.1.1",
     "oxlint": "^1.75.0",
@@ -81,6 +82,7 @@
     "vitest": "latest"
   },
   "dependencies": {
-    "@base-ui/react": "^1.8.0"
+    "@base-ui/react": "^1.8.0",
+    "@rive-app/react-canvas": "^4.35.0"
   }
 }

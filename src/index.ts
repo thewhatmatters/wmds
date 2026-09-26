@@ -73,6 +73,15 @@ export {
   type RadioSize,
 } from "./components/atoms/Radio/Radio";
 export {
+  RiveGloveHand,
+  riveGloveHandArtboards,
+  riveGloveHandSrc,
+  riveGloveHands,
+  type RiveGloveHandLayoutClassName,
+  type RiveGloveHandName,
+  type RiveGloveHandProps,
+} from "./components/atoms/RiveGloveHand/RiveGloveHand";
+export {
   Switch,
   switchLayouts,
   switchSizes,

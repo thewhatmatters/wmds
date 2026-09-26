@@ -1,0 +1,174 @@
+/**
+ * Decorative glove hands from the Interactive Icon Set remix.
+ * Artboard `31_Cigarette` has no cigarette — it is the point hand.
+ */
+
+export const riveGloveHands = ["point", "rock"] as const;
+
+export type RiveGloveHandName = (typeof riveGloveHands)[number];
+
+/** Point is artboard `31_Cigarette` (cigarette removed). Rock is `29_Rock`. */
+export const riveGloveHandArtboards: Record<RiveGloveHandName, string> = {
+  point: "31_Cigarette",
+  rock: "29_Rock",
+};
+
+export const riveGloveHandSrc = "/rive/interactive-icon-set.riv";
+
+export const riveGloveHandStateMachine = "State Machine 1";
+
+export const riveGloveHandBooleanInput = "Boolean 1";
+
+export const riveGloveHandFillProperty = "handFill";
+
+export const riveGloveHandOutlineProperty = "outline";
+
+/** Brand accent. Light default `#262626`. */
+export const riveGloveHandFillToken = "--color-accent";
+
+/**
+ * Foreground / ink. Theme alias of `--color-text-primary`.
+ * `readCssTokenRgb` falls back to the ink token when the alias is not a runtime variable.
+ */
+export const riveGloveHandOutlineToken = "--color-fg";
+
+export const riveGloveHandOutlineFallbackToken = "--color-text-primary";
+
+export const riveGloveHandClassName = "pointer-events-none";
+
+export interface Rgb {
+  r: number;
+  g: number;
+  b: number;
+}
+
+export interface RiveGloveHandColorTarget {
+  rgb: (r: number, g: number, b: number) => void;
+}
+
+export interface RiveGloveHandColorSetter {
+  setRgb: (r: number, g: number, b: number) => void;
+}
+
+/** A number is pixels. Any other value is a CSS length (`1.25em` tracks the parent font). */
+export function riveGloveHandBoxSize(size: number | string): string {
+  return typeof size === "number" ? `${size}px` : size;
+}
+
+export function cssColorToRgb(value: string): Rgb | null {
+  const trimmed = value.trim();
+  const hex = trimmed.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+  if (hex) {
+    let digits = hex[1];
+    if (digits.length === 3) {
+      digits = digits
+        .split("")
+        .map((channel) => channel + channel)
+        .join("");
+    }
+    const parsed = Number.parseInt(digits, 16);
+    return {
+      r: (parsed >> 16) & 255,
+      g: (parsed >> 8) & 255,
+      b: parsed & 255,
+    };
+  }
+
+  const channels = trimmed.match(/rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)/i);
+  if (!channels) {
+    return null;
+  }
+
+  return {
+    r: Math.round(Number(channels[1])),
+    g: Math.round(Number(channels[2])),
+    b: Math.round(Number(channels[3])),
+  };
+}
+
+function specifiedTokenRgb(token: string, depth: number): Rgb | null {
+  if (typeof document === "undefined" || depth > 2) {
+    return null;
+  }
+  const specified = getComputedStyle(document.documentElement).getPropertyValue(token).trim();
+  const direct = cssColorToRgb(specified);
+  if (direct) {
+    return direct;
+  }
+  const nested = specified.match(/^var\(\s*(--[\w-]+)\s*\)$/);
+  if (!nested) {
+    return null;
+  }
+  return specifiedTokenRgb(nested[1], depth + 1);
+}
+
+/** Resolve a theme token to 0–255 channels. Returns null when the token is missing. */
+export function readCssTokenRgb(token: string): Rgb | null {
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  const probe = document.createElement("span");
+  probe.style.color = `var(${token})`;
+  document.body.appendChild(probe);
+  const used = cssColorToRgb(getComputedStyle(probe).color);
+  probe.remove();
+  if (used) {
+    return used;
+  }
+
+  return specifiedTokenRgb(token, 0);
+}
+
+export function readRiveGloveHandFillRgb(): Rgb | null {
+  return readCssTokenRgb(riveGloveHandFillToken);
+}
+
+export function readRiveGloveHandOutlineRgb(): Rgb | null {
+  return readCssTokenRgb(riveGloveHandOutlineToken) ?? readCssTokenRgb(riveGloveHandOutlineFallbackToken);
+}
+
+/** Low-level view-model paint used from `onRiveReady` so the first frame is token-colored. */
+export function paintRiveGloveHandColors(
+  rive: {
+    viewModelInstance: {
+      color: (path: string) => RiveGloveHandColorTarget | null;
+    } | null;
+  } | null,
+): void {
+  const viewModel = rive?.viewModelInstance;
+  if (!viewModel) {
+    return;
+  }
+
+  const fill = readRiveGloveHandFillRgb();
+  const ink = readRiveGloveHandOutlineRgb();
+  if (fill) {
+    viewModel.color(riveGloveHandFillProperty)?.rgb(fill.r, fill.g, fill.b);
+  }
+  if (ink) {
+    viewModel.color(riveGloveHandOutlineProperty)?.rgb(ink.r, ink.g, ink.b);
+  }
+}
+
+/** Hook path — `useViewModelInstanceColor` setters. */
+export function applyRiveGloveHandTokenColors(targets: {
+  handFill?: RiveGloveHandColorSetter | null;
+  outline?: RiveGloveHandColorSetter | null;
+}): void {
+  const fill = readRiveGloveHandFillRgb();
+  const ink = readRiveGloveHandOutlineRgb();
+  if (fill) {
+    targets.handFill?.setRgb(fill.r, fill.g, fill.b);
+  }
+  if (ink) {
+    targets.outline?.setRgb(ink.r, ink.g, ink.b);
+  }
+}
+
+export function prefersReducedMotion(): boolean {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return false;
+  }
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
