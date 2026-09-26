@@ -33,7 +33,7 @@ Ship **HeroTileStack** as an organism under **Components/Layout**:
 
 ## Consequences
 
-Consuming apps paste **Components/Layout/HeroTileStack → Pattern — marketing hero**. The hero is full width: display headline, subhead, stack, and a primary **Button**. Replace the placeholder `src` values with product images. Keep `alt` on every tile.
+Consuming apps paste **Components/Layout/HeroTileStack → Pattern — marketing hero**. The hero is full width: a title-case display headline (`We Are WhatMatters`, no uppercase transform), 1rem body subtext (`text-base`, not a display style), the stack, and a primary **Button**. Replace the placeholder `src` values with product images. Keep `alt` on every tile.
 
 ## References
 
