@@ -32,12 +32,9 @@ export const riveGloveHandFillToken = "--color-surface";
 export const riveGloveHandFillFallbackToken = "--color-background-surface";
 
 /**
- * Foreground / ink. Theme alias of `--color-text-primary`.
- * `readCssTokenRgb` falls back to the ink token when the alias is not a runtime variable.
+ * WhatMatters brand blue (`#2f6bff`). Not `--color-fg`, and not status `--color-info`.
  */
-export const riveGloveHandOutlineToken = "--color-fg";
-
-export const riveGloveHandOutlineFallbackToken = "--color-text-primary";
+export const riveGloveHandOutlineToken = "--color-brand";
 
 export const riveGloveHandClassName = "pointer-events-none";
 
@@ -134,7 +131,7 @@ export function readRiveGloveHandFillRgb(): Rgb | null {
 }
 
 export function readRiveGloveHandOutlineRgb(): Rgb | null {
-  return readCssTokenRgb(riveGloveHandOutlineToken) ?? readCssTokenRgb(riveGloveHandOutlineFallbackToken);
+  return readCssTokenRgb(riveGloveHandOutlineToken);
 }
 
 /** Low-level view-model paint used from `onRiveReady` so the first frame is token-colored. */

@@ -11,6 +11,7 @@ const LIB_EXPORTS = [
   "GridOverlay",
 ];
 const REQUIRED_STYLE_TOKENS = [
+  "--color-brand",
   "bg-primary-hover",
   "duration-fast",
   "motion-collapse",
