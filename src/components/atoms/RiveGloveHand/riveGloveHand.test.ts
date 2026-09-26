@@ -123,7 +123,8 @@ describe("RiveGloveHand", () => {
     runtime.useViewModelInstanceColor.mockClear();
     runtime.useStateMachineInput.mockClear();
     runtime.input.value = false;
-    document.documentElement.style.setProperty("--color-accent", "#262626");
+    document.documentElement.style.setProperty("--color-surface", "#ffffff");
+    document.documentElement.style.setProperty("--color-background-surface", "#ffffff");
     document.documentElement.style.setProperty("--color-fg", "#171717");
     document.documentElement.style.setProperty("--color-text-primary", "#171717");
     stubMotion(false);
@@ -162,15 +163,15 @@ describe("RiveGloveHand", () => {
       riveGloveHandStateMachine,
       riveGloveHandBooleanInput,
     );
-    expect(readRiveGloveHandFillRgb()).toEqual({ r: 38, g: 38, b: 38 });
+    expect(readRiveGloveHandFillRgb()).toEqual({ r: 255, g: 255, b: 255 });
     expect(readRiveGloveHandOutlineRgb()).toEqual({ r: 23, g: 23, b: 23 });
-    expect(runtime.rgb).toHaveBeenCalledWith(38, 38, 38);
+    expect(runtime.rgb).toHaveBeenCalledWith(255, 255, 255);
     expect(runtime.rgb).toHaveBeenCalledWith(23, 23, 23);
-    expect(runtime.setRgb).toHaveBeenCalledWith(38, 38, 38);
+    expect(runtime.setRgb).toHaveBeenCalledWith(255, 255, 255);
     expect(runtime.setRgb).toHaveBeenCalledWith(23, 23, 23);
     expect(runtime.input.value).toBe(true);
-    expect(container.querySelector("canvas")).not.toBeNull();
     const box = container.querySelector("div");
+    expect(box?.shadowRoot?.querySelector("canvas")).not.toBeNull();
     expect(box?.getAttribute("aria-hidden")).toBe("true");
     expect(box?.className).toContain("pointer-events-none");
     expect(box?.className).toContain("absolute");

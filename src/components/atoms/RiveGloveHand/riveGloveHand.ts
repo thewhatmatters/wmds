@@ -23,8 +23,13 @@ export const riveGloveHandFillProperty = "handFill";
 
 export const riveGloveHandOutlineProperty = "outline";
 
-/** Brand accent. Light default `#262626`. */
-export const riveGloveHandFillToken = "--color-accent";
+/**
+ * Glove fill — surface white in light mode (`#ffffff`).
+ * Theme alias of `--color-background-surface`.
+ */
+export const riveGloveHandFillToken = "--color-surface";
+
+export const riveGloveHandFillFallbackToken = "--color-background-surface";
 
 /**
  * Foreground / ink. Theme alias of `--color-text-primary`.
@@ -111,17 +116,21 @@ export function readCssTokenRgb(token: string): Rgb | null {
   const probe = document.createElement("span");
   probe.style.color = `var(${token})`;
   document.body.appendChild(probe);
-  const used = cssColorToRgb(getComputedStyle(probe).color);
+  const usedColor = getComputedStyle(probe).color;
+  const parentColor = probe.parentElement ? getComputedStyle(probe.parentElement).color : "";
   probe.remove();
-  if (used) {
-    return used;
+  if (usedColor && usedColor !== parentColor) {
+    const used = cssColorToRgb(usedColor);
+    if (used) {
+      return used;
+    }
   }
 
   return specifiedTokenRgb(token, 0);
 }
 
 export function readRiveGloveHandFillRgb(): Rgb | null {
-  return readCssTokenRgb(riveGloveHandFillToken);
+  return readCssTokenRgb(riveGloveHandFillToken) ?? readCssTokenRgb(riveGloveHandFillFallbackToken);
 }
 
 export function readRiveGloveHandOutlineRgb(): Rgb | null {

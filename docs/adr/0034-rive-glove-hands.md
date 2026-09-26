@@ -5,7 +5,7 @@
 
 ## Context
 
-The marketing hero can perch two decorative glove hands on the headline, one on the **W** of “We” and one on the last letters of “WhatMatters”. The art is a cleaned remix of the Rive Interactive Icon Set. The headline stays real, selectable text. The hands are not a second title.
+The marketing hero can perch two decorative glove hands on the headline. The rock hand grips the top-left of the **W** in “We”. The point hand grips the top-right of the final **s** in “WhatMatters”. The art is a cleaned remix of the Rive Interactive Icon Set. The headline stays real, selectable text. The hands are not a second title.
 
 Several graphics share the page, so the runtime has to stay small and share one canvas renderer.
 
@@ -27,16 +27,16 @@ Several graphics share the page, so the runtime has to stay small and share one 
 - `className`: layout only.
 - `aria-hidden`: defaults to `true`.
 
-`useRive` is called with `artboard`, `stateMachines: 'State Machine 1'`, `autoBind: true`, and `Layout({ fit: Fit.Contain })`. The parent box is sized. The component always renders `<RiveComponent />`.
+`useRive` is called with `artboard`, `stateMachines: 'State Machine 1'`, `autoBind: true`, and `Layout({ fit: Fit.Contain })`. The parent box is sized. `<RiveComponent />` renders inside that box’s shadow root, so the canvas does not insert a break when someone copies the headline.
 
 ### Token colors
 
 View model `View Model 1` colors are driven from existing tokens. No new color token.
 
-| View model | Token | Light value |
-|---|---|---|
-| `handFill` | `--color-accent` (brand accent) | `#262626` |
-| `outline` | `--color-fg`, falling back to `--color-text-primary` (foreground / ink) | `#171717` |
+| View model | Token | Light value | Dark value |
+|---|---|---|---|
+| `handFill` | `--color-surface`, falling back to `--color-background-surface` (surface) | `#ffffff` | `#262626` |
+| `outline` | `--color-fg`, falling back to `--color-text-primary` (foreground / ink) | `#171717` | `#fafafa` |
 
 `useViewModelInstanceColor` applies them with `setRgb` (0–255). `onRiveReady` paints the same channels through the view model before the first drawn frame, then calls `drawFrame()`. A `data-theme` change reads the tokens again.
 
@@ -48,7 +48,7 @@ Handled with `matchMedia('(prefers-reduced-motion: reduce)')`, not Motion’s re
 
 **Components/Layout/HeroTileStack → Pattern — marketing hero** is the default. The plain h1 uses **`type-display-1`**, the largest display token (`clamp` from `2.5rem` / 40px to `5rem` / 80px). `type-display-2` and `type-display-3` are smaller. No uppercase transform.
 
-The rock hand sits on the **W**. The point hand sits on the last letters of WhatMatters. Slots are absolute and sized in `em`. Hover or focus on the h1 sets `active`.
+The rock hand grips the top-left of the **W**. The point hand grips the top-right of the final **s**. Each word that holds a glove is an `inline-block` with `whitespace-nowrap`, so the line can break between words and never through WhatMatters. The readable headline stays `We Are WhatMatters` with no extra spaces. Slots are absolute, sized in `em`, and kept inside the h1 line box so they track the clamp and stay clear of the nav. The visible glove is about one em. Hover or focus on the h1 sets `active`.
 
 ### Consuming the pattern
 

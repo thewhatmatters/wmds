@@ -1,7 +1,8 @@
 "use client";
 
 import { Fit, Layout, useRive, useStateMachineInput, useViewModelInstanceColor } from "@rive-app/react-canvas";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { cn } from "../../../lib/cn";
 import {
   applyRiveGloveHandTokenColors,
@@ -117,14 +118,32 @@ export function RiveGloveHand({
   }, [active, handFill.setRgb, outline.setRgb, pressed, reduced, rive, themeEpoch]);
 
   const length = riveGloveHandBoxSize(size);
+  const hostRef = useRef<HTMLDivElement>(null);
+  const [shadow, setShadow] = useState<ShadowRoot | null>(null);
+
+  useLayoutEffect(() => {
+    const host = hostRef.current;
+    if (!host || host.shadowRoot) {
+      return;
+    }
+    setShadow(host.attachShadow({ mode: "open" }));
+  }, []);
 
   return (
     <div
+      ref={hostRef}
       aria-hidden={ariaHidden}
       className={cn(riveGloveHandClassName, className)}
       style={{ width: length, height: length }}
     >
-      <RiveComponent />
+      {shadow
+        ? createPortal(
+            <div style={{ width: "100%", height: "100%" }}>
+              <RiveComponent />
+            </div>,
+            shadow,
+          )
+        : null}
     </div>
   );
 }
