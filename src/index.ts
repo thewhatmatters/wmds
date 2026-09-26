@@ -340,6 +340,7 @@ export {
   confettiDefaultColors,
   confettiDefaults,
   useConfetti,
+  useConfettiOnMount,
   type ConfettiFireOptions,
   type ConfettiOrigin,
   type ConfettiProviderProps,

@@ -1,7 +1,9 @@
 import { MotionConfig } from "motion/react";
+import { StrictMode } from "react";
 import { expect, waitFor } from "storybook/test";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ConfettiProvider, useConfetti } from "../components/organisms/Confetti/Confetti";
+import { RfpSubmittedPage } from "../examples/RfpSubmitted/RfpSubmittedExample";
 
 /**
  * Browser interaction tests — `npm run test:interactions`.
@@ -107,6 +109,71 @@ export const ReducedMotion: Story = {
     await new Promise((resolve) => {
       window.setTimeout(resolve, 200);
     });
+    expect(pieces().length).toBe(0);
+  },
+};
+
+export const ConfirmationBurst: Story = {
+  name: "confirmation burst",
+  render: () => (
+    <StrictMode>
+      <RfpSubmittedPage />
+    </StrictMode>
+  ),
+  play: async ({ canvas }) => {
+    const button = canvas.getByRole("button", { name: "Submit request" });
+    button.click();
+
+    await waitFor(
+      () => {
+        expect(canvas.getByRole("heading", { name: "Your proposal request is in" })).toBeInTheDocument();
+      },
+      { timeout: 3000 },
+    );
+
+    await waitFor(() => {
+      expect(bursts().length).toBe(1);
+      expect(pieces().length).toBeGreaterThan(0);
+    });
+
+    await new Promise((resolve) => {
+      window.setTimeout(resolve, 200);
+    });
+    expect(bursts().length).toBe(1);
+    expect(canvas.getByRole("button", { name: "Submit another request" })).toBeInTheDocument();
+  },
+};
+
+export const ConfirmationReducedMotion: Story = {
+  name: "confirmation reduced motion",
+  render: () => (
+    <StrictMode>
+      <MotionConfig reducedMotion="always">
+        <RfpSubmittedPage />
+      </MotionConfig>
+    </StrictMode>
+  ),
+  play: async ({ canvas }) => {
+    const button = canvas.getByRole("button", { name: "Submit request" });
+    button.click();
+
+    await waitFor(
+      () => {
+        expect(canvas.getByRole("heading", { name: "Your proposal request is in" })).toBeInTheDocument();
+      },
+      { timeout: 3000 },
+    );
+
+    await waitFor(() => {
+      expect(document.querySelector("[data-confetti-layer]")).not.toBeNull();
+    });
+    expect(bursts().length).toBe(0);
+    expect(pieces().length).toBe(0);
+
+    await new Promise((resolve) => {
+      window.setTimeout(resolve, 200);
+    });
+    expect(bursts().length).toBe(0);
     expect(pieces().length).toBe(0);
   },
 };

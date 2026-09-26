@@ -180,7 +180,7 @@ import {
 | `Badge` | `variant`, `size`, `emphasis`, `count`, `icon`, `iconOnly` | Components/Feedback/Badge — copy a **Pattern** story |
 | `Status` | `variant`, `tone`, `label`, `besideLabel`, `pulsing`, `active`, `step` | Components/Feedback/Status — `variant="ring"` or `variant="dot"` |
 | `FooterReveal` | `FooterReveal.Content`, `FooterReveal.Footer`, `footerRevealFieldClasses` | Components/Layout/FooterReveal — **Pattern — marketing page**. Cover sits on the page background; footer sticks underneath and scrubs in across its own height. Reduced motion stays fully visible. |
-| `ConfettiProvider` | `useConfetti().fire()`, `origin`, `confettiDefaultColors` | Components/Feedback/Confetti — playground. **Examples/RFP submitted → Pattern — RFP submitted**. `fire()` does nothing under reduced motion. |
+| `ConfettiProvider` | `useConfettiOnMount()`, `useConfetti().fire()`, `origin`, `confettiDefaultColors` | Components/Feedback/Confetti — playground. **Examples/RFP submitted → Pattern — RFP submitted**. Fire on the confirmation surface after the async action resolves, not on the submit click. `fire()` does nothing under reduced motion. |
 
 Copy flow patterns from **Examples/** in Storybook when they ship. See **`src/package.manifest.ts`** for the export contract.
 
