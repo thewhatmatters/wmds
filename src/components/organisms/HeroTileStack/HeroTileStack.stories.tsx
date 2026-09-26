@@ -129,7 +129,7 @@ export function MarketingHero() {
             </span>
           </p>
           <HeroTileStack tiles={tiles} />
-          <Button role="primary">Start a project</Button>
+          <Button role="primary" className="mt-6 md:mt-12">Start a project</Button>
         </div>
       </section>
     </>
@@ -179,7 +179,7 @@ function MarketingHero() {
             </span>
           </p>
           <HeroTileStack tiles={heroTiles} />
-          <Button role="primary">Start a project</Button>
+          <Button role="primary" className="mt-6 md:mt-12">Start a project</Button>
         </div>
       </section>
     </>
