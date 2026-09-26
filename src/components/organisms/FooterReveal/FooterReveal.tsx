@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  MotionConfigContext,
   motion,
   useMotionTemplate,
   useReducedMotion,
@@ -56,6 +57,7 @@ export interface FooterRevealFooterProps {
 interface FooterRevealContextValue {
   /** 0 covered → 1 uncovered. Stays at 1 when reduced motion is on. */
   reveal: MotionValue<number>;
+  reduceMotion: boolean;
   contentRef: RefObject<HTMLDivElement | null>;
   footerRef: RefObject<HTMLElement | null>;
   scale: MotionValue<number>;
@@ -92,7 +94,13 @@ function FooterRevealRoot({ children, className }: FooterRevealProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLElement>(null);
   const [revealAt, setRevealAt] = useState(0.35);
-  const reduceMotion = useReducedMotion() === true;
+  /**
+   * OS `prefers-reduced-motion` wins. `MotionConfig reducedMotion="always"`
+   * also reduces. The default config value is `"never"` (no provider); that
+   * must not ignore the OS query.
+   */
+  const { reducedMotion: reducedMotionConfig } = useContext(MotionConfigContext);
+  const reduceMotion = useReducedMotion() === true || reducedMotionConfig === "always";
 
   useLayoutEffect(() => {
     const footer = footerRef.current;
@@ -117,31 +125,21 @@ function FooterRevealRoot({ children, className }: FooterRevealProps) {
     offset: ["end end", "end start"],
   });
 
-  const reveal = useTransform(
-    scrollYProgress,
-    [0, revealAt],
-    reduceMotion ? [1, 1] : [0, 1],
-  );
-  const scale = useTransform(
-    scrollYProgress,
-    [0, revealAt],
-    reduceMotion ? [1, 1] : [0.9, 1],
-  );
-  const blur = useTransform(
-    scrollYProgress,
-    [0, revealAt],
-    reduceMotion ? [0, 0] : [6, 0],
-  );
+  const scrubbedReveal = useTransform(scrollYProgress, [0, revealAt], [0, 1]);
+  const reveal = useTransform(scrubbedReveal, (value) => (reduceMotion ? 1 : value));
+  const scale = useTransform(scrollYProgress, [0, revealAt], reduceMotion ? [1, 1] : [0.9, 1]);
+  const blur = useTransform(scrollYProgress, [0, revealAt], reduceMotion ? [0, 0] : [6, 0]);
   const filter = useMotionTemplate`blur(${blur}px)`;
-  const opacityWillChange = useTransform(scrollYProgress, (progress) =>
+  const opacityWillChange = useTransform(scrollYProgress, (progress): string =>
     !reduceMotion && progress > 0.0001 && progress < revealAt ? "opacity" : "auto",
   );
-  const contentWillChange = useTransform(scrollYProgress, (progress) =>
+  const contentWillChange = useTransform(scrollYProgress, (progress): string =>
     !reduceMotion && progress > 0.0001 && progress < revealAt ? "transform, filter" : "auto",
   );
 
   const value: FooterRevealContextValue = {
     reveal,
+    reduceMotion,
     contentRef,
     footerRef,
     scale,
@@ -174,7 +172,7 @@ function FooterRevealContent({ children, className }: FooterRevealContentProps) 
 }
 
 function FooterRevealFooter({ children, className }: FooterRevealFooterProps) {
-  const { footerRef, reveal, scale, filter, opacityWillChange, contentWillChange } =
+  const { footerRef, reveal, reduceMotion, scale, filter, opacityWillChange, contentWillChange } =
     useFooterRevealContext("FooterReveal.Footer");
 
   return (
@@ -183,24 +181,40 @@ function FooterRevealFooter({ children, className }: FooterRevealFooterProps) {
       className={footerRevealStickyClasses}
       data-footer-reveal="sticky"
     >
-      <motion.div
-        className={cn(footerRevealFadeClasses, className)}
-        style={{ opacity: reveal, willChange: opacityWillChange }}
-        data-footer-reveal="fade"
-      >
-        <motion.div
-          className={footerRevealScaleClasses}
-          style={{
-            scale,
-            filter,
-            transformOrigin: "50% 100%",
-            willChange: contentWillChange,
-          }}
-          data-footer-reveal="scale"
+      {reduceMotion ? (
+        <div
+          className={cn(footerRevealFadeClasses, className)}
+          style={{ opacity: 1 }}
+          data-footer-reveal="fade"
         >
-          {children}
+          <div
+            className={footerRevealScaleClasses}
+            style={{ transform: "none", filter: "none", transformOrigin: "50% 100%" }}
+            data-footer-reveal="scale"
+          >
+            {children}
+          </div>
+        </div>
+      ) : (
+        <motion.div
+          className={cn(footerRevealFadeClasses, className)}
+          style={{ opacity: reveal, willChange: opacityWillChange }}
+          data-footer-reveal="fade"
+        >
+          <motion.div
+            className={footerRevealScaleClasses}
+            style={{
+              scale,
+              filter,
+              transformOrigin: "50% 100%",
+              willChange: contentWillChange,
+            }}
+            data-footer-reveal="scale"
+          >
+            {children}
+          </motion.div>
         </motion.div>
-      </motion.div>
+      )}
     </footer>
   );
 }
