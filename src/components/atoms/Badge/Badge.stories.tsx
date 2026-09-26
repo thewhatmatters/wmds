@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Check, Tag, X } from "lucide-react";
+import { withStoryCopySource } from "../../../lib/storyCopySource";
 import { Button } from "../Button/Button";
 import { Badge, badgeVariants, type BadgeVariant } from "./Badge";
 
@@ -13,6 +14,7 @@ const meta = {
     emphasis: { control: "select", options: ["solid", "muted"] },
     count: { control: "number" },
     icon: { control: false },
+    avatar: { control: false },
     iconOnly: { control: "boolean" },
     children: { control: "text" },
   },
@@ -35,6 +37,7 @@ const meta = {
 | **Muted label** | \`emphasis="muted"\` + \`variant\` + label |
 | **Count** | \`count\` + \`variant\` |
 | **With icon** | \`icon\` (Lucide) + \`variant\` + label |
+| **With avatar** | \`avatar={{ src, alt }}\` + \`variant\` + label — round **Avatar**, sized to the badge |
 | **Icon only** | \`iconOnly\` + \`icon\` + \`variant\` — **TaskRows** leading done/failed |
 
 Solid semantic fills for status and category labels. **Variants:** \`neutral\` (categories), \`info\`, \`success\`, \`warning\`, \`destructive\` (errors and irreversible outcomes).
@@ -81,6 +84,68 @@ export const SemanticVariants: Story = {
           {variant === "destructive" ? "Failed" : variant.charAt(0).toUpperCase() + variant.slice(1)}
         </Badge>
       ))}
+    </div>
+  ),
+};
+
+const withAvatarCopySource = `
+import { Badge } from "@whatmatters/wmds";
+
+export function BadgeWithAvatar() {
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      <Badge
+        variant="info"
+        size="sm"
+        emphasis="muted"
+        avatar={{ src: "/hero-badges/globe.svg", alt: "Illustrated globe" }}
+      >
+        online
+      </Badge>
+      <Badge
+        variant="info"
+        size="md"
+        emphasis="muted"
+        avatar={{ src: "/hero-badges/eye.svg", alt: "Illustrated eye" }}
+      >
+        impossible to ignore
+      </Badge>
+    </div>
+  );
+}
+`.trim();
+
+export const WithAvatar: Story = {
+  name: "Pattern — with avatar",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Leading round Avatar, sized to the badge: sm is 20px, md is 24px. Mutually exclusive with icon. Pass alt=\"\" when the badge label already speaks the word. The globe and eye files in public/hero-badges/ are playful placeholders.",
+        },
+      },
+    },
+    withAvatarCopySource,
+  ),
+  render: () => (
+    <div className="flex flex-wrap items-center gap-3">
+      <Badge
+        variant="info"
+        size="sm"
+        emphasis="muted"
+        avatar={{ src: "/hero-badges/globe.svg", alt: "Illustrated globe" }}
+      >
+        online
+      </Badge>
+      <Badge
+        variant="info"
+        size="md"
+        emphasis="muted"
+        avatar={{ src: "/hero-badges/eye.svg", alt: "Illustrated eye" }}
+      >
+        impossible to ignore
+      </Badge>
     </div>
   ),
 };

@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Eye, Globe } from "lucide-react";
 import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
@@ -73,7 +72,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const marketingHeroCopySource = `
-import { Eye, Globe } from "lucide-react";
 import { Badge, Button, HeroTileStack } from "@whatmatters/wmds";
 
 const tiles = [
@@ -88,11 +86,11 @@ export function MarketingHero() {
     <section className="flex min-h-dvh w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body px-[var(--grid-margin)] py-16 text-center">
       <div className="flex w-full flex-col items-center gap-6">
         <h1 className="type-display-1 text-fg">We Are WhatMatters</h1>
-        <p className="type-body leading-loose text-muted">
+        <p className="type-large leading-loose text-muted">
           Your brand is already{" "}
-          <Badge variant="info" size="sm" emphasis="muted" className="align-middle" icon={<Globe aria-hidden />}>online</Badge>
+          <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
           {". Make it "}
-          <Badge variant="info" size="sm" emphasis="muted" className="align-middle" icon={<Eye aria-hidden />}>impossible to ignore</Badge>.
+          <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/eye.svg", alt: "" }}>impossible to ignore</Badge>.
         </p>
         <HeroTileStack tiles={tiles} />
         <Button role="primary">Start a project</Button>
@@ -107,11 +105,11 @@ function MarketingHero() {
     <section className="flex min-h-dvh w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body px-[var(--grid-margin)] py-16 text-center">
       <div className="flex w-full flex-col items-center gap-6">
         <h1 className="type-display-1 text-fg">We Are WhatMatters</h1>
-        <p className="type-body leading-loose text-muted">
+        <p className="type-large leading-loose text-muted">
           Your brand is already{" "}
-          <Badge variant="info" size="sm" emphasis="muted" className="align-middle" icon={<Globe aria-hidden />}>online</Badge>
+          <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
           {". Make it "}
-          <Badge variant="info" size="sm" emphasis="muted" className="align-middle" icon={<Eye aria-hidden />}>impossible to ignore</Badge>.
+          <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/eye.svg", alt: "" }}>impossible to ignore</Badge>.
         </p>
         <HeroTileStack tiles={heroTiles} />
         <Button role="primary">Start a project</Button>
@@ -128,7 +126,7 @@ export const MarketingHeroPattern: Story = {
       docs: {
         description: {
           story:
-            "Title-case display headline and body subtext above the fan, primary action below. The headline is a plain h1. The subtext is type-body with two inline Badges — the one sanctioned decorative use. They are not clickable, and the sentence still reads in order. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
+            "Title-case display headline and type-large subtext above the fan, primary action below. The headline is a plain h1 and stays larger than the subtext. The subtext is the next step above type-body, with two inline md Badges — the one sanctioned decorative use. Each badge leads with a round Avatar. The globe and eye files in public/hero-badges/ are playful placeholders. The badges are not clickable, alt is empty so the sentence still reads in order, and the images are not announced. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
         },
       },
     },

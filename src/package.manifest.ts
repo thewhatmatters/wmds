@@ -1,6 +1,7 @@
 /**
  * Package export manifest — single source for index.ts, tsconfig.lib, and vite externals.
  * Add a component here when it ships; run `npm run validate:manifest` before publish.
+ * Badge stays an atom. Its leading-avatar contract (`BadgeAvatar`, `badgeAvatarSize`) is exported from `src/index.ts` — ADR-0033.
  */
 
 const atoms = [

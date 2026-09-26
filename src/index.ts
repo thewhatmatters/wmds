@@ -9,7 +9,18 @@ export {
   type AvatarProps,
   type AvatarSize,
 } from "./components/atoms/Avatar/Avatar";
-export { Badge, type BadgeEmphasis, type BadgeLayoutClassName, type BadgeProps, type BadgeSize, type BadgeVariant, badgeEmphases, badgeVariants } from "./components/atoms/Badge/Badge";
+export {
+  Badge,
+  badgeAvatarSize,
+  badgeEmphases,
+  badgeVariants,
+  type BadgeAvatar,
+  type BadgeEmphasis,
+  type BadgeLayoutClassName,
+  type BadgeProps,
+  type BadgeSize,
+  type BadgeVariant,
+} from "./components/atoms/Badge/Badge";
 export {
   Button,
   buttonLayouts,
