@@ -25,13 +25,13 @@ export const cardShapeClasses: Record<CardShape, string> = {
 
 export const cardVariantClasses: Record<CardVariant, string> = {
   surface: "bg-surface",
-  outlined: "border border-border bg-card",
+  outlined: "bg-card shadow-soft-card",
   ghost: "bg-transparent",
 };
 
 export const cardLayoutVariantClasses: Record<CardVariant, string> = {
-  surface: "bg-surface shadow-md",
-  outlined: "border border-border bg-surface",
+  surface: "bg-surface shadow-soft-card",
+  outlined: "bg-surface shadow-soft-card",
   ghost: "bg-transparent",
 };
 

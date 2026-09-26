@@ -27,19 +27,19 @@ const selectShellFocusClasses = cn(
 /** Outer pill — owns border, elevation, height, and focus ring (Search shell pattern). */
 export const selectShellClasses: Record<SelectSize, string> = {
   sm: cn(
-    "relative flex w-full min-w-0 items-center rounded-full border border-border bg-surface shadow-raised",
+    "relative flex w-full min-w-0 items-center rounded-full border border-border-control bg-surface shadow-raised",
     inputSoloRadiusClasses.sm,
     "h-8",
     selectShellFocusClasses,
   ),
   md: cn(
-    "relative flex w-full min-w-0 items-center rounded-full border border-border bg-surface shadow-raised",
+    "relative flex w-full min-w-0 items-center rounded-full border border-border-control bg-surface shadow-raised",
     inputSoloRadiusClasses.md,
     "h-11",
     selectShellFocusClasses,
   ),
   lg: cn(
-    "relative flex w-full min-w-0 items-center rounded-full border border-border bg-surface shadow-raised",
+    "relative flex w-full min-w-0 items-center rounded-full border border-border-control bg-surface shadow-raised",
     inputSoloRadiusClasses.lg,
     "min-h-12",
     selectShellFocusClasses,

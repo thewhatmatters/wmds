@@ -33,9 +33,20 @@
   --color-overlay-hover: #0000000d;
   --color-overlay-pressed: #0000001a;
 
-  /* Borders */
-  --color-border: #00000014;
-  --color-border-emphasized: #d4d4d4;
+  /*
+   * Borders and elevation chrome (ADR-0029).
+   * `--color-border` is the divider ink — warm 6%, not the floating-surface edge.
+   * Floating pills and menus use `--color-elevation-edge` / `--color-elevation-surface`
+   * plus `--shadow-soft-sm` (diffuse shadow + inset ring).
+   * `--color-border-control` stays at WCAG 3:1 for input, select, and search.
+   * `--color-fill-selected` is the current-nav pill (#eee).
+   */
+  --color-border: rgb(42 36 28 / 6%);
+  --color-border-emphasized: #d9d9d9;
+  --color-border-control: #8c8c8c;
+  --color-fill-selected: #eeeeee;
+  --color-elevation-edge: rgb(255 255 253 / 90%);
+  --color-elevation-surface: rgb(255 255 253 / 90%);
 
   /* Loading placeholders — skeleton screens (Astryx Skeleton) */
   --color-skeleton: color-mix(in srgb, var(--color-text-primary) 8%, var(--color-background-muted));
@@ -74,8 +85,8 @@
   --color-primary: #39485c;
   --color-on-primary: #fafafa;
 
-  /* Derived from --color-primary — equals rgb(57 72 92 / 45%) on the default brand */
-  --color-focus-ring: color-mix(in srgb, var(--color-primary) 45%, transparent);
+  /* Derived from --color-primary — 62% clears WCAG 3:1 on white and #f8f8f8 */
+  --color-focus-ring: color-mix(in srgb, var(--color-primary) 62%, transparent);
 
   /*
    * Chart — categorical series (no semantic meaning).
@@ -105,9 +116,20 @@
   --color-chart-rag-3: #e6b800;
   --color-chart-rag-4: #007004;
 
-  /* Shadow primitives (referenced by @theme semantic shadows) */
-  --shadow-drop-sm: 0 1px 2px rgb(0 0 0 / 8%);
-  --shadow-drop-md: 0 1px 2px rgb(0 0 0 / 6%), 0 2px 6px rgb(0 0 0 / 4%);
+  /*
+   * Elevation (ADR-0029). Warm ink, not neutral black.
+   * soft-sm = nav / menu: tight veil + 8×28 spread + 4% inset ring.
+   * soft-card = cards: tight veil + 16×32 spread, no stroke.
+   */
+  --shadow-soft-sm:
+    0 2px 4px rgb(35 30 24 / 3%),
+    0 8px 28px -8px rgb(35 30 24 / 12%),
+    inset 0 0 0 1px rgb(35 30 24 / 4%);
+  --shadow-soft-card:
+    0 1px 2px rgb(26 26 24 / 6%),
+    0 16px 32px -12px rgb(26 26 24 / 10%);
+  --shadow-drop-sm: 0 2px 4px rgb(35 30 24 / 3%);
+  --shadow-drop-lg: 0 2px 4px rgb(35 30 24 / 4%), 0 12px 40px -12px rgb(35 30 24 / 16%);
 }
 
 [data-theme="dark"] {
@@ -131,8 +153,12 @@
   --color-overlay-hover: #ffffff0d;
   --color-overlay-pressed: #ffffff1a;
 
-  --color-border: #ffffff1a;
-  --color-border-emphasized: #525252;
+  --color-border: rgb(255 255 255 / 8%);
+  --color-border-emphasized: #404040;
+  --color-border-control: #8c8c8c;
+  --color-fill-selected: #303030;
+  --color-elevation-edge: rgb(255 255 255 / 14%);
+  --color-elevation-surface: rgb(38 38 38 / 94%);
 
   --color-skeleton: color-mix(in srgb, var(--color-text-primary) 12%, var(--color-background-muted));
 
@@ -159,9 +185,10 @@
    * Derived from --color-primary: lift the brand toward white so the ring stays
    * visible on dark surfaces, then apply ring alpha. Follows a consumer override.
    */
+  /* 48% of the lifted brand clears WCAG 3:1 on #262626 and #1b1b1b */
   --color-focus-ring: color-mix(
     in srgb,
-    color-mix(in oklch, var(--color-primary) 30%, white) 40%,
+    color-mix(in oklch, var(--color-primary) 30%, white) 48%,
     transparent
   );
 
@@ -183,8 +210,15 @@
   --color-chart-rag-3: #fdcf4f;
   --color-chart-rag-4: #9fe59b;
 
-  --shadow-drop-sm: 0 1px 2px rgb(0 0 0 / 30%);
-  --shadow-drop-md: 0 1px 2px rgb(0 0 0 / 20%), 0 2px 6px rgb(0 0 0 / 20%);
+  --shadow-soft-sm:
+    0 2px 4px rgb(0 0 0 / 22%),
+    0 8px 28px -8px rgb(0 0 0 / 32%),
+    inset 0 0 0 1px rgb(255 255 255 / 10%);
+  --shadow-soft-card:
+    0 1px 2px rgb(0 0 0 / 22%),
+    0 16px 32px -12px rgb(0 0 0 / 28%);
+  --shadow-drop-sm: 0 2px 4px rgb(0 0 0 / 18%);
+  --shadow-drop-lg: 0 4px 8px rgb(0 0 0 / 20%), 0 16px 48px -12px rgb(0 0 0 / 36%);
 }
 
 /**
@@ -212,8 +246,12 @@
   --color-overlay-hover: #2a241c0d;
   --color-overlay-pressed: #2a241c1a;
 
-  --color-border: #2a241c18;
-  --color-border-emphasized: #cfc4b4;
+  --color-border: rgb(42 36 28 / 6%);
+  --color-border-emphasized: #ddd4c4;
+  --color-border-control: #868686;
+  --color-fill-selected: #eee8e0;
+  --color-elevation-edge: rgb(255 250 244 / 90%);
+  --color-elevation-surface: rgb(255 250 244 / 90%);
 
   --color-skeleton: color-mix(in srgb, var(--color-text-primary) 8%, var(--color-background-muted));
 }

@@ -39,6 +39,8 @@ Marketing site header. Expanded is **in document flow** (scrolls away with the p
 
 Three slots — \`start\` | \`middle\` | \`end\` — in any combination. **SiteNav.Brand** goes in \`start\`, **SiteNav.Links** in \`middle\`, secondary link + primary **Button** in \`end\`. Supply \`mobile\` to swap the middle slot for a **Menu** IconButton and an end **Sheet** below \`md\`.
 
+A \`current\` link is a light gray pill (\`bg-fill-selected\`), including the mobile sheet row. Compact chrome is the frosted elevation surface (\`bg-elevation-surface\`, \`border-elevation-edge\`, \`shadow-soft-sm\`) and keeps its pill radius and backdrop blur.
+
 | Prop | Purpose |
 |------|---------|
 | \`collapseAt\` | Scroll distance in px that reveals the compact pill. **Omit** for **50%** of the scrollport height (\`siteNavDefaultCollapseRatio\`) |

@@ -71,7 +71,7 @@ export const sheetPanelBaseClasses = [
   cardBaseClasses,
   cardLayoutShellClasses,
   cardLayoutShellTopClasses(),
-  "max-h-full min-h-0 bg-surface shadow-md",
+  "max-h-full min-h-0 bg-surface shadow-soft-card",
 ].join(" ");
 
 /** Edge-attached shell — radius on the inner edge only (not floating). */

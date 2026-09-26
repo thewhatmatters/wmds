@@ -11,19 +11,38 @@ export interface ShadowToken {
 
 export const shadowPrimitives: ShadowToken[] = [
   {
-    token: "--shadow-drop-sm",
-    value: "0 1px 2px rgb(0 0 0 / 8%)",
-    role: "Subtle drop — no hairline",
-    usedIn: ["Composes --shadow-sm", "Paper: box-shadow literal"],
-    paperPattern: "box-shadow: 0 1px 2px rgb(0 0 0 / 8%)",
+    token: "--shadow-soft-sm",
+    value:
+      "0 2px 4px rgb(35 30 24 / 3%), 0 8px 28px -8px rgb(35 30 24 / 12%), inset 0 0 0 1px rgb(35 30 24 / 4%)",
+    role: "Nav and menu elevation — diffuse drop plus inset ring",
+    tailwind: "shadow-soft-sm",
+    usedIn: ["SiteNav compact", "SiteNav mega menu", "Dropdown"],
+    paperPattern:
+      "border: 1px solid var(--color-elevation-edge); box-shadow: 0 2px 4px rgb(35 30 24 / 3%), 0 8px 28px -8px rgb(35 30 24 / 12%), inset 0 0 0 1px rgb(35 30 24 / 4%)",
   },
   {
-    token: "--shadow-drop-md",
-    value: "0 1px 2px rgb(0 0 0 / 6%), 0 2px 6px rgb(0 0 0 / 4%)",
-    role: "Card depth drop layers",
-    usedIn: ["Composes --shadow-md (with hairline)"],
+    token: "--shadow-soft-card",
+    value: "0 1px 2px rgb(26 26 24 / 6%), 0 16px 32px -12px rgb(26 26 24 / 10%)",
+    role: "Card elevation — no stroke",
+    tailwind: "shadow-soft-card",
+    usedIn: ["Card layout surface", "Card outlined", "Sheet", "Panel"],
     paperPattern:
-      "border: 1px solid var(--color-border); box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 2px 6px rgb(0 0 0 / 4%)",
+      "box-shadow: 0 1px 2px rgb(26 26 24 / 6%), 0 16px 32px -12px rgb(26 26 24 / 10%)",
+  },
+  {
+    token: "--shadow-drop-sm",
+    value: "0 2px 4px rgb(35 30 24 / 3%)",
+    role: "Tight warm veil — no hairline",
+    usedIn: ["Composes --shadow-sm"],
+    paperPattern: "box-shadow: 0 2px 4px rgb(35 30 24 / 3%)",
+  },
+  {
+    token: "--shadow-drop-lg",
+    value: "0 2px 4px rgb(35 30 24 / 4%), 0 12px 40px -12px rgb(35 30 24 / 16%)",
+    role: "Wider diffuse lift",
+    usedIn: ["Composes --shadow-lg", "Toast"],
+    paperPattern:
+      "box-shadow: 0 2px 4px rgb(35 30 24 / 4%), 0 12px 40px -12px rgb(35 30 24 / 16%)",
   },
   {
     token: "--shadow-inset-highlight",
@@ -38,21 +57,29 @@ export const shadowPrimitives: ShadowToken[] = [
 export const shadowElevations: ShadowToken[] = [
   {
     token: "--shadow-sm",
-    value: "0 1px 2px rgb(0 0 0 / 8%)",
-    role: "Subtle lift",
+    value: "0 2px 4px rgb(35 30 24 / 3%)",
+    role: "Tight veil",
     tailwind: "shadow-sm",
-    usedIn: ["Card elevation sm"],
-    paperPattern: "box-shadow: 0 1px 2px rgb(0 0 0 / 8%)",
+    usedIn: ["Tooltip", "Input compound field"],
+    paperPattern: "box-shadow: 0 2px 4px rgb(35 30 24 / 3%)",
   },
   {
     token: "--shadow-md",
-    value:
-      "0 0 0 1px var(--color-border), 0 1px 2px rgb(0 0 0 / 6%), 0 2px 6px rgb(0 0 0 / 4%)",
-    role: "Default card elevation",
+    value: "0 1px 2px rgb(26 26 24 / 6%), 0 16px 32px -12px rgb(26 26 24 / 10%)",
+    role: "Alias of --shadow-soft-card",
     tailwind: "shadow-md",
-    usedIn: ["Card default", "Restock agent specimen"],
+    usedIn: ["Alias — prefer shadow-soft-card"],
     paperPattern:
-      "border: 1px solid var(--color-border); box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 2px 6px rgb(0 0 0 / 4%)",
+      "box-shadow: 0 1px 2px rgb(26 26 24 / 6%), 0 16px 32px -12px rgb(26 26 24 / 10%)",
+  },
+  {
+    token: "--shadow-lg",
+    value: "0 2px 4px rgb(35 30 24 / 4%), 0 12px 40px -12px rgb(35 30 24 / 16%)",
+    role: "Wider diffuse lift",
+    tailwind: "shadow-lg",
+    usedIn: ["Toast"],
+    paperPattern:
+      "box-shadow: 0 2px 4px rgb(35 30 24 / 4%), 0 12px 40px -12px rgb(35 30 24 / 16%)",
   },
   {
     token: "--shadow-hairline",
@@ -64,12 +91,12 @@ export const shadowElevations: ShadowToken[] = [
   },
   {
     token: "--shadow-raised",
-    value: "0 0 0 1px var(--color-border), 0 1px 2px rgb(0 0 0 / 8%)",
+    value: "0 0 0 1px var(--color-border), 0 2px 4px rgb(35 30 24 / 3%)",
     role: "Raised control — secondary buttons",
     tailwind: "shadow-raised",
-    usedIn: ["Button secondary", "Badge neutral"],
+    usedIn: ["Button secondary", "Badge neutral", "Input", "Select"],
     paperPattern:
-      "border: 1px solid var(--color-border); box-shadow: 0 1px 2px rgb(0 0 0 / 8%)",
+      "border: 1px solid var(--color-border); box-shadow: 0 2px 4px rgb(35 30 24 / 3%)",
   },
 ];
 

@@ -107,10 +107,10 @@ const meta = {
 | **Headerless density** | Omit **Header** — shell top densifies to **2px** (\`pt-[2px]\`); same rule as footerless / \`bodyTerminal\` bottom. Copy **Pattern — headerless media** |
 | **Body slot** | TaskRows, form, **Chart** (SegmentedBar KPI or **Cartesian** history), or custom UI — occupant owns fill, radius, and padding |
 | **Inset well** | \`cardLayoutBodyOccupantWellClasses\` on the occupant — \`bg-body\` + concentric **14px** radius (\`--radius-card-body\`); radius-only occupants → \`cardLayoutBodyOccupantRadiusClasses\`; dot-grid → \`cardLayoutBodyOccupantDotGridWellClasses\` |
-| **Outlined layout** | \`Card variant="outlined"\` — Stat-matched hairline border with no drop shadow |
+| **Outlined layout** | \`Card variant="outlined"\` — \`shadow-soft-card\`, no stroke. Radius stays \`--radius-card-shell\` |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
 
-Default \`variant="surface"\` uses the elevated shell. Use \`variant="outlined"\` for the same hairline surface treatment as **Stat**, without a drop shadow. Default \`shape="rounded"\` uses \`--radius-card-shell\`; use \`shape="flush"\` only when a parent owns outer radius.
+Default \`variant="surface"\` and \`variant="outlined"\` both use **\`shadow-soft-card\`** on layout cards — elevation comes from the shadow, not a stroke. Default \`shape="rounded"\` uses \`--radius-card-shell\`; use \`shape="flush"\` only when a parent owns outer radius.
 
 ## Anatomy
 
@@ -136,7 +136,7 @@ Card (bg-surface shell, gap-3)
 - **Do** let a headerless layout **Card.Body** densify the shell top automatically — when there is no **Header**, Card applies the matching 2px top inset so media occupants sit flush to the shell. Use \`headerless\` only to override slot detection in a wrapper.
 - **Do** let a direct terminal **Card.Body** fill stretched cards automatically — when there is no **Footer**, Card applies the matching 2px bottom shell inset and expands the occupant through the remaining Body region. Use \`bodyTerminal\` only to override slot detection in a wrapper.
 - **Do** keep title, address, and meta in **Header**; primary actions in **Footer**.
-- **Do** use \`variant="outlined"\` when Cards should share Stat's flat bordered hierarchy.
+- **Do** use \`variant="outlined"\` for the same soft card elevation as layout \`surface\`, with no stroke.
 - **Do** use default \`shape="rounded"\` — detail overlays, dashboard widgets, map overlays.
 - **Do** use \`shape="flush"\` only when nested inside a parent that already owns radius and shadow.
 - **Don't** restrict the Body to TaskRows — that is one occupant, not the contract.
@@ -210,7 +210,7 @@ export const OutlinedLayout: Story = {
       docs: {
         description: {
           story:
-            "Flat Card hierarchy — the same `border-border` hairline used by **Stat**, with no drop shadow. Use when dashboard Cards and metric tiles should read as one surface family.",
+            "Layout card with **`shadow-soft-card`** and no stroke. Radius stays **`--radius-card-shell`** (16px).",
         },
       },
     },
@@ -235,14 +235,14 @@ import { Card, cardTitleClasses } from "@whatmatters/wmds";
         start={
           <>
             <h2 className={cardTitleClasses}>Audience fit</h2>
-            <p className={cardSubtitleClasses}>Flat hierarchy beside Stat tiles.</p>
+            <p className={cardSubtitleClasses}>Soft elevation, no stroke.</p>
           </>
         }
       />
       <Card.Body>
         <div className="flex min-h-32 items-center px-3.5 py-4">
           <p className={mutedText(cardBodyTextClasses)}>
-            Hairline border · no drop shadow
+            Soft card elevation
           </p>
         </div>
       </Card.Body>

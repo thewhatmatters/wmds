@@ -68,8 +68,8 @@ export const siteNavBarStateClasses: Record<SiteNavState, string> = {
     "w-full border border-transparent bg-transparent px-[var(--grid-margin)] shadow-none",
   ),
   compact: cn(
-    "box-border rounded-full border border-border bg-surface/80 p-1.5 shadow-sm backdrop-blur-md",
-    "supports-[backdrop-filter]:bg-surface/80",
+    "box-border rounded-full border border-elevation-edge bg-elevation-surface p-1.5 shadow-soft-sm backdrop-blur-md",
+    "supports-[backdrop-filter]:bg-elevation-surface",
   ),
 };
 
@@ -155,10 +155,11 @@ export const siteNavMeasureItemClasses =
 export const siteNavMeasureMoreClasses =
   "inline-flex h-9 items-center gap-1 px-4 text-sm leading-none";
 
-/** Nav link — ghost pill; quiet ink until hover, full ink when current. */
+/** Nav link — ghost pill; quiet ink until hover. Current page is the selected fill token. */
 export const siteNavLinkClasses = cn(
   "text-muted! hover:text-fg!",
-  "data-[active]:text-fg! aria-[current=page]:text-fg!",
+  "data-[active]:bg-fill-selected! data-[active]:text-fg!",
+  "aria-[current=page]:bg-fill-selected! aria-[current=page]:text-fg!",
 );
 
 /** Mega-menu trigger — keeps the hover surface while its panel is open. */
@@ -181,7 +182,7 @@ export const siteNavMenuPositionerClasses =
 
 /** Mega-menu popup — soft pill-family radius (not a sharp card); height animates to content. */
 export const siteNavMenuPopupClasses = cn(
-  "relative box-border w-full overflow-hidden rounded-3xl border border-border bg-popover shadow-md",
+  "relative box-border w-full overflow-hidden rounded-3xl border border-elevation-edge bg-popover shadow-soft-sm",
   "h-[var(--popup-height)] origin-top",
   "transition-[height,opacity,transform]",
   motionTransition("medium"),
@@ -230,8 +231,8 @@ export const siteNavMenuReadThumbClasses =
 /** Mobile sheet body — stacked links. */
 export const siteNavMobileListClasses = "flex flex-col gap-1";
 
-/** Mobile link row — full-width ghost **Button** anchor; current page gets the quiet secondary fill. */
+/** Mobile link row — full-width ghost **Button** anchor; current page uses the selected fill. */
 export const siteNavMobileLinkClasses = cn(
   "w-full justify-start! text-muted! hover:text-fg!",
-  "aria-[current=page]:bg-secondary aria-[current=page]:text-fg!",
+  "aria-[current=page]:bg-fill-selected! aria-[current=page]:text-fg!",
 );

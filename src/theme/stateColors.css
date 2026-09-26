@@ -31,10 +31,10 @@
   --color-info-hover: color-mix(in oklch, var(--color-info) 82%, black);
   --color-info-active: color-mix(in oklch, var(--color-info) 68%, black);
 
-  /* Validation focus rings — semantic, not Tailwind opacity modifiers */
-  --color-error-focus-ring: color-mix(in oklch, var(--color-error) 50%, transparent);
-  --color-warning-focus-ring: color-mix(in oklch, var(--color-warning) 30%, transparent);
-  --color-success-focus-ring: color-mix(in oklch, var(--color-success) 30%, transparent);
+  /* Validation focus rings — alphas clear WCAG 3:1 on white and #f8f8f8 (ADR-0029) */
+  --color-error-focus-ring: color-mix(in oklch, var(--color-error) 58%, transparent);
+  --color-warning-focus-ring: color-mix(in oklch, var(--color-warning) 72%, transparent);
+  --color-success-focus-ring: color-mix(in oklch, var(--color-success) 70%, transparent);
 }
 
 [data-theme="dark"] {
@@ -63,6 +63,6 @@
   --color-info-active: color-mix(in oklch, var(--color-info) 88%, black);
 
   --color-error-focus-ring: color-mix(in oklch, var(--color-error) 50%, transparent);
-  --color-warning-focus-ring: color-mix(in oklch, var(--color-warning) 30%, transparent);
-  --color-success-focus-ring: color-mix(in oklch, var(--color-success) 30%, transparent);
+  --color-warning-focus-ring: color-mix(in oklch, var(--color-warning) 50%, transparent);
+  --color-success-focus-ring: color-mix(in oklch, var(--color-success) 50%, transparent);
 }
