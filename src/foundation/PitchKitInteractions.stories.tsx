@@ -575,10 +575,12 @@ export const SharedCardBodyRadius: Story = {
     ).toBe("14px");
     expect(getComputedStyle(reachWell!).borderRadius).toBe("14px");
     expect(getComputedStyle(audienceWell!).borderRadius).toBe("14px");
-    expect(getComputedStyle(reachCard!).borderTopWidth).toBe("1px");
-    expect(getComputedStyle(reachCard!).boxShadow).toBe("none");
-    expect(getComputedStyle(audienceCard!).borderTopWidth).toBe("1px");
-    expect(getComputedStyle(audienceCard!).boxShadow).toBe("none");
+    expect(getComputedStyle(reachCard!).borderTopWidth).toBe("0px");
+    expect(getComputedStyle(reachCard!).boxShadow).toContain("rgba(26, 26, 24, 0.06)");
+    expect(getComputedStyle(reachCard!).boxShadow).toContain("rgba(26, 26, 24, 0.1)");
+    expect(getComputedStyle(audienceCard!).borderTopWidth).toBe("0px");
+    expect(getComputedStyle(audienceCard!).boxShadow).toContain("rgba(26, 26, 24, 0.06)");
+    expect(getComputedStyle(audienceCard!).boxShadow).toContain("rgba(26, 26, 24, 0.1)");
     expect(
       reachCard!.getBoundingClientRect().bottom -
         reachWell!.getBoundingClientRect().bottom -

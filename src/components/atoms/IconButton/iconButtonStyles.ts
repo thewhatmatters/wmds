@@ -9,7 +9,7 @@ export const iconButtonExpandedStyle = {
 } satisfies CSSProperties;
 
 /** FAB pattern — raised elevation on primary fill. */
-export const iconButtonFabClasses = "shadow-md";
+export const iconButtonFabClasses = "shadow-soft-card";
 
 /** Pill shell for a compact row of ghost IconButtons — Pattern: toolbar group. */
 export const iconButtonToolbarGroupClasses =

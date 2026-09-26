@@ -34,15 +34,19 @@
   --color-overlay-pressed: #0000001a;
 
   /*
-   * Borders — decorative hairlines stay low-contrast (ADR-0029).
-   * `--color-border` matches a 4% ink ring. `--color-border-control` is the
-   * field edge (input, select, search) and stays at WCAG 3:1 against page and surface.
-   * `--color-fill-selected` is the current-nav pill.
+   * Borders and elevation chrome (ADR-0029).
+   * `--color-border` is the divider ink — warm 6%, not the floating-surface edge.
+   * Floating pills and menus use `--color-elevation-edge` / `--color-elevation-surface`
+   * plus `--shadow-soft-sm` (diffuse shadow + inset ring).
+   * `--color-border-control` stays at WCAG 3:1 for input, select, and search.
+   * `--color-fill-selected` is the current-nav pill (#eee).
    */
-  --color-border: #0000000a;
+  --color-border: rgb(42 36 28 / 6%);
   --color-border-emphasized: #d9d9d9;
   --color-border-control: #8c8c8c;
   --color-fill-selected: #eeeeee;
+  --color-elevation-edge: rgb(255 255 253 / 90%);
+  --color-elevation-surface: rgb(255 255 253 / 90%);
 
   /* Loading placeholders — skeleton screens (Astryx Skeleton) */
   --color-skeleton: color-mix(in srgb, var(--color-text-primary) 8%, var(--color-background-muted));
@@ -113,13 +117,19 @@
   --color-chart-rag-4: #007004;
 
   /*
-   * Shadow primitives — diffuse elevation (ADR-0029).
-   * sm = tight 2px/4px veil. md = that veil plus an 8px/28px spread.
-   * lg = a wider spread for toasts.
+   * Elevation (ADR-0029). Warm ink, not neutral black.
+   * soft-sm = nav / menu: tight veil + 8×28 spread + 4% inset ring.
+   * soft-card = cards: tight veil + 16×32 spread, no stroke.
    */
-  --shadow-drop-sm: 0 2px 4px rgb(0 0 0 / 3%);
-  --shadow-drop-md: 0 2px 4px rgb(0 0 0 / 3%), 0 8px 28px -8px rgb(0 0 0 / 12%);
-  --shadow-drop-lg: 0 2px 4px rgb(0 0 0 / 4%), 0 12px 40px -12px rgb(0 0 0 / 16%);
+  --shadow-soft-sm:
+    0 2px 4px rgb(35 30 24 / 3%),
+    0 8px 28px -8px rgb(35 30 24 / 12%),
+    inset 0 0 0 1px rgb(35 30 24 / 4%);
+  --shadow-soft-card:
+    0 1px 2px rgb(26 26 24 / 6%),
+    0 16px 32px -12px rgb(26 26 24 / 10%);
+  --shadow-drop-sm: 0 2px 4px rgb(35 30 24 / 3%);
+  --shadow-drop-lg: 0 2px 4px rgb(35 30 24 / 4%), 0 12px 40px -12px rgb(35 30 24 / 16%);
 }
 
 [data-theme="dark"] {
@@ -143,10 +153,12 @@
   --color-overlay-hover: #ffffff0d;
   --color-overlay-pressed: #ffffff1a;
 
-  --color-border: #ffffff14;
+  --color-border: rgb(255 255 255 / 8%);
   --color-border-emphasized: #404040;
   --color-border-control: #8c8c8c;
   --color-fill-selected: #303030;
+  --color-elevation-edge: rgb(255 255 255 / 14%);
+  --color-elevation-surface: rgb(38 38 38 / 94%);
 
   --color-skeleton: color-mix(in srgb, var(--color-text-primary) 12%, var(--color-background-muted));
 
@@ -198,9 +210,15 @@
   --color-chart-rag-3: #fdcf4f;
   --color-chart-rag-4: #9fe59b;
 
-  --shadow-drop-sm: 0 2px 4px rgb(0 0 0 / 16%);
-  --shadow-drop-md: 0 2px 4px rgb(0 0 0 / 12%), 0 8px 28px -8px rgb(0 0 0 / 24%);
-  --shadow-drop-lg: 0 4px 8px rgb(0 0 0 / 18%), 0 16px 48px -12px rgb(0 0 0 / 32%);
+  --shadow-soft-sm:
+    0 2px 4px rgb(0 0 0 / 22%),
+    0 8px 28px -8px rgb(0 0 0 / 32%),
+    inset 0 0 0 1px rgb(255 255 255 / 10%);
+  --shadow-soft-card:
+    0 1px 2px rgb(0 0 0 / 22%),
+    0 16px 32px -12px rgb(0 0 0 / 28%);
+  --shadow-drop-sm: 0 2px 4px rgb(0 0 0 / 18%);
+  --shadow-drop-lg: 0 4px 8px rgb(0 0 0 / 20%), 0 16px 48px -12px rgb(0 0 0 / 36%);
 }
 
 /**
@@ -228,14 +246,12 @@
   --color-overlay-hover: #2a241c0d;
   --color-overlay-pressed: #2a241c1a;
 
-  --color-border: #2a241c0a;
+  --color-border: rgb(42 36 28 / 6%);
   --color-border-emphasized: #ddd4c4;
   --color-border-control: #868686;
   --color-fill-selected: #eee8e0;
-
-  --shadow-drop-sm: 0 2px 4px rgb(42 36 28 / 3%);
-  --shadow-drop-md: 0 2px 4px rgb(42 36 28 / 3%), 0 8px 28px -8px rgb(42 36 28 / 12%);
-  --shadow-drop-lg: 0 2px 4px rgb(42 36 28 / 4%), 0 12px 40px -12px rgb(42 36 28 / 16%);
+  --color-elevation-edge: rgb(255 250 244 / 90%);
+  --color-elevation-surface: rgb(255 250 244 / 90%);
 
   --color-skeleton: color-mix(in srgb, var(--color-text-primary) 8%, var(--color-background-muted));
 }

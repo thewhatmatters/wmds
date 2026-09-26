@@ -68,8 +68,8 @@ export const siteNavBarStateClasses: Record<SiteNavState, string> = {
     "w-full border border-transparent bg-transparent px-[var(--grid-margin)] shadow-none",
   ),
   compact: cn(
-    "box-border rounded-full border border-border bg-surface/80 p-1.5 shadow-md backdrop-blur-md",
-    "supports-[backdrop-filter]:bg-surface/80",
+    "box-border rounded-full border border-elevation-edge bg-elevation-surface p-1.5 shadow-soft-sm backdrop-blur-md",
+    "supports-[backdrop-filter]:bg-elevation-surface",
   ),
 };
 
@@ -182,7 +182,7 @@ export const siteNavMenuPositionerClasses =
 
 /** Mega-menu popup — soft pill-family radius (not a sharp card); height animates to content. */
 export const siteNavMenuPopupClasses = cn(
-  "relative box-border w-full overflow-hidden rounded-3xl border border-border bg-popover shadow-md",
+  "relative box-border w-full overflow-hidden rounded-3xl border border-elevation-edge bg-popover shadow-soft-sm",
   "h-[var(--popup-height)] origin-top",
   "transition-[height,opacity,transform]",
   motionTransition("medium"),

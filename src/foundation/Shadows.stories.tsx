@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const shadows: Array<{ name: string; className: string }> = [
+  { name: "shadow-soft-sm", className: "shadow-soft-sm" },
+  { name: "shadow-soft-card", className: "shadow-soft-card" },
   { name: "shadow-sm", className: "shadow-sm" },
   { name: "shadow-md", className: "shadow-md" },
   { name: "shadow-lg", className: "shadow-lg" },
@@ -16,7 +18,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Semantic shadow names in **`src/theme/theme.css`** (ADR-0029). **`shadow-sm`** is a tight veil. **`shadow-md`** and **`shadow-lg`** are diffuse elevation — floating pills, layout cards, menus, sheets, toasts. **`shadow-hairline`** is a 1px edge. **`shadow-raised`** is that edge plus the tight veil (secondary buttons, badges). Values swap with **`[data-theme=\"dark\"]`**.",
+          "Semantic shadow names in **`src/theme/theme.css`** (ADR-0029). **`shadow-soft-sm`** is the floating pill and menu stack: diffuse drop plus a 4% inset ring. **`shadow-soft-card`** is the card elevation (no stroke). **`shadow-md`** aliases **`shadow-soft-card`**. **`shadow-sm`** is the tight veil. **`shadow-lg`** is the wider toast lift. **`shadow-hairline`** is a 1px edge. **`shadow-raised`** is that edge plus the tight veil. Values swap with **`[data-theme=\"dark\"]`**.",
       },
     },
   },

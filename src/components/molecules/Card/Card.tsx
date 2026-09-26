@@ -48,7 +48,7 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
   children: ReactNode;
   /** `rounded` (default) — shell + inset well with outer radius/shadow; `flush` when parent owns chrome. */
   shape?: CardShape;
-  /** Surface treatment: `surface` elevates layout cards; `outlined` uses a hairline with no shadow. */
+  /** Surface treatment: layout cards use soft card elevation. `outlined` is that elevation with no stroke. */
   variant?: CardVariant;
   /** Root padding. Use `none` with `Card.Header` / `Card.Body` / `Card.Footer`. */
   padding?: CardPadding;

@@ -33,7 +33,7 @@ export const panelShellClasses = cn(
   cardBaseClasses,
   cardLayoutShellClasses,
   cardLayoutShellTopClasses(),
-  "pointer-events-auto relative z-[1] h-full max-h-full min-h-0 bg-surface shadow-md",
+  "pointer-events-auto relative z-[1] h-full max-h-full min-h-0 bg-surface shadow-soft-card",
 );
 
 /** Cross-axis size — width on side panels (same tokens as **Sheet** `end` / `start`). */

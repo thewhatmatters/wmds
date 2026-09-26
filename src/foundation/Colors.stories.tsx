@@ -159,7 +159,7 @@ export const Borders: Story = {
   render: () => (
     <div className="flex max-w-md flex-col gap-3">
       <div className="rounded-lg border border-border bg-surface p-4 text-sm text-fg">
-        <span className="font-mono text-xs text-muted">border-border</span> — decorative hairline (4% ink)
+        <span className="font-mono text-xs text-muted">border-border</span> — dividers, warm 6% ink
       </div>
       <div className="rounded-lg border border-border-emphasized bg-surface p-4 text-sm text-fg">
         <span className="font-mono text-xs text-muted">border-border-emphasized</span> — section rules
@@ -169,6 +169,9 @@ export const Borders: Story = {
       </div>
       <div className="rounded-full bg-fill-selected px-4 py-2 text-sm text-fg">
         <span className="font-mono text-xs text-muted">bg-fill-selected</span> — current nav pill
+      </div>
+      <div className="rounded-full border border-elevation-edge bg-elevation-surface px-4 py-3 text-sm text-fg shadow-soft-sm">
+        <span className="font-mono text-xs text-muted">elevation-edge + elevation-surface + shadow-soft-sm</span> — floating pill
       </div>
     </div>
   ),

@@ -48,6 +48,8 @@
   --color-border-emphasized: var(--color-border-emphasized);
   --color-border-control: var(--color-border-control);
   --color-fill-selected: var(--color-fill-selected);
+  --color-elevation-edge: var(--color-elevation-edge);
+  --color-elevation-surface: var(--color-elevation-surface);
   --color-skeleton: var(--color-skeleton);
 
   /* Status — error */
@@ -147,9 +149,11 @@
   --font-weight-semibold: var(--font-weight-semibold);
   --font-weight-bold: var(--font-weight-bold);
 
-  /* Semantic shadows — md/lg are diffuse elevation; raised = hairline + tight drop (ADR-0029) */
+  /* Semantic shadows — soft-sm / soft-card are the elevation pair (ADR-0029). shadow-md aliases soft-card. */
+  --shadow-soft-sm: var(--shadow-soft-sm);
+  --shadow-soft-card: var(--shadow-soft-card);
   --shadow-sm: var(--shadow-drop-sm);
-  --shadow-md: var(--shadow-drop-md);
+  --shadow-md: var(--shadow-soft-card);
   --shadow-lg: var(--shadow-drop-lg);
   --shadow-hairline: 0 0 0 1px var(--color-border);
   --shadow-raised: 0 0 0 1px var(--color-border), var(--shadow-drop-sm);

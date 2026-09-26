@@ -19,52 +19,55 @@ Decorative edges (`--color-border` at 8% black, plus tight 1–2px shadows) read
 
 Dark header rule (stylesheet, not a live computed sample): surface `rgba(22, 22, 22, 0.94)`, border `rgba(255, 255, 255, 0.14)`, shadow `rgba(0, 0, 0, 0.24) 0 8px 28px -8px`, current link `rgb(48, 48, 48)`.
 
+A second pass measured the same header, active pill, and section rule in the consumer at 1280×900 against WMDS `aed006b`, and named the sources of harshness: compact SiteNav on `--color-border` (`#00000014`) plus `--shadow-sm` (`0 1px 2px / 8%`), outlined Card as `border-border` with no shadow, and the Resources menu on Tailwind’s default `shadow-md` (the semantic drop was unused). The image tile’s computed shadow was depth-scaled (`0 1px 2px` at 8% plus about `0 22px 35px -12px` at 22%, warm). The adopted card shadow is the calmer pair below, not that scaled tile.
+
+The floating edge is the diffuse shadow plus a near-invisible inset ring. A lighter `--color-border` stroke still reads as a line, so dividers and floating surfaces no longer share one border.
+
 ## Decision
 
-Keep one hairline token for decorative edges and a separate field-border token so inputs can meet WCAG 2.2 non-text contrast (3:1) while hairlines get softer.
+### Light
 
-### Light (`:root`)
-
-| Token | Before | After | Used by |
+| Token | Before (`aed006b`) | After | Used by |
 |---|---|---|---|
-| `--color-border` | `#00000014` (8%) | `#0000000a` (4%) | SiteNav compact, layout Card, dividers, Dropdown, menus, Stat, Chip, outlined Card |
-| `--color-border-emphasized` | `#d4d4d4` | `#d9d9d9` | Section rules, checkbox/radio, text-link underline |
-| `--color-border-control` | — | `#8c8c8c` (3.17:1 on `#f8f8f8`, 3.36:1 on white) | Input, TextArea, Select, Search |
-| `--color-fill-selected` | — | `#eeeeee` | SiteNav current link (desktop + mobile) |
-| `--shadow-drop-sm` / `--shadow-sm` | `0 1px 2px rgb(0 0 0 / 8%)` | `0 2px 4px rgb(0 0 0 / 3%)` | Tooltip, compound fields, `--shadow-raised` |
-| `--shadow-drop-md` / `--shadow-md` | Tailwind default (token was undocumented in `theme.css`) | `0 2px 4px rgb(0 0 0 / 3%), 0 8px 28px -8px rgb(0 0 0 / 12%)` | Layout Card, SiteNav compact + mega menu, Dropdown, Sheet, Panel |
-| `--shadow-drop-lg` / `--shadow-lg` | Tailwind default | `0 2px 4px rgb(0 0 0 / 4%), 0 12px 40px -12px rgb(0 0 0 / 16%)` | Toast |
-| `--color-focus-ring` | primary at 45% | primary at 62% | Focus rings on controls |
+| `--color-border` | `#00000014` (8% black) | `rgb(42 36 28 / 6%)` | Dividers, Stat, Chip, section rules that use `border-border` |
+| `--color-elevation-edge` | — | `rgb(255 255 253 / 90%)` | Compact SiteNav, mega menu, Dropdown |
+| `--color-elevation-surface` | — | `rgb(255 255 253 / 90%)` | Compact SiteNav fill (backdrop blur unchanged) |
+| `--color-fill-selected` | — | `#eeeeee` | Current SiteNav link (the nav-active pill; no border) |
+| `--color-border-control` | — | `#8c8c8c` (3.17:1 on `#f8f8f8`) | Input, TextArea, Select, Search |
+| `--shadow-soft-sm` | — | `0 2px 4px rgb(35 30 24 / 3%), 0 8px 28px -8px rgb(35 30 24 / 12%), inset 0 0 0 1px rgb(35 30 24 / 4%)` | Compact SiteNav, mega menu, Dropdown |
+| `--shadow-soft-card` | — | `0 1px 2px rgb(26 26 24 / 6%), 0 16px 32px -12px rgb(26 26 24 / 10%)` | Layout Card `surface` and `outlined`, Sheet, Panel |
+| `--shadow-md` | Tailwind default | alias of `--shadow-soft-card` | Leftover `shadow-md` utilities |
+| `--color-focus-ring` | primary at 45% | primary at 62% | Focus rings |
 
-Shadow alphas follow the measured header (3% tight layer, 12% at `0 8px 28px -8px`). The ink stays neutral black so the palette does not pick up the reference’s warm `rgb(35, 30, 24)`. The 4% inset ring is `--color-border`, not a third shadow layer. Layout Card `surface` also draws `border-border` so the edge is the token.
+`--color-border-emphasized` moves `#d4d4d4` → `#d9d9d9` (section rules, checkbox, radio, link underline). Expanded SiteNav stays `border-transparent` with no shadow. Mega menu stays `rounded-3xl` (24px). Card shell radius stays `--radius-card-shell` (16px) — there is no Card size for a larger radius; that is a follow-up.
 
 ### Dark
 
-Hairline steps from `#ffffff1a` (10%) to `#ffffff14` (8%) — softer, but not halved, so edges remain visible on `#1b1b1b`. Emphasized moves `#525252` → `#404040`. Selected fill is `#303030` (the dark current-link sample). Diffuse shadow large layer is `rgb(0 0 0 / 24%)` at the same `8px 28px -8px` offset. Focus ring alpha on the lifted brand moves 40% → 48%.
+Divider `--color-border` is `rgb(255 255 255 / 8%)` (was `#ffffff1a`). Elevation edge is `rgb(255 255 255 / 14%)` (the dark header border sample). Elevation surface is `rgb(38 38 38 / 94%)`. `--shadow-soft-sm` deepens the two drops (`22%` / `32%`) and uses a light inset ring at 10%. `--shadow-soft-card` is `0 1px 2px rgb(0 0 0 / 22%), 0 16px 32px -12px rgb(0 0 0 / 28%)`. Selected fill is `#303030`. Focus ring on the lifted brand moves 40% → 48%.
 
 ### Soft
 
-Hairline `#2a241c18` → `#2a241c0a`. Field border `#868686` (3:1 on `#f3eee6`; `#8c8c8c` falls short on that paper). Selected fill `#eee8e0`. Shadows use the warm ink at the same alphas as light.
+Divider matches light (`rgb(42 36 28 / 6%)`). Elevation fill and edge use the warm paper at 90% (`rgb(255 250 244 / 90%)`). Field border stays `#868686` so it clears 3:1 on `#f3eee6`.
 
 ### Focus indicators
 
-Default and status focus rings that were under 3:1 were raised in `colors.css` / `stateColors.css`. Decorative borders are allowed to stay under 3:1. Checkbox and radio stay on `--color-border-emphasized`.
+Default and status focus rings that were under 3:1 were raised in `colors.css` / `stateColors.css`. Decorative dividers stay under 3:1. Checkbox and radio stay on `--color-border-emphasized`.
 
 ### Component edits
 
-Only where a surface needed a token it was not already using:
-
-- SiteNav current link → `bg-fill-selected` (it was ink-only). Compact elevation → `shadow-md`.
-- Layout Card `surface` → `border-border` plus `shadow-md`.
-- Input, TextArea (via the shared shell), Select, Search → `border-border-control`.
+- Compact SiteNav → `border-elevation-edge`, `bg-elevation-surface`, `shadow-soft-sm`. Current link → `bg-fill-selected`.
+- Mega menu and Dropdown → the same edge and `shadow-soft-sm`, replacing `border-border` and Tailwind `shadow-md`.
+- Card `outlined` and layout `surface` → `shadow-soft-card`, no stroke.
+- Input, TextArea, Select, Search → `border-border-control`.
 
 ## Consequences
 
-- Foundations → Colors → Borders and Foundations → Shadows show the new tokens.
-- Apps that restyle with raw `border-border` / `shadow-md` pick this up without class changes.
-- `--color-focus-ring` still derives from `--color-primary`, so a brand override keeps the ring; the mix percentage is what holds the 3:1 floor on the default brand.
+- Foundations → Colors → Borders and Foundations → Shadows show the tokens.
+- `shadow-md` no longer resolves to Tailwind’s default; it aliases `--shadow-soft-card`.
+- `--color-focus-ring` still derives from `--color-primary`.
 
 ## References
 
 - ADR-0007 (color roles)
-- [anubi.io](https://anubi.io/) computed header, current link, section rule, and card edge
+- [anubi.io](https://anubi.io/) computed header, current link, section rule, and card tile
+- Consumer measurement at 1280×900 against WMDS `aed006b`
