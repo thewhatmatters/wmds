@@ -52,6 +52,15 @@ export const badgeIconGapClasses: Record<BadgeSize, string> = {
   md: "gap-1.5",
 };
 
+/**
+ * Label shell when a leading Avatar fills the pill height.
+ * sm pairs with Avatar `xsm` (20px); md pairs with Avatar `sm` (24px).
+ */
+export const badgeAvatarLabelSizeClasses: Record<BadgeSize, string> = {
+  sm: "h-5 gap-1 rounded-full py-0 pl-0 pr-2 text-xs leading-none",
+  md: "h-6 gap-1.5 rounded-full py-0 pl-0 pr-2.5 text-sm leading-none",
+};
+
 export const badgeIconSizeClasses: Record<BadgeSize, string> = {
   sm: "size-3 shrink-0 stroke-current",
   md: "size-3.5 shrink-0 stroke-current",

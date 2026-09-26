@@ -30,7 +30,7 @@ Ship **SiteNav** as an organism under **Components/Navigation**:
 
 ## Consequences
 
-Consuming apps place **SiteNav** in normal document flow (no `pt-16` under a fixed overlay). While compact is pinned, SiteNav keeps an in-flow spacer at the expanded band height. Brand + CTA + mega paste **Pattern** Show code; do not restyle the bar with utilities.
+Consuming apps place **SiteNav** in normal document flow (no `pt-16` under a fixed overlay). While compact is pinned, SiteNav keeps an in-flow spacer at the expanded band height. That height is the token `--site-nav-height` (`calc(var(--spacing) * 16)`, the same 64px as `h-16`). A first-viewport section under the band uses `min-h-[calc(100svh-var(--site-nav-height))]`. Brand + CTA + mega paste **Pattern** Show code; do not restyle the bar with utilities.
 
 ## References
 

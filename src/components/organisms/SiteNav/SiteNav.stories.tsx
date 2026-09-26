@@ -49,7 +49,7 @@ A \`current\` link is a light gray pill (\`bg-fill-selected\`), including the mo
 | \`placement\` | \`fixed\` page chrome (in-flow expanded → pinned compact) or \`inline\` static specimen |
 | \`scrollContainer\` | Ref to the scrolling element when the window does not scroll (compact uses sticky inside it) |
 
-**Do not** reserve \`pt-16\` under SiteNav on product pages — the expanded band is in normal flow and owns its height.
+**Do not** reserve \`pt-16\` under SiteNav on product pages — the expanded band is in normal flow and owns its height. A first-viewport hero under that band uses \`min-h-[calc(100svh-var(--site-nav-height))]\`. \`--site-nav-height\` matches the expanded band.
 
 **Two separate switches:** scroll compact ≠ More overflow. More only appears when the middle link track cannot fit every item.
 

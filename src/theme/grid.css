@@ -21,6 +21,8 @@ html {
   --grid-margin: calc(var(--grid-baseline) * 2);
   --grid-baseline: calc(var(--spacing) * 2);
   --grid-max: 80rem;
+  /* Expanded SiteNav band — same as Tailwind `h-16` (16 × --spacing). */
+  --site-nav-height: calc(var(--spacing) * 16);
   --grid-pad: var(--leading-base);
   --grid-row-gap: var(--leading-base);
 
