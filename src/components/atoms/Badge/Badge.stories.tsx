@@ -47,6 +47,7 @@ Solid semantic fills for status and category labels. **Variants:** \`neutral\` (
 - **Don't** badge every healthy row — if all items show green "Active", none stand out.
 - **Don't** use badges for metadata (dates, durations) — use supporting text.
 - **Don't** make badges clickable — use Button or Link for actions.
+- **Don't** use badges as decoration. The one sanctioned decorative use is inline emphasis in a marketing hero — **Components/Layout/HeroTileStack → Pattern — marketing hero**.
         `.trim(),
       },
     },
@@ -221,6 +222,14 @@ export const Sizes: Story = {
 
 export const InlineInProse: Story = {
   name: "Inline in prose",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Status words inside a sentence. Badges stay non-interactive so the line still reads in order. Decorative inline badges are only for the marketing hero — **Components/Layout/HeroTileStack → Pattern — marketing hero**.",
+      },
+    },
+  },
   render: () => (
     <p className="max-w-sm text-sm leading-normal text-muted">
       Reorder status is{" "}
