@@ -336,6 +336,15 @@ export {
   type ChartUnitGridProps,
 } from "./components/organisms/Chart/Chart";
 export {
+  ConfettiProvider,
+  confettiDefaultColors,
+  confettiDefaults,
+  useConfetti,
+  type ConfettiFireOptions,
+  type ConfettiOrigin,
+  type ConfettiProviderProps,
+} from "./components/organisms/Confetti/Confetti";
+export {
   MoreMenu,
   type MoreMenuItem,
   type MoreMenuLayoutClassName,
