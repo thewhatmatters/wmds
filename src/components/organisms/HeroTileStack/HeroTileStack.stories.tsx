@@ -119,7 +119,7 @@ export function MarketingHero() {
             <span className="block">
               Your brand is already{" "}
               <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>.
-            </span>
+            </span>{" "}
             <span className="block">
               Make it{" "}
               <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/eye.svg", alt: "" }}>impossible to ignore</Badge>.
@@ -169,7 +169,7 @@ function MarketingHero() {
             <span className="block">
               Your brand is already{" "}
               <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>.
-            </span>
+            </span>{" "}
             <span className="block">
               Make it{" "}
               <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/eye.svg", alt: "" }}>impossible to ignore</Badge>.
