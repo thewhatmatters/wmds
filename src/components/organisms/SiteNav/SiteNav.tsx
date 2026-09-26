@@ -273,7 +273,6 @@ function SiteNavRoot({
   );
 
   const compactMotionProps = {
-    key: "site-nav-compact" as const,
     initial: shouldReduceMotion ? false : compactHidden,
     animate: compactVisible,
     exit: shouldReduceMotion ? compactVisible : compactHidden,
@@ -292,6 +291,7 @@ function SiteNavRoot({
           <AnimatePresence>
             {compact ? (
               <motion.div
+                key="site-nav-compact"
                 {...compactMotionProps}
                 className={cn(pageCompactRootClass, !hasScrollContainer && className)}
               >
