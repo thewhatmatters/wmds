@@ -179,6 +179,7 @@ import {
 | `TaskRows` | `variant`, `status`, `meta`, `detailsLayout`, `TaskRows.Detail` | Components/Data display/TaskRows — **Pattern — status rows**, **capsules**, **action details** (`Detail variant="button"`), **tag chips** (`Chip readOnly size="sm"`), detail lines (`Detail` + `onPress` → `Button layout="row"`) |
 | `Badge` | `variant`, `size`, `emphasis`, `count`, `icon`, `iconOnly` | Components/Feedback/Badge — copy a **Pattern** story |
 | `Status` | `variant`, `tone`, `label`, `besideLabel`, `pulsing`, `active`, `step` | Components/Feedback/Status — `variant="ring"` or `variant="dot"` |
+| `FooterReveal` | `FooterReveal.Content`, `FooterReveal.Footer`, `footerRevealFieldClasses` | Components/Layout/FooterReveal — **Pattern — marketing page**. Cover sits on the page background; footer sticks underneath and scrubs in across its own height. Reduced motion stays fully visible. |
 
 Copy flow patterns from **Examples/** in Storybook when they ship. See **`src/package.manifest.ts`** for the export contract.
 

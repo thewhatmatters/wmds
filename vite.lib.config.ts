@@ -32,6 +32,8 @@ export default defineConfig({
       external: isLibExternal,
       output: {
         preserveModules: false,
+        /** Next App Router: the entry uses client hooks (scroll, layout effects). */
+        banner: '"use client";',
       },
       plugins: [
         {
