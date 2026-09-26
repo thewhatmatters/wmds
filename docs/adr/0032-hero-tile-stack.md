@@ -33,7 +33,7 @@ Ship **HeroTileStack** as an organism under **Components/Layout**:
 
 ## Consequences
 
-Consuming apps paste **Components/Layout/HeroTileStack → Pattern — marketing hero**. The hero is full width: headline, stack, subline. Replace the placeholder `src` values with product images. Keep `alt` on every tile.
+Consuming apps paste **Components/Layout/HeroTileStack → Pattern — marketing hero**. The hero is full width: display headline, subhead, stack, and a primary **Button**. Replace the placeholder `src` values with product images. Keep `alt` on every tile.
 
 ## References
 
