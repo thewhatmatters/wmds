@@ -116,10 +116,14 @@ export function MarketingHero() {
         <div className="flex w-full flex-col items-center gap-6">
           <h1 className="type-display-1 text-fg">We Are WhatMatters</h1>
           <p className="type-large leading-loose text-muted">
-            Your brand is already{" "}
-            <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
-            {". Make it "}
-            <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/eye.svg", alt: "" }}>impossible to ignore</Badge>.
+            <span className="block">
+              Your brand is already{" "}
+              <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>.
+            </span>
+            <span className="block">
+              Make it{" "}
+              <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/eye.svg", alt: "" }}>impossible to ignore</Badge>.
+            </span>
           </p>
           <HeroTileStack tiles={tiles} />
           <Button role="primary">Start a project</Button>
@@ -162,10 +166,14 @@ function MarketingHero() {
         <div className="flex w-full flex-col items-center gap-6">
           <h1 className="type-display-1 text-fg">We Are WhatMatters</h1>
           <p className="type-large leading-loose text-muted">
-            Your brand is already{" "}
-            <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
-            {". Make it "}
-            <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/eye.svg", alt: "" }}>impossible to ignore</Badge>.
+            <span className="block">
+              Your brand is already{" "}
+              <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>.
+            </span>
+            <span className="block">
+              Make it{" "}
+              <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/eye.svg", alt: "" }}>impossible to ignore</Badge>.
+            </span>
           </p>
           <HeroTileStack tiles={heroTiles} />
           <Button role="primary">Start a project</Button>
@@ -183,7 +191,7 @@ export const MarketingHeroPattern: Story = {
       docs: {
         description: {
           story:
-            "SiteNav sits above the hero in normal flow. The hero section is min-h-[calc(100svh-var(--site-nav-height))] and centers its content, so the nav plus the hero fill the viewport. The headline is a plain h1 (We Are WhatMatters) and stays larger than the type-large subtext. The subtext has two inline md Badges — the one sanctioned decorative use. Each badge leads with a round Avatar. The globe and eye files in public/hero-badges/ are playful placeholders. The badges are not clickable, alt is empty so the sentence still reads in order, and the images are not announced. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
+            "SiteNav sits above the hero in normal flow. The hero section is min-h-[calc(100svh-var(--site-nav-height))] and centers its content, so the nav plus the hero fill the viewport. The headline is a plain h1 (We Are WhatMatters) and stays larger than the type-large subtext. The subtext is one p with two block lines (the online sentence, then the impossible-to-ignore sentence) so the break stays the same at every width. It has two inline md Badges — the one sanctioned decorative use. Each badge leads with a round Avatar. The globe and eye files in public/hero-badges/ are playful placeholders. The badges are not clickable, alt is empty so the sentence still reads in order, and the images are not announced. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
         },
       },
     },
