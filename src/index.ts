@@ -426,6 +426,22 @@ export {
   type FooterRevealProps,
 } from "./components/organisms/FooterReveal/FooterReveal";
 export {
+  HeroTileStack,
+  heroTileRepel,
+  heroTileRestingLayout,
+  heroTileStackDefaultFalloff,
+  heroTileStackDefaultSpring,
+  heroTileStackDefaultStrength,
+  heroTileStackTapHoldMs,
+  type HeroTileRepel,
+  type HeroTileRepelInput,
+  type HeroTileRestingLayout,
+  type HeroTileStackLayoutClassName,
+  type HeroTileStackProps,
+  type HeroTileStackSpring,
+  type HeroTileStackTile,
+} from "./components/organisms/HeroTileStack/HeroTileStack";
+export {
   Tab,
   tabSizes,
   type TabGroupProps,
