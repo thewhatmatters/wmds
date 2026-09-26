@@ -406,6 +406,16 @@ export {
   type SiteNavState,
 } from "./components/organisms/SiteNav/SiteNav";
 export {
+  FooterReveal,
+  useFooterRevealProgress,
+  footerRevealFieldClasses,
+  footerRevealFieldLinkClasses,
+  type FooterRevealContentProps,
+  type FooterRevealFooterProps,
+  type FooterRevealLayoutClassName,
+  type FooterRevealProps,
+} from "./components/organisms/FooterReveal/FooterReveal";
+export {
   Tab,
   tabSizes,
   type TabGroupProps,
