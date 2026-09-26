@@ -27,7 +27,7 @@ Components use `Components/{category}/{Name}`:
 - **Feedback:** Badge, Confetti, Skeleton, Status, Toast, Tooltip
 - **Overlays:** Dialog, Dropdown, Panel, Sheet
 - **Data display:** Avatar, Chart, Kbd, Stat, TaskRows; future Carousel and Table
-- **Layout:** Accordion, Card, DisplayControls, PageHeader
+- **Layout:** Accordion, Card, DisplayControls, HeroTileStack, PageHeader
 
 Interaction fixtures and audits use `Internal/...`, retain the `test` tag, and opt out of normal browsing and generated docs with `!dev` and `!autodocs`.
 
