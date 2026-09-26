@@ -20,8 +20,9 @@ export const siteNavDefaultCollapseRatio = 0.5;
 /** @deprecated Prefer omitting `collapseAt` (half-viewport) or pass an explicit px value. */
 export const siteNavDefaultCollapseAt = 64;
 
-/** Expanded band height — pages that start under the nav reserve this with `pt-16`. */
-export const siteNavExpandedHeightClasses = "h-16 min-h-16";
+/** Expanded band height — matches `--site-nav-height`. Scroll-morph does not change this. */
+export const siteNavExpandedHeightClasses =
+  "h-[var(--site-nav-height)] min-h-[var(--site-nav-height)]";
 
 /** Compact pill — height hugs controls; equal shell inset (`p-1`) all around. */
 

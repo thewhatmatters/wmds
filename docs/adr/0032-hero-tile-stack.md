@@ -33,7 +33,7 @@ Ship **HeroTileStack** as an organism under **Components/Layout**:
 
 ## Consequences
 
-Consuming apps paste **Components/Layout/HeroTileStack → Pattern — marketing hero**. The hero is full width: a title-case display headline (`We Are WhatMatters`, plain `h1`, no uppercase transform), `type-large` subtext (the next step above `type-body`) with two inline **Badge**s (the one sanctioned decorative use; not clickable; the sentence still reads in order), the stack, and a primary **Button**. Those badges use `avatar={{ src, alt: "" }}` at `size="md"` — see **ADR-0033**. The globe and eye files under `public/hero-badges/` are placeholders. Replace the placeholder `src` values with product images. Keep `alt` on every tile.
+Consuming apps paste **Components/Layout/HeroTileStack → Pattern — marketing hero**. **SiteNav** sits above the hero in normal flow. The hero section is `min-h-[calc(100svh-var(--site-nav-height))]` and centers its content on that height. The hero is full width: a title-case display headline (`We Are WhatMatters`, plain `h1`, no uppercase transform), `type-large` subtext (the next step above `type-body`) with two inline **Badge**s (the one sanctioned decorative use; not clickable; the sentence still reads in order), the stack, and a primary **Button**. Those badges use `avatar={{ src, alt: "" }}` at `size="md"` — see **ADR-0033**. The globe and eye files under `public/hero-badges/` are placeholders. Replace the placeholder `src` values with product images. Keep `alt` on every tile.
 
 ## References
 
