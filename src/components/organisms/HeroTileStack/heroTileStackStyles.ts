@@ -1,7 +1,7 @@
 /**
  * Hero tile stack shell.
  *
- * The root clips the inline axis (`overflow-x: clip`) so a wild scatter
+ * The root clips the inline axis (`overflow-x: clip`) so a raised `strength`
  * cannot open a horizontal scrollbar. `clip` does not force the block axis
  * into a scroll container, so `overflow-y: visible` still lets cards leave
  * the stack vertically. The row itself does not clip.

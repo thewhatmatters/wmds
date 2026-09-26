@@ -122,17 +122,17 @@ export const PointerScatter: Story = {
     await waitFor(
       () => {
         const pairs = expectedFromGeometry(canvasElement, clientX, clientY);
-        const moved = pairs.filter((pair) => Math.abs(pair.repel.x) > 40 || Math.abs(pair.repel.y) > 40);
+        const moved = pairs.filter((pair) => Math.abs(pair.repel.x) > 12);
         expect(moved.length).toBeGreaterThan(1);
+        for (const pair of pairs) {
+          expect(pair.repel.y).toBe(0);
+        }
         for (const pair of moved) {
           const actual = readScatter(pair.surface);
-          if (Math.abs(pair.repel.x) > 40) {
-            expect(Math.sign(actual.x)).toBe(Math.sign(pair.repel.x));
-            expect(Math.abs(actual.x)).toBeGreaterThan(Math.abs(pair.repel.x) * 0.7);
-          }
-          if (Math.abs(pair.repel.y) > 40) {
-            expect(Math.sign(actual.y)).toBe(Math.sign(pair.repel.y));
-          }
+          expect(Math.sign(actual.x)).toBe(Math.sign(pair.repel.x));
+          expect(Math.abs(actual.x)).toBeGreaterThan(Math.abs(pair.repel.x) * 0.7);
+          expect(Math.abs(actual.x)).toBeLessThan(180);
+          expect(Math.abs(actual.y)).toBeLessThan(8);
           expect(getComputedStyle(pair.surface).transform).not.toBe("none");
         }
       },

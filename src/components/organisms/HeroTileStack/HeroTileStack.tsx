@@ -7,10 +7,13 @@ import {
   useMotionValueEvent,
   useReducedMotion,
   useSpring,
+  useTransform,
+  useVelocity,
   type MotionValue,
 } from "motion/react";
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useLayoutEffect,
@@ -23,10 +26,13 @@ import { cn } from "../../../lib/cn";
 import {
   heroTileRepel,
   heroTileRestingLayout,
+  heroTileStackDefaultMaxVertical,
   heroTileStackDefaultSpring,
   heroTileStackDefaultStrength,
+  heroTileStackDefaultVelocityFactor,
   heroTileStackIsOneShot,
   heroTileStackTapHoldMs,
+  heroTileVelocityY,
   type HeroTileRestingLayout,
 } from "./heroTileScatter";
 import {
@@ -43,11 +49,20 @@ export {
   heroTileRepel,
   heroTileRestingLayout,
   heroTileStackDefaultFalloff,
+  heroTileStackDefaultMaxVertical,
   heroTileStackDefaultSpring,
   heroTileStackDefaultStrength,
+  heroTileStackDefaultVelocityFactor,
   heroTileStackTapHoldMs,
+  heroTileStackVelocityXShare,
+  heroTileVelocityY,
 } from "./heroTileScatter";
-export type { HeroTileRepel, HeroTileRepelInput, HeroTileRestingLayout } from "./heroTileScatter";
+export type {
+  HeroTileRepel,
+  HeroTileRepelInput,
+  HeroTileRestingLayout,
+  HeroTileVelocityInput,
+} from "./heroTileScatter";
 
 /** Layout-only — width and margin. Do not restyle the tile surface here. */
 export type HeroTileStackLayoutClassName = string;
@@ -76,11 +91,18 @@ export interface HeroTileStackProps {
   /** Image tiles, left to right. Resting tilt and overlap default to a four-tile fan. */
   tiles: HeroTileStackTile[];
   /**
-   * How hard cards push away from the pointer. The default is the full wild
-   * scatter — cards near the pointer can leave the viewport. Lower it for a
-   * softer fan. `0` keeps the resting stack.
+   * How hard cards push left and right away from the pointer. The default is
+   * a gentle shift — tiles stay near the stack. Raise it for a wider scatter.
+   * `0` keeps the resting stack.
    */
   strength?: number;
+  /**
+   * Px of vertical nudge per px/s of vertical pointer velocity. Horizontal
+   * velocity contributes a smaller share. `0` disables the nudge.
+   */
+  velocityFactor?: number;
+  /** Clamp for the velocity nudge, in px. */
+  maxVertical?: number;
   /** Spring used for x, y, and rotate. Defaults to a soft, slightly underdamped spring. */
   spring?: HeroTileStackSpring;
   className?: HeroTileStackLayoutClassName;
@@ -236,9 +258,11 @@ function HeroTileMotion({ tile, index, count, layout }: TileViewProps) {
 
 /**
  * Overlapping image tiles for a marketing hero. While a fine pointer is over
- * the stack, every card springs away from that point — closer cards travel
- * farther, and the push adds tilt. Leaving the stack springs them back to the
- * resting fan. No scale, dim, or reorder.
+ * the stack, every card springs left or right away from the pointer's x —
+ * closer cards travel farther, and the push adds a little tilt. A quick
+ * pointer move adds a small vertical nudge from pointer velocity; that nudge
+ * springs back to 0 when the pointer slows. Leaving the stack springs the
+ * fan back to rest. No scale, dim, or reorder.
  *
  * Reduced motion renders the resting fan and ignores the pointer.
  * A coarse pointer or touch tap scatters once from the tap, holds, then springs back.
@@ -247,17 +271,38 @@ function HeroTileMotion({ tile, index, count, layout }: TileViewProps) {
 export function HeroTileStack({
   tiles,
   strength = heroTileStackDefaultStrength,
+  velocityFactor = heroTileStackDefaultVelocityFactor,
+  maxVertical = heroTileStackDefaultMaxVertical,
   spring: springProp,
   className,
 }: HeroTileStackProps) {
   const stackRef = useRef<HTMLDivElement>(null);
   const bindings = useRef<(TileBinding | undefined)[]>([]);
   const pointerRef = useRef<{ x: number; y: number } | null>(null);
+  const pointerSeen = useRef(false);
+  const activeRef = useRef(false);
   const oneShotUntil = useRef(0);
   const oneShotTimer = useRef<number | undefined>(undefined);
   const strengthRef = useRef(strength);
+  const velocityFactorRef = useRef(velocityFactor);
+  const maxVerticalRef = useRef(maxVertical);
   const reduceMotionRef = useRef(false);
   strengthRef.current = strength;
+  velocityFactorRef.current = velocityFactor;
+  maxVerticalRef.current = maxVertical;
+
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const velocityX = useVelocity(pointerX);
+  const velocityY = useVelocity(pointerY);
+  const velocityNudge = useTransform([velocityX, velocityY], ([vx, vy]: number[]) =>
+    heroTileVelocityY({
+      velocityX: vx,
+      velocityY: vy,
+      velocityFactor: velocityFactorRef.current,
+      maxVertical: maxVerticalRef.current,
+    }),
+  );
 
   const { reducedMotion: reducedMotionConfig } = useContext(MotionConfigContext);
   const reduceMotion = useReducedMotion() === true || reducedMotionConfig === "always";
@@ -288,11 +333,12 @@ export function HeroTileStack({
     }
   };
 
-  const scatterAt = (x: number, y: number, active: boolean) => {
+  const scatterAt = (x: number, y: number, active: boolean, nudgeOverride?: number) => {
     if (reduceMotionRef.current) {
       active = false;
     }
     measure();
+    const nudge = active ? (nudgeOverride ?? velocityNudge.get()) : 0;
     for (const binding of bindings.current) {
       if (!binding) continue;
       const rest = binding.getRotate();
@@ -310,7 +356,7 @@ export function HeroTileStack({
         strength: strengthRef.current,
       });
       binding.targetX.set(repel.x);
-      binding.targetY.set(repel.y);
+      binding.targetY.set(repel.y + nudge);
       binding.targetRotate.set(rest + repel.rotate);
     }
   };
@@ -319,6 +365,19 @@ export function HeroTileStack({
   scatterAtRef.current = scatterAt;
   const measureRef = useRef(measure);
   measureRef.current = measure;
+
+  const applyVelocityNudge = useCallback(() => {
+    if (!activeRef.current || reduceMotionRef.current) return;
+    const point = pointerRef.current;
+    if (!point) return;
+    const nudge = velocityNudge.get();
+    for (const binding of bindings.current) {
+      if (!binding) continue;
+      binding.targetY.set(nudge);
+    }
+  }, [velocityNudge]);
+
+  useMotionValueEvent(velocityNudge, "change", applyVelocityNudge);
 
   useLayoutEffect(() => {
     measureRef.current();
@@ -333,11 +392,13 @@ export function HeroTileStack({
     const point = pointerRef.current;
     if (!point || reduceMotionRef.current) return;
     scatterAtRef.current(point.x, point.y, true);
-  }, [strength]);
+  }, [strength, velocityFactor, maxVertical]);
 
   useEffect(() => {
     if (!reduceMotion) return;
     pointerRef.current = null;
+    pointerSeen.current = false;
+    activeRef.current = false;
     oneShotUntil.current = 0;
     if (oneShotTimer.current !== undefined) {
       window.clearTimeout(oneShotTimer.current);
@@ -366,6 +427,16 @@ export function HeroTileStack({
     if (heroTileStackIsOneShot(event.pointerType, coarsePointer())) return;
     const point = toLocal(event);
     if (!point) return;
+    const first = !pointerSeen.current;
+    pointerSeen.current = true;
+    activeRef.current = true;
+    if (first) {
+      pointerX.jump(point.x);
+      pointerY.jump(point.y);
+    } else {
+      pointerX.set(point.x);
+      pointerY.set(point.y);
+    }
     pointerRef.current = point;
     scatterAtRef.current(point.x, point.y, true);
   };
@@ -376,7 +447,8 @@ export function HeroTileStack({
     const point = toLocal(event);
     if (!point) return;
     pointerRef.current = null;
-    scatterAtRef.current(point.x, point.y, true);
+    activeRef.current = false;
+    scatterAtRef.current(point.x, point.y, true, 0);
     oneShotUntil.current = performance.now() + heroTileStackTapHoldMs;
     if (oneShotTimer.current !== undefined) {
       window.clearTimeout(oneShotTimer.current);
@@ -391,6 +463,10 @@ export function HeroTileStack({
   const onPointerLeave = () => {
     if (performance.now() < oneShotUntil.current) return;
     pointerRef.current = null;
+    pointerSeen.current = false;
+    activeRef.current = false;
+    pointerX.jump(pointerX.get());
+    pointerY.jump(pointerY.get());
     scatterAtRef.current(0, 0, false);
   };
 
