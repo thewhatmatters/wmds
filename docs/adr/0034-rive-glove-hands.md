@@ -46,17 +46,25 @@ Handled with `matchMedia('(prefers-reduced-motion: reduce)')`, not Motion’s re
 
 ### Headline pattern
 
-**Components/Layout/HeroTileStack → Pattern — marketing hero** keeps the plain h1. That h1 uses **`type-display-1`**, the largest display token (`clamp` from `2.5rem` / 40px to `5rem` / 80px). `type-display-2` and `type-display-3` are smaller. No uppercase transform.
+**Components/Layout/HeroTileStack → Pattern — marketing hero** is the default. The plain h1 uses **`type-display-1`**, the largest display token (`clamp` from `2.5rem` / 40px to `5rem` / 80px). `type-display-2` and `type-display-3` are smaller. No uppercase transform.
 
-**Pattern — marketing hero with hands** is the same hero plus the two hands. It is not the default. Hover or focus on the h1 sets `active`. The hands are absolutely positioned, in `em`, on the **W** and on `ers`.
+The rock hand sits on the **W**. The point hand sits on the last letters of WhatMatters. Slots are absolute and sized in `em`. Hover or focus on the h1 sets `active`.
+
+### Consuming the pattern
+
+Show code is a Next.js App Router client module:
+
+- The file starts with `"use client"`.
+- `npm install @rive-app/react-canvas`. WMDS depends on it and externalizes it, so the app must be able to resolve the package.
+- Copy `public/rive/interactive-icon-set.riv` into the app’s `public/rive/` directory. The component loads `/rive/interactive-icon-set.riv`.
 
 ### Attribution
 
-The file is **CC BY 4.0**. Credit **Silvia Sguotti** and **Gabriele Montinaro** in `public/rive/CREDITS.md` and in the hands story docs.
+The file is **CC BY 4.0**. Credit **Silvia Sguotti** and **Gabriele Montinaro** in `public/rive/CREDITS.md`, in the pattern story, and in the Show code comment.
 
 ## Non-goals
 
-- Making the hands the default marketing hero.
+- A second pattern that omits the hands.
 - A new display size above `type-display-1`.
 - A new color token for the file’s default magenta (`#F32EEF`).
 - Click targets on the gloves.
@@ -65,7 +73,8 @@ The file is **CC BY 4.0**. Credit **Silvia Sguotti** and **Gabriele Montinaro** 
 
 - **Positive:** The headline stays text. Colors follow the theme, including dark mode.
 - **Positive:** Reduced motion shows a still first frame.
-- **Tradeoff:** Consumers who ship the hands pattern must serve `interactive-icon-set.riv` at `/rive/interactive-icon-set.riv` (or change the component later to take a `src`).
+- **Positive:** One Show code block is the hero a consuming app pastes.
+- **Tradeoff:** The app must serve `interactive-icon-set.riv` at `/rive/interactive-icon-set.riv` and resolve `@rive-app/react-canvas`.
 - **Tradeoff:** `useStateMachineInput` is a legacy Rive API. The file’s interaction input is still that boolean.
 
 ## References

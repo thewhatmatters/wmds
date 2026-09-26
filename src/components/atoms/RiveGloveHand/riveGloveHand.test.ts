@@ -198,18 +198,22 @@ describe("marketing hero show code", () => {
     "utf8",
   );
 
-  it("keeps the hands pattern render and show code aligned", () => {
-    const copyStart = source.indexOf("const marketingHeroWithHandsCopySource = `");
+  it("keeps the default marketing hero render and show code aligned", () => {
+    const copyStart = source.indexOf("const marketingHeroCopySource = `");
     const copyEnd = source.indexOf("`.trim();", copyStart);
-    const copy = source.slice(copyStart, copyEnd).replaceAll("tiles={tiles}", "tiles={heroTiles}");
-    const liveStart = source.indexOf("function MarketingHeroWithHands()");
-    const liveEnd = source.indexOf("export const MarketingHeroWithHandsPattern");
+    const raw = source.slice(copyStart, copyEnd);
+    const copy = raw.slice(raw.indexOf("`") + 1).trim().replaceAll("tiles={tiles}", "tiles={heroTiles}");
+    const liveStart = source.indexOf("\nfunction MarketingHero()");
+    const liveEnd = source.indexOf("export const MarketingHeroPattern");
     const live = source.slice(liveStart, liveEnd);
+    expect(copy.startsWith('"use client";')).toBe(true);
+    expect(copy).toContain("npm install @rive-app/react-canvas");
+    expect(copy).toContain("/rive/interactive-icon-set.riv");
     expect(copy).toContain('className="type-display-1 text-fg"');
     expect(live).toContain('className="type-display-1 text-fg"');
     expect(copy).toContain('hand="rock"');
     expect(copy).toContain('hand="point"');
     expect(live).toContain(copy.slice(copy.indexOf("<h1"), copy.indexOf("</h1>") + "</h1>".length));
-    expect(source).toContain('className="type-display-1 text-fg">We Are WhatMatters</h1>');
+    expect(source).not.toContain("MarketingHeroWithHands");
   });
 });

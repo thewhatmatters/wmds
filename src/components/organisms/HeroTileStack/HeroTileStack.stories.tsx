@@ -79,8 +79,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const marketingHeroCopySource = `
+"use client";
+
+// npm install @rive-app/react-canvas
+// Copy public/rive/interactive-icon-set.riv so the app serves /rive/interactive-icon-set.riv.
+// Glove art: CC BY 4.0, Silvia Sguotti and Gabriele Montinaro.
+
+import { useState } from "react";
 import { Sparkles } from "lucide-react";
-import { Badge, Button, HeroTileStack, SiteNav } from "@whatmatters/wmds";
+import { Badge, Button, HeroTileStack, RiveGloveHand, SiteNav } from "@whatmatters/wmds";
 
 const tiles = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },
@@ -90,6 +97,7 @@ const tiles = [
 ];
 
 export function MarketingHero() {
+  const [handsActive, setHandsActive] = useState(false);
   return (
     <>
       <SiteNav
@@ -119,7 +127,26 @@ export function MarketingHero() {
       />
       <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body px-[var(--grid-margin)] py-16 text-center">
         <div className="flex w-full flex-col items-center gap-6">
-          <h1 className="type-display-1 text-fg">We Are WhatMatters</h1>
+          <h1
+            className="type-display-1 text-fg"
+            tabIndex={0}
+            onMouseEnter={() => setHandsActive(true)}
+            onMouseLeave={() => setHandsActive(false)}
+            onFocus={() => setHandsActive(true)}
+            onBlur={() => setHandsActive(false)}
+          >
+            {[
+              <span key="w" className="relative inline-block">
+                W
+                <RiveGloveHand hand="rock" size="1.35em" active={handsActive} className="absolute -left-[0.3em] -top-[0.28em] z-10" />
+              </span>,
+              "e Are WhatMatt",
+              <span key="end" className="relative inline-block">
+                ers
+                <RiveGloveHand hand="point" size="1.35em" active={handsActive} className="absolute -right-[0.12em] -top-[0.18em] z-10" />
+              </span>,
+            ]}
+          </h1>
           <p className="type-large font-normal leading-normal text-muted">
             <span className="block">
               Your brand is already{" "}
@@ -140,6 +167,7 @@ export function MarketingHero() {
 `.trim();
 
 function MarketingHero() {
+  const [handsActive, setHandsActive] = useState(false);
   return (
     <>
       <SiteNav
@@ -169,7 +197,26 @@ function MarketingHero() {
       />
       <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body px-[var(--grid-margin)] py-16 text-center">
         <div className="flex w-full flex-col items-center gap-6">
-          <h1 className="type-display-1 text-fg">We Are WhatMatters</h1>
+          <h1
+            className="type-display-1 text-fg"
+            tabIndex={0}
+            onMouseEnter={() => setHandsActive(true)}
+            onMouseLeave={() => setHandsActive(false)}
+            onFocus={() => setHandsActive(true)}
+            onBlur={() => setHandsActive(false)}
+          >
+            {[
+              <span key="w" className="relative inline-block">
+                W
+                <RiveGloveHand hand="rock" size="1.35em" active={handsActive} className="absolute -left-[0.3em] -top-[0.28em] z-10" />
+              </span>,
+              "e Are WhatMatt",
+              <span key="end" className="relative inline-block">
+                ers
+                <RiveGloveHand hand="point" size="1.35em" active={handsActive} className="absolute -right-[0.12em] -top-[0.18em] z-10" />
+              </span>,
+            ]}
+          </h1>
           <p className="type-large font-normal leading-normal text-muted">
             <span className="block">
               Your brand is already{" "}
@@ -196,181 +243,13 @@ export const MarketingHeroPattern: Story = {
       docs: {
         description: {
           story:
-            "SiteNav sits above the hero in normal flow. The hero section is min-h-[calc(100svh-var(--site-nav-height))] and centers its content, so the nav plus the hero fill the viewport. The headline is a plain h1 (We Are WhatMatters) on type-display-1, the largest display token, and stays larger than the type-large subtext. The subtext is type-large at font-normal, one p with two block lines at leading-normal: Your brand is already online, then Make it impossible to ignore, with no punctuation after the badges. The lines sit close and the md Badges do not collide. The break stays the same at every width. It has two inline md Badges — the one sanctioned decorative use. Each badge leads with a round Avatar. The globe and eye files in public/hero-badges/ are playful placeholders. The badges are not clickable, alt is empty so the sentence still reads in order, and the images are not announced. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
+            "SiteNav sits above the hero in normal flow. The hero section is min-h-[calc(100svh-var(--site-nav-height))] and centers its content, so the nav plus the hero fill the viewport. The headline is a plain h1 (We Are WhatMatters) on type-display-1, the largest display token, and stays larger than the type-large subtext. Two decorative Rive glove hands sit on the letters: rock on the W, point on the last letters of WhatMatters. Slots are absolute and sized in em so they track the h1. Hover or focus on the headline sets Boolean 1. prefers-reduced-motion shows a still frame and does not play the interaction. The hands are aria-hidden. The headline text stays selectable. handFill uses --color-accent. outline uses --color-fg (the foreground / ink token, --color-text-primary). Art is a CC BY 4.0 remix of the Rive Interactive Icon Set by Silvia Sguotti and Gabriele Montinaro. The point hand is artboard 31_Cigarette with the cigarette removed. Show code starts with use client. Install @rive-app/react-canvas and serve public/rive/interactive-icon-set.riv at /rive/interactive-icon-set.riv. The subtext is type-large at font-normal, one p with two block lines at leading-normal: Your brand is already online, then Make it impossible to ignore, with no punctuation after the badges. The lines sit close and the md Badges do not collide. The break stays the same at every width. It has two inline md Badges — the one sanctioned decorative use. Each badge leads with a round Avatar. The globe and eye files in public/hero-badges/ are playful placeholders. The badges are not clickable, alt is empty so the sentence still reads in order, and the images are not announced. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
         },
       },
     },
     marketingHeroCopySource,
   ),
   render: () => <MarketingHero />,
-};
-
-const marketingHeroWithHandsCopySource = `
-import { useState } from "react";
-import { Sparkles } from "lucide-react";
-import { Badge, Button, HeroTileStack, RiveGloveHand, SiteNav } from "@whatmatters/wmds";
-
-const tiles = [
-  { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },
-  { src: "/hero-tiles/focus.svg", alt: "Blue focus card" },
-  { src: "/hero-tiles/week.svg", alt: "Abstract shapes for the week" },
-  { src: "/hero-tiles/note.svg", alt: "A pale note about what matters" },
-];
-
-export function MarketingHeroWithHands() {
-  const [handsActive, setHandsActive] = useState(false);
-  return (
-    <>
-      <SiteNav
-        start={
-          <SiteNav.Brand href="/" aria-label="WhatMatters" icon={<Sparkles />} />
-        }
-        middle={
-          <SiteNav.Links>
-            <SiteNav.Link href="/product" current>Product</SiteNav.Link>
-            <SiteNav.Link href="/pricing">Pricing</SiteNav.Link>
-            <SiteNav.Link href="/customers">Customers</SiteNav.Link>
-          </SiteNav.Links>
-        }
-        end={
-          <>
-            <Button role="ghost" size="sm" render={<a href="/signin" />} className="whitespace-nowrap">Sign in</Button>
-            <Button role="primary" size="sm" render={<a href="/start" />} className="whitespace-nowrap">Get started</Button>
-          </>
-        }
-        mobile={
-          <>
-            <SiteNav.MobileLink href="/product" current>Product</SiteNav.MobileLink>
-            <SiteNav.MobileLink href="/pricing">Pricing</SiteNav.MobileLink>
-            <SiteNav.MobileLink href="/customers">Customers</SiteNav.MobileLink>
-          </>
-        }
-      />
-      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body px-[var(--grid-margin)] py-16 text-center">
-        <div className="flex w-full flex-col items-center gap-6">
-          <h1
-            className="type-display-1 text-fg"
-            tabIndex={0}
-            onMouseEnter={() => setHandsActive(true)}
-            onMouseLeave={() => setHandsActive(false)}
-            onFocus={() => setHandsActive(true)}
-            onBlur={() => setHandsActive(false)}
-          >
-            {[
-              <span key="w" className="relative inline-block">
-                W
-                <RiveGloveHand hand="rock" size="1.35em" active={handsActive} className="absolute -left-[0.3em] -top-[0.28em] z-10" />
-              </span>,
-              "e Are WhatMatt",
-              <span key="end" className="relative inline-block">
-                ers
-                <RiveGloveHand hand="point" size="1.35em" active={handsActive} className="absolute -right-[0.12em] -top-[0.18em] z-10" />
-              </span>,
-            ]}
-          </h1>
-          <p className="type-large font-normal leading-normal text-muted">
-            <span className="block">
-              Your brand is already{" "}
-              <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
-            </span>{" "}
-            <span className="block">
-              Make it{" "}
-              <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/eye.svg", alt: "" }}>impossible to ignore</Badge>
-            </span>
-          </p>
-          <HeroTileStack tiles={tiles} />
-          <Button role="primary" className="mt-6 md:mt-12">Start a project</Button>
-        </div>
-      </section>
-    </>
-  );
-}
-`.trim();
-
-function MarketingHeroWithHands() {
-  const [handsActive, setHandsActive] = useState(false);
-  return (
-    <>
-      <SiteNav
-        start={
-          <SiteNav.Brand href="/" aria-label="WhatMatters" icon={<Sparkles />} />
-        }
-        middle={
-          <SiteNav.Links>
-            <SiteNav.Link href="/product" current>Product</SiteNav.Link>
-            <SiteNav.Link href="/pricing">Pricing</SiteNav.Link>
-            <SiteNav.Link href="/customers">Customers</SiteNav.Link>
-          </SiteNav.Links>
-        }
-        end={
-          <>
-            <Button role="ghost" size="sm" render={<a href="/signin" />} className="whitespace-nowrap">Sign in</Button>
-            <Button role="primary" size="sm" render={<a href="/start" />} className="whitespace-nowrap">Get started</Button>
-          </>
-        }
-        mobile={
-          <>
-            <SiteNav.MobileLink href="/product" current>Product</SiteNav.MobileLink>
-            <SiteNav.MobileLink href="/pricing">Pricing</SiteNav.MobileLink>
-            <SiteNav.MobileLink href="/customers">Customers</SiteNav.MobileLink>
-          </>
-        }
-      />
-      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body px-[var(--grid-margin)] py-16 text-center">
-        <div className="flex w-full flex-col items-center gap-6">
-          <h1
-            className="type-display-1 text-fg"
-            tabIndex={0}
-            onMouseEnter={() => setHandsActive(true)}
-            onMouseLeave={() => setHandsActive(false)}
-            onFocus={() => setHandsActive(true)}
-            onBlur={() => setHandsActive(false)}
-          >
-            {[
-              <span key="w" className="relative inline-block">
-                W
-                <RiveGloveHand hand="rock" size="1.35em" active={handsActive} className="absolute -left-[0.3em] -top-[0.28em] z-10" />
-              </span>,
-              "e Are WhatMatt",
-              <span key="end" className="relative inline-block">
-                ers
-                <RiveGloveHand hand="point" size="1.35em" active={handsActive} className="absolute -right-[0.12em] -top-[0.18em] z-10" />
-              </span>,
-            ]}
-          </h1>
-          <p className="type-large font-normal leading-normal text-muted">
-            <span className="block">
-              Your brand is already{" "}
-              <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
-            </span>{" "}
-            <span className="block">
-              Make it{" "}
-              <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/eye.svg", alt: "" }}>impossible to ignore</Badge>
-            </span>
-          </p>
-          <HeroTileStack tiles={heroTiles} />
-          <Button role="primary" className="mt-6 md:mt-12">Start a project</Button>
-        </div>
-      </section>
-    </>
-  );
-}
-
-export const MarketingHeroWithHandsPattern: Story = {
-  name: "Pattern — marketing hero with hands",
-  parameters: withStoryCopySource(
-    {
-      wmdsLayout: "fullscreen",
-      docs: {
-        description: {
-          story:
-            "Same hero as Pattern — marketing hero. The h1 stays type-display-1, the largest display token, title case, with no uppercase transform. Two decorative Rive glove hands sit on the letters: rock on the W, point on the last letters of WhatMatters. Slots are absolute and sized in em so they track the h1. Hover or focus on the headline sets Boolean 1. prefers-reduced-motion shows a still frame and does not play the interaction. The hands are aria-hidden. The headline text stays selectable. handFill uses --color-accent. outline uses --color-fg (the foreground / ink token, --color-text-primary). Art is a CC BY 4.0 remix of the Rive Interactive Icon Set by Silvia Sguotti and Gabriele Montinaro. The point hand is artboard 31_Cigarette with the cigarette removed. This pattern is not the default.",
-        },
-      },
-    },
-    marketingHeroWithHandsCopySource,
-  ),
-  render: () => <MarketingHeroWithHands />,
 };
 
 export const Strength: Story = {
