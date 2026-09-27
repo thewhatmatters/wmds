@@ -3,7 +3,9 @@
  *
  * Motion: a 300svh track (`shrink-0` so a flex parent keeps that height), a sticky svh viewport that clips inline overflow,
  * and a centered window one card wide. The row starts with the first card
- * filling that window.
+ * filling that window. `expandLast` uses a 400svh track: the same horizontal
+ * distance, then one viewport of grow. The grow layer is the sticky window
+ * (`inset-0`) revealed with `clip-path`.
  *
  * Reduced motion (`motion-reduce` and `data-reduce="true"`): height auto,
  * the viewport is not sticky, and the window is a native horizontal scroller
@@ -16,6 +18,39 @@
 export const scrollHorizontalRootClasses = [
   "group/scroll-horizontal relative h-[300svh] w-full max-w-full shrink-0",
   "motion-reduce:!h-auto data-[reduce=true]:!h-auto",
+].join(" ");
+
+/** Same shell as the root, with one extra viewport for the grow. `shrink-0` keeps that height in a flex parent. */
+export const scrollHorizontalRootExpandClasses = [
+  "group/scroll-horizontal relative h-[400svh] w-full max-w-full shrink-0",
+  "motion-reduce:!h-auto data-[reduce=true]:!h-auto",
+].join(" ");
+
+/**
+ * Full-viewport color layer. `clip-path` reveals it from the last card out to
+ * the sticky window. Hidden on the reduced-motion branch, which uses the static section.
+ */
+export const scrollHorizontalExpandLayerClasses = [
+  "pointer-events-none absolute inset-0 z-20 bg-[var(--scroll-horizontal-color)] will-change-[clip-path]",
+  "motion-reduce:!hidden",
+  "group-data-[reduce=true]/scroll-horizontal:!hidden",
+].join(" ");
+
+/** Optional content on the full-bleed tile. Fades in late. Hidden when motion is reduced. */
+export const scrollHorizontalExpandedSlotClasses = [
+  "absolute inset-0 z-30",
+  "motion-reduce:!hidden",
+  "group-data-[reduce=true]/scroll-horizontal:!hidden",
+].join(" ");
+
+/**
+ * Reduced motion: the last tile as its own `h-svh` section after the scroller.
+ * `hidden` until `motion-reduce` or `data-reduce="true"`. Radius is 0.
+ */
+export const scrollHorizontalExpandedSectionClasses = [
+  "relative hidden h-svh w-full max-w-full shrink-0 overflow-hidden rounded-none",
+  "motion-reduce:!block",
+  "group-data-[reduce=true]/scroll-horizontal:!block",
 ].join(" ");
 
 export const scrollHorizontalStickyClasses = [

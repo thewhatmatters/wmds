@@ -353,6 +353,7 @@ export function MarketingHeroPage() {
         <ScrollHorizontal
           items={projects}
           heading={<h2 className="type-heading-2 text-fg">Selected work</h2>}
+          expandLast
         />
         <main className="grid-page bg-body">
           <GridOverlay visible keyboardShortcut={false} />
@@ -446,6 +447,7 @@ function MarketingHeroPage() {
         <ScrollHorizontal
           items={projects}
           heading={<h2 className="type-heading-2 text-fg">Selected work</h2>}
+          expandLast
         />
         <main className="grid-page bg-body">
           <GridOverlay visible keyboardShortcut={false} />
@@ -472,7 +474,7 @@ export const MarketingHeroPattern: Story = {
       docs: {
         description: {
           story:
-            "The marketing hero (SiteNav, headline, intro, tile fan) fills **FooterReveal.Content**, then **ScrollHorizontal** (Selected work — solid token-color placeholders), then the page grid. **FooterReveal.Brand** is the sticky footer underneath. Scroll past the hero — the gallery translates from the first card centered to the last, then the brand field fades in from about 12px of blur. Reduced motion keeps the gallery as a native horizontal scroller and shows the footer sharp.",
+            "The marketing hero (SiteNav, headline, intro, tile fan) fills **FooterReveal.Content**, then **ScrollHorizontal** with expandLast (Selected work — solid token-color placeholders), then the page grid. **FooterReveal.Brand** is the sticky footer underneath. Scroll past the hero — the gallery translates from the first card centered to the last, then the last tile grows to fill the viewport and scrolls away. The brand field fades in from about 12px of blur after that cover. Reduced motion keeps the gallery as a native horizontal scroller, follows it with the last tile as a full-viewport section, and shows the footer sharp.",
         },
       },
     },
