@@ -134,7 +134,7 @@ export const OutlineMono: Story = {
       docs: {
         description: {
           story:
-            "Hairline outline, transparent fill, mono uppercase label, and a trailing accent square. ScrollHorizontal.Intro uses this for the gallery action. size sm. endIcon is a Lucide glyph.",
+            "Hairline outline, transparent fill, mono uppercase label, and a trailing accent square. size sm. endIcon is a Lucide glyph. The gallery intro action is Button role secondary, not this pattern.",
         },
       },
     },

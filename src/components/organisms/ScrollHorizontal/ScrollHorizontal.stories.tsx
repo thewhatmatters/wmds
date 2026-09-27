@@ -37,7 +37,7 @@ Omit \`color\` to cycle \`--color-brand\`, \`--color-brand-soft\`, \`--color-pri
 
 \`heading\` names the section. It is \`sr-only\` while the window is pinned, so it does not sit under the site nav, and visible above the row when motion is reduced.
 
-\`intro\` replaces \`heading\`. **ScrollHorizontal.Intro** is the first panel: an eyebrow **Badge**, a \`type-display-2\` statement (normal weight, display-1 leading) run through **TextSequence** (\`emphasis="none"\`, \`trigger="inView"\`), and an outline mono **Button**. The panel sits in the left columns of the page grid, with top padding \`--site-nav-height\` plus the compact nav's 1rem offset, so it clears the pinned site nav. Tiles follow to the right and scroll in as the panel leaves to the left. The eyebrow is the section name. The statement is the \`h2\`. Words slide up once when that heading scrolls into view. **TextSequence.Shape** marks between words pop on that same timeline (about 1.15em, token fills). Reduced motion stacks that panel above the native row and leaves the sentence and shapes at rest.
+\`intro\` replaces \`heading\`. **ScrollHorizontal.Intro** is the first panel: an eyebrow **Badge**, a \`type-display-2\` statement (normal weight, display-1 leading) run through **TextSequence** (\`emphasis="none"\`, \`trigger="inView"\`), and a secondary **Button** (\`role="secondary"\`, label Start a project). The panel sits in the left columns of the page grid, with top padding \`--site-nav-height\` plus the compact nav's 1rem offset, so it clears the pinned site nav. Tiles follow to the right and scroll in as the panel leaves to the left. The eyebrow is the section name. The statement is the \`h2\`. Words slide up once when that heading scrolls into view. **TextSequence.Shape** marks between words pop on that same timeline (about 1.15em, token fills). Reduced motion stacks that panel above the native row and leaves the sentence and shapes at rest.
 
 \`prefers-reduced-motion\`, and \`MotionConfig\` \`reducedMotion="always"\`, skip the transform. The track height is auto, the window is not sticky, and the row is a native horizontal scroller with vertical padding (\`py-12\`). The heading is visible on that branch. The server render matches the motion shell. The OS preference is applied before paint.
 
@@ -287,7 +287,7 @@ export function ProjectGalleryIntro() {
         <ScrollHorizontal.Intro
           eyebrow="SELECTED WORK"
           statement=${scrollHorizontalIntroStatementMarkup}
-          action={{ label: "See our work" }}
+          action={{ label: "Start a project" }}
         />
       }
     />
@@ -320,7 +320,7 @@ function GalleryIntro() {
         <ScrollHorizontal.Intro
           eyebrow="SELECTED WORK"
           statement={scrollHorizontalIntroStatementNodes()}
-          action={{ label: "See our work" }}
+          action={{ label: "Start a project" }}
         />
       }
     />
@@ -381,9 +381,13 @@ export const IntroContract: Story = {
     const statement = section.querySelector("h2");
     expect(statement?.tagName).toBe("H2");
     expect(statement?.getAttribute("role")).toBeNull();
-    expect(statement?.textContent).toContain("Placeholder statement");
-    expect(statement?.textContent).toContain("WhatMatters");
-    expect(statement?.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(3);
+    expect(statement?.textContent?.replace(/\s+/g, " ").trim()).toBe(scrollHorizontalIntroStatement);
+    const shapes = [...(statement?.querySelectorAll("[data-text-sequence-shape]") ?? [])];
+    expect(shapes.map((shape) => shape.getAttribute("data-variant"))).toEqual([
+      "asterisk",
+      "pill",
+      "diamond",
+    ]);
     await waitFor(() => {
       expect(statement?.getAttribute("aria-label")).toBe(scrollHorizontalIntroStatement);
       expect(statement?.querySelector("[data-text-sequence]")?.getAttribute("data-text-sequence-state")).toBe(
@@ -394,10 +398,11 @@ export const IntroContract: Story = {
     if (!(card instanceof HTMLElement)) throw new Error("card missing");
     expect(card.getBoundingClientRect().left).toBeGreaterThanOrEqual(intro.getBoundingClientRect().right - 1);
     const action = [...section.querySelectorAll("button")].find((node) =>
-      node.textContent?.includes("See our work"),
+      node.textContent?.includes("Start a project"),
     );
-    expect(action?.getAttribute("data-role")).toBe("outline");
-    expect(action?.getAttribute("data-mono")).toBe("");
+    expect(action?.getAttribute("data-role")).toBe("secondary");
+    expect(action?.getAttribute("data-mono")).toBeNull();
+    expect(action?.querySelector("svg")).toBeNull();
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
       document.documentElement.clientWidth + 1,
     );

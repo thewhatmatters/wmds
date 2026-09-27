@@ -10,7 +10,7 @@ import { scrollHorizontalIntroStatementNodes } from "../ScrollHorizontal/scrollH
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { HeroTileStack } from "./HeroTileStack";
 import { ScrollHorizontal } from "../ScrollHorizontal/ScrollHorizontal";
-import { scrollHorizontalMarketingItems } from "../ScrollHorizontal/scrollHorizontalExamples";
+import { scrollHorizontalIntroStatement, scrollHorizontalMarketingItems } from "../ScrollHorizontal/scrollHorizontalExamples";
 import { SiteNav } from "../SiteNav/SiteNav";
 
 const meta = {
@@ -138,16 +138,16 @@ export function MarketingHeroWithGalleryIntro() {
             eyebrow="SELECTED WORK"
             statement={
               <>
-                {"Placeholder"}
+                {"Every screen"}
                 <TextSequence.Shape variant="asterisk" />
-                {" statement — a bold, left-aligned "}
+                {" is a first impression"}
                 <TextSequence.Shape variant="pill" tone="brand-soft" />
-                {" line about the work "}
+                {" and we make yours"}
                 <TextSequence.Shape variant="diamond" tone="accent" />
-                {" WhatMatters does for brands goes here."}
+                {" the one they remember."}
               </>
             }
-            action={{ label: "See our work" }}
+            action={{ label: "Start a project" }}
           />
         }
       />
@@ -236,7 +236,7 @@ function GalleryIntroHero() {
           <ScrollHorizontal.Intro
             eyebrow="SELECTED WORK"
             statement={scrollHorizontalIntroStatementNodes()}
-            action={{ label: "See our work" }}
+            action={{ label: "Start a project" }}
           />
         }
       />
@@ -269,7 +269,7 @@ export const MarketingHeroWithGalleryIntro: Story = {
     const track = section.querySelector("[data-scroll-horizontal-track]");
     expect(track?.firstElementChild).toBe(intro);
     expect(section.querySelector("[data-pattern='eyebrow']")?.textContent).toBe("SELECTED WORK");
-    expect(section.textContent).toContain("WhatMatters");
+    expect(section.textContent?.replace(/\s+/g, " ")).toContain(scrollHorizontalIntroStatement);
     expect(section.textContent).not.toContain("Selected work");
   },
 };

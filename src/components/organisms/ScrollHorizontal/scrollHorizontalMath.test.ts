@@ -655,8 +655,15 @@ describe("scrollHorizontal intro", () => {
     expect(statement?.querySelector("[data-text-sequence]")?.getAttribute("data-plain")).toBe(
       scrollHorizontalIntroStatement,
     );
-    expect(statement?.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(3);
-    expect(section?.querySelector("[data-role='outline']")?.textContent).toContain("See our work");
+    expect(
+      [...(statement?.querySelectorAll("[data-text-sequence-shape]") ?? [])].map((shape) =>
+        shape.getAttribute("data-variant"),
+      ),
+    ).toEqual(["asterisk", "pill", "diamond"]);
+    const action = section?.querySelector("[data-role='secondary']");
+    expect(action?.textContent).toContain(scrollHorizontalIntroActionLabel);
+    expect(action?.getAttribute("data-mono")).toBeNull();
+    expect(action?.querySelector("svg")).toBeNull();
     expect(section?.querySelectorAll("li")).toHaveLength(items.length);
     expect(intro?.className).toContain("pt-[calc(var(--site-nav-height)+var(--spacing)*4)]");
     view.unmount();

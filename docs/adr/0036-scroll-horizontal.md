@@ -48,11 +48,11 @@ The gallery can open on a statement instead of a centered first card.
 
 - `intro` is optional. Pass **ScrollHorizontal.Intro** (`eyebrow`, `statement`, optional `action`). It is the first panel of the track. `heading` is not rendered when `intro` is set.
 - The eyebrow is a **Badge** `eyebrow` (mono, uppercase, `--font-size-xs`, accent fill). It is the section's accessible name (`aria-labelledby`). The statement is an `h2` on `type-display-2` at `--font-weight-normal`, with `--text-display-1-leading`. That is the largest display step that wraps to about four or five lines in the left columns. No new size token.
-- The action is **Button** `role="outline"` `size="sm"` `mono` with `endIcon` (ArrowRight on an accent square).
+- The action was first **Button** `role="outline"` `size="sm"` `mono` with `endIcon`. See the later update: it is now `role="secondary"`.
 - The panel width follows the page grid: every column below `md`, 4 of 8 from `md`, 6 of 12 from `lg`. At 1440px that is about 42% of the viewport. Padding-left is the grid content edge. Top padding is `--site-nav-height` plus `1rem` (`--spacing * 4`), the compact site nav pin, so the eyebrow clears the pill.
 - Travel parks the last card on the viewport center, same end frame as a gallery with no intro, so `expandLast` still grows from that card to `inset(0)`. Without `intro`, distance and clip are unchanged.
 - Reduced motion keeps one intro node and stacks it above the native horizontal scroller. The track is not pinned.
-- **Pattern — gallery intro**, **HeroTileStack → Marketing hero with gallery intro**, and **FooterReveal → Marketing hero with gallery intro** use the placeholder copy. **Pattern — marketing hero** on both organisms stays on the sr-only heading.
+- **Pattern — marketing hero** on both organisms stays on the sr-only heading. The gallery statement copy is the later update.
 
 ## Update — statement sequence
 
@@ -62,11 +62,20 @@ The gallery statement animates with **TextSequence** (ADR-0037).
 
 - **ScrollHorizontal.Intro** renders `statement` inside the real `h2` through **TextSequence** with `emphasis="none"` and `trigger="inView"`. The type step stays `type-display-2` at normal weight. Intro owns the sequence. Callers pass text and **TextSequence.Shape** marks. They do not wrap `statement` in another **TextSequence**.
 - The entrance runs once, when the statement intersects the viewport (threshold 0.35). It does not run on page load while the panel is below the fold.
-- The pattern places three marks between words: asterisk (`brand`, `#011272`), pill (`brand-soft`), diamond (`accent`). Marks are about 1.15em tall and do not grow the line box. `info-muted` stays available on the shape.
+- Marks are about 1.15em tall and do not grow the line box. `info-muted` stays available on the shape. Placement and tones are the later update.
 - The `h2` keeps its heading role. Once the split runs, its accessible name is the plain sentence (shapes omitted). Shapes stay `aria-hidden`.
 - `prefers-reduced-motion` leaves the sentence and the shapes at rest. No split, no pop.
-- The eyebrow **Badge** and the outline mono **Button** are unchanged. `expandLast` and the flush footer handoff are unchanged. **SiteNav**, the hero `h1`, and the Rive hands are unchanged.
+- `expandLast` and the flush footer handoff are unchanged. **SiteNav**, the hero `h1`, and the Rive hands are unchanged. The action is the later update.
 - **FooterReveal → Pattern — marketing hero with sequenced gallery** shows the hero subtext sequence and this statement together.
+
+## Update — statement copy and secondary action
+
+**Date:** 2026-09-27
+
+- The statement is “Every screen is a first impression and we make yours the one they remember.” **TextSequence.Shape** sits after those words: asterisk (`brand`) after screen, pill (`brand-soft`) after impression, diamond (`accent`) after yours.
+- The `h2` accessible name is that plain sentence.
+- The action is **Button** `role="secondary"`, label Start a project, sentence case, with no `className`. Secondary has no icon slot, so there is no trailing arrow.
+- **Pattern — gallery intro**, **HeroTileStack → Marketing hero with gallery intro**, **FooterReveal → Marketing hero with gallery intro**, and **FooterReveal → Pattern — marketing hero with sequenced gallery** use this copy and this action.
 
 ## Non-goals
 

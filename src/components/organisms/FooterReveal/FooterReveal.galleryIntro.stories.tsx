@@ -161,16 +161,16 @@ export function MarketingHeroWithGalleryIntroPage() {
               eyebrow="SELECTED WORK"
               statement={
                 <>
-                  {"Placeholder"}
+                  {"Every screen"}
                   <TextSequence.Shape variant="asterisk" />
-                  {" statement — a bold, left-aligned "}
+                  {" is a first impression"}
                   <TextSequence.Shape variant="pill" tone="brand-soft" />
-                  {" line about the work "}
+                  {" and we make yours"}
                   <TextSequence.Shape variant="diamond" tone="accent" />
-                  {" WhatMatters does for brands goes here."}
+                  {" the one they remember."}
                 </>
               }
-              action={{ label: "See our work" }}
+              action={{ label: "Start a project" }}
             />
           }
         />
@@ -272,16 +272,16 @@ function GalleryIntroHeroPage() {
               eyebrow="SELECTED WORK"
               statement={
                 <>
-                  {"Placeholder"}
+                  {"Every screen"}
                   <TextSequence.Shape variant="asterisk" />
-                  {" statement — a bold, left-aligned "}
+                  {" is a first impression"}
                   <TextSequence.Shape variant="pill" tone="brand-soft" />
-                  {" line about the work "}
+                  {" and we make yours"}
                   <TextSequence.Shape variant="diamond" tone="accent" />
-                  {" WhatMatters does for brands goes here."}
+                  {" the one they remember."}
                 </>
               }
-              action={{ label: "See our work" }}
+              action={{ label: "Start a project" }}
             />
           }
         />

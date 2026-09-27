@@ -167,16 +167,16 @@ export function SequencedMarketingHeroPage() {
               eyebrow="SELECTED WORK"
               statement={
                 <>
-                  {"Placeholder"}
+                  {"Every screen"}
                   <TextSequence.Shape variant="asterisk" />
-                  {" statement — a bold, left-aligned "}
+                  {" is a first impression"}
                   <TextSequence.Shape variant="pill" tone="brand-soft" />
-                  {" line about the work "}
+                  {" and we make yours"}
                   <TextSequence.Shape variant="diamond" tone="accent" />
-                  {" WhatMatters does for brands goes here."}
+                  {" the one they remember."}
                 </>
               }
-              action={{ label: "See our work" }}
+              action={{ label: "Start a project" }}
             />
           }
         />
@@ -285,16 +285,16 @@ function SequencedGalleryHeroPage() {
               eyebrow="SELECTED WORK"
               statement={
                 <>
-                  {"Placeholder"}
+                  {"Every screen"}
                   <TextSequence.Shape variant="asterisk" />
-                  {" statement — a bold, left-aligned "}
+                  {" is a first impression"}
                   <TextSequence.Shape variant="pill" tone="brand-soft" />
-                  {" line about the work "}
+                  {" and we make yours"}
                   <TextSequence.Shape variant="diamond" tone="accent" />
-                  {" WhatMatters does for brands goes here."}
+                  {" the one they remember."}
                 </>
               }
-              action={{ label: "See our work" }}
+              action={{ label: "Start a project" }}
             />
           }
         />
@@ -369,7 +369,7 @@ export const SequencedMarketingHero: Story = {
       docs: {
         description: {
           story:
-            "Full marketing page. The h1 stays We Are WhatMatters on type-display-1, with the rock and point hands on the e, the W, and the final s. HeroIntro step display sequences the subtext on type-display-2 at normal weight — the same size as the gallery statement: Your brand is already online, then Make it impossible to ignore. Shapes sit inline at about 1.15em. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. Three shapes sit in the statement (asterisk, brand-soft pill, accent diamond). The eyebrow and the outline mono See our work button are unchanged. expandLast still ends on the full-bleed tile, flush with FooterReveal. Reduced motion leaves both sequences at rest, shapes included, and keeps the grid inset.",
+            "Full marketing page. The h1 stays We Are WhatMatters on type-display-1, with the rock and point hands on the e, the W, and the final s. HeroIntro step display sequences the subtext on type-display-2 at normal weight — the same size as the gallery statement: Your brand is already online, then Make it impossible to ignore. Shapes sit inline at about 1.15em. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. Three shapes sit in the statement (asterisk after screen, brand-soft pill after impression, accent diamond after yours). The accessible name is the plain sentence. The action is Button role secondary, labeled Start a project. expandLast still ends on the full-bleed tile, flush with FooterReveal. Reduced motion leaves both sequences at rest, shapes included, and keeps the grid inset.",
         },
       },
     },
@@ -392,9 +392,10 @@ export const SequencedMarketingHero: Story = {
     expect(text).toContain(scrollHorizontalIntroStatement);
     expect(section.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(3);
     expect(canvasElement.querySelectorAll("[data-text-sequence]")).toHaveLength(3);
-    const action = [...section.querySelectorAll("button")].find((node) => node.textContent?.includes("See our work"));
-    expect(action?.getAttribute("data-role")).toBe("outline");
-    expect(action?.getAttribute("data-mono")).toBe("");
+    const action = [...section.querySelectorAll("button")].find((node) => node.textContent?.includes("Start a project"));
+    expect(action?.getAttribute("data-role")).toBe("secondary");
+    expect(action?.getAttribute("data-mono")).toBeNull();
+    expect(action?.querySelector("svg")).toBeNull();
     const statement = section.querySelector("h2");
     expect(statement?.tagName).toBe("H2");
     expect(statement?.getAttribute("role")).toBeNull();

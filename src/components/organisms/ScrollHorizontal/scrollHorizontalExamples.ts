@@ -4,13 +4,13 @@ import type { ScrollHorizontalItem } from "./ScrollHorizontal";
  * Five solid placeholders for the marketing gallery.
  * Colors are the default palette, spelled out so Show code can paste them.
  */
-/** Placeholder copy for the gallery intro. Obviously placeholder — not brand voice. */
+/** Gallery intro copy. The statement is the plain sentence; shapes live in the nodes helper. */
 export const scrollHorizontalIntroEyebrow = "SELECTED WORK";
 
 export const scrollHorizontalIntroStatement =
-  "Placeholder statement — a bold, left-aligned line about the work WhatMatters does for brands goes here.";
+  "Every screen is a first impression and we make yours the one they remember.";
 
-export const scrollHorizontalIntroActionLabel = "See our work";
+export const scrollHorizontalIntroActionLabel = "Start a project";
 
 export const scrollHorizontalMarketingItems: ScrollHorizontalItem[] = [
   { id: "project-one", label: "Project One", color: "var(--color-brand)" },

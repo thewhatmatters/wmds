@@ -1,4 +1,3 @@
-import { ArrowRight } from "lucide-react";
 import { useContext, type ReactNode } from "react";
 import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
@@ -11,7 +10,7 @@ import {
 } from "./scrollHorizontalStyles";
 
 export interface ScrollHorizontalIntroAction {
-  /** Visible label. Rendered mono uppercase. The accessible name keeps this casing. */
+  /** Visible label, sentence case. The accessible name keeps this casing. */
   label: string;
   onClick?: () => void;
   /** When set, the action is an anchor with Button chrome. */
@@ -30,14 +29,14 @@ export interface ScrollHorizontalIntroProps {
    * The heading keeps the plain sentence as its accessible name.
    */
   statement: ReactNode;
-  /** Outline action under the statement. Omit for a statement with no button. */
+  /** Secondary action under the statement. Omit for a statement with no button. */
   action?: ScrollHorizontalIntroAction;
 }
 
 /**
  * First panel of **ScrollHorizontal**. Composes **Badge** `eyebrow`, a
  * `type-display-2` **TextSequence** inside the `h2`, and **Button**
- * `role="outline"` `mono` with a trailing arrow square.
+ * `role="secondary"` with no extra className. Secondary has no icon slot.
  * The eyebrow is the section's accessible name. The statement is the `h2`.
  * The sequence runs once, when the statement scrolls into view.
  */
@@ -58,11 +57,8 @@ export function ScrollHorizontalIntro({ eyebrow, statement, action }: ScrollHori
       </div>
       {action ? (
         <Button
-          role="outline"
-          size="sm"
-          mono
+          role="secondary"
           type="button"
-          endIcon={<ArrowRight />}
           onClick={action.onClick}
           render={action.href ? <a href={action.href} /> : undefined}
         >
