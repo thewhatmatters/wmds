@@ -9,6 +9,10 @@ import { describe, expect, it, vi } from "vitest";
 import { TextSequence, sequencePlainText } from "./TextSequence";
 import { textSequenceWordBoldClasses, textSequenceWordRegularClasses } from "./textSequenceStyles";
 import { textSequenceShapeVariants } from "../../atoms/TextSequenceShape/TextSequenceShape";
+import {
+  textSequenceShapeGraphicClasses,
+  textSequenceShapeSizeClasses,
+} from "../../atoms/TextSequenceShape/textSequenceShapeStyles";
 
 const sentence = "Your brand is already online";
 
@@ -117,6 +121,26 @@ describe("TextSequence shapes", () => {
       expect(html).toContain(`data-variant="${variant}"`);
     }
     expect(html.match(/aria-hidden="true"/g)?.length).toBe(textSequenceShapeVariants.length);
+    expect(html).toContain("min-w-[14px]");
+    expect(html).toContain("var(--color-brand)");
+    for (const variant of textSequenceShapeVariants) {
+      expect(textSequenceShapeSizeClasses[variant]).toMatch(/min-w-\[(?:14|28)px\]/);
+      expect(textSequenceShapeGraphicClasses[variant]).toContain("min-h-[14px]");
+    }
+    expect(textSequenceShapeSizeClasses.pill).toContain("w-[2.2em]");
+    expect(textSequenceShapeSizeClasses["double-pill"]).toContain("w-[2.35em]");
+    expect(textSequenceShapeGraphicClasses.asterisk).toContain("h-[1.15em]");
+    expect(textSequenceShapeGraphicClasses.dots).toContain("h-[1.2em]");
+  });
+
+  it("paints brand-soft as a token gradient", () => {
+    const html = renderToStaticMarkup(
+      createElement(TextSequence.Shape, { variant: "pill", tone: "brand-soft" }),
+    );
+    expect(html).toContain("linearGradient");
+    expect(html).toContain("var(--color-brand)");
+    expect(html).toContain("var(--color-brand-soft)");
+    expect(html).not.toMatch(/#[0-9a-fA-F]{3,8}/);
   });
 });
 

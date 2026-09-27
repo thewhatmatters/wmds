@@ -34,17 +34,36 @@ export function HeroLine() {
 
 function ShapesGallery() {
   return (
-    <p className="type-large text-center text-fg">
-      <TextSequence emphasis="none" idle stagger={0.05}>
-        <TextSequence.Shape variant="asterisk" /> asterisk{" "}
-        <TextSequence.Shape variant="pill" tone="brand-soft" /> pill{" "}
-        <TextSequence.Shape variant="diamond" tone="accent" /> diamond{" "}
-        <TextSequence.Shape variant="dots" tone="primary" /> dots{" "}
-        <TextSequence.Shape variant="double-pill" /> double-pill{" "}
-        <TextSequence.Shape variant="circle" tone="info" /> circle{" "}
-        <TextSequence.Shape variant="smiley" /> smiley
-      </TextSequence>
-    </p>
+    <div className="grid w-full grid-cols-1 items-start gap-10 sm:grid-cols-2">
+      <figure className="flex flex-col items-center gap-3">
+        <p className="type-display-3 text-center text-fg">
+          <TextSequence emphasis="none" idle stagger={0.05}>
+            <TextSequence.Shape variant="asterisk" /> asterisk{" "}
+            <TextSequence.Shape variant="pill" tone="brand-soft" /> pill{" "}
+            <TextSequence.Shape variant="diamond" tone="accent" /> diamond{" "}
+            <TextSequence.Shape variant="dots" /> dots{" "}
+            <TextSequence.Shape variant="double-pill" tone="info-muted" /> double-pill{" "}
+            <TextSequence.Shape variant="circle" tone="accent" /> circle{" "}
+            <TextSequence.Shape variant="smiley" /> smiley
+          </TextSequence>
+        </p>
+        <figcaption className="type-label text-muted">Display</figcaption>
+      </figure>
+      <figure className="flex flex-col items-center gap-3">
+        <p className="type-large text-center text-fg">
+          <TextSequence emphasis="none" idle stagger={0.05}>
+            <TextSequence.Shape variant="asterisk" /> asterisk{" "}
+            <TextSequence.Shape variant="pill" tone="brand-soft" /> pill{" "}
+            <TextSequence.Shape variant="diamond" tone="accent" /> diamond{" "}
+            <TextSequence.Shape variant="dots" /> dots{" "}
+            <TextSequence.Shape variant="double-pill" tone="info-muted" /> double-pill{" "}
+            <TextSequence.Shape variant="circle" tone="accent" /> circle{" "}
+            <TextSequence.Shape variant="smiley" /> smiley
+          </TextSequence>
+        </p>
+        <figcaption className="type-label text-muted">Subtext</figcaption>
+      </figure>
+    </div>
   );
 }
 
@@ -53,17 +72,36 @@ import { TextSequence } from "@whatmatters/wmds";
 
 export function ShapeGallery() {
   return (
-    <p className="type-large text-center text-fg">
-      <TextSequence emphasis="none" idle stagger={0.05}>
-        <TextSequence.Shape variant="asterisk" /> asterisk{" "}
-        <TextSequence.Shape variant="pill" tone="brand-soft" /> pill{" "}
-        <TextSequence.Shape variant="diamond" tone="accent" /> diamond{" "}
-        <TextSequence.Shape variant="dots" tone="primary" /> dots{" "}
-        <TextSequence.Shape variant="double-pill" /> double-pill{" "}
-        <TextSequence.Shape variant="circle" tone="info" /> circle{" "}
-        <TextSequence.Shape variant="smiley" /> smiley
-      </TextSequence>
-    </p>
+    <div className="grid w-full grid-cols-1 items-start gap-10 sm:grid-cols-2">
+      <figure className="flex flex-col items-center gap-3">
+        <p className="type-display-3 text-center text-fg">
+          <TextSequence emphasis="none" idle stagger={0.05}>
+            <TextSequence.Shape variant="asterisk" /> asterisk{" "}
+            <TextSequence.Shape variant="pill" tone="brand-soft" /> pill{" "}
+            <TextSequence.Shape variant="diamond" tone="accent" /> diamond{" "}
+            <TextSequence.Shape variant="dots" /> dots{" "}
+            <TextSequence.Shape variant="double-pill" tone="info-muted" /> double-pill{" "}
+            <TextSequence.Shape variant="circle" tone="accent" /> circle{" "}
+            <TextSequence.Shape variant="smiley" /> smiley
+          </TextSequence>
+        </p>
+        <figcaption className="type-label text-muted">Display</figcaption>
+      </figure>
+      <figure className="flex flex-col items-center gap-3">
+        <p className="type-large text-center text-fg">
+          <TextSequence emphasis="none" idle stagger={0.05}>
+            <TextSequence.Shape variant="asterisk" /> asterisk{" "}
+            <TextSequence.Shape variant="pill" tone="brand-soft" /> pill{" "}
+            <TextSequence.Shape variant="diamond" tone="accent" /> diamond{" "}
+            <TextSequence.Shape variant="dots" /> dots{" "}
+            <TextSequence.Shape variant="double-pill" tone="info-muted" /> double-pill{" "}
+            <TextSequence.Shape variant="circle" tone="accent" /> circle{" "}
+            <TextSequence.Shape variant="smiley" /> smiley
+          </TextSequence>
+        </p>
+        <figcaption className="type-label text-muted">Subtext</figcaption>
+      </figure>
+    </div>
   );
 }
 `.trim();
@@ -161,8 +199,8 @@ Install \`gsap\` and \`@gsap/react\` with WMDS. Only this component imports them
 \`\`\`
 TextSequence — block, width of the parent
 ├── word — regular or bold, masked, slides up
-└── TextSequence.Shape — inline SVG, cap-height em box, aria-hidden
-    tones: brand, brand-soft, accent, primary, info
+└── TextSequence.Shape — inline SVG, about 1.15em tall (pills about 2.2em wide), 14px floor, aria-hidden
+    tones: brand, brand-soft, accent, info-muted
     variants: asterisk, pill, diamond, dots, double-pill, circle, smiley
 \`\`\`
 
@@ -223,7 +261,7 @@ export const Shapes: Story = {
       docs: {
         description: {
           story:
-            "Every mark, inline, at cap height. Tones are brand, brand-soft, accent, primary, and info. emphasis is none so the labels keep the parent weight. Each shape is aria-hidden.",
+            "Every mark, twice: type-display-3 on the left, type-large (the hero subtext step) on the right. Each column is labeled. Marks are about 1.15em tall, pills about 2.2em wide, and none paint smaller than 14px. Tones are brand, brand-soft, accent, and info-muted. emphasis is none so the labels keep the parent weight. Each shape is aria-hidden.",
         },
       },
     },
@@ -232,7 +270,12 @@ export const Shapes: Story = {
   render: () => <ShapesGallery />,
   play: async ({ canvasElement }) => {
     const shapes = expectShapesHidden(canvasElement);
-    expect(shapes.map((shape) => shape.getAttribute("data-variant"))).toEqual([...textSequenceShapeVariants]);
+    expect(shapes.map((shape) => shape.getAttribute("data-variant"))).toEqual([
+      ...textSequenceShapeVariants,
+      ...textSequenceShapeVariants,
+    ]);
+    expect(collapsedText(canvasElement)).toContain("Display");
+    expect(collapsedText(canvasElement)).toContain("Subtext");
     expect(collapsedText(canvasElement)).toContain("asterisk");
     expect(collapsedText(canvasElement)).toContain("double-pill");
     expect(collapsedText(canvasElement)).toContain("smiley");

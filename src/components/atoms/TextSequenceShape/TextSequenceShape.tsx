@@ -1,9 +1,11 @@
-import type { ReactNode, SVGProps } from "react";
+import { useId, type ReactNode, type SVGProps } from "react";
 import { cn } from "../../../lib/cn";
 import {
   textSequenceShapeBaseClasses,
+  textSequenceShapeGraphicBaseClasses,
+  textSequenceShapeGraphicClasses,
+  textSequenceShapePaints,
   textSequenceShapeSizeClasses,
-  textSequenceShapeToneClasses,
   textSequenceShapeTones,
   textSequenceShapeVariants,
   type TextSequenceShapeTone,
@@ -22,93 +24,103 @@ export type TextSequenceShapeLayoutClassName = string;
 
 export interface TextSequenceShapeProps {
   variant: TextSequenceShapeVariant;
-  /** Token fill. Default `brand` (`--color-brand`). */
+  /**
+   * Token fill. Default `brand` (`--color-brand`).
+   * `brand-soft` and `info-muted` paint a two-stop gradient between tokens.
+   */
   tone?: TextSequenceShapeTone;
   /** Layout only. */
   className?: TextSequenceShapeLayoutClassName;
 }
 
-type MarkProps = SVGProps<SVGSVGElement>;
+type MarkProps = {
+  fill: string;
+  gradient: ReactNode;
+  className?: string;
+};
 
-function Mark({ children, ...props }: MarkProps & { children: ReactNode }) {
+type ShellProps = SVGProps<SVGSVGElement> & MarkProps & { children: ReactNode };
+
+function Shell({ children, fill, gradient, className, ...props }: ShellProps) {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" focusable="false" {...props}>
+    <svg fill={fill} focusable="false" className={className} {...props}>
+      {gradient}
       {children}
     </svg>
   );
 }
 
-function AsteriskMark() {
+function AsteriskMark(props: MarkProps) {
   return (
-    <Mark>
+    <Shell {...props} viewBox="0 0 24 24">
       <path d="M11 1h2v6.2l5.2-3.6 1.1 1.7-5.4 3.2 5.4 3.2-1.1 1.7L13 12.8V21h-2v-8.2l-5.2 3.6-1.1-1.7 5.4-3.2L4.7 8.3l1.1-1.7L11 7.2V1Z" />
-    </Mark>
+    </Shell>
   );
 }
 
-function PillMark() {
+function PillMark(props: MarkProps) {
   return (
-    <Mark>
+    <Shell {...props} viewBox="0 0 48 24">
       <path
         fillRule="evenodd"
-        d="M7.2 6h9.6a6 6 0 0 1 0 12H7.2a6 6 0 0 1 0-12zM7.6 8.2h1.05v7.6H7.6zM10.7 8.2h1.05v7.6h-1.05zM13.8 8.2h1.05v7.6h-1.05zM16.9 8.2h1.05v7.6h-1.05z"
+        d="M12 2h24a10 10 0 0 1 0 20H12A10 10 0 0 1 12 2zM15.5 5.2h4.4v13.6h-4.4zM22 5.2h4.4v13.6H22zM28.5 5.2h4.4v13.6h-4.4z"
       />
-    </Mark>
+    </Shell>
   );
 }
 
-function DiamondMark() {
+function DiamondMark(props: MarkProps) {
   return (
-    <Mark>
-      <path d="M12 2.2 21.8 12 12 21.8 2.2 12 12 2.2Z" />
-    </Mark>
+    <Shell {...props} viewBox="0 0 24 24">
+      <path d="M12 1.4 22.6 12 12 22.6 1.4 12 12 1.4Z" />
+    </Shell>
   );
 }
 
-function DotsMark() {
+function DotsMark(props: MarkProps) {
   return (
-    <Mark>
-      <circle cx="12" cy="4.2" r="2.15" />
-      <circle cx="12" cy="12" r="2.15" />
-      <circle cx="12" cy="19.8" r="2.15" />
-    </Mark>
+    <Shell {...props} viewBox="0 0 16 28">
+      <circle cx="8" cy="5.2" r="4.6" />
+      <circle cx="8" cy="14" r="4.6" />
+      <circle cx="8" cy="22.8" r="4.6" />
+    </Shell>
   );
 }
 
-function DoublePillMark() {
+function DoublePillMark(props: MarkProps) {
   return (
-    <Mark>
-      <rect x="1" y="7" width="9.2" height="10" rx="5" />
-      <rect x="13.8" y="7" width="9.2" height="10" rx="5" />
-    </Mark>
+    <Shell {...props} viewBox="0 0 48 24">
+      <rect x="1.5" y="2" width="20" height="20" rx="10" />
+      <rect x="26.5" y="2" width="20" height="20" rx="10" />
+    </Shell>
   );
 }
 
-function CircleMark() {
+function CircleMark(props: MarkProps) {
   return (
-    <Mark>
-      <circle cx="12" cy="12" r="8.2" />
-    </Mark>
+    <Shell {...props} viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" />
+    </Shell>
   );
 }
 
-function SmileyMark() {
+function SmileyMark({ fill, gradient, className }: MarkProps) {
   return (
-    <Mark fill="none">
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
-      <circle cx="9" cy="10" r="1.15" fill="currentColor" />
-      <circle cx="15" cy="10" r="1.15" fill="currentColor" />
+    <Shell fill="none" gradient={gradient} className={className} viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9.2" stroke={fill} strokeWidth="2.4" />
+      <circle cx="8.8" cy="10" r="1.45" fill={fill} />
+      <circle cx="15.2" cy="10" r="1.45" fill={fill} />
       <path
-        d="M8.4 14.2c1.1 2 6.1 2 7.2 0"
-        stroke="currentColor"
-        strokeWidth="1.6"
+        d="M8.2 14.2c1.15 2.15 6.45 2.15 7.6 0"
+        stroke={fill}
+        strokeWidth="2.2"
         strokeLinecap="round"
       />
-    </Mark>
+    </Shell>
   );
 }
 
-const marks: Record<TextSequenceShapeVariant, () => ReactNode> = {
+const marks: Record<TextSequenceShapeVariant, (props: MarkProps) => ReactNode> = {
   asterisk: AsteriskMark,
   pill: PillMark,
   diamond: DiamondMark,
@@ -118,25 +130,45 @@ const marks: Record<TextSequenceShapeVariant, () => ReactNode> = {
   smiley: SmileyMark,
 };
 
+function shapePaint(tone: TextSequenceShapeTone, gradientId: string): { fill: string; gradient: ReactNode } {
+  const paint = textSequenceShapePaints[tone];
+  if ("solid" in paint) {
+    return { fill: paint.solid, gradient: null };
+  }
+  return {
+    fill: `url(#${gradientId})`,
+    gradient: (
+      <defs>
+        <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor={paint.stops[0]} />
+          <stop offset="1" stopColor={paint.stops[1]} />
+        </linearGradient>
+      </defs>
+    ),
+  };
+}
+
 /**
  * Inline decorative mark that wraps with the surrounding text.
  * Decorative — always `aria-hidden`. The sentence lives on TextSequence.
+ * The layout gap is zero-height so the line box stays the type leading.
  */
 export function TextSequenceShape({ variant, tone = "brand", className }: TextSequenceShapeProps) {
   const Glyph = marks[variant];
+  const gradientId = `text-sequence-shape-${useId().replace(/:/g, "")}`;
+  const paint = shapePaint(tone, gradientId);
   return (
     <span
       aria-hidden="true"
       data-text-sequence-shape=""
       data-variant={variant}
-      className={cn(
-        textSequenceShapeBaseClasses,
-        textSequenceShapeSizeClasses[variant],
-        textSequenceShapeToneClasses[tone],
-        className,
-      )}
+      className={cn(textSequenceShapeBaseClasses, textSequenceShapeSizeClasses[variant], className)}
     >
-      <Glyph />
+      <Glyph
+        fill={paint.fill}
+        gradient={paint.gradient}
+        className={cn(textSequenceShapeGraphicBaseClasses, textSequenceShapeGraphicClasses[variant])}
+      />
     </span>
   );
 }
