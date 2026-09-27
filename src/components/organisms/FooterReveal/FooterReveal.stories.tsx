@@ -52,7 +52,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
             ├── headline (type-display-1, centered)
             ├── Button role="inverse" type="button" (onCtaClick)
             ├── social links (underlined, https opens in a new tab)
-            └── wordmark (aria-hidden, vw clamp, cropped at the bottom edge)
+            └── wordmark (aria-hidden, spans the footer width, cropped at the bottom edge)
 \`\`\`
 
 ## Best practices
@@ -61,7 +61,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
 - Field color is **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-on-brand\`). \`--color-brand\` is \`#011272\` in both themes. White on that navy reports **15.8:1**. The wordmark uses \`--color-brand-soft\` (40% white on the navy) so it stays visible.
 - The CTA is a **Button** \`role="inverse"\` \`type="button"\` (\`onCtaClick\`). It opens a modal; there is no default route. Pass \`ctaHref\` only when the control should be a link. Do not recolor it with \`className\`.
 - Social links use **\`footerRevealFieldLinkClasses\`** at heading-1 size. \`https\` hrefs set \`target="_blank"\` and \`rel="noopener"\`. Placeholder hashes stay on the same page.
-- The wordmark is decorative (\`aria-hidden\`). It scales with the viewport and is clipped by the brand panel, so it does not widen the page.
+- The wordmark is decorative (\`aria-hidden\`). It spans the footer width: font-size is \`100cqi\` divided by the measured advance width of the word, with no breakpoint cap. The brand panel crops it at the bottom edge, so it does not widen the page.
 - Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. The brand panel and the footer field clip the wordmark.
 - Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`. The brand panel clips its own wordmark.
         `.trim(),
@@ -234,7 +234,7 @@ export const MarketingPagePattern: Story = {
       docs: {
         description: {
           story:
-            "Marketing page: **SiteNav** and `grid-page` sit in **FooterReveal.Content**. **FooterReveal.Footer** uses **footerRevealFieldClasses** (`bg-brand` / `text-on-brand`). **FooterReveal.Brand** centers the headline, an inverse CTA, and the social row, with a cropped wordmark along the bottom. Scroll until the cover ends — the footer fades, scales, and sharpens from 12px of blur across its own height. Reduced motion stays sharp. The scrollbar stays visible.",
+            "Marketing page: **SiteNav** and `grid-page` sit in **FooterReveal.Content**. **FooterReveal.Footer** uses **footerRevealFieldClasses** (`bg-brand` / `text-on-brand`). **FooterReveal.Brand** centers the headline, an inverse CTA, and the social row, with a full-width wordmark along the bottom. Scroll until the cover ends — the footer fades, scales, and sharpens from 12px of blur across its own height. Reduced motion stays sharp. The scrollbar stays visible.",
         },
       },
     },

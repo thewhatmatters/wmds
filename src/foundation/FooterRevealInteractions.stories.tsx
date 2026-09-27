@@ -135,8 +135,26 @@ export const BrandFooter: Story = {
     expect(cta?.getAttribute("data-role")).toBe("inverse");
     expect(canvasElement.querySelector("a[href='/start']")).toBeNull();
 
-    const wordmark = [...canvasElement.querySelectorAll("p")].find((node) => node.textContent === "WHATMATTERS");
+    const wordmark = canvasElement.querySelector<HTMLElement>("[data-footer-reveal='wordmark']");
+    const frame = canvasElement.querySelector<HTMLElement>("[data-footer-reveal='wordmark-frame']");
+    expect(wordmark?.textContent).toBe("WHATMATTERS");
     expect(wordmark?.getAttribute("aria-hidden")).toBe("true");
+    await waitFor(() => {
+      const frameWidth = frame?.clientWidth ?? 0;
+      const textWidth = wordmark?.scrollWidth ?? 0;
+      expect(frameWidth).toBeGreaterThan(0);
+      expect(textWidth).toBeLessThanOrEqual(frameWidth + 1);
+      expect(frameWidth - textWidth).toBeLessThanOrEqual(Math.max(8, frameWidth * 0.02));
+      const em = Number.parseFloat(frame?.style.getPropertyValue("--footer-wordmark-em") ?? "");
+      expect(em).toBeGreaterThan(1);
+      const fontSize = Number.parseFloat(getComputedStyle(wordmark!).fontSize);
+      expect(Math.abs(fontSize * em - frameWidth)).toBeLessThanOrEqual(2);
+      expect(wordmark!.offsetLeft).toBeGreaterThanOrEqual(-1);
+      expect(wordmark!.offsetLeft + wordmark!.offsetWidth).toBeLessThanOrEqual(frameWidth + 1);
+    });
+    expect(wordmark?.className).toContain("text-brand-soft");
+    expect(wordmark?.className).toContain("translate-y-[16%]");
+    expect(wordmark?.className).not.toContain("-12vw");
 
     const instagram = canvasElement.querySelector("a[href='https://www.instagram.com/thewhatmatters']");
     expect(instagram?.getAttribute("target")).toBe("_blank");
