@@ -28,6 +28,7 @@ import {
   scrollHorizontalGapCompact,
   scrollHorizontalHorizontalEnd,
   scrollHorizontalHorizontalViewports,
+  scrollHorizontalLeadFrame,
   scrollHorizontalLeadTravel,
   scrollHorizontalItemColor,
   scrollHorizontalGridMetrics,
@@ -50,7 +51,10 @@ import {
 } from "./scrollHorizontalMath";
 import {
   scrollHorizontalExpandedSectionClasses,
+  scrollHorizontalExpandFillClasses,
   scrollHorizontalExpandLayerClasses,
+  scrollHorizontalExpandedSlotClasses,
+  scrollHorizontalIntroTrackClasses,
   scrollHorizontalHeadingClasses,
   scrollHorizontalItemClasses,
   scrollHorizontalRootClasses,
@@ -61,6 +65,22 @@ import {
 } from "./scrollHorizontalStyles";
 
 const items = scrollHorizontalMarketingItems.slice(0, 3);
+
+/** `p-0` (shorthand) on the same element as `ps-` / `pl-` / `py-` lets a later `.p-0` clear the longhand. */
+function paddingShorthandMixedWithLonghand(classes: string): boolean {
+  const tokens = classes.split(/\s+/);
+  const shorthand = tokens.some((token) => /^(?:!)?p-\d/.test(token) || token === "p-0" || token === "!p-0" || token === "p-px");
+  const longhand = tokens.some((token) => /^(?:!)?p[trblxyse]-/.test(token));
+  return shorthand && longhand;
+}
+
+/** `inset-0` on the same element as `top-` / `left-` lets a later `.inset-0` reset those edges. */
+function insetShorthandMixedWithLonghand(classes: string): boolean {
+  const tokens = classes.split(/\s+/);
+  const shorthand = tokens.some((token) => token === "inset-0" || token.startsWith("inset-") || token.startsWith("!inset-"));
+  const longhand = tokens.some((token) => /^(?:top|right|bottom|left)-/.test(token));
+  return shorthand && longhand;
+}
 
 function installMatchMedia(reduced: boolean) {
   const previous = window.matchMedia.bind(window);
@@ -157,7 +177,26 @@ describe("scrollHorizontalShell", () => {
     expect(scrollHorizontalRootExpandClasses).toContain("h-[400svh]");
     expect(scrollHorizontalRootExpandClasses).toContain("shrink-0");
     expect(scrollHorizontalRootExpandClasses).toContain("motion-reduce:!h-auto");
-    expect(scrollHorizontalExpandLayerClasses).toContain("inset-0");
+    expect(scrollHorizontalExpandLayerClasses).not.toContain("inset-0");
+    expect(scrollHorizontalExpandFillClasses).toBe("absolute top-0 right-0 bottom-0 left-0");
+    expect(scrollHorizontalExpandLayerClasses).toContain("top-0");
+    expect(scrollHorizontalExpandLayerClasses).toContain("right-0");
+    expect(scrollHorizontalExpandLayerClasses).toContain("bottom-0");
+    expect(scrollHorizontalExpandLayerClasses).toContain("left-0");
+    expect(scrollHorizontalExpandedSlotClasses).not.toContain("inset-0");
+    expect(scrollHorizontalIntroTrackClasses).not.toMatch(/(?:^|\s)!?p-0(?:\s|$)/);
+    expect(scrollHorizontalIntroTrackClasses).not.toContain("pl-[");
+    expect(scrollHorizontalIntroTrackClasses).not.toContain("!ps-");
+    expect(scrollHorizontalIntroTrackClasses).toContain("py-0");
+    expect(scrollHorizontalIntroTrackClasses).toContain("pe-0");
+    expect(scrollHorizontalIntroTrackClasses).toContain(
+      "ps-[max(var(--grid-margin),calc((100%-var(--grid-max))/2+var(--grid-margin)))]",
+    );
+    expect(paddingShorthandMixedWithLonghand(scrollHorizontalIntroTrackClasses)).toBe(false);
+    expect(paddingShorthandMixedWithLonghand(scrollHorizontalRowClasses)).toBe(false);
+    expect(insetShorthandMixedWithLonghand(scrollHorizontalExpandLayerClasses)).toBe(false);
+    expect(insetShorthandMixedWithLonghand(scrollHorizontalExpandedSlotClasses)).toBe(false);
+    expect(insetShorthandMixedWithLonghand(scrollHorizontalExpandedSectionClasses)).toBe(false);
     expect(scrollHorizontalExpandLayerClasses).toContain("will-change-[clip-path]");
     expect(scrollHorizontalExpandLayerClasses).toContain("motion-reduce:!hidden");
     expect(scrollHorizontalExpandedSectionClasses).toContain("h-svh");
@@ -620,6 +659,21 @@ describe("scrollHorizontal intro", () => {
     const parked = scrollHorizontalExpandClipRect(1, 0, frame, 5);
     expect(parked.left).toBeCloseTo(endLeft);
     const filled = scrollHorizontalExpandClipRect(1, 1, frame, 5);
+    expect(scrollHorizontalClipFillsViewport(filled, 1440, 900)).toBe(true);
+  });
+
+  it("grows from the measured last card even when the first card is not on the old centered pitch", () => {
+    const nominal = scrollHorizontalNominalExpandMetrics(1440, 900);
+    const introOffset = 604;
+    const lastRest = nominal.cardLeft + introOffset + 4 * nominal.pitch;
+    const lead = scrollHorizontalLeadFrame(nominal, lastRest, 5);
+    expect(lead.distance).toBeGreaterThan(scrollHorizontalDistance(5, nominal.cardWidth, 32));
+    expect(lead.frame.endLeft).toBeCloseTo((1440 - 400) / 2);
+    const parked = scrollHorizontalExpandClipRect(1, 0, lead.frame, 5);
+    expect(parked.left).toBeCloseTo(lead.frame.endLeft ?? 0);
+    expect(parked.right).toBeCloseTo(1440 - (lead.frame.endLeft ?? 0) - 400);
+    const filled = scrollHorizontalExpandClipRect(1, 1, lead.frame, 5);
+    expect(filled).toEqual({ top: 0, right: 0, bottom: 0, left: 0, radius: 0 });
     expect(scrollHorizontalClipFillsViewport(filled, 1440, 900)).toBe(true);
   });
 

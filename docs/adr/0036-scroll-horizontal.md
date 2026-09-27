@@ -77,6 +77,14 @@ The gallery statement animates with **TextSequence** (ADR-0037).
 - The action is **Button** `role="secondary"`, label Start a project, sentence case, with no `className`. Secondary has no icon slot, so there is no trailing arrow.
 - **Pattern — gallery intro**, **HeroTileStack → Marketing hero with gallery intro**, **FooterReveal → Marketing hero with gallery intro**, and **FooterReveal → Pattern — marketing hero with sequenced gallery** use this copy and this action.
 
+## Update — expand with an intro, cascade-safe padding
+
+**Date:** 2026-09-27
+
+- With `intro`, travel and the grow read the **last card's** rest left (track translate removed) and the **card row's** gap. The clip parks that rect on the sticky center, then reaches `inset(0)`. The layer box is the sticky `h-svh` window — the same edge-to-edge tile as a gallery with no intro.
+- The intro track does not use a padding shorthand. Inline start, inline end, and block padding are longhands (`ps` / `pe` / `py`). A consuming app's later `.p-0 { padding: 0 }` cannot clear the grid inset.
+- The expand layer, the expanded slot, and the reduced-motion slot fill the sticky window with `top-0 right-0 bottom-0 left-0`. They do not use the `inset` shorthand.
+
 ## Non-goals
 
 - Motion+.

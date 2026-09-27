@@ -311,6 +311,74 @@ function expectEdgesMeet(a: number, b: number) {
   expect(Math.abs(a - b)).toBeLessThanOrEqual(1);
 }
 
+function clipInsets(clip: string): number[] {
+  const match = /inset\(([^)]+)\)/.exec(clip);
+  if (!match?.[1]) return [Number.POSITIVE_INFINITY];
+  const body = match[1].replace(/round[\s\S]*$/, "").trim();
+  const parts = body.split(/\s+/).map((part) => Number.parseFloat(part));
+  if (parts.length === 1 && Number.isFinite(parts[0])) return [parts[0], parts[0], parts[0], parts[0]];
+  return parts;
+}
+
+/** Last tile at the end of `expandLast`: the sticky window, no neighbors, then a flush footer. */
+async function expectLastTileFillsViewport(canvasElement: HTMLElement) {
+  const section = canvasElement.querySelector("[data-scroll-horizontal]");
+  if (!(section instanceof HTMLElement)) throw new Error("gallery missing");
+  expect(section.getAttribute("data-expand-last")).toBe("true");
+  expect(section.getAttribute("data-has-intro")).toBe("true");
+  const track = section.querySelector("[data-scroll-horizontal-track]");
+  if (!(track instanceof HTMLElement)) throw new Error("intro track missing");
+  expect(track.className).not.toMatch(/(?:^|\s)p-0(?:\s|$)/);
+  expect(track.className).not.toContain("pl-[");
+  expect(track.className).toContain("ps-[");
+
+  const sticky = section.firstElementChild;
+  if (!(sticky instanceof HTMLElement)) throw new Error("sticky missing");
+  const footer = canvasElement.querySelector("[data-footer-reveal='sticky']");
+  if (!(footer instanceof HTMLElement)) throw new Error("footer missing");
+  const footerTop = stickyFooterInFlowTop(footer);
+  expect(footerTop).not.toBeNull();
+  expectEdgesMeet(footerTop ?? 0, documentBottom(section));
+
+  const endOfGrow =
+    section.getBoundingClientRect().top + window.scrollY + section.offsetHeight - window.innerHeight;
+  window.scrollTo(0, Math.max(0, endOfGrow));
+  window.dispatchEvent(new Event("scroll"));
+
+  await waitFor(() => {
+    const layer = [...section.querySelectorAll("[data-scroll-horizontal-expanded]")].find(
+      (host) => host instanceof HTMLElement && getComputedStyle(host).position === "absolute",
+    );
+    if (!(layer instanceof HTMLElement)) throw new Error("expand layer missing");
+    expect(layer.className).not.toContain("inset-0");
+    expect(layer.className).toContain("top-0");
+    expect(layer.className).toContain("left-0");
+    const insets = clipInsets(getComputedStyle(layer).clipPath);
+    expect(insets.length).toBeGreaterThan(0);
+    for (const inset of insets) expect(inset).toBeLessThanOrEqual(1);
+
+    const layerRect = layer.getBoundingClientRect();
+    const stickyRect = sticky.getBoundingClientRect();
+    const sectionRect = section.getBoundingClientRect();
+    expectEdgesMeet(layerRect.left, stickyRect.left);
+    expectEdgesMeet(layerRect.top, stickyRect.top);
+    expectEdgesMeet(layerRect.right, stickyRect.right);
+    expectEdgesMeet(layerRect.bottom, stickyRect.bottom);
+    expectEdgesMeet(layerRect.bottom, sectionRect.bottom);
+    expectEdgesMeet(layerRect.height, window.innerHeight);
+    expectEdgesMeet(stickyRect.height, window.innerHeight);
+    expectEdgesMeet(layerRect.width, sectionRect.width);
+    expect(layerRect.width).toBeGreaterThan(window.innerWidth * 0.9);
+
+    const peers = [...section.querySelectorAll("li")].slice(0, -1);
+    expect(peers.length).toBeGreaterThan(0);
+    for (const peer of peers) {
+      expect(Number.parseFloat(getComputedStyle(peer).opacity)).toBeLessThanOrEqual(0.05);
+    }
+  });
+  expectEdgesMeet(footerTop ?? 0, documentBottom(section));
+}
+
 export const MarketingHeroWithGalleryIntro: Story = {
   name: "Marketing hero with gallery intro",
   tags: ["test"],
@@ -330,37 +398,65 @@ export const MarketingHeroWithGalleryIntro: Story = {
   play: async ({ canvasElement }) => {
     const section = canvasElement.querySelector("[data-scroll-horizontal]");
     if (!(section instanceof HTMLElement)) throw new Error("gallery missing");
-    expect(section.getAttribute("data-expand-last")).toBe("true");
-    expect(section.getAttribute("data-has-intro")).toBe("true");
     const track = section.querySelector("[data-scroll-horizontal-track]");
     const intro = section.querySelector("[data-scroll-horizontal-intro]");
     expect(track?.firstElementChild).toBe(intro);
     expect(section.querySelector("[data-pattern='eyebrow']")?.textContent).toBe("SELECTED WORK");
-
-    const footer = canvasElement.querySelector("[data-footer-reveal='sticky']");
-    if (!(footer instanceof HTMLElement)) throw new Error("footer missing");
-    const footerTop = stickyFooterInFlowTop(footer);
-    expect(footerTop).not.toBeNull();
-    expectEdgesMeet(footerTop ?? 0, documentBottom(section));
-
-    const endOfGrow =
-      section.getBoundingClientRect().top + window.scrollY + section.offsetHeight - window.innerHeight;
-    window.scrollTo(0, Math.max(0, endOfGrow));
-    window.dispatchEvent(new Event("scroll"));
-
-    await waitFor(() => {
-      const layer = [...section.querySelectorAll("[data-scroll-horizontal-expanded]")].find(
-        (host) => host instanceof HTMLElement && getComputedStyle(host).position === "absolute",
-      );
-      if (!(layer instanceof HTMLElement)) throw new Error("expand layer missing");
-      const clip = getComputedStyle(layer).clipPath;
-      const match = /inset\(([^)]+)\)/.exec(clip);
-      expect(match).toBeTruthy();
-      const parts = (match?.[1] ?? "").replace(/round[\s\S]*$/, "").trim().split(/\s+/).map((part) => Number.parseFloat(part));
-      expect(parts.length).toBeGreaterThan(0);
-      for (const inset of parts) expect(inset).toBeLessThanOrEqual(1);
-      expectEdgesMeet(layer.getBoundingClientRect().bottom, section.getBoundingClientRect().bottom);
-    });
-    expectEdgesMeet(footerTop ?? 0, documentBottom(section));
+    await expectLastTileFillsViewport(canvasElement);
   },
 };
+
+const expandViewportOptions = {
+  review390: {
+    name: "Review 390",
+    styles: { width: "390px", height: "844px" },
+    type: "mobile" as const,
+  },
+  review1024: {
+    name: "Review 1024",
+    styles: { width: "1024px", height: "768px" },
+    type: "tablet" as const,
+  },
+  review1440: {
+    name: "Review 1440",
+    styles: { width: "1440px", height: "900px" },
+    type: "desktop" as const,
+  },
+  review1920: {
+    name: "Review 1920",
+    styles: { width: "1920px", height: "1080px" },
+    type: "desktop" as const,
+  },
+  review2560: {
+    name: "Review 2560",
+    styles: { width: "2560px", height: "1440px" },
+    type: "desktop" as const,
+  },
+};
+
+function expandViewportStory(id: keyof typeof expandViewportOptions, minWidth: number, maxWidth: number): Story {
+  return {
+    name: `Handoff — intro expand at ${id.replace("review", "")}`,
+    tags: ["test", "!dev", "!autodocs"],
+    globals: {
+      viewport: { value: id, isRotated: false },
+    },
+    parameters: {
+      wmdsLayout: "fullscreen",
+      docs: { disable: true },
+      viewport: { options: expandViewportOptions },
+    },
+    render: () => <GalleryIntroHeroPage />,
+    play: async ({ canvasElement }) => {
+      expect(window.innerWidth).toBeGreaterThanOrEqual(minWidth);
+      expect(window.innerWidth).toBeLessThanOrEqual(maxWidth);
+      await expectLastTileFillsViewport(canvasElement);
+    },
+  };
+}
+
+export const IntroExpandAt390: Story = expandViewportStory("review390", 390, 400);
+export const IntroExpandAt1024: Story = expandViewportStory("review1024", 1024, 1040);
+export const IntroExpandAt1440: Story = expandViewportStory("review1440", 1440, 1455);
+export const IntroExpandAt1920: Story = expandViewportStory("review1920", 1920, 1935);
+export const IntroExpandAt2560: Story = expandViewportStory("review2560", 2560, 2575);
