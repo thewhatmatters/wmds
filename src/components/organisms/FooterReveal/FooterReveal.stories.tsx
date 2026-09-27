@@ -296,7 +296,9 @@ export function MarketingHeroPage() {
               {[
                 <span key="lead" className="relative inline-block whitespace-nowrap">{[
                   <span key="gap" className="absolute inset-y-0 right-0 w-0">{[
-                    <RiveHand key="rock" hand="rock" size="2.2em" active={handsActive} className="absolute z-10 -right-[0.94em] -top-[0.17em] max-md:!h-[1.7em] max-md:!w-[1.7em] md:-right-[1.07em] md:-top-[0.54em]" />,
+                    <span key="clip" className="absolute z-10 overflow-clip -right-[0.94em] -top-[0.17em] bottom-[0.22em] w-[1.7em] md:-right-[1.07em] md:-top-[0.54em] md:w-[2.2em]">{[
+                      <RiveHand key="rock" hand="rock" size="2.2em" active={handsActive} idle entrance="slide-up" className="absolute top-0 max-md:!h-[1.7em] max-md:!w-[1.7em]" />,
+                    ]}</span>,
                   ]}</span>,
                   "We Ar",
                   <span key="e" className="relative z-20">e</span>,
@@ -307,7 +309,7 @@ export function MarketingHeroPage() {
                   "hatMatter",
                   <span key="s" className="relative">{[
                     "s",
-                    <RiveHand key="point" hand="point" size="2.2em" active={handsActive} className="absolute z-10 -right-[1.2em] -top-[0.4em] max-md:!h-[1.7em] max-md:!w-[1.7em] md:-right-[1.53em] md:-top-[0.7em]" />,
+                    <RiveHand key="point" hand="point" size="2.2em" active={handsActive} idle entrance="grow" className="absolute z-10 -right-[1.2em] -top-[0.4em] max-md:!h-[1.7em] max-md:!w-[1.7em] md:-right-[1.53em] md:-top-[0.7em]" />,
                   ]}</span>,
                 ]}</span>,
               ]}
@@ -378,7 +380,9 @@ function MarketingHeroPage() {
               {[
                 <span key="lead" className="relative inline-block whitespace-nowrap">{[
                   <span key="gap" className="absolute inset-y-0 right-0 w-0">{[
-                    <RiveHand key="rock" hand="rock" size="2.2em" active={handsActive} className="absolute z-10 -right-[0.94em] -top-[0.17em] max-md:!h-[1.7em] max-md:!w-[1.7em] md:-right-[1.07em] md:-top-[0.54em]" />,
+                    <span key="clip" className="absolute z-10 overflow-clip -right-[0.94em] -top-[0.17em] bottom-[0.22em] w-[1.7em] md:-right-[1.07em] md:-top-[0.54em] md:w-[2.2em]">{[
+                      <RiveHand key="rock" hand="rock" size="2.2em" active={handsActive} idle entrance="slide-up" className="absolute top-0 max-md:!h-[1.7em] max-md:!w-[1.7em]" />,
+                    ]}</span>,
                   ]}</span>,
                   "We Ar",
                   <span key="e" className="relative z-20">e</span>,
@@ -389,7 +393,7 @@ function MarketingHeroPage() {
                   "hatMatter",
                   <span key="s" className="relative">{[
                     "s",
-                    <RiveHand key="point" hand="point" size="2.2em" active={handsActive} className="absolute z-10 -right-[1.2em] -top-[0.4em] max-md:!h-[1.7em] max-md:!w-[1.7em] md:-right-[1.53em] md:-top-[0.7em]" />,
+                    <RiveHand key="point" hand="point" size="2.2em" active={handsActive} idle entrance="grow" className="absolute z-10 -right-[1.2em] -top-[0.4em] max-md:!h-[1.7em] max-md:!w-[1.7em] md:-right-[1.53em] md:-top-[0.7em]" />,
                   ]}</span>,
                 ]}</span>,
               ]}
