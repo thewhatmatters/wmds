@@ -269,11 +269,11 @@ const tiles = [
 ];
 
 const projects = [
-  { id: "project-one", label: "Project One", image: "/scroll-horizontal/project-one.svg" },
-  { id: "project-two", label: "Project Two", image: "/scroll-horizontal/project-two.svg" },
-  { id: "project-three", label: "Project Three", image: "/scroll-horizontal/project-three.svg" },
-  { id: "project-four", label: "Project Four", image: "/scroll-horizontal/project-four.svg" },
-  { id: "project-five", label: "Project Five", image: "/scroll-horizontal/project-five.svg" },
+  { id: "project-one", label: "Project One", color: "var(--color-brand)" },
+  { id: "project-two", label: "Project Two", color: "var(--color-brand-soft)" },
+  { id: "project-three", label: "Project Three", color: "var(--color-primary)" },
+  { id: "project-four", label: "Project Four", color: "var(--color-info-muted)" },
+  { id: "project-five", label: "Project Five", color: "var(--color-accent)" },
 ];
 
 // Opens the multi-step project form. There is no /start route.
@@ -472,7 +472,7 @@ export const MarketingHeroPattern: Story = {
       docs: {
         description: {
           story:
-            "The marketing hero (SiteNav, headline, intro, tile fan) fills **FooterReveal.Content**, then **ScrollHorizontal** (Selected work), then the page grid. **FooterReveal.Brand** is the sticky footer underneath. Scroll past the hero — the gallery translates from the first card centered to the last, then the brand field fades in from about 12px of blur. Reduced motion keeps the gallery as a native horizontal scroller and shows the footer sharp.",
+            "The marketing hero (SiteNav, headline, intro, tile fan) fills **FooterReveal.Content**, then **ScrollHorizontal** (Selected work — solid token-color placeholders), then the page grid. **FooterReveal.Brand** is the sticky footer underneath. Scroll past the hero — the gallery translates from the first card centered to the last, then the brand field fades in from about 12px of blur. Reduced motion keeps the gallery as a native horizontal scroller and shows the footer sharp.",
         },
       },
     },

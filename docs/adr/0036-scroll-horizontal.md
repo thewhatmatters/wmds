@@ -13,13 +13,12 @@ The card geometry in the reference is 400×500 with a 12px radius and a 30px gap
 
 Ship **ScrollHorizontal** as an organism under **Components/Layout**:
 
-- `items`: `{ id, label, image, color? }[]`. `image` is decorative (`alt=""`). The label is an `h3`.
+- `items`: `{ id, label, color? }[]`. Each card is a solid fill. `label` is the accessible name (`sr-only`), not visible copy. `color` is a CSS color; pass a semantic token (`var(--color-*)`). Omit `color` to cycle `--color-brand`, `--color-brand-soft`, `--color-primary`, `--color-info-muted`, and `--color-accent`.
 - `heading`: optional slot, pinned over the row. `className` is layout only, on the root.
-- The root is a `300svh` track. `useScroll({ target, offset: ['start start', 'end end'] })` drives `useTransform`. A sticky `h-svh` viewport clips the inline axis. Inside it, a centered window is one card wide (400px, 280px below `sm`), so progress 0 shows the first card centered.
+- The root is a `300svh` track (`shrink-0`, so a flex parent does not collapse it). `useScroll({ target, offset: ['start start', 'end end'] })` drives `useTransform`. A sticky `h-svh` viewport clips the inline axis. Inside it, a centered window is one card wide (400px, 280px below `sm`), so progress 0 shows the first card centered.
 - Travel is `(items.length - 1) * (itemWidth + gap)` via `scrollHorizontalDistance`. A layout effect measures the first card and the row's `column-gap`. Until that measurement is non-zero, the pitch falls back to `scrollHorizontalNominalMetrics(viewportWidth)`.
-- From `sm`: 400×500, `gap-8`. Below `sm`: 280×350, `gap-4`. Radius `rounded-xl`. Copy sits bottom-left (`bottom-8 left-8`, 32px). The number is `type-code` (14px) in the item color. The label uses `--font-size-3xl` (29px, nearest geometric step to 28px) at semibold, in `text-on-brand`.
-- A bottom gradient (`from-transparent from-60%` to the item color) uses `mix-blend-multiply` inside `isolate`, so it tints the image and not the page. The number and label sit above it.
-- Omitted `color` cycles `--color-brand` (`#011272`) and `--color-chart-categorical-1`, `2`, `4`, and `5`.
+- From `sm`: 400×500, `gap-8`. Below `sm`: 280×350, `gap-4`. Radius `rounded-xl`. The fill is `background-color: var(--scroll-horizontal-color)`.
+- The five marketing placeholders set that cycle explicitly: brand navy (`#011272`, `--color-brand`), `--color-brand-soft`, `--color-primary`, `--color-info-muted`, and `--color-accent`.
 - `scrollHorizontalShell(true)` is the reduced branch: container height `auto`, not sticky, `overflow-x: auto`, translate 0. Tailwind `motion-reduce:` applies that shell for the OS preference without a server/client markup split. `data-reduce="true"` repeats it for `MotionConfig` `reducedMotion="always"`. Vertical padding is `py-12` (48px, nearest baseline step to 50px). The scroller uses `scroll-fade-x`.
 - SSR and hydration render `data-reduce="false"`. `useState` starts at false. `useLayoutEffect` reads `matchMedia` and updates before paint, the same order **RiveHand** uses so the entrance pose does not hydrate into a different transform. `scrollHorizontalTranslateX(..., true)` is 0.
 
@@ -31,10 +30,11 @@ Ship **ScrollHorizontal** as an organism under **Components/Layout**:
 - A paged **Carousel**, drag snap, or autoplay.
 - New color or radius tokens.
 - Click targets on the cards.
+- Card photography, visible captions, and a bottom gradient. Tiles are placeholders.
 
 ## Consequences
 
-Consuming apps paste **Components/Layout/ScrollHorizontal → Pattern — project gallery**. **Components/Layout/HeroTileStack → Pattern — marketing hero** and **Components/Layout/FooterReveal → Pattern — marketing hero** place the gallery directly under the hero, then the rest of the page. Five local posters live in `public/scroll-horizontal/`. **SiteNav** is unchanged.
+Consuming apps paste **Components/Layout/ScrollHorizontal → Pattern — project gallery**. **Components/Layout/HeroTileStack → Pattern — marketing hero** and **Components/Layout/FooterReveal → Pattern — marketing hero** place the gallery directly under the hero, then the rest of the page. The five tiles are solid token-color placeholders. **SiteNav** is unchanged.
 
 ## References
 

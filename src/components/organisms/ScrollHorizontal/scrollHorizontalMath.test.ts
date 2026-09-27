@@ -1,4 +1,6 @@
 /** @vitest-environment happy-dom */
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { createElement } from "react";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
@@ -13,7 +15,6 @@ import {
   scrollHorizontalGap,
   scrollHorizontalGapCompact,
   scrollHorizontalItemColor,
-  scrollHorizontalItemNumber,
   scrollHorizontalItemWidth,
   scrollHorizontalItemWidthCompact,
   scrollHorizontalNominalMetrics,
@@ -121,6 +122,7 @@ describe("scrollHorizontalShell", () => {
       translate: false,
     });
     expect(scrollHorizontalRootClasses).toContain("h-[300svh]");
+    expect(scrollHorizontalRootClasses).toContain("shrink-0");
     expect(scrollHorizontalRootClasses).toContain("motion-reduce:!h-auto");
     expect(scrollHorizontalRootClasses).toContain("data-[reduce=true]:!h-auto");
     expect(scrollHorizontalStickyClasses).toContain("sticky");
@@ -199,14 +201,45 @@ describe("scrollHorizontalReadMetrics", () => {
 });
 
 describe("scrollHorizontal item chrome", () => {
-  it("pads the index and falls back to brand and chart tokens", () => {
-    expect(scrollHorizontalItemNumber(0)).toBe("01");
-    expect(scrollHorizontalItemNumber(4)).toBe("05");
-    expect(scrollHorizontalItemNumber(9)).toBe("10");
+  it("falls back to the placeholder token cycle", () => {
     expect(scrollHorizontalItemColor(undefined, 0)).toBe("var(--color-brand)");
     expect(scrollHorizontalItemColor("  ", 1)).toBe(scrollHorizontalDefaultColors[1]);
-    expect(scrollHorizontalItemColor("#112233", 0)).toBe("#112233");
+    expect(scrollHorizontalItemColor("var(--color-primary)", 0)).toBe("var(--color-primary)");
     expect(scrollHorizontalItemColor(undefined, 5)).toBe(scrollHorizontalDefaultColors[0]);
+    expect(scrollHorizontalDefaultColors).toEqual([
+      "var(--color-brand)",
+      "var(--color-brand-soft)",
+      "var(--color-primary)",
+      "var(--color-info-muted)",
+      "var(--color-accent)",
+    ]);
+  });
+
+  it("renders the marketing gallery as solid labeled placeholders", () => {
+    expect(scrollHorizontalMarketingItems.map((item) => item.color)).toEqual([
+      ...scrollHorizontalDefaultColors,
+    ]);
+    expect(new Set(scrollHorizontalMarketingItems.map((item) => item.color)).size).toBe(5);
+    expect(scrollHorizontalMarketingItems.every((item) => !("image" in item))).toBe(true);
+    expect(scrollHorizontalItemClasses).toContain("bg-[var(--scroll-horizontal-color)]");
+    expect(scrollHorizontalItemClasses).not.toMatch(/gradient|mix-blend|object-cover/);
+  });
+
+  it("keeps pattern show code on the same placeholder items", () => {
+    const files = [
+      "src/components/organisms/ScrollHorizontal/ScrollHorizontal.stories.tsx",
+      "src/components/organisms/HeroTileStack/HeroTileStack.stories.tsx",
+      "src/components/organisms/FooterReveal/FooterReveal.stories.tsx",
+    ];
+    for (const file of files) {
+      const source = readFileSync(join(process.cwd(), file), "utf8");
+      for (const item of scrollHorizontalMarketingItems) {
+        expect(source).toContain(
+          `{ id: "${item.id}", label: "${item.label}", color: "${item.color}" }`,
+        );
+      }
+      expect(source).not.toContain("/scroll-horizontal/");
+    }
   });
 });
 
@@ -221,10 +254,12 @@ describe("ScrollHorizontal reduced-motion branch", () => {
     const section = view.container.querySelector("[data-scroll-horizontal]");
     expect(section?.getAttribute("data-reduce")).toBe("false");
     expect(view.container.querySelectorAll("li")).toHaveLength(3);
-    expect(view.container.querySelector("h3")?.textContent).toBe("Project One");
-    expect(view.container.querySelector("span")?.textContent).toBe("01");
+    expect(view.container.querySelector("img")).toBeNull();
+    expect(view.container.querySelector("h3")).toBeNull();
+    expect(view.container.querySelector(".sr-only")?.textContent).toBe("Project One");
     const card = view.container.querySelector("li");
     expect(card?.getAttribute("style")).toContain("var(--color-brand)");
+    expect(card?.className ?? "").not.toMatch(/gradient|mix-blend/);
     view.unmount();
     restore();
   });

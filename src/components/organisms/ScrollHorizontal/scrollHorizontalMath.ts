@@ -32,13 +32,16 @@ export const scrollHorizontalRadiusUtility = "rounded-xl";
 /** Vertical padding on the reduced-motion scroller. `py-12` is 48px, nearest baseline step to 50px. */
 export const scrollHorizontalReducedPaddingUtility = "py-12";
 
-/** Default item tints. Brand navy, then chart categorical tokens. Not hue variables. */
+/**
+ * Placeholder fills. Brand navy, muted brand, neutral slate, muted info, and accent.
+ * Existing semantic tokens only — not raw hues.
+ */
 export const scrollHorizontalDefaultColors = [
   "var(--color-brand)",
-  "var(--color-chart-categorical-1)",
-  "var(--color-chart-categorical-2)",
-  "var(--color-chart-categorical-4)",
-  "var(--color-chart-categorical-5)",
+  "var(--color-brand-soft)",
+  "var(--color-primary)",
+  "var(--color-info-muted)",
+  "var(--color-accent)",
 ] as const;
 
 export interface ScrollHorizontalShell {
@@ -47,13 +50,6 @@ export interface ScrollHorizontalShell {
   sticky: boolean;
   overflowX: "clip" | "auto";
   translate: boolean;
-}
-
-export function scrollHorizontalItemNumber(index: number): string {
-  const value = index + 1;
-  if (!Number.isFinite(value) || value < 1) return "00";
-  if (value >= 100) return String(Math.floor(value));
-  return String(Math.floor(value)).padStart(2, "0");
 }
 
 export function scrollHorizontalItemColor(color: string | undefined, index: number): string {

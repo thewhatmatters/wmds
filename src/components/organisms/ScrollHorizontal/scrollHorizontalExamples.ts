@@ -1,10 +1,13 @@
 import type { ScrollHorizontalItem } from "./ScrollHorizontal";
 
-/** Five local posters for the marketing gallery. No remote images. */
+/**
+ * Five solid placeholders for the marketing gallery.
+ * Colors are the default palette, spelled out so Show code can paste them.
+ */
 export const scrollHorizontalMarketingItems: ScrollHorizontalItem[] = [
-  { id: "project-one", label: "Project One", image: "/scroll-horizontal/project-one.svg" },
-  { id: "project-two", label: "Project Two", image: "/scroll-horizontal/project-two.svg" },
-  { id: "project-three", label: "Project Three", image: "/scroll-horizontal/project-three.svg" },
-  { id: "project-four", label: "Project Four", image: "/scroll-horizontal/project-four.svg" },
-  { id: "project-five", label: "Project Five", image: "/scroll-horizontal/project-five.svg" },
+  { id: "project-one", label: "Project One", color: "var(--color-brand)" },
+  { id: "project-two", label: "Project Two", color: "var(--color-brand-soft)" },
+  { id: "project-three", label: "Project Three", color: "var(--color-primary)" },
+  { id: "project-four", label: "Project Four", color: "var(--color-info-muted)" },
+  { id: "project-five", label: "Project Five", color: "var(--color-accent)" },
 ];
