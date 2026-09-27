@@ -1,7 +1,7 @@
 /**
  * ScrollHorizontal shell.
  *
- * Motion: a 300svh track, a sticky svh viewport that clips inline overflow,
+ * Motion: a 300svh track (`shrink-0` so a flex parent keeps that height), a sticky svh viewport that clips inline overflow,
  * and a centered window one card wide. The row starts with the first card
  * filling that window.
  *
@@ -14,7 +14,7 @@
  */
 
 export const scrollHorizontalRootClasses = [
-  "group/scroll-horizontal relative h-[300svh] w-full max-w-full",
+  "group/scroll-horizontal relative h-[300svh] w-full max-w-full shrink-0",
   "motion-reduce:!h-auto data-[reduce=true]:!h-auto",
 ].join(" ");
 

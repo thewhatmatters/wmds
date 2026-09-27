@@ -122,6 +122,7 @@ describe("scrollHorizontalShell", () => {
       translate: false,
     });
     expect(scrollHorizontalRootClasses).toContain("h-[300svh]");
+    expect(scrollHorizontalRootClasses).toContain("shrink-0");
     expect(scrollHorizontalRootClasses).toContain("motion-reduce:!h-auto");
     expect(scrollHorizontalRootClasses).toContain("data-[reduce=true]:!h-auto");
     expect(scrollHorizontalStickyClasses).toContain("sticky");

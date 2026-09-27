@@ -15,7 +15,7 @@ Ship **ScrollHorizontal** as an organism under **Components/Layout**:
 
 - `items`: `{ id, label, color? }[]`. Each card is a solid fill. `label` is the accessible name (`sr-only`), not visible copy. `color` is a CSS color; pass a semantic token (`var(--color-*)`). Omit `color` to cycle `--color-brand`, `--color-brand-soft`, `--color-primary`, `--color-info-muted`, and `--color-accent`.
 - `heading`: optional slot, pinned over the row. `className` is layout only, on the root.
-- The root is a `300svh` track. `useScroll({ target, offset: ['start start', 'end end'] })` drives `useTransform`. A sticky `h-svh` viewport clips the inline axis. Inside it, a centered window is one card wide (400px, 280px below `sm`), so progress 0 shows the first card centered.
+- The root is a `300svh` track (`shrink-0`, so a flex parent does not collapse it). `useScroll({ target, offset: ['start start', 'end end'] })` drives `useTransform`. A sticky `h-svh` viewport clips the inline axis. Inside it, a centered window is one card wide (400px, 280px below `sm`), so progress 0 shows the first card centered.
 - Travel is `(items.length - 1) * (itemWidth + gap)` via `scrollHorizontalDistance`. A layout effect measures the first card and the row's `column-gap`. Until that measurement is non-zero, the pitch falls back to `scrollHorizontalNominalMetrics(viewportWidth)`.
 - From `sm`: 400×500, `gap-8`. Below `sm`: 280×350, `gap-4`. Radius `rounded-xl`. The fill is `background-color: var(--scroll-horizontal-color)`.
 - The five marketing placeholders set that cycle explicitly: brand navy (`#011272`, `--color-brand`), `--color-brand-soft`, `--color-primary`, `--color-info-muted`, and `--color-accent`.
