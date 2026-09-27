@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sparkles } from "lucide-react";
+import { MotionConfig } from "motion/react";
 import { useState } from "react";
 import { expect, fn, waitFor } from "storybook/test";
 import { Badge } from "../../atoms/Badge/Badge";
@@ -64,6 +65,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
 - The wordmark is decorative (\`aria-hidden\`). It spans the footer width: font-size is \`100cqi\` divided by the measured advance width of the word, with no breakpoint cap. The brand panel crops it at the bottom edge, so it does not widen the page.
 - Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. The brand panel and the footer field clip the wordmark.
 - Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`. The brand panel clips its own wordmark.
+- When **ScrollHorizontal** \`expandLast\` is the last section in the cover, the guide \`grid-page\` after it uses \`!py-0\`. Default \`grid-page\` block padding is \`--grid-pad\` (24px top and bottom). On a guide-only host that padding is a page-background strip between the full-bleed tile and the footer. The reduced-motion \`h-svh\` section meets the footer the same way.
         `.trim(),
       },
     },
@@ -355,7 +357,7 @@ export function MarketingHeroPage() {
           heading={<h2 className="type-heading-2 text-fg">Selected work</h2>}
           expandLast
         />
-        <main className="grid-page bg-body">
+        <main className="grid-page bg-body !py-0">
           <GridOverlay visible keyboardShortcut={false} />
         </main>
       </FooterReveal.Content>
@@ -449,7 +451,7 @@ function MarketingHeroPage() {
           heading={<h2 className="type-heading-2 text-fg">Selected work</h2>}
           expandLast
         />
-        <main className="grid-page bg-body">
+        <main className="grid-page bg-body !py-0">
           <GridOverlay visible keyboardShortcut={false} />
         </main>
       </FooterReveal.Content>
@@ -474,7 +476,7 @@ export const MarketingHeroPattern: Story = {
       docs: {
         description: {
           story:
-            "The marketing hero (SiteNav, headline, intro, tile fan) fills **FooterReveal.Content**, then **ScrollHorizontal** with expandLast (Selected work is the accessible name, sr-only while the window is pinned — solid token-color placeholders), then the page grid. **FooterReveal.Brand** is the sticky footer underneath. Scroll past the hero — the gallery translates from the first card centered to the last, then the last tile grows to fill the viewport and scrolls away. The brand field fades in from about 12px of blur after that cover. Reduced motion keeps the gallery as a native horizontal scroller with the heading visible above it, follows it with the last tile as a full-viewport section, and shows the footer sharp.",
+            "The marketing hero (SiteNav, headline, intro, tile fan) fills **FooterReveal.Content**, then **ScrollHorizontal** with expandLast (Selected work is the accessible name, sr-only while the window is pinned — solid token-color placeholders), then the page grid (\`grid-page\` with \`!py-0\`, a guide host with no block padding). **FooterReveal.Brand** is the sticky footer underneath. Scroll past the hero — the gallery translates from the first card centered to the last, then the last tile grows to fill the viewport and scrolls away. The gallery section ends on that tile, so its bottom edge meets the footer. The brand field fades in from about 12px of blur after that cover. Reduced motion keeps the gallery as a native horizontal scroller with the heading visible above it, follows it with the last tile as a full-viewport section flush with the footer, and shows the footer sharp.",
         },
       },
     },
@@ -549,5 +551,124 @@ export const MarketingHeroPattern: Story = {
     await waitFor(() => {
       expect(openProjectModal).toHaveBeenCalled();
     });
+  },
+};
+
+function documentBottom(el: HTMLElement): number {
+  return el.getBoundingClientRect().bottom + window.scrollY;
+}
+
+function expectEdgesMeet(a: number, b: number) {
+  expect(Math.abs(a - b)).toBeLessThanOrEqual(1);
+}
+
+function gallerySection(root: ParentNode): HTMLElement {
+  const section = root.querySelector<HTMLElement>("[data-scroll-horizontal]");
+  if (!section) throw new Error("gallery missing");
+  return section;
+}
+
+function footerSticky(root: ParentNode): HTMLElement {
+  const footer = root.querySelector<HTMLElement>("[data-footer-reveal='sticky']");
+  if (!footer) throw new Error("footer missing");
+  return footer;
+}
+
+/** In-flow footer top is the cover's bottom. The expanded section must meet it. */
+function expectGalleryMeetsFooter(root: ParentNode) {
+  const section = gallerySection(root);
+  const footer = footerSticky(root);
+  const footerTop = stickyFooterInFlowTop(footer);
+  expect(footerTop).not.toBeNull();
+  expectEdgesMeet(footerTop ?? 0, documentBottom(section));
+  const main = root.querySelector("main");
+  if (!(main instanceof HTMLElement)) throw new Error("guide host missing");
+  expect(main.getBoundingClientRect().height).toBeLessThanOrEqual(1);
+}
+
+function scrollToY(top: number) {
+  const scrolling = document.scrollingElement ?? document.documentElement;
+  scrolling.scrollTop = top;
+  window.scrollTo(0, top);
+  window.dispatchEvent(new Event("scroll"));
+}
+
+function clipInsets(clip: string): number[] {
+  const match = /inset\(([^)]+)\)/.exec(clip);
+  if (!match?.[1]) return [Number.POSITIVE_INFINITY];
+  const body = match[1].replace(/round[\s\S]*$/, "").trim();
+  const parts = body.split(/\s+/).map((part) => Number.parseFloat(part));
+  if (parts.length === 1 && Number.isFinite(parts[0])) return [parts[0], parts[0], parts[0], parts[0]];
+  return parts;
+}
+
+export const ExpandFooterHandoff: Story = {
+  name: "Handoff — expanded tile meets footer",
+  tags: ["test", "!dev", "!autodocs"],
+  parameters: {
+    docs: { disable: true },
+  },
+  render: () => <MarketingHeroPage />,
+  play: async ({ canvasElement }) => {
+    await waitFor(() => {
+      expect(gallerySection(canvasElement).getAttribute("data-expand-last")).toBe("true");
+    });
+    expectGalleryMeetsFooter(canvasElement);
+
+    const section = gallerySection(canvasElement);
+    const endOfGrow =
+      section.getBoundingClientRect().top + window.scrollY + section.offsetHeight - window.innerHeight;
+    const intoFooter = Math.max(0, endOfGrow + Math.round(window.innerHeight * 0.35));
+    scrollToY(intoFooter);
+
+    await waitFor(() => {
+      const layer = [...section.querySelectorAll<HTMLElement>("[data-scroll-horizontal-expanded]")].find(
+        (host) => getComputedStyle(host).position === "absolute",
+      );
+      expect(layer).toBeTruthy();
+      const insets = clipInsets(getComputedStyle(layer as HTMLElement).clipPath);
+      expect(insets.length).toBeGreaterThan(0);
+      for (const inset of insets) expect(inset).toBeLessThanOrEqual(1);
+      expectEdgesMeet(layer!.getBoundingClientRect().bottom, section.getBoundingClientRect().bottom);
+    });
+
+    expectGalleryMeetsFooter(canvasElement);
+    const sectionBottom = section.getBoundingClientRect().bottom;
+    expect(sectionBottom).toBeGreaterThan(24);
+    expect(sectionBottom).toBeLessThan(window.innerHeight - 24);
+    const scale = canvasElement.querySelector<HTMLElement>("[data-footer-reveal='scale']");
+    if (!scale) throw new Error("footer scale layer missing");
+    expect(scale.getBoundingClientRect().top).toBeLessThanOrEqual(sectionBottom + 1);
+  },
+};
+
+export const ExpandFooterHandoffReduced: Story = {
+  name: "Handoff — reduced motion tile meets footer",
+  tags: ["test", "!dev", "!autodocs"],
+  parameters: {
+    docs: { disable: true },
+  },
+  render: () => (
+    <MotionConfig reducedMotion="always">
+      <MarketingHeroPage />
+    </MotionConfig>
+  ),
+  play: async ({ canvasElement }) => {
+    const section = gallerySection(canvasElement);
+    await waitFor(() => {
+      expect(section.getAttribute("data-reduce")).toBe("true");
+    });
+    const reduced = [...section.querySelectorAll<HTMLElement>("[data-scroll-horizontal-expanded]")].find(
+      (host) => host.className.includes("h-svh"),
+    );
+    if (!reduced) throw new Error("reduced section missing");
+    await waitFor(() => {
+      expect(getComputedStyle(reduced).display).toBe("block");
+    });
+    expectEdgesMeet(documentBottom(reduced), documentBottom(section));
+    const footerTop = stickyFooterInFlowTop(footerSticky(canvasElement));
+    expect(footerTop).not.toBeNull();
+    expectEdgesMeet(footerTop ?? 0, documentBottom(reduced));
+    expectGalleryMeetsFooter(canvasElement);
   },
 };

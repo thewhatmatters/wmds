@@ -531,4 +531,22 @@ describe("ScrollHorizontal reduced-motion branch", () => {
     view.unmount();
     restore();
   });
+
+  it("keeps the footer marketing hero guide host flush in show code and the live pattern", () => {
+    const source = readFileSync(
+      join(process.cwd(), "src/components/organisms/FooterReveal/FooterReveal.stories.tsx"),
+      "utf8",
+    );
+    const copyStart = source.indexOf("const marketingHeroCopySource = `");
+    const copyEnd = source.indexOf("`.trim();", copyStart);
+    const copy = source.slice(copyStart, copyEnd);
+    const liveStart = source.indexOf("\nfunction MarketingHeroPage()");
+    const liveEnd = source.indexOf("export const MarketingHeroPattern");
+    const live = source.slice(liveStart, liveEnd);
+    const host = '<main className="grid-page bg-body !py-0">';
+    expect(copy).toContain(host);
+    expect(live).toContain(host);
+    expect(copy.match(/<main className="grid-page bg-body">/g)).toBeNull();
+    expect(live.match(/<main className="grid-page bg-body">/g)).toBeNull();
+  });
 });
