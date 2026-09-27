@@ -71,9 +71,11 @@ describe("syncFooterRevealWordmark", () => {
     });
 
     const em = syncFooterRevealWordmark(node, frame);
-    expect(em).toBeCloseTo(6.42);
-    expect(frame.style.getPropertyValue("--footer-wordmark-em")).toBe("6.42");
+    expect(em).toBeCloseTo(6.42, 2);
+    expect(Number(frame.style.getPropertyValue("--footer-wordmark-em"))).toBeCloseTo(6.42, 2);
     expect(node.style.fontSize).toBe(footerRevealWordmarkFontSize);
+    expect(node.scrollWidth).toBeLessThanOrEqual(1000);
+    expect(node.scrollWidth).toBeGreaterThan(990);
     expect(footerRevealWordmarkFrameWidth(frame)).toBe(1000);
   });
 
@@ -94,7 +96,8 @@ describe("syncFooterRevealWordmark", () => {
     });
 
     const em = syncFooterRevealWordmark(node, frame);
-    expect(em).toBeCloseTo(6.6, 3);
-    expect(Math.abs(node.scrollWidth - 1000)).toBeLessThanOrEqual(1);
+    expect(em).toBeCloseTo(6.6, 2);
+    expect(node.scrollWidth).toBeLessThanOrEqual(1000);
+    expect(node.scrollWidth).toBeGreaterThan(990);
   });
 });

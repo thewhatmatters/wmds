@@ -55,27 +55,43 @@ export function readFooterRevealWordmarkEm(node: HTMLElement): number | null {
 }
 
 /**
- * Writes `--footer-wordmark-em` so `100cqi / em` matches the frame.
- * One correction pass absorbs optical-size drift between the probe and the
- * fitted size. Sub-pixel remainder stays put so measurement does not loop.
+ * Writes `--footer-wordmark-em` so `100cqi / em` fills the frame.
+ * Hinting is not linear, so a single scale can jump past the frame and clip
+ * the terminal letters. Search for the largest size that still fits.
  */
 export function syncFooterRevealWordmark(node: HTMLElement, frame: HTMLElement): number | null {
   const measured = readFooterRevealWordmarkEm(node);
   if (measured == null) return null;
 
-  let em = measured;
-  frame.style.setProperty("--footer-wordmark-em", footerRevealWordmarkEmCss(em));
-
-  for (let pass = 0; pass < 2; pass += 1) {
-    const textWidth = node.scrollWidth;
-    const frameWidth = footerRevealWordmarkFrameWidth(frame);
-    if (textWidth <= 0 || frameWidth <= 0) break;
-    if (Math.abs(textWidth - frameWidth) <= 1) break;
-    const next = footerRevealWordmarkFittedEm(em, textWidth, frameWidth);
-    if (next == null) break;
-    em = next;
-    frame.style.setProperty("--footer-wordmark-em", footerRevealWordmarkEmCss(em));
+  const frameWidth = footerRevealWordmarkFrameWidth(frame);
+  if (frameWidth <= 0) {
+    const fallback = footerRevealWordmarkEmCss(measured);
+    frame.style.setProperty("--footer-wordmark-em", fallback);
+    return Number(fallback);
   }
 
-  return em;
+  const apply = (em: number) => {
+    const css = footerRevealWordmarkEmCss(em);
+    frame.style.setProperty("--footer-wordmark-em", css);
+    return Number(css);
+  };
+
+  let low = measured * 0.5;
+  let high = measured * 1.5;
+  apply(high);
+  if (node.scrollWidth > frameWidth) high = measured * 3;
+
+  let best = apply(high);
+  for (let pass = 0; pass < 16; pass += 1) {
+    const mid = apply((low + high) / 2);
+    if (node.scrollWidth <= frameWidth) {
+      best = mid;
+      high = mid;
+    } else {
+      low = mid;
+    }
+  }
+
+  apply(best);
+  return best;
 }

@@ -141,14 +141,16 @@ export const BrandFooter: Story = {
     expect(wordmark?.getAttribute("aria-hidden")).toBe("true");
     await waitFor(() => {
       const frameWidth = frame?.clientWidth ?? 0;
+      const textWidth = wordmark?.scrollWidth ?? 0;
       expect(frameWidth).toBeGreaterThan(0);
-      expect(Math.abs((wordmark?.scrollWidth ?? 0) - frameWidth)).toBeLessThanOrEqual(2);
+      expect(textWidth).toBeLessThanOrEqual(frameWidth + 1);
+      expect(frameWidth - textWidth).toBeLessThanOrEqual(Math.max(8, frameWidth * 0.02));
       const em = Number.parseFloat(frame?.style.getPropertyValue("--footer-wordmark-em") ?? "");
       expect(em).toBeGreaterThan(1);
       const fontSize = Number.parseFloat(getComputedStyle(wordmark!).fontSize);
       expect(Math.abs(fontSize * em - frameWidth)).toBeLessThanOrEqual(2);
       expect(wordmark!.offsetLeft).toBeGreaterThanOrEqual(-1);
-      expect(wordmark!.offsetLeft + wordmark!.offsetWidth).toBeLessThanOrEqual(frameWidth + 2);
+      expect(wordmark!.offsetLeft + wordmark!.offsetWidth).toBeLessThanOrEqual(frameWidth + 1);
     });
     expect(wordmark?.className).toContain("text-brand-soft");
     expect(wordmark?.className).toContain("translate-y-[16%]");
