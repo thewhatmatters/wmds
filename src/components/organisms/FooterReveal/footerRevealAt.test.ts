@@ -12,6 +12,9 @@ import {
   footerRevealSocialLinkClasses,
   footerRevealStickyClasses,
   footerRevealWordmarkClasses,
+  footerRevealWordmarkEmFallback,
+  footerRevealWordmarkFontSize,
+  footerRevealWordmarkFrameClasses,
 } from "./footerRevealStyles";
 
 describe("footerRevealAt", () => {
@@ -92,7 +95,18 @@ describe("footer reveal shell", () => {
     expect(contrastRatio(wordmark, "#011272")).toBeGreaterThan(2.5);
     expect(footerRevealSocialLinkClasses).toContain("type-heading-1");
     expect(footerRevealWordmarkClasses).toContain("text-brand-soft");
-    expect(footerRevealWordmarkClasses).toContain("clamp(");
+    expect(footerRevealWordmarkClasses.split(" ")).toContain(["font", "bold"].join("-"));
+    expect(footerRevealWordmarkClasses).toContain("translate-y-[16%]");
+    expect(footerRevealWordmarkClasses).toContain("tracking-[-0.045em]");
+    expect(footerRevealWordmarkClasses).not.toContain("clamp(");
+    expect(footerRevealWordmarkClasses).not.toContain("22rem");
+    expect(footerRevealWordmarkClasses).not.toContain("-12vw");
+    expect(footerRevealWordmarkFrameClasses).toContain("@container");
+    expect(footerRevealWordmarkFrameClasses).toContain("inset-x-0");
+    expect(footerRevealWordmarkFontSize).toBe(
+      `calc(100cqi / var(--footer-wordmark-em, ${footerRevealWordmarkEmFallback}))`,
+    );
+    expect(footerRevealWordmarkFontSize).not.toContain("vw");
     expect(footerRevealBrandClasses).toContain("overflow-hidden");
   });
 

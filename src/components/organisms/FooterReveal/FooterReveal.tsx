@@ -40,7 +40,10 @@ import {
   footerRevealSocialListClasses,
   footerRevealStickyClasses,
   footerRevealWordmarkClasses,
+  footerRevealWordmarkFontSize,
+  footerRevealWordmarkFrameClasses,
 } from "./footerRevealStyles";
+import { syncFooterRevealWordmark } from "./footerRevealWordmark";
 
 export { footerRevealFieldClasses, footerRevealFieldLinkClasses };
 
@@ -290,7 +293,7 @@ export interface FooterRevealBrandProps {
    * Omit it to keep the button.
    */
   ctaHref?: string;
-  /** Decorative wordmark, cropped along the bottom edge. Default: `WHATMATTERS`. */
+  /** Decorative wordmark along the bottom edge. Spans the footer width. Default: `WHATMATTERS`. */
   wordmark?: string;
   /** Underlined text row. `https` links open in a new tab with `rel="noopener"`. */
   socialLinks?: readonly FooterRevealSocialLink[];
@@ -305,8 +308,80 @@ export const footerRevealDefaultSocialLinks: readonly FooterRevealSocialLink[] =
 ];
 
 /**
+ * Decorative wordmark. Measures the word and sets `--footer-wordmark-em` so
+ * the font-size (`100cqi / em`) spans the frame. Bottom shift stays on the type.
+ */
+function FooterRevealWordmark({ text }: { text: string }) {
+  const frameRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  useLayoutEffect(() => {
+    const frame = frameRef.current;
+    const node = textRef.current;
+    if (!frame || !node) return;
+
+    let lastWidth = -1;
+    const fit = () => {
+      const width = frame.clientWidth;
+      if (width <= 0) return;
+      if (
+        Math.abs(width - lastWidth) < 0.5 &&
+        frame.style.getPropertyValue("--footer-wordmark-em")
+      ) {
+        return;
+      }
+      lastWidth = width;
+      syncFooterRevealWordmark(node, frame);
+    };
+
+    fit();
+
+    const observer =
+      typeof ResizeObserver === "undefined"
+        ? null
+        : new ResizeObserver(() => {
+            if (Math.abs(frame.clientWidth - lastWidth) < 0.5) return;
+            lastWidth = -1;
+            fit();
+          });
+    observer?.observe(frame);
+
+    const fonts = document.fonts;
+    const onFonts = () => {
+      lastWidth = -1;
+      fit();
+    };
+    fonts?.addEventListener?.("loadingdone", onFonts);
+    if (fonts?.ready) void fonts.ready.then(onFonts).catch(() => {});
+
+    return () => {
+      observer?.disconnect();
+      fonts?.removeEventListener?.("loadingdone", onFonts);
+    };
+  }, [text]);
+
+  return (
+    <div
+      ref={frameRef}
+      className={footerRevealWordmarkFrameClasses}
+      data-footer-reveal="wordmark-frame"
+    >
+      <p
+        ref={textRef}
+        className={footerRevealWordmarkClasses}
+        style={{ fontSize: footerRevealWordmarkFontSize }}
+        aria-hidden="true"
+        data-footer-reveal="wordmark"
+      >
+        {text}
+      </p>
+    </div>
+  );
+}
+
+/**
  * Brand footer for the reveal field: centered headline, inverse CTA, underlined
- * social row, and a viewport-scaled wordmark that bleeds off the bottom edge.
+ * social row, and a wordmark that spans the footer width and bleeds off the bottom edge.
  */
 function FooterRevealBrand({
   headline = "We Build WhatMatters",
@@ -340,9 +415,7 @@ function FooterRevealBrand({
           ))}
         </ul>
       </div>
-      <p className={footerRevealWordmarkClasses} aria-hidden="true">
-        {wordmark}
-      </p>
+      <FooterRevealWordmark text={wordmark} />
     </div>
   );
 }
