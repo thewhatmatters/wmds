@@ -43,6 +43,7 @@ import {
 import {
   scrollHorizontalExpandedSectionClasses,
   scrollHorizontalExpandLayerClasses,
+  scrollHorizontalHeadingClasses,
   scrollHorizontalItemClasses,
   scrollHorizontalRootClasses,
   scrollHorizontalRootExpandClasses,
@@ -416,6 +417,9 @@ describe("ScrollHorizontal reduced-motion branch", () => {
     expect(view.container.querySelector("img")).toBeNull();
     expect(view.container.querySelector("h3")).toBeNull();
     expect(view.container.querySelector(".sr-only")?.textContent).toBe("Project One");
+    expect(scrollHorizontalHeadingClasses.startsWith("sr-only")).toBe(true);
+    expect(scrollHorizontalHeadingClasses).toContain("motion-reduce:not-sr-only");
+    expect(scrollHorizontalHeadingClasses).not.toContain("top-8");
     const card = view.container.querySelector("li");
     expect(card?.getAttribute("style")).toContain("var(--color-brand)");
     expect(card?.className ?? "").not.toMatch(/gradient|mix-blend/);
@@ -436,6 +440,30 @@ describe("ScrollHorizontal reduced-motion branch", () => {
     const row = view.container.querySelector("ul");
     expect(row?.getAttribute("style") ?? "").not.toMatch(/translate/i);
     expect(view.container.querySelector("h2")?.textContent).toBe("Selected work");
+    const heading = view.container.querySelector("h2")?.parentElement;
+    expect(heading?.className).toContain("sr-only");
+    expect(heading?.className).toContain("motion-reduce:not-sr-only");
+    expect(heading?.className).toContain("group-data-[reduce=true]/scroll-horizontal:not-sr-only");
+    expect(section?.getAttribute("aria-labelledby")).toBe(heading?.id);
+    view.unmount();
+    restore();
+  });
+
+  it("keeps the heading sr-only on the motion shell", async () => {
+    const restore = installMatchMedia(false);
+    const view = await renderGallery(
+      createElement(ScrollHorizontal, {
+        items,
+        heading: createElement("h2", null, "Selected work"),
+      }),
+    );
+    const section = view.container.querySelector("[data-scroll-horizontal]");
+    const heading = view.container.querySelector("h2")?.parentElement;
+    expect(section?.getAttribute("data-reduce")).toBe("false");
+    expect(heading?.className).toContain("sr-only");
+    expect(heading?.className).not.toContain("top-8");
+    expect(section?.getAttribute("aria-labelledby")).toBe(heading?.id);
+    expect(heading?.textContent).toBe("Selected work");
     view.unmount();
     restore();
   });

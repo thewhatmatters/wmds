@@ -14,7 +14,7 @@ The card geometry in the reference is 400×500 with a 12px radius and a 30px gap
 Ship **ScrollHorizontal** as an organism under **Components/Layout**:
 
 - `items`: `{ id, label, color? }[]`. Each card is a solid fill. `label` is the accessible name (`sr-only`), not visible copy. `color` is a CSS color; pass a semantic token (`var(--color-*)`). Omit `color` to cycle `--color-brand`, `--color-brand-soft`, `--color-primary`, `--color-info-muted`, and `--color-accent`.
-- `heading`: optional slot, pinned over the row. `className` is layout only, on the root.
+- `heading`: optional section name. `sr-only` while the window is pinned, so it does not sit under the floating site nav. Visible above the row when motion is reduced. `className` is layout only, on the root.
 - The root is a `300svh` track (`shrink-0`, so a flex parent does not collapse it). `useScroll({ target, offset: ['start start', 'end end'] })` drives `useTransform`. A sticky `h-svh` viewport clips the inline axis. Inside it, a centered window is one card wide (400px, 280px below `sm`), so progress 0 shows the first card centered.
 - Travel is `(items.length - 1) * (itemWidth + gap)` via `scrollHorizontalDistance`. A layout effect measures the first card and the row's `column-gap`. Until that measurement is non-zero, the pitch falls back to `scrollHorizontalNominalMetrics(viewportWidth)`.
 - From `sm`: 400×500, `gap-8`. Below `sm`: 280×350, `gap-4`. Radius `rounded-xl`. The fill is `background-color: var(--scroll-horizontal-color)`.
@@ -35,7 +35,8 @@ The marketing heroes need the last placeholder to become a full-viewport section
 - The last tile is a layer absolutely filling the sticky `h-svh` window. `clip-path: inset(...)` starts on the centered card (12px radius) and ends at `inset(0)` with radius 0. The layer's box is the window, so the end frame is edge to edge without animating layout width or height. Earlier tiles fade across the first part of the grow.
 - The sticky window then releases. The full-bleed tile scrolls away with it. **FooterReveal** is unchanged; the tile is inside the cover, so the footer still reveals as that cover leaves.
 - `expanded` is an optional slot for that section. It is mounted on the motion layer and in the reduced-motion section. CSS hides the one that does not apply (`motion-reduce` and `data-reduce`).
-- Reduced motion keeps the native horizontal scroller, then renders the last tile as a static `h-svh` section with radius 0 and the same `sr-only` label.
+- Reduced motion keeps the native horizontal scroller, then renders the last tile as a static `h-svh` section with radius 0 and the same `sr-only` label. The heading is visible above that scroller.
+- On the motion shell the heading stays in the tree as the section's accessible name and is `sr-only`. It is not painted at the top of the pinned window.
 - **Components/Layout/HeroTileStack → Pattern — marketing hero** and **Components/Layout/FooterReveal → Pattern — marketing hero** pass `expandLast`. **Pattern — project gallery** does not.
 
 ## Non-goals

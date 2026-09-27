@@ -56,7 +56,10 @@ export interface ScrollHorizontalItem {
 
 export interface ScrollHorizontalProps {
   items: ScrollHorizontalItem[];
-  /** Optional title. Stays pinned over the row while the gallery scrolls. */
+  /**
+   * Optional section name. `sr-only` while the window is pinned (it stays the
+   * accessible name). Visible above the row when motion is reduced.
+   */
   heading?: ReactNode;
   /**
    * After the last card is centered, keep the window pinned and grow that card
@@ -84,7 +87,8 @@ export interface ScrollHorizontalProps {
  * `prefers-reduced-motion` and `MotionConfig` `reducedMotion="always"` skip
  * the transform: the track height is auto, the window is not sticky, and the
  * row scrolls natively on the inline axis. With `expandLast`, the last tile
- * follows as a static `h-svh` section.
+ * follows as a static `h-svh` section. `heading` is `sr-only` on the pinned
+ * window and visible above that scroller.
  *
  * The server render and the hydration render both use the motion shell
  * (`data-reduce="false"`). The OS query is read in `useLayoutEffect`, before

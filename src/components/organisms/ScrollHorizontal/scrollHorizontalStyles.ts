@@ -9,7 +9,8 @@
  *
  * Reduced motion (`motion-reduce` and `data-reduce="true"`): height auto,
  * the viewport is not sticky, and the window is a native horizontal scroller
- * with vertical padding. `!` wins over the motion utilities.
+ * with vertical padding. `!` wins over the motion utilities. The heading is
+ * `sr-only` while the window is pinned, and visible above that scroller.
  *
  * Card pitch: 400×500 and gap-8 from `sm`; 280×350 and gap-4 below `sm`.
  * Radius is `rounded-xl` (`--radius-xl`, 12px).
@@ -81,13 +82,18 @@ export const scrollHorizontalRowClasses = [
   "group-data-[reduce=true]/scroll-horizontal:will-change-auto",
 ].join(" ");
 
+/**
+ * Section name. `sr-only` on the pinned window so it does not sit under the
+ * floating site nav. Reduced motion shows it above the native scroller.
+ * `not-sr-only` restores a normal box; `!` padding and margin beat that reset.
+ */
 export const scrollHorizontalHeadingClasses = [
-  "absolute inset-x-0 top-8 z-10 px-[var(--grid-margin)] text-center",
-  "motion-reduce:!static motion-reduce:!inset-auto motion-reduce:top-auto motion-reduce:mb-6",
-  "group-data-[reduce=true]/scroll-horizontal:!static",
-  "group-data-[reduce=true]/scroll-horizontal:!inset-auto",
-  "group-data-[reduce=true]/scroll-horizontal:top-auto",
-  "group-data-[reduce=true]/scroll-horizontal:mb-6",
+  "sr-only",
+  "motion-reduce:not-sr-only motion-reduce:!mb-6 motion-reduce:!px-[var(--grid-margin)] motion-reduce:text-center",
+  "group-data-[reduce=true]/scroll-horizontal:not-sr-only",
+  "group-data-[reduce=true]/scroll-horizontal:!mb-6",
+  "group-data-[reduce=true]/scroll-horizontal:!px-[var(--grid-margin)]",
+  "group-data-[reduce=true]/scroll-horizontal:text-center",
 ].join(" ");
 
 export const scrollHorizontalItemClasses = [
