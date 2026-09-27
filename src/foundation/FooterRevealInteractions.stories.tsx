@@ -128,9 +128,12 @@ export const BrandFooter: Story = {
   play: async ({ canvasElement }) => {
     const headline = canvasElement.querySelector("h2");
     expect(headline?.textContent).toBe("We Build WhatMatters");
-    const cta = canvasElement.querySelector<HTMLAnchorElement>("a[href='/start']");
-    expect(cta?.textContent).toBe("Start a project");
+    const cta = [...canvasElement.querySelectorAll("button")].find(
+      (node) => node.textContent === "Start a project",
+    );
+    expect(cta?.getAttribute("type")).toBe("button");
     expect(cta?.getAttribute("data-role")).toBe("inverse");
+    expect(canvasElement.querySelector("a[href='/start']")).toBeNull();
 
     const wordmark = [...canvasElement.querySelectorAll("p")].find((node) => node.textContent === "WHATMATTERS");
     expect(wordmark?.getAttribute("aria-hidden")).toBe("true");

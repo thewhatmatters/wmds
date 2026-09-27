@@ -53,4 +53,27 @@ describe("footer reveal reduced motion SSR", () => {
     expect(filter).not.toContain("blur");
     container.remove();
   });
+
+  it("renders the CTA as a button unless ctaHref is passed", () => {
+    stubReducedMotion(true);
+    const html = renderToString(footerTree());
+    expect(html).toContain("Start a project");
+    expect(html).toContain('type="button"');
+    expect(html).not.toContain('href="/start"');
+
+    const linked = renderToString(
+      createElement(
+        FooterReveal,
+        null,
+        createElement(FooterReveal.Content, null, "Cover"),
+        createElement(
+          FooterReveal.Footer,
+          null,
+          createElement(FooterReveal.Brand, { ctaHref: "/contact" }),
+        ),
+      ),
+    );
+    expect(linked).toContain('href="/contact"');
+    expect(linked).not.toContain('type="button"');
+  });
 });

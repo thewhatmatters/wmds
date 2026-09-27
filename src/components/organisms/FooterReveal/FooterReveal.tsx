@@ -15,6 +15,7 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
+  type MouseEventHandler,
   type ReactNode,
   type RefObject,
 } from "react";
@@ -261,7 +262,15 @@ export interface FooterRevealBrandProps {
   headline?: string;
   /** Sentence-case label on the surface CTA. Default: `Start a project`. */
   ctaLabel?: string;
-  /** Href for the CTA. Default: `/start`. */
+  /**
+   * Click handler for the CTA. The control is a `<button type="button">`
+   * (it opens a modal — there is no default route).
+   */
+  onCtaClick?: MouseEventHandler<HTMLButtonElement>;
+  /**
+   * Optional navigation target. When set, the CTA renders as an anchor.
+   * Omit it to keep the button.
+   */
   ctaHref?: string;
   /** Decorative wordmark, cropped along the bottom edge. Default: `WHATMATTERS`. */
   wordmark?: string;
@@ -284,7 +293,8 @@ export const footerRevealDefaultSocialLinks: readonly FooterRevealSocialLink[] =
 function FooterRevealBrand({
   headline = "We Build WhatMatters",
   ctaLabel = "Start a project",
-  ctaHref = "/start",
+  onCtaClick,
+  ctaHref,
   wordmark = "WHATMATTERS",
   socialLinks = footerRevealDefaultSocialLinks,
   className,
@@ -293,7 +303,13 @@ function FooterRevealBrand({
     <div className={cn(footerRevealBrandClasses, className)}>
       <div className={footerRevealBrandCopyClasses}>
         <h2 className={footerRevealBrandHeadlineClasses}>{headline}</h2>
-        <Button role="inverse" size="lg" render={<a href={ctaHref} />}>
+        <Button
+          role="inverse"
+          size="lg"
+          type="button"
+          onClick={onCtaClick}
+          render={ctaHref ? <a href={ctaHref} /> : undefined}
+        >
           {ctaLabel}
         </Button>
         <ul className={footerRevealSocialListClasses}>

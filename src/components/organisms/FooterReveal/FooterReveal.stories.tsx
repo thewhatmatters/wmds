@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sparkles } from "lucide-react";
 import { useState } from "react";
-import { expect, waitFor } from "storybook/test";
+import { expect, fn, waitFor } from "storybook/test";
 import { Badge } from "../../atoms/Badge/Badge";
 import { GridOverlay } from "../../../lib/GridOverlay";
 import { Button } from "../../atoms/Button/Button";
@@ -46,7 +46,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
     └── fade (opacity) → scale / blur (origin 50% 100%, blur 12px → 0) → footer contents
         └── FooterReveal.Brand
             ├── headline (type-display-1, centered)
-            ├── Button role="inverse"
+            ├── Button role="inverse" type="button" (onCtaClick)
             ├── social links (underlined, https opens in a new tab)
             └── wordmark (aria-hidden, vw clamp, cropped at the bottom edge)
 \`\`\`
@@ -55,7 +55,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
 
 - One **FooterReveal** per page. Put **SiteNav** and the page or marketing hero inside **Content**.
 - Field color is **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-on-brand\`). \`--color-brand\` is \`#011272\` in both themes. White on that navy reports **15.8:1**. The wordmark uses \`--color-brand-soft\` (40% white on the navy) so it stays visible.
-- The CTA uses **Button** \`role="inverse"\` (white fill, brand text). Do not recolor it with \`className\`.
+- The CTA is a **Button** \`role="inverse"\` \`type="button"\` (\`onCtaClick\`). It opens a modal; there is no default route. Pass \`ctaHref\` only when the control should be a link. Do not recolor it with \`className\`.
 - Social links use **\`footerRevealFieldLinkClasses\`** at heading-1 size. \`https\` hrefs set \`target="_blank"\` and \`rel="noopener"\`. Placeholder hashes stay on the same page.
 - The wordmark is decorative (\`aria-hidden\`). It scales with the viewport and is clipped by the brand panel, so it does not widen the page.
 - Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. The brand panel and the footer field clip the wordmark.
@@ -93,6 +93,9 @@ const socialLinks = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
   { label: "X", href: "#x-TODO" },
 ] as const;
+
+// Opens the multi-step project form. There is no /start route.
+function openProjectModal() {}
 
 export function MarketingPage() {
   return (
@@ -145,7 +148,7 @@ export function MarketingPage() {
         <FooterReveal.Brand
           headline="We Build WhatMatters"
           ctaLabel="Start a project"
-          ctaHref="/start"
+          onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
           socialLinks={socialLinks}
         />
@@ -154,6 +157,8 @@ export function MarketingPage() {
   );
 }
 `.trim();
+
+const openProjectModal = fn();
 
 function MarketingPage() {
   return (
@@ -206,7 +211,7 @@ function MarketingPage() {
         <FooterReveal.Brand
           headline="We Build WhatMatters"
           ctaLabel="Start a project"
-          ctaHref="/start"
+          onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
           socialLinks={socialLinks}
         />
@@ -256,6 +261,9 @@ const tiles = [
   { src: "/hero-tiles/week.svg", alt: "Abstract shapes for the week" },
   { src: "/hero-tiles/note.svg", alt: "A pale note about what matters" },
 ];
+
+// Opens the multi-step project form. There is no /start route.
+function openProjectModal() {}
 
 export function MarketingHeroPage() {
   const [handsActive, setHandsActive] = useState(false);
@@ -334,7 +342,7 @@ export function MarketingHeroPage() {
         <FooterReveal.Brand
           headline="We Build WhatMatters"
           ctaLabel="Start a project"
-          ctaHref="/start"
+          onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
           socialLinks={socialLinks}
         />
@@ -421,7 +429,7 @@ function MarketingHeroPage() {
         <FooterReveal.Brand
           headline="We Build WhatMatters"
           ctaLabel="Start a project"
-          ctaHref="/start"
+          onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
           socialLinks={socialLinks}
         />
@@ -476,5 +484,14 @@ export const MarketingHeroPattern: Story = {
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
       document.documentElement.clientWidth + 1,
     );
+
+    const cta = [...canvasElement.querySelectorAll("button")].find(
+      (node) => node.textContent === "Start a project",
+    );
+    expect(cta?.getAttribute("type")).toBe("button");
+    cta?.click();
+    await waitFor(() => {
+      expect(openProjectModal).toHaveBeenCalled();
+    });
   },
 };
