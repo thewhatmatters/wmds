@@ -23,7 +23,7 @@ Marketing gallery that sits under the hero. Pass \`items\` (\`id\`, \`label\`, o
 
 Vertical scroll drives the row. The track is \`300svh\`. A sticky \`h-svh\` window, one card wide and centered, shows the first card at the start and the last card at the end. The travel is \`(items.length - 1) * (item width + gap)\`, measured from the row.
 
-\`expandLast\` (default false) lengthens the track to \`400svh\`. The horizontal travel keeps that same scroll distance. The window stays pinned for one more viewport while the last tile grows, via \`clip-path\`, until it fills the \`h-svh\` window edge to edge and the radius reaches 0. Earlier tiles fade out. The window then releases and that full-bleed tile scrolls away. Pass \`expanded\` for content in that section.
+\`expandLast\` (default false) lengthens the track to \`400svh\`. The horizontal travel keeps that same scroll distance. The window stays pinned for one more viewport while the last tile grows, via \`clip-path\`, until it fills the \`h-svh\` window edge to edge and the radius reaches 0. Earlier tiles fade out. The window then releases and that full-bleed tile scrolls away. The section box ends on that tile. Pass \`expanded\` for content in that section. A padded block after the section, including default \`grid-page\` block padding, paints the page background between the tile and a following footer.
 
 From \`sm\` each card is **400×500** with \`gap-8\` (32px). Below \`sm\` each card is **280×350** with \`gap-4\` (16px). Radius is \`rounded-xl\` (\`--radius-xl\`, 12px). Each card is a solid fill from \`color\`. The label is the accessible name (\`sr-only\`).
 
@@ -53,7 +53,7 @@ ScrollHorizontal — 300svh track, or 400svh with expandLast (auto when reduced)
 - Give every item an \`id\` and a \`label\`. The label is the accessible name, not visible copy.
 - Pass \`color\` as a semantic token to override the default cycle. The marketing placeholders set all five.
 - Leave \`expandLast\` off when the track should release on the last centered card.
-- Turn \`expandLast\` on when the last tile should fill the viewport and scroll away as its own section. Pass \`expanded\` for content there. The slot is mounted twice; the motion layer and the reduced-motion section each hide the other.
+- Turn \`expandLast\` on when the last tile should fill the viewport and scroll away as its own section. Pass \`expanded\` for content there. The slot is mounted twice; the motion layer and the reduced-motion section each hide the other. The section ends on the tile, including the reduced-motion \`h-svh\` section. Do not follow it with block padding when the next region is a footer. **FooterReveal → Pattern — marketing hero** sets \`!py-0\` on the guide \`grid-page\`.
 - Pass a real heading element. It names the section. It is \`sr-only\` while the window is pinned, and visible above the scroller when motion is reduced.
         `.trim(),
       },
@@ -141,7 +141,7 @@ export const ExpandLast: Story = {
     docs: {
       description: {
         story:
-          "expandLast keeps the horizontal travel on the same scroll distance as the default gallery, then holds the window while the last tile grows to the viewport and the radius reaches 0. The heading stays sr-only on that pinned window. The full-bleed tile then scrolls away. prefers-reduced-motion keeps the horizontal scroller, shows the heading above it, and follows it with that tile as a static full-viewport section.",
+          "expandLast keeps the horizontal travel on the same scroll distance as the default gallery, then holds the window while the last tile grows to the viewport and the radius reaches 0. The heading stays sr-only on that pinned window. The full-bleed tile then scrolls away. The section ends on that tile. prefers-reduced-motion keeps the horizontal scroller, shows the heading above it, and follows it with that tile as a static full-viewport section.",
       },
     },
   },

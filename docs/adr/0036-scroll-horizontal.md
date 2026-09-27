@@ -33,7 +33,8 @@ The marketing heroes need the last placeholder to become a full-viewport section
 - `expandLast` defaults to false. The `300svh` shell is unchanged.
 - When it is on, the track is `400svh` (`shrink-0`). Pinned scroll is 3 viewports. The first 2 match today's horizontal phase (`scrollHorizontalHorizontalEnd` is `2/3`). The last viewport is the grow.
 - The last tile is a layer absolutely filling the sticky `h-svh` window. `clip-path: inset(...)` starts on the centered card (12px radius) and ends at `inset(0)` with radius 0. The layer's box is the window, so the end frame is edge to edge without animating layout width or height. Earlier tiles fade across the first part of the grow.
-- The sticky window then releases. The full-bleed tile scrolls away with it. **FooterReveal** is unchanged; the tile is inside the cover, so the footer still reveals as that cover leaves.
+- The sticky window then releases. The full-bleed tile scrolls away with it. The section box ends on that tile. **FooterReveal** is unchanged; the tile is inside the cover, so the footer still reveals as that cover leaves.
+- **FooterReveal → Pattern — marketing hero** mounts **GridOverlay** in a following \`grid-page\` with \`!py-0\`. Default \`grid-page\` block padding is \`--grid-pad\` (24px top and bottom). On that guide-only host the padding is a 48px page-background strip between the tile and the footer. Reduced motion's static \`h-svh\` section meets the footer the same way.
 - `expanded` is an optional slot for that section. It is mounted on the motion layer and in the reduced-motion section. CSS hides the one that does not apply (`motion-reduce` and `data-reduce`).
 - Reduced motion keeps the native horizontal scroller, then renders the last tile as a static `h-svh` section with radius 0 and the same `sr-only` label. The heading is visible above that scroller.
 - On the motion shell the heading stays in the tree as the section's accessible name and is `sr-only`. It is not painted at the top of the pinned window.
@@ -50,7 +51,7 @@ The marketing heroes need the last placeholder to become a full-viewport section
 
 ## Consequences
 
-Consuming apps paste **Components/Layout/ScrollHorizontal → Pattern — project gallery**. **Components/Layout/HeroTileStack → Pattern — marketing hero** and **Components/Layout/FooterReveal → Pattern — marketing hero** place the gallery directly under the hero with `expandLast`, then the rest of the page. The five tiles are solid token-color placeholders. **SiteNav** is unchanged. **FooterReveal** still reveals after the cover, including the full-bleed tile.
+Consuming apps paste **Components/Layout/ScrollHorizontal → Pattern — project gallery**. **Components/Layout/HeroTileStack → Pattern — marketing hero** and **Components/Layout/FooterReveal → Pattern — marketing hero** place the gallery directly under the hero with `expandLast`, then the rest of the page. The five tiles are solid token-color placeholders. **SiteNav** is unchanged. **FooterReveal** still reveals after the cover, including the full-bleed tile. The marketing hero's guide \`grid-page\` uses \`!py-0\` so that tile meets the footer with no page-background strip.
 
 ## References
 

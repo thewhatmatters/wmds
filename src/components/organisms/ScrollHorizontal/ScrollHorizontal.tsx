@@ -83,6 +83,8 @@ export interface ScrollHorizontalProps {
  * the first two pinned viewports. The third grows the last tile with a
  * clip-path on a full-viewport layer, from the centered card to inset 0, and
  * takes the radius to 0. The window then releases, so that tile scrolls away.
+ * The section box ends on that tile. Block padding after the section paints
+ * the page background between the tile and a following footer.
  *
  * `prefers-reduced-motion` and `MotionConfig` `reducedMotion="always"` skip
  * the transform: the track height is auto, the window is not sticky, and the
