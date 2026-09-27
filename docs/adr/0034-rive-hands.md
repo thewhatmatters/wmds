@@ -50,7 +50,7 @@ Handled with `matchMedia('(prefers-reduced-motion: reduce)')`, not Motion’s re
 
 **Components/Layout/HeroTileStack → Pattern — marketing hero** is the default. The plain h1 uses **`type-display-1`**, the largest display token (`clamp` from `2.5rem` / 40px to `5rem` / 80px). `type-display-2` and `type-display-3` are smaller. No uppercase transform.
 
-The rock hand grips the top-left of the **W**. The point hand grips the top-right of the final **s**. Each word that holds a hand is an `inline-block` with `whitespace-nowrap`, so the line can break between words and never through WhatMatters. The readable headline stays `We Are WhatMatters` with no extra spaces. Slots are absolute, sized in `em`, and kept inside the h1 line box so they track the clamp and stay clear of the nav. The visible hand is about one em. Hover or focus on the h1 sets `active`.
+The rock hand grips the top-left of the **W**. The point hand grips the top-right of the final **s**. Each word that holds a hand is an `inline-block` with `whitespace-nowrap`, so the line can break between words and never through WhatMatters. The **W** and the final **s** are inline `relative` spans. Each hand is absolutely positioned inside its letter, with offset and size in `em`, so a wrap moves the hand with that letter. The rock hand is the first node in the W span and the point hand follows the s, so those controls are not between the letters. The accessible name and the copied text stay `We Are WhatMatters`. Below `md` the box is `1.35em`, which keeps the point hand inside a 320px viewport while it still grips the s. From `md` the box is `2.2em`. Hover or focus on the h1 sets `active`.
 
 ### Consuming the pattern
 
