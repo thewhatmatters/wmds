@@ -137,18 +137,18 @@ export function MarketingHero() {
           >
             {[
               <span key="we" className="inline-block whitespace-nowrap">{[
-                <span key="w" className="relative inline-block">{[
+                <span key="w" className="relative">{[
+                  <RiveHand key="rock" hand="rock" size="2.2em" active={handsActive} className="absolute z-10 -left-[0.65em] -top-[0.2em] max-md:!h-[1.35em] max-md:!w-[1.35em] md:-left-[1.18em] md:-top-[0.33em]" />,
                   "W",
-                  <RiveHand key="rock" hand="rock" size="2.2em" active={handsActive} className="absolute -left-[1.18em] -top-[0.33em] z-10" />,
                 ]}</span>,
                 "e",
               ]}</span>,
               " Are ",
               <span key="brand" className="inline-block whitespace-nowrap">{[
                 "WhatMatter",
-                <span key="s" className="relative inline-block">{[
+                <span key="s" className="relative">{[
                   "s",
-                  <RiveHand key="point" hand="point" size="2.2em" active={handsActive} className="absolute -right-[1.53em] -top-[0.7em] z-10" />,
+                  <RiveHand key="point" hand="point" size="2.2em" active={handsActive} className="absolute z-10 -right-[0.75em] -top-[0.45em] max-md:!h-[1.35em] max-md:!w-[1.35em] md:-right-[1.53em] md:-top-[0.7em]" />,
                 ]}</span>,
               ]}</span>,
             ]}
@@ -213,18 +213,18 @@ function MarketingHero() {
           >
             {[
               <span key="we" className="inline-block whitespace-nowrap">{[
-                <span key="w" className="relative inline-block">{[
+                <span key="w" className="relative">{[
+                  <RiveHand key="rock" hand="rock" size="2.2em" active={handsActive} className="absolute z-10 -left-[0.65em] -top-[0.2em] max-md:!h-[1.35em] max-md:!w-[1.35em] md:-left-[1.18em] md:-top-[0.33em]" />,
                   "W",
-                  <RiveHand key="rock" hand="rock" size="2.2em" active={handsActive} className="absolute -left-[1.18em] -top-[0.33em] z-10" />,
                 ]}</span>,
                 "e",
               ]}</span>,
               " Are ",
               <span key="brand" className="inline-block whitespace-nowrap">{[
                 "WhatMatter",
-                <span key="s" className="relative inline-block">{[
+                <span key="s" className="relative">{[
                   "s",
-                  <RiveHand key="point" hand="point" size="2.2em" active={handsActive} className="absolute -right-[1.53em] -top-[0.7em] z-10" />,
+                  <RiveHand key="point" hand="point" size="2.2em" active={handsActive} className="absolute z-10 -right-[0.75em] -top-[0.45em] max-md:!h-[1.35em] max-md:!w-[1.35em] md:-right-[1.53em] md:-top-[0.7em]" />,
                 ]}</span>,
               ]}</span>,
             ]}
@@ -255,7 +255,7 @@ export const MarketingHeroPattern: Story = {
       docs: {
         description: {
           story:
-            "SiteNav sits above the hero in normal flow. The hero section is min-h-[calc(100svh-var(--site-nav-height))] and centers its content, so the nav plus the hero fill the viewport. The headline is a plain h1 (We Are WhatMatters) on type-display-1, the largest display token, and stays larger than the type-large subtext. Two decorative Rive hands grip the letters: the rock hand on the top-left of the W in We, the point hand on the top-right of the final s in WhatMatters. Each of those words is an inline-block with whitespace-nowrap, so a narrow line breaks as We Are / WhatMatters and the words stay whole. Slots are absolute and sized in em so they track the h1 and stay in its line box. Hover or focus on the headline sets Boolean 1. prefers-reduced-motion shows a still frame and does not play the interaction. The hands are aria-hidden. The headline text stays selectable. handFill uses --color-surface (fallback --color-background-surface), white in light mode. outline uses --color-brand (#2f6bff), the WhatMatters brand blue. Art is a CC BY 4.0 remix of the Rive Interactive Icon Set by Silvia Sguotti and Gabriele Montinaro. The point hand is artboard 31_Cigarette with the cigarette removed. Show code starts with use client. Install @rive-app/react-canvas and serve public/rive/interactive-icon-set.riv at /rive/interactive-icon-set.riv. The subtext is type-large at font-normal, one p with two block lines at leading-normal: Your brand is already online, then Make it impossible to ignore, with no punctuation after the badges. The lines sit close and the md Badges do not collide. The break stays the same at every width. It has two inline md Badges — the one sanctioned decorative use. Each badge leads with a round Avatar. The globe and eye files in public/hero-badges/ are playful placeholders. The badges are not clickable, alt is empty so the sentence still reads in order, and the images are not announced. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
+            "SiteNav sits above the hero in normal flow. The hero section is min-h-[calc(100svh-var(--site-nav-height))] and centers its content, so the nav plus the hero fill the viewport. The headline is a plain h1 (We Are WhatMatters) on type-display-1, the largest display token, and stays larger than the type-large subtext. Two decorative Rive hands grip the letters: the rock hand on the top-left of the W in We, the point hand on the top-right of the final s in WhatMatters. Each of those words is an inline-block with whitespace-nowrap, so a narrow line breaks as We Are / WhatMatters and the words stay whole. Each hand sits in an inline relative span on its letter, absolutely positioned with em offsets, so it follows that letter when the headline wraps. The rock hand is the first node in the W span and the point hand follows the s, so the accessible name stays We Are WhatMatters. Below md the box is 1.35em so the point hand stays inside a 320px viewport while still gripping the s. From md the box is 2.2em. Hover or focus on the headline sets Boolean 1. prefers-reduced-motion shows a still frame and does not play the interaction. The hands are aria-hidden. The headline text stays selectable. handFill uses --color-surface (fallback --color-background-surface), white in light mode. outline uses --color-brand (#2f6bff), the WhatMatters brand blue. Art is a CC BY 4.0 remix of the Rive Interactive Icon Set by Silvia Sguotti and Gabriele Montinaro. The point hand is artboard 31_Cigarette with the cigarette removed. Show code starts with use client. Install @rive-app/react-canvas and serve public/rive/interactive-icon-set.riv at /rive/interactive-icon-set.riv. The subtext is type-large at font-normal, one p with two block lines at leading-normal: Your brand is already online, then Make it impossible to ignore, with no punctuation after the badges. The lines sit close and the md Badges do not collide. The break stays the same at every width. It has two inline md Badges — the one sanctioned decorative use. Each badge leads with a round Avatar. The globe and eye files in public/hero-badges/ are playful placeholders. The badges are not clickable, alt is empty so the sentence still reads in order, and the images are not announced. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
         },
       },
     },
