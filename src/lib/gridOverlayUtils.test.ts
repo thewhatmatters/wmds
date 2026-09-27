@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import {
   GRID_ON_CLASS,
   gridGuidesDocumentSpread,
+  gridGuidesSpreadLimit,
   gridOverlayKeyShouldToggle,
   isEditableGridOverlayTarget,
 } from "./gridOverlayUtils";
@@ -80,6 +81,16 @@ describe("gridGuidesDocumentSpread", () => {
 
   it("floors partial pixels so the guides cannot grow the scrollport", () => {
     expect(gridGuidesDocumentSpread(900.8, 400.4, 1301.1)).toEqual({ before: 900, after: 0 });
+  });
+
+  it("stops page guides at a footer that sits below the host", () => {
+    expect(gridGuidesSpreadLimit(1200, 2400, 1800)).toBe(1800);
+    expect(gridGuidesDocumentSpread(800, 400, gridGuidesSpreadLimit(1200, 2400, 1800))).toEqual({
+      before: 800,
+      after: 600,
+    });
+    expect(gridGuidesSpreadLimit(1200, 2400, null)).toBe(2400);
+    expect(gridGuidesSpreadLimit(1200, 2400, 400)).toBe(2400);
   });
 
   it("keeps column guides on the page tracks via CSS variables", () => {

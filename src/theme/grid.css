@@ -117,6 +117,20 @@ html {
   visibility: visible;
 }
 
+/*
+ * Footer field stripes. `hidden` until the page grid is on, then above the navy
+ * and under the type. The spread vars stay 0 here — these tracks fill the field
+ * only. The page overlay owns the document spread and stops at the footer.
+ */
+.footer-reveal-guides {
+  --grid-guides-before: 0px;
+  --grid-guides-after: 0px;
+}
+
+.grid-on .footer-reveal-guides {
+  display: block;
+}
+
 .grid-guides-cols {
   position: absolute;
   /* Full document span. A short or empty grid-page must not clip the hero. */

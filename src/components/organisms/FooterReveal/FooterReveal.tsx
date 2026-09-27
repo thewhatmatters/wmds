@@ -30,6 +30,9 @@ import {
   footerRevealExternalLinkProps,
   footerRevealFadeClasses,
   footerRevealFieldClasses,
+  footerRevealFieldContentClasses,
+  footerRevealFieldGuideClasses,
+  footerRevealFieldGuideFrameClasses,
   footerRevealFieldLinkClasses,
   footerRevealRootClasses,
   footerRevealScaleClasses,
@@ -204,6 +207,21 @@ function FooterRevealContent({ children, className }: FooterRevealContentProps) 
   );
 }
 
+function FooterRevealField({ children }: { children?: ReactNode }) {
+  return (
+    <div className="relative">
+      <div className={footerRevealFieldGuideClasses} data-footer-reveal="guides" aria-hidden="true">
+        <div className={footerRevealFieldGuideFrameClasses}>
+          <div className="grid-guides-cols" />
+        </div>
+      </div>
+      <div className={footerRevealFieldContentClasses} data-footer-reveal="field">
+        {children}
+      </div>
+    </div>
+  );
+}
+
 function FooterRevealFooter({ children, className }: FooterRevealFooterProps) {
   const { footerRef, reveal, reduceMotion, scale, filter, opacityWillChange, contentWillChange } =
     useFooterRevealContext("FooterReveal.Footer");
@@ -225,7 +243,7 @@ function FooterRevealFooter({ children, className }: FooterRevealFooterProps) {
             style={{ transform: "none", filter: "none", transformOrigin: "50% 100%" }}
             data-footer-reveal="scale"
           >
-            {children}
+            <FooterRevealField>{children}</FooterRevealField>
           </div>
         </div>
       ) : (
@@ -244,7 +262,7 @@ function FooterRevealFooter({ children, className }: FooterRevealFooterProps) {
             }}
             data-footer-reveal="scale"
           >
-            {children}
+            <FooterRevealField>{children}</FooterRevealField>
           </motion.div>
         </motion.div>
       )}

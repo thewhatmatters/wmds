@@ -35,6 +35,32 @@ export function gridGuidesDocumentSpread(
   return { before, after };
 }
 
+/**
+ * How far the page overlay may extend. A FooterReveal footer keeps its own
+ * guides on the field, behind the type. The page overlay stops at that
+ * footer's in-flow top so its stripes do not paint over the headline.
+ * `footerTop` is null when the page has no reveal footer.
+ */
+export function gridGuidesSpreadLimit(
+  hostBottom: number,
+  documentHeight: number,
+  footerTop: number | null,
+): number {
+  if (footerTop == null || footerTop + 1 < hostBottom) return documentHeight;
+  return Math.min(documentHeight, Math.max(hostBottom, footerTop));
+}
+
+/** In-flow document top. Sticky `getBoundingClientRect` is the stuck visual, not this. */
+export function elementDocumentTop(el: HTMLElement): number {
+  let top = 0;
+  let node: HTMLElement | null = el;
+  while (node) {
+    top += node.offsetTop;
+    node = node.offsetParent as HTMLElement | null;
+  }
+  return top;
+}
+
 /** Read `--grid-cols` from an element (the `grid-page` wrap, or `:root`). */
 export function readGridColumnCount(from: Element | null): number {
   if (!from || typeof getComputedStyle === "undefined") return 12;
