@@ -41,9 +41,9 @@ Guide tints (`--grid-guide-*`) mix **existing** `--color-primary` / `--color-inf
 
 ### Overlay
 
-`GridOverlay` is a **child of `grid-page`**. Press **g** (ignored while typing). Draws numbered columns, baseline (major every `--leading-base`, minor every `--grid-baseline`), and margin lines — same content box as the grid.
+`GridOverlay` is a **child of `grid-page`**. Press **g** (ignored while typing). Draws numbered columns, baseline (major every `--leading-base`, minor every `--grid-baseline`), and margin lines — same content box as the grid. Column guides and margin lines also cover sections that sit before that page, on the same tracks. Baseline stays in the page box.
 
-Do not mount a full-viewport overlay. That is the “slapped on top / misaligned” failure.
+Do not mount a full-viewport overlay. That ignores `--grid-max` and is the “slapped on top / misaligned” failure.
 
 ### Consumers
 

@@ -20,6 +20,21 @@ export function gridOverlayKeyShouldToggle(
   return !isEditableGridOverlayTarget(event.target);
 }
 
+/**
+ * How far column guides should extend outside the overlay host so they cover
+ * the document above and below `grid-page` without growing the scrollport.
+ * `hostTop` and `hostHeight` are document coordinates (px).
+ */
+export function gridGuidesDocumentSpread(
+  hostTop: number,
+  hostHeight: number,
+  documentHeight: number,
+): { before: number; after: number } {
+  const before = Math.max(0, Math.floor(hostTop));
+  const after = Math.max(0, Math.floor(documentHeight - hostTop - hostHeight));
+  return { before, after };
+}
+
 /** Read `--grid-cols` from an element (the `grid-page` wrap, or `:root`). */
 export function readGridColumnCount(from: Element | null): number {
   if (!from || typeof getComputedStyle === "undefined") return 12;

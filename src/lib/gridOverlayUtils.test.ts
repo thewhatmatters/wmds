@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
   GRID_ON_CLASS,
+  gridGuidesDocumentSpread,
   gridOverlayKeyShouldToggle,
   isEditableGridOverlayTarget,
 } from "./gridOverlayUtils";
@@ -68,5 +69,24 @@ describe("gridOverlayKeyShouldToggle", () => {
 
   it("exports the document class the overlay CSS reads", () => {
     expect(GRID_ON_CLASS).toBe("grid-on");
+  });
+});
+
+describe("gridGuidesDocumentSpread", () => {
+  it("covers the document above and below the host without passing the scrollport", () => {
+    expect(gridGuidesDocumentSpread(900, 400, 1400)).toEqual({ before: 900, after: 100 });
+    expect(gridGuidesDocumentSpread(0, 800, 800)).toEqual({ before: 0, after: 0 });
+  });
+
+  it("floors partial pixels so the guides cannot grow the scrollport", () => {
+    expect(gridGuidesDocumentSpread(900.8, 400.4, 1301.1)).toEqual({ before: 900, after: 0 });
+  });
+
+  it("keeps column guides on the page tracks via CSS variables", () => {
+    expect(gridCss).toMatch(/--grid-guides-before:\s*0px/);
+    expect(gridCss).toMatch(/--grid-guides-after:\s*0px/);
+    expect(gridCss).toContain("top: calc(0px - var(--grid-guides-before))");
+    expect(gridCss).toContain("bottom: calc(0px - var(--grid-guides-after))");
+    expect(gridCss).toMatch(/\.grid-guides-baseline[\s\S]*top:\s*var\(--grid-pad\)/);
   });
 });

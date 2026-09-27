@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "./cn";
 import {
+  gridGuidesDocumentSpread,
   gridOverlayKeyShouldToggle,
   readGridColumnCount,
   setDocumentGridOn,
@@ -22,8 +23,26 @@ export interface GridOverlayProps {
 }
 
 /**
- * Column + baseline + margin overlay that lives **inside** `grid-page`.
- * Do not mount this on `document.body` — that is the classic misaligned overlay.
+ * Ancestors that clip would hide a spread overlay and shift the tracks inside
+ * the page. The document scroller (`body` / `html`) is not a clip — guides
+ * have to paint through sections that sit above `grid-page`.
+ */
+function ancestorClipsOverflow(el: HTMLElement): boolean {
+  let node = el.parentElement;
+  while (node && node !== document.body && node !== document.documentElement) {
+    const { overflowX, overflowY } = getComputedStyle(node);
+    if (overflowX !== "visible" || overflowY !== "visible") return true;
+    node = node.parentElement;
+  }
+  return false;
+}
+
+/**
+ * Column + baseline + margin overlay mounted **inside** `grid-page` so it
+ * inherits that page's `--grid-max`, margin, and column gap.
+ * Column guides and margin lines then stretch over the rest of the document,
+ * including sections that sit before `grid-page`. Baseline stays in the page box.
+ * Do not mount this on `document.body` — a viewport-sized overlay ignores the page max-width.
  */
 export function GridOverlay({
   visibleByDefault = false,
@@ -53,6 +72,40 @@ export function GridOverlay({
     syncCols();
     window.addEventListener("resize", syncCols);
     return () => window.removeEventListener("resize", syncCols);
+  }, []);
+
+  useLayoutEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+
+    const syncSpread = () => {
+      if (ancestorClipsOverflow(el)) {
+        el.style.setProperty("--grid-guides-before", "0px");
+        el.style.setProperty("--grid-guides-after", "0px");
+        return;
+      }
+      const rect = el.getBoundingClientRect();
+      const top = rect.top + window.scrollY;
+      const documentHeight = document.documentElement.scrollHeight;
+      const { before, after } = gridGuidesDocumentSpread(top, rect.height, documentHeight);
+      el.style.setProperty("--grid-guides-before", `${before}px`);
+      el.style.setProperty("--grid-guides-after", `${after}px`);
+      const grown = document.documentElement.scrollHeight - documentHeight;
+      if (grown > 0) {
+        el.style.setProperty("--grid-guides-after", `${Math.max(0, after - grown)}px`);
+      }
+    };
+
+    syncSpread();
+    const observer = new ResizeObserver(syncSpread);
+    if (el.parentElement) observer.observe(el.parentElement);
+    const previous = el.parentElement?.previousElementSibling;
+    if (previous instanceof HTMLElement) observer.observe(previous);
+    window.addEventListener("resize", syncSpread);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", syncSpread);
+    };
   }, []);
 
   useEffect(() => {
