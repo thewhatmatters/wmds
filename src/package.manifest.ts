@@ -13,7 +13,7 @@ const atoms = [
   "Input",
   "Kbd",
   "Radio",
-  "RiveGloveHand",
+  "RiveHand",
   "Skeleton",
   "Status",
   "Switch",

@@ -1,11 +1,11 @@
-# ADR-0034 — Rive glove hands
+# ADR-0034 — Rive hands
 
 **Status:** Accepted  
 **Date:** 2026-09-26
 
 ## Context
 
-The marketing hero can perch two decorative glove hands on the headline. The rock hand grips the top-left of the **W** in “We”. The point hand grips the top-right of the final **s** in “WhatMatters”. The art is a cleaned remix of the Rive Interactive Icon Set. The headline stays real, selectable text. The hands are not a second title.
+The marketing hero can perch two decorative hands on the headline. The rock hand grips the top-left of the **W** in “We”. The point hand grips the top-right of the final **s** in “WhatMatters”. The art is a cleaned remix of the Rive Interactive Icon Set. The headline stays real, selectable text. The hands are not a second title.
 
 Several graphics share the page, so the runtime has to stay small and share one canvas renderer.
 
@@ -19,7 +19,7 @@ Several graphics share the page, so the runtime has to stay small and share one 
 
 ### Component
 
-**`RiveGloveHand`** is an atom. It does not compose other WMDS controls. Props:
+**`RiveHand`** is an atom. It does not compose other WMDS controls. Props:
 
 - `hand`: `'point' | 'rock'`. `point` loads artboard `31_Cigarette` (the cigarette is removed). `rock` loads `29_Rock`.
 - `size`: a number (pixels) or a CSS length. The hero passes an `em` length so the box tracks the h1.
@@ -50,7 +50,7 @@ Handled with `matchMedia('(prefers-reduced-motion: reduce)')`, not Motion’s re
 
 **Components/Layout/HeroTileStack → Pattern — marketing hero** is the default. The plain h1 uses **`type-display-1`**, the largest display token (`clamp` from `2.5rem` / 40px to `5rem` / 80px). `type-display-2` and `type-display-3` are smaller. No uppercase transform.
 
-The rock hand grips the top-left of the **W**. The point hand grips the top-right of the final **s**. Each word that holds a glove is an `inline-block` with `whitespace-nowrap`, so the line can break between words and never through WhatMatters. The readable headline stays `We Are WhatMatters` with no extra spaces. Slots are absolute, sized in `em`, and kept inside the h1 line box so they track the clamp and stay clear of the nav. The visible glove is about one em. Hover or focus on the h1 sets `active`.
+The rock hand grips the top-left of the **W**. The point hand grips the top-right of the final **s**. Each word that holds a hand is an `inline-block` with `whitespace-nowrap`, so the line can break between words and never through WhatMatters. The readable headline stays `We Are WhatMatters` with no extra spaces. Slots are absolute, sized in `em`, and kept inside the h1 line box so they track the clamp and stay clear of the nav. The visible hand is about one em. Hover or focus on the h1 sets `active`.
 
 ### Consuming the pattern
 
@@ -69,7 +69,7 @@ The file is **CC BY 4.0**. Credit **Silvia Sguotti** and **Gabriele Montinaro** 
 - A second pattern that omits the hands.
 - A new display size above `type-display-1`.
 - A color token for the file’s default magenta (`#F32EEF`). Brand blue is `--color-brand`.
-- Click targets on the gloves.
+- Click targets on the hands.
 
 ## Consequences
 

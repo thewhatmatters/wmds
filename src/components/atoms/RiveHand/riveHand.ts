@@ -1,42 +1,42 @@
 /**
- * Decorative glove hands from the Interactive Icon Set remix.
+ * Decorative hands from the Interactive Icon Set remix.
  * Artboard `31_Cigarette` has no cigarette — it is the point hand.
  */
 
-export const riveGloveHands = ["point", "rock"] as const;
+export const riveHands = ["point", "rock"] as const;
 
-export type RiveGloveHandName = (typeof riveGloveHands)[number];
+export type RiveHandName = (typeof riveHands)[number];
 
 /** Point is artboard `31_Cigarette` (cigarette removed). Rock is `29_Rock`. */
-export const riveGloveHandArtboards: Record<RiveGloveHandName, string> = {
+export const riveHandArtboards: Record<RiveHandName, string> = {
   point: "31_Cigarette",
   rock: "29_Rock",
 };
 
-export const riveGloveHandSrc = "/rive/interactive-icon-set.riv";
+export const riveHandSrc = "/rive/interactive-icon-set.riv";
 
-export const riveGloveHandStateMachine = "State Machine 1";
+export const riveHandStateMachine = "State Machine 1";
 
-export const riveGloveHandBooleanInput = "Boolean 1";
+export const riveHandBooleanInput = "Boolean 1";
 
-export const riveGloveHandFillProperty = "handFill";
+export const riveHandFillProperty = "handFill";
 
-export const riveGloveHandOutlineProperty = "outline";
+export const riveHandOutlineProperty = "outline";
 
 /**
- * Glove fill — surface white in light mode (`#ffffff`).
+ * Hand fill — surface white in light mode (`#ffffff`).
  * Theme alias of `--color-background-surface`.
  */
-export const riveGloveHandFillToken = "--color-surface";
+export const riveHandFillToken = "--color-surface";
 
-export const riveGloveHandFillFallbackToken = "--color-background-surface";
+export const riveHandFillFallbackToken = "--color-background-surface";
 
 /**
  * WhatMatters brand blue (`#2f6bff`). Not `--color-fg`, and not status `--color-info`.
  */
-export const riveGloveHandOutlineToken = "--color-brand";
+export const riveHandOutlineToken = "--color-brand";
 
-export const riveGloveHandClassName = "pointer-events-none";
+export const riveHandClassName = "pointer-events-none";
 
 export interface Rgb {
   r: number;
@@ -44,16 +44,16 @@ export interface Rgb {
   b: number;
 }
 
-export interface RiveGloveHandColorTarget {
+export interface RiveHandColorTarget {
   rgb: (r: number, g: number, b: number) => void;
 }
 
-export interface RiveGloveHandColorSetter {
+export interface RiveHandColorSetter {
   setRgb: (r: number, g: number, b: number) => void;
 }
 
 /** A number is pixels. Any other value is a CSS length (`1.25em` tracks the parent font). */
-export function riveGloveHandBoxSize(size: number | string): string {
+export function riveHandBoxSize(size: number | string): string {
   return typeof size === "number" ? `${size}px` : size;
 }
 
@@ -126,19 +126,19 @@ export function readCssTokenRgb(token: string): Rgb | null {
   return specifiedTokenRgb(token, 0);
 }
 
-export function readRiveGloveHandFillRgb(): Rgb | null {
-  return readCssTokenRgb(riveGloveHandFillToken) ?? readCssTokenRgb(riveGloveHandFillFallbackToken);
+export function readRiveHandFillRgb(): Rgb | null {
+  return readCssTokenRgb(riveHandFillToken) ?? readCssTokenRgb(riveHandFillFallbackToken);
 }
 
-export function readRiveGloveHandOutlineRgb(): Rgb | null {
-  return readCssTokenRgb(riveGloveHandOutlineToken);
+export function readRiveHandOutlineRgb(): Rgb | null {
+  return readCssTokenRgb(riveHandOutlineToken);
 }
 
 /** Low-level view-model paint used from `onRiveReady` so the first frame is token-colored. */
-export function paintRiveGloveHandColors(
+export function paintRiveHandColors(
   rive: {
     viewModelInstance: {
-      color: (path: string) => RiveGloveHandColorTarget | null;
+      color: (path: string) => RiveHandColorTarget | null;
     } | null;
   } | null,
 ): void {
@@ -147,23 +147,23 @@ export function paintRiveGloveHandColors(
     return;
   }
 
-  const fill = readRiveGloveHandFillRgb();
-  const ink = readRiveGloveHandOutlineRgb();
+  const fill = readRiveHandFillRgb();
+  const ink = readRiveHandOutlineRgb();
   if (fill) {
-    viewModel.color(riveGloveHandFillProperty)?.rgb(fill.r, fill.g, fill.b);
+    viewModel.color(riveHandFillProperty)?.rgb(fill.r, fill.g, fill.b);
   }
   if (ink) {
-    viewModel.color(riveGloveHandOutlineProperty)?.rgb(ink.r, ink.g, ink.b);
+    viewModel.color(riveHandOutlineProperty)?.rgb(ink.r, ink.g, ink.b);
   }
 }
 
 /** Hook path — `useViewModelInstanceColor` setters. */
-export function applyRiveGloveHandTokenColors(targets: {
-  handFill?: RiveGloveHandColorSetter | null;
-  outline?: RiveGloveHandColorSetter | null;
+export function applyRiveHandTokenColors(targets: {
+  handFill?: RiveHandColorSetter | null;
+  outline?: RiveHandColorSetter | null;
 }): void {
-  const fill = readRiveGloveHandFillRgb();
-  const ink = readRiveGloveHandOutlineRgb();
+  const fill = readRiveHandFillRgb();
+  const ink = readRiveHandOutlineRgb();
   if (fill) {
     targets.handFill?.setRgb(fill.r, fill.g, fill.b);
   }

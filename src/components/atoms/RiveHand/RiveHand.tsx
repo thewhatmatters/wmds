@@ -5,29 +5,29 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../../../lib/cn";
 import {
-  applyRiveGloveHandTokenColors,
-  paintRiveGloveHandColors,
+  applyRiveHandTokenColors,
+  paintRiveHandColors,
   prefersReducedMotion,
-  riveGloveHandArtboards,
-  riveGloveHandBooleanInput,
-  riveGloveHandBoxSize,
-  riveGloveHandClassName,
-  riveGloveHandFillProperty,
-  riveGloveHandOutlineProperty,
-  riveGloveHandSrc,
-  riveGloveHandStateMachine,
-  riveGloveHands,
-  type RiveGloveHandName,
-} from "./riveGloveHand";
+  riveHandArtboards,
+  riveHandBooleanInput,
+  riveHandBoxSize,
+  riveHandClassName,
+  riveHandFillProperty,
+  riveHandOutlineProperty,
+  riveHandSrc,
+  riveHandStateMachine,
+  riveHands,
+  type RiveHandName,
+} from "./riveHand";
 
-export { riveGloveHandArtboards, riveGloveHandSrc, riveGloveHands, type RiveGloveHandName };
+export { riveHandArtboards, riveHandSrc, riveHands, type RiveHandName };
 
 /** Layout-only — not for colors. Size comes from the `size` prop. */
-export type RiveGloveHandLayoutClassName = string;
+export type RiveHandLayoutClassName = string;
 
-export interface RiveGloveHandProps {
+export interface RiveHandProps {
   /** `point` is artboard `31_Cigarette` (the cigarette is removed). `rock` is `29_Rock`. */
-  hand: RiveGloveHandName;
+  hand: RiveHandName;
   /** Box size. A number is pixels. An `em` length tracks the parent font size. */
   size: number | string;
   /**
@@ -35,18 +35,18 @@ export interface RiveGloveHandProps {
    * Ignored while `prefers-reduced-motion: reduce` matches.
    */
   active?: boolean;
-  className?: RiveGloveHandLayoutClassName;
+  className?: RiveHandLayoutClassName;
   /** Decorative by default so the headline text stays the accessible name. */
   "aria-hidden"?: boolean;
 }
 
-export function RiveGloveHand({
+export function RiveHand({
   hand,
   size,
   active = false,
   className,
   "aria-hidden": ariaHidden = true,
-}: RiveGloveHandProps) {
+}: RiveHandProps) {
   const [reduced, setReduced] = useState(prefersReducedMotion);
   const [themeEpoch, setThemeEpoch] = useState(0);
   const reducedRef = useRef(reduced);
@@ -55,15 +55,15 @@ export function RiveGloveHand({
   const layout = useMemo(() => new Layout({ fit: Fit.Contain }), []);
 
   const { rive, RiveComponent } = useRive({
-    src: riveGloveHandSrc,
-    artboard: riveGloveHandArtboards[hand],
-    stateMachines: riveGloveHandStateMachine,
+    src: riveHandSrc,
+    artboard: riveHandArtboards[hand],
+    stateMachines: riveHandStateMachine,
     autoplay: true,
     autoBind: true,
     shouldDisableRiveListeners: true,
     layout,
     onRiveReady: (instance) => {
-      paintRiveGloveHandColors(instance);
+      paintRiveHandColors(instance);
       instance.drawFrame();
       if (reducedRef.current) {
         instance.pause();
@@ -71,9 +71,9 @@ export function RiveGloveHand({
     },
   });
 
-  const handFill = useViewModelInstanceColor(riveGloveHandFillProperty, rive?.viewModelInstance);
-  const outline = useViewModelInstanceColor(riveGloveHandOutlineProperty, rive?.viewModelInstance);
-  const pressed = useStateMachineInput(rive, riveGloveHandStateMachine, riveGloveHandBooleanInput);
+  const handFill = useViewModelInstanceColor(riveHandFillProperty, rive?.viewModelInstance);
+  const outline = useViewModelInstanceColor(riveHandOutlineProperty, rive?.viewModelInstance);
+  const pressed = useStateMachineInput(rive, riveHandStateMachine, riveHandBooleanInput);
 
   useEffect(() => {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
@@ -99,7 +99,7 @@ export function RiveGloveHand({
   }, []);
 
   useEffect(() => {
-    applyRiveGloveHandTokenColors({ handFill, outline });
+    applyRiveHandTokenColors({ handFill, outline });
     if (!rive) {
       return;
     }
@@ -117,7 +117,7 @@ export function RiveGloveHand({
     // `setRgb` identity changes when the view-model color binds. The result objects are new every render.
   }, [active, handFill.setRgb, outline.setRgb, pressed, reduced, rive, themeEpoch]);
 
-  const length = riveGloveHandBoxSize(size);
+  const length = riveHandBoxSize(size);
   const hostRef = useRef<HTMLDivElement>(null);
   const [shadow, setShadow] = useState<ShadowRoot | null>(null);
 
@@ -133,7 +133,7 @@ export function RiveGloveHand({
     <div
       ref={hostRef}
       aria-hidden={ariaHidden}
-      className={cn(riveGloveHandClassName, className)}
+      className={cn(riveHandClassName, className)}
       style={{ width: length, height: length }}
     >
       {shadow

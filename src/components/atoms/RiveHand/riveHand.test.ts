@@ -7,16 +7,16 @@ import { act } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   cssColorToRgb,
-  readRiveGloveHandFillRgb,
-  readRiveGloveHandOutlineRgb,
-  riveGloveHandArtboards,
-  riveGloveHandBooleanInput,
-  riveGloveHandBoxSize,
-  riveGloveHandFillProperty,
-  riveGloveHandOutlineProperty,
-  riveGloveHandSrc,
-  riveGloveHandStateMachine,
-} from "./riveGloveHand";
+  readRiveHandFillRgb,
+  readRiveHandOutlineRgb,
+  riveHandArtboards,
+  riveHandBooleanInput,
+  riveHandBoxSize,
+  riveHandFillProperty,
+  riveHandOutlineProperty,
+  riveHandSrc,
+  riveHandStateMachine,
+} from "./riveHand";
 
 const runtime = vi.hoisted(() => {
   const setRgb = vi.fn();
@@ -66,7 +66,7 @@ vi.mock("@rive-app/react-canvas", () => {
           pause: runtime.pause,
           drawFrame: runtime.drawFrame,
         },
-        RiveComponent: () => React.createElement("canvas", { "data-rive-glove": "true" }),
+        RiveComponent: () => React.createElement("canvas", { "data-rive-hand": "true" }),
       };
     },
   );
@@ -79,7 +79,7 @@ vi.mock("@rive-app/react-canvas", () => {
   };
 });
 
-import { RiveGloveHand } from "./RiveGloveHand";
+import { RiveHand } from "./RiveHand";
 
 function stubMotion(reduced: boolean) {
   window.matchMedia = ((query: string) => ({
@@ -94,22 +94,22 @@ function stubMotion(reduced: boolean) {
   })) as typeof window.matchMedia;
 }
 
-describe("rive glove hand tokens", () => {
+describe("rive hand tokens", () => {
   it("parses hex and rgb colors", () => {
     expect(cssColorToRgb("#262626")).toEqual({ r: 38, g: 38, b: 38 });
     expect(cssColorToRgb("#171717")).toEqual({ r: 23, g: 23, b: 23 });
     expect(cssColorToRgb("rgb(38, 38, 38)")).toEqual({ r: 38, g: 38, b: 38 });
-    expect(riveGloveHandBoxSize(24)).toBe("24px");
-    expect(riveGloveHandBoxSize("1.35em")).toBe("1.35em");
+    expect(riveHandBoxSize(24)).toBe("24px");
+    expect(riveHandBoxSize("1.35em")).toBe("1.35em");
   });
 
   it("maps point and rock to the cleaned artboards", () => {
-    expect(riveGloveHandArtboards.point).toBe("31_Cigarette");
-    expect(riveGloveHandArtboards.rock).toBe("29_Rock");
+    expect(riveHandArtboards.point).toBe("31_Cigarette");
+    expect(riveHandArtboards.rock).toBe("29_Rock");
   });
 });
 
-describe("RiveGloveHand", () => {
+describe("RiveHand", () => {
   let root: Root;
   let container: HTMLDivElement;
 
@@ -139,31 +139,31 @@ describe("RiveGloveHand", () => {
   }
 
   it("binds the point artboard, token colors, and the interaction input", async () => {
-    await render(createElement(RiveGloveHand, { hand: "point", size: "1.35em", active: true, className: "absolute" }));
+    await render(createElement(RiveHand, { hand: "point", size: "1.35em", active: true, className: "absolute" }));
 
     const params = runtime.useRive.mock.calls.at(-1)?.[0];
     expect(params).toMatchObject({
-      src: riveGloveHandSrc,
+      src: riveHandSrc,
       artboard: "31_Cigarette",
-      stateMachines: riveGloveHandStateMachine,
+      stateMachines: riveHandStateMachine,
       autoBind: true,
     });
     expect(params.layout.fit).toBe("contain");
     expect(runtime.useViewModelInstanceColor).toHaveBeenCalledWith(
-      riveGloveHandFillProperty,
+      riveHandFillProperty,
       expect.anything(),
     );
     expect(runtime.useViewModelInstanceColor).toHaveBeenCalledWith(
-      riveGloveHandOutlineProperty,
+      riveHandOutlineProperty,
       expect.anything(),
     );
     expect(runtime.useStateMachineInput).toHaveBeenCalledWith(
       expect.anything(),
-      riveGloveHandStateMachine,
-      riveGloveHandBooleanInput,
+      riveHandStateMachine,
+      riveHandBooleanInput,
     );
-    expect(readRiveGloveHandFillRgb()).toEqual({ r: 255, g: 255, b: 255 });
-    expect(readRiveGloveHandOutlineRgb()).toEqual({ r: 47, g: 107, b: 255 });
+    expect(readRiveHandFillRgb()).toEqual({ r: 255, g: 255, b: 255 });
+    expect(readRiveHandOutlineRgb()).toEqual({ r: 47, g: 107, b: 255 });
     expect(runtime.rgb).toHaveBeenCalledWith(255, 255, 255);
     expect(runtime.rgb).toHaveBeenCalledWith(47, 107, 255);
     expect(runtime.setRgb).toHaveBeenCalledWith(255, 255, 255);
@@ -181,7 +181,7 @@ describe("RiveGloveHand", () => {
 
   it("pauses on the first frame and does not play the interaction when motion is reduced", async () => {
     stubMotion(true);
-    await render(createElement(RiveGloveHand, { hand: "rock", size: 48, active: true }));
+    await render(createElement(RiveHand, { hand: "rock", size: 48, active: true }));
 
     expect(runtime.useRive.mock.calls.at(-1)?.[0].artboard).toBe("29_Rock");
     expect(runtime.pause).toHaveBeenCalled();
