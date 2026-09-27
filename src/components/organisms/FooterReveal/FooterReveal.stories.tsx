@@ -325,7 +325,7 @@ export function MarketingHeroPage() {
               ]}
             </h1>
             <div className="grid w-full grid-cols-4 gap-x-[var(--grid-column-gap)] md:grid-cols-8 lg:grid-cols-12">
-              <p className="type-large col-span-full text-center font-normal text-muted lg:col-start-3 lg:col-end-10">
+              <p className="type-large col-span-full text-center font-normal text-muted lg:col-start-4 lg:col-end-10">
                 We're a design and product studio based in Austin, Texas. We help brands stand out{" "}
                 <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
                 {" "}with bold ideas, fresh approaches, and products people actually love to use.
@@ -412,7 +412,7 @@ function MarketingHeroPage() {
               ]}
             </h1>
             <div className="grid w-full grid-cols-4 gap-x-[var(--grid-column-gap)] md:grid-cols-8 lg:grid-cols-12">
-              <p className="type-large col-span-full text-center font-normal text-muted lg:col-start-3 lg:col-end-10">
+              <p className="type-large col-span-full text-center font-normal text-muted lg:col-start-4 lg:col-end-10">
                 We're a design and product studio based in Austin, Texas. We help brands stand out{" "}
                 <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
                 {" "}with bold ideas, fresh approaches, and products people actually love to use.

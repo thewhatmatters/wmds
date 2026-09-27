@@ -16,8 +16,10 @@ import {
   riveHandBoxSize,
   riveHandClassName,
   riveHandFillProperty,
+  installRiveHandLayoutRect,
   riveHandGrowDelaySec,
   riveHandGrowOrigin,
+  riveHandGrowSettled,
   riveHandIdleAllowed,
   riveHandIdleHoldMs,
   riveHandOutlineProperty,
@@ -251,6 +253,57 @@ export function RiveHand({
     setShadow(host.attachShadow({ mode: "open" }));
   }, []);
 
+  // The canvas runtime sizes its bitmap from getBoundingClientRect once clientWidth
+  // leaves 0. That rect includes the grow scale, so the sample has to be the layout box.
+  useLayoutEffect(() => {
+    const canvas = hostRef.current?.shadowRoot?.querySelector("canvas");
+    if (canvas) installRiveHandLayoutRect(canvas);
+  }, [shadow]);
+
+  const resampleRef = useRef<() => void>(() => {});
+
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!rive || !host) return;
+
+    const resample = () => {
+      const box = hostRef.current;
+      if (!box) return;
+      const painted = box.getBoundingClientRect();
+      // Skip while a grow scale collapses the border box — sampling then would store 0×0.
+      if (!riveHandGrowSettled(box.offsetWidth, box.offsetHeight, painted.width, painted.height)) return;
+      // The runtime copies container size onto the canvas once. A later layout change
+      // can leave that pixel width stale, and the layout-rect patch would then resample
+      // the stale box. Pin the canvas to the host's layout size before sampling.
+      const canvas = box.shadowRoot?.querySelector("canvas");
+      if (canvas && box.clientWidth > 0 && box.clientHeight > 0) {
+        canvas.style.width = `${box.clientWidth}px`;
+        canvas.style.height = `${box.clientHeight}px`;
+      }
+      rive.resizeDrawingSurfaceToCanvas();
+      if (reducedRef.current) {
+        rive.pause();
+        return;
+      }
+      rive.startRendering();
+    };
+    resampleRef.current = resample;
+
+    if (typeof ResizeObserver === "undefined") {
+      return () => {
+        resampleRef.current = () => {};
+      };
+    }
+    const observer = new ResizeObserver(() => {
+      resample();
+    });
+    observer.observe(host);
+    return () => {
+      observer.disconnect();
+      resampleRef.current = () => {};
+    };
+  }, [rive]);
+
   return (
     <motion.div
       ref={hostRef}
@@ -282,6 +335,9 @@ export function RiveHand({
               }
             : { duration: 0 }
       }
+      onAnimationComplete={() => {
+        resampleRef.current();
+      }}
     >
       {shadow
         ? createPortal(
