@@ -755,7 +755,7 @@ export const RuledGridFooterPattern: Story = {
       docs: {
         description: {
           story:
-            "Ruled grid on the page background. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. The frame is the page grid box (`max-w-[var(--grid-max)]`). Rules are 1px `border-brand`. Default copy is WhatMatters © 2026, a mono blurb, Website and Studio link columns, hello@whatmatters.com, Brand / Product / Web, five social cells, the WhatMatters wordmark, cropped WM letterforms, and Created by WhatMatters 2024—26. Below `md` the bands stack; the link columns stay side by side; the social cells stay one row. Plus glyphs are decorative. Social cells are icon-only anchors. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. `https` links open in a new tab.",
+            "Ruled grid on the page background. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. The frame is the page grid box (`max-w-[var(--grid-max)]`). Rules are 1px `border-brand`. Default copy is WhatMatters © 2026, a mono blurb, Website and Studio link columns, randy@whatmatters.so, Brand / Product / Web, five social cells, the WhatMatters wordmark, cropped WM letterforms, and Created by WhatMatters 2024—26. Below `md` the bands stack; the link columns stay side by side; the social cells stay one row. Plus glyphs are decorative. Social cells are icon-only anchors. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. `https` links open in a new tab.",
         },
       },
     },
@@ -793,8 +793,8 @@ export const RuledGridFooterPattern: Story = {
     expect(instagram?.getAttribute("rel")).toBe("noopener");
     expect(instagram?.getAttribute("aria-label")).toBe("WhatMatters on Instagram");
 
-    const email = canvasElement.querySelector("a[href='mailto:hello@whatmatters.com']");
-    expect(email?.textContent).toBe("hello@whatmatters.com");
+    const email = canvasElement.querySelector("a[href='mailto:randy@whatmatters.so']");
+    expect(email?.textContent).toBe("randy@whatmatters.so");
 
     for (const plus of canvasElement.querySelectorAll("[data-footer-ruled='plus']")) {
       expect(plus.getAttribute("aria-hidden")).toBe("true");

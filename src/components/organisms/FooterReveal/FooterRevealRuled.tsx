@@ -143,7 +143,7 @@ export const footerRevealRuledDefaultCopy = {
     "Working with teams ready to focus on what matters. If the week feels noisy, drop us a line and let's bring the work into one calm list.",
   mark: "WM",
   contactLabel: "Contact us:",
-  email: "hello@whatmatters.com",
+  email: "randy@whatmatters.so",
   services: "Brand / Product / Web",
   wordmark: "WhatMatters",
   crop: "WM",

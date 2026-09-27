@@ -20,11 +20,11 @@ import {
 
 describe("footerRevealRuledEmailHref", () => {
   it("uses mailto when no href is passed", () => {
-    expect(footerRevealRuledEmailHref("hello@whatmatters.com")).toBe("mailto:hello@whatmatters.com");
+    expect(footerRevealRuledEmailHref("randy@whatmatters.so")).toBe("mailto:randy@whatmatters.so");
   });
 
   it("keeps an explicit href", () => {
-    expect(footerRevealRuledEmailHref("hello@whatmatters.com", "/contact")).toBe("/contact");
+    expect(footerRevealRuledEmailHref("randy@whatmatters.so", "/contact")).toBe("/contact");
   });
 });
 
@@ -74,7 +74,7 @@ describe("ruled grid footer contract", () => {
     expect(footerRevealRuledDefaultCopy.crop).toBe("WM");
     expect(footerRevealRuledDefaultCopy.mark).toBe("WM");
     expect(footerRevealRuledDefaultCopy.credit).toBe("Created by WhatMatters 2024—26");
-    expect(footerRevealRuledDefaultCopy.email).toBe("hello@whatmatters.com");
+    expect(footerRevealRuledDefaultCopy.email).toBe("randy@whatmatters.so");
     expect(JSON.stringify(footerRevealRuledDefaultCopy)).not.toContain("What Matters");
     expect(footerRevealRuledDefaultLinkGroups).toHaveLength(2);
     expect(footerRevealRuledDefaultSocials).toHaveLength(5);
