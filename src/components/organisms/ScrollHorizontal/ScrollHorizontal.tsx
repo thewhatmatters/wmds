@@ -18,6 +18,7 @@ import {
   scrollHorizontalExpandedOpacity,
   scrollHorizontalHorizontalEnd,
   scrollHorizontalItemColor,
+  scrollHorizontalLeadTravel,
   scrollHorizontalNominalExpandMetrics,
   scrollHorizontalNominalMetrics,
   scrollHorizontalPeerOpacity,
@@ -26,11 +27,17 @@ import {
   scrollHorizontalReadMetrics,
   scrollHorizontalTranslateX,
 } from "./scrollHorizontalMath";
+import { ScrollHorizontalIntro } from "./ScrollHorizontalIntro";
+import { ScrollHorizontalIntroContext } from "./scrollHorizontalIntroContext";
 import {
   scrollHorizontalExpandLayerClasses,
   scrollHorizontalExpandedSectionClasses,
   scrollHorizontalExpandedSlotClasses,
   scrollHorizontalHeadingClasses,
+  scrollHorizontalIntroPanelClasses,
+  scrollHorizontalIntroStickyClasses,
+  scrollHorizontalIntroTrackClasses,
+  scrollHorizontalIntroWindowClasses,
   scrollHorizontalItemClasses,
   scrollHorizontalLabelClasses,
   scrollHorizontalRootClasses,
@@ -59,8 +66,15 @@ export interface ScrollHorizontalProps {
   /**
    * Optional section name. `sr-only` while the window is pinned (it stays the
    * accessible name). Visible above the row when motion is reduced.
+   * Ignored when `intro` is set — the intro eyebrow names the section instead.
    */
   heading?: ReactNode;
+  /**
+   * First panel of the track: a left-aligned statement, then the tiles.
+   * Pass **ScrollHorizontal.Intro**. Scroll translates the panel off to the left.
+   * Reduced motion renders it as a block above the native row. Replaces `heading`.
+   */
+  intro?: ReactNode;
   /**
    * After the last card is centered, keep the window pinned and grow that card
    * until it fills the viewport. Default off — the track releases on the last card.
@@ -92,21 +106,30 @@ export interface ScrollHorizontalProps {
  * follows as a static `h-svh` section. `heading` is `sr-only` on the pinned
  * window and visible above that scroller.
  *
+ * `intro` (**ScrollHorizontal.Intro**) is the first panel. It sits in the page
+ * grid's left columns, clear of the site nav, with the tiles to its right.
+ * Vertical scroll carries that panel off the left edge. The eyebrow names the
+ * section. Reduced motion stacks the same panel above the native row.
+ *
  * The server render and the hydration render both use the motion shell
  * (`data-reduce="false"`). The OS query is read in `useLayoutEffect`, before
  * paint. `motion-reduce:` classes cover that first paint without a markup mismatch.
  */
-export function ScrollHorizontal({
+function ScrollHorizontalRoot({
   items,
   heading,
+  intro,
   expandLast = false,
   expanded,
   className,
 }: ScrollHorizontalProps) {
   const headingId = useId();
+  const introLabelId = useId();
+  const hasIntro = intro != null && intro !== false;
   const rootRef = useRef<HTMLElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const rowRef = useRef<HTMLUListElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const itemRef = useRef<HTMLLIElement>(null);
   const distance = useMotionValue(0);
   const frame = useMotionValue(scrollHorizontalNominalExpandMetrics(1440, 900));
@@ -179,6 +202,29 @@ export function ScrollHorizontal({
     }
 
     const measure = () => {
+      const track = trackRef.current;
+      if (hasIntro && track && sticky) {
+        const metrics = scrollHorizontalReadFrame(
+          sticky,
+          item,
+          track,
+          window.innerWidth,
+          window.innerHeight,
+        );
+        const endLeft = (metrics.viewportWidth - metrics.cardWidth) / 2;
+        distance.set(
+          scrollHorizontalLeadTravel(
+            items.length,
+            metrics.cardWidth,
+            metrics.pitch,
+            metrics.cardLeft,
+            metrics.viewportWidth,
+          ),
+        );
+        frame.set({ ...metrics, endLeft });
+        return;
+      }
+
       const measured = scrollHorizontalReadMetrics(item, row);
       const nominal = scrollHorizontalNominalMetrics(window.innerWidth);
       const itemWidth = measured.itemWidth > 0 ? measured.itemWidth : nominal.itemWidth;
@@ -197,10 +243,48 @@ export function ScrollHorizontal({
     observer.observe(item);
     observer.observe(row);
     if (sticky) observer.observe(sticky);
+    if (trackRef.current) observer.observe(trackRef.current);
     return () => observer.disconnect();
-  }, [distance, frame, items.length]);
+  }, [distance, frame, hasIntro, items.length]);
 
   const fadePeers = expandLast && !reduceMotion;
+  const labelledBy = hasIntro ? introLabelId : heading ? headingId : undefined;
+
+  const cards = items.map((item, index) => {
+    const color = scrollHorizontalItemColor(item.color, index);
+    const isPeer = fadePeers && index !== lastIndex;
+    if (isPeer) {
+      return (
+        <motion.li
+          key={item.id}
+          ref={index === 0 ? itemRef : undefined}
+          className={scrollHorizontalItemClasses}
+          style={
+            {
+              "--scroll-horizontal-color": color,
+              opacity: peerOpacity,
+            } as unknown as CSSProperties
+          }
+        >
+          <span className={scrollHorizontalLabelClasses}>{item.label}</span>
+        </motion.li>
+      );
+    }
+    return (
+      <li
+        key={item.id}
+        ref={index === 0 ? itemRef : undefined}
+        className={scrollHorizontalItemClasses}
+        style={
+          {
+            "--scroll-horizontal-color": color,
+          } as CSSProperties
+        }
+      >
+        <span className={scrollHorizontalLabelClasses}>{item.label}</span>
+      </li>
+    );
+  });
 
   return (
     <section
@@ -208,62 +292,56 @@ export function ScrollHorizontal({
       data-scroll-horizontal=""
       data-expand-last={expandLast ? "true" : "false"}
       data-reduce={reduceMotion ? "true" : "false"}
-      aria-labelledby={heading ? headingId : undefined}
-      aria-label={heading ? undefined : "Projects"}
+      data-has-intro={hasIntro ? "true" : "false"}
+      aria-labelledby={labelledBy}
+      aria-label={labelledBy ? undefined : "Projects"}
       className={cn(
         expandLast ? scrollHorizontalRootExpandClasses : scrollHorizontalRootClasses,
         className,
       )}
     >
-      <div ref={stickyRef} className={scrollHorizontalStickyClasses}>
-        {heading ? (
+      <div
+        ref={stickyRef}
+        className={cn(scrollHorizontalStickyClasses, hasIntro && scrollHorizontalIntroStickyClasses)}
+      >
+        {heading && !hasIntro ? (
           <div id={headingId} className={scrollHorizontalHeadingClasses}>
             {heading}
           </div>
         ) : null}
-        <div className={scrollHorizontalWindowClasses}>
-          <motion.ul
-            ref={rowRef}
-            className={scrollHorizontalRowClasses}
+        {hasIntro ? (
+          <motion.div
+            ref={trackRef}
+            data-scroll-horizontal-track=""
+            className={scrollHorizontalIntroTrackClasses}
             style={reduceMotion ? undefined : { x }}
           >
-            {items.map((item, index) => {
-              const color = scrollHorizontalItemColor(item.color, index);
-              const isPeer = fadePeers && index !== lastIndex;
-              if (isPeer) {
-                return (
-                  <motion.li
-                    key={item.id}
-                    ref={index === 0 ? itemRef : undefined}
-                    className={scrollHorizontalItemClasses}
-                    style={
-                      {
-                        "--scroll-horizontal-color": color,
-                        opacity: peerOpacity,
-                      } as unknown as CSSProperties
-                    }
-                  >
-                    <span className={scrollHorizontalLabelClasses}>{item.label}</span>
-                  </motion.li>
-                );
-              }
-              return (
-                <li
-                  key={item.id}
-                  ref={index === 0 ? itemRef : undefined}
-                  className={scrollHorizontalItemClasses}
-                  style={
-                    {
-                      "--scroll-horizontal-color": color,
-                    } as CSSProperties
-                  }
-                >
-                  <span className={scrollHorizontalLabelClasses}>{item.label}</span>
-                </li>
-              );
-            })}
-          </motion.ul>
-        </div>
+            <motion.div
+              data-scroll-horizontal-intro=""
+              className={scrollHorizontalIntroPanelClasses}
+              style={fadePeers ? { opacity: peerOpacity } : undefined}
+            >
+              <ScrollHorizontalIntroContext.Provider value={introLabelId}>
+                {intro}
+              </ScrollHorizontalIntroContext.Provider>
+            </motion.div>
+            <div className={scrollHorizontalIntroWindowClasses}>
+              <ul ref={rowRef} className={scrollHorizontalRowClasses}>
+                {cards}
+              </ul>
+            </div>
+          </motion.div>
+        ) : (
+          <div className={scrollHorizontalWindowClasses}>
+            <motion.ul
+              ref={rowRef}
+              className={scrollHorizontalRowClasses}
+              style={reduceMotion ? undefined : { x }}
+            >
+              {cards}
+            </motion.ul>
+          </div>
+        )}
         {expandLast && lastItem ? (
           <motion.div
             aria-hidden="true"
@@ -303,3 +381,9 @@ export function ScrollHorizontal({
     </section>
   );
 }
+
+export const ScrollHorizontal = Object.assign(ScrollHorizontalRoot, {
+  Intro: ScrollHorizontalIntro,
+});
+
+export type { ScrollHorizontalIntroAction, ScrollHorizontalIntroProps } from "./ScrollHorizontalIntro";

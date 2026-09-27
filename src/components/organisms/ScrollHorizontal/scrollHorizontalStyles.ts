@@ -103,3 +103,68 @@ export const scrollHorizontalItemClasses = [
 
 /** Accessible name for a placeholder tile. Not painted. */
 export const scrollHorizontalLabelClasses = "sr-only";
+
+/**
+ * Intro track. The sticky is an inline-size container so `100cqw` is the
+ * gallery viewport (not `100vw`, which ignores the scrollbar gutter).
+ * Padding parks the panel on the page grid's content edge.
+ * Reduced motion stacks the panel above a native scroller.
+ */
+export const scrollHorizontalIntroStickyClasses = "[container-type:inline-size]";
+
+export const scrollHorizontalIntroTrackClasses = [
+  "m-0 flex h-full w-max items-center self-start gap-8 p-0 max-sm:gap-4 will-change-transform",
+  "pl-[max(var(--grid-margin),calc((100cqw-var(--grid-max))/2+var(--grid-margin)))]",
+  "motion-reduce:!h-auto motion-reduce:!w-full motion-reduce:!max-w-full motion-reduce:!flex-col motion-reduce:!items-stretch motion-reduce:!self-stretch motion-reduce:!transform-none motion-reduce:will-change-auto",
+  "group-data-[reduce=true]/scroll-horizontal:!h-auto",
+  "group-data-[reduce=true]/scroll-horizontal:!w-full",
+  "group-data-[reduce=true]/scroll-horizontal:!max-w-full",
+  "group-data-[reduce=true]/scroll-horizontal:!flex-col",
+  "group-data-[reduce=true]/scroll-horizontal:!items-stretch",
+  "group-data-[reduce=true]/scroll-horizontal:!self-stretch",
+  "group-data-[reduce=true]/scroll-horizontal:!transform-none",
+  "group-data-[reduce=true]/scroll-horizontal:will-change-auto",
+].join(" ");
+
+/**
+ * First panel. Below `md` it is the full content box so the statement fits at 390.
+ * From `md`, 4 of 8 columns. From `lg`, 6 of 12 — the left half of the page grid.
+ * Top padding clears the compact site nav (`--site-nav-height` plus the 1rem pin offset).
+ */
+export const scrollHorizontalIntroPanelClasses = [
+  "box-border flex h-full min-w-0 shrink-0 flex-col justify-center self-stretch",
+  "pt-[calc(var(--site-nav-height)+var(--spacing)*4)]",
+  "w-[calc(min(100cqw,var(--grid-max))-2*var(--grid-margin))]",
+  "md:w-[calc(4*((min(100cqw,var(--grid-max))-2*var(--grid-margin)-7*var(--grid-column-gap))/8)+3*var(--grid-column-gap))]",
+  "lg:w-[calc(6*((min(100cqw,var(--grid-max))-2*var(--grid-margin)-11*var(--grid-column-gap))/12)+5*var(--grid-column-gap))]",
+  "motion-reduce:!h-auto motion-reduce:!self-auto",
+  "group-data-[reduce=true]/scroll-horizontal:!h-auto",
+  "group-data-[reduce=true]/scroll-horizontal:!self-auto",
+].join(" ");
+
+/** Native scroller for the cards when an intro leads the track. */
+export const scrollHorizontalIntroWindowClasses = [
+  "flex min-w-0 items-center",
+  "motion-reduce:!w-full motion-reduce:overflow-x-auto motion-reduce:scroll-fade-x",
+  "group-data-[reduce=true]/scroll-horizontal:!w-full",
+  "group-data-[reduce=true]/scroll-horizontal:overflow-x-auto",
+  "group-data-[reduce=true]/scroll-horizontal:scroll-fade-x",
+].join(" ");
+
+/** Eyebrow, statement, and action. The statement uses the panel width as its measure. */
+export const scrollHorizontalIntroBodyClasses =
+  "flex w-full min-w-0 flex-col items-start gap-8 pr-[var(--grid-column-gap)]";
+
+export const scrollHorizontalIntroCopyClasses = "flex w-full min-w-0 flex-col items-start gap-3";
+
+/**
+ * Statement. `type-display-2` is the largest display step that wraps to about
+ * four or five lines in the left columns. Weight is `--font-weight-normal`
+ * (display tokens bake in semibold/bold). Leading is the tighter display-1 token.
+ */
+export const scrollHorizontalIntroStatementClasses = [
+  "type-display-2 m-0 max-w-full min-w-0 text-left text-fg break-words",
+  "!font-normal",
+  "!leading-[var(--text-display-1-leading)]",
+  "!tracking-[var(--text-display-1-tracking)]",
+].join(" ");

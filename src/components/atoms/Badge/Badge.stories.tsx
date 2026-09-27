@@ -39,6 +39,7 @@ const meta = {
 | **With icon** | \`icon\` (Lucide) + \`variant\` + label |
 | **With avatar** | \`avatar={{ src, alt }}\` + \`variant\` + label — round **Avatar**, sized to the badge |
 | **Icon only** | \`iconOnly\` + \`icon\` + \`variant\` — **TaskRows** leading done/failed |
+| **Eyebrow** | \`eyebrow\` — mono uppercase chip on the accent fill. Text only |
 
 Solid semantic fills for status and category labels. **Variants:** \`neutral\` (categories), \`info\`, \`success\`, \`warning\`, \`destructive\` (errors and irreversible outcomes).
 
@@ -65,6 +66,29 @@ export const StatusLabel: Story = {
   args: {
     children: "Active",
     variant: "success",
+  },
+};
+
+export const Eyebrow: Story = {
+  name: "Pattern — eyebrow",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Mono uppercase chip on the accent fill. Text only — not with icon, count, avatar, or iconOnly. ScrollHorizontal.Intro uses this for the section name.",
+        },
+      },
+    },
+    `
+import { Badge } from "@whatmatters/wmds";
+
+<Badge eyebrow>Selected work</Badge>
+    `,
+  ),
+  args: {
+    eyebrow: true,
+    children: "Selected work",
   },
 };
 

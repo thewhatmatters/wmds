@@ -308,6 +308,24 @@ export {
   type TaskRowsVariant,
 } from "./components/molecules/TaskRows/TaskRows";
 export {
+  TextSequence,
+  sequencePlainText,
+  textSequenceDefaultDelay,
+  textSequenceDefaultStagger,
+  textSequenceEmphases,
+  textSequenceShapeTones,
+  textSequenceShapeVariants,
+  textSequenceTriggers,
+  type TextSequenceEmphasis,
+  type TextSequenceLayoutClassName,
+  type TextSequenceProps,
+  type TextSequenceShapeLayoutClassName,
+  type TextSequenceShapeProps,
+  type TextSequenceShapeTone,
+  type TextSequenceShapeVariant,
+  type TextSequenceTrigger,
+} from "./components/molecules/TextSequence/TextSequence";
+export {
   Chart,
   ChartCartesian,
   ChartCartesianNoData,
@@ -480,6 +498,8 @@ export {
 } from "./components/organisms/HeroTileStack/HeroTileStack";
 export {
   ScrollHorizontal,
+  type ScrollHorizontalIntroAction,
+  type ScrollHorizontalIntroProps,
   type ScrollHorizontalItem,
   type ScrollHorizontalLayoutClassName,
   type ScrollHorizontalProps,

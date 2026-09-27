@@ -121,6 +121,73 @@ export function scrollHorizontalReadMetrics(
   };
 }
 
+/**
+ * Page-grid numbers the intro panel shares with `grid.css`.
+ * `--grid-max` is 80rem (1280px at a 16px root). Margin and gutter step at `md`.
+ * Column count steps at `md` (8) and `lg` (12). The intro spans every mobile column,
+ * 4 of 8 from `md`, and 6 of 12 from `lg` (about 42% of a 1440px viewport).
+ */
+export const scrollHorizontalGridMax = 1280;
+
+export function scrollHorizontalGridMetrics(viewportWidth: number): {
+  cols: number;
+  margin: number;
+  gap: number;
+  contentLeft: number;
+  contentWidth: number;
+  introSpan: number;
+  introWidth: number;
+} {
+  const width = Number.isFinite(viewportWidth) && viewportWidth > 0 ? viewportWidth : 0;
+  const cols = width >= 1024 ? 12 : width >= 768 ? 8 : 4;
+  const margin = width >= 768 ? 24 : 16;
+  const gap = width >= 768 ? 24 : 16;
+  const pageWidth = Math.min(width, scrollHorizontalGridMax);
+  const contentLeft = (width - pageWidth) / 2 + margin;
+  const contentWidth = Math.max(0, pageWidth - margin * 2);
+  const introSpan = width >= 1024 ? 6 : width >= 768 ? 4 : cols;
+  const column =
+    cols > 0 ? (contentWidth - (cols - 1) * gap) / cols : 0;
+  const introWidth = introSpan * column + Math.max(0, introSpan - 1) * gap;
+  return { cols, margin, gap, contentLeft, contentWidth, introSpan, introWidth };
+}
+
+/**
+ * Travel when the first card does not start in the centered slot.
+ * `firstCardLeft` is that card's resting left (row transform removed).
+ * Progress 1 parks the last card on the horizontal center.
+ * When the first card is already centered, this matches `scrollHorizontalDistance`.
+ */
+export function scrollHorizontalLeadTravel(
+  count: number,
+  itemWidth: number,
+  pitch: number,
+  firstCardLeft: number,
+  viewportWidth: number,
+): number {
+  if (!Number.isFinite(count) || count < 1) return 0;
+  if (!Number.isFinite(itemWidth) || itemWidth <= 0) return 0;
+  if (!Number.isFinite(pitch) || pitch <= 0) return 0;
+  if (!Number.isFinite(firstCardLeft) || !Number.isFinite(viewportWidth) || viewportWidth <= 0) {
+    return 0;
+  }
+  const endLeft = (viewportWidth - itemWidth) / 2;
+  const lastLeft = firstCardLeft + Math.max(0, count - 1) * pitch;
+  return Math.max(0, lastLeft - endLeft);
+}
+
+/** Resting left of `item` inside `sticky`, with `transformed`'s translate removed. */
+export function scrollHorizontalRestLeft(
+  item: HTMLElement,
+  sticky: HTMLElement,
+  transformed: HTMLElement,
+): number {
+  const itemRect = item.getBoundingClientRect();
+  const stickyRect = sticky.getBoundingClientRect();
+  const shift = scrollHorizontalReadTranslateX(getComputedStyle(transformed).transform);
+  return itemRect.left - shift - stickyRect.left;
+}
+
 /** `(count - 1) * (itemWidth + gap)`. Zero when there is nothing to travel. */
 export function scrollHorizontalDistance(count: number, itemWidth: number, gap: number): number {
   if (!Number.isFinite(count) || count <= 1) return 0;
@@ -206,12 +273,21 @@ export interface ScrollHorizontalExpandMetrics {
   viewportHeight: number;
   cardWidth: number;
   cardHeight: number;
-  /** First card's rest left, relative to the sticky window. The last card sits here when travel ends. */
+  /**
+   * First card's rest left, relative to the sticky window.
+   * Without an intro, the last card ends here (the centered slot).
+   */
   cardLeft: number;
   cardTop: number;
   /** `cardWidth + gap`. Distance from one card's left edge to the next. */
   pitch: number;
   radius: number;
+  /**
+   * Last card's left at the end of horizontal travel.
+   * Omit to park on `cardLeft` (first card centered, no intro).
+   * An intro sets this to the viewport center — the first card rests further right.
+   */
+  endLeft?: number;
 }
 
 export interface ScrollHorizontalClipRect {
@@ -322,7 +398,10 @@ export function scrollHorizontalExpandClipRect(
   const travel =
     Number.isFinite(count) && count > 1 && metrics.pitch > 0 ? (count - 1) * metrics.pitch : 0;
   const horizontal = scrollHorizontalClamp01(horizontalProgress);
-  const left = metrics.cardLeft + travel * (1 - horizontal);
+  const endLeft =
+    metrics.endLeft != null && Number.isFinite(metrics.endLeft) ? metrics.endLeft : metrics.cardLeft;
+  const startLeft = metrics.cardLeft + travel;
+  const left = startLeft + (endLeft - startLeft) * horizontal;
   const top = metrics.cardTop;
   const right = metrics.viewportWidth - left - metrics.cardWidth;
   const bottom = metrics.viewportHeight - top - metrics.cardHeight;

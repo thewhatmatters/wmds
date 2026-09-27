@@ -12,6 +12,8 @@ import { ButtonStatusButton } from "./ButtonStatusButton";
 import type { ButtonStatus } from "./buttonStatusStyles";
 import {
   buttonBaseClasses,
+  buttonEndIconSquareClasses,
+  buttonMonoLabelClasses,
   buttonPillClass,
   buttonRoleClasses,
   buttonNavLayoutClasses,
@@ -39,7 +41,7 @@ export interface ButtonProps
   > {
   /** Button label. */
   children: ReactNode;
-  /** Action role — primary CTA, secondary, ghost, destructive, or inverse (surface on a brand field). Default: `primary`. */
+  /** Action role — primary, secondary, ghost, destructive, inverse, or outline (hairline, transparent fill). Default: `primary`. */
   role?: ButtonRole;
   /** `pill` (default) or `row` — flat full-width lines for detail / settings rows. */
   layout?: ButtonLayout;
@@ -59,6 +61,16 @@ export interface ButtonProps
   icon?: ReactElement;
   /** Trailing numeric count (inbox / notifications). Not combinable with `status`. */
   count?: number;
+  /**
+   * Mono uppercase label. Pairs with `role="outline"` for an eyebrow action.
+   * Not with `status`.
+   */
+  mono?: boolean;
+  /**
+   * Trailing Lucide glyph on a filled accent square. Not with `status`, `count`,
+   * or `layout="row"` / `layout="nav"`.
+   */
+  endIcon?: ReactElement;
   /** Inset nav row — `layout="nav"` only. Sets quiet selected fill + `aria-current`. */
   selected?: boolean;
   /**
@@ -79,21 +91,27 @@ export interface ButtonProps
 }
 
 function assertActionPattern(
-  props: Pick<ButtonProps, "status" | "icon" | "count" | "layout" | "render">,
+  props: Pick<ButtonProps, "status" | "icon" | "count" | "layout" | "render" | "endIcon" | "mono">,
 ) {
   if (
     (props.layout === "row" || props.layout === "nav") &&
-    (props.status != null || props.icon != null || props.count != null)
+    (props.status != null || props.icon != null || props.count != null || props.endIcon != null || props.mono)
   ) {
     console.warn(
-      `[WMDS Button] \`layout="${props.layout}"\` is mutually exclusive with \`status\`, \`icon\`, and \`count\`.`,
+      `[WMDS Button] \`layout="${props.layout}"\` is mutually exclusive with \`status\`, \`icon\`, \`count\`, \`endIcon\`, and \`mono\`.`,
     );
   }
 
   if (props.status != null) {
-    if (props.icon != null || props.count != null) {
-      console.warn("[WMDS Button] `status` is mutually exclusive with `icon` and `count`.");
+    if (props.icon != null || props.count != null || props.endIcon != null || props.mono) {
+      console.warn(
+        "[WMDS Button] `status` is mutually exclusive with `icon`, `count`, `endIcon`, and `mono`.",
+      );
     }
+  }
+
+  if (props.endIcon != null && props.count != null) {
+    console.warn("[WMDS Button] `endIcon` is mutually exclusive with `count`.");
   }
 
   if (props.render != null && (props.layout !== "pill" || props.status != null)) {
@@ -142,6 +160,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     disableOnError,
     icon,
     count,
+    mono = false,
+    endIcon,
     selected = false,
     render,
     className,
@@ -154,7 +174,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     form,
     ...buttonProps
   }, ref) {
-  assertActionPattern({ status, icon, count, layout, render });
+  assertActionPattern({ status, icon, count, layout, render, endIcon, mono });
 
   if (status != null) {
     return (
@@ -258,9 +278,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       )}
       data-role={role}
       data-size={size}
+      data-mono={mono ? "" : undefined}
+      data-end-icon={endIcon ? "" : undefined}
     >
       {icon ? <ButtonIcon size={size}>{icon}</ButtonIcon> : null}
-      <span>{children}</span>
+      <span className={mono ? buttonMonoLabelClasses : undefined}>{children}</span>
+      {endIcon ? (
+        <span className={buttonEndIconSquareClasses}>
+          <ButtonIcon size="xs">{endIcon}</ButtonIcon>
+        </span>
+      ) : null}
       {count != null ? <ButtonBadge value={count} /> : null}
     </ButtonPill>
   );

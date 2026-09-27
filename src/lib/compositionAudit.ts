@@ -106,6 +106,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "MoreMenu owns the built-in kebab trigger glyph (IconButton shell).",
   },
   {
+    file: "components/organisms/ScrollHorizontal/ScrollHorizontalIntro.tsx",
+    ruleId: "lucide-import",
+    reason: "ScrollHorizontal.Intro owns the ArrowRight glyph passed to Button endIcon.",
+  },
+  {
     file: "components/organisms/Dialog/OverlayPanelHeader.tsx",
     ruleId: "lucide-import",
     reason: "OverlayPanelHeader owns the built-in dismiss glyph (IconButton close).",

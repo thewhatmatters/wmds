@@ -4,6 +4,7 @@ import { useState } from "react";
 import { expect, userEvent, waitFor } from "storybook/test";
 import { Badge } from "../../atoms/Badge/Badge";
 import { HeroIntro } from "../../molecules/HeroIntro/HeroIntro";
+import { TextSequence } from "../../molecules/TextSequence/TextSequence";
 import { RiveHand } from "../../atoms/RiveHand/RiveHand";
 import { Button } from "../../atoms/Button/Button";
 import { SiteNav } from "../SiteNav/SiteNav";
@@ -589,5 +590,301 @@ export const IntroLeadBelowMd: Story = {
   play: async ({ canvasElement }) => {
     expect(window.innerWidth).toBeLessThan(768);
     expectHeroIntroLines(canvasElement, false);
+  },
+};
+
+const marketingHeroTextSequenceCopySource = `
+"use client";
+
+// npm install @rive-app/react-canvas gsap @gsap/react
+// Copy public/rive/interactive-icon-set.riv so the app serves /rive/interactive-icon-set.riv.
+// Hand art: CC BY 4.0, Silvia Sguotti and Gabriele Montinaro.
+
+import { useState } from "react";
+import { Sparkles } from "lucide-react";
+import { Button, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence } from "@whatmatters/wmds";
+
+const tiles = [
+  { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },
+  { src: "/hero-tiles/focus.svg", alt: "Blue focus card" },
+  { src: "/hero-tiles/week.svg", alt: "Abstract shapes for the week" },
+  { src: "/hero-tiles/note.svg", alt: "A pale note about what matters" },
+];
+
+const projects = [
+  { id: "project-one", label: "Project One", color: "var(--color-brand)" },
+  { id: "project-two", label: "Project Two", color: "var(--color-brand-soft)" },
+  { id: "project-three", label: "Project Three", color: "var(--color-primary)" },
+  { id: "project-four", label: "Project Four", color: "var(--color-info-muted)" },
+  { id: "project-five", label: "Project Five", color: "var(--color-accent)" },
+];
+
+function MarketingHeroSequenceHeadline() {
+  const [handsActive, setHandsActive] = useState(false);
+  return (
+    <div className="w-full px-[var(--grid-margin)]">
+      <h1
+        className="type-display-1 isolate text-fg"
+        tabIndex={0}
+        onMouseEnter={() => setHandsActive(true)}
+        onMouseLeave={() => setHandsActive(false)}
+        onFocus={() => setHandsActive(true)}
+        onBlur={() => setHandsActive(false)}
+      >
+        {[
+          <span key="lead" className="relative inline-block whitespace-nowrap">{[
+            <span key="gap" className="absolute inset-y-0 right-0 w-0">{[
+              <span key="clip" className="absolute z-10 overflow-clip -right-[0.94em] -top-[0.17em] bottom-[0.22em] w-[1.7em] md:-right-[1.07em] md:-top-[0.54em] md:w-[2.2em]">{[
+                <RiveHand key="rock" hand="rock" size="2.2em" active={handsActive} idle entrance="slide-up" className="absolute top-0 max-md:!h-[1.7em] max-md:!w-[1.7em]" />,
+              ]}</span>,
+            ]}</span>,
+            "We Ar",
+            <span key="e" className="relative z-20">e</span>,
+          ]}</span>,
+          " ",
+          <span key="brand" className="relative inline-block whitespace-nowrap">{[
+            <span key="w" className="relative z-0">W</span>,
+            "hatMatter",
+            <span key="s" className="relative">{[
+              "s",
+              <RiveHand key="point" hand="point" size="2.2em" active={handsActive} idle entrance="grow" className="absolute z-10 -right-[1.2em] -top-[0.4em] max-md:!h-[1.7em] max-md:!w-[1.7em] md:-right-[1.53em] md:-top-[0.7em]" />,
+            ]}</span>,
+          ]}</span>,
+        ]}
+      </h1>
+    </div>
+  );
+}
+
+export function MarketingHeroTextSequence() {
+  return (
+    <>
+      <SiteNav
+        start={
+          <SiteNav.Brand href="/" aria-label="WhatMatters" icon={<Sparkles />} />
+        }
+        middle={
+          <SiteNav.Links>
+            <SiteNav.Link href="/product" current>Product</SiteNav.Link>
+            <SiteNav.Link href="/pricing">Pricing</SiteNav.Link>
+            <SiteNav.Link href="/customers">Customers</SiteNav.Link>
+          </SiteNav.Links>
+        }
+        end={
+          <>
+            <Button role="ghost" size="sm" render={<a href="/signin" />} className="whitespace-nowrap">Sign in</Button>
+            <Button role="primary" size="sm" render={<a href="/start" />} className="whitespace-nowrap">Get started</Button>
+          </>
+        }
+        mobile={
+          <>
+            <SiteNav.MobileLink href="/product" current>Product</SiteNav.MobileLink>
+            <SiteNav.MobileLink href="/pricing">Pricing</SiteNav.MobileLink>
+            <SiteNav.MobileLink href="/customers">Customers</SiteNav.MobileLink>
+          </>
+        }
+      />
+      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-16 text-center">
+        <div className="flex w-full flex-col items-center gap-6">
+          <MarketingHeroSequenceHeadline />
+          <HeroIntro
+            lead={
+              <TextSequence idle stagger={0.07}>
+                Your brand <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
+              </TextSequence>
+            }
+          >
+            <TextSequence idle delay={0.35} stagger={0.07}>
+              Make it <TextSequence.Shape variant="pill" tone="brand-soft" /> impossible to ignore
+            </TextSequence>
+          </HeroIntro>
+          <div className="w-full px-[var(--grid-margin)]">
+            <HeroTileStack tiles={tiles} />
+          </div>
+        </div>
+      </section>
+      <ScrollHorizontal
+        items={projects}
+        heading={<h2 className="type-heading-2 text-fg">Selected work</h2>}
+        expandLast
+      />
+    </>
+  );
+}
+`.trim();
+
+function MarketingHeroSequenceHeadline() {
+  const [handsActive, setHandsActive] = useState(false);
+  return (
+    <div className="w-full px-[var(--grid-margin)]">
+      <h1
+        className="type-display-1 isolate text-fg"
+        tabIndex={0}
+        onMouseEnter={() => setHandsActive(true)}
+        onMouseLeave={() => setHandsActive(false)}
+        onFocus={() => setHandsActive(true)}
+        onBlur={() => setHandsActive(false)}
+      >
+        {[
+          <span key="lead" className="relative inline-block whitespace-nowrap">{[
+            <span key="gap" className="absolute inset-y-0 right-0 w-0">{[
+              <span key="clip" className="absolute z-10 overflow-clip -right-[0.94em] -top-[0.17em] bottom-[0.22em] w-[1.7em] md:-right-[1.07em] md:-top-[0.54em] md:w-[2.2em]">{[
+                <RiveHand key="rock" hand="rock" size="2.2em" active={handsActive} idle entrance="slide-up" className="absolute top-0 max-md:!h-[1.7em] max-md:!w-[1.7em]" />,
+              ]}</span>,
+            ]}</span>,
+            "We Ar",
+            <span key="e" className="relative z-20">e</span>,
+          ]}</span>,
+          " ",
+          <span key="brand" className="relative inline-block whitespace-nowrap">{[
+            <span key="w" className="relative z-0">W</span>,
+            "hatMatter",
+            <span key="s" className="relative">{[
+              "s",
+              <RiveHand key="point" hand="point" size="2.2em" active={handsActive} idle entrance="grow" className="absolute z-10 -right-[1.2em] -top-[0.4em] max-md:!h-[1.7em] max-md:!w-[1.7em] md:-right-[1.53em] md:-top-[0.7em]" />,
+            ]}</span>,
+          ]}</span>,
+        ]}
+      </h1>
+    </div>
+  );
+}
+
+function MarketingHeroTextSequenceView() {
+  return (
+    <>
+      <SiteNav
+        start={
+          <SiteNav.Brand href="/" aria-label="WhatMatters" icon={<Sparkles />} />
+        }
+        middle={
+          <SiteNav.Links>
+            <SiteNav.Link href="/product" current>Product</SiteNav.Link>
+            <SiteNav.Link href="/pricing">Pricing</SiteNav.Link>
+            <SiteNav.Link href="/customers">Customers</SiteNav.Link>
+          </SiteNav.Links>
+        }
+        end={
+          <>
+            <Button role="ghost" size="sm" render={<a href="/signin" />} className="whitespace-nowrap">Sign in</Button>
+            <Button role="primary" size="sm" render={<a href="/start" />} className="whitespace-nowrap">Get started</Button>
+          </>
+        }
+        mobile={
+          <>
+            <SiteNav.MobileLink href="/product" current>Product</SiteNav.MobileLink>
+            <SiteNav.MobileLink href="/pricing">Pricing</SiteNav.MobileLink>
+            <SiteNav.MobileLink href="/customers">Customers</SiteNav.MobileLink>
+          </>
+        }
+      />
+      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-16 text-center">
+        <div className="flex w-full flex-col items-center gap-6">
+          <MarketingHeroSequenceHeadline />
+          <HeroIntro
+            lead={
+              <TextSequence idle stagger={0.07}>
+                Your brand <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
+              </TextSequence>
+            }
+          >
+            <TextSequence idle delay={0.35} stagger={0.07}>
+              Make it <TextSequence.Shape variant="pill" tone="brand-soft" /> impossible to ignore
+            </TextSequence>
+          </HeroIntro>
+          <div className="w-full px-[var(--grid-margin)]">
+            <HeroTileStack tiles={heroTiles} />
+          </div>
+        </div>
+      </section>
+      <ScrollHorizontal
+        items={projects}
+        heading={<h2 className="type-heading-2 text-fg">Selected work</h2>}
+        expandLast
+      />
+    </>
+  );
+}
+
+function expectSequenceInsideViewport(root: ParentNode) {
+  const nodes = root.querySelectorAll("[data-text-sequence-word], [data-text-sequence-shape]");
+  expect(nodes.length).toBeGreaterThan(0);
+  for (const node of nodes) {
+    const box = node.getBoundingClientRect();
+    if (box.width < 1 && box.height < 1) continue;
+    expect(box.left).toBeGreaterThanOrEqual(-1);
+    expect(box.right).toBeLessThanOrEqual(window.innerWidth + 1);
+  }
+}
+
+export const MarketingHeroTextSequence: Story = {
+  name: "Pattern — marketing hero text sequence",
+  tags: ["test"],
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "fullscreen",
+      docs: {
+        description: {
+          story:
+            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. The h1 stays We Are WhatMatters on type-display-1, title case, with the rock and point hands on the e, the W, and the final s. TextSequence does not run on that h1: SplitText would rewrite those letter spans and the hands would lose their anchors. The intro is still HeroIntro, type-large (one step above body), closely spaced, columns 4–9 from lg. The two lines are Your brand is already online and Make it impossible to ignore, with no periods. A few TextSequence.Shape marks sit inline between words (asterisk, circle, ribbed pill) in place of the Badge and Avatar on the default pattern. Words alternate regular and bold. Shapes are aria-hidden. idle spins the asterisk and stretches the pill. Headline hover state lives on the headline so the sequence does not re-render. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
+        },
+      },
+    },
+    marketingHeroTextSequenceCopySource,
+  ),
+  render: () => <MarketingHeroTextSequenceView />,
+  play: async ({ canvasElement }) => {
+    const heading = canvasElement.querySelector("h1");
+    expect(heading?.textContent?.replace(/\s+/g, " ").trim()).toBe("We Are WhatMatters");
+    expect(heading?.querySelectorAll("[aria-hidden='true']").length).toBeGreaterThanOrEqual(2);
+    const text = canvasElement.textContent?.replace(/\s+/g, " ") ?? "";
+    expect(text).toContain("Your brand is already online");
+    expect(text).toContain("Make it impossible to ignore");
+    const shapes = [...canvasElement.querySelectorAll("[data-text-sequence-shape]")];
+    expect(shapes).toHaveLength(3);
+    for (const shape of shapes) {
+      expect(shape.getAttribute("aria-hidden")).toBe("true");
+    }
+    await waitFor(() => {
+      const sequences = [...canvasElement.querySelectorAll("[data-text-sequence]")];
+      expect(sequences).toHaveLength(2);
+      for (const sequence of sequences) {
+        expect(sequence.getAttribute("data-text-sequence-state")).toBe("playing");
+        expect(sequence.getAttribute("aria-label")?.length).toBeGreaterThan(0);
+      }
+    });
+  },
+};
+
+export const MarketingHeroTextSequenceNarrow: Story = {
+  name: "Text sequence hero at 390",
+  tags: ["test", "!dev", "!autodocs"],
+  globals: {
+    viewport: { value: "review390", isRotated: false },
+  },
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+    viewport: {
+      options: {
+        review390: {
+          name: "Review 390",
+          styles: { width: "390px", height: "844px" },
+          type: "mobile" as const,
+        },
+      },
+    },
+  },
+  render: () => <MarketingHeroTextSequenceView />,
+  play: async ({ canvasElement }) => {
+    expect(window.innerWidth).toBeLessThanOrEqual(400);
+    const text = canvasElement.textContent?.replace(/\s+/g, " ") ?? "";
+    expect(text).toContain("Your brand is already online");
+    expect(text).toContain("Make it impossible to ignore");
+    expect(canvasElement.querySelector("h1")?.textContent?.replace(/\s+/g, " ").trim()).toBe("We Are WhatMatters");
+    await waitFor(() => {
+      expect(canvasElement.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(3);
+    });
+    expectSequenceInsideViewport(canvasElement);
   },
 };
