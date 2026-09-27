@@ -9,7 +9,6 @@ import {
   applyRiveHandTokenColors,
   nextRiveHandIdleDelayMs,
   paintRiveHandColors,
-  prefersReducedMotion,
   riveHandArtboards,
   riveHandBooleanInput,
   riveHandBooleanValue,
@@ -76,10 +75,14 @@ export function RiveHand({
   className,
   "aria-hidden": ariaHidden = true,
 }: RiveHandProps) {
-  const [reduced, setReduced] = useState(prefersReducedMotion);
+  // Server and the hydration render both skip the entrance. Reading
+  // matchMedia here would paint `translateY(100%)` / `scale(0)` on the server
+  // and `transform: none` on a reduced-motion client.
+  const [reduced, setReduced] = useState(false);
+  const [ready, setReady] = useState(false);
   const [themeEpoch, setThemeEpoch] = useState(0);
   const [idlePulse, setIdlePulse] = useState(false);
-  const [entered, setEntered] = useState(entrance === "none" || prefersReducedMotion());
+  const [entered, setEntered] = useState(entrance === "none");
   const reducedRef = useRef(reduced);
   reducedRef.current = reduced;
   const activeRef = useRef(active);
@@ -109,13 +112,15 @@ export function RiveHand({
   const outline = useViewModelInstanceColor(riveHandOutlineProperty, rive?.viewModelInstance);
   const pressed = useStateMachineInput(rive, riveHandStateMachine, riveHandBooleanInput);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+      setReady(true);
       return;
     }
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const onChange = () => setReduced(media.matches);
     onChange();
+    setReady(true);
     media.addEventListener("change", onChange);
     return () => media.removeEventListener("change", onChange);
   }, []);
@@ -152,7 +157,7 @@ export function RiveHand({
   }, [active, handFill.setRgb, idlePulse, outline.setRgb, pressed, reduced, rive, themeEpoch]);
 
   useEffect(() => {
-    if (reduced || entrance === "none") {
+    if (!ready || reduced || entrance === "none") {
       return;
     }
     const el = hostRef.current;
@@ -171,7 +176,7 @@ export function RiveHand({
     });
     observer.observe(target);
     return () => observer.disconnect();
-  }, [entrance, reduced]);
+  }, [entrance, ready, reduced]);
 
   useEffect(() => {
     if (!idle || reduced) {
@@ -242,16 +247,18 @@ export function RiveHand({
 
   const length = riveHandBoxSize(size);
   const [shadow, setShadow] = useState<ShadowRoot | null>(null);
-  const playSlide = !reduced && entrance === "slide-up";
-  const playGrow = !reduced && entrance === "grow";
+  const playSlide = ready && !reduced && entrance === "slide-up";
+  const playGrow = ready && !reduced && entrance === "grow";
 
   useLayoutEffect(() => {
     const host = hostRef.current;
-    if (!host || host.shadowRoot) {
+    if (!host) return;
+    if (host.shadowRoot) {
+      setShadow(host.shadowRoot);
       return;
     }
     setShadow(host.attachShadow({ mode: "open" }));
-  }, []);
+  }, [playSlide, playGrow]);
 
   // The canvas runtime sizes its bitmap from getBoundingClientRect once clientWidth
   // leaves 0. That rect includes the grow scale, so the sample has to be the layout box.
@@ -302,51 +309,57 @@ export function RiveHand({
       observer.disconnect();
       resampleRef.current = () => {};
     };
-  }, [rive]);
+  }, [playGrow, playSlide, rive]);
+
+  const canvas = shadow
+    ? createPortal(
+        <div style={{ width: "100%", height: "100%" }}>
+          <RiveComponent />
+        </div>,
+        shadow,
+      )
+    : null;
+  const hostClassName = cn(riveHandClassName, className);
+  const hostStyle = {
+    width: length,
+    height: length,
+    transformOrigin: playGrow ? riveHandGrowOrigin : undefined,
+  };
+
+  if (!playSlide && !playGrow) {
+    return (
+      <div ref={hostRef} aria-hidden={ariaHidden} className={hostClassName} style={hostStyle}>
+        {canvas}
+      </div>
+    );
+  }
 
   return (
     <motion.div
       ref={hostRef}
       aria-hidden={ariaHidden}
-      className={cn(riveHandClassName, className)}
-      style={{
-        width: length,
-        height: length,
-        transformOrigin: playGrow ? riveHandGrowOrigin : undefined,
-      }}
-      initial={playSlide ? { y: "100%" } : playGrow ? { scale: 0 } : false}
+      className={hostClassName}
+      style={hostStyle}
+      initial={playSlide ? { y: "100%" } : { scale: 0 }}
       animate={
-        playSlide
-          ? { y: entered ? "0%" : "100%" }
-          : playGrow
-            ? { scale: entered ? 1 : 0 }
-            : { y: "0%", scale: 1 }
+        playSlide ? { y: entered ? "0%" : "100%" } : { scale: entered ? 1 : 0 }
       }
       transition={
         playSlide
           ? { type: "spring", stiffness: 260, damping: 28, mass: 0.85 }
-          : playGrow
-            ? {
-                type: "spring",
-                stiffness: 480,
-                damping: 12,
-                mass: 0.55,
-                delay: entered ? riveHandGrowDelaySec : 0,
-              }
-            : { duration: 0 }
+          : {
+              type: "spring",
+              stiffness: 480,
+              damping: 12,
+              mass: 0.55,
+              delay: entered ? riveHandGrowDelaySec : 0,
+            }
       }
       onAnimationComplete={() => {
         resampleRef.current();
       }}
     >
-      {shadow
-        ? createPortal(
-            <div style={{ width: "100%", height: "100%" }}>
-              <RiveComponent />
-            </div>,
-            shadow,
-          )
-        : null}
+      {canvas}
     </motion.div>
   );
 }

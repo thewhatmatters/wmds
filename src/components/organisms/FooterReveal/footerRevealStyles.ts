@@ -51,6 +51,20 @@ export const footerRevealBrandClasses =
   "relative flex min-h-dvh w-full max-w-full flex-col items-center justify-center overflow-hidden " +
   "px-[var(--grid-margin)] pb-[18vw] pt-24 text-center";
 
+/**
+ * Page-grid stripes on the brand field. Shown with `html.grid-on`.
+ * They sit under the field content (`z-0` vs `z-[1]`) and over the navy fill.
+ */
+export const footerRevealFieldGuideClasses =
+  "footer-reveal-guides pointer-events-none absolute inset-0 z-0 hidden";
+
+/** Same max-width, margin, and tracks as `grid-page` / `.grid-guides-cols`. */
+export const footerRevealFieldGuideFrameClasses =
+  "pointer-events-none absolute inset-y-0 right-0 left-0 mx-auto w-[min(100%,var(--grid-max))]";
+
+/** Footer type and controls. Above the field guides. */
+export const footerRevealFieldContentClasses = "footer-reveal-field-content relative z-[1]";
+
 export const footerRevealBrandCopyClasses =
   "relative z-[1] flex w-full max-w-4xl flex-col items-center gap-10";
 

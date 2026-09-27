@@ -4,6 +4,7 @@ import { useState } from "react";
 import { expect, fn, waitFor } from "storybook/test";
 import { Badge } from "../../atoms/Badge/Badge";
 import { GridOverlay } from "../../../lib/GridOverlay";
+import { stickyFooterInFlowTop } from "../../../lib/gridOverlayUtils";
 import { Button } from "../../atoms/Button/Button";
 import { RiveHand } from "../../atoms/RiveHand/RiveHand";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
@@ -293,10 +294,11 @@ export function MarketingHeroPage() {
             </>
           }
         />
-        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body px-[var(--grid-margin)] py-16 text-center">
+        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-16 text-center">
           <div className="flex w-full flex-col items-center gap-6">
-            <h1
-              className="type-display-1 isolate text-fg"
+          <div className="w-full px-[var(--grid-margin)]">
+          <h1
+            className="type-display-1 isolate text-fg"
               tabIndex={0}
               onMouseEnter={() => setHandsActive(true)}
               onMouseLeave={() => setHandsActive(false)}
@@ -323,15 +325,18 @@ export function MarketingHeroPage() {
                   ]}</span>,
                 ]}</span>,
               ]}
-            </h1>
-            <div className="grid w-full grid-cols-4 gap-x-[var(--grid-column-gap)] md:grid-cols-8 lg:grid-cols-12">
+          </h1>
+          </div>
+          <div className="grid-page w-full !py-0">
               <p className="type-large col-span-full text-center font-normal text-muted lg:col-start-4 lg:col-end-10">
                 We're a design and product studio based in Austin, Texas. We help brands stand out{" "}
                 <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
                 {" "}with bold ideas, fresh approaches, and products people actually love to use.
               </p>
             </div>
+            <div className="w-full px-[var(--grid-margin)]">
             <HeroTileStack tiles={tiles} />
+            </div>
           </div>
         </section>
         <main className="grid-page bg-body">
@@ -380,10 +385,11 @@ function MarketingHeroPage() {
             </>
           }
         />
-        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body px-[var(--grid-margin)] py-16 text-center">
+        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-16 text-center">
           <div className="flex w-full flex-col items-center gap-6">
-            <h1
-              className="type-display-1 isolate text-fg"
+          <div className="w-full px-[var(--grid-margin)]">
+          <h1
+            className="type-display-1 isolate text-fg"
               tabIndex={0}
               onMouseEnter={() => setHandsActive(true)}
               onMouseLeave={() => setHandsActive(false)}
@@ -410,15 +416,18 @@ function MarketingHeroPage() {
                   ]}</span>,
                 ]}</span>,
               ]}
-            </h1>
-            <div className="grid w-full grid-cols-4 gap-x-[var(--grid-column-gap)] md:grid-cols-8 lg:grid-cols-12">
+          </h1>
+          </div>
+          <div className="grid-page w-full !py-0">
               <p className="type-large col-span-full text-center font-normal text-muted lg:col-start-4 lg:col-end-10">
                 We're a design and product studio based in Austin, Texas. We help brands stand out{" "}
                 <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
                 {" "}with bold ideas, fresh approaches, and products people actually love to use.
               </p>
             </div>
+            <div className="w-full px-[var(--grid-margin)]">
             <HeroTileStack tiles={tiles} />
+            </div>
           </div>
         </section>
         <main className="grid-page bg-body">
@@ -479,7 +488,35 @@ export const MarketingHeroPattern: Story = {
     expect(columnRect.bottom).toBeGreaterThan(heroRect.bottom);
     expect(columnRect.left).toBeLessThan(heroRect.right);
     expect(columnRect.right).toBeGreaterThan(heroRect.left);
-    expect(columnRect.bottom).toBeGreaterThan(footerRect.top);
+    // Sticky `bottom: 0` paints the footer over the viewport. Its offsetTop is
+    // that stuck position. The cover's bottom is the in-flow edge.
+    const guideDocBottom = columnRect.bottom + window.scrollY;
+    const footerDocTop = stickyFooterInFlowTop(footer as HTMLElement);
+    expect(footerDocTop).not.toBeNull();
+    expect(guideDocBottom).toBeGreaterThan(heroRect.bottom + window.scrollY - 1);
+    expect(guideDocBottom).toBeLessThanOrEqual((footerDocTop ?? 0) + 1);
+    expect(footerRect.top).toBeLessThan(heroRect.bottom);
+
+    const fieldGuides = footer.querySelector("[data-footer-reveal='guides']");
+    const field = footer.querySelector("[data-footer-reveal='field']");
+    const headline = [...footer.querySelectorAll("h2")].find(
+      (node) => node.textContent === "We Build WhatMatters",
+    );
+    if (!fieldGuides || !field || !headline) throw new Error("footer field guides missing");
+    expect(getComputedStyle(fieldGuides).display).not.toBe("none");
+    const fieldCols = fieldGuides.querySelector(".grid-guides-cols");
+    expect(fieldCols?.getBoundingClientRect().height ?? 0).toBeGreaterThan(40);
+    const guideZ = Number.parseInt(getComputedStyle(fieldGuides).zIndex, 10);
+    const fieldZ = Number.parseInt(getComputedStyle(field).zIndex, 10);
+    expect(fieldZ).toBeGreaterThan(guideZ);
+    const cover = canvasElement.querySelector("[data-footer-reveal='content']");
+    if (cover instanceof HTMLElement) window.scrollTo(0, cover.offsetHeight);
+    const headlineBox = headline.getBoundingClientRect();
+    const hit = document.elementFromPoint(
+      headlineBox.left + headlineBox.width / 2,
+      headlineBox.top + headlineBox.height / 2,
+    );
+    expect(hit === headline || headline.contains(hit)).toBe(true);
 
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
       document.documentElement.clientWidth + 1,

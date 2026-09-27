@@ -2,7 +2,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createElement, type ReactNode } from "react";
-import { createRoot, type Root } from "react-dom/client";
+import { createRoot, hydrateRoot, type Root } from "react-dom/client";
+import { renderToString } from "react-dom/server";
 import { act } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
@@ -379,6 +380,51 @@ describe("rive hand idle schedule", () => {
       });
       expect(runtime.input.value).toBe(false);
     });
+  });
+});
+
+describe("rive hand reduced motion SSR", () => {
+  it("renders the resting pose on the server and hydrates without a mismatch", async () => {
+    stubMotion(true);
+    const point = createElement(RiveHand, {
+      hand: "point",
+      size: 96,
+      entrance: "grow",
+      idle: false,
+    });
+    const html = renderToString(point);
+    expect(html).not.toContain("scale(0)");
+    expect(html).not.toContain("translateY(100%)");
+    const rock = renderToString(
+      createElement(RiveHand, { hand: "rock", size: 96, entrance: "slide-up", idle: false }),
+    );
+    expect(rock).not.toContain("translateY(100%)");
+    expect(rock).not.toContain("scale(0)");
+
+    const errors: string[] = [];
+    const original = console.error;
+    console.error = (...args: unknown[]) => {
+      errors.push(args.map((arg) => String(arg)).join(" "));
+    };
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+    container.innerHTML = html;
+    let hydrated: ReturnType<typeof hydrateRoot> | undefined;
+    try {
+      await act(async () => {
+        hydrated = hydrateRoot(container, point);
+      });
+      const warning = errors.join("\n");
+      expect(warning).not.toMatch(/hydrat/i);
+      const host = container.querySelector("div");
+      const transform = host?.style.transform ?? "";
+      expect(transform).not.toContain("scale(0)");
+      expect(transform).not.toContain("translateY(100%)");
+    } finally {
+      console.error = original;
+      hydrated?.unmount();
+      container.remove();
+    }
   });
 });
 

@@ -46,7 +46,7 @@ There was no brand-navy role. `--color-info` (`#00458c`) is the status blue behi
 
 ### Reduced motion
 
-Handled with `matchMedia('(prefers-reduced-motion: reduce)')`, not Motion’s reduced-motion config. When it matches, `onRiveReady` paints the token colors, draws one frame, and calls `rive.pause()`. `Boolean 1` stays false, so hover, focus, and idle do not run. The entrance props render at rest: no slide and no scale.
+Handled with `matchMedia('(prefers-reduced-motion: reduce)')`, not Motion’s reduced-motion config. When it matches, `onRiveReady` paints the token colors, draws one frame, and calls `rive.pause()`. `Boolean 1` stays false, so hover, focus, and idle do not run. The entrance props render at rest: no slide and no scale. The server render and the hydration render both use that resting box. `matchMedia` is read in `useLayoutEffect`, and the slide or grow mounts only after that, and only when motion is allowed, so a reduced-motion client does not hydrate `transform: none` against server `translateY(100%)` or `scale(0)`.
 
 ### Headline pattern
 
