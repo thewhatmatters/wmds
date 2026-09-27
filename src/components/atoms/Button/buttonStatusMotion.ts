@@ -25,7 +25,7 @@ const roleIdlePaint: Record<ButtonRole, StatusPaint> = {
     color: "var(--color-on-error)",
   },
   inverse: {
-    backgroundColor: "var(--color-surface)",
+    backgroundColor: "var(--color-on-brand)",
     color: "var(--color-brand)",
   },
 };

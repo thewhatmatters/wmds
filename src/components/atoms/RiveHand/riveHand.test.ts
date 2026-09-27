@@ -20,7 +20,9 @@ import {
   riveHandIdleHoldMs,
   riveHandIdleMaxMs,
   riveHandIdleMinMs,
+  riveHandOutlineFallback,
   riveHandOutlineProperty,
+  riveHandOutlineToken,
   riveHandSrc,
   riveHandStateMachine,
 } from "./riveHandUtils";
@@ -132,7 +134,8 @@ describe("RiveHand", () => {
     runtime.input.value = false;
     document.documentElement.style.setProperty("--color-surface", "#ffffff");
     document.documentElement.style.setProperty("--color-background-surface", "#ffffff");
-    document.documentElement.style.setProperty("--color-brand", "#2f6bff");
+    document.documentElement.style.setProperty("--color-brand", "#011272");
+    document.documentElement.style.removeProperty("--color-brand-outline");
     stubMotion(false);
     container = document.createElement("div");
     document.body.appendChild(container);
@@ -170,11 +173,15 @@ describe("RiveHand", () => {
       riveHandBooleanInput,
     );
     expect(readRiveHandFillRgb()).toEqual({ r: 255, g: 255, b: 255 });
-    expect(readRiveHandOutlineRgb()).toEqual({ r: 47, g: 107, b: 255 });
+    expect(riveHandOutlineToken).toBe("--color-brand");
+    expect(riveHandOutlineFallback).toEqual({ r: 1, g: 18, b: 114 });
+    expect(readRiveHandOutlineRgb()).toEqual({ r: 1, g: 18, b: 114 });
+    document.documentElement.style.removeProperty("--color-brand");
+    expect(readRiveHandOutlineRgb()).toEqual(riveHandOutlineFallback);
     expect(runtime.rgb).toHaveBeenCalledWith(255, 255, 255);
-    expect(runtime.rgb).toHaveBeenCalledWith(47, 107, 255);
+    expect(runtime.rgb).toHaveBeenCalledWith(1, 18, 114);
     expect(runtime.setRgb).toHaveBeenCalledWith(255, 255, 255);
-    expect(runtime.setRgb).toHaveBeenCalledWith(47, 107, 255);
+    expect(runtime.setRgb).toHaveBeenCalledWith(1, 18, 114);
     expect(runtime.input.value).toBe(true);
     const box = container.querySelector("div");
     expect(box?.shadowRoot?.querySelector("canvas")).not.toBeNull();

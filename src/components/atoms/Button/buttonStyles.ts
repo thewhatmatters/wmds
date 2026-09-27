@@ -41,8 +41,8 @@ export const buttonRoleClasses: Record<ButtonRole, string> = {
     "bg-transparent text-ghost-foreground hover:bg-ghost-hover active:bg-ghost-active",
   destructive:
     "bg-error text-on-error hover:bg-error-hover active:bg-error-active",
-  /** Surface pill for a saturated field. Brand ink on surface — see FooterReveal. */
-  inverse: "bg-surface text-brand shadow-raised hover:bg-body active:bg-body",
+  /** Light pill on the navy field. Brand ink stays #011272 on white in both themes. */
+  inverse: "bg-on-brand text-brand shadow-raised hover:bg-on-brand-hover active:bg-on-brand-hover",
 };
 
 /** Horizontal padding per size — md = 20px (`px-5`). Shared by action and status modes. */

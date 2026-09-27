@@ -32,9 +32,13 @@ export const riveHandFillToken = "--color-surface";
 export const riveHandFillFallbackToken = "--color-background-surface";
 
 /**
- * WhatMatters brand blue (`#2f6bff`). Not `--color-fg`, and not status `--color-info`.
+ * WhatMatters brand navy. `--color-brand` is `#011272` in both themes.
+ * The hardcoded fallback is the same navy when that token cannot be read.
  */
 export const riveHandOutlineToken = "--color-brand";
+
+/** `#011272` — used when `--color-brand` is missing. */
+export const riveHandOutlineFallback: Rgb = { r: 1, g: 18, b: 114 };
 
 export const riveHandClassName = "pointer-events-none";
 
@@ -180,8 +184,8 @@ export function readRiveHandFillRgb(): Rgb | null {
   return readCssTokenRgb(riveHandFillToken) ?? readCssTokenRgb(riveHandFillFallbackToken);
 }
 
-export function readRiveHandOutlineRgb(): Rgb | null {
-  return readCssTokenRgb(riveHandOutlineToken);
+export function readRiveHandOutlineRgb(): Rgb {
+  return readCssTokenRgb(riveHandOutlineToken) ?? riveHandOutlineFallback;
 }
 
 /** Low-level view-model paint used from `onRiveReady` so the first frame is token-colored. */

@@ -4,7 +4,6 @@ import {
   MotionConfigContext,
   motion,
   useMotionTemplate,
-  useReducedMotion,
   useScroll,
   useTransform,
   type MotionValue,
@@ -15,6 +14,8 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
+  type MouseEventHandler,
   type ReactNode,
   type RefObject,
 } from "react";
@@ -76,6 +77,28 @@ interface FooterRevealContextValue {
 
 const FooterRevealContext = createContext<FooterRevealContextValue | null>(null);
 
+const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
+
+function subscribeReducedMotion(onStoreChange: () => void): () => void {
+  const media = window.matchMedia(reducedMotionQuery);
+  media.addEventListener("change", onStoreChange);
+  return () => media.removeEventListener("change", onStoreChange);
+}
+
+function readReducedMotion(): boolean {
+  return window.matchMedia(reducedMotionQuery).matches;
+}
+
+/**
+ * Server and the hydration render are sharp (`true`). Motion's
+ * `useReducedMotion()` stays `null` on the server, and treating that as
+ * "motion allowed" paints `blur(12px)` into the SSR HTML. A Next page then
+ * never reaches the sharp footer when the reader prefers reduced motion.
+ */
+function usePrefersReducedMotion(): boolean {
+  return useSyncExternalStore(subscribeReducedMotion, readReducedMotion, () => true);
+}
+
 function useFooterRevealContext(consumer: string): FooterRevealContextValue {
   const value = useContext(FooterRevealContext);
   if (!value) {
@@ -106,10 +129,11 @@ function FooterRevealRoot({ children, className }: FooterRevealProps) {
   /**
    * OS `prefers-reduced-motion` wins. `MotionConfig reducedMotion="always"`
    * also reduces. The default config value is `"never"` (no provider); that
-   * must not ignore the OS query.
+   * must not ignore the OS query. Unknown (SSR) is sharp — see
+   * `usePrefersReducedMotion`.
    */
   const { reducedMotion: reducedMotionConfig } = useContext(MotionConfigContext);
-  const reduceMotion = useReducedMotion() === true || reducedMotionConfig === "always";
+  const reduceMotion = usePrefersReducedMotion() || reducedMotionConfig === "always";
 
   useLayoutEffect(() => {
     const footer = footerRef.current;
@@ -238,7 +262,15 @@ export interface FooterRevealBrandProps {
   headline?: string;
   /** Sentence-case label on the surface CTA. Default: `Start a project`. */
   ctaLabel?: string;
-  /** Href for the CTA. Default: `/start`. */
+  /**
+   * Click handler for the CTA. The control is a `<button type="button">`
+   * (it opens a modal — there is no default route).
+   */
+  onCtaClick?: MouseEventHandler<HTMLButtonElement>;
+  /**
+   * Optional navigation target. When set, the CTA renders as an anchor.
+   * Omit it to keep the button.
+   */
   ctaHref?: string;
   /** Decorative wordmark, cropped along the bottom edge. Default: `WHATMATTERS`. */
   wordmark?: string;
@@ -261,7 +293,8 @@ export const footerRevealDefaultSocialLinks: readonly FooterRevealSocialLink[] =
 function FooterRevealBrand({
   headline = "We Build WhatMatters",
   ctaLabel = "Start a project",
-  ctaHref = "/start",
+  onCtaClick,
+  ctaHref,
   wordmark = "WHATMATTERS",
   socialLinks = footerRevealDefaultSocialLinks,
   className,
@@ -270,7 +303,13 @@ function FooterRevealBrand({
     <div className={cn(footerRevealBrandClasses, className)}>
       <div className={footerRevealBrandCopyClasses}>
         <h2 className={footerRevealBrandHeadlineClasses}>{headline}</h2>
-        <Button role="inverse" size="lg" render={<a href={ctaHref} />}>
+        <Button
+          role="inverse"
+          size="lg"
+          type="button"
+          onClick={onCtaClick}
+          render={ctaHref ? <a href={ctaHref} /> : undefined}
+        >
           {ctaLabel}
         </Button>
         <ul className={footerRevealSocialListClasses}>

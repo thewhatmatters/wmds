@@ -31,6 +31,9 @@
   --color-info-hover: color-mix(in oklch, var(--color-info) 82%, black);
   --color-info-active: color-mix(in oklch, var(--color-info) 68%, black);
 
+  /* Light pill on the navy field. Brand text on this mix stays above 7:1. */
+  --color-on-brand-hover: color-mix(in srgb, var(--color-on-brand) 88%, var(--color-brand));
+
   /* Validation focus rings — alphas clear WCAG 3:1 on white and #f8f8f8 (ADR-0029) */
   --color-error-focus-ring: color-mix(in oklch, var(--color-error) 58%, transparent);
   --color-warning-focus-ring: color-mix(in oklch, var(--color-warning) 72%, transparent);
@@ -61,6 +64,8 @@
 
   --color-info-hover: color-mix(in oklch, var(--color-info) 108%, white);
   --color-info-active: color-mix(in oklch, var(--color-info) 88%, black);
+
+  --color-on-brand-hover: color-mix(in srgb, var(--color-on-brand) 88%, var(--color-brand));
 
   --color-error-focus-ring: color-mix(in oklch, var(--color-error) 50%, transparent);
   --color-warning-focus-ring: color-mix(in oklch, var(--color-warning) 50%, transparent);

@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sparkles } from "lucide-react";
 import { useState } from "react";
+import { expect, fn, waitFor } from "storybook/test";
 import { Badge } from "../../atoms/Badge/Badge";
+import { GridOverlay } from "../../../lib/GridOverlay";
 import { Button } from "../../atoms/Button/Button";
 import { RiveHand } from "../../atoms/RiveHand/RiveHand";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
@@ -31,20 +33,20 @@ As the cover's bottom edge meets the viewport bottom, the footer scrubs from tra
 | Slot | Purpose |
 |------|---------|
 | **FooterReveal.Content** | Page body. Opaque (\`bg-body\` by default). Do not clip overflow on the root |
-| **FooterReveal.Footer** | Footer contents. \`className\` lands on the fading field — use **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-surface\`) |
+| **FooterReveal.Footer** | Footer contents. \`className\` lands on the fading field — use **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-on-brand\`) |
 | **FooterReveal.Brand** | Headline, inverse CTA, underlined social row, and a decorative wordmark |
 | \`useFooterRevealProgress\` | Reveal progress MotionValue, 0 covered → 1 uncovered (stuck at 1 when reduced motion is on) |
 
 ## Anatomy
 
 \`\`\`
-FooterReveal — isolation: isolate (overflow-x clip, overflow-y visible)
+FooterReveal — isolation: isolate (overflow visible, so grid guides can leave the page)
 ├── FooterReveal.Content — relative, z-index 1, min-height 100dvh, bg-body
 └── FooterReveal.Footer — sticky, bottom 0, z-index -1
     └── fade (opacity) → scale / blur (origin 50% 100%, blur 12px → 0) → footer contents
         └── FooterReveal.Brand
             ├── headline (type-display-1, centered)
-            ├── Button role="inverse"
+            ├── Button role="inverse" type="button" (onCtaClick)
             ├── social links (underlined, https opens in a new tab)
             └── wordmark (aria-hidden, vw clamp, cropped at the bottom edge)
 \`\`\`
@@ -52,11 +54,11 @@ FooterReveal — isolation: isolate (overflow-x clip, overflow-y visible)
 ## Best practices
 
 - One **FooterReveal** per page. Put **SiteNav** and the page or marketing hero inside **Content**.
-- Field color is **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-surface\`). \`--color-brand\` is \`#2f6bff\`. Surface on that blue reports **4.5:1**.
-- The CTA uses **Button** \`role="inverse"\` (surface fill, brand text). Do not recolor it with \`className\`.
+- Field color is **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-on-brand\`). \`--color-brand\` is \`#011272\` in both themes. White on that navy reports **15.8:1**. The wordmark uses \`--color-brand-soft\` (40% white on the navy) so it stays visible.
+- The CTA is a **Button** \`role="inverse"\` \`type="button"\` (\`onCtaClick\`). It opens a modal; there is no default route. Pass \`ctaHref\` only when the control should be a link. Do not recolor it with \`className\`.
 - Social links use **\`footerRevealFieldLinkClasses\`** at heading-1 size. \`https\` hrefs set \`target="_blank"\` and \`rel="noopener"\`. Placeholder hashes stay on the same page.
 - The wordmark is decorative (\`aria-hidden\`). It scales with the viewport and is clipped by the brand panel, so it does not widen the page.
-- Do not hide the scrollbar. The page grid already reserves a stable gutter. The root clips the inline axis only so a full-bleed field does not open a horizontal scrollbar.
+- Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. The brand panel and the footer field clip the wordmark.
 - Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`. The brand panel clips its own wordmark.
         `.trim(),
       },
@@ -91,6 +93,9 @@ const socialLinks = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
   { label: "X", href: "#x-TODO" },
 ] as const;
+
+// Opens the multi-step project form. There is no /start route.
+function openProjectModal() {}
 
 export function MarketingPage() {
   return (
@@ -143,7 +148,7 @@ export function MarketingPage() {
         <FooterReveal.Brand
           headline="We Build WhatMatters"
           ctaLabel="Start a project"
-          ctaHref="/start"
+          onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
           socialLinks={socialLinks}
         />
@@ -152,6 +157,8 @@ export function MarketingPage() {
   );
 }
 `.trim();
+
+const openProjectModal = fn();
 
 function MarketingPage() {
   return (
@@ -204,7 +211,7 @@ function MarketingPage() {
         <FooterReveal.Brand
           headline="We Build WhatMatters"
           ctaLabel="Start a project"
-          ctaHref="/start"
+          onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
           socialLinks={socialLinks}
         />
@@ -221,7 +228,7 @@ export const MarketingPagePattern: Story = {
       docs: {
         description: {
           story:
-            "Marketing page: **SiteNav** and `grid-page` sit in **FooterReveal.Content**. **FooterReveal.Footer** uses **footerRevealFieldClasses** (`bg-brand` / `text-surface`). **FooterReveal.Brand** centers the headline, an inverse CTA, and the social row, with a cropped wordmark along the bottom. Scroll until the cover ends — the footer fades, scales, and sharpens from 12px of blur across its own height. Reduced motion stays sharp. The scrollbar stays visible.",
+            "Marketing page: **SiteNav** and `grid-page` sit in **FooterReveal.Content**. **FooterReveal.Footer** uses **footerRevealFieldClasses** (`bg-brand` / `text-on-brand`). **FooterReveal.Brand** centers the headline, an inverse CTA, and the social row, with a cropped wordmark along the bottom. Scroll until the cover ends — the footer fades, scales, and sharpens from 12px of blur across its own height. Reduced motion stays sharp. The scrollbar stays visible.",
         },
       },
     },
@@ -239,7 +246,7 @@ const marketingHeroCopySource = `
 
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
-import { Badge, Button, FooterReveal, HeroTileStack, RiveHand, SiteNav, footerRevealFieldClasses } from "@whatmatters/wmds";
+import { Badge, Button, FooterReveal, GridOverlay, HeroTileStack, RiveHand, SiteNav, footerRevealFieldClasses } from "@whatmatters/wmds";
 
 const socialLinks = [
   { label: "Contra", href: "#contra-TODO" },
@@ -254,6 +261,9 @@ const tiles = [
   { src: "/hero-tiles/week.svg", alt: "Abstract shapes for the week" },
   { src: "/hero-tiles/note.svg", alt: "A pale note about what matters" },
 ];
+
+// Opens the multi-step project form. There is no /start route.
+function openProjectModal() {}
 
 export function MarketingHeroPage() {
   const [handsActive, setHandsActive] = useState(false);
@@ -324,12 +334,15 @@ export function MarketingHeroPage() {
             <HeroTileStack tiles={tiles} />
           </div>
         </section>
+        <main className="grid-page bg-body">
+          <GridOverlay visible keyboardShortcut={false} />
+        </main>
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
         <FooterReveal.Brand
           headline="We Build WhatMatters"
           ctaLabel="Start a project"
-          ctaHref="/start"
+          onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
           socialLinks={socialLinks}
         />
@@ -408,12 +421,15 @@ function MarketingHeroPage() {
             <HeroTileStack tiles={tiles} />
           </div>
         </section>
+        <main className="grid-page bg-body">
+          <GridOverlay visible keyboardShortcut={false} />
+        </main>
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
         <FooterReveal.Brand
           headline="We Build WhatMatters"
           ctaLabel="Start a project"
-          ctaHref="/start"
+          onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
           socialLinks={socialLinks}
         />
@@ -437,4 +453,45 @@ export const MarketingHeroPattern: Story = {
     marketingHeroCopySource,
   ),
   render: () => <MarketingHeroPage />,
+  play: async ({ canvasElement }) => {
+    const hero = canvasElement.querySelector("section");
+    const page = canvasElement.querySelector("main");
+    const footer = canvasElement.querySelector("[data-footer-reveal='sticky']");
+    if (!hero || !page || !footer) throw new Error("hero, page, and footer must be mounted");
+
+    await waitFor(() => {
+      expect(canvasElement.querySelectorAll(".grid-guides-col").length).toBeGreaterThan(0);
+    });
+
+    const guides = canvasElement.querySelector(".grid-guides");
+    if (!guides) throw new Error("grid guides missing");
+    expect(getComputedStyle(guides).visibility).toBe("visible");
+    expect(document.documentElement.classList.contains("grid-on")).toBe(true);
+
+    const before = Number.parseFloat(guides.style.getPropertyValue("--grid-guides-before"));
+    expect(before).toBeGreaterThan(0);
+
+    const columns = [...canvasElement.querySelectorAll(".grid-guides-col")];
+    const columnRect = columns[0]!.getBoundingClientRect();
+    const heroRect = hero.getBoundingClientRect();
+    const footerRect = footer.getBoundingClientRect();
+    expect(columnRect.top).toBeLessThan(heroRect.top);
+    expect(columnRect.bottom).toBeGreaterThan(heroRect.bottom);
+    expect(columnRect.left).toBeLessThan(heroRect.right);
+    expect(columnRect.right).toBeGreaterThan(heroRect.left);
+    expect(columnRect.bottom).toBeGreaterThan(footerRect.top);
+
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
+      document.documentElement.clientWidth + 1,
+    );
+
+    const cta = [...canvasElement.querySelectorAll("button")].find(
+      (node) => node.textContent === "Start a project",
+    );
+    expect(cta?.getAttribute("type")).toBe("button");
+    cta?.click();
+    await waitFor(() => {
+      expect(openProjectModal).toHaveBeenCalled();
+    });
+  },
 };

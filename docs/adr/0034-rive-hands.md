@@ -35,12 +35,12 @@ Several graphics share the page, so the runtime has to stay small and share one 
 
 View model `View Model 1` colors are driven from theme tokens.
 
-There was no brand-blue role. `--color-info` (`#00458c`) is the status blue behind an info **Badge**. `--color-primary` (`#39485c`) is the action brand and is slate. The hero focus tile paints `#2f6bff` with no token. **`--color-brand`** is that blue.
+There was no brand-navy role. `--color-info` (`#00458c`) is the status blue behind an info **Badge**. `--color-primary` (`#39485c`) is the action brand and is slate. The hero focus tile paints `#011272`. **`--color-brand`** is that navy in both themes.
 
 | View model | Token | Light value | Dark value |
 |---|---|---|---|
 | `handFill` | `--color-surface`, falling back to `--color-background-surface` (surface) | `#ffffff` | `#262626` |
-| `outline` | `--color-brand` (WhatMatters brand blue) | `#2f6bff` | `#2f6bff` |
+| `outline` | `--color-brand` (fallback `#011272` when the token is missing) | `#011272` | `#011272` |
 
 `useViewModelInstanceColor` applies them with `setRgb` (0–255). `onRiveReady` paints the same channels through the view model before the first drawn frame, then calls `drawFrame()`. A `data-theme` change reads the tokens again.
 
@@ -70,7 +70,7 @@ The file is **CC BY 4.0**. Credit **Silvia Sguotti** and **Gabriele Montinaro** 
 
 - A second pattern that omits the hands.
 - A new display size above `type-display-1`.
-- A color token for the file’s default magenta (`#F32EEF`). Brand blue is `--color-brand`.
+- A color token for the file’s default magenta (`#F32EEF`). The hand `outline` is `--color-brand` (`#011272`) in both themes, with the same navy hardcoded when the token is missing. `--color-brand-outline` is the lighter mix for other dark-surface strokes (`#011272` on `#1b1b1b` is about **1.1:1`). The hands do not use that mix. The footer field stays `#011272`.
 - Click targets on the hands.
 
 ## Consequences

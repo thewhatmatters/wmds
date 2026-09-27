@@ -31,7 +31,12 @@ function ancestorClipsOverflow(el: HTMLElement): boolean {
   let node = el.parentElement;
   while (node && node !== document.body && node !== document.documentElement) {
     const { overflowX, overflowY } = getComputedStyle(node);
-    if (overflowX !== "visible" || overflowY !== "visible") return true;
+    // Block-axis clipping hides a spread that reaches the hero and the footer.
+    // Inline-only `clip` (FooterReveal) does not: `hidden`/`auto`/`scroll` on x
+    // forces y into a scrollport, which does clip, so those still count.
+    const clipsBlock = overflowY !== "visible";
+    const clipsInlineIntoScrollport = overflowX !== "visible" && overflowX !== "clip";
+    if (clipsBlock || clipsInlineIntoScrollport) return true;
     node = node.parentElement;
   }
   return false;

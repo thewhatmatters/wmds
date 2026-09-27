@@ -65,6 +65,10 @@ export const packageManifest = {
   /** Utilities that must appear in dist/styles.css after Tailwind CLI build. */
   requiredStyleTokens: [
     "--color-brand",
+    "--color-on-brand",
+    "--color-on-brand-hover",
+    "--color-brand-outline",
+    "--color-brand-soft",
     "bg-primary-hover",
     "duration-fast",
     "motion-collapse",
