@@ -119,9 +119,10 @@ html {
 
 .grid-guides-cols {
   position: absolute;
-  top: calc(var(--grid-pad) - var(--grid-guides-before));
+  /* Full document span. A short or empty grid-page must not clip the hero. */
+  top: calc(0px - var(--grid-guides-before));
   right: var(--grid-margin);
-  bottom: calc(var(--grid-pad) - var(--grid-guides-after));
+  bottom: calc(0px - var(--grid-guides-after));
   left: var(--grid-margin);
   display: grid;
   grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));

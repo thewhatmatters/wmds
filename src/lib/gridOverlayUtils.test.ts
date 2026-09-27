@@ -85,9 +85,8 @@ describe("gridGuidesDocumentSpread", () => {
   it("keeps column guides on the page tracks via CSS variables", () => {
     expect(gridCss).toMatch(/--grid-guides-before:\s*0px/);
     expect(gridCss).toMatch(/--grid-guides-after:\s*0px/);
-    expect(gridCss).toContain("top: calc(var(--grid-pad) - var(--grid-guides-before))");
-    expect(gridCss).toContain("bottom: calc(var(--grid-pad) - var(--grid-guides-after))");
     expect(gridCss).toContain("top: calc(0px - var(--grid-guides-before))");
+    expect(gridCss).toContain("bottom: calc(0px - var(--grid-guides-after))");
     expect(gridCss).toMatch(/\.grid-guides-baseline[\s\S]*top:\s*var\(--grid-pad\)/);
   });
 });

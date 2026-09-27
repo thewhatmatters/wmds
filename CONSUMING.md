@@ -128,7 +128,7 @@ import { GridOverlay } from "@whatmatters/wmds";
 </div>
 ```
 
-- **`grid-page`** — wrap + column tracks. Mount **GridOverlay** as a child of this box so it inherits that page's `--grid-max`, margin, and gutter. Column guides and margin lines then cover the rest of the document, including sections that sit before the page, on those same tracks. Baseline stays in the page box. No extra class on the preceding section.
+- **`grid-page`** — wrap + column tracks. Mount **GridOverlay** as a child of this box so it inherits that page's `--grid-max`, margin, and gutter. Column guides and margin lines then cover the rest of the document, including sections that sit before the page, on those same tracks. An empty page (no bands, only the overlay) still paints those guides over the hero. Baseline stays in the page box. No extra class on the preceding section.
 - **`band`** — subgrid of those tracks (`@supports` fallback repeats `--grid-cols`).
 - Place by **column line** (`col-span-*` / `col-start-*`). This is layout, not a new atom.
 
