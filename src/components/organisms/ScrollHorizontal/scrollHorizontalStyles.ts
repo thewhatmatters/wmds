@@ -3,11 +3,14 @@
  *
  * Motion: a 300svh track (`shrink-0` so a flex parent keeps that height), a sticky svh viewport that clips inline overflow,
  * and a centered window one card wide. The row starts with the first card
- * filling that window.
+ * filling that window. `expandLast` uses a 400svh track: the same horizontal
+ * distance, then one viewport of grow. The grow layer is the sticky window
+ * (`inset-0`) revealed with `clip-path`.
  *
  * Reduced motion (`motion-reduce` and `data-reduce="true"`): height auto,
  * the viewport is not sticky, and the window is a native horizontal scroller
- * with vertical padding. `!` wins over the motion utilities.
+ * with vertical padding. `!` wins over the motion utilities. The heading is
+ * `sr-only` while the window is pinned, and visible above that scroller.
  *
  * Card pitch: 400×500 and gap-8 from `sm`; 280×350 and gap-4 below `sm`.
  * Radius is `rounded-xl` (`--radius-xl`, 12px).
@@ -16,6 +19,39 @@
 export const scrollHorizontalRootClasses = [
   "group/scroll-horizontal relative h-[300svh] w-full max-w-full shrink-0",
   "motion-reduce:!h-auto data-[reduce=true]:!h-auto",
+].join(" ");
+
+/** Same shell as the root, with one extra viewport for the grow. `shrink-0` keeps that height in a flex parent. */
+export const scrollHorizontalRootExpandClasses = [
+  "group/scroll-horizontal relative h-[400svh] w-full max-w-full shrink-0",
+  "motion-reduce:!h-auto data-[reduce=true]:!h-auto",
+].join(" ");
+
+/**
+ * Full-viewport color layer. `clip-path` reveals it from the last card out to
+ * the sticky window. Hidden on the reduced-motion branch, which uses the static section.
+ */
+export const scrollHorizontalExpandLayerClasses = [
+  "pointer-events-none absolute inset-0 z-20 bg-[var(--scroll-horizontal-color)] will-change-[clip-path]",
+  "motion-reduce:!hidden",
+  "group-data-[reduce=true]/scroll-horizontal:!hidden",
+].join(" ");
+
+/** Optional content on the full-bleed tile. Fades in late. Hidden when motion is reduced. */
+export const scrollHorizontalExpandedSlotClasses = [
+  "absolute inset-0 z-30",
+  "motion-reduce:!hidden",
+  "group-data-[reduce=true]/scroll-horizontal:!hidden",
+].join(" ");
+
+/**
+ * Reduced motion: the last tile as its own `h-svh` section after the scroller.
+ * `hidden` until `motion-reduce` or `data-reduce="true"`. Radius is 0.
+ */
+export const scrollHorizontalExpandedSectionClasses = [
+  "relative hidden h-svh w-full max-w-full shrink-0 overflow-hidden rounded-none",
+  "motion-reduce:!block",
+  "group-data-[reduce=true]/scroll-horizontal:!block",
 ].join(" ");
 
 export const scrollHorizontalStickyClasses = [
@@ -46,13 +82,18 @@ export const scrollHorizontalRowClasses = [
   "group-data-[reduce=true]/scroll-horizontal:will-change-auto",
 ].join(" ");
 
+/**
+ * Section name. `sr-only` on the pinned window so it does not sit under the
+ * floating site nav. Reduced motion shows it above the native scroller.
+ * `not-sr-only` restores a normal box; `!` padding and margin beat that reset.
+ */
 export const scrollHorizontalHeadingClasses = [
-  "absolute inset-x-0 top-8 z-10 px-[var(--grid-margin)] text-center",
-  "motion-reduce:!static motion-reduce:!inset-auto motion-reduce:top-auto motion-reduce:mb-6",
-  "group-data-[reduce=true]/scroll-horizontal:!static",
-  "group-data-[reduce=true]/scroll-horizontal:!inset-auto",
-  "group-data-[reduce=true]/scroll-horizontal:top-auto",
-  "group-data-[reduce=true]/scroll-horizontal:mb-6",
+  "sr-only",
+  "motion-reduce:not-sr-only motion-reduce:!mb-6 motion-reduce:!px-[var(--grid-margin)] motion-reduce:text-center",
+  "group-data-[reduce=true]/scroll-horizontal:not-sr-only",
+  "group-data-[reduce=true]/scroll-horizontal:!mb-6",
+  "group-data-[reduce=true]/scroll-horizontal:!px-[var(--grid-margin)]",
+  "group-data-[reduce=true]/scroll-horizontal:text-center",
 ].join(" ");
 
 export const scrollHorizontalItemClasses = [
