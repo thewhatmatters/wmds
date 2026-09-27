@@ -42,7 +42,8 @@
     "test:storybook": "vitest --project storybook run",
     "test:interactions": "vitest --project storybook run",
     "validate:composition": "vitest --project unit run src/lib/compositionAudit.test.ts",
-    "validate:manifest": "node scripts/validate-manifest.mjs"
+    "validate:manifest": "node scripts/validate-manifest.mjs",
+    "validate:case": "node scripts/check-case-collisions.mjs"
   },
   "peerDependencies": {
     "@visx/visx": "^4.0.0",
