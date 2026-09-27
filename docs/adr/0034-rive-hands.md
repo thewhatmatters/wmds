@@ -40,7 +40,7 @@ There was no brand-navy role. `--color-info` (`#00458c`) is the status blue behi
 | View model | Token | Light value | Dark value |
 |---|---|---|---|
 | `handFill` | `--color-surface`, falling back to `--color-background-surface` (surface) | `#ffffff` | `#262626` |
-| `outline` | `--color-brand-outline` | `#011272` | about `#8d94c0` (45% brand / 55% white) |
+| `outline` | `--color-brand` (fallback `#011272` when the token is missing) | `#011272` | `#011272` |
 
 `useViewModelInstanceColor` applies them with `setRgb` (0–255). `onRiveReady` paints the same channels through the view model before the first drawn frame, then calls `drawFrame()`. A `data-theme` change reads the tokens again.
 
@@ -70,7 +70,7 @@ The file is **CC BY 4.0**. Credit **Silvia Sguotti** and **Gabriele Montinaro** 
 
 - A second pattern that omits the hands.
 - A new display size above `type-display-1`.
-- A color token for the file’s default magenta (`#F32EEF`). Brand navy is `--color-brand` (`#011272`). Dark outlines use `--color-brand-outline` because `#011272` on `#1b1b1b` is about **1.1:1**. The footer field stays `#011272`.
+- A color token for the file’s default magenta (`#F32EEF`). The hand `outline` is `--color-brand` (`#011272`) in both themes, with the same navy hardcoded when the token is missing. `--color-brand-outline` is the lighter mix for other dark-surface strokes (`#011272` on `#1b1b1b` is about **1.1:1`). The hands do not use that mix. The footer field stays `#011272`.
 - Click targets on the hands.
 
 ## Consequences
