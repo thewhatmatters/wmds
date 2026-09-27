@@ -77,6 +77,7 @@ export {
   riveHandArtboards,
   riveHandSrc,
   riveHands,
+  type RiveHandEntrance,
   type RiveHandLayoutClassName,
   type RiveHandName,
   type RiveHandProps,

@@ -4,15 +4,22 @@ import { join } from "node:path";
 import { createElement, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { act } from "react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   cssColorToRgb,
+  nextRiveHandIdleDelayMs,
   readRiveHandFillRgb,
   readRiveHandOutlineRgb,
   riveHandArtboards,
   riveHandBooleanInput,
+  riveHandBooleanValue,
   riveHandBoxSize,
   riveHandFillProperty,
+  riveHandGrowDelaySec,
+  riveHandIdleAllowed,
+  riveHandIdleHoldMs,
+  riveHandIdleMaxMs,
+  riveHandIdleMinMs,
   riveHandOutlineProperty,
   riveHandSrc,
   riveHandStateMachine,
@@ -181,14 +188,153 @@ describe("RiveHand", () => {
 
   it("pauses on the first frame and does not play the interaction when motion is reduced", async () => {
     stubMotion(true);
-    await render(createElement(RiveHand, { hand: "rock", size: 48, active: true }));
+    vi.useFakeTimers();
+    await render(createElement(RiveHand, { hand: "rock", size: 48, active: true, idle: true }));
 
     expect(runtime.useRive.mock.calls.at(-1)?.[0].artboard).toBe("29_Rock");
     expect(runtime.pause).toHaveBeenCalled();
     expect(runtime.drawFrame).toHaveBeenCalled();
     expect(runtime.input.value).toBe(false);
+    await act(async () => {
+      vi.advanceTimersByTime(riveHandIdleMaxMs + riveHandIdleHoldMs);
+    });
+    expect(runtime.input.value).toBe(false);
     expect(container.querySelector("div")?.style.width).toBe("48px");
     root.unmount();
+    vi.useRealTimers();
+  });
+});
+
+function installIntersectingObserver() {
+  class ImmediateObserver {
+    private readonly callback: IntersectionObserverCallback;
+    constructor(callback: IntersectionObserverCallback) {
+      this.callback = callback;
+    }
+    observe() {
+      this.callback(
+        [{ isIntersecting: true } as IntersectionObserverEntry],
+        this as unknown as IntersectionObserver,
+      );
+    }
+    unobserve() {}
+    disconnect() {}
+    takeRecords() {
+      return [];
+    }
+    root = null;
+    rootMargin = "";
+    thresholds = [];
+  }
+  vi.stubGlobal("IntersectionObserver", ImmediateObserver);
+}
+
+describe("rive hand idle schedule", () => {
+  it("spreads delays across 4–9s and keeps the point hand inside the stagger window", () => {
+    expect(nextRiveHandIdleDelayMs(0)).toBe(riveHandIdleMinMs);
+    expect(nextRiveHandIdleDelayMs(1)).toBe(riveHandIdleMaxMs);
+    expect(nextRiveHandIdleDelayMs(0.5)).toBe(6500);
+    expect(nextRiveHandIdleDelayMs(0)).not.toBe(nextRiveHandIdleDelayMs(1));
+    expect(riveHandGrowDelaySec).toBeGreaterThanOrEqual(0.15);
+    expect(riveHandGrowDelaySec).toBeLessThanOrEqual(0.25);
+    expect(riveHandIdleAllowed({ idle: true, reduced: false, pageVisible: true, inView: true })).toBe(true);
+    expect(riveHandIdleAllowed({ idle: true, reduced: true, pageVisible: true, inView: true })).toBe(false);
+    expect(riveHandIdleAllowed({ idle: true, reduced: false, pageVisible: false, inView: true })).toBe(false);
+    expect(riveHandIdleAllowed({ idle: true, reduced: false, pageVisible: true, inView: false })).toBe(false);
+    expect(riveHandIdleAllowed({ idle: false, reduced: false, pageVisible: true, inView: true })).toBe(false);
+    expect(riveHandBooleanValue(true, false, false)).toBe(true);
+    expect(riveHandBooleanValue(false, true, false)).toBe(true);
+    expect(riveHandBooleanValue(true, true, true)).toBe(false);
+  });
+
+  describe("timers", () => {
+    let root: Root;
+    let container: HTMLDivElement;
+    let visibility: DocumentVisibilityState;
+
+    beforeEach(() => {
+      runtime.input.value = false;
+      stubMotion(false);
+      installIntersectingObserver();
+      vi.spyOn(Math, "random").mockReturnValue(0);
+      vi.useFakeTimers();
+      visibility = "visible";
+      Object.defineProperty(document, "visibilityState", {
+        configurable: true,
+        get: () => visibility,
+      });
+      container = document.createElement("div");
+      document.body.appendChild(container);
+      root = createRoot(container);
+    });
+
+    afterEach(() => {
+      root.unmount();
+      vi.useRealTimers();
+      vi.restoreAllMocks();
+      vi.unstubAllGlobals();
+    });
+
+    async function render(node: ReactNode) {
+      await act(async () => {
+        root.render(node);
+      });
+    }
+
+    it("pulses Boolean 1 after the rolled delay, holds, then arms the next gap", async () => {
+      await render(createElement(RiveHand, { hand: "point", size: 48, idle: true }));
+      expect(runtime.input.value).toBe(false);
+
+      await act(async () => {
+        vi.advanceTimersByTime(riveHandIdleMinMs - 1);
+      });
+      expect(runtime.input.value).toBe(false);
+
+      await act(async () => {
+        vi.advanceTimersByTime(1);
+      });
+      expect(runtime.input.value).toBe(true);
+
+      await act(async () => {
+        vi.advanceTimersByTime(riveHandIdleHoldMs);
+      });
+      expect(runtime.input.value).toBe(false);
+
+      await act(async () => {
+        vi.advanceTimersByTime(riveHandIdleMinMs);
+      });
+      expect(runtime.input.value).toBe(true);
+    });
+
+    it("does not pulse while the tab is hidden, and resumes with a fresh delay", async () => {
+      await render(createElement(RiveHand, { hand: "rock", size: 48 }));
+      visibility = "hidden";
+      await act(async () => {
+        document.dispatchEvent(new Event("visibilitychange"));
+      });
+      await act(async () => {
+        vi.advanceTimersByTime(riveHandIdleMaxMs);
+      });
+      expect(runtime.input.value).toBe(false);
+
+      visibility = "visible";
+      await act(async () => {
+        document.dispatchEvent(new Event("visibilitychange"));
+      });
+      await act(async () => {
+        vi.advanceTimersByTime(riveHandIdleMinMs);
+      });
+      expect(runtime.input.value).toBe(true);
+    });
+
+    it("does not pulse after unmount", async () => {
+      await render(createElement(RiveHand, { hand: "point", size: 48, idle: true }));
+      root.unmount();
+      await act(async () => {
+        vi.advanceTimersByTime(riveHandIdleMinMs + riveHandIdleHoldMs);
+      });
+      expect(runtime.input.value).toBe(false);
+    });
   });
 });
 
