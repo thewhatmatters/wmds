@@ -5,7 +5,7 @@ import {
 } from "../../../lib/clusterScale";
 
 /** Prescribed action roles — not a semantic color picker. ADR-0004. */
-export const buttonRoles = ["primary", "secondary", "ghost", "destructive"] as const;
+export const buttonRoles = ["primary", "secondary", "ghost", "destructive", "inverse"] as const;
 
 export type ButtonRole = (typeof buttonRoles)[number];
 
@@ -41,6 +41,8 @@ export const buttonRoleClasses: Record<ButtonRole, string> = {
     "bg-transparent text-ghost-foreground hover:bg-ghost-hover active:bg-ghost-active",
   destructive:
     "bg-error text-on-error hover:bg-error-hover active:bg-error-active",
+  /** Surface pill for a saturated field. Brand ink on surface — see FooterReveal. */
+  inverse: "bg-surface text-brand shadow-raised hover:bg-body active:bg-body",
 };
 
 /** Horizontal padding per size — md = 20px (`px-5`). Shared by action and status modes. */

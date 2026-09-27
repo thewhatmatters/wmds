@@ -28,7 +28,7 @@ function RevealFixture() {
         <p className="type-body text-fg">Page cover</p>
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
-        <p className="type-body px-[var(--grid-margin)] py-16 text-primary-foreground">Footer</p>
+        <p className="type-body px-[var(--grid-margin)] py-16">Footer</p>
       </FooterReveal.Footer>
     </FooterReveal>
   );
@@ -88,7 +88,8 @@ export const RevealOnScroll: Story = {
     });
     expect(readScale(canvasElement)).toBeGreaterThan(0.85);
     expect(readScale(canvasElement)).toBeLessThan(0.95);
-    expect(readBlur(canvasElement)).toBeGreaterThan(5);
+    expect(readBlur(canvasElement)).toBeGreaterThan(10);
+    expect(readBlur(canvasElement)).toBeLessThan(12.5);
 
     const footer = canvasElement.querySelector<HTMLElement>("[data-footer-reveal='sticky']");
     if (!footer) throw new Error("Footer reveal sticky shell is missing");
@@ -109,6 +110,49 @@ export const RevealOnScroll: Story = {
     expect(readScale(canvasElement)).toBeGreaterThan(0.98);
     expect(readBlur(canvasElement)).toBeLessThan(0.5);
     expect(fadeLayer(canvasElement).style.willChange === "auto" || fadeLayer(canvasElement).style.willChange === "").toBe(true);
+  },
+};
+
+export const BrandFooter: Story = {
+  name: "brand footer",
+  render: () => (
+    <FooterReveal>
+      <FooterReveal.Content>
+        <p className="type-body text-fg">Page cover</p>
+      </FooterReveal.Content>
+      <FooterReveal.Footer className={footerRevealFieldClasses}>
+        <FooterReveal.Brand />
+      </FooterReveal.Footer>
+    </FooterReveal>
+  ),
+  play: async ({ canvasElement }) => {
+    const headline = canvasElement.querySelector("h2");
+    expect(headline?.textContent).toBe("We Build WhatMatters");
+    const cta = canvasElement.querySelector<HTMLAnchorElement>("a[href='/start']");
+    expect(cta?.textContent).toBe("Start a project");
+    expect(cta?.getAttribute("data-role")).toBe("inverse");
+
+    const wordmark = [...canvasElement.querySelectorAll("p")].find((node) => node.textContent === "WHATMATTERS");
+    expect(wordmark?.getAttribute("aria-hidden")).toBe("true");
+
+    const instagram = canvasElement.querySelector("a[href='https://www.instagram.com/thewhatmatters']");
+    expect(instagram?.getAttribute("target")).toBe("_blank");
+    expect(instagram?.getAttribute("rel")).toBe("noopener");
+    const linkedin = canvasElement.querySelector("a[href='https://www.linkedin.com/in/randymdaniel']");
+    expect(linkedin?.getAttribute("target")).toBe("_blank");
+    expect(linkedin?.getAttribute("rel")).toBe("noopener");
+
+    const contra = canvasElement.querySelector("a[href='#contra-TODO']");
+    const x = canvasElement.querySelector("a[href='#x-TODO']");
+    expect(contra?.textContent).toBe("Contra");
+    expect(contra?.hasAttribute("target")).toBe(false);
+    expect(x?.textContent).toBe("X");
+    expect(x?.hasAttribute("target")).toBe(false);
+
+    const root = canvasElement.querySelector<HTMLElement>("[data-footer-reveal='root']");
+    if (!root) throw new Error("Footer reveal root is missing");
+    expect(root.scrollWidth).toBeLessThanOrEqual(root.clientWidth + 1);
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(document.documentElement.clientWidth + 1);
   },
 };
 

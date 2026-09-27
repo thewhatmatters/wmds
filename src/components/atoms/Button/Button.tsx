@@ -39,7 +39,7 @@ export interface ButtonProps
   > {
   /** Button label. */
   children: ReactNode;
-  /** Action role — primary CTA, secondary, ghost, or destructive. Default: `primary`. */
+  /** Action role — primary CTA, secondary, ghost, destructive, or inverse (surface on a brand field). Default: `primary`. */
   role?: ButtonRole;
   /** `pill` (default) or `row` — flat full-width lines for detail / settings rows. */
   layout?: ButtonLayout;
