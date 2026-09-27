@@ -1,26 +1,40 @@
 "use client";
 
 import { Fit, Layout, useRive, useStateMachineInput, useViewModelInstanceColor } from "@rive-app/react-canvas";
+import { motion } from "motion/react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../../../lib/cn";
 import {
   applyRiveHandTokenColors,
+  nextRiveHandIdleDelayMs,
   paintRiveHandColors,
   prefersReducedMotion,
   riveHandArtboards,
   riveHandBooleanInput,
+  riveHandBooleanValue,
   riveHandBoxSize,
   riveHandClassName,
   riveHandFillProperty,
+  riveHandGrowDelaySec,
+  riveHandGrowOrigin,
+  riveHandIdleAllowed,
+  riveHandIdleHoldMs,
   riveHandOutlineProperty,
   riveHandSrc,
   riveHandStateMachine,
   riveHands,
+  type RiveHandEntrance,
   type RiveHandName,
 } from "./riveHandUtils";
 
-export { riveHandArtboards, riveHandSrc, riveHands, type RiveHandName };
+export {
+  riveHandArtboards,
+  riveHandSrc,
+  riveHands,
+  type RiveHandEntrance,
+  type RiveHandName,
+};
 
 /** Layout-only — not for colors. Size comes from the `size` prop. */
 export type RiveHandLayoutClassName = string;
@@ -35,6 +49,17 @@ export interface RiveHandProps {
    * Ignored while `prefers-reduced-motion: reduce` matches.
    */
   active?: boolean;
+  /**
+   * Plays `Boolean 1` on a random 4–9s timer, per hand, while the page is visible
+   * and this hand is in view. Default is on. Reduced motion never starts the timer.
+   */
+  idle?: boolean;
+  /**
+   * `slide-up` rises from below an overflow-clip (the hero clips at the baseline).
+   * `grow` scales from 0 at the grip, with a short spring after the rock hand.
+   * `none` renders at rest. Reduced motion skips the entrance.
+   */
+  entrance?: RiveHandEntrance;
   className?: RiveHandLayoutClassName;
   /** Decorative by default so the headline text stays the accessible name. */
   "aria-hidden"?: boolean;
@@ -44,13 +69,20 @@ export function RiveHand({
   hand,
   size,
   active = false,
+  idle = true,
+  entrance = "none",
   className,
   "aria-hidden": ariaHidden = true,
 }: RiveHandProps) {
   const [reduced, setReduced] = useState(prefersReducedMotion);
   const [themeEpoch, setThemeEpoch] = useState(0);
+  const [idlePulse, setIdlePulse] = useState(false);
+  const [entered, setEntered] = useState(entrance === "none" || prefersReducedMotion());
   const reducedRef = useRef(reduced);
   reducedRef.current = reduced;
+  const activeRef = useRef(active);
+  activeRef.current = active;
+  const hostRef = useRef<HTMLDivElement>(null);
 
   const layout = useMemo(() => new Layout({ fit: Fit.Contain }), []);
 
@@ -112,14 +144,104 @@ export function RiveHand({
       return;
     }
     if (pressed) {
-      pressed.value = active;
+      pressed.value = riveHandBooleanValue(active, idlePulse, false);
     }
     // `setRgb` identity changes when the view-model color binds. The result objects are new every render.
-  }, [active, handFill.setRgb, outline.setRgb, pressed, reduced, rive, themeEpoch]);
+  }, [active, handFill.setRgb, idlePulse, outline.setRgb, pressed, reduced, rive, themeEpoch]);
+
+  useEffect(() => {
+    if (reduced || entrance === "none") {
+      return;
+    }
+    const el = hostRef.current;
+    // The entrance pose can clip this box out of view. Watch the parent so the
+    // slide or grow is allowed to start.
+    const target = el?.parentElement ?? el;
+    if (!target || typeof IntersectionObserver === "undefined") {
+      setEntered(true);
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        setEntered(true);
+        observer.disconnect();
+      }
+    });
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [entrance, reduced]);
+
+  useEffect(() => {
+    if (!idle || reduced) {
+      return;
+    }
+    const el = hostRef.current?.parentElement ?? hostRef.current;
+    let timer = 0;
+    let hold = 0;
+    let pageVisible = document.visibilityState !== "hidden";
+    let inView = typeof IntersectionObserver === "undefined";
+    let stopped = false;
+
+    const clearTimers = () => {
+      window.clearTimeout(timer);
+      window.clearTimeout(hold);
+      timer = 0;
+      hold = 0;
+    };
+
+    const arm = () => {
+      clearTimers();
+      if (stopped || !riveHandIdleAllowed({ idle: true, reduced: reducedRef.current, pageVisible, inView })) {
+        return;
+      }
+      timer = window.setTimeout(() => {
+        if (stopped || !riveHandIdleAllowed({ idle: true, reduced: reducedRef.current, pageVisible, inView })) {
+          return;
+        }
+        if (activeRef.current) {
+          arm();
+          return;
+        }
+        setIdlePulse(true);
+        hold = window.setTimeout(() => {
+          setIdlePulse(false);
+          arm();
+        }, riveHandIdleHoldMs);
+      }, nextRiveHandIdleDelayMs());
+    };
+
+    const onVisibility = () => {
+      pageVisible = document.visibilityState !== "hidden";
+      if (!pageVisible) setIdlePulse(false);
+      arm();
+    };
+
+    let observer: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver !== "undefined" && el) {
+      observer = new IntersectionObserver((entries) => {
+        inView = entries.some((entry) => entry.isIntersecting);
+        if (!inView) setIdlePulse(false);
+        arm();
+      });
+      observer.observe(el);
+    } else {
+      arm();
+    }
+
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      stopped = true;
+      clearTimers();
+      setIdlePulse(false);
+      observer?.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [idle, reduced]);
 
   const length = riveHandBoxSize(size);
-  const hostRef = useRef<HTMLDivElement>(null);
   const [shadow, setShadow] = useState<ShadowRoot | null>(null);
+  const playSlide = !reduced && entrance === "slide-up";
+  const playGrow = !reduced && entrance === "grow";
 
   useLayoutEffect(() => {
     const host = hostRef.current;
@@ -130,11 +252,36 @@ export function RiveHand({
   }, []);
 
   return (
-    <div
+    <motion.div
       ref={hostRef}
       aria-hidden={ariaHidden}
       className={cn(riveHandClassName, className)}
-      style={{ width: length, height: length }}
+      style={{
+        width: length,
+        height: length,
+        transformOrigin: playGrow ? riveHandGrowOrigin : undefined,
+      }}
+      initial={playSlide ? { y: "100%" } : playGrow ? { scale: 0 } : false}
+      animate={
+        playSlide
+          ? { y: entered ? "0%" : "100%" }
+          : playGrow
+            ? { scale: entered ? 1 : 0 }
+            : { y: "0%", scale: 1 }
+      }
+      transition={
+        playSlide
+          ? { type: "spring", stiffness: 260, damping: 28, mass: 0.85 }
+          : playGrow
+            ? {
+                type: "spring",
+                stiffness: 480,
+                damping: 12,
+                mass: 0.55,
+                delay: entered ? riveHandGrowDelaySec : 0,
+              }
+            : { duration: 0 }
+      }
     >
       {shadow
         ? createPortal(
@@ -144,6 +291,6 @@ export function RiveHand({
             shadow,
           )
         : null}
-    </div>
+    </motion.div>
   );
 }

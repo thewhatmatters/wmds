@@ -24,6 +24,8 @@ Several graphics share the page, so the runtime has to stay small and share one 
 - `hand`: `'point' | 'rock'`. `point` loads artboard `31_Cigarette` (the cigarette is removed). `rock` loads `29_Rock`.
 - `size`: a number (pixels) or a CSS length. The hero passes an `em` length so the box tracks the h1.
 - `active`: sets state-machine input `Boolean 1` through `useStateMachineInput`.
+- `idle`: default `true`. Each hand rolls its own 4–9s delay and then holds `Boolean 1` for 1.1s. Timers pause while the tab is hidden or the hand is offscreen, and they are cleared on unmount. Hover and focus still own `active`.
+- `entrance`: `'slide-up' | 'grow' | 'none'` (default `'none'`). `slide-up` translates Y from below the box. The marketing hero wraps that hand in `overflow-clip` whose bottom is `0.22em` above the line box, the baseline on `type-display-1`. `grow` scales from 0 to 1 at `22% 76%` (the point grip) with a spring and a 200ms delay. Motion comes from `motion/react`.
 - `className`: layout only.
 - `aria-hidden`: defaults to `true`.
 
@@ -44,13 +46,13 @@ There was no brand-blue role. `--color-info` (`#00458c`) is the status blue behi
 
 ### Reduced motion
 
-Handled with `matchMedia('(prefers-reduced-motion: reduce)')`, not Motion’s reduced-motion config. When it matches, `onRiveReady` paints the token colors, draws one frame, and calls `rive.pause()`. `Boolean 1` stays false, so the interaction does not run.
+Handled with `matchMedia('(prefers-reduced-motion: reduce)')`, not Motion’s reduced-motion config. When it matches, `onRiveReady` paints the token colors, draws one frame, and calls `rive.pause()`. `Boolean 1` stays false, so hover, focus, and idle do not run. The entrance props render at rest: no slide and no scale.
 
 ### Headline pattern
 
 **Components/Layout/HeroTileStack → Pattern — marketing hero** is the default. The plain h1 uses **`type-display-1`**, the largest display token (`clamp` from `2.5rem` / 40px to `5rem` / 80px). `type-display-2` and `type-display-3` are smaller. No uppercase transform.
 
-The point hand grips the top-right of the final **s**. **We Are** and **WhatMatters** are each an `inline-block` with `whitespace-nowrap`, so the line can break between those words and never through WhatMatters. The final **s** is an inline `relative` span, and the point hand is absolutely positioned inside it. The **e** in Are is an inline `relative z-20` span. The **W** in WhatMatters is an inline `relative z-0` span. The rock hand sits in a zero-width span pinned to the end of **We Are**, between that e and that W, with offset and size in `em`. That span is the first node in We Are, so it does not split the words. The h1 is `isolate` and the rock hand is `z-10`, so the e paints on top of the hand and the hand paints on top of the left edge of the W. The bottom of the rock hand’s drawn pixels sits on the text baseline. On a wrap the rock stays behind the e at the end of line 1, on that line’s baseline, clear of line 2. The point hand follows the s. The accessible name and the copied text stay `We Are WhatMatters`. Below `md` the box is `1.7em`, and the point hand stays inside a 320px viewport while it still grips the s. From `md` the box is `2.2em`. Hover or focus on the h1 sets `active`.
+The point hand grips the top-right of the final **s**. **We Are** and **WhatMatters** are each an `inline-block` with `whitespace-nowrap`, so the line can break between those words and never through WhatMatters. The final **s** is an inline `relative` span, and the point hand is absolutely positioned inside it. The **e** in Are is an inline `relative z-20` span. The **W** in WhatMatters is an inline `relative z-0` span. The rock hand sits in a zero-width span pinned to the end of **We Are**, between that e and that W, with offset and size in `em`. That span is the first node in We Are, so it does not split the words. The h1 is `isolate` and the rock hand is `z-10`, so the e paints on top of the hand and the hand paints on top of the left edge of the W. The bottom of the rock hand’s drawn pixels sits on the text baseline. On a wrap the rock stays behind the e at the end of line 1, on that line’s baseline, clear of line 2. The point hand follows the s. The accessible name and the copied text stay `We Are WhatMatters`. Below `md` the box is `1.7em`, and the point hand stays inside a 320px viewport while it still grips the s. From `md` the box is `2.2em`. Hover or focus on the h1 sets `active`. The rock hand uses `entrance="slide-up"` inside that baseline clip. The point hand uses `entrance="grow"`. Both pass `idle`.
 
 ### Consuming the pattern
 

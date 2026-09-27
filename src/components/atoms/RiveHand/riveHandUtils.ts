@@ -38,6 +38,56 @@ export const riveHandOutlineToken = "--color-brand";
 
 export const riveHandClassName = "pointer-events-none";
 
+/** Marketing hero opts in. `none` is the resting box with no entrance. */
+export const riveHandEntrances = ["slide-up", "grow", "none"] as const;
+
+export type RiveHandEntrance = (typeof riveHandEntrances)[number];
+
+/** Each hand rolls its own delay so the two gestures rarely start together. */
+export const riveHandIdleMinMs = 4000;
+
+export const riveHandIdleMaxMs = 9000;
+
+/** How long `Boolean 1` stays true for one idle gesture. */
+export const riveHandIdleHoldMs = 1100;
+
+/** Point hand follows the rock by this much. Inside the 150–250ms stagger. */
+export const riveHandGrowDelaySec = 0.2;
+
+/**
+ * Scale origin for `entrance="grow"` — lower-left of the point art, where it grips the s.
+ * Fractions of the hand box.
+ */
+export const riveHandGrowOrigin = "22% 76%";
+
+/**
+ * Gap between the line box bottom and the text baseline on `type-display-1` (line-height 1.15).
+ * The rock clip wrapper uses this as `bottom` so the hand rises out of the baseline.
+ */
+export const riveHandBaselineFromLineBottom = "0.22em";
+
+/** `random` is a unit interval, the same contract as `Math.random()`. */
+export function nextRiveHandIdleDelayMs(random: number = Math.random()): number {
+  const unit = Math.min(1, Math.max(0, random));
+  return Math.round(riveHandIdleMinMs + unit * (riveHandIdleMaxMs - riveHandIdleMinMs));
+}
+
+/** Idle pulses only while the hand is allowed to move and the page can be seen. */
+export function riveHandIdleAllowed(input: {
+  idle: boolean;
+  reduced: boolean;
+  pageVisible: boolean;
+  inView: boolean;
+}): boolean {
+  return input.idle && !input.reduced && input.pageVisible && input.inView;
+}
+
+/** `Boolean 1` while hovering, focusing, or inside an idle pulse. Reduced motion forces it off. */
+export function riveHandBooleanValue(active: boolean, idlePulse: boolean, reduced: boolean): boolean {
+  if (reduced) return false;
+  return active || idlePulse;
+}
+
 export interface Rgb {
   r: number;
   g: number;
