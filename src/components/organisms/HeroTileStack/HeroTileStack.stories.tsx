@@ -18,6 +18,8 @@ import {
   heroTileStackDefaultVelocityFactor,
   type HeroTileStackTile,
 } from "./HeroTileStack";
+import { ScrollHorizontal } from "../ScrollHorizontal/ScrollHorizontal";
+import { scrollHorizontalMarketingItems } from "../ScrollHorizontal/scrollHorizontalExamples";
 
 const heroTiles: HeroTileStackTile[] = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },
@@ -25,6 +27,8 @@ const heroTiles: HeroTileStackTile[] = [
   { src: "/hero-tiles/week.svg", alt: "Abstract shapes for the week" },
   { src: "/hero-tiles/note.svg", alt: "A pale note about what matters" },
 ];
+
+const projects = scrollHorizontalMarketingItems;
 
 const meta = {
   title: "Components/Layout/HeroTileStack",
@@ -91,13 +95,21 @@ const marketingHeroCopySource = `
 
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
-import { Badge, Button, HeroIntro, HeroTileStack, RiveHand, SiteNav } from "@whatmatters/wmds";
+import { Badge, Button, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav } from "@whatmatters/wmds";
 
 const tiles = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },
   { src: "/hero-tiles/focus.svg", alt: "Blue focus card" },
   { src: "/hero-tiles/week.svg", alt: "Abstract shapes for the week" },
   { src: "/hero-tiles/note.svg", alt: "A pale note about what matters" },
+];
+
+const projects = [
+  { id: "project-one", label: "Project One", image: "/scroll-horizontal/project-one.svg" },
+  { id: "project-two", label: "Project Two", image: "/scroll-horizontal/project-two.svg" },
+  { id: "project-three", label: "Project Three", image: "/scroll-horizontal/project-three.svg" },
+  { id: "project-four", label: "Project Four", image: "/scroll-horizontal/project-four.svg" },
+  { id: "project-five", label: "Project Five", image: "/scroll-horizontal/project-five.svg" },
 ];
 
 export function MarketingHero() {
@@ -172,6 +184,10 @@ export function MarketingHero() {
             </div>
         </div>
       </section>
+      <ScrollHorizontal
+        items={projects}
+        heading={<h2 className="type-heading-2 text-fg">Selected work</h2>}
+      />
     </>
   );
 }
@@ -249,6 +265,10 @@ function MarketingHero() {
             </div>
         </div>
       </section>
+      <ScrollHorizontal
+        items={projects}
+        heading={<h2 className="type-heading-2 text-fg">Selected work</h2>}
+      />
     </>
   );
 }
@@ -287,7 +307,7 @@ export const MarketingHeroPattern: Story = {
       docs: {
         description: {
           story:
-            "SiteNav sits above the hero in normal flow. The hero section is min-h-[calc(100svh-var(--site-nav-height))] and centers its content, so the nav plus the hero fill the viewport. The headline is a plain h1 (We Are WhatMatters) on type-display-1, the largest display token. We Are and WhatMatters are each an inline-block with whitespace-nowrap, so a narrow line breaks as We Are / WhatMatters. The rock hand sits in a zero-width span pinned to the end of We Are, between the e and the W, with em offsets. That span is the first node in We Are so it does not split the words. The e is an inline relative z-20 span, the W is an inline relative z-0 span, the h1 is isolate, and the rock hand is z-10, so the e paints on top of the hand and the hand paints on top of the left edge of the W. The bottom of the rock hand's drawn pixels sits on the text baseline. On a wrap the rock stays behind the e at the end of line 1, on that line's baseline, clear of line 2. The point hand stays on the final s. The accessible name stays We Are WhatMatters. Below md the box is 1.7em, and the point hand stays inside a 320px viewport while still gripping the s. From md the box is 2.2em. Hover or focus on the headline sets Boolean 1. On first view the rock hand slides up from below the baseline inside an overflow-clip wrapper (e at z-20, hand at z-10, W at z-0). The point hand then grows in from its grip with a spring, about 200ms later. Each hand also sets Boolean 1 on its own 4–9s timer while the tab is visible and the hand is in view. idle defaults on. prefers-reduced-motion skips the entrance and the idle timers and keeps the still frame. The hands are aria-hidden. The headline text stays selectable. handFill uses --color-surface (fallback --color-background-surface), white in light mode. outline uses --color-brand (#011272 in both themes), with the same navy as a hardcoded fallback when the token is missing. Art is a CC BY 4.0 remix of the Rive Interactive Icon Set by Silvia Sguotti and Gabriele Montinaro. The point hand is artboard 31_Cigarette with the cigarette removed. Show code starts with use client. Install @rive-app/react-canvas and serve public/rive/interactive-icon-set.riv at /rive/interactive-icon-set.riv. The intro is HeroIntro. Pass the first sentence as lead (We're a design and product studio based in Austin, Texas.). From md that lead stays on one line. Below md it may wrap. children is the rest of the copy and always starts on the next line. Both lines stay on type-large at font-normal, centered, on the type-large leading. Do not insert a br in the copy. HeroIntro sits on grid-page (max-width --grid-max, the same margin, column gap, and column count as the guides) with py-0 so the page block pad does not stack on the hero gap. From lg, where the grid is 12 columns, it occupies columns 4–9 (lg:col-start-4 lg:col-end-10), 6 of 12 columns, centered, and those edges line up with guide columns 4 and 9. md is 8 columns, so that span does not start at md. Below lg the paragraph is full width of that page grid, inside --grid-margin. The copy is: We're a design and product studio based in Austin, Texas. We help brands stand out online with bold ideas, fresh approaches, and products people actually love to use. online is one inline md Badge with a round Avatar — the one sanctioned decorative use. The globe file in public/hero-badges/ is a playful placeholder. The badge is not clickable, alt is empty so the sentence still reads in order, and the image is not announced. The tile fan is the last element. The section's py-16 is the space under the tiles. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
+            "SiteNav sits above the hero in normal flow. The hero section is min-h-[calc(100svh-var(--site-nav-height))] and centers its content, so the nav plus the hero fill the viewport. The headline is a plain h1 (We Are WhatMatters) on type-display-1, the largest display token. We Are and WhatMatters are each an inline-block with whitespace-nowrap, so a narrow line breaks as We Are / WhatMatters. The rock hand sits in a zero-width span pinned to the end of We Are, between the e and the W, with em offsets. That span is the first node in We Are so it does not split the words. The e is an inline relative z-20 span, the W is an inline relative z-0 span, the h1 is isolate, and the rock hand is z-10, so the e paints on top of the hand and the hand paints on top of the left edge of the W. The bottom of the rock hand's drawn pixels sits on the text baseline. On a wrap the rock stays behind the e at the end of line 1, on that line's baseline, clear of line 2. The point hand stays on the final s. The accessible name stays We Are WhatMatters. Below md the box is 1.7em, and the point hand stays inside a 320px viewport while still gripping the s. From md the box is 2.2em. Hover or focus on the headline sets Boolean 1. On first view the rock hand slides up from below the baseline inside an overflow-clip wrapper (e at z-20, hand at z-10, W at z-0). The point hand then grows in from its grip with a spring, about 200ms later. Each hand also sets Boolean 1 on its own 4–9s timer while the tab is visible and the hand is in view. idle defaults on. prefers-reduced-motion skips the entrance and the idle timers and keeps the still frame. The hands are aria-hidden. The headline text stays selectable. handFill uses --color-surface (fallback --color-background-surface), white in light mode. outline uses --color-brand (#011272 in both themes), with the same navy as a hardcoded fallback when the token is missing. Art is a CC BY 4.0 remix of the Rive Interactive Icon Set by Silvia Sguotti and Gabriele Montinaro. The point hand is artboard 31_Cigarette with the cigarette removed. Show code starts with use client. Install @rive-app/react-canvas and serve public/rive/interactive-icon-set.riv at /rive/interactive-icon-set.riv. The intro is HeroIntro. Pass the first sentence as lead (We're a design and product studio based in Austin, Texas.). From md that lead stays on one line. Below md it may wrap. children is the rest of the copy and always starts on the next line. Both lines stay on type-large at font-normal, centered, on the type-large leading. Do not insert a br in the copy. HeroIntro sits on grid-page (max-width --grid-max, the same margin, column gap, and column count as the guides) with py-0 so the page block pad does not stack on the hero gap. From lg, where the grid is 12 columns, it occupies columns 4–9 (lg:col-start-4 lg:col-end-10), 6 of 12 columns, centered, and those edges line up with guide columns 4 and 9. md is 8 columns, so that span does not start at md. Below lg the paragraph is full width of that page grid, inside --grid-margin. The copy is: We're a design and product studio based in Austin, Texas. We help brands stand out online with bold ideas, fresh approaches, and products people actually love to use. online is one inline md Badge with a round Avatar — the one sanctioned decorative use. The globe file in public/hero-badges/ is a playful placeholder. The badge is not clickable, alt is empty so the sentence still reads in order, and the image is not announced. The tile fan is the last element in the hero. ScrollHorizontal follows that section: a 300svh track translates the project row from the first card centered to the last. prefers-reduced-motion turns the track into a native horizontal scroller. The section's py-16 is the space under the tiles. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
         },
       },
     },
@@ -502,9 +522,13 @@ export const GuidesCoverEmptyPage: Story = {
 
     const heroRect = hero.getBoundingClientRect();
     const pageRect = page.getBoundingClientRect();
+    const gallery = canvasElement.querySelector("[data-scroll-horizontal]");
+    if (!(gallery instanceof HTMLElement)) throw new Error("gallery missing");
+    const galleryRect = gallery.getBoundingClientRect();
     expect(pageRect.height).toBeLessThan(160);
     expect(pageRect.height).toBeLessThan(heroRect.height);
-    expect(pageRect.top).toBeGreaterThanOrEqual(heroRect.bottom - 1);
+    expect(galleryRect.top).toBeGreaterThanOrEqual(heroRect.bottom - 1);
+    expect(pageRect.top).toBeGreaterThanOrEqual(galleryRect.bottom - 1);
 
     const columns = [...canvasElement.querySelectorAll(".grid-guides-col")];
     expect(columns).toHaveLength(12);

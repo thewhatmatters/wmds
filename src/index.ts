@@ -479,6 +479,12 @@ export {
   type HeroTileVelocityInput,
 } from "./components/organisms/HeroTileStack/HeroTileStack";
 export {
+  ScrollHorizontal,
+  type ScrollHorizontalItem,
+  type ScrollHorizontalLayoutClassName,
+  type ScrollHorizontalProps,
+} from "./components/organisms/ScrollHorizontal/ScrollHorizontal";
+export {
   Tab,
   tabSizes,
   type TabGroupProps,
