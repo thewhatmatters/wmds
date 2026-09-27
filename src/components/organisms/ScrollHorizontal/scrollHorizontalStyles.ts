@@ -5,7 +5,7 @@
  * and a centered window one card wide. The row starts with the first card
  * filling that window. `expandLast` uses a 400svh track: the same horizontal
  * distance, then one viewport of grow. The grow layer is the sticky window
- * (`inset-0`) revealed with `clip-path`.
+ * (edge longhands, not the `inset` shorthand) revealed with `clip-path`.
  *
  * Reduced motion (`motion-reduce` and `data-reduce="true"`): height auto,
  * the viewport is not sticky, and the window is a native horizontal scroller
@@ -28,18 +28,28 @@ export const scrollHorizontalRootExpandClasses = [
 ].join(" ");
 
 /**
+ * Fill the sticky window from its padding edges.
+ * Four edge longhands, not the `inset` shorthand: a consuming app that emits
+ * `.inset-0` later must not be able to reset this box.
+ */
+export const scrollHorizontalExpandFillClasses =
+  "absolute top-0 right-0 bottom-0 left-0";
+
+/**
  * Full-viewport color layer. `clip-path` reveals it from the last card out to
  * the sticky window. Hidden on the reduced-motion branch, which uses the static section.
  */
 export const scrollHorizontalExpandLayerClasses = [
-  "pointer-events-none absolute inset-0 z-20 bg-[var(--scroll-horizontal-color)] will-change-[clip-path]",
+  "pointer-events-none z-20 bg-[var(--scroll-horizontal-color)] will-change-[clip-path]",
+  scrollHorizontalExpandFillClasses,
   "motion-reduce:!hidden",
   "group-data-[reduce=true]/scroll-horizontal:!hidden",
 ].join(" ");
 
 /** Optional content on the full-bleed tile. Fades in late. Hidden when motion is reduced. */
 export const scrollHorizontalExpandedSlotClasses = [
-  "absolute inset-0 z-30",
+  "z-30",
+  scrollHorizontalExpandFillClasses,
   "motion-reduce:!hidden",
   "group-data-[reduce=true]/scroll-horizontal:!hidden",
 ].join(" ");
@@ -110,7 +120,9 @@ export const scrollHorizontalLabelClasses = "sr-only";
  * The track's inline start is the page-grid content edge: the same inset as
  * `grid-page` (`--grid-margin` inside a centered `--grid-max`). Percentage
  * padding resolves against the sticky, so it does not depend on `cqw`.
- * `!` wins over `p-0`. The inset is on the translating track, so scroll
+ * Padding is longhands only (`ps` / `pe` / `py`). A padding shorthand such as
+ * `p-0` on this element lets a consuming app's later `.p-0 { padding: 0 }`
+ * clear the inline start. The inset is on the translating track, so scroll
  * carries the panel off the left edge with the tiles.
  * Reduced motion stacks the panel above a native scroller and keeps the inset.
  */
@@ -118,7 +130,7 @@ export const scrollHorizontalIntroStickyClasses = "[container-type:inline-size]"
 
 export const scrollHorizontalIntroTrackClasses = [
   "m-0 flex h-full w-max items-center self-start gap-8 py-0 pe-0 max-sm:gap-4 will-change-transform",
-  "!ps-[max(var(--grid-margin),calc((100%-var(--grid-max))/2+var(--grid-margin)))]",
+  "ps-[max(var(--grid-margin),calc((100%-var(--grid-max))/2+var(--grid-margin)))]",
   "motion-reduce:!h-auto motion-reduce:!w-full motion-reduce:!max-w-full motion-reduce:!flex-col motion-reduce:!items-stretch motion-reduce:!self-stretch motion-reduce:!transform-none motion-reduce:will-change-auto",
   "group-data-[reduce=true]/scroll-horizontal:!h-auto",
   "group-data-[reduce=true]/scroll-horizontal:!w-full",

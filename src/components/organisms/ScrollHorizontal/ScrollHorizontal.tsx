@@ -18,18 +18,22 @@ import {
   scrollHorizontalExpandedOpacity,
   scrollHorizontalHorizontalEnd,
   scrollHorizontalItemColor,
-  scrollHorizontalLeadTravel,
+  scrollHorizontalLeadFrame,
   scrollHorizontalNominalExpandMetrics,
   scrollHorizontalNominalMetrics,
+  scrollHorizontalParseGap,
   scrollHorizontalPeerOpacity,
   scrollHorizontalPhaseProgress,
   scrollHorizontalReadFrame,
   scrollHorizontalReadMetrics,
+  scrollHorizontalReadTranslateX,
+  scrollHorizontalRestLeft,
   scrollHorizontalTranslateX,
 } from "./scrollHorizontalMath";
 import { ScrollHorizontalIntro } from "./ScrollHorizontalIntro";
 import { ScrollHorizontalIntroContext } from "./scrollHorizontalIntroContext";
 import {
+  scrollHorizontalExpandFillClasses,
   scrollHorizontalExpandLayerClasses,
   scrollHorizontalExpandedSectionClasses,
   scrollHorizontalExpandedSlotClasses,
@@ -205,24 +209,31 @@ function ScrollHorizontalRoot({
     const measure = () => {
       const track = trackRef.current;
       if (hasIntro && track && sticky) {
+        // Gap lives on the card row. The translate lives on the track.
+        // Reading either element for both puts the clip on the pre-intro pitch.
         const metrics = scrollHorizontalReadFrame(
           sticky,
           item,
-          track,
+          row,
           window.innerWidth,
           window.innerHeight,
         );
-        const endLeft = (metrics.viewportWidth - metrics.cardWidth) / 2;
-        distance.set(
-          scrollHorizontalLeadTravel(
-            items.length,
-            metrics.cardWidth,
-            metrics.pitch,
-            metrics.cardLeft,
-            metrics.viewportWidth,
-          ),
-        );
-        frame.set({ ...metrics, endLeft });
+        const shift = scrollHorizontalReadTranslateX(getComputedStyle(track).transform);
+        const stickyRect = sticky.getBoundingClientRect();
+        const itemRect = item.getBoundingClientRect();
+        const cardLeft = itemRect.left - shift - stickyRect.left;
+        const rowGap = scrollHorizontalParseGap(getComputedStyle(row).columnGap);
+        const pitch =
+          metrics.cardWidth + (rowGap > 0 ? rowGap : metrics.pitch - metrics.cardWidth);
+        const last = row.querySelector("li:last-child");
+        const steps = Math.max(0, items.length - 1);
+        const lastRest =
+          last instanceof HTMLElement
+            ? scrollHorizontalRestLeft(last, sticky, track)
+            : cardLeft + steps * pitch;
+        const lead = scrollHorizontalLeadFrame({ ...metrics, cardLeft, pitch }, lastRest, items.length);
+        distance.set(lead.distance);
+        frame.set(lead.frame);
         return;
       }
 
@@ -376,7 +387,7 @@ function ScrollHorizontalRoot({
           }
         >
           <span className={scrollHorizontalLabelClasses}>{lastItem.label}</span>
-          {expanded ? <div className="absolute inset-0 z-10">{expanded}</div> : null}
+          {expanded ? <div className={cn(scrollHorizontalExpandFillClasses, "z-10")}>{expanded}</div> : null}
         </div>
       ) : null}
     </section>
