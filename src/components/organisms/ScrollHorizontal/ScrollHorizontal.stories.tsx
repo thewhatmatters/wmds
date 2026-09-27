@@ -37,7 +37,7 @@ Omit \`color\` to cycle \`--color-brand\`, \`--color-brand-soft\`, \`--color-pri
 
 \`heading\` names the section. It is \`sr-only\` while the window is pinned, so it does not sit under the site nav, and visible above the row when motion is reduced.
 
-\`intro\` replaces \`heading\`. **ScrollHorizontal.Intro** is the first panel: an eyebrow **Badge**, a \`type-display-2\` statement (normal weight, display-1 leading) run through **TextSequence** (\`emphasis="none"\`, \`trigger="inView"\`), and an outline mono **Button**. The panel sits in the left columns of the page grid, with top padding \`--site-nav-height\` plus the compact nav's 1rem offset, so it clears the pinned site nav. Tiles follow to the right and scroll in as the panel leaves to the left. The eyebrow is the section name. The statement is the \`h2\`. Words slide up once when that heading scrolls into view. **TextSequence.Shape** marks between words pop on that same timeline (about 1.15em, token fills). Reduced motion stacks that panel above the native row and leaves the sentence and shapes at rest.
+\`intro\` replaces \`heading\`. **ScrollHorizontal.Intro** is the first panel: an eyebrow **Badge**, a \`type-display-2\` statement (normal weight, display-1 leading) run through **TextSequence** (\`emphasis="none"\`, \`trigger="inView"\`), and a secondary **Button** (\`role="secondary"\`, label Start a project). The panel sits in the left columns of the page grid, with top padding \`--site-nav-height\` plus the compact nav's 1rem offset, so it clears the pinned site nav. Tiles follow to the right and scroll in as the panel leaves to the left. The eyebrow is the section name. The statement is the \`h2\`. Words slide up once when that heading scrolls into view. **TextSequence.Shape** marks between words pop on that same timeline (about 1.15em, token fills). Reduced motion stacks that panel above the native row and leaves the sentence and shapes at rest.
 
 \`prefers-reduced-motion\`, and \`MotionConfig\` \`reducedMotion="always"\`, skip the transform. The track height is auto, the window is not sticky, and the row is a native horizontal scroller with vertical padding (\`py-12\`). The heading is visible on that branch. The server render matches the motion shell. The OS preference is applied before paint.
 
@@ -287,13 +287,29 @@ export function ProjectGalleryIntro() {
         <ScrollHorizontal.Intro
           eyebrow="SELECTED WORK"
           statement=${scrollHorizontalIntroStatementMarkup}
-          action={{ label: "See our work" }}
+          action={{ label: "Start a project" }}
         />
       }
     />
   );
 }
 `.trim();
+
+function pageGridContentStart(): number {
+  const probe = document.createElement("div");
+  probe.className = "grid-page";
+  document.body.appendChild(probe);
+  const start =
+    probe.getBoundingClientRect().left + Number.parseFloat(getComputedStyle(probe).paddingLeft);
+  probe.remove();
+  return start;
+}
+
+function expectIntroOnPageGrid(root: ParentNode) {
+  const intro = root.querySelector("[data-scroll-horizontal-intro]");
+  if (!(intro instanceof HTMLElement)) throw new Error("intro missing");
+  expect(Math.abs(intro.getBoundingClientRect().left - pageGridContentStart())).toBeLessThanOrEqual(1);
+}
 
 function GalleryIntro() {
   return (
@@ -304,7 +320,7 @@ function GalleryIntro() {
         <ScrollHorizontal.Intro
           eyebrow="SELECTED WORK"
           statement={scrollHorizontalIntroStatementNodes()}
-          action={{ label: "See our work" }}
+          action={{ label: "Start a project" }}
         />
       }
     />
@@ -319,7 +335,7 @@ export const WithIntro: Story = {
       docs: {
         description: {
           story:
-            "The intro is the first panel. The eyebrow names the section. The statement is the h2 on type-display-2 at normal weight. TextSequence runs once when that heading scrolls into view: words slide up, and an asterisk, a brand-soft pill, and an accent diamond pop between words at about 1.15em. Tiles sit to the right and scroll in as the panel leaves left. expandLast still grows the last tile. Reduced motion stacks the same intro above the native row, with the sentence and shapes at rest. Do not pass heading — the eyebrow replaces it.",
+            "The intro is the first panel. At rest its left edge is the page-grid content start, the same inset as grid-page. Scroll translates the panel off to the left with the tiles. The eyebrow names the section. The statement is the h2 on type-display-2 at normal weight. TextSequence runs once when that heading scrolls into view: words slide up, and an asterisk, a brand-soft pill, and an accent diamond pop between words at about 1.15em. Tiles sit to the right and scroll in as the panel leaves left. expandLast still grows the last tile. Reduced motion stacks the same intro above the native row, with the same inset, and the sentence and shapes at rest. Do not pass heading — the eyebrow replaces it.",
         },
       },
     },
@@ -365,9 +381,13 @@ export const IntroContract: Story = {
     const statement = section.querySelector("h2");
     expect(statement?.tagName).toBe("H2");
     expect(statement?.getAttribute("role")).toBeNull();
-    expect(statement?.textContent).toContain("Placeholder statement");
-    expect(statement?.textContent).toContain("WhatMatters");
-    expect(statement?.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(3);
+    expect(statement?.textContent?.replace(/\s+/g, " ").trim()).toBe(scrollHorizontalIntroStatement);
+    const shapes = [...(statement?.querySelectorAll("[data-text-sequence-shape]") ?? [])];
+    expect(shapes.map((shape) => shape.getAttribute("data-variant"))).toEqual([
+      "asterisk",
+      "pill",
+      "diamond",
+    ]);
     await waitFor(() => {
       expect(statement?.getAttribute("aria-label")).toBe(scrollHorizontalIntroStatement);
       expect(statement?.querySelector("[data-text-sequence]")?.getAttribute("data-text-sequence-state")).toBe(
@@ -378,13 +398,40 @@ export const IntroContract: Story = {
     if (!(card instanceof HTMLElement)) throw new Error("card missing");
     expect(card.getBoundingClientRect().left).toBeGreaterThanOrEqual(intro.getBoundingClientRect().right - 1);
     const action = [...section.querySelectorAll("button")].find((node) =>
-      node.textContent?.includes("See our work"),
+      node.textContent?.includes("Start a project"),
     );
-    expect(action?.getAttribute("data-role")).toBe("outline");
-    expect(action?.getAttribute("data-mono")).toBe("");
+    expect(action?.getAttribute("data-role")).toBe("secondary");
+    expect(action?.getAttribute("data-mono")).toBeNull();
+    expect(action?.querySelector("svg")).toBeNull();
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
       document.documentElement.clientWidth + 1,
     );
+    expectIntroOnPageGrid(section);
+  },
+};
+
+const review1440Viewport = {
+  review1440: {
+    name: "Review 1440",
+    styles: { width: "1440px", height: "900px" },
+    type: "desktop" as const,
+  },
+};
+
+export const IntroAlignedAt1440: Story = {
+  tags: ["test", "!dev", "!autodocs"],
+  globals: {
+    viewport: { value: "review1440", isRotated: false },
+  },
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+    viewport: { options: review1440Viewport },
+  },
+  render: () => <GalleryIntro />,
+  play: async ({ canvasElement }) => {
+    expect(window.innerWidth).toBeGreaterThanOrEqual(1440);
+    expectIntroOnPageGrid(canvasElement);
   },
 };
 
@@ -410,6 +457,7 @@ export const IntroAt390: Story = {
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
       document.documentElement.clientWidth + 1,
     );
+    expectIntroOnPageGrid(canvasElement);
   },
 };
 
@@ -445,10 +493,34 @@ export const IntroReduced: Story = {
     expect(getComputedStyle(sticky).position).toBe("relative");
     expect(intro.getBoundingClientRect().bottom).toBeLessThanOrEqual(row.getBoundingClientRect().top + 1);
     expect(section.querySelector("[data-pattern='eyebrow']")?.textContent).toBe("SELECTED WORK");
+    expectIntroOnPageGrid(section);
     const reducedTile = [...section.querySelectorAll("[data-scroll-horizontal-expanded]")].find((host) =>
       host.className.includes("h-svh"),
     );
     expect(reducedTile?.textContent).toContain("Project Five");
+  },
+};
+
+export const IntroReducedAt390: Story = {
+  tags: ["test", "!dev", "!autodocs"],
+  globals: lockedViewportGlobals("mobile"),
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+  },
+  render: () => (
+    <MotionConfig reducedMotion="always">
+      <GalleryIntro />
+    </MotionConfig>
+  ),
+  play: async ({ canvasElement }) => {
+    expect(window.innerWidth).toBeLessThanOrEqual(400);
+    const section = canvasElement.querySelector("[data-scroll-horizontal]");
+    if (!(section instanceof HTMLElement)) throw new Error("gallery missing");
+    await waitFor(() => {
+      expect(section.getAttribute("data-reduce")).toBe("true");
+    });
+    expectIntroOnPageGrid(section);
   },
 };
 

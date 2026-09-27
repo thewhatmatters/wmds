@@ -30,7 +30,7 @@ The owner approved GSAP for this sequence only. GSAP and its plugins, including 
 
 The h1 stays the Rive hand headline (ADR-0034). SplitText rewrites text into masked word elements. The rock and point hands are anchored to the **e**, the **W**, and the final **s**. Running the sequence on that h1 would detach the hands, so this variant sequences the intro only. The h1 still reads **We Are WhatMatters** on `type-display-1`.
 
-The intro stays **HeroIntro** (`type-large`, one step above body, shared leading, columns 4–9 from `lg`). Copy is two lines with no periods: “Your brand is already online” and “Make it impossible to ignore”. A few **`TextSequence.Shape`** marks replace the inline **Badge** / **Avatar** used on the default pattern. Headline `useState` for the hands lives on the headline, so a hover does not re-render the sequence and wipe the split DOM.
+The intro stays **HeroIntro** with `step="display"`: `type-display-2` at normal weight, the same size as **ScrollHorizontal.Intro**, full width of the page grid. Copy is two lines with no periods: “Your brand is already online” and “Make it impossible to ignore”. A few **`TextSequence.Shape`** marks (about 1.15em) replace the inline **Badge** / **Avatar** used on the default pattern. `emphasis="none"` keeps every word regular. Headline `useState` for the hands lives on the headline, so a hover does not re-render the sequence and wipe the split DOM. The default **Pattern — marketing hero** stays on `step="large"` (`type-large`, columns 4–9).
 
 ## Non-goals
 

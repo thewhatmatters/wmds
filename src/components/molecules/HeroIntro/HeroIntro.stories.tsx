@@ -21,7 +21,9 @@ const meta = {
         component: `
 ## Usage
 
-Centered intro under a marketing headline. Pass the first sentence as \`lead\` and the rest as children. **HeroIntro** owns the line break, the \`type-large\` step, and the page-grid span.
+Centered intro under a marketing headline. Pass the first sentence as \`lead\` and the rest as children. **HeroIntro** owns the line break and the page-grid span.
+
+\`step="large"\` (default) is \`type-large\` at normal weight, columns 4–9 from \`lg\`. \`step="display"\` is \`type-display-2\` at normal weight, full width of the page grid — the sequenced hero subtext, the same size as **ScrollHorizontal.Intro**.
 
 From \`md\`, \`lead\` stays on one line. Below \`md\` it may wrap. Children always start on the next line. Both lines use the type-large leading and stay centered.
 
@@ -42,7 +44,8 @@ HeroIntro — grid-page, page block pad removed
 - Pass the first sentence, including its period, as \`lead\`. Do not insert a line break in the copy.
 - Keep children on the same sentence rhythm. The marketing hero puts one inline **Badge** in that line.
 - \`className\` is layout only (width, margin). The column span and the nowrap lead are part of the component.
-- Do not restyle the two lines to different type steps. They share \`type-large\`.
+- Do not restyle the two lines to different type steps. They share the step you pass.
+- Use \`step="display"\` for the sequenced marketing hero. Leave the default hero on \`large\`.
         `.trim(),
       },
     },
