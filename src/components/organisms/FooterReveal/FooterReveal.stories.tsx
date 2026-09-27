@@ -8,6 +8,7 @@ import { stickyFooterInFlowTop } from "../../../lib/gridOverlayUtils";
 import { Button } from "../../atoms/Button/Button";
 import { RiveHand } from "../../atoms/RiveHand/RiveHand";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
+import { HeroIntro } from "../../molecules/HeroIntro/HeroIntro";
 import { HeroTileStack } from "../HeroTileStack/HeroTileStack";
 import { SiteNav } from "../SiteNav/SiteNav";
 import { FooterReveal } from "./FooterReveal";
@@ -247,7 +248,7 @@ const marketingHeroCopySource = `
 
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
-import { Badge, Button, FooterReveal, GridOverlay, HeroTileStack, RiveHand, SiteNav, footerRevealFieldClasses } from "@whatmatters/wmds";
+import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, SiteNav, footerRevealFieldClasses } from "@whatmatters/wmds";
 
 const socialLinks = [
   { label: "Contra", href: "#contra-TODO" },
@@ -327,13 +328,11 @@ export function MarketingHeroPage() {
               ]}
           </h1>
           </div>
-          <div className="grid-page w-full !py-0">
-              <p className="type-large col-span-full text-center font-normal text-muted lg:col-start-4 lg:col-end-10">
-                We're a design and product studio based in Austin, Texas. We help brands stand out{" "}
-                <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
-                {" "}with bold ideas, fresh approaches, and products people actually love to use.
-              </p>
-            </div>
+          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
+            We help brands stand out{" "}
+            <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
+            {" "}with bold ideas, fresh approaches, and products people actually love to use.
+          </HeroIntro>
             <div className="w-full px-[var(--grid-margin)]">
             <HeroTileStack tiles={tiles} />
             </div>
@@ -418,13 +417,11 @@ function MarketingHeroPage() {
               ]}
           </h1>
           </div>
-          <div className="grid-page w-full !py-0">
-              <p className="type-large col-span-full text-center font-normal text-muted lg:col-start-4 lg:col-end-10">
-                We're a design and product studio based in Austin, Texas. We help brands stand out{" "}
-                <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
-                {" "}with bold ideas, fresh approaches, and products people actually love to use.
-              </p>
-            </div>
+          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
+            We help brands stand out{" "}
+            <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
+            {" "}with bold ideas, fresh approaches, and products people actually love to use.
+          </HeroIntro>
             <div className="w-full px-[var(--grid-margin)]">
             <HeroTileStack tiles={tiles} />
             </div>

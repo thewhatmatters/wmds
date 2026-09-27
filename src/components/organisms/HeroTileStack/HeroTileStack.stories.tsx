@@ -3,6 +3,7 @@ import { Sparkles } from "lucide-react";
 import { useState } from "react";
 import { expect, userEvent, waitFor } from "storybook/test";
 import { Badge } from "../../atoms/Badge/Badge";
+import { HeroIntro } from "../../molecules/HeroIntro/HeroIntro";
 import { RiveHand } from "../../atoms/RiveHand/RiveHand";
 import { Button } from "../../atoms/Button/Button";
 import { SiteNav } from "../SiteNav/SiteNav";
@@ -90,7 +91,7 @@ const marketingHeroCopySource = `
 
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
-import { Badge, Button, HeroTileStack, RiveHand, SiteNav } from "@whatmatters/wmds";
+import { Badge, Button, HeroIntro, HeroTileStack, RiveHand, SiteNav } from "@whatmatters/wmds";
 
 const tiles = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },
@@ -161,13 +162,11 @@ export function MarketingHero() {
             ]}
           </h1>
           </div>
-          <div className="grid-page w-full !py-0">
-            <p className="type-large col-span-full text-center font-normal text-muted lg:col-start-4 lg:col-end-10">
-              We're a design and product studio based in Austin, Texas. We help brands stand out{" "}
-              <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
-              {" "}with bold ideas, fresh approaches, and products people actually love to use.
-            </p>
-          </div>
+          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
+            We help brands stand out{" "}
+            <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
+            {" "}with bold ideas, fresh approaches, and products people actually love to use.
+          </HeroIntro>
             <div className="w-full px-[var(--grid-margin)]">
             <HeroTileStack tiles={tiles} />
             </div>
@@ -240,13 +239,11 @@ function MarketingHero() {
             ]}
           </h1>
           </div>
-          <div className="grid-page w-full !py-0">
-            <p className="type-large col-span-full text-center font-normal text-muted lg:col-start-4 lg:col-end-10">
-              We're a design and product studio based in Austin, Texas. We help brands stand out{" "}
-              <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
-              {" "}with bold ideas, fresh approaches, and products people actually love to use.
-            </p>
-          </div>
+          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
+            We help brands stand out{" "}
+            <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
+            {" "}with bold ideas, fresh approaches, and products people actually love to use.
+          </HeroIntro>
             <div className="w-full px-[var(--grid-margin)]">
             <HeroTileStack tiles={heroTiles} />
             </div>
@@ -254,6 +251,32 @@ function MarketingHero() {
       </section>
     </>
   );
+}
+
+const heroIntroLeadCopy = "We're a design and product studio based in Austin, Texas.";
+
+function expectHeroIntroLines(root: ParentNode, nowrap: boolean) {
+  const intro = root.querySelector("section p");
+  if (!(intro instanceof HTMLElement)) throw new Error("intro paragraph missing");
+  const spans = [...intro.querySelectorAll(":scope > span")];
+  expect(spans).toHaveLength(2);
+  const lead = spans[0];
+  const rest = spans[1];
+  if (!(lead instanceof HTMLElement) || !(rest instanceof HTMLElement)) {
+    throw new Error("intro lines missing");
+  }
+  expect(lead.textContent).toBe(heroIntroLeadCopy);
+  expect(rest.textContent?.trim().startsWith("We help brands stand out")).toBe(true);
+  expect(getComputedStyle(lead).whiteSpace).toBe(nowrap ? "nowrap" : "normal");
+  const leadBox = lead.getBoundingClientRect();
+  const restBox = rest.getBoundingClientRect();
+  expect(restBox.top).toBeGreaterThanOrEqual(leadBox.bottom - 1);
+  if (nowrap) {
+    const lineHeight = Number.parseFloat(getComputedStyle(lead).lineHeight);
+    expect(lineHeight).toBeGreaterThan(0);
+    expect(leadBox.height).toBeLessThan(lineHeight * 1.75);
+  }
+  return intro;
 }
 
 export const MarketingHeroPattern: Story = {
@@ -264,7 +287,7 @@ export const MarketingHeroPattern: Story = {
       docs: {
         description: {
           story:
-            "SiteNav sits above the hero in normal flow. The hero section is min-h-[calc(100svh-var(--site-nav-height))] and centers its content, so the nav plus the hero fill the viewport. The headline is a plain h1 (We Are WhatMatters) on type-display-1, the largest display token. We Are and WhatMatters are each an inline-block with whitespace-nowrap, so a narrow line breaks as We Are / WhatMatters. The rock hand sits in a zero-width span pinned to the end of We Are, between the e and the W, with em offsets. That span is the first node in We Are so it does not split the words. The e is an inline relative z-20 span, the W is an inline relative z-0 span, the h1 is isolate, and the rock hand is z-10, so the e paints on top of the hand and the hand paints on top of the left edge of the W. The bottom of the rock hand's drawn pixels sits on the text baseline. On a wrap the rock stays behind the e at the end of line 1, on that line's baseline, clear of line 2. The point hand stays on the final s. The accessible name stays We Are WhatMatters. Below md the box is 1.7em, and the point hand stays inside a 320px viewport while still gripping the s. From md the box is 2.2em. Hover or focus on the headline sets Boolean 1. On first view the rock hand slides up from below the baseline inside an overflow-clip wrapper (e at z-20, hand at z-10, W at z-0). The point hand then grows in from its grip with a spring, about 200ms later. Each hand also sets Boolean 1 on its own 4–9s timer while the tab is visible and the hand is in view. idle defaults on. prefers-reduced-motion skips the entrance and the idle timers and keeps the still frame. The hands are aria-hidden. The headline text stays selectable. handFill uses --color-surface (fallback --color-background-surface), white in light mode. outline uses --color-brand (#011272 in both themes), with the same navy as a hardcoded fallback when the token is missing. Art is a CC BY 4.0 remix of the Rive Interactive Icon Set by Silvia Sguotti and Gabriele Montinaro. The point hand is artboard 31_Cigarette with the cigarette removed. Show code starts with use client. Install @rive-app/react-canvas and serve public/rive/interactive-icon-set.riv at /rive/interactive-icon-set.riv. The intro is one centered paragraph at type-large and font-normal, the step above type-body, on the type-large leading. It sits on grid-page (max-width --grid-max, the same margin, column gap, and column count as the guides) with py-0 so the page block pad does not stack on the hero gap. From lg, where the grid is 12 columns, it occupies columns 4–9 (lg:col-start-4 lg:col-end-10), 6 of 12 columns, centered, and those edges line up with guide columns 4 and 9. md is 8 columns, so that span does not start at md. Below lg the paragraph is full width of that page grid, inside --grid-margin. The copy is: We're a design and product studio based in Austin, Texas. We help brands stand out online with bold ideas, fresh approaches, and products people actually love to use. online is one inline md Badge with a round Avatar — the one sanctioned decorative use. The globe file in public/hero-badges/ is a playful placeholder. The badge is not clickable, alt is empty so the sentence still reads in order, and the image is not announced. The tile fan is the last element. The section's py-16 is the space under the tiles. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
+            "SiteNav sits above the hero in normal flow. The hero section is min-h-[calc(100svh-var(--site-nav-height))] and centers its content, so the nav plus the hero fill the viewport. The headline is a plain h1 (We Are WhatMatters) on type-display-1, the largest display token. We Are and WhatMatters are each an inline-block with whitespace-nowrap, so a narrow line breaks as We Are / WhatMatters. The rock hand sits in a zero-width span pinned to the end of We Are, between the e and the W, with em offsets. That span is the first node in We Are so it does not split the words. The e is an inline relative z-20 span, the W is an inline relative z-0 span, the h1 is isolate, and the rock hand is z-10, so the e paints on top of the hand and the hand paints on top of the left edge of the W. The bottom of the rock hand's drawn pixels sits on the text baseline. On a wrap the rock stays behind the e at the end of line 1, on that line's baseline, clear of line 2. The point hand stays on the final s. The accessible name stays We Are WhatMatters. Below md the box is 1.7em, and the point hand stays inside a 320px viewport while still gripping the s. From md the box is 2.2em. Hover or focus on the headline sets Boolean 1. On first view the rock hand slides up from below the baseline inside an overflow-clip wrapper (e at z-20, hand at z-10, W at z-0). The point hand then grows in from its grip with a spring, about 200ms later. Each hand also sets Boolean 1 on its own 4–9s timer while the tab is visible and the hand is in view. idle defaults on. prefers-reduced-motion skips the entrance and the idle timers and keeps the still frame. The hands are aria-hidden. The headline text stays selectable. handFill uses --color-surface (fallback --color-background-surface), white in light mode. outline uses --color-brand (#011272 in both themes), with the same navy as a hardcoded fallback when the token is missing. Art is a CC BY 4.0 remix of the Rive Interactive Icon Set by Silvia Sguotti and Gabriele Montinaro. The point hand is artboard 31_Cigarette with the cigarette removed. Show code starts with use client. Install @rive-app/react-canvas and serve public/rive/interactive-icon-set.riv at /rive/interactive-icon-set.riv. The intro is HeroIntro. Pass the first sentence as lead (We're a design and product studio based in Austin, Texas.). From md that lead stays on one line. Below md it may wrap. children is the rest of the copy and always starts on the next line. Both lines stay on type-large at font-normal, centered, on the type-large leading. Do not insert a br in the copy. HeroIntro sits on grid-page (max-width --grid-max, the same margin, column gap, and column count as the guides) with py-0 so the page block pad does not stack on the hero gap. From lg, where the grid is 12 columns, it occupies columns 4–9 (lg:col-start-4 lg:col-end-10), 6 of 12 columns, centered, and those edges line up with guide columns 4 and 9. md is 8 columns, so that span does not start at md. Below lg the paragraph is full width of that page grid, inside --grid-margin. The copy is: We're a design and product studio based in Austin, Texas. We help brands stand out online with bold ideas, fresh approaches, and products people actually love to use. online is one inline md Badge with a round Avatar — the one sanctioned decorative use. The globe file in public/hero-badges/ is a playful placeholder. The badge is not clickable, alt is empty so the sentence still reads in order, and the image is not announced. The tile fan is the last element. The section's py-16 is the space under the tiles. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
         },
       },
     },
@@ -381,8 +404,7 @@ export const GuidesCoverPrecedingHero: Story = {
     expect(columns).toHaveLength(12);
     expect(columns).toHaveLength(readGridColumnCount(page));
 
-    const intro = canvasElement.querySelector("section p");
-    if (!intro) throw new Error("intro paragraph missing");
+    const intro = expectHeroIntroLines(canvasElement, true);
     const introBox = intro.getBoundingClientRect();
     const columnFour = columns[3]!.getBoundingClientRect();
     const columnNine = columns[8]!.getBoundingClientRect();
@@ -488,8 +510,7 @@ export const GuidesCoverEmptyPage: Story = {
     expect(columns).toHaveLength(12);
     expect(columns).toHaveLength(readGridColumnCount(page));
 
-    const intro = canvasElement.querySelector("section p");
-    if (!intro) throw new Error("intro paragraph missing");
+    const intro = expectHeroIntroLines(canvasElement, true);
     const introBox = intro.getBoundingClientRect();
     const columnFour = columns[3]!.getBoundingClientRect();
     const columnNine = columns[8]!.getBoundingClientRect();
@@ -516,5 +537,31 @@ export const GuidesCoverEmptyPage: Story = {
     expect(hero.getBoundingClientRect().top + window.scrollY).toBeCloseTo(heroDocTop, 0);
     expect(page.getBoundingClientRect().top + window.scrollY).toBeCloseTo(pageDocTop, 0);
     expect(page.getBoundingClientRect().height).toBeCloseTo(pageRect.height, 0);
+  },
+};
+
+export const IntroLeadBelowMd: Story = {
+  name: "Intro lead may wrap below md",
+  tags: ["test", "!dev", "!autodocs"],
+  globals: {
+    viewport: { value: "review390", isRotated: false },
+  },
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+    viewport: {
+      options: {
+        review390: {
+          name: "Review 390",
+          styles: { width: "390px", height: "844px" },
+          type: "mobile" as const,
+        },
+      },
+    },
+  },
+  render: () => <MarketingHero />,
+  play: async ({ canvasElement }) => {
+    expect(window.innerWidth).toBeLessThan(768);
+    expectHeroIntroLines(canvasElement, false);
   },
 };
