@@ -188,6 +188,31 @@ export function scrollHorizontalRestLeft(
   return itemRect.left - shift - stickyRect.left;
 }
 
+/**
+ * Clip frame when the first card does not start centered.
+ * `lastRestLeft` is the last card's measured rest left (translate removed).
+ * Travel and the grow both use that rect, then park it on the viewport center.
+ * At expand amount 1 the clip is still `inset(0)` — the layer box is the tile.
+ */
+export function scrollHorizontalLeadFrame(
+  metrics: ScrollHorizontalExpandMetrics,
+  lastRestLeft: number,
+  count: number,
+): { distance: number; frame: ScrollHorizontalExpandMetrics } {
+  const viewportWidth =
+    Number.isFinite(metrics.viewportWidth) && metrics.viewportWidth > 0 ? metrics.viewportWidth : 0;
+  const cardWidth = Number.isFinite(metrics.cardWidth) && metrics.cardWidth > 0 ? metrics.cardWidth : 0;
+  const endLeft = viewportWidth > 0 && cardWidth > 0 ? (viewportWidth - cardWidth) / 2 : 0;
+  const pitch = Number.isFinite(metrics.pitch) && metrics.pitch > 0 ? metrics.pitch : cardWidth;
+  const steps = Number.isFinite(count) ? Math.max(0, count - 1) : 0;
+  const rest = Number.isFinite(lastRestLeft) ? lastRestLeft : endLeft;
+  const cardLeft = steps > 0 && pitch > 0 ? rest - steps * pitch : rest;
+  return {
+    distance: Math.max(0, rest - endLeft),
+    frame: { ...metrics, cardLeft, pitch, endLeft },
+  };
+}
+
 /** `(count - 1) * (itemWidth + gap)`. Zero when there is nothing to travel. */
 export function scrollHorizontalDistance(count: number, itemWidth: number, gap: number): number {
   if (!Number.isFinite(count) || count <= 1) return 0;
