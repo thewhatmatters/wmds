@@ -109,7 +109,7 @@ export function SequencedMarketingHeroPage() {
             </>
           }
         />
-        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-16 text-center">
+        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-12 text-center">
           <div className="flex w-full flex-col items-center gap-6">
           <div className="w-full px-[var(--grid-margin)]">
           <h1
@@ -143,13 +143,14 @@ export function SequencedMarketingHeroPage() {
           </h1>
           </div>
           <HeroIntro
+            step="display"
             lead={
-              <TextSequence idle stagger={0.07}>
+              <TextSequence idle emphasis="none" stagger={0.07}>
                 Your brand <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
               </TextSequence>
             }
           >
-            <TextSequence idle delay={0.35} stagger={0.07}>
+            <TextSequence idle emphasis="none" delay={0.35} stagger={0.07}>
               Make it <TextSequence.Shape variant="pill" tone="brand-soft" /> impossible to ignore
             </TextSequence>
           </HeroIntro>
@@ -226,7 +227,7 @@ function SequencedGalleryHeroPage() {
             </>
           }
         />
-        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-16 text-center">
+        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-12 text-center">
           <div className="flex w-full flex-col items-center gap-6">
           <div className="w-full px-[var(--grid-margin)]">
           <h1
@@ -260,13 +261,14 @@ function SequencedGalleryHeroPage() {
           </h1>
           </div>
           <HeroIntro
+            step="display"
             lead={
-              <TextSequence idle stagger={0.07}>
+              <TextSequence idle emphasis="none" stagger={0.07}>
                 Your brand <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
               </TextSequence>
             }
           >
-            <TextSequence idle delay={0.35} stagger={0.07}>
+            <TextSequence idle emphasis="none" delay={0.35} stagger={0.07}>
               Make it <TextSequence.Shape variant="pill" tone="brand-soft" /> impossible to ignore
             </TextSequence>
           </HeroIntro>
@@ -322,6 +324,42 @@ function expectEdgesMeet(a: number, b: number) {
   expect(Math.abs(a - b)).toBeLessThanOrEqual(1);
 }
 
+function pageGridContentStart(): number {
+  const probe = document.createElement("div");
+  probe.className = "grid-page";
+  document.body.appendChild(probe);
+  const start =
+    probe.getBoundingClientRect().left + Number.parseFloat(getComputedStyle(probe).paddingLeft);
+  probe.remove();
+  return start;
+}
+
+function expectSequencedHeroMatchesGallery(root: ParentNode) {
+  const section = root.querySelector("[data-scroll-horizontal]");
+  if (!(section instanceof HTMLElement)) throw new Error("gallery missing");
+  const intro = section.querySelector("[data-scroll-horizontal-intro]");
+  const statement = section.querySelector("h2");
+  const heroSeq = [...root.querySelectorAll("[data-text-sequence]")].find(
+    (node) => !section.contains(node),
+  );
+  const heading = [...root.querySelectorAll("h1")].find((node) =>
+    (node.textContent ?? "").includes("WhatMatters"),
+  );
+  if (!(intro instanceof HTMLElement) || !(statement instanceof HTMLElement)) {
+    throw new Error("gallery intro missing");
+  }
+  if (!(heroSeq instanceof HTMLElement) || !(heading instanceof HTMLElement)) {
+    throw new Error("hero subtext missing");
+  }
+  expect(Math.abs(intro.getBoundingClientRect().left - pageGridContentStart())).toBeLessThanOrEqual(1);
+  expect(getComputedStyle(heroSeq).fontSize).toBe(getComputedStyle(statement).fontSize);
+  expect(getComputedStyle(heroSeq).fontWeight).toBe("400");
+  expect(getComputedStyle(statement).fontWeight).toBe("400");
+  expect(Number.parseFloat(getComputedStyle(heading).fontSize)).toBeGreaterThan(
+    Number.parseFloat(getComputedStyle(heroSeq).fontSize),
+  );
+}
+
 export const SequencedMarketingHero: Story = {
   name: "Pattern — marketing hero with sequenced gallery",
   tags: ["test"],
@@ -331,7 +369,7 @@ export const SequencedMarketingHero: Story = {
       docs: {
         description: {
           story:
-            "Full marketing page. The h1 stays We Are WhatMatters on type-display-1, with the rock and point hands on the e, the W, and the final s. HeroIntro sequences the subtext (type-large): Your brand is already online, then Make it impossible to ignore. ScrollHorizontal.Intro sequences the gallery statement on type-display-2 at normal weight, once, when that panel scrolls into view. Three shapes sit in the statement (asterisk, brand-soft pill, accent diamond), about 1.15em. The eyebrow and the outline mono See our work button are unchanged. expandLast still ends on the full-bleed tile, flush with FooterReveal. Reduced motion leaves both sequences at rest, shapes included.",
+            "Full marketing page. The h1 stays We Are WhatMatters on type-display-1, with the rock and point hands on the e, the W, and the final s. HeroIntro step display sequences the subtext on type-display-2 at normal weight — the same size as the gallery statement: Your brand is already online, then Make it impossible to ignore. Shapes sit inline at about 1.15em. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. Three shapes sit in the statement (asterisk, brand-soft pill, accent diamond). The eyebrow and the outline mono See our work button are unchanged. expandLast still ends on the full-bleed tile, flush with FooterReveal. Reduced motion leaves both sequences at rest, shapes included, and keeps the grid inset.",
         },
       },
     },
@@ -370,6 +408,7 @@ export const SequencedMarketingHero: Story = {
         expect(sequence.getAttribute("data-text-sequence-state")).toBe("playing");
       }
     });
+    expectSequencedHeroMatchesGallery(canvasElement);
 
     const footer = canvasElement.querySelector("[data-footer-reveal='sticky']");
     if (!(footer instanceof HTMLElement)) throw new Error("footer missing");
@@ -426,5 +465,65 @@ export const SequencedGalleryHandoff: Story = {
     });
     const footerTop = stickyFooterInFlowTop(footer);
     expectEdgesMeet(footerTop ?? 0, documentBottom(section));
+  },
+};
+
+const review1440Viewport = {
+  review1440: {
+    name: "Review 1440",
+    styles: { width: "1440px", height: "900px" },
+    type: "desktop" as const,
+  },
+};
+
+const review390Viewport = {
+  review390: {
+    name: "Review 390",
+    styles: { width: "390px", height: "844px" },
+    type: "mobile" as const,
+  },
+};
+
+export const SequencedGalleryAt1440: Story = {
+  name: "Sequenced gallery at 1440",
+  tags: ["test", "!dev", "!autodocs"],
+  globals: {
+    viewport: { value: "review1440", isRotated: false },
+  },
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+    viewport: { options: review1440Viewport },
+  },
+  render: () => <SequencedGalleryHeroPage />,
+  play: async ({ canvasElement }) => {
+    expect(window.innerWidth).toBeGreaterThanOrEqual(1440);
+    expectSequencedHeroMatchesGallery(canvasElement);
+  },
+};
+
+export const SequencedGalleryAt390: Story = {
+  name: "Sequenced gallery at 390",
+  tags: ["test", "!dev", "!autodocs"],
+  globals: {
+    viewport: { value: "review390", isRotated: false },
+  },
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+    viewport: { options: review390Viewport },
+  },
+  render: () => <SequencedGalleryHeroPage />,
+  play: async ({ canvasElement }) => {
+    expect(window.innerWidth).toBeLessThanOrEqual(400);
+    expectSequencedHeroMatchesGallery(canvasElement);
+    const sequences = [...canvasElement.querySelectorAll("[data-text-sequence]")].filter(
+      (node) => !node.closest("[data-scroll-horizontal]"),
+    );
+    for (const node of sequences) {
+      const box = node.getBoundingClientRect();
+      expect(box.left).toBeGreaterThanOrEqual(-1);
+      expect(box.right).toBeLessThanOrEqual(window.innerWidth + 1);
+    }
   },
 };

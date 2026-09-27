@@ -105,16 +105,20 @@ export const scrollHorizontalItemClasses = [
 export const scrollHorizontalLabelClasses = "sr-only";
 
 /**
- * Intro track. The sticky is an inline-size container so `100cqw` is the
- * gallery viewport (not `100vw`, which ignores the scrollbar gutter).
- * Padding parks the panel on the page grid's content edge.
- * Reduced motion stacks the panel above a native scroller.
+ * Intro track. The sticky is an inline-size container so panel widths use
+ * `100cqw` (the gallery viewport, not `100vw`).
+ * The track's inline start is the page-grid content edge: the same inset as
+ * `grid-page` (`--grid-margin` inside a centered `--grid-max`). Percentage
+ * padding resolves against the sticky, so it does not depend on `cqw`.
+ * `!` wins over `p-0`. The inset is on the translating track, so scroll
+ * carries the panel off the left edge with the tiles.
+ * Reduced motion stacks the panel above a native scroller and keeps the inset.
  */
 export const scrollHorizontalIntroStickyClasses = "[container-type:inline-size]";
 
 export const scrollHorizontalIntroTrackClasses = [
-  "m-0 flex h-full w-max items-center self-start gap-8 p-0 max-sm:gap-4 will-change-transform",
-  "pl-[max(var(--grid-margin),calc((100cqw-var(--grid-max))/2+var(--grid-margin)))]",
+  "m-0 flex h-full w-max items-center self-start gap-8 py-0 pe-0 max-sm:gap-4 will-change-transform",
+  "!ps-[max(var(--grid-margin),calc((100%-var(--grid-max))/2+var(--grid-margin)))]",
   "motion-reduce:!h-auto motion-reduce:!w-full motion-reduce:!max-w-full motion-reduce:!flex-col motion-reduce:!items-stretch motion-reduce:!self-stretch motion-reduce:!transform-none motion-reduce:will-change-auto",
   "group-data-[reduce=true]/scroll-horizontal:!h-auto",
   "group-data-[reduce=true]/scroll-horizontal:!w-full",

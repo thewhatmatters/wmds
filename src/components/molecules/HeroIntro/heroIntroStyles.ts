@@ -19,3 +19,17 @@ export const heroIntroLeadClasses = "block md:whitespace-nowrap";
 
 /** Rest of the intro. Always the next line, same type step and leading. */
 export const heroIntroRestClasses = "block";
+
+/**
+ * Sequenced hero subtext. Same size and normal weight as ScrollHorizontal.Intro
+ * (`type-display-2`). Full width of the page grid — columns 4–9 are the
+ * type-large measure and are too narrow for this step. `!font-normal` wins
+ * over the display token's semibold.
+ */
+export const heroIntroDisplayCopyClasses = [
+  "type-display-2 !font-normal",
+  "col-span-full min-w-0 text-center text-muted",
+].join(" ");
+
+/** Display step lead. Wraps when the measure is short (390). No nowrap. */
+export const heroIntroDisplayLeadClasses = "block min-w-0";

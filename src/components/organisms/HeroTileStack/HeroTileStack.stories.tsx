@@ -684,17 +684,18 @@ export function MarketingHeroTextSequence() {
           </>
         }
       />
-      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-16 text-center">
+      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-12 text-center">
         <div className="flex w-full flex-col items-center gap-6">
           <MarketingHeroSequenceHeadline />
           <HeroIntro
+            step="display"
             lead={
-              <TextSequence idle stagger={0.07}>
+              <TextSequence idle emphasis="none" stagger={0.07}>
                 Your brand <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
               </TextSequence>
             }
           >
-            <TextSequence idle delay={0.35} stagger={0.07}>
+            <TextSequence idle emphasis="none" delay={0.35} stagger={0.07}>
               Make it <TextSequence.Shape variant="pill" tone="brand-soft" /> impossible to ignore
             </TextSequence>
           </HeroIntro>
@@ -778,17 +779,18 @@ function MarketingHeroTextSequenceView() {
           </>
         }
       />
-      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-16 text-center">
+      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-12 text-center">
         <div className="flex w-full flex-col items-center gap-6">
           <MarketingHeroSequenceHeadline />
           <HeroIntro
+            step="display"
             lead={
-              <TextSequence idle stagger={0.07}>
+              <TextSequence idle emphasis="none" stagger={0.07}>
                 Your brand <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
               </TextSequence>
             }
           >
-            <TextSequence idle delay={0.35} stagger={0.07}>
+            <TextSequence idle emphasis="none" delay={0.35} stagger={0.07}>
               Make it <TextSequence.Shape variant="pill" tone="brand-soft" /> impossible to ignore
             </TextSequence>
           </HeroIntro>
@@ -826,7 +828,7 @@ export const MarketingHeroTextSequence: Story = {
       docs: {
         description: {
           story:
-            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. The h1 stays We Are WhatMatters on type-display-1, title case, with the rock and point hands on the e, the W, and the final s. TextSequence does not run on that h1: SplitText would rewrite those letter spans and the hands would lose their anchors. The intro is still HeroIntro, type-large (one step above body), closely spaced, columns 4–9 from lg. The two lines are Your brand is already online and Make it impossible to ignore, with no periods. A few TextSequence.Shape marks sit inline between words (asterisk, circle, ribbed pill) in place of the Badge and Avatar on the default pattern. Words alternate regular and bold. Shapes are aria-hidden. idle spins the asterisk and stretches the pill. Headline hover state lives on the headline so the sequence does not re-render. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
+            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. The h1 stays We Are WhatMatters on type-display-1, title case, with the rock and point hands on the e, the W, and the final s. TextSequence does not run on that h1: SplitText would rewrite those letter spans and the hands would lose their anchors. HeroIntro step display sets the subtext to type-display-2 at normal weight, the same size as ScrollHorizontal.Intro, full width of the page grid. The two lines are Your brand is already online and Make it impossible to ignore, with no periods. A few TextSequence.Shape marks sit inline between words (asterisk, circle, ribbed pill) at about 1.15em, in place of the Badge and Avatar on the default pattern. emphasis is none, so every word stays regular. Shapes are aria-hidden. idle spins the asterisk and stretches the pill. Headline hover state lives on the headline so the sequence does not re-render. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
         },
       },
     },

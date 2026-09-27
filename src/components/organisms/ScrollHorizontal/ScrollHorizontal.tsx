@@ -106,10 +106,11 @@ export interface ScrollHorizontalProps {
  * follows as a static `h-svh` section. `heading` is `sr-only` on the pinned
  * window and visible above that scroller.
  *
- * `intro` (**ScrollHorizontal.Intro**) is the first panel. It sits in the page
- * grid's left columns, clear of the site nav, with the tiles to its right.
- * Vertical scroll carries that panel off the left edge. The eyebrow names the
- * section. Reduced motion stacks the same panel above the native row.
+ * `intro` (**ScrollHorizontal.Intro**) is the first panel. Its left edge is the
+ * page-grid content start (the same inset as `grid-page`), clear of the site
+ * nav, with the tiles to its right. Vertical scroll carries that panel off the
+ * left edge with the tiles. The eyebrow names the section. Reduced motion
+ * stacks the same panel above the native row and keeps the inset.
  *
  * The server render and the hydration render both use the motion shell
  * (`data-reduce="false"`). The OS query is read in `useLayoutEffect`, before

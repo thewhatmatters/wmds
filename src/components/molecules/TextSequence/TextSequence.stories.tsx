@@ -261,7 +261,7 @@ export const Shapes: Story = {
       docs: {
         description: {
           story:
-            "Every mark, twice: type-display-3 on the left, type-large (the hero subtext step) on the right. Each column is labeled. Marks are about 1.15em tall, pills about 2.2em wide, and none paint smaller than 14px. Tones are brand, brand-soft, accent, and info-muted. emphasis is none so the labels keep the parent weight. Each shape is aria-hidden.",
+            "Every mark, twice: type-display-3 on the left, type-large on the right. Each column is labeled. Marks are about 1.15em tall, pills about 2.2em wide, and none paint smaller than 14px. Tones are brand, brand-soft, accent, and info-muted. emphasis is none so the labels keep the parent weight. Each shape is aria-hidden.",
         },
       },
     },

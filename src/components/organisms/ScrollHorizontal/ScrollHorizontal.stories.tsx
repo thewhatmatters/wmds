@@ -295,6 +295,22 @@ export function ProjectGalleryIntro() {
 }
 `.trim();
 
+function pageGridContentStart(): number {
+  const probe = document.createElement("div");
+  probe.className = "grid-page";
+  document.body.appendChild(probe);
+  const start =
+    probe.getBoundingClientRect().left + Number.parseFloat(getComputedStyle(probe).paddingLeft);
+  probe.remove();
+  return start;
+}
+
+function expectIntroOnPageGrid(root: ParentNode) {
+  const intro = root.querySelector("[data-scroll-horizontal-intro]");
+  if (!(intro instanceof HTMLElement)) throw new Error("intro missing");
+  expect(Math.abs(intro.getBoundingClientRect().left - pageGridContentStart())).toBeLessThanOrEqual(1);
+}
+
 function GalleryIntro() {
   return (
     <ScrollHorizontal
@@ -319,7 +335,7 @@ export const WithIntro: Story = {
       docs: {
         description: {
           story:
-            "The intro is the first panel. The eyebrow names the section. The statement is the h2 on type-display-2 at normal weight. TextSequence runs once when that heading scrolls into view: words slide up, and an asterisk, a brand-soft pill, and an accent diamond pop between words at about 1.15em. Tiles sit to the right and scroll in as the panel leaves left. expandLast still grows the last tile. Reduced motion stacks the same intro above the native row, with the sentence and shapes at rest. Do not pass heading — the eyebrow replaces it.",
+            "The intro is the first panel. At rest its left edge is the page-grid content start, the same inset as grid-page. Scroll translates the panel off to the left with the tiles. The eyebrow names the section. The statement is the h2 on type-display-2 at normal weight. TextSequence runs once when that heading scrolls into view: words slide up, and an asterisk, a brand-soft pill, and an accent diamond pop between words at about 1.15em. Tiles sit to the right and scroll in as the panel leaves left. expandLast still grows the last tile. Reduced motion stacks the same intro above the native row, with the same inset, and the sentence and shapes at rest. Do not pass heading — the eyebrow replaces it.",
         },
       },
     },
@@ -385,6 +401,32 @@ export const IntroContract: Story = {
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
       document.documentElement.clientWidth + 1,
     );
+    expectIntroOnPageGrid(section);
+  },
+};
+
+const review1440Viewport = {
+  review1440: {
+    name: "Review 1440",
+    styles: { width: "1440px", height: "900px" },
+    type: "desktop" as const,
+  },
+};
+
+export const IntroAlignedAt1440: Story = {
+  tags: ["test", "!dev", "!autodocs"],
+  globals: {
+    viewport: { value: "review1440", isRotated: false },
+  },
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+    viewport: { options: review1440Viewport },
+  },
+  render: () => <GalleryIntro />,
+  play: async ({ canvasElement }) => {
+    expect(window.innerWidth).toBeGreaterThanOrEqual(1440);
+    expectIntroOnPageGrid(canvasElement);
   },
 };
 
@@ -410,6 +452,7 @@ export const IntroAt390: Story = {
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
       document.documentElement.clientWidth + 1,
     );
+    expectIntroOnPageGrid(canvasElement);
   },
 };
 
@@ -445,10 +488,34 @@ export const IntroReduced: Story = {
     expect(getComputedStyle(sticky).position).toBe("relative");
     expect(intro.getBoundingClientRect().bottom).toBeLessThanOrEqual(row.getBoundingClientRect().top + 1);
     expect(section.querySelector("[data-pattern='eyebrow']")?.textContent).toBe("SELECTED WORK");
+    expectIntroOnPageGrid(section);
     const reducedTile = [...section.querySelectorAll("[data-scroll-horizontal-expanded]")].find((host) =>
       host.className.includes("h-svh"),
     );
     expect(reducedTile?.textContent).toContain("Project Five");
+  },
+};
+
+export const IntroReducedAt390: Story = {
+  tags: ["test", "!dev", "!autodocs"],
+  globals: lockedViewportGlobals("mobile"),
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+  },
+  render: () => (
+    <MotionConfig reducedMotion="always">
+      <GalleryIntro />
+    </MotionConfig>
+  ),
+  play: async ({ canvasElement }) => {
+    expect(window.innerWidth).toBeLessThanOrEqual(400);
+    const section = canvasElement.querySelector("[data-scroll-horizontal]");
+    if (!(section instanceof HTMLElement)) throw new Error("gallery missing");
+    await waitFor(() => {
+      expect(section.getAttribute("data-reduce")).toBe("true");
+    });
+    expectIntroOnPageGrid(section);
   },
 };
 
