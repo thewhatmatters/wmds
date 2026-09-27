@@ -39,13 +39,28 @@ import {
   footerRevealSocialLinkClasses,
   footerRevealSocialListClasses,
   footerRevealStickyClasses,
+  footerRevealRuledFieldClasses,
   footerRevealWordmarkClasses,
   footerRevealWordmarkFontSize,
   footerRevealWordmarkFrameClasses,
 } from "./footerRevealStyles";
 import { syncFooterRevealWordmark } from "./footerRevealWordmark";
+import { FooterRevealRuled } from "./FooterRevealRuled";
 
-export { footerRevealFieldClasses, footerRevealFieldLinkClasses };
+export { footerRevealFieldClasses, footerRevealFieldLinkClasses, footerRevealRuledFieldClasses };
+export type {
+  FooterRevealRuledLink,
+  FooterRevealRuledLinkGroup,
+  FooterRevealRuledProps,
+  FooterRevealRuledSocial,
+} from "./FooterRevealRuled";
+export {
+  footerRevealRuledDefaultCopy,
+  footerRevealRuledDefaultLinkGroups,
+  footerRevealRuledDefaultSocials,
+  footerRevealRuledEmailHref,
+  footerRevealRuledNavLabel,
+} from "./FooterRevealRuled";
 
 /** Layout-only — placement. Do not add overflow clipping; it breaks the sticky footer. */
 export type FooterRevealLayoutClassName = string;
@@ -424,4 +439,5 @@ export const FooterReveal = Object.assign(FooterRevealRoot, {
   Content: FooterRevealContent,
   Footer: FooterRevealFooter,
   Brand: FooterRevealBrand,
+  Ruled: FooterRevealRuled,
 });
