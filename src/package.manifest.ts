@@ -22,7 +22,7 @@ const atoms = [
   "Tooltip",
 ] as const;
 
-const molecules = ["Accordion", "Card", "CheckboxGroup", "Chip", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "HeroIntro", "NavList", "PageHeader", "Pagination", "RadioGroup", "Search", "Select", "SegmentedControl", "Stat", "TaskRows"] as const;
+const molecules = ["Accordion", "Card", "CheckboxGroup", "Chip", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "HeroIntro", "NavList", "PageHeader", "Pagination", "RadioGroup", "Search", "Select", "SegmentedControl", "Stat", "TaskRows", "TextSequence"] as const;
 
 const organisms = ["Carousel", "Chart", "Confetti", "Dialog", "FooterReveal", "HeroTileStack", "MoreMenu", "Panel", "ScrollHorizontal", "Sheet", "SiteNav", "Tab", "Table", "Toast"] as const;
 
@@ -57,10 +57,17 @@ export const packageManifest = {
     "@base-ui/react/use-render",
     "@base-ui/react/navigation-menu",
     "lucide-react",
+    "gsap",
+    "gsap/SplitText",
+    "@gsap/react",
   ] as const,
 
-  /** Rollup external prefix — Chart imports granular `@visx/*` packages for tree-shaking. */
-  libExternalPrefixes: ["@visx/", "@rive-app/"] as const,
+  /**
+   * Rollup external prefix — Chart imports granular `@visx/*` packages for tree-shaking.
+   * `gsap` covers `gsap/SplitText` and the rest of the GSAP plugin paths.
+   * Only TextSequence imports GSAP (ADR-0037). The runtime stays external.
+   */
+  libExternalPrefixes: ["@visx/", "@rive-app/", "gsap", "@gsap/"] as const,
 
   /** Utilities that must appear in dist/styles.css after Tailwind CLI build. */
   requiredStyleTokens: [
