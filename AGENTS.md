@@ -113,7 +113,7 @@ When adding a component: create its folder in the correct atomic tier, place its
 | Marketing hero tile fan | **Components/Layout/HeroTileStack → Pattern — marketing hero** |
 | Horizontal project gallery | **Components/Layout/ScrollHorizontal → Pattern — project gallery** |
 | Gallery intro statement | **Components/Layout/ScrollHorizontal → Pattern — gallery intro** |
-| Sequenced marketing page | **Components/Layout/FooterReveal → Pattern — marketing hero with sequenced gallery** |
+| Sequenced marketing page | **Components/Layout/FooterReveal → Pattern — marketing hero ruled grid** (sequenced hero, gallery intro, **FooterReveal.Ruled**) |
 | RFP submitted | **Examples/RFP submitted → Pattern — RFP submitted** |
 
 **Next backlog (ADR-0015):** optional **Popover** extract; **AvatarGroup** molecule; legend series toggle (non-goal v1).

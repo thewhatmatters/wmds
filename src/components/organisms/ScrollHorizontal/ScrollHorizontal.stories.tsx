@@ -37,7 +37,7 @@ Omit \`color\` to cycle \`--color-brand\`, \`--color-brand-soft\`, \`--color-pri
 
 \`heading\` names the section. It is \`sr-only\` while the window is pinned, so it does not sit under the site nav, and visible above the row when motion is reduced.
 
-\`intro\` replaces \`heading\`. **ScrollHorizontal.Intro** is the first panel: an eyebrow **Badge**, a \`type-display-2\` statement (normal weight, display-1 leading) run through **TextSequence** (\`emphasis="none"\`, \`trigger="inView"\`), and a secondary **Button** (\`role="secondary"\`, label Start a project). The panel sits in the left columns of the page grid, with top padding \`--site-nav-height\` plus the compact nav's 1rem offset, so it clears the pinned site nav. Tiles follow to the right and scroll in as the panel leaves to the left. The eyebrow is the section name. The statement is the \`h2\`. Words slide up once when that heading scrolls into view. **TextSequence.Shape** marks between words pop on that same timeline (about 1.15em, token fills). Reduced motion stacks that panel above the native row and leaves the sentence and shapes at rest.
+\`intro\` replaces \`heading\`. **ScrollHorizontal.Intro** is the first panel: an eyebrow **Badge**, a \`type-display-2\` statement (normal weight, display-1 leading) run through **TextSequence** (\`emphasis="none"\`, \`trigger="inView"\`), and a secondary **Button** (\`role="secondary"\`, label Start a project, \`onClick\` or \`href\`). The panel sits in the left columns of the page grid, with top padding \`--site-nav-height\` plus the compact nav's 1rem offset, so it clears the pinned site nav. Tiles follow to the right and scroll in as the panel leaves to the left. The eyebrow is the section name. The statement is the \`h2\`. Words slide up once when that heading scrolls into view. **TextSequence.Shape** marks between words pop on that same timeline (about 1.15em, token fills). Reduced motion stacks that panel above the native row and leaves the sentence and shapes at rest.
 
 \`prefers-reduced-motion\`, and \`MotionConfig\` \`reducedMotion="always"\`, skip the transform. The track height is auto, the window is not sticky, and the row is a native horizontal scroller with vertical padding (\`py-12\`). The heading is visible on that branch. The server render matches the motion shell. The OS preference is applied before paint.
 
@@ -270,6 +270,9 @@ export const ProjectGalleryPattern: Story = {
 const galleryIntroCopySource = `
 import { ScrollHorizontal, TextSequence } from "@whatmatters/wmds";
 
+// Opens the multi-step project form. There is no /start route.
+function openProjectModal() {}
+
 const projects = [
   { id: "project-one", label: "Project One", color: "var(--color-brand)" },
   { id: "project-two", label: "Project Two", color: "var(--color-brand-soft)" },
@@ -287,7 +290,7 @@ export function ProjectGalleryIntro() {
         <ScrollHorizontal.Intro
           eyebrow="SELECTED WORK"
           statement=${scrollHorizontalIntroStatementMarkup}
-          action={{ label: "Start a project" }}
+          action={{ label: "Start a project", onClick: openProjectModal }}
         />
       }
     />
@@ -311,6 +314,8 @@ function expectIntroOnPageGrid(root: ParentNode) {
   expect(Math.abs(intro.getBoundingClientRect().left - pageGridContentStart())).toBeLessThanOrEqual(1);
 }
 
+function openProjectModal() {}
+
 function GalleryIntro() {
   return (
     <ScrollHorizontal
@@ -320,7 +325,7 @@ function GalleryIntro() {
         <ScrollHorizontal.Intro
           eyebrow="SELECTED WORK"
           statement={scrollHorizontalIntroStatementNodes()}
-          action={{ label: "Start a project" }}
+          action={{ label: "Start a project", onClick: openProjectModal }}
         />
       }
     />
@@ -388,10 +393,11 @@ export const IntroContract: Story = {
       "pill",
       "diamond",
     ]);
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     await waitFor(() => {
-      expect(statement?.getAttribute("aria-label")).toBe(scrollHorizontalIntroStatement);
+      expect(statement?.getAttribute("aria-label")).toBe(reduced ? null : scrollHorizontalIntroStatement);
       expect(statement?.querySelector("[data-text-sequence]")?.getAttribute("data-text-sequence-state")).toBe(
-        "playing",
+        reduced ? "rest" : "playing",
       );
     });
     const card = section.querySelector("li");

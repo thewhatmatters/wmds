@@ -12,8 +12,15 @@ import {
 export interface ScrollHorizontalIntroAction {
   /** Visible label, sentence case. The accessible name keeps this casing. */
   label: string;
+  /**
+   * Button click — a modal or other action. **Button** `type="button"`.
+   * Not with `href`.
+   */
   onClick?: () => void;
-  /** When set, the action is an anchor with Button chrome. */
+  /**
+   * Navigation URL. **Button** chrome on an anchor (`render={<a href />}`).
+   * Not with `onClick`.
+   */
   href?: string;
 }
 
@@ -56,14 +63,15 @@ export function ScrollHorizontalIntro({ eyebrow, statement, action }: ScrollHori
         </h2>
       </div>
       {action ? (
-        <Button
-          role="secondary"
-          type="button"
-          onClick={action.onClick}
-          render={action.href ? <a href={action.href} /> : undefined}
-        >
-          {action.label}
-        </Button>
+        action.href ? (
+          <Button role="secondary" render={<a href={action.href} />}>
+            {action.label}
+          </Button>
+        ) : (
+          <Button role="secondary" type="button" onClick={action.onClick}>
+            {action.label}
+          </Button>
+        )
       ) : null}
     </div>
   );
