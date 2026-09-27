@@ -10,6 +10,8 @@ import { RiveHand } from "../../atoms/RiveHand/RiveHand";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { HeroIntro } from "../../molecules/HeroIntro/HeroIntro";
 import { HeroTileStack } from "../HeroTileStack/HeroTileStack";
+import { ScrollHorizontal } from "../ScrollHorizontal/ScrollHorizontal";
+import { scrollHorizontalMarketingItems } from "../ScrollHorizontal/scrollHorizontalExamples";
 import { SiteNav } from "../SiteNav/SiteNav";
 import { FooterReveal } from "./FooterReveal";
 import { footerRevealFieldClasses } from "./footerRevealStyles";
@@ -84,6 +86,8 @@ const tiles = [
   { src: "/hero-tiles/week.svg", alt: "Abstract shapes for the week" },
   { src: "/hero-tiles/note.svg", alt: "A pale note about what matters" },
 ];
+
+const projects = scrollHorizontalMarketingItems;
 
 const marketingPageCopySource = `
 import { Button, FooterReveal, SiteNav, footerRevealFieldClasses } from "@whatmatters/wmds";
@@ -248,7 +252,7 @@ const marketingHeroCopySource = `
 
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
-import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, SiteNav, footerRevealFieldClasses } from "@whatmatters/wmds";
+import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, footerRevealFieldClasses } from "@whatmatters/wmds";
 
 const socialLinks = [
   { label: "Contra", href: "#contra-TODO" },
@@ -262,6 +266,14 @@ const tiles = [
   { src: "/hero-tiles/focus.svg", alt: "Blue focus card" },
   { src: "/hero-tiles/week.svg", alt: "Abstract shapes for the week" },
   { src: "/hero-tiles/note.svg", alt: "A pale note about what matters" },
+];
+
+const projects = [
+  { id: "project-one", label: "Project One", image: "/scroll-horizontal/project-one.svg" },
+  { id: "project-two", label: "Project Two", image: "/scroll-horizontal/project-two.svg" },
+  { id: "project-three", label: "Project Three", image: "/scroll-horizontal/project-three.svg" },
+  { id: "project-four", label: "Project Four", image: "/scroll-horizontal/project-four.svg" },
+  { id: "project-five", label: "Project Five", image: "/scroll-horizontal/project-five.svg" },
 ];
 
 // Opens the multi-step project form. There is no /start route.
@@ -338,6 +350,10 @@ export function MarketingHeroPage() {
             </div>
           </div>
         </section>
+        <ScrollHorizontal
+          items={projects}
+          heading={<h2 className="type-heading-2 text-fg">Selected work</h2>}
+        />
         <main className="grid-page bg-body">
           <GridOverlay visible keyboardShortcut={false} />
         </main>
@@ -427,6 +443,10 @@ function MarketingHeroPage() {
             </div>
           </div>
         </section>
+        <ScrollHorizontal
+          items={projects}
+          heading={<h2 className="type-heading-2 text-fg">Selected work</h2>}
+        />
         <main className="grid-page bg-body">
           <GridOverlay visible keyboardShortcut={false} />
         </main>
@@ -452,7 +472,7 @@ export const MarketingHeroPattern: Story = {
       docs: {
         description: {
           story:
-            "The marketing hero (SiteNav, headline, intro, tile fan) fills **FooterReveal.Content**. **FooterReveal.Brand** is the sticky footer underneath. Scroll past the hero — the brand field fades in from about 12px of blur. Reduced motion shows it sharp.",
+            "The marketing hero (SiteNav, headline, intro, tile fan) fills **FooterReveal.Content**, then **ScrollHorizontal** (Selected work), then the page grid. **FooterReveal.Brand** is the sticky footer underneath. Scroll past the hero — the gallery translates from the first card centered to the last, then the brand field fades in from about 12px of blur. Reduced motion keeps the gallery as a native horizontal scroller and shows the footer sharp.",
         },
       },
     },
