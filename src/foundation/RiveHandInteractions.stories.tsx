@@ -60,6 +60,53 @@ function handHasInk(canvas: HTMLCanvasElement): boolean {
   return false;
 }
 
+function OffscreenPointGrow() {
+  return (
+    <MotionConfig reducedMotion="never">
+      <div style={{ flexShrink: 0 }}>
+        <div style={{ height: "140vh" }} />
+        <div data-offscreen-point="" style={{ fontSize: 48, padding: 48 }}>
+          <span style={{ position: "relative", display: "inline-block" }}>
+            s
+            <RiveHand hand="point" size="2em" entrance="grow" idle={false} />
+          </span>
+        </div>
+      </div>
+    </MotionConfig>
+  );
+}
+
+export const PointGrowOffscreen: Story = {
+  name: "point grow from offscreen",
+  parameters: { wmdsLayout: "fullscreen" },
+  render: () => <OffscreenPointGrow />,
+  play: async ({ canvasElement }) => {
+    const view = canvasElement.ownerDocument.defaultView;
+    if (!view) throw new Error("viewport missing");
+    view.scrollTo(0, 0);
+    const target = canvasElement.querySelector<HTMLElement>("[data-offscreen-point]");
+    expect(target).not.toBeNull();
+    expect(target!.getBoundingClientRect().top).toBeGreaterThan(view.innerHeight);
+
+    await new Promise((resolve) => {
+      view.setTimeout(resolve, 1600);
+    });
+
+    target!.scrollIntoView({ block: "center" });
+
+    await waitFor(
+      () => {
+        const canvasNode = findHandCanvas(canvasElement);
+        expect(canvasNode).not.toBeNull();
+        const host = (canvasNode!.getRootNode() as ShadowRoot).host as HTMLElement;
+        expect(host.getBoundingClientRect().width).toBeGreaterThan(host.offsetWidth * 0.9);
+        expect(handHasInk(canvasNode!)).toBe(true);
+      },
+      { timeout: 8000 },
+    );
+  },
+};
+
 export const PointGrowCanvas: Story = {
   name: "point grow canvas",
   render: () => <PointGrowFixture />,
