@@ -34,7 +34,7 @@ const meta = {
         component: `
 ## Usage
 
-**Four prescribed patterns** — pick one story, copy the code. Not a composable slot API.
+**Prescribed patterns** — pick one story, copy the code. Not a composable slot API.
 
 | Pattern | Props |
 |---------|--------|
@@ -46,7 +46,7 @@ const meta = {
 | **Submit / async** | \`status\` + optional \`statusLabels\` |
 | **Link** | \`render={<a href />}\` — Button chrome on a real anchor (nav links, header CTAs) |
 
-Pill-shaped by default (\`layout="pill"\`). **Row layout** is flat full-width — for TaskRows detail lines and settings rows. **Roles:** \`primary\` (main CTA), \`secondary\`, \`ghost\`, \`destructive\`. No semantic color variants — success/error live on \`status\` morph only.
+Pill-shaped by default (\`layout="pill"\`). **Row layout** is flat full-width — for TaskRows detail lines and settings rows. **Roles:** \`primary\` (main CTA), \`secondary\`, \`ghost\`, \`destructive\`, \`inverse\` (surface fill and brand text, for a brand-blue field). No semantic color variants — success/error live on \`status\` morph only.
 
 ## Best practices
 
@@ -124,6 +124,26 @@ import { Button } from "@whatmatters/wmds";
 <Button role="secondary">Cancel</Button>
   `),
   args: { role: "secondary", children: "Cancel" },
+};
+
+export const InverseAction: Story = {
+  name: "Pattern — inverse action",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Surface pill with brand text. Use it on a brand-blue field (**FooterReveal**). Surface (`#ffffff`) on `--color-brand` (`#2f6bff`) reports **4.5:1**. Compose `render={<a href />}` when the control navigates.",
+        },
+      },
+    },
+    `
+import { Button } from "@whatmatters/wmds";
+
+<Button role="inverse" size="lg">Start a project</Button>
+    `,
+  ),
+  args: { role: "inverse", size: "lg", children: "Start a project" },
 };
 
 export const GhostAction: Story = {

@@ -13,22 +13,23 @@ Ship **FooterReveal** as an organism under **Components/Layout**:
 
 - Compounds **FooterReveal.Content** then **FooterReveal.Footer**. The root owns scroll progress and publishes it with `useFooterRevealProgress`.
 - Root: `isolation: isolate`, `overflow-x: clip`, `overflow-y: visible`. Content: `z-index: 1`, `min-height: 100dvh`, page background (`bg-body`). Footer: `position: sticky; bottom: 0; z-index: -1`.
-- Scrub, tied to `useScroll({ target: content, offset: ["end end", "end start"] })`: opacity 0→1, scale 0.9→1 (origin `50% 100%`), blur 6px→0. The input range ends at `footerRevealAt` = clamp(footerHeight / viewportHeight, 0.05, 0.95), measured with `ResizeObserver` and window `resize` in `useLayoutEffect`.
+- Scrub, tied to `useScroll({ target: content, offset: ["end end", "end start"] })` and `useTransform`: opacity 0→1, scale 0.9→1 (origin `50% 100%`), blur 12px→0. The input range ends at `footerRevealAt` = clamp(footerHeight / viewportHeight, 0.05, 0.95), measured with `ResizeObserver` and window `resize` in `useLayoutEffect`.
 - `will-change` is `opacity` on the fade layer and `transform, filter` on the scale layer only while progress is strictly inside that range.
 - `prefers-reduced-motion`: opacity 1, scale 1, blur 0, `will-change: auto`. No scrub.
-- Field color is **`footerRevealFieldClasses`** (`bg-primary` / `text-primary-foreground`). Links on that field use **`footerRevealFieldLinkClasses`**. No new color token — primary / on-primary already describe a brand plane and its ink. **TextLink** stays prose on the page background.
+- Field color is **`footerRevealFieldClasses`** (`bg-brand` / `text-surface`). `--color-brand` is `#2f6bff`. Surface (`#ffffff`) on that blue reports **4.5:1**. Links on that field use **`footerRevealFieldLinkClasses`** (solid underline, surface ink). **TextLink** stays prose on the page background.
+- **FooterReveal.Brand** is the marketing footer: centered display headline, **Button** `role="inverse"` (surface fill, brand text), an underlined `socialLinks` row, and a decorative wordmark. `https` links open in a new tab with `rel="noopener"`. The wordmark is `aria-hidden`, sized with a `vw` clamp, shifted off the inline edge, and cropped by the panel so it does not widen the page.
 - The scrollbar stays visible. `grid.css` already sets `scrollbar-gutter: stable` on `html`; that gutter can show the page background beside the field. Horizontal overflow is clipped on the isolate root so a full-bleed field does not open a second scrollbar. The sticky shell does not use a bare `footer` class name.
 - `"use client"` on the module, and the library bundle banner, so Next App Router consumers can import it from a Server Component tree.
 
 ## Non-goals
 
-- A second marketing footer organism. Footer contents are children of **FooterReveal.Footer**.
+- A second marketing footer organism. **FooterReveal.Brand** is a compound of this one. Other footer contents stay children of **FooterReveal.Footer**.
 - Hiding or restyling the viewport scrollbar.
 - Scroll-linked animation inside an arbitrary overflow container (the scrollport is the viewport).
 
 ## Consequences
 
-Consuming apps paste **Components/Layout/FooterReveal → Pattern — marketing page**. Place **SiteNav** and `grid-page` in **Content**. Pass **`footerRevealFieldClasses`** on **Footer**.
+Consuming apps paste **Components/Layout/FooterReveal → Pattern — marketing page**. Place **SiteNav** and `grid-page` (or the marketing hero) in **Content**. Pass **`footerRevealFieldClasses`** on **Footer** and compose **FooterReveal.Brand** for the brand plane. **Pattern — marketing hero** puts the hero above that footer.
 
 ## References
 

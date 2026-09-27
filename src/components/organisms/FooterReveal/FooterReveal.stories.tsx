@@ -1,10 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sparkles } from "lucide-react";
+import { useState } from "react";
+import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
+import { RiveHand } from "../../atoms/RiveHand/RiveHand";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
+import { HeroTileStack } from "../HeroTileStack/HeroTileStack";
 import { SiteNav } from "../SiteNav/SiteNav";
 import { FooterReveal } from "./FooterReveal";
-import { footerRevealFieldClasses, footerRevealFieldLinkClasses } from "./footerRevealStyles";
+import { footerRevealFieldClasses } from "./footerRevealStyles";
 
 const meta = {
   title: "Components/Layout/FooterReveal",
@@ -18,16 +22,17 @@ const meta = {
         component: `
 ## Usage
 
-Page root for a marketing scroll: **FooterReveal.Content** (the cover) then **FooterReveal.Footer** (any footer). The cover is at least \`100dvh\`, painted with the page background, and stacked above the footer. The footer sticks to the bottom of the viewport underneath that cover.
+Page root for a marketing scroll: **FooterReveal.Content** (the cover) then **FooterReveal.Footer** (the brand footer, or any footer). The cover is at least \`100dvh\`, painted with the page background, and stacked above the footer. The footer sticks to the bottom of the viewport underneath that cover.
 
-As the cover's bottom edge meets the viewport bottom, the footer scrubs from transparent / 0.9 scale / 6px blur to opaque / full size / sharp, across one footer-height of scroll. \`will-change\` is set only while that scrub is in progress.
+As the cover's bottom edge meets the viewport bottom, the footer scrubs from transparent / 0.9 scale / 12px blur to opaque / full size / sharp, across one footer-height of scroll. \`will-change\` is set only while that scrub is in progress.
 
 \`prefers-reduced-motion\`: the footer stays fully visible — opacity 1, scale 1, no blur.
 
 | Slot | Purpose |
 |------|---------|
 | **FooterReveal.Content** | Page body. Opaque (\`bg-body\` by default). Do not clip overflow on the root |
-| **FooterReveal.Footer** | Footer contents. \`className\` lands on the fading field — use **\`footerRevealFieldClasses\`** |
+| **FooterReveal.Footer** | Footer contents. \`className\` lands on the fading field — use **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-surface\`) |
+| **FooterReveal.Brand** | Headline, inverse CTA, underlined social row, and a decorative wordmark |
 | \`useFooterRevealProgress\` | Reveal progress MotionValue, 0 covered → 1 uncovered (stuck at 1 when reduced motion is on) |
 
 ## Anatomy
@@ -36,16 +41,23 @@ As the cover's bottom edge meets the viewport bottom, the footer scrubs from tra
 FooterReveal — isolation: isolate (overflow-x clip, overflow-y visible)
 ├── FooterReveal.Content — relative, z-index 1, min-height 100dvh, bg-body
 └── FooterReveal.Footer — sticky, bottom 0, z-index -1
-    └── fade (opacity) → scale / blur (origin 50% 100%) → footer contents
+    └── fade (opacity) → scale / blur (origin 50% 100%, blur 12px → 0) → footer contents
+        └── FooterReveal.Brand
+            ├── headline (type-display-1, centered)
+            ├── Button role="inverse"
+            ├── social links (underlined, https opens in a new tab)
+            └── wordmark (aria-hidden, vw clamp, cropped at the bottom edge)
 \`\`\`
 
 ## Best practices
 
-- One **FooterReveal** per page. Put **SiteNav** and \`grid-page\` inside **Content**.
-- Field color is **\`footerRevealFieldClasses\`** (\`bg-primary\` / \`text-primary-foreground\`). No separate footer color token.
-- Links on that field use **\`footerRevealFieldLinkClasses\`** (inherit on-primary ink). **TextLink** stays the prose-on-body treatment.
-- Do not hide the scrollbar. The page grid already reserves a stable gutter; that gutter can show the page background beside the field. The root clips the inline axis only so a full-bleed field does not open a horizontal scrollbar.
-- Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`.
+- One **FooterReveal** per page. Put **SiteNav** and the page or marketing hero inside **Content**.
+- Field color is **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-surface\`). \`--color-brand\` is \`#2f6bff\`. Surface on that blue reports **4.5:1**.
+- The CTA uses **Button** \`role="inverse"\` (surface fill, brand text). Do not recolor it with \`className\`.
+- Social links use **\`footerRevealFieldLinkClasses\`** at heading-1 size. \`https\` hrefs set \`target="_blank"\` and \`rel="noopener"\`. Placeholder hashes stay on the same page.
+- The wordmark is decorative (\`aria-hidden\`). It scales with the viewport and is clipped by the brand panel, so it does not widen the page.
+- Do not hide the scrollbar. The page grid already reserves a stable gutter. The root clips the inline axis only so a full-bleed field does not open a horizontal scrollbar.
+- Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`. The brand panel clips its own wordmark.
         `.trim(),
       },
     },
@@ -55,35 +67,29 @@ FooterReveal — isolation: isolate (overflow-x clip, overflow-y visible)
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const socialLinks = [
+  { label: "Contra", href: "#contra-TODO" },
+  { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
+  { label: "X", href: "#x-TODO" },
+] as const;
+
+const tiles = [
+  { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },
+  { src: "/hero-tiles/focus.svg", alt: "Blue focus card" },
+  { src: "/hero-tiles/week.svg", alt: "Abstract shapes for the week" },
+  { src: "/hero-tiles/note.svg", alt: "A pale note about what matters" },
+];
+
 const marketingPageCopySource = `
-import { Button, FooterReveal, SiteNav, footerRevealFieldClasses, footerRevealFieldLinkClasses } from "@whatmatters/wmds";
+import { Button, FooterReveal, SiteNav, footerRevealFieldClasses } from "@whatmatters/wmds";
 import { Sparkles } from "lucide-react";
 
-const columns = [
-  {
-    title: "Product",
-    links: [
-      { href: "/product", label: "Priorities" },
-      { href: "/plan", label: "Weekly plan" },
-      { href: "/shared", label: "Shared lists" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { href: "/about", label: "About" },
-      { href: "/customers", label: "Customers" },
-      { href: "/blog", label: "Blog" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { href: "/docs", label: "Docs" },
-      { href: "/changelog", label: "Changelog" },
-      { href: "/support", label: "Support" },
-    ],
-  },
+const socialLinks = [
+  { label: "Contra", href: "#contra-TODO" },
+  { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
+  { label: "X", href: "#x-TODO" },
 ] as const;
 
 export function MarketingPage() {
@@ -121,100 +127,31 @@ export function MarketingPage() {
               <p className="type-body max-w-prose text-muted">
                 WhatMatters turns a noisy backlog into one calm list. Set priorities once and let the week reshuffle itself.
               </p>
-              <div className="flex flex-wrap gap-3">
-                <Button role="primary" size="md" render={<a href="/start" />} className="whitespace-nowrap">Get started</Button>
-                <Button role="secondary" size="md" render={<a href="/product" />} className="whitespace-nowrap">See product</Button>
-              </div>
             </div>
           </div>
-          <div id="product" className="band py-12">
+          <div className="band py-16">
             <div className="col-span-full flex flex-col gap-3 lg:col-span-8 lg:col-start-3">
-              <h2 className="type-heading-2 text-fg">One list, not another dashboard</h2>
+              <h2 className="type-heading-2 text-fg">Scroll to the end of the cover</h2>
               <p className="type-body max-w-prose text-muted">
-                Capture everything, then keep only the work that changes the week. Shared lists stay in sync without a second tool.
-              </p>
-            </div>
-          </div>
-          <div id="pricing" className="band py-12">
-            <div className="col-span-full flex flex-col gap-3 lg:col-span-8 lg:col-start-3">
-              <h2 className="type-heading-2 text-fg">Pricing that stays out of the way</h2>
-              <p className="type-body max-w-prose text-muted">
-                Start with the calm list. Invite the rest of the team when the week is already under control.
-              </p>
-            </div>
-          </div>
-          <div id="customers" className="band py-16">
-            <div className="col-span-full flex flex-col gap-3 lg:col-span-8 lg:col-start-3">
-              <h2 className="type-heading-2 text-fg">Teams who stopped re-sorting Monday</h2>
-              <p className="type-body max-w-prose text-muted">
-                Scroll to the end of the cover. The footer sits underneath and sharpens into place across its own height.
+                The footer sits underneath. It starts soft and blurred, then sharpens across its own height.
               </p>
             </div>
           </div>
         </main>
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
-        <div className="mx-auto flex w-full max-w-[var(--grid-max)] flex-col gap-10 px-[var(--grid-margin)] py-16">
-          <div className="max-w-md">
-            <p className="type-heading-4 text-primary-foreground">WhatMatters</p>
-            <p className="type-body mt-3 text-primary-foreground/80">
-              One calm list for the week. Priorities stay put; the rest can wait.
-            </p>
-          </div>
-          <div className="grid gap-8 sm:grid-cols-3">
-            {columns.map((column) => (
-              <div key={column.title} className="flex flex-col gap-3">
-                <h2 className="type-supporting font-medium uppercase tracking-wider text-primary-foreground/70">{column.title}</h2>
-                <ul className="flex flex-col gap-2">
-                  {column.links.map((link) => (
-                    <li key={link.href}>
-                      <a href={link.href} className={footerRevealFieldLinkClasses}>{link.label}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-primary-foreground/20 pt-6">
-            <p className="type-supporting text-primary-foreground/70">© 2026 WhatMatters</p>
-            <ul className="flex flex-wrap gap-6">
-              <li><a href="/privacy" className={footerRevealFieldLinkClasses}>Privacy</a></li>
-              <li><a href="/terms" className={footerRevealFieldLinkClasses}>Terms</a></li>
-            </ul>
-          </div>
-        </div>
+        <FooterReveal.Brand
+          headline="We Build WhatMatters"
+          ctaLabel="Start a project"
+          ctaHref="/start"
+          wordmark="WHATMATTERS"
+          socialLinks={socialLinks}
+        />
       </FooterReveal.Footer>
     </FooterReveal>
   );
 }
 `.trim();
-
-const columns = [
-  {
-    title: "Product",
-    links: [
-      { href: "/product", label: "Priorities" },
-      { href: "/plan", label: "Weekly plan" },
-      { href: "/shared", label: "Shared lists" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { href: "/about", label: "About" },
-      { href: "/customers", label: "Customers" },
-      { href: "/blog", label: "Blog" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { href: "/docs", label: "Docs" },
-      { href: "/changelog", label: "Changelog" },
-      { href: "/support", label: "Support" },
-    ],
-  },
-] as const;
 
 function MarketingPage() {
   return (
@@ -251,68 +188,26 @@ function MarketingPage() {
               <p className="type-body max-w-prose text-muted">
                 WhatMatters turns a noisy backlog into one calm list. Set priorities once and let the week reshuffle itself.
               </p>
-              <div className="flex flex-wrap gap-3">
-                <Button role="primary" size="md" render={<a href="/start" />} className="whitespace-nowrap">Get started</Button>
-                <Button role="secondary" size="md" render={<a href="/product" />} className="whitespace-nowrap">See product</Button>
-              </div>
             </div>
           </div>
-          <div id="product" className="band py-12">
+          <div className="band py-16">
             <div className="col-span-full flex flex-col gap-3 lg:col-span-8 lg:col-start-3">
-              <h2 className="type-heading-2 text-fg">One list, not another dashboard</h2>
+              <h2 className="type-heading-2 text-fg">Scroll to the end of the cover</h2>
               <p className="type-body max-w-prose text-muted">
-                Capture everything, then keep only the work that changes the week. Shared lists stay in sync without a second tool.
-              </p>
-            </div>
-          </div>
-          <div id="pricing" className="band py-12">
-            <div className="col-span-full flex flex-col gap-3 lg:col-span-8 lg:col-start-3">
-              <h2 className="type-heading-2 text-fg">Pricing that stays out of the way</h2>
-              <p className="type-body max-w-prose text-muted">
-                Start with the calm list. Invite the rest of the team when the week is already under control.
-              </p>
-            </div>
-          </div>
-          <div id="customers" className="band py-16">
-            <div className="col-span-full flex flex-col gap-3 lg:col-span-8 lg:col-start-3">
-              <h2 className="type-heading-2 text-fg">Teams who stopped re-sorting Monday</h2>
-              <p className="type-body max-w-prose text-muted">
-                Scroll to the end of the cover. The footer sits underneath and sharpens into place across its own height.
+                The footer sits underneath. It starts soft and blurred, then sharpens across its own height.
               </p>
             </div>
           </div>
         </main>
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
-        <div className="mx-auto flex w-full max-w-[var(--grid-max)] flex-col gap-10 px-[var(--grid-margin)] py-16">
-          <div className="max-w-md">
-            <p className="type-heading-4 text-primary-foreground">WhatMatters</p>
-            <p className="type-body mt-3 text-primary-foreground/80">
-              One calm list for the week. Priorities stay put; the rest can wait.
-            </p>
-          </div>
-          <div className="grid gap-8 sm:grid-cols-3">
-            {columns.map((column) => (
-              <div key={column.title} className="flex flex-col gap-3">
-                <h2 className="type-supporting font-medium uppercase tracking-wider text-primary-foreground/70">{column.title}</h2>
-                <ul className="flex flex-col gap-2">
-                  {column.links.map((link) => (
-                    <li key={link.href}>
-                      <a href={link.href} className={footerRevealFieldLinkClasses}>{link.label}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-primary-foreground/20 pt-6">
-            <p className="type-supporting text-primary-foreground/70">© 2026 WhatMatters</p>
-            <ul className="flex flex-wrap gap-6">
-              <li><a href="/privacy" className={footerRevealFieldLinkClasses}>Privacy</a></li>
-              <li><a href="/terms" className={footerRevealFieldLinkClasses}>Terms</a></li>
-            </ul>
-          </div>
-        </div>
+        <FooterReveal.Brand
+          headline="We Build WhatMatters"
+          ctaLabel="Start a project"
+          ctaHref="/start"
+          wordmark="WHATMATTERS"
+          socialLinks={socialLinks}
+        />
       </FooterReveal.Footer>
     </FooterReveal>
   );
@@ -326,11 +221,220 @@ export const MarketingPagePattern: Story = {
       docs: {
         description: {
           story:
-            "Marketing page: **SiteNav** and `grid-page` sit in **FooterReveal.Content**. **FooterReveal.Footer** uses **footerRevealFieldClasses**. Scroll until the cover ends — the footer fades, scales, and sharpens across its own height. The scrollbar stays visible.",
+            "Marketing page: **SiteNav** and `grid-page` sit in **FooterReveal.Content**. **FooterReveal.Footer** uses **footerRevealFieldClasses** (`bg-brand` / `text-surface`). **FooterReveal.Brand** centers the headline, an inverse CTA, and the social row, with a cropped wordmark along the bottom. Scroll until the cover ends — the footer fades, scales, and sharpens from 12px of blur across its own height. Reduced motion stays sharp. The scrollbar stays visible.",
         },
       },
     },
     marketingPageCopySource,
   ),
   render: () => <MarketingPage />,
+};
+
+const marketingHeroCopySource = `
+"use client";
+
+// npm install @rive-app/react-canvas
+// Copy public/rive/interactive-icon-set.riv so the app serves /rive/interactive-icon-set.riv.
+// Hand art: CC BY 4.0, Silvia Sguotti and Gabriele Montinaro.
+
+import { useState } from "react";
+import { Sparkles } from "lucide-react";
+import { Badge, Button, FooterReveal, HeroTileStack, RiveHand, SiteNav, footerRevealFieldClasses } from "@whatmatters/wmds";
+
+const socialLinks = [
+  { label: "Contra", href: "#contra-TODO" },
+  { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
+  { label: "X", href: "#x-TODO" },
+] as const;
+
+const tiles = [
+  { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },
+  { src: "/hero-tiles/focus.svg", alt: "Blue focus card" },
+  { src: "/hero-tiles/week.svg", alt: "Abstract shapes for the week" },
+  { src: "/hero-tiles/note.svg", alt: "A pale note about what matters" },
+];
+
+export function MarketingHeroPage() {
+  const [handsActive, setHandsActive] = useState(false);
+  return (
+    <FooterReveal>
+      <FooterReveal.Content>
+        <SiteNav
+          start={<SiteNav.Brand href="/" aria-label="WhatMatters" icon={<Sparkles strokeWidth={2} />} />}
+          middle={
+            <SiteNav.Links>
+              <SiteNav.Link href="/product" current>Product</SiteNav.Link>
+              <SiteNav.Link href="/pricing">Pricing</SiteNav.Link>
+              <SiteNav.Link href="/customers">Customers</SiteNav.Link>
+            </SiteNav.Links>
+          }
+          end={
+            <>
+              <Button role="ghost" size="sm" render={<a href="/signin" />} className="whitespace-nowrap">Sign in</Button>
+              <Button role="primary" size="sm" render={<a href="/start" />} className="whitespace-nowrap">Get started</Button>
+            </>
+          }
+          mobile={
+            <>
+              <SiteNav.MobileLink href="/product" current>Product</SiteNav.MobileLink>
+              <SiteNav.MobileLink href="/pricing">Pricing</SiteNav.MobileLink>
+              <SiteNav.MobileLink href="/customers">Customers</SiteNav.MobileLink>
+            </>
+          }
+        />
+        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body px-[var(--grid-margin)] py-16 text-center">
+          <div className="flex w-full flex-col items-center gap-6">
+            <h1
+              className="type-display-1 isolate text-fg"
+              tabIndex={0}
+              onMouseEnter={() => setHandsActive(true)}
+              onMouseLeave={() => setHandsActive(false)}
+              onFocus={() => setHandsActive(true)}
+              onBlur={() => setHandsActive(false)}
+            >
+              {[
+                <span key="lead" className="relative inline-block whitespace-nowrap">{[
+                  <span key="gap" className="absolute inset-y-0 right-0 w-0">{[
+                    <span key="clip" className="absolute z-10 overflow-clip -right-[0.94em] -top-[0.17em] bottom-[0.22em] w-[1.7em] md:-right-[1.07em] md:-top-[0.54em] md:w-[2.2em]">{[
+                      <RiveHand key="rock" hand="rock" size="2.2em" active={handsActive} idle entrance="slide-up" className="absolute top-0 max-md:!h-[1.7em] max-md:!w-[1.7em]" />,
+                    ]}</span>,
+                  ]}</span>,
+                  "We Ar",
+                  <span key="e" className="relative z-20">e</span>,
+                ]}</span>,
+                " ",
+                <span key="brand" className="relative inline-block whitespace-nowrap">{[
+                  <span key="w" className="relative z-0">W</span>,
+                  "hatMatter",
+                  <span key="s" className="relative">{[
+                    "s",
+                    <RiveHand key="point" hand="point" size="2.2em" active={handsActive} idle entrance="grow" className="absolute z-10 -right-[1.2em] -top-[0.4em] max-md:!h-[1.7em] max-md:!w-[1.7em] md:-right-[1.53em] md:-top-[0.7em]" />,
+                  ]}</span>,
+                ]}</span>,
+              ]}
+            </h1>
+            <div className="grid w-full grid-cols-4 gap-x-[var(--grid-column-gap)] md:grid-cols-8 lg:grid-cols-12">
+              <p className="type-large col-span-full text-center font-normal text-muted lg:col-start-3 lg:col-end-10">
+                We're a design and product studio based in Austin, Texas. We help brands stand out{" "}
+                <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
+                {" "}with bold ideas, fresh approaches, and products people actually love to use.
+              </p>
+            </div>
+            <HeroTileStack tiles={tiles} />
+          </div>
+        </section>
+      </FooterReveal.Content>
+      <FooterReveal.Footer className={footerRevealFieldClasses}>
+        <FooterReveal.Brand
+          headline="We Build WhatMatters"
+          ctaLabel="Start a project"
+          ctaHref="/start"
+          wordmark="WHATMATTERS"
+          socialLinks={socialLinks}
+        />
+      </FooterReveal.Footer>
+    </FooterReveal>
+  );
+}
+`.trim();
+
+function MarketingHeroPage() {
+  const [handsActive, setHandsActive] = useState(false);
+  return (
+    <FooterReveal>
+      <FooterReveal.Content>
+        <SiteNav
+          start={<SiteNav.Brand href="/" aria-label="WhatMatters" icon={<Sparkles strokeWidth={2} />} />}
+          middle={
+            <SiteNav.Links>
+              <SiteNav.Link href="/product" current>Product</SiteNav.Link>
+              <SiteNav.Link href="/pricing">Pricing</SiteNav.Link>
+              <SiteNav.Link href="/customers">Customers</SiteNav.Link>
+            </SiteNav.Links>
+          }
+          end={
+            <>
+              <Button role="ghost" size="sm" render={<a href="/signin" />} className="whitespace-nowrap">Sign in</Button>
+              <Button role="primary" size="sm" render={<a href="/start" />} className="whitespace-nowrap">Get started</Button>
+            </>
+          }
+          mobile={
+            <>
+              <SiteNav.MobileLink href="/product" current>Product</SiteNav.MobileLink>
+              <SiteNav.MobileLink href="/pricing">Pricing</SiteNav.MobileLink>
+              <SiteNav.MobileLink href="/customers">Customers</SiteNav.MobileLink>
+            </>
+          }
+        />
+        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body px-[var(--grid-margin)] py-16 text-center">
+          <div className="flex w-full flex-col items-center gap-6">
+            <h1
+              className="type-display-1 isolate text-fg"
+              tabIndex={0}
+              onMouseEnter={() => setHandsActive(true)}
+              onMouseLeave={() => setHandsActive(false)}
+              onFocus={() => setHandsActive(true)}
+              onBlur={() => setHandsActive(false)}
+            >
+              {[
+                <span key="lead" className="relative inline-block whitespace-nowrap">{[
+                  <span key="gap" className="absolute inset-y-0 right-0 w-0">{[
+                    <span key="clip" className="absolute z-10 overflow-clip -right-[0.94em] -top-[0.17em] bottom-[0.22em] w-[1.7em] md:-right-[1.07em] md:-top-[0.54em] md:w-[2.2em]">{[
+                      <RiveHand key="rock" hand="rock" size="2.2em" active={handsActive} idle entrance="slide-up" className="absolute top-0 max-md:!h-[1.7em] max-md:!w-[1.7em]" />,
+                    ]}</span>,
+                  ]}</span>,
+                  "We Ar",
+                  <span key="e" className="relative z-20">e</span>,
+                ]}</span>,
+                " ",
+                <span key="brand" className="relative inline-block whitespace-nowrap">{[
+                  <span key="w" className="relative z-0">W</span>,
+                  "hatMatter",
+                  <span key="s" className="relative">{[
+                    "s",
+                    <RiveHand key="point" hand="point" size="2.2em" active={handsActive} idle entrance="grow" className="absolute z-10 -right-[1.2em] -top-[0.4em] max-md:!h-[1.7em] max-md:!w-[1.7em] md:-right-[1.53em] md:-top-[0.7em]" />,
+                  ]}</span>,
+                ]}</span>,
+              ]}
+            </h1>
+            <div className="grid w-full grid-cols-4 gap-x-[var(--grid-column-gap)] md:grid-cols-8 lg:grid-cols-12">
+              <p className="type-large col-span-full text-center font-normal text-muted lg:col-start-3 lg:col-end-10">
+                We're a design and product studio based in Austin, Texas. We help brands stand out{" "}
+                <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
+                {" "}with bold ideas, fresh approaches, and products people actually love to use.
+              </p>
+            </div>
+            <HeroTileStack tiles={tiles} />
+          </div>
+        </section>
+      </FooterReveal.Content>
+      <FooterReveal.Footer className={footerRevealFieldClasses}>
+        <FooterReveal.Brand
+          headline="We Build WhatMatters"
+          ctaLabel="Start a project"
+          ctaHref="/start"
+          wordmark="WHATMATTERS"
+          socialLinks={socialLinks}
+        />
+      </FooterReveal.Footer>
+    </FooterReveal>
+  );
+}
+
+export const MarketingHeroPattern: Story = {
+  name: "Pattern — marketing hero",
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "fullscreen",
+      docs: {
+        description: {
+          story:
+            "The marketing hero (SiteNav, headline, intro, tile fan) fills **FooterReveal.Content**. **FooterReveal.Brand** is the sticky footer underneath. Scroll past the hero — the brand field fades in from about 12px of blur. Reduced motion shows it sharp.",
+        },
+      },
+    },
+    marketingHeroCopySource,
+  ),
+  render: () => <MarketingHeroPage />,
 };

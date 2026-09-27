@@ -439,12 +439,15 @@ export {
 export {
   FooterReveal,
   useFooterRevealProgress,
+  footerRevealDefaultSocialLinks,
   footerRevealFieldClasses,
   footerRevealFieldLinkClasses,
+  type FooterRevealBrandProps,
   type FooterRevealContentProps,
   type FooterRevealFooterProps,
   type FooterRevealLayoutClassName,
   type FooterRevealProps,
+  type FooterRevealSocialLink,
 } from "./components/organisms/FooterReveal/FooterReveal";
 export {
   HeroTileStack,

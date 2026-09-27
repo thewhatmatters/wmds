@@ -18,16 +18,24 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
+import { Button } from "../../atoms/Button/Button";
 import { cn } from "../../../lib/cn";
 import { footerRevealAt } from "./footerRevealAt";
 import {
+  footerRevealBrandClasses,
+  footerRevealBrandCopyClasses,
+  footerRevealBrandHeadlineClasses,
   footerRevealContentClasses,
+  footerRevealExternalLinkProps,
   footerRevealFadeClasses,
   footerRevealFieldClasses,
   footerRevealFieldLinkClasses,
   footerRevealRootClasses,
   footerRevealScaleClasses,
+  footerRevealSocialLinkClasses,
+  footerRevealSocialListClasses,
   footerRevealStickyClasses,
+  footerRevealWordmarkClasses,
 } from "./footerRevealStyles";
 
 export { footerRevealFieldClasses, footerRevealFieldLinkClasses };
@@ -88,7 +96,8 @@ export function useFooterRevealProgress(): MotionValue<number> {
  * Sticky under-page footer. The page cover sits at z-index 1 with the page
  * background. The footer is sticky to the bottom at z-index -1 inside an
  * isolate wrapper, and scrubs opacity, scale, and blur across one footer-height
- * of scroll. Reduced motion shows the footer fully opaque at scale 1 with no blur.
+ * of scroll. Content starts near `blur(12px)` and transparent, then sharpens.
+ * Reduced motion shows the footer fully opaque at scale 1 with no blur.
  */
 function FooterRevealRoot({ children, className }: FooterRevealProps) {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -128,7 +137,7 @@ function FooterRevealRoot({ children, className }: FooterRevealProps) {
   const scrubbedReveal = useTransform(scrollYProgress, [0, revealAt], [0, 1]);
   const reveal = useTransform(scrubbedReveal, (value) => (reduceMotion ? 1 : value));
   const scale = useTransform(scrollYProgress, [0, revealAt], reduceMotion ? [1, 1] : [0.9, 1]);
-  const blur = useTransform(scrollYProgress, [0, revealAt], reduceMotion ? [0, 0] : [6, 0]);
+  const blur = useTransform(scrollYProgress, [0, revealAt], reduceMotion ? [0, 0] : [12, 0]);
   const filter = useMotionTemplate`blur(${blur}px)`;
   const opacityWillChange = useTransform(scrollYProgress, (progress): string =>
     !reduceMotion && progress > 0.0001 && progress < revealAt ? "opacity" : "auto",
@@ -219,7 +228,70 @@ function FooterRevealFooter({ children, className }: FooterRevealFooterProps) {
   );
 }
 
+export interface FooterRevealSocialLink {
+  label: string;
+  href: string;
+}
+
+export interface FooterRevealBrandProps {
+  /** Centered display headline. Default: `We Build WhatMatters`. */
+  headline?: string;
+  /** Sentence-case label on the surface CTA. Default: `Start a project`. */
+  ctaLabel?: string;
+  /** Href for the CTA. Default: `/start`. */
+  ctaHref?: string;
+  /** Decorative wordmark, cropped along the bottom edge. Default: `WHATMATTERS`. */
+  wordmark?: string;
+  /** Underlined text row. `https` links open in a new tab with `rel="noopener"`. */
+  socialLinks?: readonly FooterRevealSocialLink[];
+  className?: FooterRevealLayoutClassName;
+}
+
+export const footerRevealDefaultSocialLinks: readonly FooterRevealSocialLink[] = [
+  { label: "Contra", href: "#contra-TODO" },
+  { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
+  { label: "X", href: "#x-TODO" },
+];
+
+/**
+ * Brand footer for the reveal field: centered headline, inverse CTA, underlined
+ * social row, and a viewport-scaled wordmark that bleeds off the bottom edge.
+ */
+function FooterRevealBrand({
+  headline = "We Build WhatMatters",
+  ctaLabel = "Start a project",
+  ctaHref = "/start",
+  wordmark = "WHATMATTERS",
+  socialLinks = footerRevealDefaultSocialLinks,
+  className,
+}: FooterRevealBrandProps) {
+  return (
+    <div className={cn(footerRevealBrandClasses, className)}>
+      <div className={footerRevealBrandCopyClasses}>
+        <h2 className={footerRevealBrandHeadlineClasses}>{headline}</h2>
+        <Button role="inverse" size="lg" render={<a href={ctaHref} />}>
+          {ctaLabel}
+        </Button>
+        <ul className={footerRevealSocialListClasses}>
+          {socialLinks.map((link) => (
+            <li key={link.label}>
+              <a href={link.href} className={footerRevealSocialLinkClasses} {...footerRevealExternalLinkProps(link.href)}>
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <p className={footerRevealWordmarkClasses} aria-hidden="true">
+        {wordmark}
+      </p>
+    </div>
+  );
+}
+
 export const FooterReveal = Object.assign(FooterRevealRoot, {
   Content: FooterRevealContent,
   Footer: FooterRevealFooter,
+  Brand: FooterRevealBrand,
 });
