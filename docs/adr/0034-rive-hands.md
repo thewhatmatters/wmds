@@ -5,7 +5,7 @@
 
 ## Context
 
-The marketing hero can perch two decorative hands on the headline. The rock hand grips the top-left of the **W** in “We”. The point hand grips the top-right of the final **s** in “WhatMatters”. The art is a cleaned remix of the Rive Interactive Icon Set. The headline stays real, selectable text. The hands are not a second title.
+The marketing hero can perch two decorative hands on the headline. The rock hand sits between the **e** in “Are” and the **W** in “WhatMatters”, behind the e and in front of the W. The point hand grips the top-right of the final **s** in “WhatMatters”. The art is a cleaned remix of the Rive Interactive Icon Set. The headline stays real, selectable text. The hands are not a second title.
 
 Several graphics share the page, so the runtime has to stay small and share one canvas renderer.
 
@@ -50,7 +50,7 @@ Handled with `matchMedia('(prefers-reduced-motion: reduce)')`, not Motion’s re
 
 **Components/Layout/HeroTileStack → Pattern — marketing hero** is the default. The plain h1 uses **`type-display-1`**, the largest display token (`clamp` from `2.5rem` / 40px to `5rem` / 80px). `type-display-2` and `type-display-3` are smaller. No uppercase transform.
 
-The point hand grips the top-right of the final **s**. **We Are** and **WhatMatters** are each an `inline-block` with `whitespace-nowrap`, so the line can break between those words and never through WhatMatters. The final **s** is an inline `relative` span, and the point hand is absolutely positioned inside it. The rock hand sits in a zero-width span pinned to the end of **We Are**, in the gap before WhatMatters, with offset and size in `em`. That span is the first node in We Are, so it does not split the words. The h1 is `isolate`, the words are `relative z-10`, and the rock hand is `-z-10`, so the letters paint on top and the hand peeks through the gap. On a wrap the rock stays at the end of line 1. The point hand follows the s. The accessible name and the copied text stay `We Are WhatMatters`. Below `md` the box is `1.7em`. The rock hand sits higher so its drawn pixels clear the second line, and the point hand stays inside a 320px viewport while it still grips the s. From `md` the box is `2.2em`. Hover or focus on the h1 sets `active`.
+The point hand grips the top-right of the final **s**. **We Are** and **WhatMatters** are each an `inline-block` with `whitespace-nowrap`, so the line can break between those words and never through WhatMatters. The final **s** is an inline `relative` span, and the point hand is absolutely positioned inside it. The **e** in Are is an inline `relative z-20` span. The **W** in WhatMatters is an inline `relative z-0` span. The rock hand sits in a zero-width span pinned to the end of **We Are**, between that e and that W, with offset and size in `em`. That span is the first node in We Are, so it does not split the words. The h1 is `isolate` and the rock hand is `z-10`, so the e paints on top of the hand and the hand paints on top of the left edge of the W. The bottom of the rock hand’s drawn pixels sits on the text baseline. On a wrap the rock stays behind the e at the end of line 1, on that line’s baseline, clear of line 2. The point hand follows the s. The accessible name and the copied text stay `We Are WhatMatters`. Below `md` the box is `1.7em`, and the point hand stays inside a 320px viewport while it still grips the s. From `md` the box is `2.2em`. Hover or focus on the h1 sets `active`.
 
 ### Consuming the pattern
 
