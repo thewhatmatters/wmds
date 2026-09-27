@@ -85,6 +85,10 @@
 
   /* Brand / primary */
   --color-brand: var(--color-brand);
+  --color-on-brand: var(--color-on-brand);
+  --color-on-brand-hover: var(--color-on-brand-hover);
+  --color-brand-outline: var(--color-brand-outline);
+  --color-brand-soft: var(--color-brand-soft);
   --color-primary: var(--color-primary);
   --color-primary-foreground: var(--color-on-primary);
   --color-primary-hover: var(--color-primary-hover);

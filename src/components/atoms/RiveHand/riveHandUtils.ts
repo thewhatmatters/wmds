@@ -32,9 +32,11 @@ export const riveHandFillToken = "--color-surface";
 export const riveHandFillFallbackToken = "--color-background-surface";
 
 /**
- * WhatMatters brand blue (`#2f6bff`). Not `--color-fg`, and not status `--color-info`.
+ * WhatMatters brand navy (`#011272`) on a light page.
+ * In dark mode the same token is a lighter mix: `#011272` is about 1:1 on
+ * `#1b1b1b` and `#262626`.
  */
-export const riveHandOutlineToken = "--color-brand";
+export const riveHandOutlineToken = "--color-brand-outline";
 
 export const riveHandClassName = "pointer-events-none";
 

@@ -86,10 +86,16 @@
   --color-on-primary: #fafafa;
 
   /*
-   * WhatMatters brand blue. Not status info (`--color-info`, #00458c) and not
+   * WhatMatters brand navy. Not status info (`--color-info`, #00458c) and not
    * the action brand (`--color-primary`, slate). Matches the hero focus tile.
+   * White on #011272 is 15.8:1.
+   * `--color-brand-soft` is the wordmark: 40% white on the navy (about #6771aa, 3.4:1).
+   * 20% white falls to about #34418e (1.7:1) and disappears into the field.
    */
-  --color-brand: #2f6bff;
+  --color-brand: #011272;
+  --color-on-brand: #ffffff;
+  --color-brand-outline: var(--color-brand);
+  --color-brand-soft: color-mix(in srgb, var(--color-on-brand) 40%, var(--color-brand));
 
   /* Derived from --color-primary — 62% clears WCAG 3:1 on white and #f8f8f8 */
   --color-focus-ring: color-mix(in srgb, var(--color-primary) 62%, transparent);
@@ -190,8 +196,15 @@
   --color-primary: #5a6d85;
   --color-on-primary: #fafaf8;
 
-  /* Same brand blue. It stays saturated so the outline reads on a dark surface. */
-  --color-brand: #2f6bff;
+  /*
+   * The field stays #011272. That navy on #1b1b1b is 1.09:1 and on #262626 is 1.04:1,
+   * so it cannot be the hand outline. `--color-brand-outline` is 45% navy / 55% white
+   * (about #8d94c0): 5.1:1 on #262626 and 5.8:1 on #1b1b1b.
+   */
+  --color-brand: #011272;
+  --color-on-brand: #ffffff;
+  --color-brand-outline: color-mix(in srgb, var(--color-brand) 45%, white);
+  --color-brand-soft: color-mix(in srgb, var(--color-on-brand) 40%, var(--color-brand));
 
   /*
    * Derived from --color-primary: lift the brand toward white so the ring stays

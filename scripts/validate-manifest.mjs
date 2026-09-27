@@ -12,6 +12,10 @@ const LIB_EXPORTS = [
 ];
 const REQUIRED_STYLE_TOKENS = [
   "--color-brand",
+  "--color-on-brand",
+  "--color-on-brand-hover",
+  "--color-brand-outline",
+  "--color-brand-soft",
   "bg-primary-hover",
   "duration-fast",
   "motion-collapse",

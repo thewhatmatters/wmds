@@ -30,7 +30,7 @@ Do **not** set `--spacing` to 8px on this live project. Re-scaling the spacing s
 | `--grid-pad` / `--grid-row-gap` | `--leading-base` (relaxed rows) |
 | `--leading-base` | 24px — also the `leading-base` utility |
 
-Guide tints (`--grid-guide-*`) mix **existing** `--color-primary` / `--color-info`. Keep WhatMatters brand colors.
+Guide tints (`--grid-guide-*`) mix **existing** `--color-primary` / `--color-info`. WhatMatters brand navy is `--color-brand` (`#011272`) in both themes. Dark-mode hand outlines use `--color-brand-outline` (45% navy / 55% white) because navy on a dark surface fails contrast. The footer wordmark uses `--color-brand-soft`.
 
 ### Utilities
 

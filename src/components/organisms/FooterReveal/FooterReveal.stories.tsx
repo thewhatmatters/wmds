@@ -31,7 +31,7 @@ As the cover's bottom edge meets the viewport bottom, the footer scrubs from tra
 | Slot | Purpose |
 |------|---------|
 | **FooterReveal.Content** | Page body. Opaque (\`bg-body\` by default). Do not clip overflow on the root |
-| **FooterReveal.Footer** | Footer contents. \`className\` lands on the fading field — use **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-surface\`) |
+| **FooterReveal.Footer** | Footer contents. \`className\` lands on the fading field — use **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-on-brand\`) |
 | **FooterReveal.Brand** | Headline, inverse CTA, underlined social row, and a decorative wordmark |
 | \`useFooterRevealProgress\` | Reveal progress MotionValue, 0 covered → 1 uncovered (stuck at 1 when reduced motion is on) |
 
@@ -52,8 +52,8 @@ FooterReveal — isolation: isolate (overflow-x clip, overflow-y visible)
 ## Best practices
 
 - One **FooterReveal** per page. Put **SiteNav** and the page or marketing hero inside **Content**.
-- Field color is **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-surface\`). \`--color-brand\` is \`#2f6bff\`. Surface on that blue reports **4.5:1**.
-- The CTA uses **Button** \`role="inverse"\` (surface fill, brand text). Do not recolor it with \`className\`.
+- Field color is **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-on-brand\`). \`--color-brand\` is \`#011272\` in both themes. White on that navy reports **15.8:1**. The wordmark uses \`--color-brand-soft\` (40% white on the navy) so it stays visible.
+- The CTA uses **Button** \`role="inverse"\` (white fill, brand text). Do not recolor it with \`className\`.
 - Social links use **\`footerRevealFieldLinkClasses\`** at heading-1 size. \`https\` hrefs set \`target="_blank"\` and \`rel="noopener"\`. Placeholder hashes stay on the same page.
 - The wordmark is decorative (\`aria-hidden\`). It scales with the viewport and is clipped by the brand panel, so it does not widen the page.
 - Do not hide the scrollbar. The page grid already reserves a stable gutter. The root clips the inline axis only so a full-bleed field does not open a horizontal scrollbar.
@@ -221,7 +221,7 @@ export const MarketingPagePattern: Story = {
       docs: {
         description: {
           story:
-            "Marketing page: **SiteNav** and `grid-page` sit in **FooterReveal.Content**. **FooterReveal.Footer** uses **footerRevealFieldClasses** (`bg-brand` / `text-surface`). **FooterReveal.Brand** centers the headline, an inverse CTA, and the social row, with a cropped wordmark along the bottom. Scroll until the cover ends — the footer fades, scales, and sharpens from 12px of blur across its own height. Reduced motion stays sharp. The scrollbar stays visible.",
+            "Marketing page: **SiteNav** and `grid-page` sit in **FooterReveal.Content**. **FooterReveal.Footer** uses **footerRevealFieldClasses** (`bg-brand` / `text-on-brand`). **FooterReveal.Brand** centers the headline, an inverse CTA, and the social row, with a cropped wordmark along the bottom. Scroll until the cover ends — the footer fades, scales, and sharpens from 12px of blur across its own height. Reduced motion stays sharp. The scrollbar stays visible.",
         },
       },
     },
