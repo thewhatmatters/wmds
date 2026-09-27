@@ -209,8 +209,8 @@ describe("marketing hero show code", () => {
     expect(copy.startsWith('"use client";')).toBe(true);
     expect(copy).toContain("npm install @rive-app/react-canvas");
     expect(copy).toContain("/rive/interactive-icon-set.riv");
-    expect(copy).toContain('className="type-display-1 text-fg"');
-    expect(live).toContain('className="type-display-1 text-fg"');
+    expect(copy).toContain('className="type-display-1 isolate text-fg"');
+    expect(live).toContain('className="type-display-1 isolate text-fg"');
     expect(copy).toContain('hand="rock"');
     expect(copy).toContain('hand="point"');
     expect(live).toContain(copy.slice(copy.indexOf("<h1"), copy.indexOf("</h1>") + "</h1>".length));
