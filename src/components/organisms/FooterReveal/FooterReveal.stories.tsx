@@ -6,6 +6,7 @@ import { expect, fn, waitFor } from "storybook/test";
 import { Badge } from "../../atoms/Badge/Badge";
 import { GridOverlay } from "../../../lib/GridOverlay";
 import { stickyFooterInFlowTop } from "../../../lib/gridOverlayUtils";
+import { lockedViewportGlobals, storybookViewports } from "../../../lib/viewports";
 import { Button } from "../../atoms/Button/Button";
 import { RiveHand } from "../../atoms/RiveHand/RiveHand";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
@@ -15,7 +16,7 @@ import { ScrollHorizontal } from "../ScrollHorizontal/ScrollHorizontal";
 import { scrollHorizontalMarketingItems } from "../ScrollHorizontal/scrollHorizontalExamples";
 import { SiteNav } from "../SiteNav/SiteNav";
 import { FooterReveal } from "./FooterReveal";
-import { footerRevealFieldClasses } from "./footerRevealStyles";
+import { footerRevealFieldClasses, footerRevealRuledFieldClasses } from "./footerRevealStyles";
 
 const meta = {
   title: "Components/Layout/FooterReveal",
@@ -39,7 +40,8 @@ As the cover's bottom edge meets the viewport bottom, the footer scrubs from tra
 |------|---------|
 | **FooterReveal.Content** | Page body. Opaque (\`bg-body\` by default). Do not clip overflow on the root |
 | **FooterReveal.Footer** | Footer contents. \`className\` lands on the fading field — use **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-on-brand\`) |
-| **FooterReveal.Brand** | Headline, inverse CTA, underlined social row, and a decorative wordmark |
+| **FooterReveal.Brand** | Headline, inverse CTA, underlined social row, and a decorative wordmark on the navy field |
+| **FooterReveal.Ruled** | Ruled grid on the page background: identity, link columns, contact, social cells, fitted wordmark, cropped mark, credit |
 | \`useFooterRevealProgress\` | Reveal progress MotionValue, 0 covered → 1 uncovered (stuck at 1 when reduced motion is on) |
 
 ## Anatomy
@@ -49,11 +51,19 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
 ├── FooterReveal.Content — relative, z-index 1, min-height 100dvh, bg-body
 └── FooterReveal.Footer — sticky, bottom 0, z-index -1
     └── fade (opacity) → scale / blur (origin 50% 100%, blur 12px → 0) → footer contents
-        └── FooterReveal.Brand
-            ├── headline (type-display-1, centered)
-            ├── Button role="inverse" type="button" (onCtaClick)
-            ├── social links (underlined, https opens in a new tab)
-            └── wordmark (aria-hidden, spans the footer width, cropped at the bottom edge)
+        ├── FooterReveal.Brand
+        │   ├── headline (type-display-1, centered)
+        │   ├── Button role="inverse" type="button" (onCtaClick)
+        │   ├── social links (underlined, https opens in a new tab)
+        │   └── wordmark (aria-hidden, spans the footer width, cropped at the bottom edge)
+        └── FooterReveal.Ruled
+            ├── identity (copyright, mono blurb, typographic mark, decorative plus)
+            ├── two link columns (dotted rules, ArrowUpRight)
+            ├── contact (email anchor, services line)
+            ├── social cells (icon-only anchors, ButtonIcon)
+            ├── wordmark (aria-hidden, fills the frame)
+            ├── crop (aria-hidden WM letterforms, cut by the bottom rule)
+            └── credit bar
 \`\`\`
 
 ## Best practices
@@ -66,6 +76,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
 - Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. The brand panel and the footer field clip the wordmark.
 - Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`. The brand panel clips its own wordmark.
 - When **ScrollHorizontal** \`expandLast\` is the last section in the cover, the guide \`grid-page\` after it uses \`!py-0\`. Default \`grid-page\` block padding is \`--grid-pad\` (24px top and bottom). On a guide-only host that padding is a page-background strip between the full-bleed tile and the footer. The reduced-motion \`h-svh\` section meets the footer the same way.
+- **FooterReveal.Ruled** is the ruled-grid footer. Pass **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) on **Footer**. Rules are 1px \`border-brand\`. The frame is the page grid box (\`max-w-[var(--grid-max)]\`). Below \`md\` the bands stack; the two link columns stay side by side; social cells stay one row. The wordmark fills the frame. The crop row is oversized \`WM\` letterforms cut by the bottom rule. Plus glyphs are decorative (\`aria-hidden\`). Social cells are icon-only anchors with accessible names and a brand focus ring. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — the defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. Dark theme keeps the field on \`--color-on-brand\` so the navy rules stay readable. **FooterReveal.Brand** stays the navy field.
         `.trim(),
       },
     },
@@ -375,7 +386,46 @@ export function MarketingHeroPage() {
 }
 `.trim();
 
+const marketingHeroRuledCopySource = marketingHeroCopySource
+  .replace(
+    `      <FooterReveal.Footer className={footerRevealFieldClasses}>
+        <FooterReveal.Brand
+          headline="We Build WhatMatters"
+          ctaLabel="Start a project"
+          onCtaClick={openProjectModal}
+          wordmark="WHATMATTERS"
+          socialLinks={socialLinks}
+        />
+      </FooterReveal.Footer>`,
+    `      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
+        <FooterReveal.Ruled />
+      </FooterReveal.Footer>`,
+  )
+  .replaceAll("footerRevealFieldClasses", "footerRevealRuledFieldClasses")
+  .replace(
+    `const socialLinks = [
+  { label: "Contra", href: "#contra-TODO" },
+  { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
+  { label: "X", href: "#x-TODO" },
+] as const;
+
+`,
+    "",
+  )
+  .replace(
+    `// Opens the multi-step project form. There is no /start route.
+function openProjectModal() {}
+
+`,
+    "",
+  );
+
 function MarketingHeroPage() {
+  return <MarketingHeroCanvas />;
+}
+
+function MarketingHeroCanvas({ ruled = false }: { ruled?: boolean } = {}) {
   const [handsActive, setHandsActive] = useState(false);
   return (
     <FooterReveal>
@@ -455,14 +505,18 @@ function MarketingHeroPage() {
           <GridOverlay visible keyboardShortcut={false} />
         </main>
       </FooterReveal.Content>
-      <FooterReveal.Footer className={footerRevealFieldClasses}>
-        <FooterReveal.Brand
-          headline="We Build WhatMatters"
-          ctaLabel="Start a project"
-          onCtaClick={openProjectModal}
-          wordmark="WHATMATTERS"
-          socialLinks={socialLinks}
-        />
+      <FooterReveal.Footer className={ruled ? footerRevealRuledFieldClasses : footerRevealFieldClasses}>
+        {ruled ? (
+          <FooterReveal.Ruled />
+        ) : (
+          <FooterReveal.Brand
+            headline="We Build WhatMatters"
+            ctaLabel="Start a project"
+            onCtaClick={openProjectModal}
+            wordmark="WHATMATTERS"
+            socialLinks={socialLinks}
+          />
+        )}
       </FooterReveal.Footer>
     </FooterReveal>
   );
@@ -670,5 +724,174 @@ export const ExpandFooterHandoffReduced: Story = {
     expect(footerTop).not.toBeNull();
     expectEdgesMeet(footerTop ?? 0, documentBottom(reduced));
     expectGalleryMeetsFooter(canvasElement);
+  },
+};
+
+const ruledGridFooterCopySource = `
+import { FooterReveal, footerRevealRuledFieldClasses } from "@whatmatters/wmds";
+
+export function RuledGridFooter() {
+  return (
+    <div className={footerRevealRuledFieldClasses}>
+      <FooterReveal.Ruled />
+    </div>
+  );
+}
+`.trim();
+
+function RuledGridFooterSpecimen() {
+  return (
+    <div className={footerRevealRuledFieldClasses} data-footer-ruled-field="">
+      <FooterReveal.Ruled />
+    </div>
+  );
+}
+
+export const RuledGridFooterPattern: Story = {
+  name: "Pattern — ruled grid footer",
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "fullscreen",
+      docs: {
+        description: {
+          story:
+            "Ruled grid on the page background. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. The frame is the page grid box (`max-w-[var(--grid-max)]`). Rules are 1px `border-brand`. Default copy is WhatMatters © 2026, a mono blurb, Website and Studio link columns, randy@whatmatters.so, Brand / Product / Web, five social cells, the WhatMatters wordmark, cropped WM letterforms, and Created by WhatMatters 2024—26. Below `md` the bands stack; the link columns stay side by side; the social cells stay one row. Plus glyphs are decorative. Social cells are icon-only anchors. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. `https` links open in a new tab.",
+        },
+      },
+    },
+    ruledGridFooterCopySource,
+  ),
+  render: () => <RuledGridFooterSpecimen />,
+  play: async ({ canvasElement }) => {
+    const root = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='root']");
+    const field = canvasElement.querySelector<HTMLElement>("[data-footer-ruled-field]");
+    const identity = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='identity']");
+    const links = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='links']");
+    if (!root || !field || !identity || !links) throw new Error("ruled footer missing");
+
+    const border = getComputedStyle(root).borderTopColor.replace(/\s/g, "");
+    expect(border).toBe("rgb(1,18,114)");
+    const fieldFill = getComputedStyle(field).backgroundColor.replace(/\s/g, "");
+    expect(fieldFill === "rgb(248,248,248)" || fieldFill === "rgb(255,255,255)").toBe(true);
+
+    const wordmark = canvasElement.querySelector("[data-footer-ruled='wordmark']");
+    const crop = canvasElement.querySelector("[data-footer-ruled='crop']");
+    expect(wordmark?.textContent).toBe("WhatMatters");
+    expect(wordmark?.getAttribute("aria-hidden")).toBe("true");
+    expect(crop?.textContent).toBe("WM");
+    expect(crop?.getAttribute("aria-hidden")).toBe("true");
+    expect(canvasElement.textContent).not.toContain("What Matters");
+
+    const socials = canvasElement.querySelectorAll<HTMLAnchorElement>("[data-footer-ruled='socials'] a");
+    expect(socials).toHaveLength(5);
+    for (const link of socials) {
+      expect(link.getAttribute("aria-label")?.length ?? 0).toBeGreaterThan(0);
+      expect(link.className).toContain("focus-visible:ring-brand");
+    }
+    const instagram = canvasElement.querySelector("a[href='https://www.instagram.com/thewhatmatters']");
+    expect(instagram?.getAttribute("target")).toBe("_blank");
+    expect(instagram?.getAttribute("rel")).toBe("noopener");
+    expect(instagram?.getAttribute("aria-label")).toBe("WhatMatters on Instagram");
+
+    const email = canvasElement.querySelector("a[href='mailto:randy@whatmatters.so']");
+    expect(email?.textContent).toBe("randy@whatmatters.so");
+
+    for (const plus of canvasElement.querySelectorAll("[data-footer-ruled='plus']")) {
+      expect(plus.getAttribute("aria-hidden")).toBe("true");
+    }
+
+    const navs = links.querySelectorAll("nav");
+    expect(navs).toHaveLength(2);
+    expect(Math.abs(navs[0]!.getBoundingClientRect().top - navs[1]!.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
+
+    if (window.innerWidth >= 768) {
+      expect(Math.abs(identity.getBoundingClientRect().top - links.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
+    }
+
+    await waitFor(() => {
+      const frame = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='wordmark-frame']");
+      const text = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='wordmark']");
+      expect(frame?.clientWidth ?? 0).toBeGreaterThan(0);
+      expect(text?.scrollWidth ?? 0).toBeLessThanOrEqual((frame?.clientWidth ?? 0) + 1);
+    });
+
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
+      document.documentElement.clientWidth + 1,
+    );
+  },
+};
+
+export const MarketingHeroRuledPattern: Story = {
+  name: "Pattern — marketing hero ruled grid",
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "fullscreen",
+      docs: {
+        description: {
+          story:
+            "The marketing hero (SiteNav, headline, intro, tile fan) fills **FooterReveal.Content**, then **ScrollHorizontal** with expandLast, then the page grid (`grid-page` with `!py-0`). **FooterReveal.Ruled** is the sticky footer on **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`). The gallery section ends on the expanded tile, so its bottom edge meets the footer. Reduced motion keeps the gallery as a native horizontal scroller and shows the footer sharp. **FooterReveal.Brand** remains **Pattern — marketing hero**.",
+        },
+      },
+    },
+    marketingHeroRuledCopySource,
+  ),
+  render: () => <MarketingHeroCanvas ruled />,
+  play: async ({ canvasElement }) => {
+    await waitFor(() => {
+      expect(gallerySection(canvasElement).getAttribute("data-expand-last")).toBe("true");
+    });
+    expectGalleryMeetsFooter(canvasElement);
+    expect(canvasElement.querySelector("[data-footer-ruled='wordmark']")?.textContent).toBe("WhatMatters");
+    expect(canvasElement.querySelector("h2")?.textContent).not.toBe("We Build WhatMatters");
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
+      document.documentElement.clientWidth + 1,
+    );
+  },
+};
+
+export const RuledGridOverflow390: Story = {
+  name: "Ruled grid — 390 overflow",
+  tags: ["test", "!dev", "!autodocs"],
+  globals: lockedViewportGlobals("mobile"),
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+    viewport: { options: storybookViewports },
+  },
+  render: () => <RuledGridFooterSpecimen />,
+  play: async ({ canvasElement }) => {
+    expect(window.innerWidth).toBeLessThan(768);
+    expect(window.innerWidth).toBeGreaterThanOrEqual(390 - 2);
+
+    const identity = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='identity']");
+    const links = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='links']");
+    const contact = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='contact']");
+    const socials = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='socials']");
+    const wordmark = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='wordmark']");
+    const crop = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='crop']");
+    if (!identity || !links || !contact || !socials || !wordmark || !crop) {
+      throw new Error("ruled footer bands missing");
+    }
+
+    expect(identity.getBoundingClientRect().bottom).toBeLessThanOrEqual(links.getBoundingClientRect().top + 1);
+    expect(links.getBoundingClientRect().bottom).toBeLessThanOrEqual(contact.getBoundingClientRect().top + 1);
+    expect(contact.getBoundingClientRect().bottom).toBeLessThanOrEqual(socials.getBoundingClientRect().top + 1);
+    expect(wordmark.getBoundingClientRect().bottom).toBeLessThanOrEqual(crop.getBoundingClientRect().top + 1);
+
+    const navs = links.querySelectorAll("nav");
+    expect(navs).toHaveLength(2);
+    expect(Math.abs(navs[0]!.getBoundingClientRect().top - navs[1]!.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
+    expect(socials.querySelectorAll("a")).toHaveLength(5);
+
+    await waitFor(() => {
+      const frame = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='wordmark-frame']");
+      expect(wordmark.scrollWidth).toBeLessThanOrEqual((frame?.clientWidth ?? 0) + 1);
+    });
+
+    const root = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='root']");
+    expect(root?.scrollWidth ?? 0).toBeLessThanOrEqual((root?.clientWidth ?? 0) + 1);
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
+      document.documentElement.clientWidth + 1,
+    );
   },
 };

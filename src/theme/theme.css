@@ -187,3 +187,13 @@
 [data-theme="dark"] {
   --shadow-inset-highlight: inset 0 1px 0 rgb(255 255 255 / 14%);
 }
+
+/**
+ * Ruled footer field. Light and soft themes use `bg-body`.
+ * Brand navy on the dark body is under 3:1, so the dark theme keeps the
+ * light on-brand surface and brand ink.
+ */
+[data-theme="dark"] .footer-reveal-ruled-field {
+  background-color: var(--color-on-brand);
+  color: var(--color-brand);
+}

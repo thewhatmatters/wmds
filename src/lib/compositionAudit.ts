@@ -155,6 +155,12 @@ export const compositionShellExceptions: CompositionShellException[] = [
     ruleId: "lucide-import",
     reason: "Toast owns built-in status glyphs passed to Badge and the dismiss glyph passed to IconButton.",
   },
+  {
+    file: "components/organisms/FooterReveal/FooterRevealRuled.tsx",
+    ruleId: "lucide-import",
+    reason:
+      "FooterReveal.Ruled owns the ruled-grid chrome glyphs (decorative plus, column arrow, services arrow) and the default social stand-ins. Social glyphs render through ButtonIcon. Lucide has no X, Dribbble, Instagram, or LinkedIn brand marks — defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle.",
+  },
 ];
 
 /**

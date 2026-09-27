@@ -115,3 +115,102 @@ export function footerRevealExternalLinkProps(
   if (/^https?:\/\//i.test(href)) return { target: "_blank", rel: "noopener" };
   return {};
 }
+
+/**
+ * Ruled-grid field. Page background with brand ink.
+ * Dark theme repaints this class to `--color-on-brand` — brand navy on the
+ * dark body is under 3:1. See `theme.css`.
+ */
+export const footerRevealRuledFieldClasses =
+  "footer-reveal-ruled-field bg-body text-brand";
+
+/** Page-grid box. 1px brand rules. Clips the fitted wordmark and the crop. */
+export const footerRevealRuledFrameClasses =
+  "mx-auto w-full min-w-0 max-w-[var(--grid-max)] overflow-hidden border border-brand text-brand";
+
+export const footerRevealRuledSplitClasses = "grid grid-cols-1 md:grid-cols-2";
+
+export const footerRevealRuledIdentityClasses =
+  "flex min-w-0 flex-col gap-4 border-b border-brand p-[var(--grid-pad)] md:border-r";
+
+export const footerRevealRuledLinksClasses =
+  "flex min-w-0 flex-col gap-4 border-b border-brand p-[var(--grid-pad)]";
+
+export const footerRevealRuledLinkColumnsClasses =
+  "grid min-w-0 grid-cols-2 gap-x-[var(--grid-gutter)]";
+
+export const footerRevealRuledColumnHeadingClasses = "type-label mb-4 text-brand";
+
+export const footerRevealRuledLinkListClasses = "m-0 flex list-none flex-col gap-3 p-0";
+
+/** Column link. Dotted rule spans the column; the arrow sits on the end. */
+export const footerRevealRuledLinkClasses =
+  "flex min-w-0 items-center justify-between gap-2 border-b border-dotted border-brand py-2 text-brand " +
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand";
+
+export const footerRevealRuledLinkLabelClasses =
+  "min-w-0 font-mono text-[length:var(--font-size-sm)] uppercase leading-none tracking-[0.14em]";
+
+/** Shell glyph slot — smaller than ButtonIcon's xs (28px) cluster target. */
+export const footerRevealRuledGlyphClasses =
+  "inline-flex size-3.5 shrink-0 text-brand [&>svg]:size-full [&>svg]:stroke-current";
+
+/** Decorative plus. Hidden below `md`, where the bands stack. */
+export const footerRevealRuledPlusClasses =
+  footerRevealRuledGlyphClasses + " pointer-events-none mt-auto hidden md:inline-flex";
+
+export const footerRevealRuledCopyrightClasses = "type-supporting min-w-0 text-brand";
+
+export const footerRevealRuledBlurbClasses =
+  "max-w-[36ch] font-mono text-[length:var(--font-size-sm)] leading-[1.45] text-brand";
+
+/** Corner mark. Typographic WM — not a separate logo asset. */
+export const footerRevealRuledMarkClasses =
+  "shrink-0 font-sans text-[length:var(--font-size-5xl)] font-bold leading-[0.8] tracking-[-0.04em] text-brand";
+
+export const footerRevealRuledContactClasses =
+  "flex min-w-0 flex-col justify-center border-b border-brand p-[var(--grid-pad)] md:border-r";
+
+export const footerRevealRuledContactRowClasses =
+  "flex min-w-0 flex-col gap-4 md:flex-row md:items-center md:justify-between";
+
+export const footerRevealRuledContactLabelClasses = "type-label text-brand";
+
+export const footerRevealRuledEmailClasses =
+  "type-label text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand";
+
+export const footerRevealRuledServicesClasses =
+  "type-label flex min-w-0 items-center gap-2 text-brand";
+
+export const footerRevealRuledSocialGridClasses =
+  "grid min-w-0 border-b border-brand";
+
+export const footerRevealRuledSocialCellClasses =
+  "flex aspect-square min-h-11 min-w-0 items-center justify-center border-r border-brand text-brand last:border-r-0 " +
+  "hover:bg-neutral focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand";
+
+export const footerRevealRuledWordmarkFrameClasses =
+  "@container flex w-full min-w-0 items-center overflow-hidden border-b border-brand px-[var(--grid-margin)] py-[var(--grid-baseline)]";
+
+/** Fully visible. `leading-none` keeps the caps inside the row; the crop row below is the bleed. */
+export const footerRevealRuledWordmarkClasses =
+  "w-max max-w-none shrink-0 whitespace-nowrap font-sans font-bold leading-none tracking-[-0.045em] text-brand";
+
+/**
+ * Oversized letterforms, top-aligned. The frame is shorter than the em box,
+ * so the bottom rule crops the letters.
+ */
+export const footerRevealRuledCropFrameClasses =
+  "@container aspect-[3/1] w-full min-w-0 overflow-hidden border-b border-brand";
+
+export const footerRevealRuledCropClasses =
+  "w-max max-w-none whitespace-nowrap font-sans font-bold leading-none tracking-[-0.06em] text-brand";
+
+export const footerRevealRuledCreditClasses =
+  "flex min-w-0 items-center justify-between gap-4 px-[var(--grid-pad)] py-[var(--grid-baseline)]";
+
+export const footerRevealRuledCreditMarkClasses =
+  "shrink-0 font-sans text-[length:var(--font-size-xl)] font-bold leading-none tracking-[-0.04em] text-brand";
+
+export const footerRevealRuledCreditCopyClasses =
+  "min-w-0 text-right font-mono text-[length:var(--font-size-sm)] leading-none text-brand";
