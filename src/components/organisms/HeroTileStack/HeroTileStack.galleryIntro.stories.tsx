@@ -235,6 +235,7 @@ function GalleryIntroHero() {
 
 export const MarketingHeroWithGalleryIntro: Story = {
   name: "Marketing hero with gallery intro",
+  tags: ["test"],
   parameters: withStoryCopySource(
     {
       wmdsLayout: "fullscreen",
