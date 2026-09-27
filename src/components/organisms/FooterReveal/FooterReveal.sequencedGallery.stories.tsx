@@ -357,6 +357,10 @@ export const SequencedMarketingHero: Story = {
     const action = [...section.querySelectorAll("button")].find((node) => node.textContent?.includes("See our work"));
     expect(action?.getAttribute("data-role")).toBe("outline");
     expect(action?.getAttribute("data-mono")).toBe("");
+    const statement = section.querySelector("h2");
+    expect(statement?.tagName).toBe("H2");
+    expect(statement?.getAttribute("role")).toBeNull();
+    expect(statement?.textContent?.replace(/\s+/g, " ").trim()).toBe(scrollHorizontalIntroStatement);
     await waitFor(() => {
       const heroSequences = [...canvasElement.querySelectorAll("[data-text-sequence]")].filter(
         (node) => !section.contains(node),
@@ -366,6 +370,26 @@ export const SequencedMarketingHero: Story = {
         expect(sequence.getAttribute("data-text-sequence-state")).toBe("playing");
       }
     });
+
+    const footer = canvasElement.querySelector("[data-footer-reveal='sticky']");
+    if (!(footer instanceof HTMLElement)) throw new Error("footer missing");
+    const footerTop = stickyFooterInFlowTop(footer);
+    expect(footerTop).not.toBeNull();
+    expectEdgesMeet(footerTop ?? 0, documentBottom(section));
+  },
+};
+
+export const SequencedGalleryHandoff: Story = {
+  tags: ["test", "!dev", "!autodocs"],
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+  },
+  render: () => <SequencedGalleryHeroPage />,
+  play: async ({ canvasElement }) => {
+    const section = canvasElement.querySelector("[data-scroll-horizontal]");
+    if (!(section instanceof HTMLElement)) throw new Error("gallery missing");
+    const intro = section.querySelector("[data-scroll-horizontal-intro]");
     if (intro instanceof HTMLElement) intro.scrollIntoView({ block: "center" });
     const statement = section.querySelector("h2");
     await waitFor(() => {
@@ -378,10 +402,6 @@ export const SequencedMarketingHero: Story = {
 
     const footer = canvasElement.querySelector("[data-footer-reveal='sticky']");
     if (!(footer instanceof HTMLElement)) throw new Error("footer missing");
-    const footerTop = stickyFooterInFlowTop(footer);
-    expect(footerTop).not.toBeNull();
-    expectEdgesMeet(footerTop ?? 0, documentBottom(section));
-
     const endOfGrow =
       section.getBoundingClientRect().top + window.scrollY + section.offsetHeight - window.innerHeight;
     window.scrollTo(0, Math.max(0, endOfGrow));
@@ -395,11 +415,16 @@ export const SequencedMarketingHero: Story = {
       const clip = getComputedStyle(layer).clipPath;
       const match = /inset\(([^)]+)\)/.exec(clip);
       expect(match).toBeTruthy();
-      const parts = (match?.[1] ?? "").replace(/round[\s\S]*$/, "").trim().split(/\s+/).map((part) => Number.parseFloat(part));
+      const parts = (match?.[1] ?? "")
+        .replace(/round[\s\S]*$/, "")
+        .trim()
+        .split(/\s+/)
+        .map((part) => Number.parseFloat(part));
       expect(parts.length).toBeGreaterThan(0);
       for (const inset of parts) expect(inset).toBeLessThanOrEqual(1);
       expectEdgesMeet(layer.getBoundingClientRect().bottom, section.getBoundingClientRect().bottom);
     });
+    const footerTop = stickyFooterInFlowTop(footer);
     expectEdgesMeet(footerTop ?? 0, documentBottom(section));
   },
 };
