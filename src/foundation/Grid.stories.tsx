@@ -22,6 +22,7 @@ const meta = {
           "**Breakpoints and the page grid are one contract.** `--grid-cols` steps at the same `md:` / `lg:` tokens as the mobile-first scale — 4 → 8 → 12. " +
           "`sm:` exists as a utility prefix; the column count does not change there. " +
           "Live spine: `grid-page` + `band` + **g** overlay (same content box). " +
+          "Column guides also cover sections that sit before `grid-page`. Baseline stays in the page box. " +
           "`--spacing` stays 4px; baseline is 8px. See **DESIGN.md → Grid**, **ADR-0003**, **ADR-0010**.",
       },
     },

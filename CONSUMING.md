@@ -128,15 +128,15 @@ import { GridOverlay } from "@whatmatters/wmds";
 </div>
 ```
 
-- **`grid-page`** — wrap + column tracks. Overlay **must** be a child of this box.
+- **`grid-page`** — wrap + column tracks. Mount **GridOverlay** as a child of this box so it inherits that page's `--grid-max`, margin, and gutter. Column guides and margin lines then cover the rest of the document, including sections that sit before the page, on those same tracks. Baseline stays in the page box. No extra class on the preceding section.
 - **`band`** — subgrid of those tracks (`@supports` fallback repeats `--grid-cols`).
 - Place by **column line** (`col-span-*` / `col-start-*`). This is layout, not a new atom.
 
-CSS-only (no React overlay): add `class="grid-on"` on `<html>` and an empty `<div class="grid-guides"><div class="grid-guides-cols"></div><div class="grid-guides-baseline"></div>…</div>` inside `grid-page`. Prefer `GridOverlay` when React is present.
+CSS-only (no React overlay): add `class="grid-on"` on `<html>` and an empty `<div class="grid-guides"><div class="grid-guides-cols"></div><div class="grid-guides-baseline"></div>…</div>` inside `grid-page`. That paints inside the page box. Prefer `GridOverlay` when React is present — it is what spreads the column guides over preceding sections.
 
 ### Overlay (`g`)
 
-`GridOverlay` composes the **`tailwindcss-react-grid-overlay` contract** (press **g**, React, columns) but is **bound to `--grid-*` inside `grid-page`**. The npm package paints a viewport overlay — that drifts from a centered max-width grid. WMDS does not depend on it.
+`GridOverlay` composes the **`tailwindcss-react-grid-overlay` contract** (press **g**, React, columns) but stays a child of `grid-page` so the tracks cannot drift from that page. A viewport-sized overlay ignores `--grid-max` and is the misaligned one. WMDS does not depend on the npm package.
 
 - Press **g** (ignored in inputs). Optional `visible` / `visibleByDefault` / `onVisibleChange`.
 - Mount in Storybook and local demos. Do **not** lock Pitchkit chrome to the overlay.

@@ -1,10 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sparkles } from "lucide-react";
 import { useState } from "react";
+import { expect, userEvent, waitFor } from "storybook/test";
 import { Badge } from "../../atoms/Badge/Badge";
 import { RiveHand } from "../../atoms/RiveHand/RiveHand";
 import { Button } from "../../atoms/Button/Button";
 import { SiteNav } from "../SiteNav/SiteNav";
+import { GridOverlay } from "../../../lib/GridOverlay";
+import { readGridColumnCount } from "../../../lib/gridOverlayUtils";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import {
   HeroTileStack,
@@ -300,4 +303,100 @@ export const Strength: Story = {
       />
     </div>
   ),
+};
+
+function HeroThenPage() {
+  const [on, setOn] = useState(true);
+
+  return (
+    <>
+      <MarketingHero />
+      <main className="grid-page min-h-[40vh] bg-body" data-testid="page">
+        <GridOverlay visible={on} onVisibleChange={setOn} keyboardShortcut={false} />
+        <div className="band">
+          <div
+            data-testid="lower"
+            className="col-span-full flex h-40 items-end bg-surface px-4 py-4 shadow-raised"
+          >
+            <Button role="secondary" size="sm" onClick={() => setOn((current) => !current)}>
+              Toggle grid
+            </Button>
+          </div>
+        </div>
+      </main>
+    </>
+  );
+}
+
+export const GuidesCoverPrecedingHero: Story = {
+  name: "Guides cover the preceding hero",
+  tags: ["test", "!dev", "!autodocs"],
+  globals: {
+    viewport: { value: "review1440", isRotated: false },
+  },
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+    viewport: {
+      options: {
+        review1440: {
+          name: "Review 1440",
+          styles: { width: "1440px", height: "900px" },
+          type: "desktop" as const,
+        },
+      },
+    },
+  },
+  render: () => <HeroThenPage />,
+  play: async ({ canvas, canvasElement }) => {
+    const hero = canvasElement.querySelector("section");
+    const page = canvasElement.querySelector("main");
+    if (!hero || !page) throw new Error("hero and page must both be mounted");
+
+    await waitFor(() => {
+      expect(canvasElement.querySelectorAll(".grid-guides-col").length).toBeGreaterThan(0);
+    });
+
+    const guides = canvasElement.querySelector(".grid-guides");
+    if (!guides) throw new Error("grid guides missing");
+    const guideStyle = getComputedStyle(guides);
+    expect(guideStyle.visibility).toBe("visible");
+    expect(guideStyle.pointerEvents).toBe("none");
+    expect(document.documentElement.classList.contains("grid-on")).toBe(true);
+    expect(window.innerWidth).toBeGreaterThanOrEqual(1440);
+
+    const columns = [...canvasElement.querySelectorAll(".grid-guides-col")];
+    expect(columns).toHaveLength(12);
+    expect(columns).toHaveLength(readGridColumnCount(page));
+
+    const heroRect = hero.getBoundingClientRect();
+    const columnRect = columns[0]!.getBoundingClientRect();
+    expect(columnRect.top).toBeLessThan(heroRect.top);
+    expect(columnRect.bottom).toBeGreaterThan(heroRect.bottom);
+    expect(columnRect.left).toBeLessThan(heroRect.right);
+    expect(columnRect.right).toBeGreaterThan(heroRect.left);
+
+    const lower = canvas.getByTestId("lower").getBoundingClientRect();
+    const first = columns[0]!.getBoundingClientRect();
+    const last = columns[columns.length - 1]!.getBoundingClientRect();
+    expect(first.left).toBeCloseTo(lower.left, 0);
+    expect(last.right).toBeCloseTo(lower.right, 0);
+
+    const pageBottom = page.getBoundingClientRect().bottom + window.scrollY;
+    expect(document.documentElement.scrollHeight).toBeLessThanOrEqual(Math.ceil(pageBottom) + 1);
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
+      document.documentElement.clientWidth + 1,
+    );
+
+    const heroDocTop = hero.getBoundingClientRect().top + window.scrollY;
+    const pageDocTop = page.getBoundingClientRect().top + window.scrollY;
+    await userEvent.click(canvas.getByRole("button", { name: "Toggle grid" }));
+    await waitFor(() => {
+      expect(getComputedStyle(guides).visibility).toBe("hidden");
+    });
+    expect(Number.parseFloat(getComputedStyle(guides).opacity)).toBe(0);
+    expect(document.documentElement.classList.contains("grid-on")).toBe(false);
+    expect(hero.getBoundingClientRect().top + window.scrollY).toBeCloseTo(heroDocTop, 0);
+    expect(page.getBoundingClientRect().top + window.scrollY).toBeCloseTo(pageDocTop, 0);
+  },
 };

@@ -88,7 +88,14 @@ html {
   }
 }
 
-/* ---- Overlay (same wrap as `.grid-page`; do not position this on the viewport) ---- */
+/*
+ * Overlay stays a child of `.grid-page` so tracks share that page's max-width,
+ * margin, and gutter. `--grid-guides-before` / `--grid-guides-after` (set by
+ * GridOverlay) pull the column guides and margin lines across the rest of the
+ * document — including sections that sit before the page — without a viewport
+ * overlay that ignores `--grid-max`. Baseline stays in the page box.
+ * `0px` is the inset page, so clipped specimens do not move.
+ */
 
 .grid-guides {
   position: absolute;
@@ -97,6 +104,8 @@ html {
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
+  --grid-guides-before: 0px;
+  --grid-guides-after: 0px;
   transition:
     opacity var(--duration-fast) var(--ease-standard),
     visibility var(--duration-fast) var(--ease-standard);
@@ -110,9 +119,9 @@ html {
 
 .grid-guides-cols {
   position: absolute;
-  top: var(--grid-pad);
+  top: calc(var(--grid-pad) - var(--grid-guides-before));
   right: var(--grid-margin);
-  bottom: var(--grid-pad);
+  bottom: calc(var(--grid-pad) - var(--grid-guides-after));
   left: var(--grid-margin);
   display: grid;
   grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
@@ -175,8 +184,8 @@ html {
 
 .grid-guides-margin {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: calc(0px - var(--grid-guides-before));
+  bottom: calc(0px - var(--grid-guides-after));
   width: 1px;
   background: var(--grid-guide-edge);
 }
