@@ -40,6 +40,20 @@ The marketing heroes need the last placeholder to become a full-viewport section
 - On the motion shell the heading stays in the tree as the section's accessible name and is `sr-only`. It is not painted at the top of the pinned window.
 - **Components/Layout/HeroTileStack → Pattern — marketing hero** and **Components/Layout/FooterReveal → Pattern — marketing hero** pass `expandLast`. **Pattern — project gallery** does not.
 
+## Update — gallery intro
+
+**Date:** 2026-09-27
+
+The gallery can open on a statement instead of a centered first card.
+
+- `intro` is optional. Pass **ScrollHorizontal.Intro** (`eyebrow`, `statement`, optional `action`). It is the first panel of the track. `heading` is not rendered when `intro` is set.
+- The eyebrow is a **Badge** `eyebrow` (mono, uppercase, `--font-size-xs`, accent fill). It is the section's accessible name (`aria-labelledby`). The statement is an `h2` on `type-display-2` at `--font-weight-normal`, with `--text-display-1-leading`. That is the largest display step that wraps to about four or five lines in the left columns. No new size token.
+- The action is **Button** `role="outline"` `size="sm"` `mono` with `endIcon` (ArrowRight on an accent square).
+- The panel width follows the page grid: every column below `md`, 4 of 8 from `md`, 6 of 12 from `lg`. At 1440px that is about 42% of the viewport. Padding-left is the grid content edge. Top padding is `--site-nav-height` plus `1rem` (`--spacing * 4`), the compact site nav pin, so the eyebrow clears the pill.
+- Travel parks the last card on the viewport center, same end frame as a gallery with no intro, so `expandLast` still grows from that card to `inset(0)`. Without `intro`, distance and clip are unchanged.
+- Reduced motion keeps one intro node and stacks it above the native horizontal scroller. The track is not pinned.
+- **Pattern — gallery intro**, **HeroTileStack → Marketing hero with gallery intro**, and **FooterReveal → Marketing hero with gallery intro** use the placeholder copy. **Pattern — marketing hero** on both organisms stays on the sr-only heading.
+
 ## Non-goals
 
 - Motion+.

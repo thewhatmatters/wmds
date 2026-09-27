@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MotionConfig } from "motion/react";
 import { expect, waitFor } from "storybook/test";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
+import { lockedViewportGlobals } from "../../../lib/viewports";
 import { ScrollHorizontal } from "./ScrollHorizontal";
 import { scrollHorizontalMarketingItems } from "./scrollHorizontalExamples";
 
@@ -19,7 +20,7 @@ const meta = {
         component: `
 ## Usage
 
-Marketing gallery that sits under the hero. Pass \`items\` (\`id\`, \`label\`, optional \`color\`) and an optional \`heading\`. \`className\` is layout only, on the root.
+Marketing gallery that sits under the hero. Pass \`items\` (\`id\`, \`label\`, optional \`color\`), an optional \`heading\`, and an optional \`intro\` (**ScrollHorizontal.Intro**). \`className\` is layout only, on the root.
 
 Vertical scroll drives the row. The track is \`300svh\`. A sticky \`h-svh\` window, one card wide and centered, shows the first card at the start and the last card at the end. The travel is \`(items.length - 1) * (item width + gap)\`, measured from the row.
 
@@ -31,6 +32,8 @@ Omit \`color\` to cycle \`--color-brand\`, \`--color-brand-soft\`, \`--color-pri
 
 \`heading\` names the section. It is \`sr-only\` while the window is pinned, so it does not sit under the site nav, and visible above the row when motion is reduced.
 
+\`intro\` replaces \`heading\`. **ScrollHorizontal.Intro** is the first panel: an eyebrow **Badge**, a \`type-display-2\` statement (normal weight, display-1 leading), and an outline mono **Button**. The panel sits in the left columns of the page grid, with top padding \`--site-nav-height\` plus the compact nav's 1rem offset, so it clears the pinned site nav. Tiles follow to the right and scroll in as the panel leaves to the left. The eyebrow is the section name. The statement is the \`h2\`. Reduced motion stacks that panel above the native row.
+
 \`prefers-reduced-motion\`, and \`MotionConfig\` \`reducedMotion="always"\`, skip the transform. The track height is auto, the window is not sticky, and the row is a native horizontal scroller with vertical padding (\`py-12\`). The heading is visible on that branch. The server render matches the motion shell. The OS preference is applied before paint.
 
 ## Anatomy
@@ -38,7 +41,8 @@ Omit \`color\` to cycle \`--color-brand\`, \`--color-brand-soft\`, \`--color-pri
 \`\`\`
 ScrollHorizontal — 300svh track, or 400svh with expandLast (auto when reduced)
 └── sticky svh viewport (relative, full width, overflow-x auto when reduced)
-    ├── heading (optional) — sr-only while pinned; visible when reduced
+    ├── heading (optional) — sr-only while pinned; visible when reduced; omitted when intro is set
+    ├── intro (optional) — first panel; eyebrow names the section; above the row when reduced
     ├── window — 400px, centered (280px below sm; full-width scroller when reduced)
     │   └── row — translateX, or no transform when reduced
     │       └── card — solid token color; label is sr-only
@@ -55,6 +59,7 @@ ScrollHorizontal — 300svh track, or 400svh with expandLast (auto when reduced)
 - Leave \`expandLast\` off when the track should release on the last centered card.
 - Turn \`expandLast\` on when the last tile should fill the viewport and scroll away as its own section. Pass \`expanded\` for content there. The slot is mounted twice; the motion layer and the reduced-motion section each hide the other. The section ends on the tile, including the reduced-motion \`h-svh\` section. Do not follow it with block padding when the next region is a footer. **FooterReveal → Pattern — marketing hero** sets \`!py-0\` on the guide \`grid-page\`.
 - Pass a real heading element. It names the section. It is \`sr-only\` while the window is pinned, and visible above the scroller when motion is reduced.
+- Pass \`intro={<ScrollHorizontal.Intro />}\` when the gallery opens on a statement. Do not also pass \`heading\` — the eyebrow replaces it. The arrow square is part of Intro.
         `.trim(),
       },
     },
@@ -255,4 +260,180 @@ export const ProjectGalleryPattern: Story = {
       />
     </div>
   ),
+};
+
+const galleryIntroCopySource = `
+import { ScrollHorizontal } from "@whatmatters/wmds";
+
+const projects = [
+  { id: "project-one", label: "Project One", color: "var(--color-brand)" },
+  { id: "project-two", label: "Project Two", color: "var(--color-brand-soft)" },
+  { id: "project-three", label: "Project Three", color: "var(--color-primary)" },
+  { id: "project-four", label: "Project Four", color: "var(--color-info-muted)" },
+  { id: "project-five", label: "Project Five", color: "var(--color-accent)" },
+];
+
+export function ProjectGalleryIntro() {
+  return (
+    <ScrollHorizontal
+      items={projects}
+      expandLast
+      intro={
+        <ScrollHorizontal.Intro
+          eyebrow="SELECTED WORK"
+          statement="Placeholder statement — a bold, left-aligned line about the work WhatMatters does for brands goes here."
+          action={{ label: "See our work" }}
+        />
+      }
+    />
+  );
+}
+`.trim();
+
+function GalleryIntro() {
+  return (
+    <ScrollHorizontal
+      items={scrollHorizontalMarketingItems}
+      expandLast
+      intro={
+        <ScrollHorizontal.Intro
+          eyebrow="SELECTED WORK"
+          statement="Placeholder statement — a bold, left-aligned line about the work WhatMatters does for brands goes here."
+          action={{ label: "See our work" }}
+        />
+      }
+    />
+  );
+}
+
+export const WithIntro: Story = {
+  name: "Pattern — gallery intro",
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "fullscreen",
+      docs: {
+        description: {
+          story:
+            "The intro is the first panel. The eyebrow names the section. The statement is the h2 on type-display-2 at normal weight. Tiles sit to the right and scroll in as the panel leaves left. expandLast still grows the last tile. Reduced motion stacks the same intro above the native row. Do not pass heading — the eyebrow replaces it.",
+        },
+      },
+    },
+    galleryIntroCopySource,
+  ),
+  render: () => (
+    <div className="bg-body">
+      <div className="flex h-[40svh] items-end justify-center px-[var(--grid-margin)] pb-8">
+        <p className="type-heading-2 text-fg">Scroll into the gallery</p>
+      </div>
+      <GalleryIntro />
+      <div className="flex h-svh items-center justify-center px-[var(--grid-margin)]">
+        <p className="type-heading-2 text-fg">After the gallery</p>
+      </div>
+    </div>
+  ),
+};
+
+export const IntroContract: Story = {
+  tags: ["test", "!dev", "!autodocs"],
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+  },
+  render: () => <GalleryIntro />,
+  play: async ({ canvasElement }) => {
+    const section = canvasElement.querySelector("[data-scroll-horizontal]");
+    if (!(section instanceof HTMLElement)) throw new Error("gallery missing");
+    expect(section.getAttribute("data-has-intro")).toBe("true");
+    expect(section.getAttribute("data-expand-last")).toBe("true");
+    const track = section.querySelector("[data-scroll-horizontal-track]");
+    const intro = section.querySelector("[data-scroll-horizontal-intro]");
+    if (!(track instanceof HTMLElement) || !(intro instanceof HTMLElement)) {
+      throw new Error("intro track missing");
+    }
+    expect(track.firstElementChild).toBe(intro);
+    const eyebrow = section.querySelector("[data-pattern='eyebrow']");
+    if (!(eyebrow instanceof HTMLElement)) throw new Error("eyebrow missing");
+    expect(eyebrow.textContent).toBe("SELECTED WORK");
+    expect(section.getAttribute("aria-labelledby")).toBe(eyebrow.id);
+    expect(section.getAttribute("aria-label")).toBeNull();
+    expect(section.textContent).not.toContain("Selected work");
+    const statement = section.querySelector("h2");
+    expect(statement?.textContent).toContain("Placeholder statement");
+    expect(statement?.textContent).toContain("WhatMatters");
+    const card = section.querySelector("li");
+    if (!(card instanceof HTMLElement)) throw new Error("card missing");
+    expect(card.getBoundingClientRect().left).toBeGreaterThanOrEqual(intro.getBoundingClientRect().right - 1);
+    const action = [...section.querySelectorAll("button")].find((node) =>
+      node.textContent?.includes("See our work"),
+    );
+    expect(action?.getAttribute("data-role")).toBe("outline");
+    expect(action?.getAttribute("data-mono")).toBe("");
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
+      document.documentElement.clientWidth + 1,
+    );
+  },
+};
+
+export const IntroAt390: Story = {
+  tags: ["test", "!dev", "!autodocs"],
+  globals: lockedViewportGlobals("mobile"),
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+  },
+  render: () => <GalleryIntro />,
+  play: async ({ canvasElement }) => {
+    expect(window.innerWidth).toBeLessThanOrEqual(400);
+    const intro = canvasElement.querySelector("[data-scroll-horizontal-intro]");
+    const statement = canvasElement.querySelector("h2");
+    if (!(intro instanceof HTMLElement) || !(statement instanceof HTMLElement)) {
+      throw new Error("intro missing");
+    }
+    expect(intro.scrollWidth).toBeLessThanOrEqual(intro.clientWidth + 1);
+    expect(statement.scrollWidth).toBeLessThanOrEqual(intro.clientWidth + 1);
+    expect(statement.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1);
+    expect(statement.getBoundingClientRect().left).toBeGreaterThanOrEqual(-1);
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
+      document.documentElement.clientWidth + 1,
+    );
+  },
+};
+
+export const IntroReduced: Story = {
+  tags: ["test", "!dev", "!autodocs"],
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+  },
+  render: () => (
+    <MotionConfig reducedMotion="always">
+      <GalleryIntro />
+    </MotionConfig>
+  ),
+  play: async ({ canvasElement }) => {
+    const section = canvasElement.querySelector("[data-scroll-horizontal]");
+    if (!(section instanceof HTMLElement)) throw new Error("gallery missing");
+    await waitFor(() => {
+      expect(section.getAttribute("data-reduce")).toBe("true");
+    });
+    const track = section.querySelector("[data-scroll-horizontal-track]");
+    const intro = section.querySelector("[data-scroll-horizontal-intro]");
+    const row = section.querySelector("ul");
+    if (!(track instanceof HTMLElement) || !(intro instanceof HTMLElement) || !(row instanceof HTMLElement)) {
+      throw new Error("reduced intro missing");
+    }
+    expect(track.firstElementChild).toBe(intro);
+    await waitFor(() => {
+      expect(getComputedStyle(track).flexDirection).toBe("column");
+    });
+    const sticky = track.parentElement;
+    if (!(sticky instanceof HTMLElement)) throw new Error("sticky missing");
+    expect(getComputedStyle(sticky).position).toBe("relative");
+    expect(intro.getBoundingClientRect().bottom).toBeLessThanOrEqual(row.getBoundingClientRect().top + 1);
+    expect(section.querySelector("[data-pattern='eyebrow']")?.textContent).toBe("SELECTED WORK");
+    const reducedTile = [...section.querySelectorAll("[data-scroll-horizontal-expanded]")].find((host) =>
+      host.className.includes("h-svh"),
+    );
+    expect(reducedTile?.textContent).toContain("Project Five");
+  },
 };

@@ -28,6 +28,10 @@ const roleIdlePaint: Record<ButtonRole, StatusPaint> = {
     backgroundColor: "var(--color-on-brand)",
     color: "var(--color-brand)",
   },
+  outline: {
+    backgroundColor: "transparent",
+    color: "var(--color-fg)",
+  },
 };
 
 const statusPaint: Record<Exclude<ButtonStatus, "idle">, StatusPaint> = {
@@ -59,6 +63,7 @@ export const roleIdleShellClasses: Record<ButtonRole, string> = {
   ghost: "",
   destructive: "",
   inverse: "shadow-raised",
+  outline: "",
 };
 
 export function getStatusPaint(status: ButtonStatus, role: ButtonRole): StatusPaint {

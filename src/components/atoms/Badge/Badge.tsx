@@ -9,6 +9,7 @@ import {
   badgeIconGapClasses,
   badgeIconOnlySizeClasses,
   badgeLabelSizeClasses,
+  badgeEyebrowClasses,
   badgeSolidClasses,
   badgeSurfaceClasses,
   type BadgeEmphasis,
@@ -56,13 +57,27 @@ export interface BadgeProps {
   avatar?: BadgeAvatar;
   /** Circular icon-only badge — **TaskRows** leading done/failed. Requires `icon`; no `children`. */
   iconOnly?: boolean;
+  /**
+   * Mono uppercase eyebrow chip on the accent fill. Text only — not with
+   * `icon`, `count`, `avatar`, or `iconOnly`. Names a section when the chip
+   * is the accessible label.
+   */
+  eyebrow?: boolean;
+  /** DOM id — section `aria-labelledby` targets the eyebrow chip. */
+  id?: string;
   /** Layout-only: margin in prose, flex placement. */
   className?: BadgeLayoutClassName;
 }
 
 function assertBadgePattern(
-  props: Pick<BadgeProps, "count" | "icon" | "avatar" | "iconOnly" | "children">,
+  props: Pick<BadgeProps, "count" | "icon" | "avatar" | "iconOnly" | "children" | "eyebrow">,
 ) {
+  if (props.eyebrow && (props.icon || props.iconOnly || props.count != null || props.avatar)) {
+    console.warn(
+      "[WMDS Badge] `eyebrow` is mutually exclusive with `icon`, `iconOnly`, `count`, and `avatar`.",
+    );
+  }
+
   if (props.avatar && (props.icon || props.iconOnly || props.count != null)) {
     console.warn("[WMDS Badge] `avatar` is mutually exclusive with `icon`, `iconOnly`, and `count`.");
   }
@@ -99,9 +114,24 @@ export function Badge({
   icon,
   avatar,
   iconOnly = false,
+  eyebrow = false,
+  id,
   className,
 }: BadgeProps) {
-  assertBadgePattern({ count, icon, avatar, iconOnly, children });
+  assertBadgePattern({ count, icon, avatar, iconOnly, children, eyebrow });
+
+  if (eyebrow && !icon && !iconOnly && count == null && avatar == null) {
+    return (
+      <span
+        id={id}
+        className={cn(badgeBaseClasses, badgeEyebrowClasses, className)}
+        data-pattern="eyebrow"
+        data-size={size}
+      >
+        {children}
+      </span>
+    );
+  }
 
   const surface = badgeSurfaceClasses(variant, emphasis);
   const isCount = count != null && avatar == null;

@@ -7,6 +7,11 @@ import { createRoot } from "react-dom/client";
 import { MotionConfig } from "motion/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { ScrollHorizontal } from "./ScrollHorizontal";
+import {
+  scrollHorizontalIntroActionLabel,
+  scrollHorizontalIntroEyebrow,
+  scrollHorizontalIntroStatement,
+} from "./scrollHorizontalExamples";
 import { scrollHorizontalMarketingItems } from "./scrollHorizontalExamples";
 import {
   scrollHorizontalClipFillsViewport,
@@ -22,7 +27,9 @@ import {
   scrollHorizontalGapCompact,
   scrollHorizontalHorizontalEnd,
   scrollHorizontalHorizontalViewports,
+  scrollHorizontalLeadTravel,
   scrollHorizontalItemColor,
+  scrollHorizontalGridMetrics,
   scrollHorizontalItemHeight,
   scrollHorizontalItemHeightCompact,
   scrollHorizontalItemWidth,
@@ -532,6 +539,17 @@ describe("ScrollHorizontal reduced-motion branch", () => {
     restore();
   });
 
+  it("keeps the default marketing heroes on the sr-only heading", () => {
+    for (const file of [
+      "src/components/organisms/HeroTileStack/HeroTileStack.stories.tsx",
+      "src/components/organisms/FooterReveal/FooterReveal.stories.tsx",
+    ]) {
+      const source = readFileSync(join(process.cwd(), file), "utf8");
+      expect(source).toContain('heading={<h2 className="type-heading-2 text-fg">Selected work</h2>}');
+      expect(source).not.toContain("ScrollHorizontal.Intro");
+    }
+  });
+
   it("keeps the footer marketing hero guide host flush in show code and the live pattern", () => {
     const source = readFileSync(
       join(process.cwd(), "src/components/organisms/FooterReveal/FooterReveal.stories.tsx"),
@@ -548,5 +566,120 @@ describe("ScrollHorizontal reduced-motion branch", () => {
     expect(live).toContain(host);
     expect(copy.match(/<main className="grid-page bg-body">/g)).toBeNull();
     expect(live.match(/<main className="grid-page bg-body">/g)).toBeNull();
+  });
+});
+
+describe("scrollHorizontal intro", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
+  it("sizes the panel to the left page-grid columns", () => {
+    const mobile = scrollHorizontalGridMetrics(390);
+    expect(mobile.introSpan).toBe(4);
+    expect(mobile.introWidth).toBeCloseTo(390 - 32);
+    expect(mobile.contentLeft).toBe(16);
+    expect(mobile.introWidth).toBeLessThanOrEqual(390);
+
+    const desktop = scrollHorizontalGridMetrics(1440);
+    expect(desktop.introSpan).toBe(6);
+    expect(desktop.cols).toBe(12);
+    expect(desktop.contentLeft).toBeCloseTo(104);
+    expect(desktop.introWidth / 1440).toBeGreaterThan(0.4);
+    expect(desktop.introWidth / 1440).toBeLessThan(0.45);
+
+    const wide = scrollHorizontalGridMetrics(1280);
+    expect(wide.introSpan).toBe(6);
+    expect(wide.contentLeft).toBe(24);
+  });
+
+  it("parks the last card on center when the first card starts further right", () => {
+    const metrics = scrollHorizontalGridMetrics(1440);
+    const itemWidth = scrollHorizontalItemWidth;
+    const gap = scrollHorizontalGap;
+    const pitch = itemWidth + gap;
+    const firstCardLeft = metrics.contentLeft + metrics.introWidth + gap;
+    const travel = scrollHorizontalLeadTravel(5, itemWidth, pitch, firstCardLeft, 1440);
+    const centered = scrollHorizontalDistance(5, itemWidth, gap);
+    expect(travel).toBeGreaterThan(centered);
+    const endLeft = (1440 - itemWidth) / 2;
+    expect(firstCardLeft + 4 * pitch - travel).toBeCloseTo(endLeft);
+
+    const frame: ScrollHorizontalExpandMetrics = {
+      viewportWidth: 1440,
+      viewportHeight: 900,
+      cardWidth: itemWidth,
+      cardHeight: scrollHorizontalItemHeight,
+      cardLeft: firstCardLeft,
+      cardTop: 200,
+      pitch,
+      radius: 12,
+      endLeft,
+    };
+    const parked = scrollHorizontalExpandClipRect(1, 0, frame, 5);
+    expect(parked.left).toBeCloseTo(endLeft);
+    const filled = scrollHorizontalExpandClipRect(1, 1, frame, 5);
+    expect(scrollHorizontalClipFillsViewport(filled, 1440, 900)).toBe(true);
+  });
+
+  it("renders the intro first in the track and names the section from the eyebrow", async () => {
+    const restore = installMatchMedia(false);
+    const view = await renderGallery(
+      createElement(ScrollHorizontal, {
+        items,
+        expandLast: true,
+        intro: createElement(ScrollHorizontal.Intro, {
+          eyebrow: scrollHorizontalIntroEyebrow,
+          statement: scrollHorizontalIntroStatement,
+          action: { label: scrollHorizontalIntroActionLabel },
+        }),
+      }),
+    );
+    const section = view.container.querySelector("[data-scroll-horizontal]");
+    expect(section?.getAttribute("data-has-intro")).toBe("true");
+    expect(section?.getAttribute("data-expand-last")).toBe("true");
+    expect(section?.className).toContain("h-[400svh]");
+    const track = section?.querySelector("[data-scroll-horizontal-track]");
+    const intro = section?.querySelector("[data-scroll-horizontal-intro]");
+    expect(track?.firstElementChild).toBe(intro);
+    const eyebrow = section?.querySelector("[data-pattern='eyebrow']");
+    expect(eyebrow?.textContent).toBe("SELECTED WORK");
+    expect(section?.getAttribute("aria-labelledby")).toBe(eyebrow?.id);
+    expect(section?.getAttribute("aria-label")).toBeNull();
+    expect(section?.textContent).not.toContain("Selected work");
+    expect(section?.querySelector("h2")?.textContent).toBe(scrollHorizontalIntroStatement);
+    expect(section?.querySelector("[data-role='outline']")?.textContent).toContain("See our work");
+    expect(section?.querySelectorAll("li")).toHaveLength(items.length);
+    expect(intro?.className).toContain("pt-[calc(var(--site-nav-height)+var(--spacing)*4)]");
+    view.unmount();
+    restore();
+  });
+
+  it("stacks the intro above the row when motion is reduced", async () => {
+    const restore = installMatchMedia(true);
+    const view = await renderGallery(
+      createElement(ScrollHorizontal, {
+        items,
+        heading: createElement("h2", null, "Selected work"),
+        intro: createElement(ScrollHorizontal.Intro, {
+          eyebrow: scrollHorizontalIntroEyebrow,
+          statement: scrollHorizontalIntroStatement,
+          action: { label: scrollHorizontalIntroActionLabel },
+        }),
+      }),
+    );
+    const section = view.container.querySelector("[data-scroll-horizontal]");
+    expect(section?.getAttribute("data-reduce")).toBe("true");
+    const track = section?.querySelector("[data-scroll-horizontal-track]");
+    const intro = section?.querySelector("[data-scroll-horizontal-intro]");
+    const row = section?.querySelector("ul");
+    expect(track?.firstElementChild).toBe(intro);
+    expect(intro?.compareDocumentPosition(row as Node) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(track?.className).toContain("group-data-[reduce=true]/scroll-horizontal:!flex-col");
+    expect(section?.querySelector("h2")?.textContent).toBe(scrollHorizontalIntroStatement);
+    expect(section?.textContent).not.toContain("Selected work");
+    expect(row?.getAttribute("style") ?? "").not.toMatch(/translate/i);
+    view.unmount();
+    restore();
   });
 });

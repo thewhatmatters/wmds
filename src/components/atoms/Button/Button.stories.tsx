@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { useState } from "react";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { ArrowRight, Pencil, Plus, Trash2 } from "lucide-react";
 import { Button, buttonLayouts, buttonRoles, getNextButtonStatus, type ButtonStatus } from "./Button";
 import { typographyClass } from "../../../lib/typography";
 import { storyCopySource, storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
@@ -42,11 +42,12 @@ const meta = {
 | **Row** | \`layout="row"\` + \`role="ghost"\` — flat full-width detail / settings lines |
 | **Nav** | \`layout="nav"\` + \`selected\` — inset pill rows; compose in **NavList** only |
 | **With icon** | \`icon\` (Lucide) + \`role\` |
+| **Outline mono** | \`role="outline"\` + \`mono\` + \`endIcon\` — hairline pill, mono uppercase label, accent arrow square |
 | **With count** | \`count\` + \`role\` (inbox / notifications) |
 | **Submit / async** | \`status\` + optional \`statusLabels\` |
 | **Link** | \`render={<a href />}\` — Button chrome on a real anchor (nav links, header CTAs) |
 
-Pill-shaped by default (\`layout="pill"\`). **Row layout** is flat full-width — for TaskRows detail lines and settings rows. **Roles:** \`primary\` (main CTA), \`secondary\`, \`ghost\`, \`destructive\`, \`inverse\` (surface fill and brand text, for a brand-blue field). No semantic color variants — success/error live on \`status\` morph only.
+Pill-shaped by default (\`layout="pill"\`). **Row layout** is flat full-width — for TaskRows detail lines and settings rows. **Roles:** \`primary\` (main CTA), \`secondary\`, \`ghost\`, \`destructive\`, \`inverse\` (surface fill and brand text, for a brand-blue field), \`outline\` (hairline border, transparent fill). \`mono\` sets a mono uppercase label. \`endIcon\` adds a trailing accent square. No semantic color variants — success/error live on \`status\` morph only.
 
 ## Best practices
 
@@ -124,6 +125,39 @@ import { Button } from "@whatmatters/wmds";
 <Button role="secondary">Cancel</Button>
   `),
   args: { role: "secondary", children: "Cancel" },
+};
+
+export const OutlineMono: Story = {
+  name: "Pattern — outline mono",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Hairline outline, transparent fill, mono uppercase label, and a trailing accent square. ScrollHorizontal.Intro uses this for the gallery action. size sm. endIcon is a Lucide glyph.",
+        },
+      },
+    },
+    `
+import { ArrowRight } from "lucide-react";
+import { Button } from "@whatmatters/wmds";
+
+<Button role="outline" size="sm" mono endIcon={<ArrowRight />}>
+  See our work
+</Button>
+    `,
+  ),
+  args: {
+    role: "outline",
+    size: "sm",
+    mono: true,
+    children: "See our work",
+  },
+  render: (args) => (
+    <Button {...args} endIcon={<ArrowRight />}>
+      See our work
+    </Button>
+  ),
 };
 
 export const InverseAction: Story = {

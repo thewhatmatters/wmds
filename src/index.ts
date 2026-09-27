@@ -480,6 +480,8 @@ export {
 } from "./components/organisms/HeroTileStack/HeroTileStack";
 export {
   ScrollHorizontal,
+  type ScrollHorizontalIntroAction,
+  type ScrollHorizontalIntroProps,
   type ScrollHorizontalItem,
   type ScrollHorizontalLayoutClassName,
   type ScrollHorizontalProps,

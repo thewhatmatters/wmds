@@ -5,7 +5,7 @@ import {
 } from "../../../lib/clusterScale";
 
 /** Prescribed action roles — not a semantic color picker. ADR-0004. */
-export const buttonRoles = ["primary", "secondary", "ghost", "destructive", "inverse"] as const;
+export const buttonRoles = ["primary", "secondary", "ghost", "destructive", "inverse", "outline"] as const;
 
 export type ButtonRole = (typeof buttonRoles)[number];
 
@@ -43,7 +43,20 @@ export const buttonRoleClasses: Record<ButtonRole, string> = {
     "bg-error text-on-error hover:bg-error-hover active:bg-error-active",
   /** Light pill on the navy field. Brand ink stays #011272 on white in both themes. */
   inverse: "bg-on-brand text-brand shadow-raised hover:bg-on-brand-hover active:bg-on-brand-hover",
+  /** Hairline outline, transparent fill. Gallery intro action. */
+  outline: "border border-fg bg-transparent text-fg hover:bg-ghost-hover active:bg-ghost-active",
 };
+
+/**
+ * Mono uppercase label. `!` beats the sans medium shell.
+ * Size is `--font-size-sm` (12px) — small, still a control label.
+ */
+export const buttonMonoLabelClasses =
+  "!font-mono !text-[length:var(--font-size-sm)] !font-normal !uppercase !leading-none !tracking-[0.14em]";
+
+/** Trailing accent square for a Lucide glyph (`endIcon`). */
+export const buttonEndIconSquareClasses =
+  "inline-flex size-5 shrink-0 items-center justify-center rounded-none bg-accent text-on-accent";
 
 /** Horizontal padding per size — md = 20px (`px-5`). Shared by action and status modes. */
 export const buttonHorizontalPadding: Record<ButtonSize, string> = {
