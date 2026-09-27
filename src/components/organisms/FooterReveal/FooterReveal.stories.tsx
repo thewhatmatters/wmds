@@ -4,6 +4,7 @@ import { useState } from "react";
 import { expect, fn, waitFor } from "storybook/test";
 import { Badge } from "../../atoms/Badge/Badge";
 import { GridOverlay } from "../../../lib/GridOverlay";
+import { stickyFooterInFlowTop } from "../../../lib/gridOverlayUtils";
 import { Button } from "../../atoms/Button/Button";
 import { RiveHand } from "../../atoms/RiveHand/RiveHand";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
@@ -487,7 +488,14 @@ export const MarketingHeroPattern: Story = {
     expect(columnRect.bottom).toBeGreaterThan(heroRect.bottom);
     expect(columnRect.left).toBeLessThan(heroRect.right);
     expect(columnRect.right).toBeGreaterThan(heroRect.left);
-    expect(columnRect.bottom).toBeLessThanOrEqual(footerRect.top + 1);
+    // Sticky `bottom: 0` paints the footer over the viewport. Its offsetTop is
+    // that stuck position. The cover's bottom is the in-flow edge.
+    const guideDocBottom = columnRect.bottom + window.scrollY;
+    const footerDocTop = stickyFooterInFlowTop(footer as HTMLElement);
+    expect(footerDocTop).not.toBeNull();
+    expect(guideDocBottom).toBeGreaterThan(heroRect.bottom + window.scrollY - 1);
+    expect(guideDocBottom).toBeLessThanOrEqual((footerDocTop ?? 0) + 1);
+    expect(footerRect.top).toBeLessThan(heroRect.bottom);
 
     const fieldGuides = footer.querySelector("[data-footer-reveal='guides']");
     const field = footer.querySelector("[data-footer-reveal='field']");
@@ -501,7 +509,8 @@ export const MarketingHeroPattern: Story = {
     const guideZ = Number.parseInt(getComputedStyle(fieldGuides).zIndex, 10);
     const fieldZ = Number.parseInt(getComputedStyle(field).zIndex, 10);
     expect(fieldZ).toBeGreaterThan(guideZ);
-    headline.scrollIntoView({ block: "center" });
+    const cover = canvasElement.querySelector("[data-footer-reveal='content']");
+    if (cover instanceof HTMLElement) window.scrollTo(0, cover.offsetHeight);
     const headlineBox = headline.getBoundingClientRect();
     const hit = document.elementFromPoint(
       headlineBox.left + headlineBox.width / 2,

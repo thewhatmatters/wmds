@@ -84,13 +84,14 @@ describe("gridGuidesDocumentSpread", () => {
   });
 
   it("stops page guides at a footer that sits below the host", () => {
-    expect(gridGuidesSpreadLimit(1200, 2400, 1800)).toBe(1800);
-    expect(gridGuidesDocumentSpread(800, 400, gridGuidesSpreadLimit(1200, 2400, 1800))).toEqual({
+    expect(gridGuidesSpreadLimit(800, 1200, 2400, 1800)).toBe(1800);
+    expect(gridGuidesDocumentSpread(800, 400, gridGuidesSpreadLimit(800, 1200, 2400, 1800))).toEqual({
       before: 800,
       after: 600,
     });
-    expect(gridGuidesSpreadLimit(1200, 2400, null)).toBe(2400);
-    expect(gridGuidesSpreadLimit(1200, 2400, 400)).toBe(2400);
+    expect(gridGuidesSpreadLimit(800, 1200, 2400, null)).toBe(2400);
+    expect(gridGuidesSpreadLimit(800, 1200, 2400, 400)).toBe(2400);
+    expect(gridGuidesSpreadLimit(800, 948, 1848, 948)).toBe(948);
   });
 
   it("keeps column guides on the page tracks via CSS variables", () => {

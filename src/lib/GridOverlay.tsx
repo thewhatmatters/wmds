@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "./cn";
 import {
-  elementDocumentTop,
   gridGuidesDocumentSpread,
   gridGuidesSpreadLimit,
+  stickyFooterInFlowTop,
   gridOverlayKeyShouldToggle,
   readGridColumnCount,
   setDocumentGridOn,
@@ -95,8 +95,8 @@ export function GridOverlay({
       const top = rect.top + window.scrollY;
       const documentHeight = document.documentElement.scrollHeight;
       const footer = document.querySelector("[data-footer-reveal='sticky']");
-      const footerTop = footer instanceof HTMLElement ? elementDocumentTop(footer) : null;
-      const spreadHeight = gridGuidesSpreadLimit(top + rect.height, documentHeight, footerTop);
+      const footerTop = footer instanceof HTMLElement ? stickyFooterInFlowTop(footer) : null;
+      const spreadHeight = gridGuidesSpreadLimit(top, top + rect.height, documentHeight, footerTop);
       const { before, after } = gridGuidesDocumentSpread(top, rect.height, spreadHeight);
       el.style.setProperty("--grid-guides-before", `${before}px`);
       el.style.setProperty("--grid-guides-after", `${after}px`);

@@ -39,14 +39,15 @@ export function gridGuidesDocumentSpread(
  * How far the page overlay may extend. A FooterReveal footer keeps its own
  * guides on the field, behind the type. The page overlay stops at that
  * footer's in-flow top so its stripes do not paint over the headline.
- * `footerTop` is null when the page has no reveal footer.
+ * `footerTop` is the cover's bottom (the footer's in-flow start), or null.
  */
 export function gridGuidesSpreadLimit(
+  hostTop: number,
   hostBottom: number,
   documentHeight: number,
   footerTop: number | null,
 ): number {
-  if (footerTop == null || footerTop + 1 < hostBottom) return documentHeight;
+  if (footerTop == null || footerTop + 1 < hostTop) return documentHeight;
   return Math.min(documentHeight, Math.max(hostBottom, footerTop));
 }
 
@@ -59,6 +60,17 @@ export function elementDocumentTop(el: HTMLElement): number {
     node = node.offsetParent as HTMLElement | null;
   }
   return top;
+}
+
+/**
+ * Where a sticky FooterReveal footer begins in document flow.
+ * `offsetTop` on the footer itself is the stuck position (often 0). The
+ * preceding cover's bottom is the in-flow edge the page guides must stop at.
+ */
+export function stickyFooterInFlowTop(footer: HTMLElement): number | null {
+  const cover = footer.previousElementSibling;
+  if (!(cover instanceof HTMLElement)) return null;
+  return elementDocumentTop(cover) + cover.offsetHeight;
 }
 
 /** Read `--grid-cols` from an element (the `grid-page` wrap, or `:root`). */
