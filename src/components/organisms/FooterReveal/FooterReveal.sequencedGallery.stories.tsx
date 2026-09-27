@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sparkles } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { expect, fn, waitFor } from "storybook/test";
 import { Button } from "../../atoms/Button/Button";
 import { RiveHand } from "../../atoms/RiveHand/RiveHand";
@@ -14,7 +14,7 @@ import { ScrollHorizontal } from "../ScrollHorizontal/ScrollHorizontal";
 import { scrollHorizontalIntroStatement, scrollHorizontalMarketingItems } from "../ScrollHorizontal/scrollHorizontalExamples";
 import { SiteNav } from "../SiteNav/SiteNav";
 import { FooterReveal } from "./FooterReveal";
-import { footerRevealFieldClasses } from "./footerRevealStyles";
+import { footerRevealFieldClasses, footerRevealRuledFieldClasses } from "./footerRevealStyles";
 
 const meta = {
   title: "Components/Layout/FooterReveal",
@@ -176,7 +176,7 @@ export function SequencedMarketingHeroPage() {
                   {" the one they remember."}
                 </>
               }
-              action={{ label: "Start a project" }}
+              action={{ label: "Start a project", onClick: openProjectModal }}
             />
           }
         />
@@ -199,7 +199,39 @@ export function SequencedMarketingHeroPage() {
 
 `.trim();
 
-function SequencedGalleryHeroPage() {
+const marketingHeroRuledCopySource = marketingHeroWithGalleryIntroCopySource
+  .replaceAll("footerRevealFieldClasses", "footerRevealRuledFieldClasses")
+  .replace(
+    `      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
+        <FooterReveal.Brand
+          headline="We Build WhatMatters"
+          ctaLabel="Start a project"
+          onCtaClick={openProjectModal}
+          wordmark="WHATMATTERS"
+          socialLinks={socialLinks}
+        />
+      </FooterReveal.Footer>`,
+    `      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
+        <FooterReveal.Ruled />
+      </FooterReveal.Footer>`,
+  )
+  .replace(
+    `const socialLinks = [
+  { label: "Contra", href: "#contra-TODO" },
+  { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
+  { label: "X", href: "#x-TODO" },
+] as const;
+
+`,
+    "",
+  )
+  .replace(
+    "export function SequencedMarketingHeroPage()",
+    "export function MarketingHeroRuledPage()",
+  );
+
+function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
   const [handsActive, setHandsActive] = useState(false);
   return (
     <FooterReveal>
@@ -294,7 +326,7 @@ function SequencedGalleryHeroPage() {
                   {" the one they remember."}
                 </>
               }
-              action={{ label: "Start a project" }}
+              action={{ label: "Start a project", onClick: openProjectModal }}
             />
           }
         />
@@ -302,14 +334,18 @@ function SequencedGalleryHeroPage() {
           <GridOverlay visible keyboardShortcut={false} />
         </main>
       </FooterReveal.Content>
-      <FooterReveal.Footer className={footerRevealFieldClasses}>
-        <FooterReveal.Brand
-          headline="We Build WhatMatters"
-          ctaLabel="Start a project"
-          onCtaClick={openProjectModal}
-          wordmark="WHATMATTERS"
-          socialLinks={socialLinks}
-        />
+      <FooterReveal.Footer className={ruled ? footerRevealRuledFieldClasses : footerRevealFieldClasses}>
+        {ruled ? (
+          <FooterReveal.Ruled />
+        ) : (
+          <FooterReveal.Brand
+            headline="We Build WhatMatters"
+            ctaLabel="Start a project"
+            onCtaClick={openProjectModal}
+            wordmark="WHATMATTERS"
+            socialLinks={socialLinks}
+          />
+        )}
       </FooterReveal.Footer>
     </FooterReveal>
   );
@@ -322,6 +358,43 @@ function documentBottom(el: HTMLElement): number {
 
 function expectEdgesMeet(a: number, b: number) {
   expect(Math.abs(a - b)).toBeLessThanOrEqual(1);
+}
+
+/** TextSequence stays at rest when the reader prefers reduced motion. */
+function textSequenceState(): "playing" | "rest" {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "rest" : "playing";
+}
+
+function reducedMotionList(query: string): MediaQueryList {
+  return {
+    matches: true,
+    media: query,
+    onchange: null,
+    addListener() {},
+    removeListener() {},
+    addEventListener() {},
+    removeEventListener() {},
+    dispatchEvent() {
+      return false;
+    },
+  };
+}
+
+function ReducedMotionFrame({ children }: { children: ReactNode }) {
+  const restore = useRef<typeof window.matchMedia | null>(null);
+  if (typeof window !== "undefined") {
+    if (!restore.current) restore.current = window.matchMedia.bind(window);
+    const original = restore.current;
+    window.matchMedia = (query: string) =>
+      query.includes("prefers-reduced-motion") ? reducedMotionList(query) : original(query);
+  }
+  useEffect(() => {
+    const original = restore.current;
+    return () => {
+      if (original) window.matchMedia = original;
+    };
+  }, []);
+  return children;
 }
 
 function pageGridContentStart(): number {
@@ -360,6 +433,51 @@ function expectSequencedHeroMatchesGallery(root: ParentNode) {
   );
 }
 
+async function playSequencedMarketingHero(canvasElement: HTMLElement) {
+  const section = canvasElement.querySelector("[data-scroll-horizontal]");
+  if (!(section instanceof HTMLElement)) throw new Error("gallery missing");
+  expect(section.getAttribute("data-expand-last")).toBe("true");
+  expect(section.getAttribute("data-has-intro")).toBe("true");
+  const track = section.querySelector("[data-scroll-horizontal-track]");
+  const intro = section.querySelector("[data-scroll-horizontal-intro]");
+  expect(track?.firstElementChild).toBe(intro);
+  expect(section.querySelector("[data-pattern='eyebrow']")?.textContent).toBe("SELECTED WORK");
+  expect(canvasElement.querySelector("h1")?.textContent?.replace(/\s+/g, " ").trim()).toBe("We Are WhatMatters");
+  const text = canvasElement.textContent?.replace(/\s+/g, " ") ?? "";
+  expect(text).toContain("Your brand is already online");
+  expect(text).toContain("Make it impossible to ignore");
+  expect(text).toContain(scrollHorizontalIntroStatement);
+  expect(section.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(3);
+  expect(canvasElement.querySelectorAll("[data-text-sequence]")).toHaveLength(3);
+  const action = [...section.querySelectorAll("button")].find((node) => node.textContent?.includes("Start a project"));
+  expect(action?.getAttribute("data-role")).toBe("secondary");
+  expect(action?.getAttribute("data-mono")).toBeNull();
+  expect(action?.querySelector("svg")).toBeNull();
+  openProjectModal.mockClear();
+  action?.click();
+  expect(openProjectModal).toHaveBeenCalledOnce();
+  const statement = section.querySelector("h2");
+  expect(statement?.tagName).toBe("H2");
+  expect(statement?.getAttribute("role")).toBeNull();
+  expect(statement?.textContent?.replace(/\s+/g, " ").trim()).toBe(scrollHorizontalIntroStatement);
+  await waitFor(() => {
+    const heroSequences = [...canvasElement.querySelectorAll("[data-text-sequence]")].filter(
+      (node) => !section.contains(node),
+    );
+    expect(heroSequences).toHaveLength(2);
+    for (const sequence of heroSequences) {
+      expect(sequence.getAttribute("data-text-sequence-state")).toBe(textSequenceState());
+    }
+  });
+  expectSequencedHeroMatchesGallery(canvasElement);
+
+  const footer = canvasElement.querySelector("[data-footer-reveal='sticky']");
+  if (!(footer instanceof HTMLElement)) throw new Error("footer missing");
+  const footerTop = stickyFooterInFlowTop(footer);
+  expect(footerTop).not.toBeNull();
+  expectEdgesMeet(footerTop ?? 0, documentBottom(section));
+}
+
 export const SequencedMarketingHero: Story = {
   name: "Pattern — marketing hero with sequenced gallery",
   tags: ["test"],
@@ -369,7 +487,7 @@ export const SequencedMarketingHero: Story = {
       docs: {
         description: {
           story:
-            "Full marketing page. The h1 stays We Are WhatMatters on type-display-1, with the rock and point hands on the e, the W, and the final s. HeroIntro step display sequences the subtext on type-display-2 at normal weight — the same size as the gallery statement: Your brand is already online, then Make it impossible to ignore. Shapes sit inline at about 1.15em. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. Three shapes sit in the statement (asterisk after screen, brand-soft pill after impression, accent diamond after yours). The accessible name is the plain sentence. The action is Button role secondary, labeled Start a project. expandLast still ends on the full-bleed tile, flush with FooterReveal. Reduced motion leaves both sequences at rest, shapes included, and keeps the grid inset.",
+            "Full marketing page on the navy footer. The h1 stays We Are WhatMatters on type-display-1, with the rock and point hands on the e, the W, and the final s. HeroIntro step display sequences the subtext on type-display-2 at normal weight — the same size as the gallery statement: Your brand is already online, then Make it impossible to ignore. Shapes sit inline at about 1.15em. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. Three shapes sit in the statement (asterisk after screen, brand-soft pill after impression, accent diamond after yours). The accessible name is the plain sentence. The action is Button role secondary, labeled Start a project, with onClick opening the project modal. expandLast still ends on the full-bleed tile, flush with FooterReveal.Brand. Reduced motion leaves both sequences at rest, shapes included, and keeps the grid inset. The ruled-footer page is Pattern — marketing hero ruled grid.",
         },
       },
     },
@@ -377,45 +495,51 @@ export const SequencedMarketingHero: Story = {
   ),
   render: () => <SequencedGalleryHeroPage />,
   play: async ({ canvasElement }) => {
-    const section = canvasElement.querySelector("[data-scroll-horizontal]");
-    if (!(section instanceof HTMLElement)) throw new Error("gallery missing");
-    expect(section.getAttribute("data-expand-last")).toBe("true");
-    expect(section.getAttribute("data-has-intro")).toBe("true");
-    const track = section.querySelector("[data-scroll-horizontal-track]");
-    const intro = section.querySelector("[data-scroll-horizontal-intro]");
-    expect(track?.firstElementChild).toBe(intro);
-    expect(section.querySelector("[data-pattern='eyebrow']")?.textContent).toBe("SELECTED WORK");
-    expect(canvasElement.querySelector("h1")?.textContent?.replace(/\s+/g, " ").trim()).toBe("We Are WhatMatters");
-    const text = canvasElement.textContent?.replace(/\s+/g, " ") ?? "";
-    expect(text).toContain("Your brand is already online");
-    expect(text).toContain("Make it impossible to ignore");
-    expect(text).toContain(scrollHorizontalIntroStatement);
-    expect(section.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(3);
-    expect(canvasElement.querySelectorAll("[data-text-sequence]")).toHaveLength(3);
-    const action = [...section.querySelectorAll("button")].find((node) => node.textContent?.includes("Start a project"));
-    expect(action?.getAttribute("data-role")).toBe("secondary");
-    expect(action?.getAttribute("data-mono")).toBeNull();
-    expect(action?.querySelector("svg")).toBeNull();
-    const statement = section.querySelector("h2");
-    expect(statement?.tagName).toBe("H2");
-    expect(statement?.getAttribute("role")).toBeNull();
-    expect(statement?.textContent?.replace(/\s+/g, " ").trim()).toBe(scrollHorizontalIntroStatement);
-    await waitFor(() => {
-      const heroSequences = [...canvasElement.querySelectorAll("[data-text-sequence]")].filter(
-        (node) => !section.contains(node),
-      );
-      expect(heroSequences).toHaveLength(2);
-      for (const sequence of heroSequences) {
-        expect(sequence.getAttribute("data-text-sequence-state")).toBe("playing");
-      }
-    });
-    expectSequencedHeroMatchesGallery(canvasElement);
+    await playSequencedMarketingHero(canvasElement);
+  },
+};
 
-    const footer = canvasElement.querySelector("[data-footer-reveal='sticky']");
-    if (!(footer instanceof HTMLElement)) throw new Error("footer missing");
-    const footerTop = stickyFooterInFlowTop(footer);
-    expect(footerTop).not.toBeNull();
-    expectEdgesMeet(footerTop ?? 0, documentBottom(section));
+export const SequencedGalleryReducedMotion: Story = {
+  name: "Sequenced gallery — reduced motion",
+  tags: ["test", "!dev", "!autodocs"],
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+  },
+  render: () => (
+    <ReducedMotionFrame>
+      <SequencedGalleryHeroPage />
+    </ReducedMotionFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    expect(window.matchMedia("(prefers-reduced-motion: reduce)").matches).toBe(true);
+    await playSequencedMarketingHero(canvasElement);
+    expect(textSequenceState()).toBe("rest");
+  },
+};
+
+export const MarketingHeroRuledPattern: Story = {
+  name: "Pattern — marketing hero ruled grid",
+  tags: ["test"],
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "fullscreen",
+      docs: {
+        description: {
+          story:
+            "The one full marketing page. Sequenced hero (same as Pattern — marketing hero text sequence): h1 We Are WhatMatters on type-display-1, HeroIntro step display on type-display-2. Then ScrollHorizontal with Intro and expandLast. Then FooterReveal.Ruled on footerRevealRuledFieldClasses. The intro action is Button role secondary, onClick openProjectModal. Show code is that whole page. Reduced motion leaves the sequences at rest. The gallery section ends on the expanded tile, flush with the ruled footer.",
+        },
+      },
+    },
+    marketingHeroRuledCopySource,
+  ),
+  render: () => <SequencedGalleryHeroPage ruled />,
+  play: async ({ canvasElement }) => {
+    await playSequencedMarketingHero(canvasElement);
+    expect(canvasElement.querySelector("[data-footer-ruled='wordmark']")?.textContent).toBe("WhatMatters");
+    expect(canvasElement.textContent).not.toContain("WHATMATTERS");
+    expect(canvasElement.textContent).not.toContain("We Build WhatMatters");
+    expect(canvasElement.textContent).not.toContain("Selected work");
   },
 };
 
@@ -432,38 +556,48 @@ export const SequencedGalleryHandoff: Story = {
     const intro = section.querySelector("[data-scroll-horizontal-intro]");
     if (intro instanceof HTMLElement) intro.scrollIntoView({ block: "center" });
     const statement = section.querySelector("h2");
+    const reduced = textSequenceState() === "rest";
     await waitFor(() => {
       expect(statement?.getAttribute("role")).toBeNull();
-      expect(statement?.getAttribute("aria-label")).toBe(scrollHorizontalIntroStatement);
       expect(statement?.querySelector("[data-text-sequence]")?.getAttribute("data-text-sequence-state")).toBe(
-        "playing",
+        textSequenceState(),
       );
+      expect(statement?.getAttribute("aria-label")).toBe(reduced ? null : scrollHorizontalIntroStatement);
     });
 
     const footer = canvasElement.querySelector("[data-footer-reveal='sticky']");
     if (!(footer instanceof HTMLElement)) throw new Error("footer missing");
-    const endOfGrow =
-      section.getBoundingClientRect().top + window.scrollY + section.offsetHeight - window.innerHeight;
-    window.scrollTo(0, Math.max(0, endOfGrow));
-    window.dispatchEvent(new Event("scroll"));
 
-    await waitFor(() => {
-      const layer = [...section.querySelectorAll("[data-scroll-horizontal-expanded]")].find(
-        (host) => host instanceof HTMLElement && getComputedStyle(host).position === "absolute",
+    if (reduced) {
+      const reducedSection = [...section.querySelectorAll("[data-scroll-horizontal-expanded]")].find(
+        (host) => host instanceof HTMLElement && host.className.includes("h-svh"),
       );
-      if (!(layer instanceof HTMLElement)) throw new Error("expand layer missing");
-      const clip = getComputedStyle(layer).clipPath;
-      const match = /inset\(([^)]+)\)/.exec(clip);
-      expect(match).toBeTruthy();
-      const parts = (match?.[1] ?? "")
-        .replace(/round[\s\S]*$/, "")
-        .trim()
-        .split(/\s+/)
-        .map((part) => Number.parseFloat(part));
-      expect(parts.length).toBeGreaterThan(0);
-      for (const inset of parts) expect(inset).toBeLessThanOrEqual(1);
-      expectEdgesMeet(layer.getBoundingClientRect().bottom, section.getBoundingClientRect().bottom);
-    });
+      if (!(reducedSection instanceof HTMLElement)) throw new Error("reduced section missing");
+      expectEdgesMeet(documentBottom(reducedSection), documentBottom(section));
+    } else {
+      const endOfGrow =
+        section.getBoundingClientRect().top + window.scrollY + section.offsetHeight - window.innerHeight;
+      window.scrollTo(0, Math.max(0, endOfGrow));
+      window.dispatchEvent(new Event("scroll"));
+
+      await waitFor(() => {
+        const layer = [...section.querySelectorAll("[data-scroll-horizontal-expanded]")].find(
+          (host) => host instanceof HTMLElement && getComputedStyle(host).position === "absolute",
+        );
+        if (!(layer instanceof HTMLElement)) throw new Error("expand layer missing");
+        const clip = getComputedStyle(layer).clipPath;
+        const match = /inset\(([^)]+)\)/.exec(clip);
+        expect(match).toBeTruthy();
+        const parts = (match?.[1] ?? "")
+          .replace(/round[\s\S]*$/, "")
+          .trim()
+          .split(/\s+/)
+          .map((part) => Number.parseFloat(part));
+        expect(parts.length).toBeGreaterThan(0);
+        for (const inset of parts) expect(inset).toBeLessThanOrEqual(1);
+        expectEdgesMeet(layer.getBoundingClientRect().bottom, section.getBoundingClientRect().bottom);
+      });
+    }
     const footerTop = stickyFooterInFlowTop(footer);
     expectEdgesMeet(footerTop ?? 0, documentBottom(section));
   },

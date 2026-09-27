@@ -386,46 +386,11 @@ export function MarketingHeroPage() {
 }
 `.trim();
 
-const marketingHeroRuledCopySource = marketingHeroCopySource
-  .replace(
-    `      <FooterReveal.Footer className={footerRevealFieldClasses}>
-        <FooterReveal.Brand
-          headline="We Build WhatMatters"
-          ctaLabel="Start a project"
-          onCtaClick={openProjectModal}
-          wordmark="WHATMATTERS"
-          socialLinks={socialLinks}
-        />
-      </FooterReveal.Footer>`,
-    `      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
-        <FooterReveal.Ruled />
-      </FooterReveal.Footer>`,
-  )
-  .replaceAll("footerRevealFieldClasses", "footerRevealRuledFieldClasses")
-  .replace(
-    `const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
-  { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
-] as const;
-
-`,
-    "",
-  )
-  .replace(
-    `// Opens the multi-step project form. There is no /start route.
-function openProjectModal() {}
-
-`,
-    "",
-  );
-
 function MarketingHeroPage() {
   return <MarketingHeroCanvas />;
 }
 
-function MarketingHeroCanvas({ ruled = false }: { ruled?: boolean } = {}) {
+function MarketingHeroCanvas() {
   const [handsActive, setHandsActive] = useState(false);
   return (
     <FooterReveal>
@@ -505,18 +470,14 @@ function MarketingHeroCanvas({ ruled = false }: { ruled?: boolean } = {}) {
           <GridOverlay visible keyboardShortcut={false} />
         </main>
       </FooterReveal.Content>
-      <FooterReveal.Footer className={ruled ? footerRevealRuledFieldClasses : footerRevealFieldClasses}>
-        {ruled ? (
-          <FooterReveal.Ruled />
-        ) : (
-          <FooterReveal.Brand
-            headline="We Build WhatMatters"
-            ctaLabel="Start a project"
-            onCtaClick={openProjectModal}
-            wordmark="WHATMATTERS"
-            socialLinks={socialLinks}
-          />
-        )}
+      <FooterReveal.Footer className={footerRevealFieldClasses}>
+        <FooterReveal.Brand
+          headline="We Build WhatMatters"
+          ctaLabel="Start a project"
+          onCtaClick={openProjectModal}
+          wordmark="WHATMATTERS"
+          socialLinks={socialLinks}
+        />
       </FooterReveal.Footer>
     </FooterReveal>
   );
@@ -815,34 +776,6 @@ export const RuledGridFooterPattern: Story = {
       expect(text?.scrollWidth ?? 0).toBeLessThanOrEqual((frame?.clientWidth ?? 0) + 1);
     });
 
-    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
-      document.documentElement.clientWidth + 1,
-    );
-  },
-};
-
-export const MarketingHeroRuledPattern: Story = {
-  name: "Pattern — marketing hero ruled grid",
-  parameters: withStoryCopySource(
-    {
-      wmdsLayout: "fullscreen",
-      docs: {
-        description: {
-          story:
-            "The marketing hero (SiteNav, headline, intro, tile fan) fills **FooterReveal.Content**, then **ScrollHorizontal** with expandLast, then the page grid (`grid-page` with `!py-0`). **FooterReveal.Ruled** is the sticky footer on **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`). The gallery section ends on the expanded tile, so its bottom edge meets the footer. Reduced motion keeps the gallery as a native horizontal scroller and shows the footer sharp. **FooterReveal.Brand** remains **Pattern — marketing hero**.",
-        },
-      },
-    },
-    marketingHeroRuledCopySource,
-  ),
-  render: () => <MarketingHeroCanvas ruled />,
-  play: async ({ canvasElement }) => {
-    await waitFor(() => {
-      expect(gallerySection(canvasElement).getAttribute("data-expand-last")).toBe("true");
-    });
-    expectGalleryMeetsFooter(canvasElement);
-    expect(canvasElement.querySelector("[data-footer-ruled='wordmark']")?.textContent).toBe("WhatMatters");
-    expect(canvasElement.querySelector("h2")?.textContent).not.toBe("We Build WhatMatters");
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
       document.documentElement.clientWidth + 1,
     );

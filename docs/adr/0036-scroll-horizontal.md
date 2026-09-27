@@ -74,7 +74,7 @@ The gallery statement animates with **TextSequence** (ADR-0037).
 
 - The statement is “Every screen is a first impression and we make yours the one they remember.” **TextSequence.Shape** sits after those words: asterisk (`brand`) after screen, pill (`brand-soft`) after impression, diamond (`accent`) after yours.
 - The `h2` accessible name is that plain sentence.
-- The action is **Button** `role="secondary"`, label Start a project, sentence case, with no `className`. Secondary has no icon slot, so there is no trailing arrow.
+- The action is **Button** `role="secondary"`, label Start a project, sentence case, with no `className`. Secondary has no icon slot, so there is no trailing arrow. `action.onClick` is that button. `action.href` composes the same button on an anchor.
 - **Pattern — gallery intro**, **HeroTileStack → Marketing hero with gallery intro**, **FooterReveal → Marketing hero with gallery intro**, and **FooterReveal → Pattern — marketing hero with sequenced gallery** use this copy and this action.
 
 ## Update — expand with an intro, cascade-safe padding
@@ -84,6 +84,15 @@ The gallery statement animates with **TextSequence** (ADR-0037).
 - With `intro`, travel and the grow read the **last card's** rest left (track translate removed) and the **card row's** gap. The clip parks that rect on the sticky center, then reaches `inset(0)`. The layer box is the sticky `h-svh` window — the same edge-to-edge tile as a gallery with no intro.
 - The intro track does not use a padding shorthand. Inline start, inline end, and block padding are longhands (`ps` / `pe` / `py`). A consuming app's later `.p-0 { padding: 0 }` cannot clear the grid inset.
 - The expand layer, the expanded slot, and the reduced-motion slot fill the sticky window with `top-0 right-0 bottom-0 left-0`. They do not use the `inset` shorthand.
+
+## Update — intro action
+
+**Date:** 2026-09-27
+
+- **ScrollHorizontal.Intro** `action` is `{ label, onClick }` or `{ label, href }`. `label` stays sentence case (Start a project).
+- `onClick` renders **Button** `role="secondary"` `type="button"`. That is the project-modal wiring. There is no trailing icon.
+- `href` renders the same **Button** on an anchor via `render={<a href />}` — the same link pattern **Button** already uses. It does not invent a second control.
+- **FooterReveal → Pattern — marketing hero ruled grid** is the full page: sequenced hero, this intro with `onClick`, `expandLast`, then **FooterReveal.Ruled**. Show code is that page.
 
 ## Non-goals
 

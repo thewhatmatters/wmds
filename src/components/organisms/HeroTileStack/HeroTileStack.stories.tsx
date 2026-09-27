@@ -847,12 +847,14 @@ export const MarketingHeroTextSequence: Story = {
     for (const shape of shapes) {
       expect(shape.getAttribute("aria-hidden")).toBe("true");
     }
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     await waitFor(() => {
       const sequences = [...canvasElement.querySelectorAll("[data-text-sequence]")];
       expect(sequences).toHaveLength(2);
       for (const sequence of sequences) {
-        expect(sequence.getAttribute("data-text-sequence-state")).toBe("playing");
-        expect(sequence.getAttribute("aria-label")?.length).toBeGreaterThan(0);
+        expect(sequence.getAttribute("data-text-sequence-state")).toBe(reduced ? "rest" : "playing");
+        if (reduced) expect(sequence.getAttribute("aria-label")).toBeNull();
+        else expect(sequence.getAttribute("aria-label")?.length).toBeGreaterThan(0);
       }
     });
   },

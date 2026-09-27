@@ -5,7 +5,7 @@ import { createElement } from "react";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { MotionConfig } from "motion/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { ScrollHorizontal } from "./ScrollHorizontal";
 import {
   scrollHorizontalIntroActionLabel,
@@ -717,9 +717,54 @@ describe("scrollHorizontal intro", () => {
     const action = section?.querySelector("[data-role='secondary']");
     expect(action?.textContent).toContain(scrollHorizontalIntroActionLabel);
     expect(action?.getAttribute("data-mono")).toBeNull();
+    expect(action?.tagName).toBe("BUTTON");
     expect(action?.querySelector("svg")).toBeNull();
     expect(section?.querySelectorAll("li")).toHaveLength(items.length);
     expect(intro?.className).toContain("pt-[calc(var(--site-nav-height)+var(--spacing)*4)]");
+    view.unmount();
+    restore();
+  });
+
+  it("calls onClick on the secondary action", async () => {
+    const restore = installMatchMedia(false);
+    const onClick = vi.fn();
+    const view = await renderGallery(
+      createElement(ScrollHorizontal, {
+        items,
+        intro: createElement(ScrollHorizontal.Intro, {
+          eyebrow: scrollHorizontalIntroEyebrow,
+          statement: scrollHorizontalIntroStatement,
+          action: { label: scrollHorizontalIntroActionLabel, onClick },
+        }),
+      }),
+    );
+    const action = view.container.querySelector("[data-role='secondary']");
+    expect(action?.tagName).toBe("BUTTON");
+    expect(action?.querySelector("svg")).toBeNull();
+    await act(async () => {
+      (action as HTMLButtonElement).click();
+    });
+    expect(onClick).toHaveBeenCalledOnce();
+    view.unmount();
+    restore();
+  });
+
+  it("renders the secondary action as an anchor when href is set", async () => {
+    const restore = installMatchMedia(false);
+    const view = await renderGallery(
+      createElement(ScrollHorizontal, {
+        items,
+        intro: createElement(ScrollHorizontal.Intro, {
+          eyebrow: scrollHorizontalIntroEyebrow,
+          statement: scrollHorizontalIntroStatement,
+          action: { label: scrollHorizontalIntroActionLabel, href: "/start" },
+        }),
+      }),
+    );
+    const action = view.container.querySelector("[data-role='secondary']");
+    expect(action?.tagName).toBe("A");
+    expect(action?.getAttribute("href")).toBe("/start");
+    expect(action?.querySelector("svg")).toBeNull();
     view.unmount();
     restore();
   });
