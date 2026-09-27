@@ -3,20 +3,19 @@
  *
  * Scrollbar: `src/theme/grid.css` already sets `scrollbar-gutter: stable` on
  * `html`. That gutter paints the page background beside a full-bleed field.
- * This shell does not hide the scrollbar. `overflow-x: clip` (with
- * `overflow-y: visible`) stops a full-bleed field from opening a horizontal
- * scrollbar — `clip` does not force the block axis into a scroll container,
- * so `position: sticky` on the footer keeps working. Do not add
- * `overflow-hidden` or `scrollbar-width: none` here.
+ * This shell does not hide the scrollbar. The root and the cover do not clip:
+ * an `overflow-x: clip` ancestor keeps GridOverlay's column guides inside
+ * `main`, so they never reach the hero. The wordmark is clipped on the brand
+ * panel and the footer field instead. Do not add `overflow-hidden` on the
+ * root — it breaks `position: sticky`. Do not set `scrollbar-width: none`.
  */
 
 /** Isolate root — negative z-index on the footer stays inside this stacking context. */
-export const footerRevealRootClasses =
-  "relative isolate w-full max-w-full overflow-x-clip overflow-y-visible";
+export const footerRevealRootClasses = "relative isolate w-full max-w-full overflow-visible";
 
 /** Page cover — opaque page background, at least one viewport tall, above the footer. */
 export const footerRevealContentClasses =
-  "relative z-[1] min-h-dvh w-full max-w-full overflow-x-clip bg-body";
+  "relative z-[1] min-h-dvh w-full max-w-full overflow-visible bg-body";
 
 /**
  * Sticky under-page footer. Class name is not `footer` — a bare `footer`

@@ -4,7 +4,6 @@ import {
   MotionConfigContext,
   motion,
   useMotionTemplate,
-  useReducedMotion,
   useScroll,
   useTransform,
   type MotionValue,
@@ -15,6 +14,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type ReactNode,
   type RefObject,
 } from "react";
@@ -76,6 +76,28 @@ interface FooterRevealContextValue {
 
 const FooterRevealContext = createContext<FooterRevealContextValue | null>(null);
 
+const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
+
+function subscribeReducedMotion(onStoreChange: () => void): () => void {
+  const media = window.matchMedia(reducedMotionQuery);
+  media.addEventListener("change", onStoreChange);
+  return () => media.removeEventListener("change", onStoreChange);
+}
+
+function readReducedMotion(): boolean {
+  return window.matchMedia(reducedMotionQuery).matches;
+}
+
+/**
+ * Server and the hydration render are sharp (`true`). Motion's
+ * `useReducedMotion()` stays `null` on the server, and treating that as
+ * "motion allowed" paints `blur(12px)` into the SSR HTML. A Next page then
+ * never reaches the sharp footer when the reader prefers reduced motion.
+ */
+function usePrefersReducedMotion(): boolean {
+  return useSyncExternalStore(subscribeReducedMotion, readReducedMotion, () => true);
+}
+
 function useFooterRevealContext(consumer: string): FooterRevealContextValue {
   const value = useContext(FooterRevealContext);
   if (!value) {
@@ -106,10 +128,11 @@ function FooterRevealRoot({ children, className }: FooterRevealProps) {
   /**
    * OS `prefers-reduced-motion` wins. `MotionConfig reducedMotion="always"`
    * also reduces. The default config value is `"never"` (no provider); that
-   * must not ignore the OS query.
+   * must not ignore the OS query. Unknown (SSR) is sharp — see
+   * `usePrefersReducedMotion`.
    */
   const { reducedMotion: reducedMotionConfig } = useContext(MotionConfigContext);
-  const reduceMotion = useReducedMotion() === true || reducedMotionConfig === "always";
+  const reduceMotion = usePrefersReducedMotion() || reducedMotionConfig === "always";
 
   useLayoutEffect(() => {
     const footer = footerRef.current;

@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sparkles } from "lucide-react";
 import { useState } from "react";
+import { expect, waitFor } from "storybook/test";
 import { Badge } from "../../atoms/Badge/Badge";
+import { GridOverlay } from "../../../lib/GridOverlay";
 import { Button } from "../../atoms/Button/Button";
 import { RiveHand } from "../../atoms/RiveHand/RiveHand";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
@@ -38,7 +40,7 @@ As the cover's bottom edge meets the viewport bottom, the footer scrubs from tra
 ## Anatomy
 
 \`\`\`
-FooterReveal — isolation: isolate (overflow-x clip, overflow-y visible)
+FooterReveal — isolation: isolate (overflow visible, so grid guides can leave the page)
 ├── FooterReveal.Content — relative, z-index 1, min-height 100dvh, bg-body
 └── FooterReveal.Footer — sticky, bottom 0, z-index -1
     └── fade (opacity) → scale / blur (origin 50% 100%, blur 12px → 0) → footer contents
@@ -56,7 +58,7 @@ FooterReveal — isolation: isolate (overflow-x clip, overflow-y visible)
 - The CTA uses **Button** \`role="inverse"\` (white fill, brand text). Do not recolor it with \`className\`.
 - Social links use **\`footerRevealFieldLinkClasses\`** at heading-1 size. \`https\` hrefs set \`target="_blank"\` and \`rel="noopener"\`. Placeholder hashes stay on the same page.
 - The wordmark is decorative (\`aria-hidden\`). It scales with the viewport and is clipped by the brand panel, so it does not widen the page.
-- Do not hide the scrollbar. The page grid already reserves a stable gutter. The root clips the inline axis only so a full-bleed field does not open a horizontal scrollbar.
+- Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. The brand panel and the footer field clip the wordmark.
 - Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`. The brand panel clips its own wordmark.
         `.trim(),
       },
@@ -239,7 +241,7 @@ const marketingHeroCopySource = `
 
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
-import { Badge, Button, FooterReveal, HeroTileStack, RiveHand, SiteNav, footerRevealFieldClasses } from "@whatmatters/wmds";
+import { Badge, Button, FooterReveal, GridOverlay, HeroTileStack, RiveHand, SiteNav, footerRevealFieldClasses } from "@whatmatters/wmds";
 
 const socialLinks = [
   { label: "Contra", href: "#contra-TODO" },
@@ -324,6 +326,9 @@ export function MarketingHeroPage() {
             <HeroTileStack tiles={tiles} />
           </div>
         </section>
+        <main className="grid-page bg-body">
+          <GridOverlay visible keyboardShortcut={false} />
+        </main>
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
         <FooterReveal.Brand
@@ -408,6 +413,9 @@ function MarketingHeroPage() {
             <HeroTileStack tiles={tiles} />
           </div>
         </section>
+        <main className="grid-page bg-body">
+          <GridOverlay visible keyboardShortcut={false} />
+        </main>
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
         <FooterReveal.Brand
@@ -437,4 +445,36 @@ export const MarketingHeroPattern: Story = {
     marketingHeroCopySource,
   ),
   render: () => <MarketingHeroPage />,
+  play: async ({ canvasElement }) => {
+    const hero = canvasElement.querySelector("section");
+    const page = canvasElement.querySelector("main");
+    const footer = canvasElement.querySelector("[data-footer-reveal='sticky']");
+    if (!hero || !page || !footer) throw new Error("hero, page, and footer must be mounted");
+
+    await waitFor(() => {
+      expect(canvasElement.querySelectorAll(".grid-guides-col").length).toBeGreaterThan(0);
+    });
+
+    const guides = canvasElement.querySelector(".grid-guides");
+    if (!guides) throw new Error("grid guides missing");
+    expect(getComputedStyle(guides).visibility).toBe("visible");
+    expect(document.documentElement.classList.contains("grid-on")).toBe(true);
+
+    const before = Number.parseFloat(guides.style.getPropertyValue("--grid-guides-before"));
+    expect(before).toBeGreaterThan(0);
+
+    const columns = [...canvasElement.querySelectorAll(".grid-guides-col")];
+    const columnRect = columns[0]!.getBoundingClientRect();
+    const heroRect = hero.getBoundingClientRect();
+    const footerRect = footer.getBoundingClientRect();
+    expect(columnRect.top).toBeLessThan(heroRect.top);
+    expect(columnRect.bottom).toBeGreaterThan(heroRect.bottom);
+    expect(columnRect.left).toBeLessThan(heroRect.right);
+    expect(columnRect.right).toBeGreaterThan(heroRect.left);
+    expect(columnRect.bottom).toBeGreaterThan(footerRect.top);
+
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
+      document.documentElement.clientWidth + 1,
+    );
+  },
 };

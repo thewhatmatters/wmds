@@ -38,8 +38,12 @@ describe("footerRevealAt", () => {
 describe("footer reveal shell", () => {
   it("keeps the cover above a sticky footer inside an isolate root", () => {
     expect(footerRevealRootClasses).toContain("isolate");
-    expect(footerRevealRootClasses).toContain("overflow-x-clip");
-    expect(footerRevealRootClasses).toContain("overflow-y-visible");
+    expect(footerRevealRootClasses).toContain("overflow-visible");
+    expect(footerRevealRootClasses).not.toContain("overflow-x-clip");
+    expect(footerRevealContentClasses).toContain("overflow-visible");
+    expect(footerRevealContentClasses).not.toContain("overflow-x-clip");
+    expect(footerRevealFadeClasses).toContain("overflow-x-clip");
+    expect(footerRevealStickyClasses).toContain("overflow-x-clip");
     expect(footerRevealContentClasses).toContain("z-[1]");
     expect(footerRevealContentClasses).toContain("min-h-dvh");
     expect(footerRevealContentClasses).toContain("bg-body");
