@@ -2,6 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { useContext, type ReactNode } from "react";
 import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
+import { TextSequence } from "../../molecules/TextSequence/TextSequence";
 import { ScrollHorizontalIntroContext } from "./scrollHorizontalIntroContext";
 import {
   scrollHorizontalIntroBodyClasses,
@@ -23,16 +24,22 @@ export interface ScrollHorizontalIntroProps {
    * Pass the short label, for example `SELECTED WORK`.
    */
   eyebrow: string;
-  /** Display statement. Rendered as the section `h2`. */
+  /**
+   * Display statement. Rendered as the section `h2` through **TextSequence**
+   * (`emphasis="none"`, `trigger="inView"`). Mix text with **TextSequence.Shape**.
+   * The heading keeps the plain sentence as its accessible name.
+   */
   statement: ReactNode;
   /** Outline action under the statement. Omit for a statement with no button. */
   action?: ScrollHorizontalIntroAction;
 }
 
 /**
- * First panel of **ScrollHorizontal**. Composes **Badge** `eyebrow`, display
- * type, and **Button** `role="outline"` `mono` with a trailing arrow square.
+ * First panel of **ScrollHorizontal**. Composes **Badge** `eyebrow`, a
+ * `type-display-2` **TextSequence** inside the `h2`, and **Button**
+ * `role="outline"` `mono` with a trailing arrow square.
  * The eyebrow is the section's accessible name. The statement is the `h2`.
+ * The sequence runs once, when the statement scrolls into view.
  */
 export function ScrollHorizontalIntro({ eyebrow, statement, action }: ScrollHorizontalIntroProps) {
   const labelId = useContext(ScrollHorizontalIntroContext);
@@ -43,7 +50,11 @@ export function ScrollHorizontalIntro({ eyebrow, statement, action }: ScrollHori
         <Badge eyebrow id={labelId}>
           {eyebrow}
         </Badge>
-        <h2 className={scrollHorizontalIntroStatementClasses}>{statement}</h2>
+        <h2 className={scrollHorizontalIntroStatementClasses}>
+          <TextSequence trigger="inView" emphasis="none">
+            {statement}
+          </TextSequence>
+        </h2>
       </div>
       {action ? (
         <Button

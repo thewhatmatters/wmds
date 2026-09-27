@@ -54,6 +54,20 @@ The gallery can open on a statement instead of a centered first card.
 - Reduced motion keeps one intro node and stacks it above the native horizontal scroller. The track is not pinned.
 - **Pattern — gallery intro**, **HeroTileStack → Marketing hero with gallery intro**, and **FooterReveal → Marketing hero with gallery intro** use the placeholder copy. **Pattern — marketing hero** on both organisms stays on the sr-only heading.
 
+## Update — statement sequence
+
+**Date:** 2026-09-27
+
+The gallery statement animates with **TextSequence** (ADR-0037).
+
+- **ScrollHorizontal.Intro** renders `statement` inside the real `h2` through **TextSequence** with `emphasis="none"` and `trigger="inView"`. The type step stays `type-display-2` at normal weight. Intro owns the sequence. Callers pass text and **TextSequence.Shape** marks. They do not wrap `statement` in another **TextSequence**.
+- The entrance runs once, when the statement intersects the viewport (threshold 0.35). It does not run on page load while the panel is below the fold.
+- The pattern places three marks between words: asterisk (`brand`, `#011272`), pill (`brand-soft`), diamond (`accent`). Marks are about 1.15em tall and do not grow the line box. `info-muted` stays available on the shape.
+- The `h2` keeps its heading role. Once the split runs, its accessible name is the plain sentence (shapes omitted). Shapes stay `aria-hidden`.
+- `prefers-reduced-motion` leaves the sentence and the shapes at rest. No split, no pop.
+- The eyebrow **Badge** and the outline mono **Button** are unchanged. `expandLast` and the flush footer handoff are unchanged. **SiteNav**, the hero `h1`, and the Rive hands are unchanged.
+- **FooterReveal → Pattern — marketing hero with sequenced gallery** shows the hero subtext sequence and this statement together.
+
 ## Non-goals
 
 - Motion+.

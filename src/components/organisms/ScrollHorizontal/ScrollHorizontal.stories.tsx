@@ -1,10 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MotionConfig } from "motion/react";
 import { expect, waitFor } from "storybook/test";
+import { useEffect, useRef, type ReactNode } from "react";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { lockedViewportGlobals } from "../../../lib/viewports";
 import { ScrollHorizontal } from "./ScrollHorizontal";
-import { scrollHorizontalMarketingItems } from "./scrollHorizontalExamples";
+import { scrollHorizontalIntroStatement, scrollHorizontalMarketingItems } from "./scrollHorizontalExamples";
+import {
+  scrollHorizontalIntroStatementMarkup,
+  scrollHorizontalIntroStatementNodes,
+} from "./scrollHorizontalIntroStatement";
 
 const meta = {
   title: "Components/Layout/ScrollHorizontal",
@@ -32,7 +37,7 @@ Omit \`color\` to cycle \`--color-brand\`, \`--color-brand-soft\`, \`--color-pri
 
 \`heading\` names the section. It is \`sr-only\` while the window is pinned, so it does not sit under the site nav, and visible above the row when motion is reduced.
 
-\`intro\` replaces \`heading\`. **ScrollHorizontal.Intro** is the first panel: an eyebrow **Badge**, a \`type-display-2\` statement (normal weight, display-1 leading), and an outline mono **Button**. The panel sits in the left columns of the page grid, with top padding \`--site-nav-height\` plus the compact nav's 1rem offset, so it clears the pinned site nav. Tiles follow to the right and scroll in as the panel leaves to the left. The eyebrow is the section name. The statement is the \`h2\`. Reduced motion stacks that panel above the native row.
+\`intro\` replaces \`heading\`. **ScrollHorizontal.Intro** is the first panel: an eyebrow **Badge**, a \`type-display-2\` statement (normal weight, display-1 leading) run through **TextSequence** (\`emphasis="none"\`, \`trigger="inView"\`), and an outline mono **Button**. The panel sits in the left columns of the page grid, with top padding \`--site-nav-height\` plus the compact nav's 1rem offset, so it clears the pinned site nav. Tiles follow to the right and scroll in as the panel leaves to the left. The eyebrow is the section name. The statement is the \`h2\`. Words slide up once when that heading scrolls into view. **TextSequence.Shape** marks between words pop on that same timeline (about 1.15em, token fills). Reduced motion stacks that panel above the native row and leaves the sentence and shapes at rest.
 
 \`prefers-reduced-motion\`, and \`MotionConfig\` \`reducedMotion="always"\`, skip the transform. The track height is auto, the window is not sticky, and the row is a native horizontal scroller with vertical padding (\`py-12\`). The heading is visible on that branch. The server render matches the motion shell. The OS preference is applied before paint.
 
@@ -59,7 +64,7 @@ ScrollHorizontal — 300svh track, or 400svh with expandLast (auto when reduced)
 - Leave \`expandLast\` off when the track should release on the last centered card.
 - Turn \`expandLast\` on when the last tile should fill the viewport and scroll away as its own section. Pass \`expanded\` for content there. The slot is mounted twice; the motion layer and the reduced-motion section each hide the other. The section ends on the tile, including the reduced-motion \`h-svh\` section. Do not follow it with block padding when the next region is a footer. **FooterReveal → Pattern — marketing hero** sets \`!py-0\` on the guide \`grid-page\`.
 - Pass a real heading element. It names the section. It is \`sr-only\` while the window is pinned, and visible above the scroller when motion is reduced.
-- Pass \`intro={<ScrollHorizontal.Intro />}\` when the gallery opens on a statement. Do not also pass \`heading\` — the eyebrow replaces it. The arrow square is part of Intro.
+- Pass \`intro={<ScrollHorizontal.Intro />}\` when the gallery opens on a statement. Put **TextSequence.Shape** marks in \`statement\`. Do not wrap \`statement\` in another **TextSequence** — Intro owns the sequence (\`emphasis="none"\`, once, when the heading scrolls into view). Do not also pass \`heading\` — the eyebrow replaces it. The arrow square is part of Intro.
         `.trim(),
       },
     },
@@ -263,7 +268,7 @@ export const ProjectGalleryPattern: Story = {
 };
 
 const galleryIntroCopySource = `
-import { ScrollHorizontal } from "@whatmatters/wmds";
+import { ScrollHorizontal, TextSequence } from "@whatmatters/wmds";
 
 const projects = [
   { id: "project-one", label: "Project One", color: "var(--color-brand)" },
@@ -281,7 +286,7 @@ export function ProjectGalleryIntro() {
       intro={
         <ScrollHorizontal.Intro
           eyebrow="SELECTED WORK"
-          statement="Placeholder statement — a bold, left-aligned line about the work WhatMatters does for brands goes here."
+          statement=${scrollHorizontalIntroStatementMarkup}
           action={{ label: "See our work" }}
         />
       }
@@ -298,7 +303,7 @@ function GalleryIntro() {
       intro={
         <ScrollHorizontal.Intro
           eyebrow="SELECTED WORK"
-          statement="Placeholder statement — a bold, left-aligned line about the work WhatMatters does for brands goes here."
+          statement={scrollHorizontalIntroStatementNodes()}
           action={{ label: "See our work" }}
         />
       }
@@ -314,7 +319,7 @@ export const WithIntro: Story = {
       docs: {
         description: {
           story:
-            "The intro is the first panel. The eyebrow names the section. The statement is the h2 on type-display-2 at normal weight. Tiles sit to the right and scroll in as the panel leaves left. expandLast still grows the last tile. Reduced motion stacks the same intro above the native row. Do not pass heading — the eyebrow replaces it.",
+            "The intro is the first panel. The eyebrow names the section. The statement is the h2 on type-display-2 at normal weight. TextSequence runs once when that heading scrolls into view: words slide up, and an asterisk, a brand-soft pill, and an accent diamond pop between words at about 1.15em. Tiles sit to the right and scroll in as the panel leaves left. expandLast still grows the last tile. Reduced motion stacks the same intro above the native row, with the sentence and shapes at rest. Do not pass heading — the eyebrow replaces it.",
         },
       },
     },
@@ -358,8 +363,17 @@ export const IntroContract: Story = {
     expect(section.getAttribute("aria-label")).toBeNull();
     expect(section.textContent).not.toContain("Selected work");
     const statement = section.querySelector("h2");
+    expect(statement?.tagName).toBe("H2");
+    expect(statement?.getAttribute("role")).toBeNull();
     expect(statement?.textContent).toContain("Placeholder statement");
     expect(statement?.textContent).toContain("WhatMatters");
+    expect(statement?.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(3);
+    await waitFor(() => {
+      expect(statement?.getAttribute("aria-label")).toBe(scrollHorizontalIntroStatement);
+      expect(statement?.querySelector("[data-text-sequence]")?.getAttribute("data-text-sequence-state")).toBe(
+        "playing",
+      );
+    });
     const card = section.querySelector("li");
     if (!(card instanceof HTMLElement)) throw new Error("card missing");
     expect(card.getBoundingClientRect().left).toBeGreaterThanOrEqual(intro.getBoundingClientRect().right - 1);
@@ -435,5 +449,69 @@ export const IntroReduced: Story = {
       host.className.includes("h-svh"),
     );
     expect(reducedTile?.textContent).toContain("Project Five");
+  },
+};
+
+function reducedMotionList(query: string): MediaQueryList {
+  return {
+    matches: true,
+    media: query,
+    onchange: null,
+    addListener() {},
+    removeListener() {},
+    addEventListener() {},
+    removeEventListener() {},
+    dispatchEvent() {
+      return false;
+    },
+  };
+}
+
+function ReducedMotionFrame({ children }: { children: ReactNode }) {
+  const restore = useRef<typeof window.matchMedia | null>(null);
+  if (typeof window !== "undefined") {
+    if (!restore.current) restore.current = window.matchMedia.bind(window);
+    const original = restore.current;
+    window.matchMedia = (query: string) =>
+      query.includes("prefers-reduced-motion") ? reducedMotionList(query) : original(query);
+  }
+  useEffect(() => {
+    const original = restore.current;
+    return () => {
+      if (original) window.matchMedia = original;
+    };
+  }, []);
+  return children;
+}
+
+export const IntroSequenceReduced: Story = {
+  tags: ["test", "!dev", "!autodocs"],
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+  },
+  render: () => (
+    <ReducedMotionFrame>
+      <GalleryIntro />
+    </ReducedMotionFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const section = canvasElement.querySelector("[data-scroll-horizontal]");
+    if (!(section instanceof HTMLElement)) throw new Error("gallery missing");
+    const statement = section.querySelector("h2");
+    if (!(statement instanceof HTMLElement)) throw new Error("statement missing");
+    await waitFor(() => {
+      expect(section.getAttribute("data-reduce")).toBe("true");
+      expect(statement.querySelector("[data-text-sequence]")?.getAttribute("data-text-sequence-state")).toBe("rest");
+    });
+    expect(statement.getAttribute("role")).toBeNull();
+    expect(statement.getAttribute("aria-label")).toBeNull();
+    expect(statement.textContent?.replace(/\s+/g, " ").trim()).toBe(scrollHorizontalIntroStatement);
+    const shapes = [...statement.querySelectorAll("[data-text-sequence-shape]")];
+    expect(shapes).toHaveLength(3);
+    for (const shape of shapes) expect(shape.getAttribute("aria-hidden")).toBe("true");
+    const word = statement.querySelector("[data-text-sequence-word]");
+    expect(word).not.toBeNull();
+    expect(getComputedStyle(word!).transform).toBe("none");
   },
 };

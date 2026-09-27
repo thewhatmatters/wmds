@@ -35,7 +35,8 @@ The intro stays **HeroIntro** (`type-large`, one step above body, shared leading
 ## Non-goals
 
 - GSAP on any component other than **TextSequence** (no ScrollTrigger, no page transitions, no replacement for `motion/react`).
-- Changing **Pattern — marketing hero**, **SiteNav**, **FooterReveal**, or **ScrollHorizontal**.
+- Changing **Pattern — marketing hero**, **SiteNav**, or **FooterReveal** internals.
+- GSAP on **ScrollHorizontal** itself. The gallery statement composes **TextSequence** (ADR-0036 update). Only **TextSequence** imports GSAP.
 - A reduced-motion prop. The OS media query is the contract.
 - Lucide icons as the decorative shapes.
 

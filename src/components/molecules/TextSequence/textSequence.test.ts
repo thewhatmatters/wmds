@@ -73,6 +73,48 @@ describe("TextSequence server markup", () => {
   });
 });
 
+describe("TextSequence inside a heading", () => {
+  it("keeps the heading role and names it with the plain sentence", async () => {
+    vi.stubGlobal(
+      "matchMedia",
+      (query: string) =>
+        ({
+          matches: false,
+          media: query,
+          onchange: null,
+          addListener() {},
+          removeListener() {},
+          addEventListener() {},
+          removeEventListener() {},
+          dispatchEvent() {
+            return false;
+          },
+        }) as MediaQueryList,
+    );
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+    const root = createRoot(container);
+    await act(async () => {
+      root.render(
+        createElement(
+          "h2",
+          null,
+          createElement(TextSequence, { trigger: "mount", emphasis: "none", children: "Placeholder statement" }),
+        ),
+      );
+    });
+    const heading = container.querySelector("h2");
+    expect(heading?.getAttribute("role")).toBeNull();
+    expect(heading?.tagName).toBe("H2");
+    expect(heading?.getAttribute("aria-label")).toBe("Placeholder statement");
+    expect(heading?.querySelector("[data-text-sequence]")?.getAttribute("role")).toBeNull();
+    expect(heading?.querySelector("[data-text-sequence]")?.getAttribute("aria-label")).toBeNull();
+    root.unmount();
+    container.remove();
+    vi.unstubAllGlobals();
+  });
+});
+
 describe("TextSequence reduced motion", () => {
   it("stays at rest with hidden shapes and the full sentence", async () => {
     vi.stubGlobal("matchMedia", reducedMatchMedia);

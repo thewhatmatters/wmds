@@ -193,8 +193,17 @@ function playSequence(root: HTMLElement, config: SequenceMotionConfig) {
     reduceWhiteSpace: true,
     onSplit(self) {
       self.elements.forEach((element) => {
+        const heading = element.closest("h1, h2, h3, h4, h5, h6");
+        if (heading instanceof HTMLElement && heading !== element) {
+          heading.setAttribute("aria-label", plain);
+          element.removeAttribute("aria-label");
+          element.removeAttribute("role");
+          return;
+        }
         element.setAttribute("aria-label", plain);
-        element.setAttribute("role", "paragraph");
+        if (!/^H[1-6]$/.test(element.tagName)) {
+          element.setAttribute("role", "paragraph");
+        }
       });
       for (const line of self.lines) {
         (line as HTMLElement).style.display = "block";
@@ -344,16 +353,18 @@ function TextSequenceRoot({
         root.dataset.textSequenceState = "rest";
       } else if (trigger === "inView") {
         root.dataset.textSequenceState = "rest";
-        observer = new IntersectionObserver(
-          (entries) => {
-            if (!entries.some((entry) => entry.isIntersecting)) return;
-            observer?.disconnect();
-            observer = undefined;
-            start();
-          },
-          { threshold: 0.35 },
-        );
-        observer.observe(root);
+        if (typeof IntersectionObserver === "function") {
+          observer = new IntersectionObserver(
+            (entries) => {
+              if (!entries.some((entry) => entry.isIntersecting)) return;
+              observer?.disconnect();
+              observer = undefined;
+              start();
+            },
+            { threshold: 0.35 },
+          );
+          observer.observe(root);
+        }
       } else {
         start();
       }

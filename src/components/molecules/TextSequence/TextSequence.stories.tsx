@@ -190,7 +190,7 @@ Words slide up from behind a mask, staggered. Shapes pop (scale and rotate) half
 
 \`prefers-reduced-motion\`: no split, no pop, no idle. The sentence stays at rest. The server render matches that rest state, so hydration does not hide the text and no-JS keeps it visible.
 
-Screen readers get the plain sentence once. Shapes are \`aria-hidden\`. Split words are hidden from the tree and the block's \`aria-label\` is the sentence.
+Screen readers get the plain sentence once. Shapes are \`aria-hidden\`. Split words are hidden from the tree and the block's \`aria-label\` is the sentence. When the sequence sits inside a heading, that heading keeps its role and takes the plain sentence as its accessible name. The sequence does not become a paragraph inside the heading.
 
 Install \`gsap\` and \`@gsap/react\` with WMDS. Only this component imports them. See **ADR-0037**.
 

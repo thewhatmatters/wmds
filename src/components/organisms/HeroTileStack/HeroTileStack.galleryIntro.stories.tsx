@@ -6,6 +6,7 @@ import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
 import { RiveHand } from "../../atoms/RiveHand/RiveHand";
 import { HeroIntro } from "../../molecules/HeroIntro/HeroIntro";
+import { scrollHorizontalIntroStatementNodes } from "../ScrollHorizontal/scrollHorizontalIntroStatement";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { HeroTileStack } from "./HeroTileStack";
 import { ScrollHorizontal } from "../ScrollHorizontal/ScrollHorizontal";
@@ -40,7 +41,7 @@ const marketingHeroWithGalleryIntroCopySource = `
 
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
-import { Badge, Button, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav } from "@whatmatters/wmds";
+import { Badge, Button, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence } from "@whatmatters/wmds";
 
 const tiles = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },
@@ -135,7 +136,17 @@ export function MarketingHeroWithGalleryIntro() {
         intro={
           <ScrollHorizontal.Intro
             eyebrow="SELECTED WORK"
-            statement="Placeholder statement — a bold, left-aligned line about the work WhatMatters does for brands goes here."
+            statement={
+              <>
+                {"Placeholder"}
+                <TextSequence.Shape variant="asterisk" />
+                {" statement — a bold, left-aligned "}
+                <TextSequence.Shape variant="pill" tone="brand-soft" />
+                {" line about the work "}
+                <TextSequence.Shape variant="diamond" tone="accent" />
+                {" WhatMatters does for brands goes here."}
+              </>
+            }
             action={{ label: "See our work" }}
           />
         }
@@ -224,7 +235,7 @@ function GalleryIntroHero() {
         intro={
           <ScrollHorizontal.Intro
             eyebrow="SELECTED WORK"
-            statement="Placeholder statement — a bold, left-aligned line about the work WhatMatters does for brands goes here."
+            statement={scrollHorizontalIntroStatementNodes()}
             action={{ label: "See our work" }}
           />
         }

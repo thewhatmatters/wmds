@@ -12,6 +12,7 @@ import {
   scrollHorizontalIntroEyebrow,
   scrollHorizontalIntroStatement,
 } from "./scrollHorizontalExamples";
+import { scrollHorizontalIntroStatementNodes } from "./scrollHorizontalIntroStatement";
 import { scrollHorizontalMarketingItems } from "./scrollHorizontalExamples";
 import {
   scrollHorizontalClipFillsViewport,
@@ -630,7 +631,7 @@ describe("scrollHorizontal intro", () => {
         expandLast: true,
         intro: createElement(ScrollHorizontal.Intro, {
           eyebrow: scrollHorizontalIntroEyebrow,
-          statement: scrollHorizontalIntroStatement,
+          statement: scrollHorizontalIntroStatementNodes(),
           action: { label: scrollHorizontalIntroActionLabel },
         }),
       }),
@@ -647,7 +648,14 @@ describe("scrollHorizontal intro", () => {
     expect(section?.getAttribute("aria-labelledby")).toBe(eyebrow?.id);
     expect(section?.getAttribute("aria-label")).toBeNull();
     expect(section?.textContent).not.toContain("Selected work");
-    expect(section?.querySelector("h2")?.textContent).toBe(scrollHorizontalIntroStatement);
+    const statement = section?.querySelector("h2");
+    expect(statement?.tagName).toBe("H2");
+    expect(statement?.getAttribute("role")).toBeNull();
+    expect(statement?.textContent?.replace(/\s+/g, " ").trim()).toBe(scrollHorizontalIntroStatement);
+    expect(statement?.querySelector("[data-text-sequence]")?.getAttribute("data-plain")).toBe(
+      scrollHorizontalIntroStatement,
+    );
+    expect(statement?.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(3);
     expect(section?.querySelector("[data-role='outline']")?.textContent).toContain("See our work");
     expect(section?.querySelectorAll("li")).toHaveLength(items.length);
     expect(intro?.className).toContain("pt-[calc(var(--site-nav-height)+var(--spacing)*4)]");
@@ -663,7 +671,7 @@ describe("scrollHorizontal intro", () => {
         heading: createElement("h2", null, "Selected work"),
         intro: createElement(ScrollHorizontal.Intro, {
           eyebrow: scrollHorizontalIntroEyebrow,
-          statement: scrollHorizontalIntroStatement,
+          statement: scrollHorizontalIntroStatementNodes(),
           action: { label: scrollHorizontalIntroActionLabel },
         }),
       }),
@@ -676,7 +684,11 @@ describe("scrollHorizontal intro", () => {
     expect(track?.firstElementChild).toBe(intro);
     expect(intro?.compareDocumentPosition(row as Node) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(track?.className).toContain("group-data-[reduce=true]/scroll-horizontal:!flex-col");
-    expect(section?.querySelector("h2")?.textContent).toBe(scrollHorizontalIntroStatement);
+    const statement = section?.querySelector("h2");
+    expect(statement?.textContent?.replace(/\s+/g, " ").trim()).toBe(scrollHorizontalIntroStatement);
+    expect(statement?.getAttribute("aria-label")).toBeNull();
+    expect(statement?.querySelector("[data-text-sequence]")?.getAttribute("data-text-sequence-state")).toBe("rest");
+    expect(statement?.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(3);
     expect(section?.textContent).not.toContain("Selected work");
     expect(row?.getAttribute("style") ?? "").not.toMatch(/translate/i);
     view.unmount();

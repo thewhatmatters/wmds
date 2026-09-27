@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sparkles } from "lucide-react";
 import { useState } from "react";
 import { expect, fn, waitFor } from "storybook/test";
-import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
 import { RiveHand } from "../../atoms/RiveHand/RiveHand";
 import { GridOverlay } from "../../../lib/GridOverlay";
@@ -12,7 +11,7 @@ import { HeroIntro } from "../../molecules/HeroIntro/HeroIntro";
 import { TextSequence } from "../../molecules/TextSequence/TextSequence";
 import { HeroTileStack } from "../HeroTileStack/HeroTileStack";
 import { ScrollHorizontal } from "../ScrollHorizontal/ScrollHorizontal";
-import { scrollHorizontalMarketingItems } from "../ScrollHorizontal/scrollHorizontalExamples";
+import { scrollHorizontalIntroStatement, scrollHorizontalMarketingItems } from "../ScrollHorizontal/scrollHorizontalExamples";
 import { SiteNav } from "../SiteNav/SiteNav";
 import { FooterReveal } from "./FooterReveal";
 import { footerRevealFieldClasses } from "./footerRevealStyles";
@@ -49,13 +48,13 @@ const openProjectModal = fn();
 const marketingHeroWithGalleryIntroCopySource = `
 "use client";
 
-// npm install @rive-app/react-canvas
+// npm install @rive-app/react-canvas gsap @gsap/react
 // Copy public/rive/interactive-icon-set.riv so the app serves /rive/interactive-icon-set.riv.
 // Hand art: CC BY 4.0, Silvia Sguotti and Gabriele Montinaro.
 
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
-import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence, footerRevealFieldClasses } from "@whatmatters/wmds";
+import { Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence, footerRevealFieldClasses } from "@whatmatters/wmds";
 
 const socialLinks = [
   { label: "Contra", href: "#contra-TODO" },
@@ -82,7 +81,7 @@ const projects = [
 // Opens the multi-step project form. There is no /start route.
 function openProjectModal() {}
 
-export function MarketingHeroWithGalleryIntroPage() {
+export function SequencedMarketingHeroPage() {
   const [handsActive, setHandsActive] = useState(false);
   return (
     <FooterReveal>
@@ -143,10 +142,16 @@ export function MarketingHeroWithGalleryIntroPage() {
               ]}
           </h1>
           </div>
-          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
-            We help brands stand out{" "}
-            <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
-            {" "}with bold ideas, fresh approaches, and products people actually love to use.
+          <HeroIntro
+            lead={
+              <TextSequence idle stagger={0.07}>
+                Your brand <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
+              </TextSequence>
+            }
+          >
+            <TextSequence idle delay={0.35} stagger={0.07}>
+              Make it <TextSequence.Shape variant="pill" tone="brand-soft" /> impossible to ignore
+            </TextSequence>
           </HeroIntro>
             <div className="w-full px-[var(--grid-margin)]">
             <HeroTileStack tiles={tiles} />
@@ -193,7 +198,7 @@ export function MarketingHeroWithGalleryIntroPage() {
 
 `.trim();
 
-function GalleryIntroHeroPage() {
+function SequencedGalleryHeroPage() {
   const [handsActive, setHandsActive] = useState(false);
   return (
     <FooterReveal>
@@ -254,10 +259,16 @@ function GalleryIntroHeroPage() {
               ]}
           </h1>
           </div>
-          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
-            We help brands stand out{" "}
-            <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
-            {" "}with bold ideas, fresh approaches, and products people actually love to use.
+          <HeroIntro
+            lead={
+              <TextSequence idle stagger={0.07}>
+                Your brand <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
+              </TextSequence>
+            }
+          >
+            <TextSequence idle delay={0.35} stagger={0.07}>
+              Make it <TextSequence.Shape variant="pill" tone="brand-soft" /> impossible to ignore
+            </TextSequence>
           </HeroIntro>
             <div className="w-full px-[var(--grid-margin)]">
             <HeroTileStack tiles={tiles} />
@@ -311,8 +322,8 @@ function expectEdgesMeet(a: number, b: number) {
   expect(Math.abs(a - b)).toBeLessThanOrEqual(1);
 }
 
-export const MarketingHeroWithGalleryIntro: Story = {
-  name: "Marketing hero with gallery intro",
+export const SequencedMarketingHero: Story = {
+  name: "Pattern — marketing hero with sequenced gallery",
   tags: ["test"],
   parameters: withStoryCopySource(
     {
@@ -320,13 +331,13 @@ export const MarketingHeroWithGalleryIntro: Story = {
       docs: {
         description: {
           story:
-            "Same marketing hero as Pattern — marketing hero, with ScrollHorizontal.Intro as the first gallery panel. expandLast still ends on the full-bleed tile, flush with FooterReveal. The default pattern keeps the sr-only Selected work heading.",
+            "Full marketing page. The h1 stays We Are WhatMatters on type-display-1, with the rock and point hands on the e, the W, and the final s. HeroIntro sequences the subtext (type-large): Your brand is already online, then Make it impossible to ignore. ScrollHorizontal.Intro sequences the gallery statement on type-display-2 at normal weight, once, when that panel scrolls into view. Three shapes sit in the statement (asterisk, brand-soft pill, accent diamond), about 1.15em. The eyebrow and the outline mono See our work button are unchanged. expandLast still ends on the full-bleed tile, flush with FooterReveal. Reduced motion leaves both sequences at rest, shapes included.",
         },
       },
     },
     marketingHeroWithGalleryIntroCopySource,
   ),
-  render: () => <GalleryIntroHeroPage />,
+  render: () => <SequencedGalleryHeroPage />,
   play: async ({ canvasElement }) => {
     const section = canvasElement.querySelector("[data-scroll-horizontal]");
     if (!(section instanceof HTMLElement)) throw new Error("gallery missing");
@@ -336,6 +347,34 @@ export const MarketingHeroWithGalleryIntro: Story = {
     const intro = section.querySelector("[data-scroll-horizontal-intro]");
     expect(track?.firstElementChild).toBe(intro);
     expect(section.querySelector("[data-pattern='eyebrow']")?.textContent).toBe("SELECTED WORK");
+    expect(canvasElement.querySelector("h1")?.textContent?.replace(/\s+/g, " ").trim()).toBe("We Are WhatMatters");
+    const text = canvasElement.textContent?.replace(/\s+/g, " ") ?? "";
+    expect(text).toContain("Your brand is already online");
+    expect(text).toContain("Make it impossible to ignore");
+    expect(text).toContain(scrollHorizontalIntroStatement);
+    expect(section.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(3);
+    expect(canvasElement.querySelectorAll("[data-text-sequence]")).toHaveLength(3);
+    const action = [...section.querySelectorAll("button")].find((node) => node.textContent?.includes("See our work"));
+    expect(action?.getAttribute("data-role")).toBe("outline");
+    expect(action?.getAttribute("data-mono")).toBe("");
+    await waitFor(() => {
+      const heroSequences = [...canvasElement.querySelectorAll("[data-text-sequence]")].filter(
+        (node) => !section.contains(node),
+      );
+      expect(heroSequences).toHaveLength(2);
+      for (const sequence of heroSequences) {
+        expect(sequence.getAttribute("data-text-sequence-state")).toBe("playing");
+      }
+    });
+    if (intro instanceof HTMLElement) intro.scrollIntoView({ block: "center" });
+    const statement = section.querySelector("h2");
+    await waitFor(() => {
+      expect(statement?.getAttribute("role")).toBeNull();
+      expect(statement?.getAttribute("aria-label")).toBe(scrollHorizontalIntroStatement);
+      expect(statement?.querySelector("[data-text-sequence]")?.getAttribute("data-text-sequence-state")).toBe(
+        "playing",
+      );
+    });
 
     const footer = canvasElement.querySelector("[data-footer-reveal='sticky']");
     if (!(footer instanceof HTMLElement)) throw new Error("footer missing");
