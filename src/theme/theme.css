@@ -84,6 +84,7 @@
   --color-info-active: var(--color-info-active);
 
   /* Brand / primary */
+  --color-brand: var(--color-brand);
   --color-primary: var(--color-primary);
   --color-primary-foreground: var(--color-on-primary);
   --color-primary-hover: var(--color-primary-hover);

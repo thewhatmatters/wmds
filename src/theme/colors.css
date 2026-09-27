@@ -85,6 +85,12 @@
   --color-primary: #39485c;
   --color-on-primary: #fafafa;
 
+  /*
+   * WhatMatters brand blue. Not status info (`--color-info`, #00458c) and not
+   * the action brand (`--color-primary`, slate). Matches the hero focus tile.
+   */
+  --color-brand: #2f6bff;
+
   /* Derived from --color-primary — 62% clears WCAG 3:1 on white and #f8f8f8 */
   --color-focus-ring: color-mix(in srgb, var(--color-primary) 62%, transparent);
 
@@ -183,6 +189,9 @@
 
   --color-primary: #5a6d85;
   --color-on-primary: #fafaf8;
+
+  /* Same brand blue. It stays saturated so the outline reads on a dark surface. */
+  --color-brand: #2f6bff;
 
   /*
    * Derived from --color-primary: lift the brand toward white so the ring stays

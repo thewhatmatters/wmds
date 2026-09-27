@@ -13,6 +13,7 @@ const atoms = [
   "Input",
   "Kbd",
   "Radio",
+  "RiveHand",
   "Skeleton",
   "Status",
   "Switch",
@@ -59,10 +60,11 @@ export const packageManifest = {
   ] as const,
 
   /** Rollup external prefix — Chart imports granular `@visx/*` packages for tree-shaking. */
-  libExternalPrefixes: ["@visx/"] as const,
+  libExternalPrefixes: ["@visx/", "@rive-app/"] as const,
 
   /** Utilities that must appear in dist/styles.css after Tailwind CLI build. */
   requiredStyleTokens: [
+    "--color-brand",
     "bg-primary-hover",
     "duration-fast",
     "motion-collapse",
