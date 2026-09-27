@@ -14,19 +14,14 @@ import { cn } from "../../../lib/cn";
 import {
   scrollHorizontalDistance,
   scrollHorizontalItemColor,
-  scrollHorizontalItemNumber,
   scrollHorizontalNominalMetrics,
   scrollHorizontalReadMetrics,
   scrollHorizontalTranslateX,
 } from "./scrollHorizontalMath";
 import {
-  scrollHorizontalCopyClasses,
   scrollHorizontalHeadingClasses,
-  scrollHorizontalImageClasses,
   scrollHorizontalItemClasses,
   scrollHorizontalLabelClasses,
-  scrollHorizontalNumberClasses,
-  scrollHorizontalOverlayClasses,
   scrollHorizontalRootClasses,
   scrollHorizontalRowClasses,
   scrollHorizontalStickyClasses,
@@ -38,12 +33,11 @@ export type ScrollHorizontalLayoutClassName = string;
 
 export interface ScrollHorizontalItem {
   id: string;
+  /** Accessible name. Rendered for assistive tech only (`sr-only`). */
   label: string;
-  /** Image URL. Painted with `object-cover`. Decorative — the label is the name. */
-  image: string;
   /**
-   * CSS color for the number and the bottom multiply gradient.
-   * Omit to cycle `--color-brand` and chart categorical tokens.
+   * CSS color for the solid tile. Pass a semantic token, for example
+   * `var(--color-brand)`. Omit to cycle the placeholder palette.
    */
   color?: string;
 }
@@ -154,14 +148,7 @@ export function ScrollHorizontal({ items, heading, className }: ScrollHorizontal
                   } as CSSProperties
                 }
               >
-                <img src={item.image} alt="" className={scrollHorizontalImageClasses} />
-                <div className={scrollHorizontalOverlayClasses} aria-hidden="true" />
-                <div className={scrollHorizontalCopyClasses}>
-                  <span className={scrollHorizontalNumberClasses}>
-                    {scrollHorizontalItemNumber(index)}
-                  </span>
-                  <h3 className={scrollHorizontalLabelClasses}>{item.label}</h3>
-                </div>
+                <span className={scrollHorizontalLabelClasses}>{item.label}</span>
               </li>
             ))}
           </motion.ul>

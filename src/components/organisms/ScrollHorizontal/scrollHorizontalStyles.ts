@@ -56,19 +56,9 @@ export const scrollHorizontalHeadingClasses = [
 ].join(" ");
 
 export const scrollHorizontalItemClasses = [
-  "relative isolate h-[500px] w-[400px] shrink-0 overflow-hidden rounded-xl bg-[var(--scroll-horizontal-color)]",
+  "relative h-[500px] w-[400px] shrink-0 overflow-hidden rounded-xl bg-[var(--scroll-horizontal-color)]",
   "max-sm:h-[350px] max-sm:w-[280px]",
 ].join(" ");
 
-export const scrollHorizontalImageClasses = "absolute inset-0 h-full w-full object-cover";
-
-export const scrollHorizontalOverlayClasses =
-  "pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent from-60% to-[var(--scroll-horizontal-color)] mix-blend-multiply";
-
-export const scrollHorizontalCopyClasses = "absolute bottom-8 left-8 z-10 max-w-[calc(100%-4rem)]";
-
-export const scrollHorizontalNumberClasses =
-  "type-code mb-2 block text-[color:var(--scroll-horizontal-color)]";
-
-export const scrollHorizontalLabelClasses =
-  "m-0 font-semibold leading-[1.2] text-on-brand text-[length:var(--font-size-3xl)]";
+/** Accessible name for a placeholder tile. Not painted. */
+export const scrollHorizontalLabelClasses = "sr-only";
