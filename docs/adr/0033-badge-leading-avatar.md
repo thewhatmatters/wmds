@@ -29,7 +29,7 @@ Badge may import **Avatar** for this slot only. That is the exception to ADR-000
 
 ### Decorative marketing use
 
-The one sanctioned decorative use of Badge is inline emphasis in **Components/Layout/HeroTileStack → Pattern — marketing hero**. Those badges are not clickable. The sentence still reads in order. Placeholder art lives in `public/hero-badges/` (a globe for `online`, an eye for `impossible to ignore`) and is marked as placeholder in that story. Product images replace those files.
+The one sanctioned decorative use of Badge is inline emphasis in **Components/Layout/HeroTileStack → Pattern — marketing hero**. The badge is not clickable. The sentence still reads in order. The hero marks the word `online` with the globe placeholder in `public/hero-badges/`. Product images replace that file.
 
 ## Non-goals
 
