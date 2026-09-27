@@ -219,6 +219,11 @@ export {
   type FloatingActionButtonProps,
 } from "./components/molecules/FloatingActionButton/FloatingActionButton";
 export {
+  HeroIntro,
+  type HeroIntroLayoutClassName,
+  type HeroIntroProps,
+} from "./components/molecules/HeroIntro/HeroIntro";
+export {
   NavList,
   navListLabelAlignments,
   type NavListIcon,
