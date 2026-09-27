@@ -18,7 +18,7 @@ import {
   riveHandStateMachine,
   riveHands,
   type RiveHandName,
-} from "./riveHand";
+} from "./riveHandUtils";
 
 export { riveHandArtboards, riveHandSrc, riveHands, type RiveHandName };
 

@@ -16,7 +16,7 @@ import {
   riveHandOutlineProperty,
   riveHandSrc,
   riveHandStateMachine,
-} from "./riveHand";
+} from "./riveHandUtils";
 
 const runtime = vi.hoisted(() => {
   const setRgb = vi.fn();
