@@ -92,6 +92,37 @@ export function riveHandBooleanValue(active: boolean, idlePulse: boolean, reduce
   return active || idlePulse;
 }
 
+const riveHandLayoutRectCanvases = new WeakSet<HTMLCanvasElement>();
+
+/**
+ * Border box Rive should rasterize.
+ * `resizeDrawingSurfaceToCanvas` reads `getBoundingClientRect`, which includes transforms.
+ * A grow entrance mounts at `scale: 0`, so that rect is 0×0, and the later scale does not
+ * change `clientWidth`, so the runtime never samples again. Layout size ignores that scale.
+ */
+export function riveHandLayoutClientRect(canvas: HTMLCanvasElement, painted: DOMRect): DOMRect {
+  const width = canvas.clientWidth || painted.width;
+  const height = canvas.clientHeight || painted.height;
+  if (Math.abs(width - painted.width) < 0.5 && Math.abs(height - painted.height) < 0.5) {
+    return painted;
+  }
+  return new DOMRect(painted.x, painted.y, width, height);
+}
+
+/** Report layout size from `getBoundingClientRect` so a scale transform cannot zero the backing store. */
+export function installRiveHandLayoutRect(canvas: HTMLCanvasElement): void {
+  if (riveHandLayoutRectCanvases.has(canvas)) return;
+  riveHandLayoutRectCanvases.add(canvas);
+  const painted = canvas.getBoundingClientRect.bind(canvas);
+  canvas.getBoundingClientRect = () => riveHandLayoutClientRect(canvas, painted());
+}
+
+/** True once a grow scale has settled and it is safe to resample the drawing surface. */
+export function riveHandGrowSettled(layoutWidth: number, layoutHeight: number, paintedWidth: number, paintedHeight: number): boolean {
+  if (layoutWidth < 1 || layoutHeight < 1) return false;
+  return paintedWidth / layoutWidth >= 0.92 && paintedHeight / layoutHeight >= 0.92;
+}
+
 export interface Rgb {
   r: number;
   g: number;

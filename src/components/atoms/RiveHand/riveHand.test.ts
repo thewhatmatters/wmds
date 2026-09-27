@@ -15,8 +15,11 @@ import {
   riveHandBooleanValue,
   riveHandBoxSize,
   riveHandFillProperty,
+  installRiveHandLayoutRect,
   riveHandGrowDelaySec,
+  riveHandGrowSettled,
   riveHandIdleAllowed,
+  riveHandLayoutClientRect,
   riveHandIdleHoldMs,
   riveHandIdleMaxMs,
   riveHandIdleMinMs,
@@ -31,6 +34,8 @@ const runtime = vi.hoisted(() => {
   const setRgb = vi.fn();
   const pause = vi.fn();
   const drawFrame = vi.fn();
+  const resizeDrawingSurfaceToCanvas = vi.fn();
+  const startRendering = vi.fn();
   const rgb = vi.fn();
   const input = { value: false };
   const color = vi.fn(() => ({ rgb }));
@@ -42,6 +47,8 @@ const runtime = vi.hoisted(() => {
     setRgb,
     pause,
     drawFrame,
+    resizeDrawingSurfaceToCanvas,
+    startRendering,
     rgb,
     input,
     color,
@@ -68,12 +75,16 @@ vi.mock("@rive-app/react-canvas", () => {
         viewModelInstance: runtime.viewModelInstance,
         pause: runtime.pause,
         drawFrame: runtime.drawFrame,
+        resizeDrawingSurfaceToCanvas: runtime.resizeDrawingSurfaceToCanvas,
+        startRendering: runtime.startRendering,
       });
       return {
         rive: {
           viewModelInstance: runtime.viewModelInstance,
           pause: runtime.pause,
           drawFrame: runtime.drawFrame,
+          resizeDrawingSurfaceToCanvas: runtime.resizeDrawingSurfaceToCanvas,
+          startRendering: runtime.startRendering,
         },
         RiveComponent: () => React.createElement("canvas", { "data-rive-hand": "true" }),
       };
@@ -126,6 +137,8 @@ describe("RiveHand", () => {
     runtime.setRgb.mockClear();
     runtime.pause.mockClear();
     runtime.drawFrame.mockClear();
+    runtime.resizeDrawingSurfaceToCanvas.mockClear();
+    runtime.startRendering.mockClear();
     runtime.rgb.mockClear();
     runtime.color.mockClear();
     runtime.useRive.mockClear();
@@ -209,6 +222,30 @@ describe("RiveHand", () => {
     expect(container.querySelector("div")?.style.width).toBe("48px");
     root.unmount();
     vi.useRealTimers();
+  });
+
+  it("reports layout size for the point hand canvas while the grow scale is 0", async () => {
+    const original = HTMLCanvasElement.prototype.getBoundingClientRect;
+    HTMLCanvasElement.prototype.getBoundingClientRect = () => new DOMRect(0, 0, 0, 0);
+    try {
+      await render(
+        createElement(RiveHand, { hand: "point", size: 96, entrance: "grow", idle: false }),
+      );
+      const canvas = container.querySelector("div")?.shadowRoot?.querySelector("canvas");
+      expect(canvas).toBeInstanceOf(HTMLCanvasElement);
+      Object.defineProperty(canvas, "clientWidth", { configurable: true, value: 96 });
+      Object.defineProperty(canvas, "clientHeight", { configurable: true, value: 96 });
+      const rect = canvas!.getBoundingClientRect();
+      expect(rect.width).toBe(96);
+      expect(rect.height).toBe(96);
+      expect(riveHandLayoutClientRect(canvas!, new DOMRect(4, 8, 0, 0)).width).toBe(96);
+      expect(riveHandGrowSettled(96, 96, 0, 0)).toBe(false);
+      expect(riveHandGrowSettled(96, 96, 96, 96)).toBe(true);
+      expect(installRiveHandLayoutRect(canvas!)).toBeUndefined();
+    } finally {
+      HTMLCanvasElement.prototype.getBoundingClientRect = original;
+      root.unmount();
+    }
   });
 });
 
