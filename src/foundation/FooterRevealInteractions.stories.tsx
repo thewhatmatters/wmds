@@ -2,6 +2,7 @@ import { MotionConfig } from "motion/react";
 import { expect, waitFor } from "storybook/test";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FooterReveal } from "../components/organisms/FooterReveal/FooterReveal";
+import { footerRevealWordmarkFillsFrame } from "../components/organisms/FooterReveal/footerRevealWordmark";
 import { footerRevealFieldClasses } from "../components/organisms/FooterReveal/footerRevealStyles";
 
 /**
@@ -140,17 +141,19 @@ export const BrandFooter: Story = {
     expect(wordmark?.textContent).toBe("WHATMATTERS");
     expect(wordmark?.getAttribute("aria-hidden")).toBe("true");
     await waitFor(() => {
-      const frameWidth = frame?.clientWidth ?? 0;
-      const textWidth = wordmark?.scrollWidth ?? 0;
+      if (!wordmark || !frame) throw new Error("brand wordmark missing");
+      const frameWidth = frame.clientWidth;
+      const textWidth = wordmark.scrollWidth;
       expect(frameWidth).toBeGreaterThan(0);
+      expect(footerRevealWordmarkFillsFrame(wordmark, frame)).toBe(true);
       expect(textWidth).toBeLessThanOrEqual(frameWidth + 1);
       expect(frameWidth - textWidth).toBeLessThanOrEqual(Math.max(8, frameWidth * 0.02));
-      const em = Number.parseFloat(frame?.style.getPropertyValue("--footer-wordmark-em") ?? "");
+      const em = Number.parseFloat(frame.style.getPropertyValue("--footer-wordmark-em") ?? "");
       expect(em).toBeGreaterThan(1);
-      const fontSize = Number.parseFloat(getComputedStyle(wordmark!).fontSize);
+      const fontSize = Number.parseFloat(getComputedStyle(wordmark).fontSize);
       expect(Math.abs(fontSize * em - frameWidth)).toBeLessThanOrEqual(2);
-      expect(wordmark!.offsetLeft).toBeGreaterThanOrEqual(-1);
-      expect(wordmark!.offsetLeft + wordmark!.offsetWidth).toBeLessThanOrEqual(frameWidth + 1);
+      expect(wordmark.offsetLeft).toBeGreaterThanOrEqual(-1);
+      expect(wordmark.offsetLeft + wordmark.offsetWidth).toBeLessThanOrEqual(frameWidth + 1);
     });
     expect(wordmark?.className).toContain("text-brand-soft");
     expect(wordmark?.className).toContain("translate-y-[16%]");
