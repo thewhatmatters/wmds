@@ -113,7 +113,11 @@ export function SequencedMarketingHeroPage() {
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                Your brand <RiveHand hand="rock" inline idle entrance="none" aria-hidden /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
+                {"Your brand "}
+                <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
+                {" is already "}
+                <TextSequence.Shape variant="circle" tone="accent" />
+                {" online"}
               </TextSequence>
             }
           >
@@ -136,7 +140,7 @@ export function SequencedMarketingHeroPage() {
                 <>
                   {"Every screen"}
                   <TextSequence.Shape variant="asterisk" />
-                  {" is a first impression"}
+                  {" is a first impression "}
                   <RiveHand hand="point" inline idle entrance="none" aria-hidden />
                   {" and we make yours"}
                   <TextSequence.Shape variant="diamond" tone="accent" />
@@ -231,7 +235,11 @@ function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                Your brand <RiveHand hand="rock" inline idle entrance="none" aria-hidden /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
+                {"Your brand "}
+                <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
+                {" is already "}
+                <TextSequence.Shape variant="circle" tone="accent" />
+                {" online"}
               </TextSequence>
             }
           >
@@ -254,7 +262,7 @@ function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
                 <>
                   {"Every screen"}
                   <TextSequence.Shape variant="asterisk" />
-                  {" is a first impression"}
+                  {" is a first impression "}
                   <RiveHand hand="point" inline idle entrance="none" aria-hidden />
                   {" and we make yours"}
                   <TextSequence.Shape variant="diamond" tone="accent" />

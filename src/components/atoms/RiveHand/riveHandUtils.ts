@@ -86,6 +86,25 @@ export function riveHandIdleAllowed(input: {
   return input.idle && !input.reduced && input.pageVisible && input.inView;
 }
 
+/** True once the hand box can hold a drawing. A 0×0 canvas is not a frame yet. */
+export function riveHandHasLayoutBox(width: number, height: number): boolean {
+  return width >= 1 && height >= 1;
+}
+
+/**
+ * Viewport overlap of a sized box.
+ * A zero-area rect is not an answer — the inline slot is 0px tall, so visibility
+ * has to come from the hand box, not that slot.
+ */
+export function riveHandIntersectsViewport(
+  rect: { width: number; height: number; top: number; left: number; right: number; bottom: number },
+  viewportWidth: number,
+  viewportHeight: number,
+): boolean {
+  if (!riveHandHasLayoutBox(rect.width, rect.height)) return false;
+  return rect.bottom > 0 && rect.right > 0 && rect.top < viewportHeight && rect.left < viewportWidth;
+}
+
 /** `Boolean 1` while hovering, focusing, or inside an idle pulse. Reduced motion forces it off. */
 export function riveHandBooleanValue(active: boolean, idlePulse: boolean, reduced: boolean): boolean {
   if (reduced) return false;

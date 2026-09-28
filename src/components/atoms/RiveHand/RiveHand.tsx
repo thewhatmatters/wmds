@@ -21,7 +21,9 @@ import {
   riveHandGrowDelaySec,
   riveHandGrowOrigin,
   riveHandGrowSettled,
+  riveHandHasLayoutBox,
   riveHandIdleAllowed,
+  riveHandIntersectsViewport,
   riveHandIdleHoldMs,
   riveHandOutlineProperty,
   riveHandSrc,
@@ -41,6 +43,38 @@ export {
 
 /** Layout-only — not for colors. Size comes from the `size` prop. */
 export type RiveHandLayoutClassName = string;
+
+type RiveHandPlayback = {
+  drawFrame: () => void;
+  pause: () => void;
+  startRendering: () => void;
+  play?: (name?: string) => void;
+  isPaused?: boolean;
+  isStopped?: boolean;
+};
+
+/**
+ * Reduced motion draws one frame, then pauses — only after the box has size.
+ * Motion resumes a paused state machine and keeps the render loop going while
+ * that box is on screen. A 0×0 canvas is left alone so the first real frame
+ * is not a blank pause.
+ */
+function settleRiveHandPlayback(rive: RiveHandPlayback, box: HTMLElement | null, reduced: boolean) {
+  if (!box || !riveHandHasLayoutBox(box.clientWidth, box.clientHeight)) return;
+  if (reduced) {
+    rive.drawFrame();
+    rive.pause();
+    return;
+  }
+  if (!riveHandIntersectsViewport(box.getBoundingClientRect(), window.innerWidth, window.innerHeight)) {
+    return;
+  }
+  if (typeof rive.play === "function" && (rive.isStopped || rive.isPaused)) {
+    rive.play(rive.isStopped ? riveHandStateMachine : undefined);
+    return;
+  }
+  rive.startRendering();
+}
 
 export interface RiveHandProps {
   /** `point` is artboard `31_Cigarette` (the cigarette is removed). `rock` is `29_Rock`. */
@@ -63,7 +97,8 @@ export interface RiveHandProps {
   active?: boolean;
   /**
    * Plays `Boolean 1` on a random 4–9s timer, per hand, while the page is visible
-   * and this hand is in view. Default is on. Reduced motion never starts the timer.
+   * and the sized hand box is in view. The zero-height inline slot is not the
+   * visibility target. Default is on. Reduced motion never starts the timer.
    */
   idle?: boolean;
   /**
@@ -112,11 +147,10 @@ export function RiveHand({
     shouldDisableRiveListeners: true,
     layout,
     onRiveReady: (instance) => {
+      // Paint now, but do not pause yet. The canvas is often still 0×0 here.
+      // Pausing would freeze that empty frame. Settle once the hand box has size.
       paintRiveHandColors(instance);
       instance.drawFrame();
-      if (reducedRef.current) {
-        instance.pause();
-      }
     },
   });
 
@@ -155,16 +189,11 @@ export function RiveHand({
       return;
     }
     if (reduced) {
-      rive.drawFrame();
-      rive.pause();
-      if (pressed) {
-        pressed.value = false;
-      }
-      return;
-    }
-    if (pressed) {
+      if (pressed) pressed.value = false;
+    } else if (pressed) {
       pressed.value = riveHandBooleanValue(active, idlePulse, false);
     }
+    settleRiveHandPlayback(rive, hostRef.current, reduced);
     // `setRgb` identity changes when the view-model color binds. The result objects are new every render.
   }, [active, handFill.setRgb, idlePulse, outline.setRgb, pressed, reduced, rive, themeEpoch]);
 
@@ -194,7 +223,9 @@ export function RiveHand({
     if (!idle || reduced) {
       return;
     }
-    const el = hostRef.current?.parentElement ?? hostRef.current;
+    // The inline slot is `h-0`. Watching that parent leaves `inView` false in
+    // browsers that never report a zero-area target, so Boolean 1 never fires.
+    const el = hostRef.current;
     let timer = 0;
     let hold = 0;
     let pageVisible = document.visibilityState !== "hidden";
@@ -229,6 +260,13 @@ export function RiveHand({
       }, nextRiveHandIdleDelayMs());
     };
 
+    const setInView = (next: boolean) => {
+      if (next === inView) return;
+      inView = next;
+      if (!inView) setIdlePulse(false);
+      arm();
+    };
+
     const onVisibility = () => {
       pageVisible = document.visibilityState !== "hidden";
       if (!pageVisible) setIdlePulse(false);
@@ -238,13 +276,29 @@ export function RiveHand({
     let observer: IntersectionObserver | null = null;
     if (typeof IntersectionObserver !== "undefined" && el) {
       observer = new IntersectionObserver((entries) => {
-        inView = entries.some((entry) => entry.isIntersecting);
-        if (!inView) setIdlePulse(false);
-        arm();
+        const entry = entries[entries.length - 1];
+        if (!entry) return;
+        const box = entry.boundingClientRect;
+        // A 0×0 sample is not "offscreen". Wait for a box, then trust the flag.
+        if (box && !riveHandHasLayoutBox(box.width, box.height)) return;
+        setInView(entry.isIntersecting);
       });
       observer.observe(el);
     } else {
       arm();
+    }
+
+    let resize: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined" && el) {
+      resize = new ResizeObserver(() => {
+        if (!el.isConnected || !riveHandHasLayoutBox(el.clientWidth, el.clientHeight)) return;
+        const rect = el.getBoundingClientRect();
+        // Layout can report a client box before the painted rect exists. That is
+        // not "scrolled away".
+        if (!riveHandHasLayoutBox(rect.width, rect.height)) return;
+        setInView(riveHandIntersectsViewport(rect, window.innerWidth, window.innerHeight));
+      });
+      resize.observe(el);
     }
 
     document.addEventListener("visibilitychange", onVisibility);
@@ -253,9 +307,10 @@ export function RiveHand({
       clearTimers();
       setIdlePulse(false);
       observer?.disconnect();
+      resize?.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [idle, reduced]);
+  }, [idle, ready, reduced]);
 
   const inlineLayout = inline ? riveHandInlineLayout(hand) : null;
   const length = inlineLayout ? inlineLayout.box : riveHandBoxSize(size ?? "1em");
@@ -300,17 +355,32 @@ export function RiveHand({
         canvas.style.width = `${box.clientWidth}px`;
         canvas.style.height = `${box.clientHeight}px`;
       }
+      if (!riveHandHasLayoutBox(box.clientWidth, box.clientHeight)) return;
       rive.resizeDrawingSurfaceToCanvas();
-      if (reducedRef.current) {
-        rive.pause();
-        return;
-      }
-      rive.startRendering();
+      settleRiveHandPlayback(rive, box, reducedRef.current);
     };
     resampleRef.current = resample;
 
+    // The inline slot is 0px tall. The canvas starts at 0×0 until the host's em box
+    // has been laid out — at 390 that box can still be 0 on the first sample.
+    let frames = 0;
+    let frame = 0;
+    const kick = () => {
+      resample();
+      const box = hostRef.current;
+      const canvas = box?.shadowRoot?.querySelector("canvas");
+      const canvasWaiting = !canvas || canvas.clientWidth < 1 || canvas.clientHeight < 1;
+      const hostWaiting = !box || !box.isConnected || box.clientWidth < 1 || box.clientHeight < 1;
+      if ((canvasWaiting || hostWaiting) && box?.isConnected && frames < 8) {
+        frames += 1;
+        frame = requestAnimationFrame(kick);
+      }
+    };
+    kick();
+
     if (typeof ResizeObserver === "undefined") {
       return () => {
+        cancelAnimationFrame(frame);
         resampleRef.current = () => {};
       };
     }
@@ -319,6 +389,7 @@ export function RiveHand({
     });
     observer.observe(host);
     return () => {
+      cancelAnimationFrame(frame);
       observer.disconnect();
       resampleRef.current = () => {};
     };

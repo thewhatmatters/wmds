@@ -22,7 +22,9 @@ import {
   installRiveHandLayoutRect,
   riveHandGrowDelaySec,
   riveHandGrowSettled,
+  riveHandHasLayoutBox,
   riveHandIdleAllowed,
+  riveHandIntersectsViewport,
   riveHandLayoutClientRect,
   riveHandIdleHoldMs,
   riveHandIdleMaxMs,
@@ -222,22 +224,37 @@ describe("RiveHand", () => {
     root.unmount();
   });
 
-  it("pauses on the first frame and does not play the interaction when motion is reduced", async () => {
+  it("draws one frame and pauses once the box has size when motion is reduced", async () => {
     stubMotion(true);
     vi.useFakeTimers();
-    await render(createElement(RiveHand, { hand: "rock", size: 48, active: true, idle: true }));
+    const restore = installStyleClientBox();
+    try {
+      await render(createElement(RiveHand, { hand: "rock", size: 48, active: true, idle: true }));
 
-    expect(runtime.useRive.mock.calls.at(-1)?.[0].artboard).toBe("29_Rock");
-    expect(runtime.pause).toHaveBeenCalled();
+      expect(runtime.useRive.mock.calls.at(-1)?.[0].artboard).toBe("29_Rock");
+      expect(runtime.pause).toHaveBeenCalled();
+      expect(runtime.drawFrame).toHaveBeenCalled();
+      expect(runtime.input.value).toBe(false);
+      await act(async () => {
+        vi.advanceTimersByTime(riveHandIdleMaxMs + riveHandIdleHoldMs);
+      });
+      expect(runtime.input.value).toBe(false);
+      expect(container.querySelector("div")?.style.width).toBe("48px");
+    } finally {
+      restore();
+      root.unmount();
+      vi.useRealTimers();
+    }
+  });
+
+  it("does not pause reduced motion while the hand box is still 0×0", async () => {
+    stubMotion(true);
+    await render(createElement(RiveHand, { hand: "rock", size: 0, active: true, idle: true }));
+
+    expect(runtime.pause).not.toHaveBeenCalled();
     expect(runtime.drawFrame).toHaveBeenCalled();
     expect(runtime.input.value).toBe(false);
-    await act(async () => {
-      vi.advanceTimersByTime(riveHandIdleMaxMs + riveHandIdleHoldMs);
-    });
-    expect(runtime.input.value).toBe(false);
-    expect(container.querySelector("div")?.style.width).toBe("48px");
     root.unmount();
-    vi.useRealTimers();
   });
 
   it("reports layout size for the point hand canvas while the grow scale is 0", async () => {
@@ -264,6 +281,31 @@ describe("RiveHand", () => {
     }
   });
 });
+
+function installStyleClientBox() {
+  const width = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "clientWidth");
+  const height = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "clientHeight");
+  const pixels = (value: string) => {
+    const parsed = Number.parseFloat(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
+  Object.defineProperty(HTMLElement.prototype, "clientWidth", {
+    configurable: true,
+    get() {
+      return pixels(this.style.width);
+    },
+  });
+  Object.defineProperty(HTMLElement.prototype, "clientHeight", {
+    configurable: true,
+    get() {
+      return pixels(this.style.height);
+    },
+  });
+  return () => {
+    if (width) Object.defineProperty(HTMLElement.prototype, "clientWidth", width);
+    if (height) Object.defineProperty(HTMLElement.prototype, "clientHeight", height);
+  };
+}
 
 function installIntersectingObserver() {
   class ImmediateObserver {
@@ -302,6 +344,17 @@ describe("rive hand idle schedule", () => {
     expect(riveHandIdleAllowed({ idle: true, reduced: false, pageVisible: false, inView: true })).toBe(false);
     expect(riveHandIdleAllowed({ idle: true, reduced: false, pageVisible: true, inView: false })).toBe(false);
     expect(riveHandIdleAllowed({ idle: false, reduced: false, pageVisible: true, inView: true })).toBe(false);
+    expect(riveHandHasLayoutBox(0, 48)).toBe(false);
+    expect(riveHandHasLayoutBox(48, 48)).toBe(true);
+    expect(
+      riveHandIntersectsViewport({ width: 0, height: 0, top: 10, left: 10, right: 10, bottom: 10 }, 1440, 900),
+    ).toBe(false);
+    expect(
+      riveHandIntersectsViewport({ width: 115, height: 115, top: 20, left: 20, right: 135, bottom: 135 }, 1440, 900),
+    ).toBe(true);
+    expect(
+      riveHandIntersectsViewport({ width: 115, height: 115, top: 1000, left: 20, right: 135, bottom: 1115 }, 1440, 900),
+    ).toBe(false);
     expect(riveHandBooleanValue(true, false, false)).toBe(true);
     expect(riveHandBooleanValue(false, true, false)).toBe(true);
     expect(riveHandBooleanValue(true, true, true)).toBe(false);
@@ -381,6 +434,51 @@ describe("rive hand idle schedule", () => {
       await act(async () => {
         document.dispatchEvent(new Event("visibilitychange"));
       });
+      await act(async () => {
+        vi.advanceTimersByTime(riveHandIdleMinMs);
+      });
+      expect(runtime.input.value).toBe(true);
+    });
+
+    it("pulses an inline hand from the sized host when the zero-height slot never intersects", async () => {
+      const observed: Element[] = [];
+      class SlotBlindObserver {
+        private readonly callback: IntersectionObserverCallback;
+        constructor(callback: IntersectionObserverCallback) {
+          this.callback = callback;
+        }
+        observe(target: Element) {
+          observed.push(target);
+          const slot = target.getAttribute("data-rive-hand-slot") != null;
+          const box = slot
+            ? { width: 0, height: 0, top: 0, left: 0, bottom: 0, right: 0, x: 0, y: 0, toJSON() {} }
+            : { width: 115, height: 115, top: 20, left: 20, bottom: 135, right: 135, x: 20, y: 20, toJSON() {} };
+          this.callback(
+            [
+              {
+                isIntersecting: !slot,
+                boundingClientRect: box,
+                target,
+              } as IntersectionObserverEntry,
+            ],
+            this as unknown as IntersectionObserver,
+          );
+        }
+        unobserve() {}
+        disconnect() {}
+        takeRecords() {
+          return [];
+        }
+        root = null;
+        rootMargin = "";
+        thresholds = [];
+      }
+      vi.stubGlobal("IntersectionObserver", SlotBlindObserver);
+
+      await render(createElement(RiveHand, { hand: "rock", inline: true, idle: true }));
+      expect(observed.some((el) => el.getAttribute("data-rive-hand") === "rock")).toBe(true);
+      expect(observed.every((el) => el.getAttribute("data-rive-hand-slot") == null)).toBe(true);
+
       await act(async () => {
         vi.advanceTimersByTime(riveHandIdleMinMs);
       });

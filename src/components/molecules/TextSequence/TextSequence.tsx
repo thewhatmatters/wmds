@@ -174,16 +174,48 @@ function shapeStart(before: number, stagger: number): number {
   return (before - 0.5) * stagger;
 }
 
+/** Placeholder while SplitText owns the root. The live slot is not in the snapshot. */
+const textSequenceHandAnchorAttr = "data-text-sequence-hand-anchor";
+
+/**
+ * SplitText snapshots `innerHTML` and writes it back on every re-split.
+ * A hand slot in that snapshot is a dead clone: the Rive canvas lives on the
+ * React node, in a shadow root, and does not survive `innerHTML`.
+ * Lift the live slot out first and leave an anchor that has the same gap.
+ */
+function detachHandSlots(root: HTMLElement): HTMLElement[] {
+  const slots = [...root.querySelectorAll<HTMLElement>("[data-rive-hand-slot]")];
+  for (const slot of slots) {
+    const anchor = document.createElement("span");
+    anchor.setAttribute(textSequenceHandAnchorAttr, slot.getAttribute("data-rive-hand-slot") ?? "");
+    anchor.setAttribute("aria-hidden", "true");
+    anchor.className = slot.className;
+    anchor.style.width = slot.style.width;
+    slot.replaceWith(anchor);
+  }
+  return slots;
+}
+
+function restoreHandSlots(root: HTMLElement, slots: readonly HTMLElement[]) {
+  const anchors = [...root.querySelectorAll<HTMLElement>(`[${textSequenceHandAnchorAttr}]`)];
+  anchors.forEach((anchor, index) => {
+    const slot = slots[index];
+    if (slot) anchor.replaceWith(slot);
+  });
+}
+
 interface SequenceMotionConfig {
   stagger: number;
   delay: number;
   idle: boolean;
   lines: boolean;
   plain: string;
+  /** Live hand slots lifted out before this split. Put back on every `onSplit`. */
+  hands: readonly HTMLElement[];
 }
 
 function playSequence(root: HTMLElement, config: SequenceMotionConfig) {
-  const { stagger, delay, idle, lines, plain } = config;
+  const { stagger, delay, idle, lines, plain, hands } = config;
   const split = SplitText.create(root, {
     type: lines ? "words,lines" : "words",
     mask: "words",
@@ -191,7 +223,12 @@ function playSequence(root: HTMLElement, config: SequenceMotionConfig) {
     autoSplit: lines,
     aria: "auto",
     reduceWhiteSpace: true,
+    // Anchors stand in for the hand. Ignore keeps SplitText from wrapping them into a word.
+    ignore: `[${textSequenceHandAnchorAttr}]`,
     onSplit(self) {
+      // Re-split restores the anchor snapshot, which drops the live slot. Put that
+      // same node back so the Rive canvas stays connected.
+      restoreHandSlots(root, hands);
       self.elements.forEach((element) => {
         const heading = element.closest("h1, h2, h3, h4, h5, h6");
         if (heading instanceof HTMLElement && heading !== element) {
@@ -320,12 +357,14 @@ function TextSequenceRoot({
       const media = window.matchMedia("(prefers-reduced-motion: reduce)");
       let split: SplitText | undefined;
       let observer: IntersectionObserver | undefined;
+      let hands: HTMLElement[] = [];
 
       const stop = () => {
         observer?.disconnect();
         observer = undefined;
         split?.revert();
         split = undefined;
+        restoreHandSlots(root, hands);
         delete root.dataset.textSequenceState;
         root.dataset.textSequenceState = "rest";
       };
@@ -335,12 +374,15 @@ function TextSequenceRoot({
           root.dataset.textSequenceState = "rest";
           return;
         }
+        const detached = detachHandSlots(root);
+        if (detached.length > 0) hands = detached;
         split = playSequence(root, {
           stagger: safeStagger,
           delay: safeDelay,
           idle,
           lines,
           plain: built.plain,
+          hands,
         });
       };
 
@@ -377,6 +419,7 @@ function TextSequenceRoot({
         media.removeEventListener("change", onMotionChange);
         observer?.disconnect();
         split?.revert();
+        restoreHandSlots(root, hands);
       };
     },
     {
