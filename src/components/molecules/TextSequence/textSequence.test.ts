@@ -410,6 +410,10 @@ describe("marketing hero text sequence story", () => {
     const pattern = source.slice(0, variantStart);
     const variant = source.slice(variantStart, variantEnd);
     expect(pattern).toContain('lead="We\'re a design and product studio based in Austin, Texas."');
+    expect(variant).toContain("We're a design and product studio based in Austin, Texas.");
+    expect(variant).toContain("delay={0.7}");
+    expect(variant).toContain("delay={1.05}");
+    expect(variant.indexOf("Austin, Texas.")).toBeLessThan(variant.indexOf("Your brand"));
     expect(variant).toContain("Your brand");
     expect(variant).toContain("is already");
     expect(variant).toContain("online");

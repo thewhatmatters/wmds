@@ -621,15 +621,18 @@ export function MarketingHeroTextSequence() {
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                {"Your brand "}
-                <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
-                {" is already "}
-                <TextSequence.Shape variant="circle" tone="accent" />
-                {" online"}
+                We're a design and product studio based in Austin, Texas.
               </TextSequence>
             }
           >
-            <TextSequence idle emphasis="none" delay={0.35} stagger={0.07}>
+            <TextSequence idle emphasis="none" delay={0.7} stagger={0.07}>
+              {"Your brand "}
+              <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
+              {" is already "}
+              <TextSequence.Shape variant="circle" tone="accent" />
+              {" online"}
+            </TextSequence>
+            <TextSequence idle emphasis="none" delay={1.05} stagger={0.07}>
               Make it <TextSequence.Shape variant="pill" tone="brand-soft" /> impossible to ignore
             </TextSequence>
           </HeroIntro>
@@ -681,15 +684,18 @@ function MarketingHeroTextSequenceView() {
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                {"Your brand "}
-                <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
-                {" is already "}
-                <TextSequence.Shape variant="circle" tone="accent" />
-                {" online"}
+                We're a design and product studio based in Austin, Texas.
               </TextSequence>
             }
           >
-            <TextSequence idle emphasis="none" delay={0.35} stagger={0.07}>
+            <TextSequence idle emphasis="none" delay={0.7} stagger={0.07}>
+              {"Your brand "}
+              <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
+              {" is already "}
+              <TextSequence.Shape variant="circle" tone="accent" />
+              {" online"}
+            </TextSequence>
+            <TextSequence idle emphasis="none" delay={1.05} stagger={0.07}>
               Make it <TextSequence.Shape variant="pill" tone="brand-soft" /> impossible to ignore
             </TextSequence>
           </HeroIntro>
@@ -856,7 +862,7 @@ export const MarketingHeroTextSequence: Story = {
       docs: {
         description: {
           story:
-            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. HeroIntro is the h1 on type-display-2 at normal weight, the same font-size and line-height as the gallery statement, full width of the page grid. The two lines are Your brand is already online and Make it impossible to ignore, with no periods. A rock RiveHand replaces the asterisk immediately after Your brand. inline sizes the canvas past the artboard padding so the drawn hand is about 1.15em, its outline bottom sits on the text baseline, the same height as the circle and the pill, and the zero-height slot keeps the line box. Outline is brand navy (#011272) from --color-brand. The hand is aria-hidden and entrance is none. TextSequence pops that slot on the beat after brand, with the same scale, rotation, and back.out(1.8) ease as the circle and the pill. Idle starts after the pop. With motion on, the state machine keeps playing once that box has size. Reduced motion draws one frame after the box has size, then pauses. The circle and the pill stay inline at about 1.15em. emphasis is none. Shapes are aria-hidden. idle spins the asterisk and stretches the pill. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
+            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. HeroIntro is the h1 on type-display-2 at normal weight, the same font-size and line-height as the gallery statement, full width of the page grid. The first line is We're a design and product studio based in Austin, Texas. Then Your brand is already online and Make it impossible to ignore, with no periods. The Austin line sequences first. The brand line waits 0.7s and the last line waits 1.05s so the 0.07s stagger continues. A rock RiveHand replaces the asterisk immediately after Your brand. inline sizes the canvas past the artboard padding so the drawn hand is about 1.15em, its outline bottom sits on the text baseline, the same height as the circle and the pill, and the zero-height slot keeps the line box. Outline is brand navy (#011272) from --color-brand. The hand is aria-hidden and entrance is none. TextSequence pops that slot on the beat after brand, with the same scale, rotation, and back.out(1.8) ease as the circle and the pill. Idle starts after the pop. With motion on, the state machine keeps playing once that box has size. Reduced motion draws one frame after the box has size, then pauses. The circle and the pill stay inline at about 1.15em. emphasis is none. Shapes are aria-hidden. idle spins the asterisk and stretches the pill. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
         },
       },
     },
@@ -868,6 +874,8 @@ export const MarketingHeroTextSequence: Story = {
     if (!(heading instanceof HTMLElement)) throw new Error("hero heading missing");
     expect(canvasElement.querySelectorAll("h1")).toHaveLength(1);
     const text = heading.textContent?.replace(/\s+/g, " ") ?? "";
+    expect(text).toContain("We're a design and product studio based in Austin, Texas.");
+    expect(text.indexOf("Austin, Texas.")).toBeLessThan(text.indexOf("Your brand"));
     expect(text).toContain("Your brand");
     expect(text).toContain("is already online");
     expect(text).toContain("Make it impossible to ignore");
@@ -889,13 +897,16 @@ export const MarketingHeroTextSequence: Story = {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     await waitFor(() => {
       const sequences = [...canvasElement.querySelectorAll("[data-text-sequence]")];
-      expect(sequences).toHaveLength(2);
+      expect(sequences).toHaveLength(3);
       for (const sequence of sequences) {
         expect(sequence.getAttribute("data-text-sequence-state")).toBe(reduced ? "rest" : "playing");
         expect(sequence.getAttribute("aria-label")).toBeNull();
       }
       if (reduced) expect(heading.getAttribute("aria-label")).toBeNull();
       else {
+        expect(heading.getAttribute("aria-label")).toContain(
+          "We're a design and product studio based in Austin, Texas.",
+        );
         expect(heading.getAttribute("aria-label")).toContain("Your brand is already online");
         expect(heading.getAttribute("aria-label")).toContain("Make it impossible to ignore");
       }
@@ -927,9 +938,11 @@ export const MarketingHeroTextSequenceNarrow: Story = {
   play: async ({ canvasElement }) => {
     expect(window.innerWidth).toBeLessThanOrEqual(400);
     const text = canvasElement.textContent?.replace(/\s+/g, " ") ?? "";
+    expect(text).toContain("We're a design and product studio based in Austin, Texas.");
     expect(text).toContain("Your brand is already online");
     expect(text).toContain("Make it impossible to ignore");
     const heading = canvasElement.querySelector("h1");
+    expect(heading?.textContent?.replace(/\s+/g, " ")).toContain("Austin, Texas.");
     expect(heading?.textContent?.replace(/\s+/g, " ")).toContain("Your brand");
     expect(heading?.textContent).not.toContain("We Are WhatMatters");
     const hand = heading?.querySelector("[data-rive-hand='rock']");
