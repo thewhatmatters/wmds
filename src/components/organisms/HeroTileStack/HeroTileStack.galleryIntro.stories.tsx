@@ -186,7 +186,7 @@ export const MarketingHeroWithGalleryIntro: Story = {
       docs: {
         description: {
           story:
-            "Same marketing hero as Pattern — marketing hero, with ScrollHorizontal.Intro as the first gallery panel. The eyebrow names the section. expandLast is unchanged: the last tile still grows to the viewport. The default Pattern — marketing hero stays on the sr-only Selected work heading.",
+            "Same marketing hero as Pattern — marketing hero, with ScrollHorizontal.Intro as the first gallery panel. The badge names the section. expandLast is unchanged: the last tile still grows to the viewport. The default Pattern — marketing hero stays on the sr-only Selected work heading.",
         },
       },
     },
@@ -201,7 +201,7 @@ export const MarketingHeroWithGalleryIntro: Story = {
     const intro = section.querySelector("[data-scroll-horizontal-intro]");
     const track = section.querySelector("[data-scroll-horizontal-track]");
     expect(track?.firstElementChild).toBe(intro);
-    expect(section.querySelector("[data-pattern='eyebrow']")?.textContent).toBe("SELECTED WORK");
+    expect(section.querySelector("[data-pattern='label']")?.textContent).toBe("SELECTED WORK");
     expect(section.textContent?.replace(/\s+/g, " ")).toContain(scrollHorizontalIntroStatement);
     expect(section.textContent).not.toContain("Selected work");
   },

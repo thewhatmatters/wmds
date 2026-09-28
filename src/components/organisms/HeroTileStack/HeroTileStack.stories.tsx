@@ -622,22 +622,15 @@ export function MarketingHeroTextSequence() {
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 {"An "}
-                <span className="whitespace-nowrap">Austin,&nbsp;TX</span>
-                {" studio specializing in brand and product design."}
+                <span className="whitespace-nowrap">
+                  Austin,&nbsp;TX{" "}
+                  <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
+                  {" "}
+                </span>
+                {"studio specializing in brand and product design."}
               </TextSequence>
             }
-          >
-            <TextSequence idle emphasis="none" delay={0.7} stagger={0.07}>
-              {"Your brand "}
-              <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
-              {" is already "}
-              <TextSequence.Shape variant="circle" tone="accent" />
-              {" online"}
-            </TextSequence>
-            <TextSequence idle emphasis="none" delay={1.05} stagger={0.07}>
-              Make it <TextSequence.Shape variant="pill" tone="brand-soft" /> impossible to ignore
-            </TextSequence>
-          </HeroIntro>
+          />
           <div className="w-full px-[var(--grid-margin)]">
             <HeroTileStack tiles={tiles} />
           </div>
@@ -687,22 +680,15 @@ function MarketingHeroTextSequenceView() {
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 {"An "}
-                <span className="whitespace-nowrap">Austin,&nbsp;TX</span>
-                {" studio specializing in brand and product design."}
+                <span className="whitespace-nowrap">
+                  Austin,&nbsp;TX{" "}
+                  <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
+                  {" "}
+                </span>
+                {"studio specializing in brand and product design."}
               </TextSequence>
             }
-          >
-            <TextSequence idle emphasis="none" delay={0.7} stagger={0.07}>
-              {"Your brand "}
-              <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
-              {" is already "}
-              <TextSequence.Shape variant="circle" tone="accent" />
-              {" online"}
-            </TextSequence>
-            <TextSequence idle emphasis="none" delay={1.05} stagger={0.07}>
-              Make it <TextSequence.Shape variant="pill" tone="brand-soft" /> impossible to ignore
-            </TextSequence>
-          </HeroIntro>
+          />
           <div className="w-full px-[var(--grid-margin)]">
             <HeroTileStack tiles={heroTiles} />
           </div>
@@ -866,7 +852,7 @@ export const MarketingHeroTextSequence: Story = {
       docs: {
         description: {
           story:
-            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. HeroIntro is the h1 on type-display-2 at normal weight, the same font-size and line-height as the gallery statement, full width of the page grid. The first line is An Austin, TX studio specializing in brand and product design. Austin, and TX stay together (non-breaking space, nowrap). The hero lines use text-wrap balance. The section is shrink-0 and justify-center-safe, so a headline taller than the minimum starts below the nav and the section grows downward. Then Your brand is already online and Make it impossible to ignore, with no periods. The Austin line sequences first. The brand line waits 0.7s and the last line waits 1.05s so the 0.07s stagger continues. A rock RiveHand replaces the asterisk immediately after Your brand. inline sizes the canvas past the artboard padding so the drawn hand is about 1.15em, its outline bottom sits on the text baseline, the same height as the circle and the pill, and the zero-height slot keeps the line box. Outline is brand navy (#011272) from --color-brand. The hand is aria-hidden and entrance is none. TextSequence pops that slot on the beat after brand, with the same scale, rotation, and back.out(1.8) ease as the circle and the pill. Idle starts after the pop. With motion on, the state machine keeps playing once that box has size. Reduced motion draws one frame after the box has size, then pauses. The circle and the pill stay inline at about 1.15em. emphasis is none. Shapes are aria-hidden. idle spins the asterisk and stretches the pill. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
+            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. HeroIntro is the h1 on type-display-2 at normal weight, the same font-size and line-height as the gallery statement, full width of the page grid. The h1 is only An Austin, TX studio specializing in brand and product design. Austin, and TX stay together (non-breaking space, nowrap), and the rock hand stays in that phrase. The line uses text-wrap balance. The section is shrink-0 and justify-center-safe, so a headline taller than the minimum starts below the nav and the section grows downward. A rock RiveHand sits immediately after TX. inline sizes the canvas past the artboard padding so the drawn hand is about 1.15em and is centered on the line, and the zero-height slot keeps the line box. Outline is brand navy (#011272) from --color-brand. The hand is aria-hidden and entrance is none. TextSequence pops that slot on the beat after TX, with scale from 0, rotation -16, and back.out(1.8). Idle starts after the pop. With motion on, the state machine keeps playing once that box has size. Reduced motion draws one frame after the box has size, then pauses. emphasis is none. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
         },
       },
     },
@@ -879,29 +865,28 @@ export const MarketingHeroTextSequence: Story = {
     expect(canvasElement.querySelectorAll("h1")).toHaveLength(1);
     const text = heading.textContent?.replace(/\s+/g, " ") ?? "";
     expect(text).toContain("An Austin, TX studio specializing in brand and product design.");
-    expect(text.indexOf("Austin, TX")).toBeLessThan(text.indexOf("Your brand"));
-    expect(text).toContain("Your brand");
-    expect(text).toContain("is already online");
-    expect(text).toContain("Make it impossible to ignore");
+    expect(text).not.toContain("Your brand");
+    expect(text).not.toContain("Make it impossible to ignore");
     expect(text).not.toContain("We Are WhatMatters");
     const hand = heading.querySelector("[data-rive-hand='rock']");
     const slot = hand?.closest("[data-rive-hand-slot]");
     if (!(hand instanceof HTMLElement) || !(slot instanceof HTMLElement)) throw new Error("inline rock hand missing");
     expect(hand.getAttribute("aria-hidden")).toBe("true");
+    expect(slot.parentElement?.className).toContain("whitespace-nowrap");
     expect(slot.getAttribute("data-rive-hand-slot")).toBe("rock");
+    const tx = [...heading.querySelectorAll("[data-text-sequence-word]")].find(
+      (node) => node.textContent === "TX",
+    );
+    expect(tx?.compareDocumentPosition(slot) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(getComputedStyle(slot).height).toBe("0px");
     const lineHeight = Number.parseFloat(getComputedStyle(heading).lineHeight);
     const lines = Math.round(heading.getBoundingClientRect().height / lineHeight);
     expect(Math.abs(heading.getBoundingClientRect().height - lines * lineHeight)).toBeLessThanOrEqual(1.5);
-    const shapes = [...canvasElement.querySelectorAll("[data-text-sequence-shape]")];
-    expect(shapes.map((shape) => shape.getAttribute("data-variant"))).toEqual(["circle", "pill"]);
-    for (const shape of shapes) {
-      expect(shape.getAttribute("aria-hidden")).toBe("true");
-    }
+    expect(canvasElement.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(0);
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     await waitFor(() => {
       const sequences = [...canvasElement.querySelectorAll("[data-text-sequence]")];
-      expect(sequences).toHaveLength(3);
+      expect(sequences).toHaveLength(1);
       for (const sequence of sequences) {
         expect(sequence.getAttribute("data-text-sequence-state")).toBe(reduced ? "rest" : "playing");
         expect(sequence.getAttribute("aria-label")).toBeNull();
@@ -911,8 +896,8 @@ export const MarketingHeroTextSequence: Story = {
         expect(heading.getAttribute("aria-label")).toContain(
           "An Austin, TX studio specializing in brand and product design.",
         );
-        expect(heading.getAttribute("aria-label")).toContain("Your brand is already online");
-        expect(heading.getAttribute("aria-label")).toContain("Make it impossible to ignore");
+        expect(heading.getAttribute("aria-label")).not.toContain("Your brand");
+        expect(heading.getAttribute("aria-label")).not.toContain("Make it");
       }
     });
     await expectRockHandCanvas(canvasElement);
@@ -943,11 +928,11 @@ export const MarketingHeroTextSequenceNarrow: Story = {
     expect(window.innerWidth).toBeLessThanOrEqual(400);
     const text = canvasElement.textContent?.replace(/\s+/g, " ") ?? "";
     expect(text).toContain("An Austin, TX studio specializing in brand and product design.");
-    expect(text).toContain("Your brand is already online");
-    expect(text).toContain("Make it impossible to ignore");
+    expect(text).not.toContain("Your brand is already online");
+    expect(text).not.toContain("Make it impossible to ignore");
     const heading = canvasElement.querySelector("h1");
     expect(heading?.textContent?.replace(/\s+/g, " ")).toContain("Austin, TX");
-    expect(heading?.textContent?.replace(/\s+/g, " ")).toContain("Your brand");
+    expect(heading?.textContent).not.toContain("Your brand");
     expect(heading?.textContent).not.toContain("We Are WhatMatters");
     const hand = heading?.querySelector("[data-rive-hand='rock']");
     const slot = hand?.closest("[data-rive-hand-slot]");
@@ -960,7 +945,8 @@ export const MarketingHeroTextSequenceNarrow: Story = {
     const lines = Math.round(heading.getBoundingClientRect().height / lineHeight);
     expect(Math.abs(heading.getBoundingClientRect().height - lines * lineHeight)).toBeLessThanOrEqual(1.5);
     await waitFor(() => {
-      expect(canvasElement.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(2);
+      expect(canvasElement.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(0);
+      expect(canvasElement.querySelectorAll("[data-text-sequence]")).toHaveLength(1);
     });
     expectSequenceInsideViewport(canvasElement);
     await expectRockHandCanvas(canvasElement);

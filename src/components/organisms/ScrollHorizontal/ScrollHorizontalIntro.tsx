@@ -26,8 +26,9 @@ export interface ScrollHorizontalIntroAction {
 
 export interface ScrollHorizontalIntroProps {
   /**
-   * Eyebrow chip. Names the section (`aria-labelledby`), replacing `heading`.
-   * Pass the short label, for example `SELECTED WORK`.
+   * Section label. Rendered as the **Badge** label pill and names the section
+   * (`aria-labelledby`), replacing `heading`. Pass the short label, for example
+   * `SELECTED WORK`.
    */
   eyebrow: string;
   /**
@@ -41,10 +42,11 @@ export interface ScrollHorizontalIntroProps {
 }
 
 /**
- * First panel of **ScrollHorizontal**. Composes **Badge** `eyebrow`, a
- * `type-display-2` **TextSequence** inside the `h2` (display-2 leading, same as **HeroIntro**), and **Button**
+ * First panel of **ScrollHorizontal**. Composes the **Badge** label pill
+ * (neutral, sm, solid — the category pill), a `type-display-2` **TextSequence**
+ * inside the `h2` (display-2 leading, same as **HeroIntro**), and **Button**
  * `role="secondary"` with no extra className. Secondary has no icon slot.
- * The eyebrow is the section's accessible name. The statement is the `h2`.
+ * The badge is the section's accessible name. The statement is the `h2`.
  * The sequence runs once, when the statement scrolls into view.
  */
 export function ScrollHorizontalIntro({ eyebrow, statement, action }: ScrollHorizontalIntroProps) {
@@ -53,9 +55,7 @@ export function ScrollHorizontalIntro({ eyebrow, statement, action }: ScrollHori
   return (
     <div className={scrollHorizontalIntroBodyClasses}>
       <div className={scrollHorizontalIntroCopyClasses}>
-        <Badge eyebrow id={labelId}>
-          {eyebrow}
-        </Badge>
+        <Badge id={labelId}>{eyebrow}</Badge>
         <h2 className={scrollHorizontalIntroStatementClasses}>
           <TextSequence trigger="inView" emphasis="none">
             {statement}

@@ -9,7 +9,6 @@ import {
   badgeIconGapClasses,
   badgeIconOnlySizeClasses,
   badgeLabelSizeClasses,
-  badgeEyebrowClasses,
   badgeSolidClasses,
   badgeSurfaceClasses,
   type BadgeEmphasis,
@@ -57,27 +56,15 @@ export interface BadgeProps {
   avatar?: BadgeAvatar;
   /** Circular icon-only badge — **TaskRows** leading done/failed. Requires `icon`; no `children`. */
   iconOnly?: boolean;
-  /**
-   * Mono uppercase eyebrow chip on the accent fill. Text only — not with
-   * `icon`, `count`, `avatar`, or `iconOnly`. Names a section when the chip
-   * is the accessible label.
-   */
-  eyebrow?: boolean;
-  /** DOM id — section `aria-labelledby` targets the eyebrow chip. */
+  /** DOM id — section `aria-labelledby` targets this badge. */
   id?: string;
   /** Layout-only: margin in prose, flex placement. */
   className?: BadgeLayoutClassName;
 }
 
 function assertBadgePattern(
-  props: Pick<BadgeProps, "count" | "icon" | "avatar" | "iconOnly" | "children" | "eyebrow">,
+  props: Pick<BadgeProps, "count" | "icon" | "avatar" | "iconOnly" | "children">,
 ) {
-  if (props.eyebrow && (props.icon || props.iconOnly || props.count != null || props.avatar)) {
-    console.warn(
-      "[WMDS Badge] `eyebrow` is mutually exclusive with `icon`, `iconOnly`, `count`, and `avatar`.",
-    );
-  }
-
   if (props.avatar && (props.icon || props.iconOnly || props.count != null)) {
     console.warn("[WMDS Badge] `avatar` is mutually exclusive with `icon`, `iconOnly`, and `count`.");
   }
@@ -114,24 +101,10 @@ export function Badge({
   icon,
   avatar,
   iconOnly = false,
-  eyebrow = false,
   id,
   className,
 }: BadgeProps) {
-  assertBadgePattern({ count, icon, avatar, iconOnly, children, eyebrow });
-
-  if (eyebrow && !icon && !iconOnly && count == null && avatar == null) {
-    return (
-      <span
-        id={id}
-        className={cn(badgeBaseClasses, badgeEyebrowClasses, className)}
-        data-pattern="eyebrow"
-        data-size={size}
-      >
-        {children}
-      </span>
-    );
-  }
+  assertBadgePattern({ count, icon, avatar, iconOnly, children });
 
   const surface = badgeSurfaceClasses(variant, emphasis);
   const isCount = count != null && avatar == null;
@@ -142,6 +115,7 @@ export function Badge({
   if (isCount) {
     return (
       <span
+        id={id}
         className={cn(badgeBaseClasses, surface, badgeCountSizeClasses[size], className)}
         data-variant={variant}
         data-size={size}
@@ -156,6 +130,7 @@ export function Badge({
   if (isIconOnly) {
     return (
       <span
+        id={id}
         className={cn(badgeBaseClasses, badgeSolidClasses[variant], badgeIconOnlySizeClasses, className)}
         data-variant={variant}
         data-pattern="icon-only"
@@ -168,6 +143,7 @@ export function Badge({
 
   return (
     <span
+      id={id}
       className={cn(
         badgeBaseClasses,
         surface,

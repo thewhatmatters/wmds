@@ -87,8 +87,8 @@ export interface RiveHandProps {
   size?: number | string;
   /**
    * Sit in a text line. The canvas is larger than the artboard padding so the
-   * drawn hand is about 1.15em, and the outline bottom sits on the text baseline.
-   * The in-flow slot is zero height, so the line box does not grow.
+   * drawn hand is about 1.15em and centered on the line. The in-flow slot is
+   * zero height, so the line box does not grow.
    * This prop skips the hand's own slide or grow. A TextSequence parent still pops the slot.
    */
   inline?: boolean;

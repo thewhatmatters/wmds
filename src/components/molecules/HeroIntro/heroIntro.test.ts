@@ -70,6 +70,31 @@ describe("HeroIntro", () => {
     expect(intro?.className).not.toContain("lg:col-start-4");
     const lead = intro?.querySelector(":scope > span");
     expect(lead?.className).not.toContain("whitespace-nowrap");
+    expect(intro?.querySelectorAll(":scope > span")).toHaveLength(2);
+
+    root.unmount();
+    container.remove();
+  });
+
+  it("omits the rest line when the sequenced hero passes only the lead", async () => {
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+    const root = createRoot(container);
+
+    await act(async () => {
+      root.render(
+        createElement(HeroIntro, {
+          lead: "An Austin, TX studio specializing in brand and product design.",
+          step: "display",
+        }),
+      );
+    });
+
+    const intro = container.querySelector("h1");
+    const spans = intro?.querySelectorAll(":scope > span");
+    expect(spans).toHaveLength(1);
+    expect(spans?.[0]?.textContent).toBe("An Austin, TX studio specializing in brand and product design.");
+    expect(intro?.textContent).not.toContain("Your brand");
 
     root.unmount();
     container.remove();

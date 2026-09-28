@@ -70,7 +70,7 @@ export interface ScrollHorizontalProps {
   /**
    * Optional section name. `sr-only` while the window is pinned (it stays the
    * accessible name). Visible above the row when motion is reduced.
-   * Ignored when `intro` is set — the intro eyebrow names the section instead.
+   * Ignored when `intro` is set — the intro badge names the section instead.
    */
   heading?: ReactNode;
   /**
@@ -113,7 +113,7 @@ export interface ScrollHorizontalProps {
  * `intro` (**ScrollHorizontal.Intro**) is the first panel. Its left edge is the
  * page-grid content start (the same inset as `grid-page`), clear of the site
  * nav, with the tiles to its right. Vertical scroll carries that panel off the
- * left edge with the tiles. The eyebrow names the section. Reduced motion
+ * left edge with the tiles. The badge names the section. Reduced motion
  * stacks the same panel above the native row and keeps the inset.
  *
  * The server render and the hydration render both use the motion shell

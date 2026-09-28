@@ -172,11 +172,10 @@ export const riveHandInlineVisibleEm = 1.15;
 
 /**
  * Pop origin for a hand slot inside TextSequence.
- * The slot is zero height on the baseline, so `50% 50%` would be the wrist.
- * This is the drawn ink's center: half of `riveHandInlineVisibleEm` above that line,
- * the same visual center the circle and pill use.
+ * The slot is zero height and the ink is centered on it, so `50% 50%` is the
+ * drawn hand's center — the same visual center the circle and pill use.
  */
-export const riveHandSequenceOrigin = `50% -${(riveHandInlineVisibleEm / 2).toFixed(3)}em`;
+export const riveHandSequenceOrigin = "50% 50%";
 
 /** Set on the slot when the sequence pop finishes. Idle waits for it inside a TextSequence. */
 export const riveHandEnteredAttr = "data-rive-hand-entered";
@@ -184,12 +183,11 @@ export const riveHandEnteredAttr = "data-rive-hand-entered";
 /**
  * Drawn outline as a fraction of the square canvas, measured from a raster
  * after Rive has fit the artboard. Both hands sit in padding, and the rock
- * outline is only about half the canvas height. `bottom` is the outline's
- * lower edge (the rock wrist), not the center of that last pixel.
+ * outline is only about half the canvas height.
  */
 export const riveHandInkFractions = {
-  rock: { width: 0.324, height: 0.505, centerX: 0.5, centerY: 0.409, bottom: 0.6696 },
-  point: { width: 0.455, height: 0.422, centerX: 0.462, centerY: 0.545, bottom: 0.7681 },
+  rock: { width: 0.324, height: 0.505, centerX: 0.5, centerY: 0.409 },
+  point: { width: 0.455, height: 0.422, centerX: 0.462, centerY: 0.545 },
 } as const;
 
 export interface RiveHandInlineLayout {
@@ -197,11 +195,7 @@ export interface RiveHandInlineLayout {
   box: string;
   /** In-flow gap. Zero height, as wide as the drawn hand. */
   slot: string;
-  /**
-   * Shifts the canvas so the drawn outline's bottom edge sits on the slot.
-   * The slot is baseline-aligned, so that edge meets the text baseline.
-   * Horizontal shift still centers the ink in the slot.
-   */
+  /** Shifts the canvas so the ink center sits on the slot center. */
   transform: string;
 }
 
@@ -209,35 +203,21 @@ function riveHandFixed(value: number): string {
   return value.toFixed(2);
 }
 
-/** Drawn outline bottom, as a fraction of the canvas from the top. Artboard padding is already in the ink box. */
-export function riveHandInkBottom(hand: RiveHandName): number {
-  return riveHandInkFractions[hand].bottom;
-}
-
-/**
- * Scale and shift that make the drawn hand about 1.15em, with its outline
- * bottom on the text baseline. The slot stays zero height so the line box
- * does not grow.
- */
+/** Scale and shift that make the drawn hand about 1.15em, centered on the line. */
 export function riveHandInlineLayout(hand: RiveHandName): RiveHandInlineLayout {
   const ink = riveHandInkFractions[hand];
   const boxEm = riveHandInlineVisibleEm / ink.height;
   const slotEm = boxEm * ink.width;
-  const shiftX = -50 - (ink.centerX - 0.5) * 100;
-  const shiftY = -riveHandInkBottom(hand) * 100;
   return {
     box: `${riveHandFixed(boxEm)}em`,
     slot: `${riveHandFixed(slotEm)}em`,
-    transform: `translate(${riveHandFixed(shiftX)}%, ${riveHandFixed(shiftY)}%)`,
+    transform: `translate(${riveHandFixed(-50 - (ink.centerX - 0.5) * 100)}%, ${riveHandFixed(-50 - (ink.centerY - 0.5) * 100)}%)`,
   };
 }
 
-/**
- * Zero-height inline gap. `align-baseline` puts the slot on the text baseline.
- * The canvas is absolute, so the line box stays put.
- */
+/** Zero-height inline gap. The canvas is absolute, so the line box stays put. */
 export const riveHandInlineSlotClassName =
-  "pointer-events-none relative mx-[0.08em] inline-block h-0 shrink-0 select-none align-baseline";
+  "pointer-events-none relative mx-[0.08em] inline-block h-0 shrink-0 select-none align-middle";
 
 export function cssColorToRgb(value: string): Rgb | null {
   const trimmed = value.trim();

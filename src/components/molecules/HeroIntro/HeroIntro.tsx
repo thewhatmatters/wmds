@@ -19,11 +19,14 @@ export type HeroIntroStep = (typeof heroIntroSteps)[number];
 export interface HeroIntroProps {
   /**
    * First sentence. Wraps when the measure is shorter than the line, including from `md`.
-   * The rest of the intro always starts on the next line.
+   * When `children` is passed, the rest of the intro starts on the next line.
    */
   lead: ReactNode;
-  /** Rest of the intro. Always starts on a new line, on the same type step and leading. */
-  children: ReactNode;
+  /**
+   * Rest of the intro. When present, starts on a new line, on the same type step and leading.
+   * Omit it when the heading is only the lead, as on the sequenced hero.
+   */
+  children?: ReactNode;
   /**
    * `large` — `type-display-2` at normal weight, columns 4–9 from `lg`. The default hero.
    * `display` — the same size, full width of the page grid. The sequenced hero.
@@ -35,16 +38,17 @@ export interface HeroIntroProps {
 }
 
 /**
- * Marketing hero heading. `lead` is line 1. `children` is line 2.
+ * Marketing hero heading. `lead` is the first line. `children`, when passed, is the next line.
  * The component owns the break. This is the page `h1`.
  */
 export function HeroIntro({ lead, children, step = "large", className }: HeroIntroProps) {
   const display = step === "display";
+  const rest = children != null && children !== false;
   return (
     <div className={cn(heroIntroPageClasses, className)}>
       <h1 className={display ? heroIntroDisplayCopyClasses : heroIntroCopyClasses}>
         <span className={display ? heroIntroDisplayLeadClasses : heroIntroLeadClasses}>{lead}</span>
-        <span className={heroIntroRestClasses}>{children}</span>
+        {rest ? <span className={heroIntroRestClasses}>{children}</span> : null}
       </h1>
     </div>
   );
