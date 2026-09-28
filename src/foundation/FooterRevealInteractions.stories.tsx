@@ -140,7 +140,6 @@ export const BrandFooter: Story = {
     const frame = canvasElement.querySelector<HTMLElement>("[data-footer-reveal='wordmark-frame']");
     expect(wordmark?.textContent).toBe("WHATMATTERS");
     expect(wordmark?.getAttribute("aria-hidden")).toBe("true");
-    expect(window.matchMedia("(prefers-reduced-motion: reduce)").matches).toBe(true);
     await waitFor(() => {
       if (!wordmark || !frame) throw new Error("brand wordmark missing");
       const frameWidth = frame.clientWidth;

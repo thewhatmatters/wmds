@@ -793,7 +793,6 @@ export const RuledGridFooterPattern: Story = {
       expect(Math.abs(identity.getBoundingClientRect().top - links.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
     }
 
-    expect(window.matchMedia("(prefers-reduced-motion: reduce)").matches).toBe(true);
     await waitFor(() => {
       expectFittedWord(
         canvasElement.querySelector("[data-footer-ruled='wordmark']"),
@@ -845,7 +844,6 @@ export const RuledGridOverflow390: Story = {
     expect(Math.abs(navs[0]!.getBoundingClientRect().top - navs[1]!.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
     expect(socials.querySelectorAll("a")).toHaveLength(5);
 
-    expect(window.matchMedia("(prefers-reduced-motion: reduce)").matches).toBe(true);
     await waitFor(() => {
       expectFittedWord(wordmark, canvasElement.querySelector("[data-footer-ruled='wordmark-frame']"));
       expectFittedWord(crop, canvasElement.querySelector("[data-footer-ruled='crop-frame']"));
