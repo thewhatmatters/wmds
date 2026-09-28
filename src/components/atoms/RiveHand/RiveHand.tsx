@@ -96,9 +96,10 @@ export interface RiveHandProps {
    */
   active?: boolean;
   /**
-   * Plays `Boolean 1` on a random 4–9s timer, per hand, while the page is visible
-   * and the sized hand box is in view. The zero-height inline slot is not the
-   * visibility target. Default is on. Reduced motion never starts the timer.
+   * Holds `Boolean 1` for 1.1s, then waits a random 1–2s before the next pulse.
+   * Per hand, while the page is visible and the sized hand box is in view.
+   * The zero-height inline slot is not the visibility target. Default is on.
+   * Reduced motion never starts the timer.
    */
   idle?: boolean;
   /**
