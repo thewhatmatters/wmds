@@ -60,6 +60,7 @@ import {
   siteNavMenuReadThumbClasses,
   siteNavMiddleClasses,
   siteNavMiddleHugClasses,
+  siteNavMiddleHugResponsiveClasses,
   siteNavMobileLinkClasses,
   siteNavMiddleResponsiveClasses,
   siteNavMobileListClasses,
@@ -228,10 +229,15 @@ function SiteNavRoot({
         {hasStart ? <div className={siteNavStartClasses}>{start}</div> : null}
         {hasMiddle ? (
           <div
-            className={cn(
-              useHugCluster ? siteNavMiddleHugClasses : siteNavMiddleClasses,
-              hasMobile && siteNavMiddleResponsiveClasses,
-            )}
+            className={
+              hasMobile
+                ? useHugCluster
+                  ? siteNavMiddleHugResponsiveClasses
+                  : siteNavMiddleResponsiveClasses
+                : useHugCluster
+                  ? siteNavMiddleHugClasses
+                  : siteNavMiddleClasses
+            }
           >
             {middle}
           </div>
