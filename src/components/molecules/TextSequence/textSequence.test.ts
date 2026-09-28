@@ -47,6 +47,29 @@ describe("sequencePlainText", () => {
     ]);
     expect(plain).toBe("Your brand is already online");
   });
+
+  it("keeps a nowrap phrase together and still counts both words", () => {
+    const plain = sequencePlainText([
+      "We're a design and product studio based in ",
+      createElement("span", { className: "whitespace-nowrap" }, "Austin,\u00A0Texas."),
+    ]);
+    expect(plain).toBe("We're a design and product studio based in Austin, Texas.");
+    const html = renderToStaticMarkup(
+      createElement(
+        TextSequence,
+        { emphasis: "none", idle: false },
+        "We're a design and product studio based in ",
+        createElement("span", { className: "whitespace-nowrap" }, "Austin,\u00A0Texas."),
+      ),
+    );
+    expect(html).toContain('class="whitespace-nowrap"');
+    expect(html).toContain("Austin,</span>\u00A0<span");
+    expect(html).toContain("Texas.");
+    expect(html).toContain(
+      'data-plain="We&#x27;re a design and product studio based in Austin, Texas."',
+    );
+    expect(html.match(/data-text-sequence-word=/g)).toHaveLength(10);
+  });
 });
 
 describe("TextSequence server markup", () => {
@@ -409,11 +432,13 @@ describe("marketing hero text sequence story", () => {
     expect(variantEnd).toBeGreaterThan(variantStart);
     const pattern = source.slice(0, variantStart);
     const variant = source.slice(variantStart, variantEnd);
-    expect(pattern).toContain('lead="We\'re a design and product studio based in Austin, Texas."');
-    expect(variant).toContain("We're a design and product studio based in Austin, Texas.");
+    expect(pattern).toContain('lead="We\'re a design and product studio based in Austin,\u00A0Texas."');
+    expect(variant).toContain('{"We\'re a design and product studio based in "}');
+    expect(variant).toContain("Austin,&nbsp;Texas.");
+    expect(variant).toContain('className="whitespace-nowrap"');
     expect(variant).toContain("delay={0.7}");
     expect(variant).toContain("delay={1.05}");
-    expect(variant.indexOf("Austin, Texas.")).toBeLessThan(variant.indexOf("Your brand"));
+    expect(variant.indexOf("Austin,&nbsp;Texas.")).toBeLessThan(variant.indexOf("Your brand"));
     expect(variant).toContain("Your brand");
     expect(variant).toContain("is already");
     expect(variant).toContain("online");

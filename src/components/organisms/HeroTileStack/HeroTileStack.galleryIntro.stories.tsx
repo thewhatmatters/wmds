@@ -83,9 +83,9 @@ export function MarketingHeroWithGalleryIntro() {
           </>
         }
       />
-      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-16 text-center">
+      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-16 text-center">
         <div className="flex w-full flex-col items-center gap-6">
-          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
+          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
             We help brands stand out{" "}
             <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
             {" "}with bold ideas, fresh approaches, and products people actually love to use.
@@ -150,9 +150,9 @@ function GalleryIntroHero() {
           </>
         }
       />
-      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-16 text-center">
+      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-16 text-center">
         <div className="flex w-full flex-col items-center gap-6">
-          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
+          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
             We help brands stand out{" "}
             <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
             {" "}with bold ideas, fresh approaches, and products people actually love to use.

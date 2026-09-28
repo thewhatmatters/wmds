@@ -94,6 +94,12 @@ function isShapeElement(child: ReactNode): child is ReactElement<TextSequenceSha
   return isValidElement(child) && child.type === TextSequenceShape;
 }
 
+function isNowrapSpan(child: ReactNode): child is ReactElement<{ children?: ReactNode; className?: string }> {
+  if (!isValidElement(child) || child.type !== "span") return false;
+  const className = (child.props as { className?: unknown }).className;
+  return typeof className === "string" && className.split(/\s+/).includes("whitespace-nowrap");
+}
+
 export function sequencePlainText(children: ReactNode): string {
   return buildSequence(children, "none").plain;
 }
@@ -137,6 +143,20 @@ function buildSequence(children: ReactNode, emphasis: TextSequenceEmphasis): Bui
     if (!isValidElement(child)) return;
     if (child.type === Fragment) {
       walk((child.props as { children?: ReactNode }).children);
+      return;
+    }
+    // A nowrap span keeps a phrase on one line (Austin, Texas) while its words
+    // still take stagger beats. SplitText recurses into the span; nowrap holds
+    // the phrase together after that split turns a non-breaking space into a space.
+    if (isNowrapSpan(child)) {
+      const start = nodes.length;
+      walk((child.props as { children?: ReactNode }).children);
+      const wrapped = nodes.splice(start);
+      nodes.push(
+        <span key={`keep-${wordIndex}`} className="whitespace-nowrap">
+          {wrapped}
+        </span>,
+      );
       return;
     }
     if (isShapeElement(child)) {

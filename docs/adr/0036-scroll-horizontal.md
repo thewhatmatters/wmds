@@ -98,7 +98,7 @@ The gallery statement animates with **TextSequence** (ADR-0037).
 
 **Date:** 2026-09-28
 
-The statement `h2` stays `type-display-2` at normal weight and the display-2 leading (`1.2`). It also sets `text-wrap: pretty`, so the last word is not left on a line by itself. The hero `h1` uses that same font-size and line-height (ADR-0035 update).
+The statement `h2` stays `type-display-2` at normal weight and the display-2 leading (`1.2`). It also sets `text-wrap: pretty`, so the last word is not left on a line by itself. The hero `h1` uses that same font-size and line-height, with `text-wrap: balance` (ADR-0035 update).
 
 ## Non-goals
 

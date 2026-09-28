@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest";
 import { HeroIntro } from "./HeroIntro";
 import { heroIntroLeadClasses, heroIntroRestClasses } from "./heroIntroStyles";
 
-const leadCopy = "We're a design and product studio based in Austin, Texas.";
+const leadCopy = "We're a design and product studio based in Austin, Texas.";
 
 describe("HeroIntro", () => {
   it("puts the lead on its own line and the rest on the next line", async () => {
@@ -37,7 +37,7 @@ describe("HeroIntro", () => {
     expect(intro?.className).toContain("lg:col-end-10");
     expect(intro?.className).toContain("type-display-2");
     expect(intro?.className).toContain("!font-normal");
-    expect(intro?.className).toContain("text-pretty");
+    expect(intro?.className).toContain("text-balance");
     expect(intro?.className).not.toContain("type-large");
     expect(spans?.[0]?.className).not.toContain("whitespace-nowrap");
     expect(spans).toHaveLength(2);
@@ -65,7 +65,7 @@ describe("HeroIntro", () => {
     const intro = container.querySelector("h1");
     expect(intro?.className).toContain("type-display-2");
     expect(intro?.className).toContain("!font-normal");
-    expect(intro?.className).toContain("text-pretty");
+    expect(intro?.className).toContain("text-balance");
     expect(intro?.className).toContain("col-span-full");
     expect(intro?.className).not.toContain("lg:col-start-4");
     const lead = intro?.querySelector(":scope > span");

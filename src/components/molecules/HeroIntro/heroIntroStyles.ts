@@ -9,12 +9,13 @@ export const heroIntroPageClasses = "grid-page w-full !py-0";
 /**
  * Centered `h1` on `type-display-2` at normal weight — the same size and
  * leading as **ScrollHorizontal.Intro** and the sequenced hero. `!font-normal`
- * beats the display token's semibold. `text-pretty` keeps a last word from sitting alone.
+ * beats the display token's semibold. `text-balance` evens wrapped lines so a
+ * last line is not a single word.
  * Columns 4–9 from `lg` (6 of 12). Full width of the page grid below `lg`.
  * The lead wraps inside that measure.
  */
 export const heroIntroCopyClasses = [
-  "type-display-2 !font-normal text-pretty",
+  "type-display-2 !font-normal text-balance",
   "col-span-full min-w-0 text-center text-muted lg:col-start-4 lg:col-end-10",
 ].join(" ");
 
@@ -29,10 +30,10 @@ export const heroIntroRestClasses = "block";
  * default intro and **ScrollHorizontal.Intro**. Full width of the page grid —
  * columns 4–9 are the default measure and are too narrow for this longer line
  * with shapes. `!font-normal` wins over the display token's semibold.
- * `text-pretty` keeps a last word from sitting alone.
+ * `text-balance` evens wrapped lines so a last line is not a single word.
  */
 export const heroIntroDisplayCopyClasses = [
-  "type-display-2 !font-normal text-pretty",
+  "type-display-2 !font-normal text-balance",
   "col-span-full min-w-0 text-center text-muted",
 ].join(" ");
 

@@ -107,13 +107,14 @@ export function SequencedMarketingHeroPage() {
             </>
           }
         />
-        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-12 text-center">
+        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-12 text-center">
           <div className="flex w-full flex-col items-center gap-6">
           <HeroIntro
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                We're a design and product studio based in Austin, Texas.
+                {"We're a design and product studio based in "}
+                <span className="whitespace-nowrap">Austin,&nbsp;Texas.</span>
               </TextSequence>
             }
           >
@@ -232,13 +233,14 @@ function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
             </>
           }
         />
-        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-12 text-center">
+        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-12 text-center">
           <div className="flex w-full flex-col items-center gap-6">
           <HeroIntro
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                We're a design and product studio based in Austin, Texas.
+                {"We're a design and product studio based in "}
+                <span className="whitespace-nowrap">Austin,&nbsp;Texas.</span>
               </TextSequence>
             }
           >
@@ -381,9 +383,9 @@ function expectSequencedHeroMatchesGallery(root: ParentNode) {
   expect(statementStyle.fontWeight).toBe("400");
   expect(heroCopy.className).toContain("type-display-2");
   expect(statement.className).toContain("type-display-2");
-  expect(heroCopy.className).toContain("text-pretty");
+  expect(heroCopy.className).toContain("text-balance");
   expect(statement.className).toContain("text-pretty");
-  expect(heroStyle.textWrap).toBe("pretty");
+  expect(heroStyle.textWrap).toBe("balance");
   expect(statementStyle.textWrap).toBe("pretty");
   expect(heroCopy.scrollWidth).toBeLessThanOrEqual(heroCopy.clientWidth + 1);
   expect(statement.scrollWidth).toBeLessThanOrEqual(statement.clientWidth + 1);
