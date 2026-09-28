@@ -753,6 +753,36 @@ function expectRuledFooterFits(root: ParentNode) {
   expectCreditFits(root);
 }
 
+/**
+ * Each social divider's bottom edge meets the band's bottom rule.
+ * The rule is the band's `border-b`; its top edge is the row's bottom.
+ */
+function expectSocialDividersMeetBottomRule(root: ParentNode) {
+  const socials = root.querySelector<HTMLElement>("[data-footer-ruled='socials']");
+  const band = socials?.closest<HTMLElement>("[data-footer-ruled='band']");
+  if (!socials || !band) throw new Error("social row missing");
+  const rule =
+    band.getBoundingClientRect().bottom -
+    Number.parseFloat(getComputedStyle(band).borderBottomWidth);
+  const row = socials.getBoundingClientRect();
+  expect(Math.abs(row.bottom - rule)).toBeLessThanOrEqual(0.5);
+  const cells = [...socials.querySelectorAll<HTMLAnchorElement>(":scope > a")];
+  const dividers = [...socials.querySelectorAll<HTMLElement>("[data-footer-ruled='social-divider']")];
+  expect(cells.length).toBeGreaterThan(1);
+  expect(dividers).toHaveLength(cells.length - 1);
+  const ruleColor = getComputedStyle(band).borderBottomColor;
+  for (let index = 0; index < dividers.length; index += 1) {
+    const divider = dividers[index]!;
+    const box = divider.getBoundingClientRect();
+    expect(Math.abs(box.bottom - rule)).toBeLessThanOrEqual(0.5);
+    expect(Math.abs(box.top - row.top)).toBeLessThanOrEqual(0.5);
+    expect(Math.abs(box.right - cells[index]!.getBoundingClientRect().right)).toBeLessThanOrEqual(0.5);
+    expect(getComputedStyle(divider).width).toBe("1px");
+    expect(getComputedStyle(divider).backgroundColor).toBe(ruleColor);
+    expect(getComputedStyle(cells[index]!).borderRightWidth).toBe("0px");
+  }
+}
+
 function expectVerticalRulesOnColumns(root: ParentNode) {
   const columns = [...root.querySelectorAll<HTMLElement>(".grid-guides-col")];
   expect(columns.length).toBeGreaterThan(1);
@@ -787,6 +817,12 @@ const ruledReviewViewports = {
     name: "Review 2560",
     styles: { width: "2560px", height: "1440px" },
     type: "desktop" as const,
+  },
+  /** Contact cell is taller than a square social anchor — the divider gap. */
+  review900: {
+    name: "Review 900",
+    styles: { width: "900px", height: "900px" },
+    type: "tablet" as const,
   },
 };
 
@@ -857,6 +893,7 @@ export const RuledGridFooterPattern: Story = {
 
     const socials = canvasElement.querySelectorAll<HTMLAnchorElement>("[data-footer-ruled='socials'] a");
     expect(socials).toHaveLength(5);
+    expectSocialDividersMeetBottomRule(canvasElement);
     for (const link of socials) {
       expect(link.getAttribute("aria-label")?.length ?? 0).toBeGreaterThan(0);
       expect(link.className).toContain("focus-visible:ring-brand");
@@ -934,6 +971,7 @@ export const RuledGridOverflow390: Story = {
     expect(navs).toHaveLength(2);
     expect(Math.abs(navs[0]!.getBoundingClientRect().top - navs[1]!.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
     expect(socials.querySelectorAll("a")).toHaveLength(5);
+    expectSocialDividersMeetBottomRule(canvasElement);
 
     const grid = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='grid']");
     if (!grid) throw new Error("ruled grid missing");
@@ -960,7 +998,7 @@ export const RuledGridOverflow390: Story = {
 };
 
 function ruledColumnsStory(
-  id: "review1024" | "review1440" | "review2560",
+  id: "review900" | "review1024" | "review1440" | "review2560",
   minWidth: number,
   maxWidth: number,
   minHeight: number,
@@ -998,10 +1036,20 @@ function ruledColumnsStory(
         );
       });
       expectRuledFooterFits(canvasElement);
+      expectSocialDividersMeetBottomRule(canvasElement);
     },
   };
 }
 
+export const RuledGridSocialDividers900: Story = {
+  ...ruledColumnsStory("review900", 900, 920, 860, 940),
+  name: "Ruled grid — social dividers",
+  render: () => (
+    <MotionConfig reducedMotion="always">
+      <RuledGridWithGuides />
+    </MotionConfig>
+  ),
+};
 export const RuledGridFits1024: Story = ruledColumnsStory("review1024", 1024, 1040, 600, 640);
 export const RuledGridColumns1440: Story = ruledColumnsStory("review1440", 1440, 1455, 880, 920);
 export const RuledGridColumns2560: Story = ruledColumnsStory("review2560", 2560, 2575, 1400, 1460);

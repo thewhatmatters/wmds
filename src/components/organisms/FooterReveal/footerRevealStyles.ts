@@ -207,11 +207,24 @@ export const footerRevealRuledEmailClasses =
 export const footerRevealRuledServicesClasses =
   "type-label flex min-w-0 items-center gap-2 text-brand";
 
-export const footerRevealRuledSocialGridClasses = "grid min-w-0";
+/**
+ * Social row. `relative` is the containing block for the full-height dividers.
+ * The row stretches with the contact cell; the square anchors do not.
+ */
+export const footerRevealRuledSocialGridClasses = "relative grid min-w-0";
 
 export const footerRevealRuledSocialCellClasses =
-  "flex aspect-square min-h-11 min-w-0 items-center justify-center border-r border-brand text-brand last:border-r-0 " +
+  "flex aspect-square min-h-11 min-w-0 items-center justify-center text-brand " +
   "hover:bg-neutral focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand";
+
+/**
+ * Vertical rule between social cells. Pinned to the row, not the square anchor.
+ * `aspect-square` keeps the anchor from stretching, so a `border-r` on the cell
+ * stops short of the band rule when the contact cell is taller.
+ * 1px, inset 1px from the column boundary — the same edge a cell `border-r` used.
+ */
+export const footerRevealRuledSocialDividerClasses =
+  "pointer-events-none absolute inset-y-0 w-px bg-brand";
 
 export const footerRevealRuledWordmarkFrameClasses =
   "@container flex w-full min-w-0 items-center overflow-hidden py-[var(--grid-baseline)]";

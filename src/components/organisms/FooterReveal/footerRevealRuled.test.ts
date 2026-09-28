@@ -11,6 +11,8 @@ import {
   footerRevealRuledPlusClasses,
   footerRevealRuledRootClasses,
   footerRevealRuledSocialCellClasses,
+  footerRevealRuledSocialDividerClasses,
+  footerRevealRuledSocialGridClasses,
   footerRevealRuledWordmarkClasses,
 } from "./footerRevealStyles";
 import {
@@ -66,6 +68,14 @@ describe("ruled grid footer contract", () => {
     expect(footerRevealRuledLinkClasses).toContain("border-brand");
     expect(footerRevealRuledLinkClasses).toContain("focus-visible:ring-brand");
     expect(footerRevealRuledSocialCellClasses).toContain("focus-visible:ring-brand");
+    expect(footerRevealRuledSocialCellClasses).toContain("aspect-square");
+    expect(footerRevealRuledSocialCellClasses).not.toContain("border-r");
+    expect(footerRevealRuledSocialGridClasses).toContain("relative");
+    expect(footerRevealRuledSocialDividerClasses).toContain("absolute");
+    expect(footerRevealRuledSocialDividerClasses).toContain("inset-y-0");
+    expect(footerRevealRuledSocialDividerClasses).toContain("w-px");
+    expect(footerRevealRuledSocialDividerClasses).toContain("bg-brand");
+    expect(footerRevealRuledSocialDividerClasses).toContain("pointer-events-none");
     expect(footerRevealRuledEmailClasses).toContain("focus-visible:ring-brand");
     expect(footerRevealRuledWordmarkClasses).toContain("text-brand");
     expect(footerRevealRuledCreditCopyClasses).toContain("font-mono");
@@ -78,6 +88,7 @@ describe("ruled grid footer contract", () => {
       footerRevealRuledGridClasses,
       footerRevealRuledLinkClasses,
       footerRevealRuledSocialCellClasses,
+      footerRevealRuledSocialDividerClasses,
     ].join(" ");
     expect(shell).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
   });

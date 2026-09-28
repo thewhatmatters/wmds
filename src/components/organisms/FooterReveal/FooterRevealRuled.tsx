@@ -31,6 +31,7 @@ import {
   footerRevealRuledRootClasses,
   footerRevealRuledServicesClasses,
   footerRevealRuledSocialCellClasses,
+  footerRevealRuledSocialDividerClasses,
   footerRevealRuledSocialGridClasses,
   footerRevealRuledSplitClasses,
   footerRevealRuledWordmarkClasses,
@@ -285,6 +286,7 @@ export function FooterRevealRuled({
   className,
 }: FooterRevealRuledProps) {
   const emailLink = footerRevealRuledEmailHref(email, emailHref);
+  const socialCount = Math.max(socials.length, 1);
 
   return (
     <div className={cn(footerRevealRuledRootClasses, className)} data-footer-ruled="root">
@@ -353,7 +355,7 @@ export function FooterRevealRuled({
         </div>
         <div
           className={footerRevealRuledSocialGridClasses}
-          style={{ gridTemplateColumns: `repeat(${Math.max(socials.length, 1)}, minmax(0, 1fr))` }}
+          style={{ gridTemplateColumns: `repeat(${socialCount}, minmax(0, 1fr))` }}
           data-footer-ruled="socials"
         >
           {socials.map((social) => (
@@ -366,6 +368,15 @@ export function FooterRevealRuled({
             >
               <ButtonIcon size="sm">{social.icon}</ButtonIcon>
             </a>
+          ))}
+          {socials.slice(0, -1).map((social, index) => (
+            <span
+              key={`${social.label}-divider`}
+              className={footerRevealRuledSocialDividerClasses}
+              style={{ left: `calc(${index + 1} / ${socialCount} * 100% - 1px)` }}
+              aria-hidden="true"
+              data-footer-ruled="social-divider"
+            />
           ))}
         </div>
       </div>
