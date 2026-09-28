@@ -194,10 +194,12 @@ describe("marketing hero text sequence story", () => {
     );
     const patternEnd = source.indexOf("export const MarketingHeroPattern");
     const variantStart = source.indexOf("function MarketingHeroTextSequenceView");
+    const variantEnd = source.indexOf("function expectSequenceInsideViewport", variantStart);
     expect(patternEnd).toBeGreaterThan(-1);
     expect(variantStart).toBeGreaterThan(patternEnd);
+    expect(variantEnd).toBeGreaterThan(variantStart);
     const pattern = source.slice(0, variantStart);
-    const variant = source.slice(variantStart);
+    const variant = source.slice(variantStart, variantEnd);
     expect(pattern).toContain('lead="We\'re a design and product studio based in Austin, Texas."');
     expect(variant).toContain("Your brand");
     expect(variant).toContain("is already");
