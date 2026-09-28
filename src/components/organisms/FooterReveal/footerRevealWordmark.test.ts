@@ -4,9 +4,10 @@ import { footerRevealWordmarkFontSize } from "./footerRevealStyles";
 import {
   footerRevealWordmarkEm,
   footerRevealWordmarkEmCss,
+  footerRevealWordmarkFitEm,
+  footerRevealWordmarkFillsFrame,
   footerRevealWordmarkFittedEm,
   footerRevealWordmarkFrameWidth,
-  readFooterRevealWordmarkEm,
   syncFooterRevealWordmark,
 } from "./footerRevealWordmark";
 
@@ -54,50 +55,101 @@ describe("footerRevealWordmarkEmCss", () => {
   });
 });
 
+describe("footerRevealWordmarkFitEm", () => {
+  it("picks the rounded em whose width fills the frame", () => {
+    const em = footerRevealWordmarkFitEm(1000, 6.42, (candidate) => 1000 * (6.42 / candidate));
+    expect(em).toBeCloseTo(6.42, 2);
+  });
+
+  it("grows em when the fitted size is wider than the 100px probe", () => {
+    const em = footerRevealWordmarkFitEm(1000, 6, (candidate) => 1000 * (6.6 / candidate));
+    expect(em).toBeCloseTo(6.6, 2);
+  });
+});
+
+describe("footerRevealWordmarkFillsFrame", () => {
+  it("accepts a word that covers the content box", () => {
+    const frame = document.createElement("div");
+    const text = document.createElement("p");
+    Object.defineProperty(frame, "clientWidth", { configurable: true, get: () => 1000 });
+    Object.defineProperty(text, "scrollWidth", { configurable: true, get: () => 970 });
+    expect(footerRevealWordmarkFillsFrame(text, frame)).toBe(true);
+    Object.defineProperty(text, "scrollWidth", { configurable: true, get: () => 800 });
+    expect(footerRevealWordmarkFillsFrame(text, frame)).toBe(false);
+  });
+});
+
 describe("syncFooterRevealWordmark", () => {
+  const originalScrollWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "scrollWidth");
+
+  function mockProbeWidth(widthAtPx: (px: number, transitionsDisabled: boolean) => number) {
+    Object.defineProperty(HTMLElement.prototype, "scrollWidth", {
+      configurable: true,
+      get(this: HTMLElement) {
+        if (!this.hasAttribute("data-footer-wordmark-probe")) return 0;
+        const transitionsDisabled =
+          this.style.getPropertyPriority("transition-property") === "important" &&
+          this.style.getPropertyValue("transition-property") === "none" &&
+          this.style.getPropertyPriority("transition-duration") === "important" &&
+          this.style.getPropertyValue("transition-duration") === "0s";
+        const px = Number.parseFloat(this.style.getPropertyValue("font-size"));
+        return widthAtPx(Number.isFinite(px) ? px : 0, transitionsDisabled);
+      },
+    });
+  }
+
+  function restoreScrollWidth() {
+    if (originalScrollWidth) {
+      Object.defineProperty(HTMLElement.prototype, "scrollWidth", originalScrollWidth);
+    }
+  }
+
   it("sets the em so 100cqi fills the frame", () => {
     const frame = document.createElement("div");
     const node = document.createElement("p");
+    node.textContent = "WhatMatters";
     node.style.fontSize = footerRevealWordmarkFontSize;
     Object.defineProperty(frame, "clientWidth", { configurable: true, get: () => 1000 });
-    Object.defineProperty(node, "scrollWidth", {
-      configurable: true,
-      get() {
-        const probe = /^(\d+(?:\.\d+)?)px$/.exec(node.style.fontSize);
-        if (probe) return 6.42 * Number(probe[1]);
-        const em = Number.parseFloat(frame.style.getPropertyValue("--footer-wordmark-em")) || 9;
-        return 1000 * (6.42 / em);
-      },
-    });
+    mockProbeWidth((px, transitionsDisabled) => (transitionsDisabled ? 6.42 * px : 10000));
 
     const em = syncFooterRevealWordmark(node, frame);
     expect(em).toBeCloseTo(6.42, 2);
     expect(Number(frame.style.getPropertyValue("--footer-wordmark-em"))).toBeCloseTo(6.42, 2);
     expect(node.style.fontSize).toBe(footerRevealWordmarkFontSize);
-    expect(node.scrollWidth).toBeLessThanOrEqual(1000);
-    expect(node.scrollWidth).toBeGreaterThan(990);
+    expect(document.querySelector("[data-footer-wordmark-probe]")).toBeNull();
     expect(footerRevealWordmarkFrameWidth(frame)).toBe(1000);
+    restoreScrollWidth();
+  });
+
+  it("ignores a stale width left by a reduced-motion transition", () => {
+    const frame = document.createElement("div");
+    const node = document.createElement("p");
+    node.textContent = "WhatMatters";
+    node.style.fontSize = footerRevealWordmarkFontSize;
+    Object.defineProperty(frame, "clientWidth", { configurable: true, get: () => 1000 });
+    // Without transition: none, scrollWidth stays on the previous (too-wide) size.
+    mockProbeWidth((px, transitionsDisabled) => (transitionsDisabled ? 6.42 * px : 10000));
+
+    const em = syncFooterRevealWordmark(node, frame);
+    expect(em).toBeCloseTo(6.42, 2);
+    expect(em).toBeLessThan(10);
+    restoreScrollWidth();
   });
 
   it("corrects a probe that does not match the fitted optical size", () => {
     const frame = document.createElement("div");
     const node = document.createElement("p");
+    node.textContent = "WhatMatters";
     node.style.fontSize = footerRevealWordmarkFontSize;
     Object.defineProperty(frame, "clientWidth", { configurable: true, get: () => 1000 });
-    Object.defineProperty(node, "scrollWidth", {
-      configurable: true,
-      get() {
-        const probe = /^(\d+(?:\.\d+)?)px$/.exec(node.style.fontSize);
-        if (probe) return 6 * Number(probe[1]);
-        const em = Number.parseFloat(frame.style.getPropertyValue("--footer-wordmark-em")) || 9;
-        // Fitted size is 10% wider than the 100px probe predicted.
-        return 1000 * (6.6 / em);
-      },
+    mockProbeWidth((px, transitionsDisabled) => {
+      if (!transitionsDisabled) return 10000;
+      // Fitted sizes run 10% wider than the 100px probe predicted.
+      return px === 100 ? 600 : 6.6 * px;
     });
 
     const em = syncFooterRevealWordmark(node, frame);
     expect(em).toBeCloseTo(6.6, 2);
-    expect(node.scrollWidth).toBeLessThanOrEqual(1000);
-    expect(node.scrollWidth).toBeGreaterThan(990);
+    restoreScrollWidth();
   });
 });

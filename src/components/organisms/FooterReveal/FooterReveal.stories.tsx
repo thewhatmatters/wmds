@@ -16,6 +16,7 @@ import { ScrollHorizontal } from "../ScrollHorizontal/ScrollHorizontal";
 import { scrollHorizontalMarketingItems } from "../ScrollHorizontal/scrollHorizontalExamples";
 import { SiteNav } from "../SiteNav/SiteNav";
 import { FooterReveal } from "./FooterReveal";
+import { footerRevealWordmarkFillsFrame } from "./footerRevealWordmark";
 import { footerRevealFieldClasses, footerRevealRuledFieldClasses } from "./footerRevealStyles";
 
 const meta = {
@@ -708,8 +709,14 @@ function RuledGridFooterSpecimen() {
   );
 }
 
+function expectFittedWord(text: HTMLElement | null, frame: HTMLElement | null) {
+  if (!text || !frame) throw new Error("fitted word missing");
+  expect(footerRevealWordmarkFillsFrame(text, frame)).toBe(true);
+}
+
 export const RuledGridFooterPattern: Story = {
   name: "Pattern — ruled grid footer",
+  tags: ["test"],
   parameters: withStoryCopySource(
     {
       wmdsLayout: "fullscreen",
@@ -786,11 +793,16 @@ export const RuledGridFooterPattern: Story = {
       expect(Math.abs(identity.getBoundingClientRect().top - links.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
     }
 
+    expect(window.matchMedia("(prefers-reduced-motion: reduce)").matches).toBe(true);
     await waitFor(() => {
-      const frame = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='wordmark-frame']");
-      const text = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='wordmark']");
-      expect(frame?.clientWidth ?? 0).toBeGreaterThan(0);
-      expect(text?.scrollWidth ?? 0).toBeLessThanOrEqual((frame?.clientWidth ?? 0) + 1);
+      expectFittedWord(
+        canvasElement.querySelector("[data-footer-ruled='wordmark']"),
+        canvasElement.querySelector("[data-footer-ruled='wordmark-frame']"),
+      );
+      expectFittedWord(
+        canvasElement.querySelector("[data-footer-ruled='crop']"),
+        canvasElement.querySelector("[data-footer-ruled='crop-frame']"),
+      );
     });
 
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
@@ -833,9 +845,10 @@ export const RuledGridOverflow390: Story = {
     expect(Math.abs(navs[0]!.getBoundingClientRect().top - navs[1]!.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
     expect(socials.querySelectorAll("a")).toHaveLength(5);
 
+    expect(window.matchMedia("(prefers-reduced-motion: reduce)").matches).toBe(true);
     await waitFor(() => {
-      const frame = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='wordmark-frame']");
-      expect(wordmark.scrollWidth).toBeLessThanOrEqual((frame?.clientWidth ?? 0) + 1);
+      expectFittedWord(wordmark, canvasElement.querySelector("[data-footer-ruled='wordmark-frame']"));
+      expectFittedWord(crop, canvasElement.querySelector("[data-footer-ruled='crop-frame']"));
     });
 
     const root = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='root']");
