@@ -137,11 +137,13 @@ export const footerRevealRuledBandClasses = "w-full min-w-0 border-b border-bran
 export const footerRevealRuledBandTopClasses = "border-t";
 
 /**
- * Page-grid column. Vertical edge rules sit on this box and meet the full-bleed
- * rules. Content, internal dividers, the wordmark, and the crop stay inside it.
+ * Column-edge box. Inset by `--grid-margin` from the page grid box so `border-x`
+ * sits on the outer column edges (the same content edge as `grid-page` and the
+ * nav). Horizontal rules stay on the full-bleed bands. Content, internal
+ * dividers, the wordmark, and the crop stay inside this border.
  */
 export const footerRevealRuledGridClasses =
-  "mx-auto w-full min-w-0 max-w-[var(--grid-max)] border-x border-brand";
+  "mx-auto w-[calc(100%-2*var(--grid-margin))] min-w-0 max-w-[calc(var(--grid-max)-2*var(--grid-margin))] border-x border-brand";
 
 export const footerRevealRuledSplitClasses = "grid grid-cols-1 md:grid-cols-2";
 
@@ -212,7 +214,7 @@ export const footerRevealRuledSocialCellClasses =
   "hover:bg-neutral focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand";
 
 export const footerRevealRuledWordmarkFrameClasses =
-  "@container flex w-full min-w-0 items-center overflow-hidden px-[var(--grid-margin)] py-[var(--grid-baseline)]";
+  "@container flex w-full min-w-0 items-center overflow-hidden py-[var(--grid-baseline)]";
 
 /** Fully visible. `leading-none` keeps the caps inside the row; the crop row below is the bleed. */
 export const footerRevealRuledWordmarkClasses =

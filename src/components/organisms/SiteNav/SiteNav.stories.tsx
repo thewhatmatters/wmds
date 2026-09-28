@@ -1,6 +1,7 @@
 import { useRef, useState, type ReactNode, type RefObject } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sparkles } from "lucide-react";
+import { expect } from "storybook/test";
 import { Button } from "../../atoms/Button/Button";
 import { storyCopySource, storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { typographyClass } from "../../../lib/typography";
@@ -333,6 +334,85 @@ ${indentSiteNavResourcesMenuCopySource(4)}
     </div>
   ),
 };
+
+const compactHugViewports = {
+  review1024: {
+    name: "Review 1024",
+    styles: { width: "1024px", height: "768px" },
+    type: "tablet" as const,
+  },
+  review1440: {
+    name: "Review 1440",
+    styles: { width: "1440px", height: "900px" },
+    type: "desktop" as const,
+  },
+};
+
+/** App chrome: `mobile` is set, so the compact middle uses the responsive hug classes. */
+function CompactHugSpecimen() {
+  return (
+    <div className="bg-body">
+      <SiteNav
+        placement="inline"
+        state="compact"
+        start={<BrandMark />}
+        middle={<PrimaryLinks />}
+        end={<EndActions />}
+        mobile={<MobileLinks />}
+      />
+    </div>
+  );
+}
+
+function expectCompactPillHugs(root: ParentNode) {
+  const pill = [...root.querySelectorAll<HTMLElement>('[data-state="compact"]')].find(
+    (el) => el.tagName !== "HEADER",
+  );
+  const slots = pill?.firstElementChild;
+  if (!(pill instanceof HTMLElement) || !(slots instanceof HTMLElement)) {
+    throw new Error("compact pill missing");
+  }
+  const pillBox = pill.getBoundingClientRect();
+  const slotsBox = slots.getBoundingClientRect();
+  const style = getComputedStyle(pill);
+  const chrome =
+    Number.parseFloat(style.paddingLeft) +
+    Number.parseFloat(style.paddingRight) +
+    Number.parseFloat(style.borderLeftWidth) +
+    Number.parseFloat(style.borderRightWidth);
+  expect(Math.abs(pillBox.width - slotsBox.width - chrome)).toBeLessThanOrEqual(4);
+  const host = pill.parentElement;
+  if (!host) throw new Error("compact host missing");
+  expect(host.clientWidth - pillBox.width).toBeGreaterThan(32);
+}
+
+function compactHugStory(id: "review1024" | "review1440", minWidth: number, maxWidth: number): Story {
+  return {
+    name: `Compact hug — ${id.replace("review", "")}`,
+    tags: ["test", "!dev", "!autodocs"],
+    globals: {
+      viewport: { value: id, isRotated: false },
+    },
+    parameters: {
+      wmdsLayout: "fullscreen",
+      docs: { disable: true },
+      viewport: { options: compactHugViewports },
+    },
+    render: () => <CompactHugSpecimen />,
+    play: async ({ canvasElement }) => {
+      expect(window.innerWidth).toBeGreaterThanOrEqual(minWidth);
+      expect(window.innerWidth).toBeLessThanOrEqual(maxWidth);
+      const product = [...canvasElement.querySelectorAll("a")].find((anchor) =>
+        anchor.textContent?.includes("Product"),
+      );
+      expect(product?.getBoundingClientRect().width ?? 0).toBeGreaterThan(0);
+      expectCompactPillHugs(canvasElement);
+    },
+  };
+}
+
+export const CompactHug1024: Story = compactHugStory("review1024", 1024, 1040);
+export const CompactHug1440: Story = compactHugStory("review1440", 1440, 1455);
 
 export const Compact: Story = {
   name: "Pattern — compact (scrolled)",

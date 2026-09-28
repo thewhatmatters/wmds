@@ -77,7 +77,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
 - Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. The brand panel and the footer field clip the wordmark.
 - Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`. The brand panel clips its own wordmark.
 - When **ScrollHorizontal** \`expandLast\` is the last section in the cover, the guide \`grid-page\` after it uses \`!py-0\`. Default \`grid-page\` block padding is \`--grid-pad\` (24px top and bottom). On a guide-only host that padding is a page-background strip between the full-bleed tile and the footer. The reduced-motion \`h-svh\` section meets the footer the same way.
-- **FooterReveal.Ruled** is the ruled-grid footer. Pass **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) on **Footer**. Rules are 1px \`border-brand\`. Horizontal rules span the footer field. Content, internal dividers, and the grid's vertical edges stay in the page grid box (\`max-w-[var(--grid-max)]\`). Below \`md\` the bands stack; the two link columns stay side by side; social cells stay one row. The wordmark fills the grid box. The crop row is oversized \`WM\` letterforms cut by the bottom rule. Plus glyphs are decorative (\`aria-hidden\`) and show from \`md\`. Social cells are icon-only anchors with accessible names and a brand focus ring. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — the defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. Dark theme keeps the field on \`--color-on-brand\` so the navy rules stay readable. **FooterReveal.Brand** stays the navy field.
+- **FooterReveal.Ruled** is the ruled-grid footer. Pass **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) on **Footer**. Rules are 1px \`border-brand\`. Horizontal rules span the footer field. The vertical edges sit on the outer column edges (inset by \`--grid-margin\`). Content, internal dividers, the wordmark, and the crop stay inside that border. Below \`md\` the bands stack; the two link columns stay side by side; social cells stay one row. The wordmark fills the grid box. The crop row is oversized \`WM\` letterforms cut by the bottom rule. Plus glyphs are decorative (\`aria-hidden\`) and show from \`md\`. Social cells are icon-only anchors with accessible names and a brand focus ring. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — the defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. Dark theme keeps the field on \`--color-on-brand\` so the navy rules stay readable. **FooterReveal.Brand** stays the navy field.
         `.trim(),
       },
     },
@@ -714,6 +714,65 @@ function expectFittedWord(text: HTMLElement | null, frame: HTMLElement | null) {
   expect(footerRevealWordmarkFillsFrame(text, frame)).toBe(true);
 }
 
+/** Wordmark and crop fill the column-edge box, not a narrower padded track. */
+function expectFillsRuledBox(text: HTMLElement | null, box: HTMLElement) {
+  if (!text) throw new Error("fitted word missing");
+  const width = text.getBoundingClientRect().width;
+  const boxWidth = box.getBoundingClientRect().width;
+  expect(boxWidth).toBeGreaterThan(0);
+  expect(width / boxWidth).toBeGreaterThanOrEqual(0.9);
+  expect(text.getBoundingClientRect().left).toBeGreaterThanOrEqual(box.getBoundingClientRect().left - 1);
+  expect(text.getBoundingClientRect().right).toBeLessThanOrEqual(box.getBoundingClientRect().right + 1);
+}
+
+function expectVerticalRulesOnColumns(root: ParentNode) {
+  const columns = [...root.querySelectorAll<HTMLElement>(".grid-guides-col")];
+  expect(columns.length).toBeGreaterThan(1);
+  const first = columns[0]!.getBoundingClientRect();
+  const last = columns[columns.length - 1]!.getBoundingClientRect();
+  const grids = [...root.querySelectorAll<HTMLElement>("[data-footer-ruled='grid']")];
+  expect(grids.length).toBeGreaterThan(0);
+  for (const grid of grids) {
+    const box = grid.getBoundingClientRect();
+    expect(Math.abs(box.left - first.left)).toBeLessThanOrEqual(1);
+    expect(Math.abs(box.right - last.right)).toBeLessThanOrEqual(1);
+  }
+}
+
+const ruledReviewViewports = {
+  review390: {
+    name: "Review 390",
+    styles: { width: "390px", height: "844px" },
+    type: "mobile" as const,
+  },
+  review1440: {
+    name: "Review 1440",
+    styles: { width: "1440px", height: "900px" },
+    type: "desktop" as const,
+  },
+  review2560: {
+    name: "Review 2560",
+    styles: { width: "2560px", height: "1440px" },
+    type: "desktop" as const,
+  },
+};
+
+/** Ruled footer under the same column tracks as GridOverlay. Guides are not part of Show code. */
+function RuledGridWithGuides() {
+  return (
+    <div className="relative bg-body">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="grid-page h-full !py-0">
+          <GridOverlay visible keyboardShortcut={false} />
+        </div>
+      </div>
+      <div className={footerRevealRuledFieldClasses} data-footer-ruled-field="">
+        <FooterReveal.Ruled />
+      </div>
+    </div>
+  );
+}
+
 export const RuledGridFooterPattern: Story = {
   name: "Pattern — ruled grid footer",
   tags: ["test"],
@@ -723,7 +782,7 @@ export const RuledGridFooterPattern: Story = {
       docs: {
         description: {
           story:
-            "Ruled grid on the page background. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. Horizontal rules are 1px `border-brand` and span the footer field. Content, internal dividers, and the grid's vertical edges stay in the page grid box (`max-w-[var(--grid-max)]`). Default copy is WhatMatters © 2026, a mono blurb, Website and Studio link columns, randy@whatmatters.so, Brand / Product / Web, five social cells, the WhatMatters wordmark, cropped WM letterforms, and Created by WhatMatters 2024—26. Below `md` the bands stack; the link columns stay side by side; the social cells stay one row. Plus glyphs are decorative and show from `md`. Social cells are icon-only anchors. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. `https` links open in a new tab.",
+            "Ruled grid on the page background. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. Horizontal rules are 1px `border-brand` and span the footer field. The vertical edges sit on the outer column edges (inset by `--grid-margin`). Content, internal dividers, the wordmark, and the crop stay inside that border. Default copy is WhatMatters © 2026, a mono blurb, Website and Studio link columns, randy@whatmatters.so, Brand / Product / Web, five social cells, the WhatMatters wordmark, cropped WM letterforms, and Created by WhatMatters 2024—26. Below `md` the bands stack; the link columns stay side by side; the social cells stay one row. Plus glyphs are decorative and show from `md`. Social cells are icon-only anchors. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. `https` links open in a new tab.",
         },
       },
     },
@@ -802,6 +861,8 @@ export const RuledGridFooterPattern: Story = {
         canvasElement.querySelector("[data-footer-ruled='crop']"),
         canvasElement.querySelector("[data-footer-ruled='crop-frame']"),
       );
+      expectFillsRuledBox(canvasElement.querySelector("[data-footer-ruled='wordmark']"), grid);
+      expectFillsRuledBox(canvasElement.querySelector("[data-footer-ruled='crop']"), grid);
     });
 
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
@@ -817,9 +878,9 @@ export const RuledGridOverflow390: Story = {
   parameters: {
     wmdsLayout: "fullscreen",
     docs: { disable: true },
-    viewport: { options: storybookViewports },
+    viewport: { options: { ...storybookViewports, ...ruledReviewViewports } },
   },
-  render: () => <RuledGridFooterSpecimen />,
+  render: () => <RuledGridWithGuides />,
   play: async ({ canvasElement }) => {
     expect(window.innerWidth).toBeLessThan(768);
     expect(window.innerWidth).toBeGreaterThanOrEqual(390 - 2);
@@ -844,9 +905,14 @@ export const RuledGridOverflow390: Story = {
     expect(Math.abs(navs[0]!.getBoundingClientRect().top - navs[1]!.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
     expect(socials.querySelectorAll("a")).toHaveLength(5);
 
+    const grid = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='grid']");
+    if (!grid) throw new Error("ruled grid missing");
     await waitFor(() => {
       expectFittedWord(wordmark, canvasElement.querySelector("[data-footer-ruled='wordmark-frame']"));
       expectFittedWord(crop, canvasElement.querySelector("[data-footer-ruled='crop-frame']"));
+      expectFillsRuledBox(wordmark, grid);
+      expectFillsRuledBox(crop, grid);
+      expectVerticalRulesOnColumns(canvasElement);
     });
 
     const root = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='root']");
@@ -863,3 +929,49 @@ export const RuledGridOverflow390: Story = {
     );
   },
 };
+
+function ruledColumnsStory(
+  id: "review1440" | "review2560",
+  minWidth: number,
+  maxWidth: number,
+): Story {
+  return {
+    name: `Ruled grid — columns at ${id.replace("review", "")}`,
+    tags: ["test", "!dev", "!autodocs"],
+    globals: {
+      viewport: { value: id, isRotated: false },
+    },
+    parameters: {
+      wmdsLayout: "fullscreen",
+      docs: { disable: true },
+      viewport: { options: ruledReviewViewports },
+    },
+    render: () => <RuledGridWithGuides />,
+    play: async ({ canvasElement }) => {
+      expect(window.innerWidth).toBeGreaterThanOrEqual(minWidth);
+      expect(window.innerWidth).toBeLessThanOrEqual(maxWidth);
+      const field = canvasElement.querySelector<HTMLElement>("[data-footer-ruled-field]");
+      const band = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='band']");
+      const grid = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='grid']");
+      if (!field || !band || !grid) throw new Error("ruled footer missing");
+      expect(Math.abs(band.offsetWidth - field.offsetWidth)).toBeLessThanOrEqual(1);
+      expect(Math.abs(band.getBoundingClientRect().left - field.getBoundingClientRect().left)).toBeLessThanOrEqual(1);
+      await waitFor(() => {
+        expectVerticalRulesOnColumns(canvasElement);
+        expectFillsRuledBox(canvasElement.querySelector("[data-footer-ruled='wordmark']"), grid);
+        expectFillsRuledBox(canvasElement.querySelector("[data-footer-ruled='crop']"), grid);
+        expectFittedWord(
+          canvasElement.querySelector("[data-footer-ruled='wordmark']"),
+          canvasElement.querySelector("[data-footer-ruled='wordmark-frame']"),
+        );
+        expectFittedWord(
+          canvasElement.querySelector("[data-footer-ruled='crop']"),
+          canvasElement.querySelector("[data-footer-ruled='crop-frame']"),
+        );
+      });
+    },
+  };
+}
+
+export const RuledGridColumns1440: Story = ruledColumnsStory("review1440", 1440, 1455);
+export const RuledGridColumns2560: Story = ruledColumnsStory("review2560", 2560, 2575);
