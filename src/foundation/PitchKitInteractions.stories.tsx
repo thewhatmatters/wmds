@@ -776,6 +776,11 @@ export const PastBrandsOwnerResult: Story = {
     expect(within(dialog).getByLabelText(/brand name/i)).toHaveValue("Studio Line");
     const result = within(dialog).getByLabelText(/^result$/i);
     await userEvent.type(result, "1.4M views");
+    // Save reads the controlled draft. Wait until that value is committed so the
+    // click cannot close the dialog on the previous render.
+    await waitFor(() => {
+      expect(result).toHaveValue("1.4M views");
+    });
     await userEvent.click(within(dialog).getByRole("button", { name: /^save$/i }));
 
     await waitFor(() => {
