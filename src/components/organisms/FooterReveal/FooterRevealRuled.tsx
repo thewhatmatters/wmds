@@ -17,8 +17,6 @@ import {
   footerRevealRuledCreditMarkClasses,
   footerRevealRuledBandClasses,
   footerRevealRuledBandTopClasses,
-  footerRevealRuledCropClasses,
-  footerRevealRuledCropFrameClasses,
   footerRevealRuledEmailClasses,
   footerRevealRuledGlyphClasses,
   footerRevealRuledGridClasses,
@@ -87,9 +85,7 @@ export interface FooterRevealRuledProps {
   socials?: readonly FooterRevealRuledSocial[];
   /** Display wordmark that fills the frame. Default: `WhatMatters`. */
   wordmark?: string;
-  /** Cropped letterforms under the wordmark. Default: `WM`. */
-  crop?: string;
-  /** Credit line. Default: `Created by WhatMatters 2024—26`. */
+  /** Credit line. Default: `Created by WhatMatters 2024–2026`. */
   credit?: string;
   /** Layout only — width or margin. */
   className?: string;
@@ -149,8 +145,7 @@ export const footerRevealRuledDefaultCopy = {
   email: "randy@whatmatters.so",
   services: "Brand / Product / Web",
   wordmark: "WhatMatters",
-  crop: "WM",
-  credit: "Created by WhatMatters 2024—26",
+  credit: "Created by WhatMatters 2024\u20132026",
 } as const;
 
 /** `mailto:` when the caller does not pass an href. */
@@ -286,7 +281,6 @@ export function FooterRevealRuled({
   services = footerRevealRuledDefaultCopy.services,
   socials = footerRevealRuledDefaultSocials,
   wordmark = footerRevealRuledDefaultCopy.wordmark,
-  crop = footerRevealRuledDefaultCopy.crop,
   credit = footerRevealRuledDefaultCopy.credit,
   className,
 }: FooterRevealRuledProps) {
@@ -383,14 +377,6 @@ export function FooterRevealRuled({
         frameClassName={footerRevealRuledWordmarkFrameClasses}
         textClassName={footerRevealRuledWordmarkClasses}
         slot="wordmark"
-      />
-      </RuledBand>
-      <RuledBand>
-      <FittedLine
-        text={crop}
-        frameClassName={footerRevealRuledCropFrameClasses}
-        textClassName={footerRevealRuledCropClasses}
-        slot="crop"
       />
       </RuledBand>
 

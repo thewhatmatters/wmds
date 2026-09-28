@@ -140,7 +140,7 @@ export const footerRevealRuledBandTopClasses = "border-t";
  * Column-edge box. Inset by `--grid-margin` from the page grid box so `border-x`
  * sits on the outer column edges (the same content edge as `grid-page` and the
  * nav). Horizontal rules stay on the full-bleed bands. Content, internal
- * dividers, the wordmark, and the crop stay inside this border.
+ * dividers, and the wordmark stay inside this border.
  */
 export const footerRevealRuledGridClasses =
   "mx-auto w-[calc(100%-2*var(--grid-margin))] min-w-0 max-w-[calc(var(--grid-max)-2*var(--grid-margin))] border-x border-brand";
@@ -216,19 +216,9 @@ export const footerRevealRuledSocialCellClasses =
 export const footerRevealRuledWordmarkFrameClasses =
   "@container flex w-full min-w-0 items-center overflow-hidden py-[var(--grid-baseline)]";
 
-/** Fully visible. `leading-none` keeps the caps inside the row; the crop row below is the bleed. */
+/** Fully visible. `leading-none` keeps the caps inside the row. */
 export const footerRevealRuledWordmarkClasses =
   "w-max max-w-none shrink-0 whitespace-nowrap font-sans font-bold leading-none tracking-[-0.045em] text-brand";
-
-/**
- * Oversized letterforms, top-aligned. The frame is shorter than the em box,
- * so the bottom rule crops the letters.
- */
-export const footerRevealRuledCropFrameClasses =
-  "@container aspect-[3/1] w-full min-w-0 overflow-hidden";
-
-export const footerRevealRuledCropClasses =
-  "w-max max-w-none whitespace-nowrap font-sans font-bold leading-none tracking-[-0.06em] text-brand";
 
 export const footerRevealRuledCreditClasses =
   "flex min-w-0 items-center justify-between gap-4 px-[var(--grid-pad)] py-[var(--grid-baseline)]";
@@ -237,4 +227,4 @@ export const footerRevealRuledCreditMarkClasses =
   "shrink-0 font-sans text-[length:var(--font-size-xl)] font-bold leading-none tracking-[-0.04em] text-brand";
 
 export const footerRevealRuledCreditCopyClasses =
-  "min-w-0 text-right font-mono text-[length:var(--font-size-sm)] leading-none text-brand";
+  "min-w-0 text-right font-mono text-[length:var(--font-size-sm)] leading-none text-brand break-words";
