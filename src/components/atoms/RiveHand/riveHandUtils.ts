@@ -47,12 +47,18 @@ export const riveHandEntrances = ["slide-up", "grow", "none"] as const;
 
 export type RiveHandEntrance = (typeof riveHandEntrances)[number];
 
-/** Each hand rolls its own delay so the two gestures rarely start together. */
-export const riveHandIdleMinMs = 4000;
+/**
+ * Gap after a finished gesture, and before the first one.
+ * Each hand rolls its own 1–2s wait so the two poses rarely start together.
+ */
+export const riveHandIdleMinMs = 1000;
 
-export const riveHandIdleMaxMs = 9000;
+export const riveHandIdleMaxMs = 2000;
 
-/** How long `Boolean 1` stays true for one idle gesture. */
+/**
+ * How long `Boolean 1` stays true for one idle gesture.
+ * The next 1–2s gap starts only after this hold releases.
+ */
 export const riveHandIdleHoldMs = 1100;
 
 /** Point hand follows the rock by this much. Inside the 150–250ms stagger. */
@@ -70,7 +76,7 @@ export const riveHandGrowOrigin = "22% 76%";
  */
 export const riveHandBaselineFromLineBottom = "0.22em";
 
-/** `random` is a unit interval, the same contract as `Math.random()`. */
+/** `random` is a unit interval, the same contract as `Math.random()`. Returns the post-gesture wait. */
 export function nextRiveHandIdleDelayMs(random: number = Math.random()): number {
   const unit = Math.min(1, Math.max(0, random));
   return Math.round(riveHandIdleMinMs + unit * (riveHandIdleMaxMs - riveHandIdleMinMs));

@@ -332,10 +332,10 @@ function installIntersectingObserver() {
 }
 
 describe("rive hand idle schedule", () => {
-  it("spreads delays across 4–9s and keeps the point hand inside the stagger window", () => {
+  it("spreads the post-gesture wait across 1–2s and keeps the point hand inside the stagger window", () => {
     expect(nextRiveHandIdleDelayMs(0)).toBe(riveHandIdleMinMs);
     expect(nextRiveHandIdleDelayMs(1)).toBe(riveHandIdleMaxMs);
-    expect(nextRiveHandIdleDelayMs(0.5)).toBe(6500);
+    expect(nextRiveHandIdleDelayMs(0.5)).toBe(1500);
     expect(nextRiveHandIdleDelayMs(0)).not.toBe(nextRiveHandIdleDelayMs(1));
     expect(riveHandGrowDelaySec).toBeGreaterThanOrEqual(0.15);
     expect(riveHandGrowDelaySec).toBeLessThanOrEqual(0.25);
