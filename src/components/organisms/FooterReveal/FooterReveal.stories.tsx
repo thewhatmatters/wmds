@@ -753,6 +753,41 @@ function expectRuledFooterFits(root: ParentNode) {
   expectCreditFits(root);
 }
 
+/** Social-cell rules meet the band's bottom rule. No gap, no overshoot. */
+function expectSocialDividersMeetRow(root: ParentNode) {
+  const socials = root.querySelector<HTMLElement>("[data-footer-ruled='socials']");
+  const band = socials?.closest<HTMLElement>("[data-footer-ruled='band']");
+  if (!socials || !band) throw new Error("social row missing");
+  const bandBox = band.getBoundingClientRect();
+  const ruleBottom = bandBox.bottom - parseFloat(getComputedStyle(band).borderBottomWidth);
+  const rowTop = socials.getBoundingClientRect().top;
+  const dividers = [...socials.querySelectorAll<HTMLElement>("a")].filter(
+    (cell) => parseFloat(getComputedStyle(cell).borderRightWidth) > 0,
+  );
+  expect(dividers.length).toBeGreaterThan(0);
+  for (const cell of dividers) {
+    const box = cell.getBoundingClientRect();
+    expect(Math.abs(box.bottom - ruleBottom)).toBeLessThanOrEqual(0.5);
+    expect(Math.abs(box.top - rowTop)).toBeLessThanOrEqual(0.5);
+    expect(parseFloat(getComputedStyle(cell).borderBottomWidth)).toBe(0);
+  }
+}
+
+/** Contact copy starts at the cell's left edge plus the shared ruled inset. */
+function expectContactBlockInset(root: ParentNode) {
+  const cell = root.querySelector<HTMLElement>("[data-footer-ruled='contact']");
+  const block = root.querySelector<HTMLElement>("[data-footer-ruled='contact-block']");
+  const identity = root.querySelector<HTMLElement>("[data-footer-ruled='identity']");
+  if (!cell || !block || !identity) throw new Error("contact block missing");
+  const inset = parseFloat(getComputedStyle(cell).paddingLeft);
+  expect(inset).toBeGreaterThan(0);
+  expect(Math.abs(inset - parseFloat(getComputedStyle(identity).paddingLeft))).toBeLessThanOrEqual(0.5);
+  expect(Math.abs(block.getBoundingClientRect().left - (cell.getBoundingClientRect().left + inset))).toBeLessThanOrEqual(
+    0.5,
+  );
+  expect(getComputedStyle(block).textAlign).toBe("left");
+}
+
 function expectVerticalRulesOnColumns(root: ParentNode) {
   const columns = [...root.querySelectorAll<HTMLElement>(".grid-guides-col")];
   expect(columns.length).toBeGreaterThan(1);
@@ -772,6 +807,11 @@ const ruledReviewViewports = {
     name: "Review 390",
     styles: { width: "390px", height: "844px" },
     type: "mobile" as const,
+  },
+  review900: {
+    name: "Review 900",
+    styles: { width: "900px", height: "800px" },
+    type: "tablet" as const,
   },
   review1024: {
     name: "Review 1024",
@@ -868,6 +908,8 @@ export const RuledGridFooterPattern: Story = {
 
     const email = canvasElement.querySelector("a[href='mailto:randy@whatmatters.so']");
     expect(email?.textContent).toBe("randy@whatmatters.so");
+    expectSocialDividersMeetRow(canvasElement);
+    expectContactBlockInset(canvasElement);
 
     for (const plus of canvasElement.querySelectorAll<HTMLElement>("[data-footer-ruled='plus']")) {
       expect(plus.getAttribute("aria-hidden")).toBe("true");
@@ -934,6 +976,8 @@ export const RuledGridOverflow390: Story = {
     expect(navs).toHaveLength(2);
     expect(Math.abs(navs[0]!.getBoundingClientRect().top - navs[1]!.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
     expect(socials.querySelectorAll("a")).toHaveLength(5);
+    expectSocialDividersMeetRow(canvasElement);
+    expectContactBlockInset(canvasElement);
 
     const grid = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='grid']");
     if (!grid) throw new Error("ruled grid missing");
@@ -998,10 +1042,13 @@ function ruledColumnsStory(
         );
       });
       expectRuledFooterFits(canvasElement);
+      expectSocialDividersMeetRow(canvasElement);
+      expectContactBlockInset(canvasElement);
     },
   };
 }
 
+export const RuledGridDividers900: Story = ruledColumnsStory("review900", 900, 910, 780, 820);
 export const RuledGridFits1024: Story = ruledColumnsStory("review1024", 1024, 1040, 600, 640);
 export const RuledGridColumns1440: Story = ruledColumnsStory("review1440", 1440, 1455, 880, 920);
 export const RuledGridColumns2560: Story = ruledColumnsStory("review2560", 2560, 2575, 1400, 1460);

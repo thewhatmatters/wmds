@@ -75,7 +75,7 @@ export interface FooterRevealRuledProps {
   email?: string;
   /** Defaults to `mailto:` plus `email`. */
   emailHref?: string;
-  /** Services line beside the email from `md`. */
+  /** Services line under the email, in the left-aligned contact block. */
   services?: string;
   /**
    * Icon-only social cells. `https` opens in a new tab.
@@ -332,7 +332,7 @@ export function FooterRevealRuled({
       <RuledBand>
       <div className={footerRevealRuledSplitClasses}>
         <div className={footerRevealRuledContactClasses} data-footer-ruled="contact">
-          <div className={footerRevealRuledContactRowClasses}>
+          <div className={footerRevealRuledContactRowClasses} data-footer-ruled="contact-block">
             <div className="flex min-w-0 flex-col gap-1">
               <p className={footerRevealRuledContactLabelClasses}>{contactLabel}</p>
               <a

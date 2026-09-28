@@ -3,6 +3,8 @@ import { describe, expect, it } from "vitest";
 import {
   footerRevealRuledBandClasses,
   footerRevealRuledBandTopClasses,
+  footerRevealRuledContactClasses,
+  footerRevealRuledContactRowClasses,
   footerRevealRuledCreditCopyClasses,
   footerRevealRuledEmailClasses,
   footerRevealRuledFieldClasses,
@@ -66,6 +68,18 @@ describe("ruled grid footer contract", () => {
     expect(footerRevealRuledLinkClasses).toContain("border-brand");
     expect(footerRevealRuledLinkClasses).toContain("focus-visible:ring-brand");
     expect(footerRevealRuledSocialCellClasses).toContain("focus-visible:ring-brand");
+    expect(footerRevealRuledSocialCellClasses).toContain("h-full");
+    expect(footerRevealRuledSocialCellClasses).toContain("min-h-[max(100%,2.75rem)]");
+    expect(footerRevealRuledSocialCellClasses).toContain("self-stretch");
+    expect(footerRevealRuledContactClasses).toContain("items-start");
+    expect(footerRevealRuledContactClasses).toContain("text-left");
+    expect(footerRevealRuledContactClasses).toContain("p-[var(--grid-pad)]");
+    expect(footerRevealRuledContactClasses).not.toContain("justify-center");
+    expect(footerRevealRuledContactRowClasses).toContain("items-start");
+    expect(footerRevealRuledContactRowClasses).toContain("text-left");
+    expect(footerRevealRuledContactRowClasses).toContain("w-fit");
+    expect(footerRevealRuledContactRowClasses).not.toContain("justify-between");
+    expect(footerRevealRuledContactRowClasses).not.toContain("justify-center");
     expect(footerRevealRuledEmailClasses).toContain("focus-visible:ring-brand");
     expect(footerRevealRuledWordmarkClasses).toContain("text-brand");
     expect(footerRevealRuledCreditCopyClasses).toContain("font-mono");

@@ -194,10 +194,11 @@ export const footerRevealRuledMarkClasses =
   "shrink-0 font-sans text-[length:var(--font-size-5xl)] font-bold leading-[0.8] tracking-[-0.04em] text-brand";
 
 export const footerRevealRuledContactClasses =
-  "flex min-w-0 flex-col justify-center border-brand p-[var(--grid-pad)] max-md:border-b md:border-r";
+  "flex min-w-0 flex-col items-start border-brand p-[var(--grid-pad)] text-left max-md:border-b md:border-r";
 
+/** Left-aligned stack. Hugs the copy so its left edge is the cell's inner padding. */
 export const footerRevealRuledContactRowClasses =
-  "flex min-w-0 flex-col gap-4 md:flex-row md:items-center md:justify-between";
+  "flex w-fit min-w-0 flex-col items-start gap-4 text-left";
 
 export const footerRevealRuledContactLabelClasses = "type-label text-brand";
 
@@ -207,10 +208,16 @@ export const footerRevealRuledEmailClasses =
 export const footerRevealRuledServicesClasses =
   "type-label flex min-w-0 items-center gap-2 text-brand";
 
-export const footerRevealRuledSocialGridClasses = "grid min-w-0";
+/** Fills the split row so cell rules can meet the band's horizontal rules. */
+export const footerRevealRuledSocialGridClasses = "grid h-full min-h-0 min-w-0 self-stretch";
 
+/**
+ * Square when the row is content-sized. `h-full` stretches the border box when
+ * the contact cell is taller, so `border-r` meets the band rules. The min-height
+ * floor is 2.75rem (44px) when that percentage does not resolve.
+ */
 export const footerRevealRuledSocialCellClasses =
-  "flex aspect-square min-h-11 min-w-0 items-center justify-center border-r border-brand text-brand last:border-r-0 " +
+  "flex aspect-square h-full min-h-[max(100%,2.75rem)] w-full min-w-0 items-center justify-center self-stretch border-r border-brand text-brand last:border-r-0 " +
   "hover:bg-neutral focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand";
 
 export const footerRevealRuledWordmarkFrameClasses =
