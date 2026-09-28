@@ -37,7 +37,7 @@ Omit \`color\` to cycle \`--color-brand\`, \`--color-brand-soft\`, \`--color-pri
 
 \`heading\` names the section. It is \`sr-only\` while the window is pinned, so it does not sit under the site nav, and visible above the row when motion is reduced.
 
-\`intro\` replaces \`heading\`. **ScrollHorizontal.Intro** is the first panel: an eyebrow **Badge**, a \`type-display-2\` statement (normal weight, display-2 leading, the same line-height as **HeroIntro**) run through **TextSequence** (\`emphasis="none"\`, \`trigger="inView"\`), and a secondary **Button** (\`role="secondary"\`, label Start a project, \`onClick\` or \`href\`). The panel sits in the left columns of the page grid, with top padding \`--site-nav-height\` plus the compact nav's 1rem offset, so it clears the pinned site nav. Tiles follow to the right and scroll in as the panel leaves to the left. The eyebrow is the section name. The statement is the \`h2\`. Words slide up once when that heading scrolls into view. **TextSequence.Shape** marks between words pop on that same timeline (about 1.15em, token fills). Reduced motion stacks that panel above the native row and leaves the sentence and shapes at rest.
+\`intro\` replaces \`heading\`. **ScrollHorizontal.Intro** is the first panel: a **Badge** label pill, a \`type-display-2\` statement (normal weight, display-2 leading, the same line-height as **HeroIntro**) run through **TextSequence** (\`emphasis="none"\`, \`trigger="inView"\`), and a secondary **Button** (\`role="secondary"\`, label Start a project, \`onClick\` or \`href\`). The panel sits in the left columns of the page grid, with top padding \`--site-nav-height\` plus the compact nav's 1rem offset, so it clears the pinned site nav. Tiles follow to the right and scroll in as the panel leaves to the left. The badge is the section name. The statement is the \`h2\`. Words slide up once when that heading scrolls into view. **TextSequence.Shape** marks between words pop on that same timeline (about 1.15em, token fills). Reduced motion stacks that panel above the native row and leaves the sentence and shapes at rest.
 
 \`prefers-reduced-motion\`, and \`MotionConfig\` \`reducedMotion="always"\`, skip the transform. The track height is auto, the window is not sticky, and the row is a native horizontal scroller with vertical padding (\`py-12\`). The heading is visible on that branch. The server render matches the motion shell. The OS preference is applied before paint.
 
@@ -47,7 +47,7 @@ Omit \`color\` to cycle \`--color-brand\`, \`--color-brand-soft\`, \`--color-pri
 ScrollHorizontal — 300svh track, or 400svh with expandLast (auto when reduced)
 └── sticky svh viewport (relative, full width, overflow-x auto when reduced)
     ├── heading (optional) — sr-only while pinned; visible when reduced; omitted when intro is set
-    ├── intro (optional) — first panel; eyebrow names the section; above the row when reduced
+    ├── intro (optional) — first panel; badge names the section; above the row when reduced
     ├── window — 400px, centered (280px below sm; full-width scroller when reduced)
     │   └── row — translateX, or no transform when reduced
     │       └── card — solid token color; label is sr-only
@@ -64,7 +64,7 @@ ScrollHorizontal — 300svh track, or 400svh with expandLast (auto when reduced)
 - Leave \`expandLast\` off when the track should release on the last centered card.
 - Turn \`expandLast\` on when the last tile should fill the viewport and scroll away as its own section. Pass \`expanded\` for content there. The slot is mounted twice; the motion layer and the reduced-motion section each hide the other. The section ends on the tile, including the reduced-motion \`h-svh\` section. Do not follow it with block padding when the next region is a footer. **FooterReveal → Pattern — marketing hero** sets \`!py-0\` on the guide \`grid-page\`.
 - Pass a real heading element. It names the section. It is \`sr-only\` while the window is pinned, and visible above the scroller when motion is reduced.
-- Pass \`intro={<ScrollHorizontal.Intro />}\` when the gallery opens on a statement. Put **TextSequence.Shape** marks in \`statement\`. Do not wrap \`statement\` in another **TextSequence** — Intro owns the sequence (\`emphasis="none"\`, once, when the heading scrolls into view). Do not also pass \`heading\` — the eyebrow replaces it. The arrow square is part of Intro.
+- Pass \`intro={<ScrollHorizontal.Intro />}\` when the gallery opens on a statement. Put **TextSequence.Shape** marks in \`statement\`. Do not wrap \`statement\` in another **TextSequence** — Intro owns the sequence (\`emphasis="none"\`, once, when the heading scrolls into view). Do not also pass \`heading\` — the badge replaces it. The arrow square is part of Intro.
         `.trim(),
       },
     },
@@ -340,7 +340,7 @@ export const WithIntro: Story = {
       docs: {
         description: {
           story:
-            "The intro is the first panel. At rest its left edge is the page-grid content start, the same inset as grid-page. Scroll translates the panel off to the left with the tiles. The eyebrow names the section. The statement is the h2 on type-display-2 at normal weight and display-2 leading, with text-wrap pretty, the same line-height as HeroIntro. TextSequence runs once when that heading scrolls into view: words slide up, and an asterisk and an accent diamond pop between words at about 1.15em. A point RiveHand with inline sits after “is a first impression”, drawn at about 1.15em with its outline bottom on the text baseline, aria-hidden. The zero-height slot keeps the line box. That slot pops with the statement’s shapes, on the beat after impression, with the same scale, rotation, and back.out(1.8) ease. Idle starts after the pop. Tiles sit to the right and scroll in as the panel leaves left. expandLast still grows the last tile. Reduced motion stacks the same intro above the native row, with the same inset, and the sentence and shapes at rest. Do not pass heading — the eyebrow replaces it.",
+            "The intro is the first panel. At rest its left edge is the page-grid content start, the same inset as grid-page. Scroll translates the panel off to the left with the tiles. The badge names the section. The statement is the h2 on type-display-2 at normal weight and display-2 leading, with text-wrap pretty, the same line-height as HeroIntro. TextSequence runs once when that heading scrolls into view: words slide up, and an asterisk and an accent diamond pop between words at about 1.15em. A point RiveHand with inline sits after “is a first impression”, drawn at about 1.15em and centered on the line, aria-hidden. The zero-height slot keeps the line box. That slot pops with the statement’s shapes, on the beat after impression, with the same scale, rotation, and back.out(1.8) ease. Idle starts after the pop. Tiles sit to the right and scroll in as the panel leaves left. expandLast still grows the last tile. Reduced motion stacks the same intro above the native row, with the same inset, and the sentence and shapes at rest. Do not pass heading — the eyebrow replaces it.",
         },
       },
     },
@@ -377,7 +377,7 @@ export const IntroContract: Story = {
       throw new Error("intro track missing");
     }
     expect(track.firstElementChild).toBe(intro);
-    const eyebrow = section.querySelector("[data-pattern='eyebrow']");
+    const eyebrow = section.querySelector("[data-pattern='label']");
     if (!(eyebrow instanceof HTMLElement)) throw new Error("eyebrow missing");
     expect(eyebrow.textContent).toBe("SELECTED WORK");
     expect(section.getAttribute("aria-labelledby")).toBe(eyebrow.id);
@@ -503,7 +503,7 @@ export const IntroReduced: Story = {
     if (!(sticky instanceof HTMLElement)) throw new Error("sticky missing");
     expect(getComputedStyle(sticky).position).toBe("relative");
     expect(intro.getBoundingClientRect().bottom).toBeLessThanOrEqual(row.getBoundingClientRect().top + 1);
-    expect(section.querySelector("[data-pattern='eyebrow']")?.textContent).toBe("SELECTED WORK");
+    expect(section.querySelector("[data-pattern='label']")?.textContent).toBe("SELECTED WORK");
     expectIntroOnPageGrid(section);
     const reducedTile = [...section.querySelectorAll("[data-scroll-horizontal-expanded]")].find((host) =>
       host.className.includes("h-svh"),

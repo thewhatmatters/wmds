@@ -335,7 +335,7 @@ export const MarketingHeroWithGalleryIntro: Story = {
     const track = section.querySelector("[data-scroll-horizontal-track]");
     const intro = section.querySelector("[data-scroll-horizontal-intro]");
     expect(track?.firstElementChild).toBe(intro);
-    expect(section.querySelector("[data-pattern='eyebrow']")?.textContent).toBe("SELECTED WORK");
+    expect(section.querySelector("[data-pattern='label']")?.textContent).toBe("SELECTED WORK");
     expectDefaultHeroMatchesGallery(canvasElement);
     await expectLastTileFillsViewport(canvasElement);
   },

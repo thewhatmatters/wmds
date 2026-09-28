@@ -349,6 +349,55 @@ describe("TextSequence hand slot", () => {
     vi.unstubAllGlobals();
   });
 
+  it("pops the rock hand on the beat after TX and keeps it in the nowrap phrase", async () => {
+    vi.stubGlobal(
+      "matchMedia",
+      (query: string) =>
+        ({
+          matches: false,
+          media: query,
+          onchange: null,
+          addListener() {},
+          removeListener() {},
+          addEventListener() {},
+          removeEventListener() {},
+          dispatchEvent() {
+            return false;
+          },
+        }) as MediaQueryList,
+    );
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+    const root = createRoot(container);
+    await act(async () => {
+      root.render(
+        createElement(
+          TextSequence,
+          { trigger: "mount", emphasis: "none", idle: false, lines: true },
+          "An ",
+          createElement(
+            "span",
+            { className: "whitespace-nowrap" },
+            "Austin,\u00A0TX ",
+            createElement(RockSlot),
+            " ",
+          ),
+          "studio specializing in brand and product design.",
+        ),
+      );
+    });
+    const slot = container.querySelector<HTMLElement>("[data-rive-hand-slot='rock']");
+    const pop = slot?.querySelector<HTMLElement>("[data-rive-hand-pop]");
+    const handTween = pop ? gsap.getTweensOf(pop)[0] : undefined;
+    expect(slot?.parentElement?.className).toContain("whitespace-nowrap");
+    expect(slot?.previousSibling?.textContent ?? "").toMatch(/\s/);
+    expect(slot?.nextSibling?.textContent ?? "").toMatch(/\s/);
+    expect(handTween?.startTime()).toBeCloseTo((3 - 0.5) * textSequenceDefaultStagger, 5);
+    root.unmount();
+    container.remove();
+    vi.unstubAllGlobals();
+  });
+
   it("pops the point hand on the beat after impression", async () => {
     vi.stubGlobal(
       "matchMedia",
@@ -436,14 +485,18 @@ describe("marketing hero text sequence story", () => {
     const variant = source.slice(variantStart, variantEnd);
     expect(pattern).toContain('lead="We\'re a design and product studio based in Austin,\u00A0Texas."');
     expect(pattern).toContain("Austin,&nbsp;TX");
-    expect(pattern).toContain('{" studio specializing in brand and product design."}');
+    expect(pattern).toContain('{"studio specializing in brand and product design."}');
+    expect(pattern.indexOf('hand="rock"')).toBeGreaterThan(pattern.indexOf("Austin,&nbsp;TX"));
+    expect(pattern.indexOf('hand="rock"')).toBeLessThan(pattern.indexOf('{"studio specializing'));
     expect(variant).toContain('{"An "}');
     expect(variant).toContain("Austin,&nbsp;TX");
-    expect(variant).toContain('{" studio specializing in brand and product design."}');
+    expect(variant).toContain('{"studio specializing in brand and product design."}');
     expect(variant).toContain('className="whitespace-nowrap"');
     expect(variant).toContain("delay={0.7}");
     expect(variant).toContain("delay={1.05}");
-    expect(variant.indexOf("Austin,&nbsp;TX")).toBeLessThan(variant.indexOf("Your brand"));
+    expect(variant.indexOf("Austin,&nbsp;TX")).toBeLessThan(variant.indexOf('hand="rock"'));
+    expect(variant.indexOf('hand="rock"')).toBeLessThan(variant.indexOf("Your brand"));
+    expect(variant).toContain('{"Your brand is already "}');
     expect(variant).toContain("Your brand");
     expect(variant).toContain("is already");
     expect(variant).toContain("online");

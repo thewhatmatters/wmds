@@ -75,17 +75,6 @@ export const badgeCountSizeClasses: Record<BadgeSize, string> = {
 /** Icon-only circle — **TaskRows** leading done/failed (22px). */
 export const badgeIconOnlySizeClasses = "size-[1.375rem] rounded-full p-0";
 
-/**
- * Eyebrow chip — mono, uppercase, tiny, accent fill.
- * `!` beats the sans label shell (`font-sans`, `rounded-full`, `tracking-normal`).
- * Size is `--font-size-xs` (10px), the smallest step on the type ramp.
- */
-export const badgeEyebrowClasses = [
-  "!h-auto !rounded-sm bg-accent !px-1.5 !py-1",
-  "!font-mono !text-[length:var(--font-size-xs)] !font-normal !uppercase !leading-none",
-  "!tracking-[0.14em] text-on-accent",
-].join(" ");
-
 /** Internal — trailing count on secondary/primary buttons. */
 export const badgeOnButtonCountClasses =
   "border border-transparent bg-surface text-fg shadow-raised";

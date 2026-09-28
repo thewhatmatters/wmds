@@ -54,7 +54,7 @@ The sequenced hero’s first line is “An Austin, TX studio specializing in bra
 
 **Date:** 2026-09-28
 
-The display-1 **We Are WhatMatters** headline is gone. **HeroIntro** is the page `h1`. The sequenced hero places a rock **RiveHand** `inline` after “Your brand”, in place of the asterisk. The drawn hand is about 1.15em and `aria-hidden`. Reduced motion keeps that hand on its first frame.
+The display-1 **We Are WhatMatters** headline is gone. **HeroIntro** is the page `h1`. The sequenced hero places a rock **RiveHand** `inline` immediately after “TX”, inside the same nowrap phrase, in place of the asterisk. The drawn hand is about 1.15em, centered on the line, and `aria-hidden`. It pops on the beat after TX. Reduced motion keeps that hand on its first frame.
 
 ## References
 

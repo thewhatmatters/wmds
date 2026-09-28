@@ -697,7 +697,7 @@ describe("scrollHorizontal intro", () => {
     const track = section?.querySelector("[data-scroll-horizontal-track]");
     const intro = section?.querySelector("[data-scroll-horizontal-intro]");
     expect(track?.firstElementChild).toBe(intro);
-    const eyebrow = section?.querySelector("[data-pattern='eyebrow']");
+    const eyebrow = section?.querySelector("[data-pattern='label']");
     expect(eyebrow?.textContent).toBe("SELECTED WORK");
     expect(section?.getAttribute("aria-labelledby")).toBe(eyebrow?.id);
     expect(section?.getAttribute("aria-label")).toBeNull();

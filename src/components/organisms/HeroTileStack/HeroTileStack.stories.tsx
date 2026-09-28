@@ -622,15 +622,17 @@ export function MarketingHeroTextSequence() {
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 {"An "}
-                <span className="whitespace-nowrap">Austin,&nbsp;TX</span>
-                {" studio specializing in brand and product design."}
+                <span className="whitespace-nowrap">
+                  Austin,&nbsp;TX{" "}
+                  <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
+                  {" "}
+                </span>
+                {"studio specializing in brand and product design."}
               </TextSequence>
             }
           >
             <TextSequence idle emphasis="none" delay={0.7} stagger={0.07}>
-              {"Your brand "}
-              <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
-              {" is already "}
+              {"Your brand is already "}
               <TextSequence.Shape variant="circle" tone="accent" />
               {" online"}
             </TextSequence>
@@ -687,15 +689,17 @@ function MarketingHeroTextSequenceView() {
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 {"An "}
-                <span className="whitespace-nowrap">Austin,&nbsp;TX</span>
-                {" studio specializing in brand and product design."}
+                <span className="whitespace-nowrap">
+                  Austin,&nbsp;TX{" "}
+                  <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
+                  {" "}
+                </span>
+                {"studio specializing in brand and product design."}
               </TextSequence>
             }
           >
             <TextSequence idle emphasis="none" delay={0.7} stagger={0.07}>
-              {"Your brand "}
-              <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
-              {" is already "}
+              {"Your brand is already "}
               <TextSequence.Shape variant="circle" tone="accent" />
               {" online"}
             </TextSequence>
@@ -866,7 +870,7 @@ export const MarketingHeroTextSequence: Story = {
       docs: {
         description: {
           story:
-            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. HeroIntro is the h1 on type-display-2 at normal weight, the same font-size and line-height as the gallery statement, full width of the page grid. The first line is An Austin, TX studio specializing in brand and product design. Austin, and TX stay together (non-breaking space, nowrap). The hero lines use text-wrap balance. The section is shrink-0 and justify-center-safe, so a headline taller than the minimum starts below the nav and the section grows downward. Then Your brand is already online and Make it impossible to ignore, with no periods. The Austin line sequences first. The brand line waits 0.7s and the last line waits 1.05s so the 0.07s stagger continues. A rock RiveHand replaces the asterisk immediately after Your brand. inline sizes the canvas past the artboard padding so the drawn hand is about 1.15em, its outline bottom sits on the text baseline, the same height as the circle and the pill, and the zero-height slot keeps the line box. Outline is brand navy (#011272) from --color-brand. The hand is aria-hidden and entrance is none. TextSequence pops that slot on the beat after brand, with the same scale, rotation, and back.out(1.8) ease as the circle and the pill. Idle starts after the pop. With motion on, the state machine keeps playing once that box has size. Reduced motion draws one frame after the box has size, then pauses. The circle and the pill stay inline at about 1.15em. emphasis is none. Shapes are aria-hidden. idle spins the asterisk and stretches the pill. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
+            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. HeroIntro is the h1 on type-display-2 at normal weight, the same font-size and line-height as the gallery statement, full width of the page grid. The first line is An Austin, TX studio specializing in brand and product design. Austin, and TX stay together (non-breaking space, nowrap). The hero lines use text-wrap balance. The section is shrink-0 and justify-center-safe, so a headline taller than the minimum starts below the nav and the section grows downward. Then Your brand is already online and Make it impossible to ignore, with no periods. The Austin line sequences first. The brand line waits 0.7s and the last line waits 1.05s so the 0.07s stagger continues. A rock RiveHand sits immediately after TX, inside the same nowrap phrase. inline sizes the canvas past the artboard padding so the drawn hand is about 1.15em and is centered on the line, the same height as the circle and the pill, and the zero-height slot keeps the line box. Outline is brand navy (#011272) from --color-brand. The hand is aria-hidden and entrance is none. TextSequence pops that slot on the beat after TX, with the same scale, rotation, and back.out(1.8) ease as the circle and the pill. Idle starts after the pop. With motion on, the state machine keeps playing once that box has size. Reduced motion draws one frame after the box has size, then pauses. The circle and the pill stay inline at about 1.15em. emphasis is none. Shapes are aria-hidden. idle spins the asterisk and stretches the pill. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
         },
       },
     },
@@ -888,7 +892,12 @@ export const MarketingHeroTextSequence: Story = {
     const slot = hand?.closest("[data-rive-hand-slot]");
     if (!(hand instanceof HTMLElement) || !(slot instanceof HTMLElement)) throw new Error("inline rock hand missing");
     expect(hand.getAttribute("aria-hidden")).toBe("true");
+    expect(slot.parentElement?.className).toContain("whitespace-nowrap");
     expect(slot.getAttribute("data-rive-hand-slot")).toBe("rock");
+    const tx = [...heading.querySelectorAll("[data-text-sequence-word]")].find(
+      (node) => node.textContent === "TX",
+    );
+    expect(tx?.compareDocumentPosition(slot) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(getComputedStyle(slot).height).toBe("0px");
     const lineHeight = Number.parseFloat(getComputedStyle(heading).lineHeight);
     const lines = Math.round(heading.getBoundingClientRect().height / lineHeight);
