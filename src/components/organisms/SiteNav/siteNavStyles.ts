@@ -115,9 +115,20 @@ export const siteNavMiddleClasses =
 export const siteNavMiddleHugClasses = "flex min-w-0 max-w-full items-center justify-center";
 export const siteNavEndClasses = "flex shrink-0 flex-nowrap items-center gap-2";
 
-/** Middle slot hides below `md` when a `mobile` menu is supplied. */
-export const siteNavMiddleResponsiveClasses = "hidden md:flex min-w-0 w-full";
-export const siteNavMobileTriggerClasses = "md:hidden";
+/**
+ * Middle slot when a `mobile` menu is supplied. Shown from `md`.
+ * No unprefixed `hidden` or `flex`: a later stylesheet's `.hidden` beats `md:flex`,
+ * and a later `.flex` beats `max-md:hidden`. These strings are the whole slot.
+ */
+export const siteNavMiddleResponsiveClasses =
+  "max-md:hidden md:flex min-w-0 w-full flex-1 items-center justify-center";
+export const siteNavMiddleHugResponsiveClasses =
+  "max-md:hidden md:flex min-w-0 w-full max-w-full items-center justify-center";
+/**
+ * IconButton paints `inline-flex`. `md:!hidden` beats a later non-important
+ * `.inline-flex`. The class is not `hidden`, so an app's `.hidden` does not match.
+ */
+export const siteNavMobileTriggerClasses = "md:!hidden";
 
 /**
  * Brand — layout only when wordmark **Button**; icon brands use **IconButton** (circular).

@@ -527,7 +527,7 @@ export const MarketingHeroRuledPattern: Story = {
       docs: {
         description: {
           story:
-            "The one full marketing page. Sequenced hero (same as Pattern — marketing hero text sequence): h1 We Are WhatMatters on type-display-1, HeroIntro step display on type-display-2. Then ScrollHorizontal with Intro and expandLast. Then FooterReveal.Ruled on footerRevealRuledFieldClasses. The intro action is Button role secondary, onClick openProjectModal. Show code is that whole page. Reduced motion leaves the sequences at rest. The gallery section ends on the expanded tile, flush with the ruled footer.",
+            "The one full marketing page. Sequenced hero (same as Pattern — marketing hero text sequence): h1 We Are WhatMatters on type-display-1, HeroIntro step display on type-display-2. Then ScrollHorizontal with Intro and expandLast. Then FooterReveal.Ruled on footerRevealRuledFieldClasses. Horizontal rules span the footer field; content and the grid edges stay in the page grid box. The intro action is Button role secondary, onClick openProjectModal. Show code is that whole page. Reduced motion leaves the sequences at rest. The gallery section ends on the expanded tile, flush with the ruled footer.",
         },
       },
     },
@@ -536,6 +536,15 @@ export const MarketingHeroRuledPattern: Story = {
   render: () => <SequencedGalleryHeroPage ruled />,
   play: async ({ canvasElement }) => {
     await playSequencedMarketingHero(canvasElement);
+    const fade = canvasElement.querySelector<HTMLElement>("[data-footer-reveal='fade']");
+    const band = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='band']");
+    const grid = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='grid']");
+    if (!fade || !band || !grid) throw new Error("ruled footer missing");
+    const bandBox = band.getBoundingClientRect();
+    const gridBox = grid.getBoundingClientRect();
+    expect(Math.abs(band.offsetWidth - fade.offsetWidth)).toBeLessThanOrEqual(1);
+    expect(Math.abs(gridBox.left - bandBox.left - (bandBox.right - gridBox.right))).toBeLessThanOrEqual(1);
+    expect(getComputedStyle(band).borderBottomColor.replace(/\s/g, "")).toBe("rgb(1,18,114)");
     expect(canvasElement.querySelector("[data-footer-ruled='wordmark']")?.textContent).toBe("WhatMatters");
     expect(canvasElement.textContent).not.toContain("WHATMATTERS");
     expect(canvasElement.textContent).not.toContain("We Build WhatMatters");

@@ -15,11 +15,13 @@ import {
   footerRevealRuledCreditClasses,
   footerRevealRuledCreditCopyClasses,
   footerRevealRuledCreditMarkClasses,
+  footerRevealRuledBandClasses,
+  footerRevealRuledBandTopClasses,
   footerRevealRuledCropClasses,
   footerRevealRuledCropFrameClasses,
   footerRevealRuledEmailClasses,
-  footerRevealRuledFrameClasses,
   footerRevealRuledGlyphClasses,
+  footerRevealRuledGridClasses,
   footerRevealRuledIdentityClasses,
   footerRevealRuledLinkClasses,
   footerRevealRuledLinkColumnsClasses,
@@ -28,6 +30,7 @@ import {
   footerRevealRuledLinksClasses,
   footerRevealRuledMarkClasses,
   footerRevealRuledPlusClasses,
+  footerRevealRuledRootClasses,
   footerRevealRuledServicesClasses,
   footerRevealRuledSocialCellClasses,
   footerRevealRuledSocialGridClasses,
@@ -241,6 +244,19 @@ function FittedLine({
   );
 }
 
+function RuledBand({ top = false, children }: { top?: boolean; children: ReactNode }) {
+  return (
+    <div
+      className={cn(footerRevealRuledBandClasses, top && footerRevealRuledBandTopClasses)}
+      data-footer-ruled="band"
+    >
+      <div className={footerRevealRuledGridClasses} data-footer-ruled="grid">
+        {children}
+      </div>
+    </div>
+  );
+}
+
 function RuledPlus({ align }: { align: "start" | "end" }) {
   return (
     <span
@@ -255,8 +271,9 @@ function RuledPlus({ align }: { align: "start" | "end" }) {
 
 /**
  * Ruled-grid marketing footer. Brand ink and 1px brand rules on the page
- * background. Below `md` the bands stack; the two link columns stay side by
- * side and the social cells stay one row.
+ * background. Horizontal rules span the footer field. Content and the grid's
+ * vertical edges stay in the page grid box. Below `md` the bands stack; the
+ * two link columns stay side by side and the social cells stay one row.
  */
 export function FooterRevealRuled({
   copyright = footerRevealRuledDefaultCopy.copyright,
@@ -276,7 +293,8 @@ export function FooterRevealRuled({
   const emailLink = footerRevealRuledEmailHref(email, emailHref);
 
   return (
-    <div className={cn(footerRevealRuledFrameClasses, className)} data-footer-ruled="root">
+    <div className={cn(footerRevealRuledRootClasses, className)} data-footer-ruled="root">
+      <RuledBand top>
       <div className={footerRevealRuledSplitClasses}>
         <div className={footerRevealRuledIdentityClasses} data-footer-ruled="identity">
           <div className="flex items-start justify-between gap-4">
@@ -315,7 +333,9 @@ export function FooterRevealRuled({
           <RuledPlus align="end" />
         </div>
       </div>
+      </RuledBand>
 
+      <RuledBand>
       <div className={footerRevealRuledSplitClasses}>
         <div className={footerRevealRuledContactClasses} data-footer-ruled="contact">
           <div className={footerRevealRuledContactRowClasses}>
@@ -355,26 +375,33 @@ export function FooterRevealRuled({
           ))}
         </div>
       </div>
+      </RuledBand>
 
+      <RuledBand>
       <FittedLine
         text={wordmark}
         frameClassName={footerRevealRuledWordmarkFrameClasses}
         textClassName={footerRevealRuledWordmarkClasses}
         slot="wordmark"
       />
+      </RuledBand>
+      <RuledBand>
       <FittedLine
         text={crop}
         frameClassName={footerRevealRuledCropFrameClasses}
         textClassName={footerRevealRuledCropClasses}
         slot="crop"
       />
+      </RuledBand>
 
+      <RuledBand>
       <div className={footerRevealRuledCreditClasses} data-footer-ruled="credit">
         <span className={footerRevealRuledCreditMarkClasses} aria-hidden="true">
           {mark}
         </span>
         <p className={footerRevealRuledCreditCopyClasses}>{credit}</p>
       </div>
+      </RuledBand>
     </div>
   );
 }

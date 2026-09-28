@@ -124,17 +124,35 @@ export function footerRevealExternalLinkProps(
 export const footerRevealRuledFieldClasses =
   "footer-reveal-ruled-field bg-body text-brand";
 
-/** Page-grid box. 1px brand rules. Clips the fitted wordmark and the crop. */
-export const footerRevealRuledFrameClasses =
-  "mx-auto w-full min-w-0 max-w-[var(--grid-max)] overflow-hidden border border-brand text-brand";
+/**
+ * Full-bleed shell. Horizontal rules live on the bands (`border-t` / `border-b`),
+ * not on a centered box — a max-width frame would stop the rules short of the viewport.
+ */
+export const footerRevealRuledRootClasses = "w-full min-w-0 text-brand";
+
+/** Full-bleed row. `border-b` is the horizontal rule, edge to edge of the footer field. */
+export const footerRevealRuledBandClasses = "w-full min-w-0 border-b border-brand";
+
+/** Top of the footer. Longhand only — not the `border` shorthand beside `border-b`. */
+export const footerRevealRuledBandTopClasses = "border-t";
+
+/**
+ * Page-grid column. Vertical edge rules sit on this box and meet the full-bleed
+ * rules. Content, internal dividers, the wordmark, and the crop stay inside it.
+ */
+export const footerRevealRuledGridClasses =
+  "mx-auto w-full min-w-0 max-w-[var(--grid-max)] border-x border-brand";
 
 export const footerRevealRuledSplitClasses = "grid grid-cols-1 md:grid-cols-2";
 
+/**
+ * `max-md:border-b` is the stacked rule. It is not the class `border-b`, so a
+ * later `.border-b` cannot keep that edge at `md` and double the band rule.
+ */
 export const footerRevealRuledIdentityClasses =
-  "flex min-w-0 flex-col gap-4 border-b border-brand p-[var(--grid-pad)] md:border-r";
+  "flex min-w-0 flex-col gap-4 border-brand p-[var(--grid-pad)] max-md:border-b md:border-r";
 
-export const footerRevealRuledLinksClasses =
-  "flex min-w-0 flex-col gap-4 border-b border-brand p-[var(--grid-pad)]";
+export const footerRevealRuledLinksClasses = "flex min-w-0 flex-col gap-4 p-[var(--grid-pad)]";
 
 export const footerRevealRuledLinkColumnsClasses =
   "grid min-w-0 grid-cols-2 gap-x-[var(--grid-gutter)]";
@@ -155,9 +173,14 @@ export const footerRevealRuledLinkLabelClasses =
 export const footerRevealRuledGlyphClasses =
   "inline-flex size-3.5 shrink-0 text-brand [&>svg]:size-full [&>svg]:stroke-current";
 
-/** Decorative plus. Hidden below `md`, where the bands stack. */
+/**
+ * Decorative plus. Hidden below `md`, where the bands stack.
+ * Display is `max-md:hidden` and `md:inline-flex` only. An unprefixed `hidden`
+ * or `inline-flex` on this element loses to whichever a consuming stylesheet
+ * emits last, and the identity and links cells lose the mark's row.
+ */
 export const footerRevealRuledPlusClasses =
-  footerRevealRuledGlyphClasses + " pointer-events-none mt-auto hidden md:inline-flex";
+  "pointer-events-none mt-auto size-3.5 shrink-0 text-brand [&>svg]:size-full [&>svg]:stroke-current max-md:hidden md:inline-flex";
 
 export const footerRevealRuledCopyrightClasses = "type-supporting min-w-0 text-brand";
 
@@ -169,7 +192,7 @@ export const footerRevealRuledMarkClasses =
   "shrink-0 font-sans text-[length:var(--font-size-5xl)] font-bold leading-[0.8] tracking-[-0.04em] text-brand";
 
 export const footerRevealRuledContactClasses =
-  "flex min-w-0 flex-col justify-center border-b border-brand p-[var(--grid-pad)] md:border-r";
+  "flex min-w-0 flex-col justify-center border-brand p-[var(--grid-pad)] max-md:border-b md:border-r";
 
 export const footerRevealRuledContactRowClasses =
   "flex min-w-0 flex-col gap-4 md:flex-row md:items-center md:justify-between";
@@ -182,15 +205,14 @@ export const footerRevealRuledEmailClasses =
 export const footerRevealRuledServicesClasses =
   "type-label flex min-w-0 items-center gap-2 text-brand";
 
-export const footerRevealRuledSocialGridClasses =
-  "grid min-w-0 border-b border-brand";
+export const footerRevealRuledSocialGridClasses = "grid min-w-0";
 
 export const footerRevealRuledSocialCellClasses =
   "flex aspect-square min-h-11 min-w-0 items-center justify-center border-r border-brand text-brand last:border-r-0 " +
   "hover:bg-neutral focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand";
 
 export const footerRevealRuledWordmarkFrameClasses =
-  "@container flex w-full min-w-0 items-center overflow-hidden border-b border-brand px-[var(--grid-margin)] py-[var(--grid-baseline)]";
+  "@container flex w-full min-w-0 items-center overflow-hidden px-[var(--grid-margin)] py-[var(--grid-baseline)]";
 
 /** Fully visible. `leading-none` keeps the caps inside the row; the crop row below is the bleed. */
 export const footerRevealRuledWordmarkClasses =
@@ -201,7 +223,7 @@ export const footerRevealRuledWordmarkClasses =
  * so the bottom rule crops the letters.
  */
 export const footerRevealRuledCropFrameClasses =
-  "@container aspect-[3/1] w-full min-w-0 overflow-hidden border-b border-brand";
+  "@container aspect-[3/1] w-full min-w-0 overflow-hidden";
 
 export const footerRevealRuledCropClasses =
   "w-max max-w-none whitespace-nowrap font-sans font-bold leading-none tracking-[-0.06em] text-brand";

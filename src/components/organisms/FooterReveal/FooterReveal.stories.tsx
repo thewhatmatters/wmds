@@ -76,7 +76,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
 - Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. The brand panel and the footer field clip the wordmark.
 - Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`. The brand panel clips its own wordmark.
 - When **ScrollHorizontal** \`expandLast\` is the last section in the cover, the guide \`grid-page\` after it uses \`!py-0\`. Default \`grid-page\` block padding is \`--grid-pad\` (24px top and bottom). On a guide-only host that padding is a page-background strip between the full-bleed tile and the footer. The reduced-motion \`h-svh\` section meets the footer the same way.
-- **FooterReveal.Ruled** is the ruled-grid footer. Pass **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) on **Footer**. Rules are 1px \`border-brand\`. The frame is the page grid box (\`max-w-[var(--grid-max)]\`). Below \`md\` the bands stack; the two link columns stay side by side; social cells stay one row. The wordmark fills the frame. The crop row is oversized \`WM\` letterforms cut by the bottom rule. Plus glyphs are decorative (\`aria-hidden\`). Social cells are icon-only anchors with accessible names and a brand focus ring. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — the defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. Dark theme keeps the field on \`--color-on-brand\` so the navy rules stay readable. **FooterReveal.Brand** stays the navy field.
+- **FooterReveal.Ruled** is the ruled-grid footer. Pass **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) on **Footer**. Rules are 1px \`border-brand\`. Horizontal rules span the footer field. Content, internal dividers, and the grid's vertical edges stay in the page grid box (\`max-w-[var(--grid-max)]\`). Below \`md\` the bands stack; the two link columns stay side by side; social cells stay one row. The wordmark fills the grid box. The crop row is oversized \`WM\` letterforms cut by the bottom rule. Plus glyphs are decorative (\`aria-hidden\`) and show from \`md\`. Social cells are icon-only anchors with accessible names and a brand focus ring. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — the defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. Dark theme keeps the field on \`--color-on-brand\` so the navy rules stay readable. **FooterReveal.Brand** stays the navy field.
         `.trim(),
       },
     },
@@ -716,7 +716,7 @@ export const RuledGridFooterPattern: Story = {
       docs: {
         description: {
           story:
-            "Ruled grid on the page background. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. The frame is the page grid box (`max-w-[var(--grid-max)]`). Rules are 1px `border-brand`. Default copy is WhatMatters © 2026, a mono blurb, Website and Studio link columns, randy@whatmatters.so, Brand / Product / Web, five social cells, the WhatMatters wordmark, cropped WM letterforms, and Created by WhatMatters 2024—26. Below `md` the bands stack; the link columns stay side by side; the social cells stay one row. Plus glyphs are decorative. Social cells are icon-only anchors. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. `https` links open in a new tab.",
+            "Ruled grid on the page background. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. Horizontal rules are 1px `border-brand` and span the footer field. Content, internal dividers, and the grid's vertical edges stay in the page grid box (`max-w-[var(--grid-max)]`). Default copy is WhatMatters © 2026, a mono blurb, Website and Studio link columns, randy@whatmatters.so, Brand / Product / Web, five social cells, the WhatMatters wordmark, cropped WM letterforms, and Created by WhatMatters 2024—26. Below `md` the bands stack; the link columns stay side by side; the social cells stay one row. Plus glyphs are decorative and show from `md`. Social cells are icon-only anchors. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. `https` links open in a new tab.",
         },
       },
     },
@@ -726,12 +726,26 @@ export const RuledGridFooterPattern: Story = {
   play: async ({ canvasElement }) => {
     const root = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='root']");
     const field = canvasElement.querySelector<HTMLElement>("[data-footer-ruled-field]");
+    const band = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='band']");
+    const grid = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='grid']");
     const identity = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='identity']");
     const links = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='links']");
-    if (!root || !field || !identity || !links) throw new Error("ruled footer missing");
+    if (!root || !field || !band || !grid || !identity || !links) throw new Error("ruled footer missing");
 
-    const border = getComputedStyle(root).borderTopColor.replace(/\s/g, "");
+    const fieldBox = field.getBoundingClientRect();
+    const bandBox = band.getBoundingClientRect();
+    const gridBox = grid.getBoundingClientRect();
+    expect(Math.abs(band.offsetWidth - field.offsetWidth)).toBeLessThanOrEqual(1);
+    expect(Math.abs(bandBox.left - fieldBox.left)).toBeLessThanOrEqual(1);
+    expect(Math.abs(gridBox.left - bandBox.left - (bandBox.right - gridBox.right))).toBeLessThanOrEqual(1);
+    expect(identity.getBoundingClientRect().left).toBeGreaterThanOrEqual(gridBox.left - 1);
+    expect(identity.getBoundingClientRect().right).toBeLessThanOrEqual(gridBox.right + 1);
+
+    const border = getComputedStyle(band).borderTopColor.replace(/\s/g, "");
     expect(border).toBe("rgb(1,18,114)");
+    expect(getComputedStyle(band).borderBottomWidth).toBe("1px");
+    expect(getComputedStyle(grid).borderLeftWidth).toBe("1px");
+    expect(getComputedStyle(grid).borderRightWidth).toBe("1px");
     const fieldFill = getComputedStyle(field).backgroundColor.replace(/\s/g, "");
     expect(fieldFill === "rgb(248,248,248)" || fieldFill === "rgb(255,255,255)").toBe(true);
 
@@ -757,8 +771,11 @@ export const RuledGridFooterPattern: Story = {
     const email = canvasElement.querySelector("a[href='mailto:randy@whatmatters.so']");
     expect(email?.textContent).toBe("randy@whatmatters.so");
 
-    for (const plus of canvasElement.querySelectorAll("[data-footer-ruled='plus']")) {
+    for (const plus of canvasElement.querySelectorAll<HTMLElement>("[data-footer-ruled='plus']")) {
       expect(plus.getAttribute("aria-hidden")).toBe("true");
+      expect(plus.className).toContain("md:inline-flex");
+      // A flex item blockifies `inline-flex` to `flex`. `none` means the hide utility won.
+      expect(getComputedStyle(plus).display).toBe(window.innerWidth >= 768 ? "flex" : "none");
     }
 
     const navs = links.querySelectorAll("nav");
@@ -822,7 +839,14 @@ export const RuledGridOverflow390: Story = {
     });
 
     const root = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='root']");
-    expect(root?.scrollWidth ?? 0).toBeLessThanOrEqual((root?.clientWidth ?? 0) + 1);
+    const field = canvasElement.querySelector<HTMLElement>("[data-footer-ruled-field]");
+    const band = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='band']");
+    if (!root || !field || !band) throw new Error("ruled footer missing");
+    expect(Math.abs(band.offsetWidth - field.offsetWidth)).toBeLessThanOrEqual(1);
+    for (const plus of canvasElement.querySelectorAll<HTMLElement>("[data-footer-ruled='plus']")) {
+      expect(getComputedStyle(plus).display).toBe("none");
+    }
+    expect(root.scrollWidth).toBeLessThanOrEqual(root.clientWidth + 1);
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
       document.documentElement.clientWidth + 1,
     );

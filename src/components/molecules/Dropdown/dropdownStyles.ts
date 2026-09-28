@@ -14,16 +14,23 @@ export const dropdownMenuListClasses = "m-0 flex list-none flex-col gap-0.5 p-0"
 /** Gap between anchor shell and menu when positioned with getBoundingClientRect. */
 export const dropdownMenuOffsetPx = 4;
 
-export const dropdownItemButtonClasses = cn(
+/** Shared row chrome. Display and width stay on the button or the measure row, not both. */
+export const dropdownItemRowClasses = cn(
   typographyClass("body"),
-  "flex w-full cursor-pointer items-center gap-2 rounded-[14px] px-3.5 py-2 text-left text-fg",
+  "cursor-pointer items-center gap-2 rounded-[14px] px-3.5 py-2 text-left text-fg",
   "transition-[color,background-color] hover:bg-accent-muted focus-visible:outline-none focus-visible:bg-accent-muted",
   motionTransition("fast"),
 );
 
-/** Off-DOM row measure — intrinsic width from longest label + slots (not trigger width). */
+export const dropdownItemButtonClasses = cn(dropdownItemRowClasses, "flex w-full");
+
+/**
+ * Off-DOM row measure — intrinsic width from longest label + slots (not trigger width).
+ * `inline-flex` and `w-max` replace the button's `flex` and `w-full`. Both pairs on one
+ * element follow stylesheet order, so a consuming app had to re-emit `w-max`.
+ */
 export const dropdownItemMeasureButtonClasses = cn(
-  dropdownItemButtonClasses,
+  dropdownItemRowClasses,
   "inline-flex w-max max-w-none",
 );
 
