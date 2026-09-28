@@ -773,7 +773,9 @@ export const RuledGridFooterPattern: Story = {
 
     for (const plus of canvasElement.querySelectorAll<HTMLElement>("[data-footer-ruled='plus']")) {
       expect(plus.getAttribute("aria-hidden")).toBe("true");
-      expect(getComputedStyle(plus).display).toBe(window.innerWidth >= 768 ? "inline-flex" : "none");
+      expect(plus.className).toContain("md:inline-flex");
+      // A flex item blockifies `inline-flex` to `flex`. `none` means the hide utility won.
+      expect(getComputedStyle(plus).display).toBe(window.innerWidth >= 768 ? "flex" : "none");
     }
 
     const navs = links.querySelectorAll("nav");
