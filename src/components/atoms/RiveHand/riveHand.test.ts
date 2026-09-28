@@ -16,7 +16,9 @@ import {
   riveHandBooleanValue,
   riveHandBoxSize,
   riveHandInkFractions,
+  riveHandInkBottom,
   riveHandInlineLayout,
+  riveHandInlineSlotClassName,
   riveHandInlineVisibleEm,
   riveHandFillProperty,
   installRiveHandLayoutRect,
@@ -129,15 +131,19 @@ describe("rive hand tokens", () => {
     expect(riveHandBoxSize("1.35em")).toBe("1.35em");
   });
 
-  it("scales an inline hand so the drawn mark is about 1.15em", () => {
+  it("scales an inline hand so the drawn mark is about 1.15em and sits on the baseline", () => {
+    expect(riveHandInlineSlotClassName).toContain("align-baseline");
+    expect(riveHandInlineSlotClassName).toContain("h-0");
     for (const hand of ["rock", "point"] as const) {
       const layout = riveHandInlineLayout(hand);
       const ink = riveHandInkFractions[hand];
       const box = Number.parseFloat(layout.box);
       const slot = Number.parseFloat(layout.slot);
+      const [, yPart] = layout.transform.slice("translate(".length, -1).split(",");
       expect(box * ink.height).toBeCloseTo(riveHandInlineVisibleEm, 1);
       expect(slot).toBeCloseTo(box * ink.width, 1);
-      expect(layout.transform.startsWith("translate(")).toBe(true);
+      expect(Number.parseFloat(yPart)).toBeCloseTo(-riveHandInkBottom(hand) * 100, 1);
+      expect(riveHandInkBottom(hand)).toBeGreaterThan(ink.centerY);
     }
   });
 
