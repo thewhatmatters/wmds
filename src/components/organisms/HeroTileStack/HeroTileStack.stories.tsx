@@ -136,9 +136,9 @@ export function MarketingHero() {
           </>
         }
       />
-      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-16 text-center">
+      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-16 text-center">
         <div className="flex w-full flex-col items-center gap-6">
-          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
+          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
             We help brands stand out{" "}
             <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
             {" "}with bold ideas, fresh approaches, and products people actually love to use.
@@ -186,9 +186,9 @@ function MarketingHero() {
           </>
         }
       />
-      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-16 text-center">
+      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-16 text-center">
         <div className="flex w-full flex-col items-center gap-6">
-          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
+          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
             We help brands stand out{" "}
             <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
             {" "}with bold ideas, fresh approaches, and products people actually love to use.
@@ -207,7 +207,7 @@ function MarketingHero() {
   );
 }
 
-const heroIntroLeadCopy = "We're a design and product studio based in Austin, Texas.";
+const heroIntroLeadCopy = "We're a design and product studio based in Austin, Texas.";
 
 function expectHeroIntroLines(root: ParentNode) {
   const intro = root.querySelector("section h1");
@@ -247,7 +247,7 @@ export const MarketingHeroPattern: Story = {
       docs: {
         description: {
           story:
-            "SiteNav sits above the hero in normal flow. The hero section is min-h-[calc(100svh-var(--site-nav-height))] and centers its content, so the nav plus the hero fill the viewport. HeroIntro is the page h1. It leads the hero on type-display-2 at normal weight, with text-wrap pretty, the same font-size and line-height as the gallery statement. There is no display-1 We Are WhatMatters headline. The intro is HeroIntro. Pass the first sentence as lead (We're a design and product studio based in Austin, Texas.). The lead wraps inside its measure, including from md, so the display-2 line does not clip. children is the rest of the copy and always starts on the next line. Both lines stay on type-display-2 at normal weight, centered, with text-wrap pretty — the same font-size as the gallery statement. Do not insert a br in the copy. HeroIntro sits on grid-page (max-width --grid-max, the same margin, column gap, and column count as the guides) with py-0 so the page block pad does not stack on the hero gap. From lg, where the grid is 12 columns, it occupies columns 4–9 (lg:col-start-4 lg:col-end-10), 6 of 12 columns, centered, and those edges line up with guide columns 4 and 9. md is 8 columns, so that span does not start at md. Below lg the paragraph is full width of that page grid, inside --grid-margin. The copy is: We're a design and product studio based in Austin, Texas. We help brands stand out online with bold ideas, fresh approaches, and products people actually love to use. online is one inline md Badge with a round Avatar — the one sanctioned decorative use. The globe file in public/hero-badges/ is a playful placeholder. The badge is not clickable, alt is empty so the sentence still reads in order, and the image is not announced. The tile fan is the last element in the hero. ScrollHorizontal follows that section with expandLast. Each card is a solid token-color placeholder and the label is the accessible name only. The heading is sr-only while that window is pinned, and visible above the row when motion is reduced. A 400svh track translates the project row from the first card centered to the last on the same scroll distance as a 300svh gallery, then the last tile grows until it fills the viewport and the radius reaches 0. That full-bleed tile scrolls away on its own. The gallery section ends on that tile, so the next block meets its bottom edge. prefers-reduced-motion keeps a native horizontal scroller, then the last tile as a static full-viewport section. The section's py-16 is the space under the tiles. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
+            "SiteNav sits above the hero in normal flow. The hero section is min-h-[calc(100svh-var(--site-nav-height))], shrink-0, and justify-center-safe, so the nav plus the hero fill the viewport when the copy fits. When the copy is taller than that minimum, the section grows and the content starts below the nav with the section's top padding. HeroIntro is the page h1. It leads the hero on type-display-2 at normal weight, with text-wrap balance, the same font-size and line-height as the gallery statement. There is no display-1 We Are WhatMatters headline. The intro is HeroIntro. Pass the first sentence as lead (We're a design and product studio based in Austin, Texas.). The lead wraps inside its measure, including from md, so the display-2 line does not clip. children is the rest of the copy and always starts on the next line. Both lines stay on type-display-2 at normal weight, centered, with text-wrap balance — the same font-size as the gallery statement. Austin, and Texas stay together with a non-breaking space. Do not insert a br in the copy. HeroIntro sits on grid-page (max-width --grid-max, the same margin, column gap, and column count as the guides) with py-0 so the page block pad does not stack on the hero gap. From lg, where the grid is 12 columns, it occupies columns 4–9 (lg:col-start-4 lg:col-end-10), 6 of 12 columns, centered, and those edges line up with guide columns 4 and 9. md is 8 columns, so that span does not start at md. Below lg the paragraph is full width of that page grid, inside --grid-margin. The copy is: We're a design and product studio based in Austin, Texas. We help brands stand out online with bold ideas, fresh approaches, and products people actually love to use. online is one inline md Badge with a round Avatar — the one sanctioned decorative use. The globe file in public/hero-badges/ is a playful placeholder. The badge is not clickable, alt is empty so the sentence still reads in order, and the image is not announced. The tile fan is the last element in the hero. ScrollHorizontal follows that section with expandLast. Each card is a solid token-color placeholder and the label is the accessible name only. The heading is sr-only while that window is pinned, and visible above the row when motion is reduced. A 400svh track translates the project row from the first card centered to the last on the same scroll distance as a 300svh gallery, then the last tile grows until it fills the viewport and the radius reaches 0. That full-bleed tile scrolls away on its own. The gallery section ends on that tile, so the next block meets its bottom edge. prefers-reduced-motion keeps a native horizontal scroller, then the last tile as a static full-viewport section. The section's py-16 is the space under the tiles. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
         },
       },
     },
@@ -615,21 +615,26 @@ export function MarketingHeroTextSequence() {
           </>
         }
       />
-      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-12 text-center">
+      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-12 text-center">
         <div className="flex w-full flex-col items-center gap-6">
           <HeroIntro
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                {"Your brand "}
-                <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
-                {" is already "}
-                <TextSequence.Shape variant="circle" tone="accent" />
-                {" online"}
+                {"An "}
+                <span className="whitespace-nowrap">Austin,&nbsp;TX</span>
+                {" studio specializing in brand and product design."}
               </TextSequence>
             }
           >
-            <TextSequence idle emphasis="none" delay={0.35} stagger={0.07}>
+            <TextSequence idle emphasis="none" delay={0.7} stagger={0.07}>
+              {"Your brand "}
+              <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
+              {" is already "}
+              <TextSequence.Shape variant="circle" tone="accent" />
+              {" online"}
+            </TextSequence>
+            <TextSequence idle emphasis="none" delay={1.05} stagger={0.07}>
               Make it <TextSequence.Shape variant="pill" tone="brand-soft" /> impossible to ignore
             </TextSequence>
           </HeroIntro>
@@ -675,21 +680,26 @@ function MarketingHeroTextSequenceView() {
           </>
         }
       />
-      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-12 text-center">
+      <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-12 text-center">
         <div className="flex w-full flex-col items-center gap-6">
           <HeroIntro
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                {"Your brand "}
-                <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
-                {" is already "}
-                <TextSequence.Shape variant="circle" tone="accent" />
-                {" online"}
+                {"An "}
+                <span className="whitespace-nowrap">Austin,&nbsp;TX</span>
+                {" studio specializing in brand and product design."}
               </TextSequence>
             }
           >
-            <TextSequence idle emphasis="none" delay={0.35} stagger={0.07}>
+            <TextSequence idle emphasis="none" delay={0.7} stagger={0.07}>
+              {"Your brand "}
+              <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
+              {" is already "}
+              <TextSequence.Shape variant="circle" tone="accent" />
+              {" online"}
+            </TextSequence>
+            <TextSequence idle emphasis="none" delay={1.05} stagger={0.07}>
               Make it <TextSequence.Shape variant="pill" tone="brand-soft" /> impossible to ignore
             </TextSequence>
           </HeroIntro>
@@ -771,7 +781,7 @@ async function expectRockHandCanvas(root: ParentNode) {
       expect(canvas.isConnected).toBe(true);
       expect(canvas.clientWidth).toBeGreaterThan(0);
       expect(canvas.clientHeight).toBeGreaterThan(0);
-      const slot = host.parentElement;
+      const slot = host.closest("[data-rive-hand-slot]");
       if (!(slot instanceof HTMLElement)) throw new Error("rock slot missing");
       expect(slot.getAttribute("data-rive-hand-slot")).toBe("rock");
       expect(slot.isConnected).toBe(true);
@@ -856,7 +866,7 @@ export const MarketingHeroTextSequence: Story = {
       docs: {
         description: {
           story:
-            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. HeroIntro is the h1 on type-display-2 at normal weight, the same font-size and line-height as the gallery statement, full width of the page grid. The two lines are Your brand is already online and Make it impossible to ignore, with no periods. A rock RiveHand replaces the asterisk immediately after Your brand. inline sizes the canvas past the artboard padding so the drawn hand is about 1.15em, the same height as the circle and the pill, and the zero-height slot keeps the line box. Outline is brand navy (#011272) from --color-brand. The hand is aria-hidden and entrance is none. With motion on, the state machine keeps playing once that box has size. Reduced motion draws one frame after the box has size, then pauses. The circle and the pill stay inline at about 1.15em. emphasis is none. Shapes are aria-hidden. idle spins the asterisk and stretches the pill. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
+            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. HeroIntro is the h1 on type-display-2 at normal weight, the same font-size and line-height as the gallery statement, full width of the page grid. The first line is An Austin, TX studio specializing in brand and product design. Austin, and TX stay together (non-breaking space, nowrap). The hero lines use text-wrap balance. The section is shrink-0 and justify-center-safe, so a headline taller than the minimum starts below the nav and the section grows downward. Then Your brand is already online and Make it impossible to ignore, with no periods. The Austin line sequences first. The brand line waits 0.7s and the last line waits 1.05s so the 0.07s stagger continues. A rock RiveHand replaces the asterisk immediately after Your brand. inline sizes the canvas past the artboard padding so the drawn hand is about 1.15em, its outline bottom sits on the text baseline, the same height as the circle and the pill, and the zero-height slot keeps the line box. Outline is brand navy (#011272) from --color-brand. The hand is aria-hidden and entrance is none. TextSequence pops that slot on the beat after brand, with the same scale, rotation, and back.out(1.8) ease as the circle and the pill. Idle starts after the pop. With motion on, the state machine keeps playing once that box has size. Reduced motion draws one frame after the box has size, then pauses. The circle and the pill stay inline at about 1.15em. emphasis is none. Shapes are aria-hidden. idle spins the asterisk and stretches the pill. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
         },
       },
     },
@@ -868,12 +878,14 @@ export const MarketingHeroTextSequence: Story = {
     if (!(heading instanceof HTMLElement)) throw new Error("hero heading missing");
     expect(canvasElement.querySelectorAll("h1")).toHaveLength(1);
     const text = heading.textContent?.replace(/\s+/g, " ") ?? "";
+    expect(text).toContain("An Austin, TX studio specializing in brand and product design.");
+    expect(text.indexOf("Austin, TX")).toBeLessThan(text.indexOf("Your brand"));
     expect(text).toContain("Your brand");
     expect(text).toContain("is already online");
     expect(text).toContain("Make it impossible to ignore");
     expect(text).not.toContain("We Are WhatMatters");
     const hand = heading.querySelector("[data-rive-hand='rock']");
-    const slot = hand?.parentElement;
+    const slot = hand?.closest("[data-rive-hand-slot]");
     if (!(hand instanceof HTMLElement) || !(slot instanceof HTMLElement)) throw new Error("inline rock hand missing");
     expect(hand.getAttribute("aria-hidden")).toBe("true");
     expect(slot.getAttribute("data-rive-hand-slot")).toBe("rock");
@@ -889,13 +901,16 @@ export const MarketingHeroTextSequence: Story = {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     await waitFor(() => {
       const sequences = [...canvasElement.querySelectorAll("[data-text-sequence]")];
-      expect(sequences).toHaveLength(2);
+      expect(sequences).toHaveLength(3);
       for (const sequence of sequences) {
         expect(sequence.getAttribute("data-text-sequence-state")).toBe(reduced ? "rest" : "playing");
         expect(sequence.getAttribute("aria-label")).toBeNull();
       }
       if (reduced) expect(heading.getAttribute("aria-label")).toBeNull();
       else {
+        expect(heading.getAttribute("aria-label")).toContain(
+          "An Austin, TX studio specializing in brand and product design.",
+        );
         expect(heading.getAttribute("aria-label")).toContain("Your brand is already online");
         expect(heading.getAttribute("aria-label")).toContain("Make it impossible to ignore");
       }
@@ -927,13 +942,15 @@ export const MarketingHeroTextSequenceNarrow: Story = {
   play: async ({ canvasElement }) => {
     expect(window.innerWidth).toBeLessThanOrEqual(400);
     const text = canvasElement.textContent?.replace(/\s+/g, " ") ?? "";
+    expect(text).toContain("An Austin, TX studio specializing in brand and product design.");
     expect(text).toContain("Your brand is already online");
     expect(text).toContain("Make it impossible to ignore");
     const heading = canvasElement.querySelector("h1");
+    expect(heading?.textContent?.replace(/\s+/g, " ")).toContain("Austin, TX");
     expect(heading?.textContent?.replace(/\s+/g, " ")).toContain("Your brand");
     expect(heading?.textContent).not.toContain("We Are WhatMatters");
     const hand = heading?.querySelector("[data-rive-hand='rock']");
-    const slot = hand?.parentElement;
+    const slot = hand?.closest("[data-rive-hand-slot]");
     if (!(hand instanceof HTMLElement) || !(slot instanceof HTMLElement) || !(heading instanceof HTMLElement)) {
       throw new Error("inline hand missing");
     }

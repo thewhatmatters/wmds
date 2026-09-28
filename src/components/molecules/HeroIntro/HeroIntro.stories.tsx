@@ -3,7 +3,7 @@ import { Badge } from "../../atoms/Badge/Badge";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { HeroIntro } from "./HeroIntro";
 
-const lead = "We're a design and product studio based in Austin, Texas.";
+const lead = "We're a design and product studio based in Austin, Texas.";
 
 const meta = {
   title: "Components/Layout/HeroIntro",
@@ -25,7 +25,7 @@ Centered intro under a marketing headline. Pass the first sentence as \`lead\` a
 
 Both steps are an \`h1\` on \`type-display-2\` at normal weight, the same font-size and line-height as **ScrollHorizontal.Intro**. \`step="large"\` (default) is columns 4–9 from \`lg\`. \`step="display"\` is full width of the page grid — the sequenced hero.
 
-\`lead\` wraps when the measure is shorter than the line, including from \`md\`. Children always start on the next line. Both lines stay centered, with \`text-wrap: pretty\`.
+\`lead\` wraps when the measure is shorter than the line, including from \`md\`. Children always start on the next line. Both lines stay centered, with \`text-wrap: balance\`, so a wrapped line is not a single word. Keep “Austin, Texas” together with a non-breaking space.
 
 Paste it inside **Components/Layout/HeroTileStack → Pattern — marketing hero**.
 
@@ -33,7 +33,7 @@ Paste it inside **Components/Layout/HeroTileStack → Pattern — marketing hero
 
 \`\`\`
 HeroIntro — grid-page, page block pad removed
-└── h1 — type-display-2, normal weight, text-pretty, text-muted, centered
+└── h1 — type-display-2, normal weight, text-balance, text-muted, centered
     ├── lead — wraps, including from md
     └── children — always the next line
         large: columns 4–9 from lg; full width of the page grid below lg
@@ -61,7 +61,7 @@ import { Badge, HeroIntro } from "@whatmatters/wmds";
 
 export function MarketingHeroIntro() {
   return (
-    <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
+    <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
       We help brands stand out{" "}
       <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
       {" "}with bold ideas, fresh approaches, and products people actually love to use.
@@ -77,7 +77,7 @@ export const TwoLineIntro: Story = {
       docs: {
         description: {
           story:
-            "lead is the Austin sentence and wraps inside the measure, including from md. The rest, including the inline online Badge, always starts on the next line. type-display-2 at normal weight, the same font-size as the gallery statement, with text-wrap pretty. Centered on grid-page, columns 4–9 from lg.",
+            "lead is the Austin sentence and wraps inside the measure, including from md. Austin, and Texas stay together with a non-breaking space. The rest, including the inline online Badge, always starts on the next line. type-display-2 at normal weight, the same font-size as the gallery statement, with text-wrap balance. Centered on grid-page, columns 4–9 from lg.",
         },
       },
     },

@@ -16,7 +16,9 @@ import {
   riveHandBooleanValue,
   riveHandBoxSize,
   riveHandInkFractions,
+  riveHandInkBottom,
   riveHandInlineLayout,
+  riveHandInlineSlotClassName,
   riveHandInlineVisibleEm,
   riveHandFillProperty,
   installRiveHandLayoutRect,
@@ -29,6 +31,8 @@ import {
   riveHandIdleHoldMs,
   riveHandIdleMaxMs,
   riveHandIdleMinMs,
+  riveHandEnteredAttr,
+  riveHandSequenceOrigin,
   riveHandOutlineFallback,
   riveHandOutlineProperty,
   riveHandOutlineToken,
@@ -129,16 +133,21 @@ describe("rive hand tokens", () => {
     expect(riveHandBoxSize("1.35em")).toBe("1.35em");
   });
 
-  it("scales an inline hand so the drawn mark is about 1.15em", () => {
+  it("scales an inline hand so the drawn mark is about 1.15em and sits on the baseline", () => {
+    expect(riveHandInlineSlotClassName).toContain("align-baseline");
+    expect(riveHandInlineSlotClassName).toContain("h-0");
     for (const hand of ["rock", "point"] as const) {
       const layout = riveHandInlineLayout(hand);
       const ink = riveHandInkFractions[hand];
       const box = Number.parseFloat(layout.box);
       const slot = Number.parseFloat(layout.slot);
+      const [, yPart] = layout.transform.slice("translate(".length, -1).split(",");
       expect(box * ink.height).toBeCloseTo(riveHandInlineVisibleEm, 1);
       expect(slot).toBeCloseTo(box * ink.width, 1);
-      expect(layout.transform.startsWith("translate(")).toBe(true);
+      expect(Number.parseFloat(yPart)).toBeCloseTo(-riveHandInkBottom(hand) * 100, 1);
+      expect(riveHandInkBottom(hand)).toBeGreaterThan(ink.centerY);
     }
+    expect(riveHandSequenceOrigin).toBe(`50% -${(riveHandInlineVisibleEm / 2).toFixed(3)}em`);
   });
 
   it("maps point and rock to the cleaned artboards", () => {
@@ -481,6 +490,34 @@ describe("rive hand idle schedule", () => {
 
       await act(async () => {
         vi.advanceTimersByTime(riveHandIdleMinMs);
+      });
+      expect(runtime.input.value).toBe(true);
+    });
+
+    it("waits to pulse an inline hand inside a text sequence until the slot has entered", async () => {
+      await render(
+        createElement(
+          "span",
+          { "data-text-sequence": "" },
+          createElement(RiveHand, { hand: "rock", inline: true, idle: true }),
+        ),
+      );
+      await act(async () => {
+        vi.advanceTimersByTime(riveHandIdleMinMs + riveHandIdleHoldMs);
+      });
+      expect(runtime.input.value).toBe(false);
+
+      const slot = container.querySelector("[data-rive-hand-slot]");
+      expect(slot).toBeTruthy();
+      await act(async () => {
+        slot?.setAttribute(riveHandEnteredAttr, "true");
+      });
+      await act(async () => {
+        vi.advanceTimersByTime(riveHandIdleMinMs - 1);
+      });
+      expect(runtime.input.value).toBe(false);
+      await act(async () => {
+        vi.advanceTimersByTime(1);
       });
       expect(runtime.input.value).toBe(true);
     });

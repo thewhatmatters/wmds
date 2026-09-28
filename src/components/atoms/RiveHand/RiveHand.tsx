@@ -14,6 +14,7 @@ import {
   riveHandBooleanValue,
   riveHandBoxSize,
   riveHandClassName,
+  riveHandEnteredAttr,
   riveHandInlineLayout,
   riveHandInlineSlotClassName,
   riveHandFillProperty,
@@ -86,8 +87,9 @@ export interface RiveHandProps {
   size?: number | string;
   /**
    * Sit in a text line. The canvas is larger than the artboard padding so the
-   * drawn hand is about 1.15em and centered on the line. The in-flow slot is
-   * zero height, so the line box does not grow. Entrance is skipped.
+   * drawn hand is about 1.15em, and the outline bottom sits on the text baseline.
+   * The in-flow slot is zero height, so the line box does not grow.
+   * This prop skips the hand's own slide or grow. A TextSequence parent still pops the slot.
    */
   inline?: boolean;
   /**
@@ -99,6 +101,7 @@ export interface RiveHandProps {
    * Holds `Boolean 1` for 1.1s, then waits a random 1–2s before the next pulse.
    * Per hand, while the page is visible and the sized hand box is in view.
    * The zero-height inline slot is not the visibility target. Default is on.
+   * Inside a TextSequence, the first pulse waits until that slot's pop finishes.
    * Reduced motion never starts the timer.
    */
   idle?: boolean;
@@ -240,13 +243,24 @@ export function RiveHand({
       hold = 0;
     };
 
+    const sequenceSlot = el?.closest("[data-text-sequence]")
+      ? el.closest<HTMLElement>("[data-rive-hand-slot]")
+      : null;
+    const sequenceReady = () =>
+      !sequenceSlot || sequenceSlot.getAttribute(riveHandEnteredAttr) === "true";
+
     const arm = () => {
       clearTimers();
+      if (!sequenceReady()) return;
       if (stopped || !riveHandIdleAllowed({ idle: true, reduced: reducedRef.current, pageVisible, inView })) {
         return;
       }
       timer = window.setTimeout(() => {
-        if (stopped || !riveHandIdleAllowed({ idle: true, reduced: reducedRef.current, pageVisible, inView })) {
+        if (
+          stopped ||
+          !sequenceReady() ||
+          !riveHandIdleAllowed({ idle: true, reduced: reducedRef.current, pageVisible, inView })
+        ) {
           return;
         }
         if (activeRef.current) {
@@ -302,6 +316,18 @@ export function RiveHand({
       resize.observe(el);
     }
 
+    let enteredObserver: MutationObserver | null = null;
+    if (sequenceSlot && typeof MutationObserver !== "undefined") {
+      enteredObserver = new MutationObserver(() => {
+        if (!sequenceReady()) setIdlePulse(false);
+        arm();
+      });
+      enteredObserver.observe(sequenceSlot, {
+        attributes: true,
+        attributeFilter: [riveHandEnteredAttr],
+      });
+    }
+
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
       stopped = true;
@@ -309,6 +335,7 @@ export function RiveHand({
       setIdlePulse(false);
       observer?.disconnect();
       resize?.disconnect();
+      enteredObserver?.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [idle, ready, reduced]);
@@ -463,7 +490,9 @@ export function RiveHand({
       className={riveHandInlineSlotClassName}
       style={{ width: inlineLayout.slot }}
     >
-      {host}
+      <span data-rive-hand-pop="" className="pointer-events-none absolute left-0 top-0 h-0 w-full">
+        {host}
+      </span>
     </span>
   );
 }

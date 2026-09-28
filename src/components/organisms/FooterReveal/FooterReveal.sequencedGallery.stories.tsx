@@ -107,21 +107,26 @@ export function SequencedMarketingHeroPage() {
             </>
           }
         />
-        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-12 text-center">
+        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-12 text-center">
           <div className="flex w-full flex-col items-center gap-6">
           <HeroIntro
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                {"Your brand "}
-                <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
-                {" is already "}
-                <TextSequence.Shape variant="circle" tone="accent" />
-                {" online"}
+                {"An "}
+                <span className="whitespace-nowrap">Austin,&nbsp;TX</span>
+                {" studio specializing in brand and product design."}
               </TextSequence>
             }
           >
-            <TextSequence idle emphasis="none" delay={0.35} stagger={0.07}>
+            <TextSequence idle emphasis="none" delay={0.7} stagger={0.07}>
+              {"Your brand "}
+              <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
+              {" is already "}
+              <TextSequence.Shape variant="circle" tone="accent" />
+              {" online"}
+            </TextSequence>
+            <TextSequence idle emphasis="none" delay={1.05} stagger={0.07}>
               Make it <TextSequence.Shape variant="pill" tone="brand-soft" /> impossible to ignore
             </TextSequence>
           </HeroIntro>
@@ -229,21 +234,26 @@ function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
             </>
           }
         />
-        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-12 text-center">
+        <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-12 text-center">
           <div className="flex w-full flex-col items-center gap-6">
           <HeroIntro
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                {"Your brand "}
-                <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
-                {" is already "}
-                <TextSequence.Shape variant="circle" tone="accent" />
-                {" online"}
+                {"An "}
+                <span className="whitespace-nowrap">Austin,&nbsp;TX</span>
+                {" studio specializing in brand and product design."}
               </TextSequence>
             }
           >
-            <TextSequence idle emphasis="none" delay={0.35} stagger={0.07}>
+            <TextSequence idle emphasis="none" delay={0.7} stagger={0.07}>
+              {"Your brand "}
+              <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
+              {" is already "}
+              <TextSequence.Shape variant="circle" tone="accent" />
+              {" online"}
+            </TextSequence>
+            <TextSequence idle emphasis="none" delay={1.05} stagger={0.07}>
               Make it <TextSequence.Shape variant="pill" tone="brand-soft" /> impossible to ignore
             </TextSequence>
           </HeroIntro>
@@ -375,15 +385,15 @@ function expectSequencedHeroMatchesGallery(root: ParentNode) {
   expect(statementStyle.fontWeight).toBe("400");
   expect(heroCopy.className).toContain("type-display-2");
   expect(statement.className).toContain("type-display-2");
-  expect(heroCopy.className).toContain("text-pretty");
+  expect(heroCopy.className).toContain("text-balance");
   expect(statement.className).toContain("text-pretty");
-  expect(heroStyle.textWrap).toBe("pretty");
+  expect(heroStyle.textWrap).toBe("balance");
   expect(statementStyle.textWrap).toBe("pretty");
   expect(heroCopy.scrollWidth).toBeLessThanOrEqual(heroCopy.clientWidth + 1);
   expect(statement.scrollWidth).toBeLessThanOrEqual(statement.clientWidth + 1);
   expect(statement.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1);
   const hand = heroCopy.querySelector("[data-rive-hand='rock']");
-  const slot = hand?.parentElement;
+  const slot = hand?.closest("[data-rive-hand-slot]");
   if (!(hand instanceof HTMLElement) || !(slot instanceof HTMLElement)) throw new Error("inline rock hand missing");
   expect(hand.getAttribute("aria-hidden")).toBe("true");
   expect(getComputedStyle(slot).height).toBe("0px");
@@ -402,16 +412,20 @@ async function playSequencedMarketingHero(canvasElement: HTMLElement) {
   expect(track?.firstElementChild).toBe(intro);
   expect(section.querySelector("[data-pattern='eyebrow']")?.textContent).toBe("SELECTED WORK");
   const heading = canvasElement.querySelector("h1");
+  expect(heading?.textContent?.replace(/\s+/g, " ")).toContain(
+    "An Austin, TX studio specializing in brand and product design.",
+  );
   expect(heading?.textContent?.replace(/\s+/g, " ")).toContain("Your brand is already online");
   expect(heading?.textContent).not.toContain("We Are WhatMatters");
   expect(heading?.querySelector("[data-rive-hand='rock']")?.getAttribute("aria-hidden")).toBe("true");
   expect(section.querySelector("[data-rive-hand='point']")?.getAttribute("aria-hidden")).toBe("true");
   const text = canvasElement.textContent?.replace(/\s+/g, " ") ?? "";
+  expect(text).toContain("An Austin, TX studio specializing in brand and product design.");
   expect(text).toContain("Your brand is already online");
   expect(text).toContain("Make it impossible to ignore");
   expect(text).toContain(scrollHorizontalIntroStatement);
   expect(section.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(2);
-  expect(canvasElement.querySelectorAll("[data-text-sequence]")).toHaveLength(3);
+  expect(canvasElement.querySelectorAll("[data-text-sequence]")).toHaveLength(4);
   const action = [...section.querySelectorAll("button")].find((node) => node.textContent?.includes("Start a project"));
   expect(action?.getAttribute("data-role")).toBe("secondary");
   expect(action?.getAttribute("data-mono")).toBeNull();
@@ -427,7 +441,7 @@ async function playSequencedMarketingHero(canvasElement: HTMLElement) {
     const heroSequences = [...canvasElement.querySelectorAll("[data-text-sequence]")].filter(
       (node) => !section.contains(node),
     );
-    expect(heroSequences).toHaveLength(2);
+    expect(heroSequences).toHaveLength(3);
     for (const sequence of heroSequences) {
       expect(sequence.getAttribute("data-text-sequence-state")).toBe(textSequenceState());
     }
@@ -450,7 +464,7 @@ export const SequencedMarketingHero: Story = {
       docs: {
         description: {
           story:
-            "Full marketing page on the navy footer. HeroIntro is the h1 and sequences the subtext on type-display-2 at normal weight and display-2 leading — the same size and line-height as the gallery statement: Your brand, then a rock RiveHand, then is already online, then Make it impossible to ignore. The rock hand uses inline, in place of the asterisk, drawn at about 1.15em and aria-hidden. The circle and pill stay at about 1.15em. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. An asterisk, a point RiveHand after impression, and an accent diamond sit in the statement. The accessible name is the plain sentence. The action is Button role secondary, labeled Start a project, with onClick opening the project modal. expandLast still ends on the full-bleed tile, flush with FooterReveal.Brand. Reduced motion leaves both sequences at rest, shapes included, and keeps the grid inset. The ruled-footer page is Pattern — marketing hero ruled grid.",
+            "Full marketing page on the navy footer. HeroIntro is the h1 and sequences the subtext on type-display-2 at normal weight and display-2 leading — the same size and line-height as the gallery statement. The first line is An Austin, TX studio specializing in brand and product design. Austin, and TX stay together. Then Your brand, a rock RiveHand, is already online, then Make it impossible to ignore. The Austin line sequences first. The brand line waits 0.7s and the last line waits 1.05s so the 0.07s stagger continues. The rock hand uses inline, in place of the asterisk, drawn at about 1.15em with its outline bottom on the text baseline, and aria-hidden. That slot pops with the hero sequence on the beat after brand, with the same scale, rotation, and back.out(1.8) ease as the circle and the pill. Idle starts after the pop. The circle and pill stay at about 1.15em. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. An asterisk, a point RiveHand after impression, and an accent diamond sit in the statement. The point hand pops with that statement on the beat after impression, then idles. The accessible name is the plain sentence. The action is Button role secondary, labeled Start a project, with onClick opening the project modal. expandLast still ends on the full-bleed tile, flush with FooterReveal.Brand. Reduced motion leaves both sequences at rest, shapes and hands included, on one static frame, and keeps the grid inset. The ruled-footer page is Pattern — marketing hero ruled grid.",
         },
       },
     },
@@ -490,7 +504,7 @@ export const MarketingHeroRuledPattern: Story = {
       docs: {
         description: {
           story:
-            "The one full marketing page. Sequenced hero (same as Pattern — marketing hero text sequence): HeroIntro is the h1 on type-display-2, with the rock hand inline after Your brand. Then ScrollHorizontal with Intro and expandLast. Then FooterReveal.Ruled on footerRevealRuledFieldClasses. Horizontal rules span the footer field; content and the grid edges stay in the page grid box. The intro action is Button role secondary, onClick openProjectModal. Show code is that whole page. Reduced motion leaves the sequences at rest. The gallery section ends on the expanded tile, flush with the ruled footer.",
+            "The one full marketing page. Sequenced hero (same as Pattern — marketing hero text sequence): HeroIntro is the h1 on type-display-2. The first line is An Austin, TX studio specializing in brand and product design. The rock hand sits inline after Your brand. Then ScrollHorizontal with Intro and expandLast. Then FooterReveal.Ruled on footerRevealRuledFieldClasses. Horizontal rules span the footer field; content and the grid edges stay in the page grid box. The intro action is Button role secondary, onClick openProjectModal. Show code is that whole page. Reduced motion leaves the sequences at rest. The gallery section ends on the expanded tile, flush with the ruled footer.",
         },
       },
     },
