@@ -28,8 +28,8 @@ export const heroIntroRestClasses = "block";
 /**
  * Sequenced hero subtext. Same `type-display-2` size and normal weight as the
  * default intro and **ScrollHorizontal.Intro**. Full width of the page grid —
- * columns 4–9 are the default measure and are too narrow for this longer line
- * with shapes. `!font-normal` wins over the display token's semibold.
+ * columns 4–9 are the default measure and are too narrow for this longer sentence.
+ * `!font-normal` wins over the display token's semibold.
  * `text-balance` evens wrapped lines so a last line is not a single word.
  */
 export const heroIntroDisplayCopyClasses = [

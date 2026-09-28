@@ -48,7 +48,7 @@ The marketing hero section uses `justify-center-safe` and `shrink-0`. When the i
 
 **Date:** 2026-09-28
 
-The sequenced hero’s first line is “An Austin, TX studio specializing in brand and product design.” “Austin,” and “TX” stay together with a non-breaking space inside `whitespace-nowrap`, and they still count as two of the ten words, so the brand line still waits 0.7s. The default marketing hero `lead` stays “We're a design and product studio based in Austin, Texas.”
+The sequenced hero’s h1 is only “An Austin, TX studio specializing in brand and product design.” “Austin,” and “TX” stay together with a non-breaking space inside `whitespace-nowrap`, and they still count as two of the ten words. There is no following sentence, so the 0.7s and 1.05s delays are gone. The default marketing hero `lead` stays “We're a design and product studio based in Austin, Texas.”
 
 ## Update — the intro is the h1
 
