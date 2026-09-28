@@ -7,9 +7,9 @@
 export const heroIntroPageClasses = "grid-page w-full !py-0";
 
 /**
- * Centered `type-display-2` at normal weight — the same size as
- * **ScrollHorizontal.Intro** and the sequenced hero. `!font-normal` beats the
- * display token's semibold. `text-pretty` keeps a last word from sitting alone.
+ * Centered `h1` on `type-display-2` at normal weight — the same size and
+ * leading as **ScrollHorizontal.Intro** and the sequenced hero. `!font-normal`
+ * beats the display token's semibold. `text-pretty` keeps a last word from sitting alone.
  * Columns 4–9 from `lg` (6 of 12). Full width of the page grid below `lg`.
  * The lead wraps inside that measure.
  */

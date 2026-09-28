@@ -14,6 +14,8 @@ import {
   riveHandBooleanValue,
   riveHandBoxSize,
   riveHandClassName,
+  riveHandInlineLayout,
+  riveHandInlineSlotClassName,
   riveHandFillProperty,
   installRiveHandLayoutRect,
   riveHandGrowDelaySec,
@@ -43,8 +45,17 @@ export type RiveHandLayoutClassName = string;
 export interface RiveHandProps {
   /** `point` is artboard `31_Cigarette` (the cigarette is removed). `rock` is `29_Rock`. */
   hand: RiveHandName;
-  /** Box size. A number is pixels. An `em` length tracks the parent font size. */
-  size: number | string;
+  /**
+   * Box size. A number is pixels. An `em` length tracks the parent font size.
+   * Ignored when `inline` is set — that mode sizes the canvas from the artboard ink.
+   */
+  size?: number | string;
+  /**
+   * Sit in a text line. The canvas is larger than the artboard padding so the
+   * drawn hand is about 1.15em and centered on the line. The in-flow slot is
+   * zero height, so the line box does not grow. Entrance is skipped.
+   */
+  inline?: boolean;
   /**
    * Drives state-machine input `Boolean 1`. Hover or focus on the headline sets this.
    * Ignored while `prefers-reduced-motion: reduce` matches.
@@ -69,6 +80,7 @@ export interface RiveHandProps {
 export function RiveHand({
   hand,
   size,
+  inline = false,
   active = false,
   idle = true,
   entrance = "none",
@@ -245,10 +257,11 @@ export function RiveHand({
     };
   }, [idle, reduced]);
 
-  const length = riveHandBoxSize(size);
+  const inlineLayout = inline ? riveHandInlineLayout(hand) : null;
+  const length = inlineLayout ? inlineLayout.box : riveHandBoxSize(size ?? "1em");
   const [shadow, setShadow] = useState<ShadowRoot | null>(null);
-  const playSlide = ready && !reduced && entrance === "slide-up";
-  const playGrow = ready && !reduced && entrance === "grow";
+  const playSlide = !inline && ready && !reduced && entrance === "slide-up";
+  const playGrow = !inline && ready && !reduced && entrance === "grow";
 
   useLayoutEffect(() => {
     const host = hostRef.current;
@@ -324,20 +337,26 @@ export function RiveHand({
     width: length,
     height: length,
     transformOrigin: playGrow ? riveHandGrowOrigin : undefined,
+    ...(inlineLayout
+      ? { position: "absolute" as const, left: "50%", top: "50%", transform: inlineLayout.transform }
+      : {}),
   };
 
-  if (!playSlide && !playGrow) {
-    return (
-      <div ref={hostRef} aria-hidden={ariaHidden} className={hostClassName} style={hostStyle}>
-        {canvas}
-      </div>
-    );
-  }
-
-  return (
+  const host = !playSlide && !playGrow ? (
+    <div
+      ref={hostRef}
+      aria-hidden={ariaHidden}
+      data-rive-hand={hand}
+      className={hostClassName}
+      style={hostStyle}
+    >
+      {canvas}
+    </div>
+  ) : (
     <motion.div
       ref={hostRef}
       aria-hidden={ariaHidden}
+      data-rive-hand={hand}
       className={hostClassName}
       style={hostStyle}
       initial={playSlide ? { y: "100%" } : { scale: 0 }}
@@ -361,5 +380,18 @@ export function RiveHand({
     >
       {canvas}
     </motion.div>
+  );
+
+  if (!inlineLayout) return host;
+
+  return (
+    <span
+      aria-hidden={ariaHidden}
+      data-rive-hand-slot={hand}
+      className={riveHandInlineSlotClassName}
+      style={{ width: inlineLayout.slot }}
+    >
+      {host}
+    </span>
   );
 }

@@ -195,7 +195,10 @@ function playSequence(root: HTMLElement, config: SequenceMotionConfig) {
       self.elements.forEach((element) => {
         const heading = element.closest("h1, h2, h3, h4, h5, h6");
         if (heading instanceof HTMLElement && heading !== element) {
-          heading.setAttribute("aria-label", plain);
+          const plains = [...heading.querySelectorAll("[data-text-sequence]")]
+            .map((node) => node.getAttribute("data-plain"))
+            .filter((value): value is string => Boolean(value));
+          heading.setAttribute("aria-label", plains.length > 0 ? plains.join(" ") : plain);
           element.removeAttribute("aria-label");
           element.removeAttribute("role");
           return;

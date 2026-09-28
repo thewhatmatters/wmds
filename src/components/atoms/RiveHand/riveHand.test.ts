@@ -15,6 +15,9 @@ import {
   riveHandBooleanInput,
   riveHandBooleanValue,
   riveHandBoxSize,
+  riveHandInkFractions,
+  riveHandInlineLayout,
+  riveHandInlineVisibleEm,
   riveHandFillProperty,
   installRiveHandLayoutRect,
   riveHandGrowDelaySec,
@@ -122,6 +125,18 @@ describe("rive hand tokens", () => {
     expect(cssColorToRgb("rgb(38, 38, 38)")).toEqual({ r: 38, g: 38, b: 38 });
     expect(riveHandBoxSize(24)).toBe("24px");
     expect(riveHandBoxSize("1.35em")).toBe("1.35em");
+  });
+
+  it("scales an inline hand so the drawn mark is about 1.15em", () => {
+    for (const hand of ["rock", "point"] as const) {
+      const layout = riveHandInlineLayout(hand);
+      const ink = riveHandInkFractions[hand];
+      const box = Number.parseFloat(layout.box);
+      const slot = Number.parseFloat(layout.slot);
+      expect(box * ink.height).toBeCloseTo(riveHandInlineVisibleEm, 1);
+      expect(slot).toBeCloseTo(box * ink.width, 1);
+      expect(layout.transform.startsWith("translate(")).toBe(true);
+    }
   });
 
   it("maps point and rock to the cleaned artboards", () => {
@@ -443,13 +458,17 @@ describe("marketing hero show code", () => {
     const liveEnd = source.indexOf("export const MarketingHeroPattern");
     const live = source.slice(liveStart, liveEnd);
     expect(copy.startsWith('"use client";')).toBe(true);
-    expect(copy).toContain("npm install @rive-app/react-canvas");
-    expect(copy).toContain("/rive/interactive-icon-set.riv");
-    expect(copy).toContain('className="type-display-1 isolate text-fg"');
-    expect(live).toContain('className="type-display-1 isolate text-fg"');
-    expect(copy).toContain('hand="rock"');
-    expect(copy).toContain('hand="point"');
-    expect(live).toContain(copy.slice(copy.indexOf("<h1"), copy.indexOf("</h1>") + "</h1>".length));
+    expect(copy).not.toContain("We Are WhatMatters");
+    expect(live).not.toContain("We Are WhatMatters");
+    expect(copy).not.toContain('className="type-display-1 isolate text-fg"');
+    expect(live).not.toContain('className="type-display-1 isolate text-fg"');
+    const sequenceStart = source.indexOf("const marketingHeroTextSequenceCopySource = `");
+    const sequenceEnd = source.indexOf("`.trim();", sequenceStart);
+    const sequence = source.slice(sequenceStart, sequenceEnd);
+    expect(sequence).toContain('hand="rock"');
+    expect(sequence).toContain("inline");
+    expect(sequence).not.toContain('variant="asterisk"');
+    expect(source.slice(source.indexOf("function MarketingHeroTextSequenceView"))).toContain('hand="rock"');
     expect(source).not.toContain("MarketingHeroWithHands");
   });
 });

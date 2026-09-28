@@ -1,10 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sparkles } from "lucide-react";
-import { useState } from "react";
 import { expect } from "storybook/test";
 import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
-import { RiveHand } from "../../atoms/RiveHand/RiveHand";
 import { HeroIntro } from "../../molecules/HeroIntro/HeroIntro";
 import { scrollHorizontalIntroStatementNodes } from "../ScrollHorizontal/scrollHorizontalIntroStatement";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
@@ -39,7 +37,6 @@ const marketingHeroWithGalleryIntroCopySource = `
 // Copy public/rive/interactive-icon-set.riv so the app serves /rive/interactive-icon-set.riv.
 // Hand art: CC BY 4.0, Silvia Sguotti and Gabriele Montinaro.
 
-import { useState } from "react";
 import { Sparkles } from "lucide-react";
 import { Badge, Button, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence } from "@whatmatters/wmds";
 
@@ -59,7 +56,6 @@ const projects = [
 ];
 
 export function MarketingHeroWithGalleryIntro() {
-  const [handsActive, setHandsActive] = useState(false);
   return (
     <>
       <SiteNav
@@ -89,37 +85,6 @@ export function MarketingHeroWithGalleryIntro() {
       />
       <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-16 text-center">
         <div className="flex w-full flex-col items-center gap-6">
-          <div className="w-full px-[var(--grid-margin)]">
-          <h1
-            className="type-display-1 isolate text-fg"
-            tabIndex={0}
-            onMouseEnter={() => setHandsActive(true)}
-            onMouseLeave={() => setHandsActive(false)}
-            onFocus={() => setHandsActive(true)}
-            onBlur={() => setHandsActive(false)}
-          >
-            {[
-              <span key="lead" className="relative inline-block whitespace-nowrap">{[
-                <span key="gap" className="absolute inset-y-0 right-0 w-0">{[
-                  <span key="clip" className="absolute z-10 overflow-clip -right-[0.94em] -top-[0.17em] bottom-[0.22em] w-[1.7em] md:-right-[1.07em] md:-top-[0.54em] md:w-[2.2em]">{[
-                    <RiveHand key="rock" hand="rock" size="2.2em" active={handsActive} idle entrance="slide-up" className="absolute top-0 max-md:!h-[1.7em] max-md:!w-[1.7em]" />,
-                  ]}</span>,
-                ]}</span>,
-                "We Ar",
-                <span key="e" className="relative z-20">e</span>,
-              ]}</span>,
-              " ",
-              <span key="brand" className="relative inline-block whitespace-nowrap">{[
-                <span key="w" className="relative z-0">W</span>,
-                "hatMatter",
-                <span key="s" className="relative">{[
-                  "s",
-                  <RiveHand key="point" hand="point" size="2.2em" active={handsActive} idle entrance="grow" className="absolute z-10 -right-[1.2em] -top-[0.4em] max-md:!h-[1.7em] max-md:!w-[1.7em] md:-right-[1.53em] md:-top-[0.7em]" />,
-                ]}</span>,
-              ]}</span>,
-            ]}
-          </h1>
-          </div>
           <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
             We help brands stand out{" "}
             <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
@@ -141,7 +106,7 @@ export function MarketingHeroWithGalleryIntro() {
                 {"Every screen"}
                 <TextSequence.Shape variant="asterisk" />
                 {" is a first impression"}
-                <TextSequence.Shape variant="pill" tone="brand-soft" />
+                <RiveHand hand="point" inline idle entrance="none" aria-hidden />
                 {" and we make yours"}
                 <TextSequence.Shape variant="diamond" tone="accent" />
                 {" the one they remember."}
@@ -158,7 +123,6 @@ export function MarketingHeroWithGalleryIntro() {
 `.trim();
 
 function GalleryIntroHero() {
-  const [handsActive, setHandsActive] = useState(false);
   return (
     <>
       <SiteNav
@@ -188,37 +152,6 @@ function GalleryIntroHero() {
       />
       <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-16 text-center">
         <div className="flex w-full flex-col items-center gap-6">
-          <div className="w-full px-[var(--grid-margin)]">
-          <h1
-            className="type-display-1 isolate text-fg"
-            tabIndex={0}
-            onMouseEnter={() => setHandsActive(true)}
-            onMouseLeave={() => setHandsActive(false)}
-            onFocus={() => setHandsActive(true)}
-            onBlur={() => setHandsActive(false)}
-          >
-            {[
-              <span key="lead" className="relative inline-block whitespace-nowrap">{[
-                <span key="gap" className="absolute inset-y-0 right-0 w-0">{[
-                  <span key="clip" className="absolute z-10 overflow-clip -right-[0.94em] -top-[0.17em] bottom-[0.22em] w-[1.7em] md:-right-[1.07em] md:-top-[0.54em] md:w-[2.2em]">{[
-                    <RiveHand key="rock" hand="rock" size="2.2em" active={handsActive} idle entrance="slide-up" className="absolute top-0 max-md:!h-[1.7em] max-md:!w-[1.7em]" />,
-                  ]}</span>,
-                ]}</span>,
-                "We Ar",
-                <span key="e" className="relative z-20">e</span>,
-              ]}</span>,
-              " ",
-              <span key="brand" className="relative inline-block whitespace-nowrap">{[
-                <span key="w" className="relative z-0">W</span>,
-                "hatMatter",
-                <span key="s" className="relative">{[
-                  "s",
-                  <RiveHand key="point" hand="point" size="2.2em" active={handsActive} idle entrance="grow" className="absolute z-10 -right-[1.2em] -top-[0.4em] max-md:!h-[1.7em] max-md:!w-[1.7em] md:-right-[1.53em] md:-top-[0.7em]" />,
-                ]}</span>,
-              ]}</span>,
-            ]}
-          </h1>
-          </div>
           <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
             We help brands stand out{" "}
             <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>

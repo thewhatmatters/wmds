@@ -142,6 +142,48 @@ export function riveHandBoxSize(size: number | string): string {
   return typeof size === "number" ? `${size}px` : size;
 }
 
+/** Drawn hand height when `inline` is set. Matches TextSequence marks (`1.15em`). */
+export const riveHandInlineVisibleEm = 1.15;
+
+/**
+ * Drawn outline as a fraction of the square canvas, measured from a raster
+ * after Rive has fit the artboard. Both hands sit in padding, and the rock
+ * outline is only about half the canvas height.
+ */
+export const riveHandInkFractions = {
+  rock: { width: 0.324, height: 0.505, centerX: 0.5, centerY: 0.409 },
+  point: { width: 0.455, height: 0.422, centerX: 0.462, centerY: 0.545 },
+} as const;
+
+export interface RiveHandInlineLayout {
+  /** Canvas box. Larger than the ink so the drawn hand reaches `riveHandInlineVisibleEm`. */
+  box: string;
+  /** In-flow gap. Zero height, as wide as the drawn hand. */
+  slot: string;
+  /** Shifts the canvas so the ink center sits on the slot center. */
+  transform: string;
+}
+
+function riveHandFixed(value: number): string {
+  return value.toFixed(2);
+}
+
+/** Scale and shift that make the drawn hand about 1.15em, centered on the line. */
+export function riveHandInlineLayout(hand: RiveHandName): RiveHandInlineLayout {
+  const ink = riveHandInkFractions[hand];
+  const boxEm = riveHandInlineVisibleEm / ink.height;
+  const slotEm = boxEm * ink.width;
+  return {
+    box: `${riveHandFixed(boxEm)}em`,
+    slot: `${riveHandFixed(slotEm)}em`,
+    transform: `translate(${riveHandFixed(-50 - (ink.centerX - 0.5) * 100)}%, ${riveHandFixed(-50 - (ink.centerY - 0.5) * 100)}%)`,
+  };
+}
+
+/** Zero-height inline gap. The canvas is absolute, so the line box stays put. */
+export const riveHandInlineSlotClassName =
+  "pointer-events-none relative mx-[0.08em] inline-block h-0 shrink-0 select-none align-middle";
+
 export function cssColorToRgb(value: string): Rgb | null {
   const trimmed = value.trim();
   const hex = trimmed.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
