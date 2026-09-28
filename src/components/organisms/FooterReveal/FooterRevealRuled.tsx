@@ -271,8 +271,8 @@ function RuledPlus({ align }: { align: "start" | "end" }) {
 
 /**
  * Ruled-grid marketing footer. Brand ink and 1px brand rules on the page
- * background. Horizontal rules span the footer field. Content and the grid's
- * vertical edges stay in the page grid box. Below `md` the bands stack; the
+ * background. Horizontal rules span the footer field. Vertical edges sit on the
+ * outer column edges. Below `md` the bands stack; the
  * two link columns stay side by side and the social cells stay one row.
  */
 export function FooterRevealRuled({

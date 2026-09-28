@@ -58,10 +58,13 @@ export const siteNavRootClasses: Record<SiteNavPlacement, string> = {
 export const siteNavContainerClasses =
   "relative mx-auto w-full max-w-[var(--grid-max)]";
 
-/** Bar shell — expanded stays static; compact is a separate layer that slides in. */
-export const siteNavBarBaseClasses = cn(
-  "pointer-events-auto relative z-[1] flex w-full items-center",
-);
+/**
+ * Bar shell — expanded stays static; compact is a separate layer that slides in.
+ * Width stays off this string. Expanded and `compactLayout="grid"` add `w-full`;
+ * hug adds only `w-max`. Both widths on one element follow stylesheet order.
+ */
+export const siteNavBarBaseClasses =
+  "pointer-events-auto relative z-[1] flex items-center";
 
 export const siteNavBarStateClasses: Record<SiteNavState, string> = {
   expanded: cn(
@@ -122,8 +125,9 @@ export const siteNavEndClasses = "flex shrink-0 flex-nowrap items-center gap-2";
  */
 export const siteNavMiddleResponsiveClasses =
   "max-md:hidden md:flex min-w-0 w-full flex-1 items-center justify-center";
+/** Same content cluster as `siteNavMiddleHugClasses`. No `w-full` — that stretches the hug pill. */
 export const siteNavMiddleHugResponsiveClasses =
-  "max-md:hidden md:flex min-w-0 w-full max-w-full items-center justify-center";
+  "max-md:hidden md:flex min-w-0 max-w-full items-center justify-center";
 /**
  * IconButton paints `inline-flex`. `md:!hidden` beats a later non-important
  * `.inline-flex`. The class is not `hidden`, so an app's `.hidden` does not match.

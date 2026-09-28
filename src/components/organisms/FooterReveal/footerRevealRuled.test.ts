@@ -50,7 +50,13 @@ describe("ruled grid footer contract", () => {
     expect(footerRevealRuledBandTopClasses).toBe("border-t");
     expect(footerRevealRuledGridClasses).toContain("border-x");
     expect(footerRevealRuledGridClasses).toContain("border-brand");
-    expect(footerRevealRuledGridClasses).toContain("max-w-[var(--grid-max)]");
+    expect(footerRevealRuledGridClasses).toContain(
+      "w-[calc(100%-2*var(--grid-margin))]",
+    );
+    expect(footerRevealRuledGridClasses).toContain(
+      "max-w-[calc(var(--grid-max)-2*var(--grid-margin))]",
+    );
+    expect(footerRevealRuledGridClasses).not.toMatch(/(?:^|\s)w-full(?:\s|$)/);
     expect(footerRevealRuledRootClasses).not.toContain("max-w-");
     expect(footerRevealRuledRootClasses).not.toContain("border");
     expect(footerRevealRuledPlusClasses).toContain("max-md:hidden");
