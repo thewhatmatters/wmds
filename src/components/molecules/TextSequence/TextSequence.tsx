@@ -13,6 +13,7 @@ import {
   type ReactNode,
 } from "react";
 import { cn } from "../../../lib/cn";
+import { riveHandEnteredAttr, riveHandSequenceOrigin } from "../../atoms/RiveHand/riveHandUtils";
 import {
   TextSequenceShape,
   type TextSequenceShapeProps,
@@ -204,6 +205,10 @@ function restoreHandSlots(root: HTMLElement, slots: readonly HTMLElement[]) {
   });
 }
 
+function clearHandEntered(slots: readonly HTMLElement[]) {
+  for (const slot of slots) slot.removeAttribute(riveHandEnteredAttr);
+}
+
 interface SequenceMotionConfig {
   stagger: number;
   delay: number;
@@ -290,6 +295,30 @@ function playSequence(root: HTMLElement, config: SequenceMotionConfig) {
           shapeStart(before, stagger),
         );
       });
+      // Pop the inner layer. Transforming the slot itself makes GSAP reparent it
+      // when the gap measures 0×0, which drops the word space after the hand.
+      const handPops = [...root.querySelectorAll<HTMLElement>("[data-rive-hand-pop]")];
+      handPops.forEach((pop) => {
+        const slot = pop.closest<HTMLElement>("[data-rive-hand-slot]") ?? pop;
+        slot.removeAttribute(riveHandEnteredAttr);
+        const before = wordsBefore(slot, self.words);
+        timeline.from(
+          pop,
+          {
+            scale: 0,
+            rotation: -16,
+            duration: shapeDuration,
+            ease: "back.out(1.8)",
+            transformOrigin: riveHandSequenceOrigin,
+            immediateRender: true,
+            onComplete() {
+              const scale = Number(gsap.getProperty(pop, "scale"));
+              if (scale > 0.99) slot.setAttribute(riveHandEnteredAttr, "true");
+            },
+          },
+          shapeStart(before, stagger),
+        );
+      });
 
       if (idle && shapes.length > 0) {
         const idleAt = timeline.duration();
@@ -365,6 +394,7 @@ function TextSequenceRoot({
         split?.revert();
         split = undefined;
         restoreHandSlots(root, hands);
+        clearHandEntered(hands);
         delete root.dataset.textSequenceState;
         root.dataset.textSequenceState = "rest";
       };
@@ -420,6 +450,7 @@ function TextSequenceRoot({
         observer?.disconnect();
         split?.revert();
         restoreHandSlots(root, hands);
+        clearHandEntered(hands);
       };
     },
     {

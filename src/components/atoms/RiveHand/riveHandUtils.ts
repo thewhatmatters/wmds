@@ -171,6 +171,17 @@ export function riveHandBoxSize(size: number | string): string {
 export const riveHandInlineVisibleEm = 1.15;
 
 /**
+ * Pop origin for a hand slot inside TextSequence.
+ * The slot is zero height on the baseline, so `50% 50%` would be the wrist.
+ * This is the drawn ink's center: half of `riveHandInlineVisibleEm` above that line,
+ * the same visual center the circle and pill use.
+ */
+export const riveHandSequenceOrigin = `50% -${(riveHandInlineVisibleEm / 2).toFixed(3)}em`;
+
+/** Set on the slot when the sequence pop finishes. Idle waits for it inside a TextSequence. */
+export const riveHandEnteredAttr = "data-rive-hand-entered";
+
+/**
  * Drawn outline as a fraction of the square canvas, measured from a raster
  * after Rive has fit the artboard. Both hands sit in padding, and the rock
  * outline is only about half the canvas height. `bottom` is the outline's

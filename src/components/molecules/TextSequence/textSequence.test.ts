@@ -5,8 +5,10 @@ import { createRoot } from "react-dom/client";
 import { renderToStaticMarkup } from "react-dom/server";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import gsap from "gsap";
 import { describe, expect, it, vi } from "vitest";
-import { TextSequence, sequencePlainText } from "./TextSequence";
+import { riveHandEnteredAttr, riveHandSequenceOrigin } from "../../atoms/RiveHand/riveHandUtils";
+import { TextSequence, sequencePlainText, textSequenceDefaultStagger } from "./TextSequence";
 import { textSequenceWordBoldClasses, textSequenceWordRegularClasses } from "./textSequenceStyles";
 import { textSequenceShapeVariants } from "../../atoms/TextSequenceShape/TextSequenceShape";
 import {
@@ -186,17 +188,24 @@ describe("TextSequence shapes", () => {
   });
 });
 
-function RockSlot() {
+function HandSlot({ hand }: { hand: "rock" | "point" }) {
   const ref = useRef<HTMLCanvasElement>(null);
   return createElement(
     "span",
     {
-      "data-rive-hand-slot": "rock",
-      "data-rive-hand": "rock",
-      style: { display: "inline-block", width: "0.74em", height: "0px" },
+      "data-rive-hand-slot": hand,
+      style: { display: "inline-block", position: "relative", width: "24px", height: "0px" },
     },
-    createElement("canvas", { ref, width: 73, height: 73 }),
+    createElement(
+      "span",
+      { "data-rive-hand-pop": "" },
+      createElement("canvas", { ref, "data-rive-hand": hand, width: 73, height: 73 }),
+    ),
   );
+}
+
+function RockSlot() {
+  return createElement(HandSlot, { hand: "rock" });
 }
 
 describe("TextSequence hand slot", () => {
@@ -248,6 +257,138 @@ describe("TextSequence hand slot", () => {
     expect(slot?.previousSibling?.textContent ?? "").toMatch(/\s/);
     expect(slot?.nextSibling?.nodeType).toBe(Node.TEXT_NODE);
     expect(slot?.nextSibling?.textContent ?? "").toMatch(/\s/);
+    root.unmount();
+    container.remove();
+    vi.unstubAllGlobals();
+  });
+
+  it("pops a hand slot with the shape entrance on the beat after the previous word", async () => {
+    vi.stubGlobal(
+      "matchMedia",
+      (query: string) =>
+        ({
+          matches: false,
+          media: query,
+          onchange: null,
+          addListener() {},
+          removeListener() {},
+          addEventListener() {},
+          removeEventListener() {},
+          dispatchEvent() {
+            return false;
+          },
+        }) as MediaQueryList,
+    );
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+    const root = createRoot(container);
+    await act(async () => {
+      root.render(
+        createElement(
+          TextSequence,
+          { trigger: "mount", emphasis: "none", idle: false, lines: true },
+          "Your brand ",
+          createElement(RockSlot),
+          " is already ",
+          createElement(TextSequence.Shape, { variant: "circle" }),
+          " online",
+        ),
+      );
+    });
+    const slot = container.querySelector<HTMLElement>("[data-rive-hand-slot='rock']");
+    const pop = slot?.querySelector<HTMLElement>("[data-rive-hand-pop]");
+    const circle = container.querySelector<HTMLElement>("[data-text-sequence-shape]");
+    expect(slot).toBeTruthy();
+    expect(pop).toBeTruthy();
+    expect(circle).toBeTruthy();
+    const handTween = pop ? gsap.getTweensOf(pop)[0] : undefined;
+    const shapeTween = circle ? gsap.getTweensOf(circle)[0] : undefined;
+    expect(handTween).toBeTruthy();
+    expect(shapeTween).toBeTruthy();
+    expect(handTween?.vars.scale).toBe(0);
+    expect(handTween?.vars.rotation).toBe(-16);
+    expect(handTween?.vars.duration).toBe(shapeTween?.vars.duration);
+    expect(handTween?.vars.ease).toBe(shapeTween?.vars.ease);
+    expect(handTween?.vars.opacity).toBeUndefined();
+    expect(shapeTween?.vars.opacity).toBeUndefined();
+    expect(handTween?.vars.transformOrigin).toBe(riveHandSequenceOrigin);
+    expect(Number(gsap.getProperty(pop!, "scale"))).toBe(0);
+    expect(handTween?.startTime()).toBeCloseTo((2 - 0.5) * textSequenceDefaultStagger, 5);
+    expect(slot?.getAttribute(riveHandEnteredAttr)).toBeNull();
+    await act(async () => {
+      handTween?.progress(1);
+    });
+    expect(slot?.getAttribute(riveHandEnteredAttr)).toBe("true");
+    root.unmount();
+    container.remove();
+    vi.unstubAllGlobals();
+  });
+
+  it("pops the point hand on the beat after impression", async () => {
+    vi.stubGlobal(
+      "matchMedia",
+      (query: string) =>
+        ({
+          matches: false,
+          media: query,
+          onchange: null,
+          addListener() {},
+          removeListener() {},
+          addEventListener() {},
+          removeEventListener() {},
+          dispatchEvent() {
+            return false;
+          },
+        }) as MediaQueryList,
+    );
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+    const root = createRoot(container);
+    await act(async () => {
+      root.render(
+        createElement(
+          TextSequence,
+          { trigger: "mount", emphasis: "none", idle: false, lines: true },
+          "Every screen ",
+          createElement(TextSequence.Shape, { variant: "asterisk" }),
+          " is a first impression ",
+          createElement(HandSlot, { hand: "point" }),
+          " and we make yours",
+        ),
+      );
+    });
+    const slot = container.querySelector<HTMLElement>("[data-rive-hand-slot='point']");
+    const pop = slot?.querySelector<HTMLElement>("[data-rive-hand-pop]");
+    const handTween = pop ? gsap.getTweensOf(pop)[0] : undefined;
+    expect(handTween?.vars.scale).toBe(0);
+    expect(handTween?.vars.rotation).toBe(-16);
+    expect(handTween?.startTime()).toBeCloseTo((6 - 0.5) * textSequenceDefaultStagger, 5);
+    root.unmount();
+    container.remove();
+    vi.unstubAllGlobals();
+  });
+
+  it("leaves a hand slot at rest when motion is reduced", async () => {
+    vi.stubGlobal("matchMedia", reducedMatchMedia);
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+    const root = createRoot(container);
+    await act(async () => {
+      root.render(
+        createElement(
+          TextSequence,
+          { trigger: "mount", emphasis: "none", idle: false, lines: true },
+          "Your brand ",
+          createElement(RockSlot),
+          " is already online",
+        ),
+      );
+    });
+    const slot = container.querySelector<HTMLElement>("[data-rive-hand-slot='rock']");
+    const pop = slot?.querySelector<HTMLElement>("[data-rive-hand-pop]");
+    expect(slot?.getAttribute(riveHandEnteredAttr)).toBeNull();
+    expect(pop?.style.transform ?? "").not.toContain("scale");
+    expect(gsap.getTweensOf(pop!)).toHaveLength(0);
     root.unmount();
     container.remove();
     vi.unstubAllGlobals();
