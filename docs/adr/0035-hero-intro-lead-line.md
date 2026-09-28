@@ -32,6 +32,12 @@ Ship **HeroIntro** as a molecule under **Components/Layout**:
 
 Consuming apps paste the marketing hero pattern. The first sentence is the `lead` prop. Engineering does not insert a line break or a nowrap utility at the call site.
 
+## Update — one type step
+
+**Date:** 2026-09-28
+
+The sequenced marketing hero used a second step, `display` (`type-display-2`, full width of the page grid), so the subtext matched the gallery statement. The gallery statement is now `type-large` at normal weight and the type-large leading. The sequenced hero uses the default **HeroIntro** — `type-large`, `!font-normal`, columns 4–9 from `lg`. `step`, `heroIntroSteps`, and the display class recipes are removed. **ScrollHorizontal.Intro** and **HeroIntro** share that computed font-size and line-height.
+
 ## References
 
 - ADR-0004 (pattern-first), ADR-0032 (hero tile stack), ADR-0033 (badge leading avatar), ADR-0034 (Rive hands)

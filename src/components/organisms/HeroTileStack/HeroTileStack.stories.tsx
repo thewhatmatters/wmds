@@ -688,7 +688,6 @@ export function MarketingHeroTextSequence() {
         <div className="flex w-full flex-col items-center gap-6">
           <MarketingHeroSequenceHeadline />
           <HeroIntro
-            step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 Your brand <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
@@ -783,7 +782,6 @@ function MarketingHeroTextSequenceView() {
         <div className="flex w-full flex-col items-center gap-6">
           <MarketingHeroSequenceHeadline />
           <HeroIntro
-            step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 Your brand <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
@@ -828,7 +826,7 @@ export const MarketingHeroTextSequence: Story = {
       docs: {
         description: {
           story:
-            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. The h1 stays We Are WhatMatters on type-display-1, title case, with the rock and point hands on the e, the W, and the final s. TextSequence does not run on that h1: SplitText would rewrite those letter spans and the hands would lose their anchors. HeroIntro step display sets the subtext to type-display-2 at normal weight, the same size as the gallery statement, full width of the page grid. The two lines are Your brand is already online and Make it impossible to ignore, with no periods. A few TextSequence.Shape marks sit inline between words (asterisk, circle, ribbed pill) at about 1.15em, in place of the Badge and Avatar on the default pattern. emphasis is none, so every word stays regular. Shapes are aria-hidden. idle spins the asterisk and stretches the pill. Headline hover state lives on the headline so the sequence does not re-render. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
+            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. The h1 stays We Are WhatMatters on type-display-1, title case, with the rock and point hands on the e, the W, and the final s. TextSequence does not run on that h1: SplitText would rewrite those letter spans and the hands would lose their anchors. HeroIntro sets the subtext to type-large at normal weight, the same size, weight, and leading as the gallery statement, columns 4–9 from lg. The two lines are Your brand is already online and Make it impossible to ignore, with no periods. A few TextSequence.Shape marks sit inline between words (asterisk, circle, ribbed pill) at about 1.15em, in place of the Badge and Avatar on the default pattern. emphasis is none, so every word stays regular. Shapes are aria-hidden. idle spins the asterisk and stretches the pill. Headline hover state lives on the headline so the sequence does not re-render. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
         },
       },
     },

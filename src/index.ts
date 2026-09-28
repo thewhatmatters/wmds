@@ -220,10 +220,8 @@ export {
 } from "./components/molecules/FloatingActionButton/FloatingActionButton";
 export {
   HeroIntro,
-  heroIntroSteps,
   type HeroIntroLayoutClassName,
   type HeroIntroProps,
-  type HeroIntroStep,
 } from "./components/molecules/HeroIntro/HeroIntro";
 export {
   NavList,
