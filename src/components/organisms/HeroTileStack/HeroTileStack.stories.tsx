@@ -712,6 +712,49 @@ function expectWordSpace(node: Node | null) {
   expect(node?.textContent ?? "").toMatch(/\s/);
 }
 
+type RockRuntime = { isPlaying: boolean; isPaused: boolean; frameCount: number };
+
+/** The state machine lives on the hand component's hook state, above the host node. */
+function readRockRuntime(root: ParentNode): RockRuntime {
+  const host = root.querySelector("[data-rive-hand='rock']");
+  if (!(host instanceof HTMLElement)) throw new Error("rock host missing");
+  const key = Object.keys(host).find(
+    (name) => name.startsWith("__reactFiber") || name.startsWith("__reactInternalInstance"),
+  );
+  if (!key) throw new Error("rock fiber missing");
+  type Fiber = {
+    return?: Fiber | null;
+    memoizedState?: {
+      memoizedState?: unknown;
+      next?: Fiber["memoizedState"];
+    } | null;
+  };
+  let fiber = (host as unknown as Record<string, Fiber | null>)[key];
+  const seen = new Set<Fiber>();
+  while (fiber && !seen.has(fiber)) {
+    seen.add(fiber);
+    let hook = fiber.memoizedState;
+    let guard = 0;
+    while (hook && guard < 40) {
+      const state = hook.memoizedState;
+      if (
+        state &&
+        typeof state === "object" &&
+        "isPlaying" in state &&
+        "frameCount" in state &&
+        typeof state.isPlaying === "boolean" &&
+        typeof state.frameCount === "number"
+      ) {
+        return state as RockRuntime;
+      }
+      hook = hook.next;
+      guard += 1;
+    }
+    fiber = fiber.return;
+  }
+  throw new Error("rock runtime missing");
+}
+
 /** Rock canvas stays on the live host after SplitText, with a real box at this viewport. */
 async function expectRockHandCanvas(root: ParentNode) {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -813,7 +856,7 @@ export const MarketingHeroTextSequence: Story = {
       docs: {
         description: {
           story:
-            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. HeroIntro is the h1 on type-display-2 at normal weight, the same font-size and line-height as the gallery statement, full width of the page grid. The two lines are Your brand is already online and Make it impossible to ignore, with no periods. A rock RiveHand replaces the asterisk immediately after Your brand. inline sizes the canvas past the artboard padding so the drawn hand is about 1.15em, the same height as the circle and the pill, and the zero-height slot keeps the line box. Outline is brand navy (#011272) from --color-brand. The hand is aria-hidden and entrance is none; reduced motion pauses on the first frame. The circle and the pill stay inline at about 1.15em. emphasis is none. Shapes are aria-hidden. idle spins the asterisk and stretches the pill. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
+            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. HeroIntro is the h1 on type-display-2 at normal weight, the same font-size and line-height as the gallery statement, full width of the page grid. The two lines are Your brand is already online and Make it impossible to ignore, with no periods. A rock RiveHand replaces the asterisk immediately after Your brand. inline sizes the canvas past the artboard padding so the drawn hand is about 1.15em, the same height as the circle and the pill, and the zero-height slot keeps the line box. Outline is brand navy (#011272) from --color-brand. The hand is aria-hidden and entrance is none. With motion on, the state machine keeps playing once that box has size. Reduced motion draws one frame after the box has size, then pauses. The circle and the pill stay inline at about 1.15em. emphasis is none. Shapes are aria-hidden. idle spins the asterisk and stretches the pill. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
         },
       },
     },
@@ -917,6 +960,15 @@ export const RockHandCanvas1440: Story = {
     expect(window.innerWidth).toBeLessThanOrEqual(1460);
     expect(window.matchMedia("(prefers-reduced-motion: reduce)").matches).toBe(false);
     await expectRockHandCanvas(canvasElement);
+    await waitFor(() => {
+      const runtime = readRockRuntime(canvasElement);
+      expect(runtime.isPlaying).toBe(true);
+      expect(runtime.isPaused).toBe(false);
+    });
+    const start = readRockRuntime(canvasElement).frameCount;
+    await waitFor(() => {
+      expect(readRockRuntime(canvasElement).frameCount).toBeGreaterThan(start);
+    });
   },
 };
 
@@ -933,6 +985,15 @@ export const RockHandCanvas1440Reduced: Story = {
     expect(window.innerWidth).toBeGreaterThanOrEqual(1440);
     expect(window.matchMedia("(prefers-reduced-motion: reduce)").matches).toBe(true);
     await expectRockHandCanvas(canvasElement);
+    await waitFor(() => {
+      expect(readRockRuntime(canvasElement).isPaused).toBe(true);
+    });
+    const frame = readRockRuntime(canvasElement).frameCount;
+    await new Promise((resolve) => {
+      window.setTimeout(resolve, 250);
+    });
+    expect(readRockRuntime(canvasElement).frameCount).toBeLessThanOrEqual(frame + 1);
+    expect(readRockRuntime(canvasElement).isPlaying).toBe(false);
   },
 };
 
@@ -949,5 +1010,9 @@ export const RockHandCanvas390Reduced: Story = {
     expect(window.innerWidth).toBeLessThanOrEqual(400);
     expect(window.matchMedia("(prefers-reduced-motion: reduce)").matches).toBe(true);
     await expectRockHandCanvas(canvasElement);
+    await waitFor(() => {
+      expect(readRockRuntime(canvasElement).isPaused).toBe(true);
+    });
+    expect(readRockRuntime(canvasElement).isPlaying).toBe(false);
   },
 };
