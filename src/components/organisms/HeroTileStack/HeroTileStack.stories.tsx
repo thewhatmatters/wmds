@@ -771,7 +771,7 @@ async function expectRockHandCanvas(root: ParentNode) {
       expect(canvas.isConnected).toBe(true);
       expect(canvas.clientWidth).toBeGreaterThan(0);
       expect(canvas.clientHeight).toBeGreaterThan(0);
-      const slot = host.parentElement;
+      const slot = host.closest("[data-rive-hand-slot]");
       if (!(slot instanceof HTMLElement)) throw new Error("rock slot missing");
       expect(slot.getAttribute("data-rive-hand-slot")).toBe("rock");
       expect(slot.isConnected).toBe(true);
@@ -873,7 +873,7 @@ export const MarketingHeroTextSequence: Story = {
     expect(text).toContain("Make it impossible to ignore");
     expect(text).not.toContain("We Are WhatMatters");
     const hand = heading.querySelector("[data-rive-hand='rock']");
-    const slot = hand?.parentElement;
+    const slot = hand?.closest("[data-rive-hand-slot]");
     if (!(hand instanceof HTMLElement) || !(slot instanceof HTMLElement)) throw new Error("inline rock hand missing");
     expect(hand.getAttribute("aria-hidden")).toBe("true");
     expect(slot.getAttribute("data-rive-hand-slot")).toBe("rock");
@@ -933,7 +933,7 @@ export const MarketingHeroTextSequenceNarrow: Story = {
     expect(heading?.textContent?.replace(/\s+/g, " ")).toContain("Your brand");
     expect(heading?.textContent).not.toContain("We Are WhatMatters");
     const hand = heading?.querySelector("[data-rive-hand='rock']");
-    const slot = hand?.parentElement;
+    const slot = hand?.closest("[data-rive-hand-slot]");
     if (!(hand instanceof HTMLElement) || !(slot instanceof HTMLElement) || !(heading instanceof HTMLElement)) {
       throw new Error("inline hand missing");
     }

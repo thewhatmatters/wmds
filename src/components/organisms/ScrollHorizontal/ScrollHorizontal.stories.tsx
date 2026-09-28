@@ -394,7 +394,7 @@ export const IntroContract: Story = {
     ]);
     const point = statement?.querySelector("[data-rive-hand='point']");
     expect(point?.getAttribute("aria-hidden")).toBe("true");
-    const pointSlot = point?.parentElement;
+    const pointSlot = point?.closest("[data-rive-hand-slot]");
     expect(pointSlot?.getAttribute("data-rive-hand-slot")).toBe("point");
     expect(pointSlot?.previousSibling?.textContent ?? "").toMatch(/\s/);
     expect(pointSlot?.nextSibling?.textContent ?? "").toMatch(/^\s/);

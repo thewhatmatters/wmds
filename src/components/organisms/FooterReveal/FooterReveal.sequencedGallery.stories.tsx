@@ -383,7 +383,7 @@ function expectSequencedHeroMatchesGallery(root: ParentNode) {
   expect(statement.scrollWidth).toBeLessThanOrEqual(statement.clientWidth + 1);
   expect(statement.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1);
   const hand = heroCopy.querySelector("[data-rive-hand='rock']");
-  const slot = hand?.parentElement;
+  const slot = hand?.closest("[data-rive-hand-slot]");
   if (!(hand instanceof HTMLElement) || !(slot instanceof HTMLElement)) throw new Error("inline rock hand missing");
   expect(hand.getAttribute("aria-hidden")).toBe("true");
   expect(getComputedStyle(slot).height).toBe("0px");
