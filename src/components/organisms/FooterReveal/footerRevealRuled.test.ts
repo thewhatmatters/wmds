@@ -4,7 +4,6 @@ import {
   footerRevealRuledBandClasses,
   footerRevealRuledBandTopClasses,
   footerRevealRuledCreditCopyClasses,
-  footerRevealRuledCropFrameClasses,
   footerRevealRuledEmailClasses,
   footerRevealRuledFieldClasses,
   footerRevealRuledGridClasses,
@@ -69,8 +68,8 @@ describe("ruled grid footer contract", () => {
     expect(footerRevealRuledSocialCellClasses).toContain("focus-visible:ring-brand");
     expect(footerRevealRuledEmailClasses).toContain("focus-visible:ring-brand");
     expect(footerRevealRuledWordmarkClasses).toContain("text-brand");
-    expect(footerRevealRuledCropFrameClasses).toContain("overflow-hidden");
     expect(footerRevealRuledCreditCopyClasses).toContain("font-mono");
+    expect(footerRevealRuledCreditCopyClasses).toContain("break-words");
 
     const shell = [
       footerRevealRuledFieldClasses,
@@ -93,9 +92,9 @@ describe("ruled grid footer contract", () => {
   it("uses WhatMatters placeholder copy and five social cells", () => {
     expect(footerRevealRuledDefaultCopy.copyright).toBe("WhatMatters © 2026");
     expect(footerRevealRuledDefaultCopy.wordmark).toBe("WhatMatters");
-    expect(footerRevealRuledDefaultCopy.crop).toBe("WM");
     expect(footerRevealRuledDefaultCopy.mark).toBe("WM");
-    expect(footerRevealRuledDefaultCopy.credit).toBe("Created by WhatMatters 2024—26");
+    expect(footerRevealRuledDefaultCopy.credit).toBe("Created by WhatMatters 2024\u20132026");
+    expect("crop" in footerRevealRuledDefaultCopy).toBe(false);
     expect(footerRevealRuledDefaultCopy.email).toBe("randy@whatmatters.so");
     expect(JSON.stringify(footerRevealRuledDefaultCopy)).not.toContain("What Matters");
     expect(footerRevealRuledDefaultLinkGroups).toHaveLength(2);

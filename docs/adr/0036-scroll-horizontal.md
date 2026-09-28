@@ -77,12 +77,6 @@ The gallery statement animates with **TextSequence** (ADR-0037).
 - The action is **Button** `role="secondary"`, label Start a project, sentence case, with no `className`. Secondary has no icon slot, so there is no trailing arrow. `action.onClick` is that button. `action.href` composes the same button on an anchor.
 - **Pattern — gallery intro**, **HeroTileStack → Marketing hero with gallery intro**, **FooterReveal → Marketing hero with gallery intro**, and **FooterReveal → Pattern — marketing hero with sequenced gallery** use this copy and this action.
 
-## Update — type-large statement
-
-**Date:** 2026-09-28
-
-The statement `h2` is `type-large` at `--font-weight-normal` (`!font-normal`) and the type-large leading. It is the same computed font-size and line-height as **HeroIntro**. The display-2 size and the display-1 leading override are gone. Shapes stay about 1.15em of this step. The panel's left edge is still the page-grid content start. The cluster uses `gap-6` so the secondary **Button** stays with the smaller statement.
-
 ## Update — expand with an intro, cascade-safe padding
 
 **Date:** 2026-09-27
@@ -99,6 +93,12 @@ The statement `h2` is `type-large` at `--font-weight-normal` (`!font-normal`) an
 - `onClick` renders **Button** `role="secondary"` `type="button"`. That is the project-modal wiring. There is no trailing icon.
 - `href` renders the same **Button** on an anchor via `render={<a href />}` — the same link pattern **Button** already uses. It does not invent a second control.
 - **FooterReveal → Pattern — marketing hero ruled grid** is the full page: sequenced hero, this intro with `onClick`, `expandLast`, then **FooterReveal.Ruled**. Show code is that page.
+
+## Update — text-wrap pretty
+
+**Date:** 2026-09-28
+
+The statement `h2` stays `type-display-2` at normal weight and the display-1 leading. It also sets `text-wrap: pretty`, so the last word is not left on a line by itself. The hero subtext uses that same font-size (ADR-0035 update).
 
 ## Non-goals
 
