@@ -456,7 +456,7 @@ async function playSequencedMarketingHero(canvasElement: HTMLElement) {
 }
 
 export const SequencedMarketingHero: Story = {
-  name: "Pattern \u2014 marketing hero with sequenced gallery",
+  name: "Pattern — marketing hero with sequenced gallery",
   tags: ["test"],
   parameters: withStoryCopySource(
     {
@@ -464,7 +464,7 @@ export const SequencedMarketingHero: Story = {
       docs: {
         description: {
           story:
-            "Full marketing page on the navy footer. HeroIntro is the h1 and sequences the subtext on type-display-2 at normal weight and display-2 leading \u2014 the same size and line-height as the gallery statement. The first line is An Austin, TX studio specializing in brand and product design. Austin, and TX stay together. Then Your brand, a rock RiveHand, is already online, then Make it impossible to ignore. The Austin line sequences first. The brand line waits 0.7s and the last line waits 1.05s so the 0.07s stagger continues. The rock hand uses inline, in place of the asterisk, drawn at about 1.15em with its outline bottom on the text baseline, and aria-hidden. That slot pops with the hero sequence on the beat after brand, with the same scale, rotation, and back.out(1.8) ease as the circle and the pill. Idle starts after the pop. The circle and pill stay at about 1.15em. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. An asterisk, a point RiveHand after impression, and an accent diamond sit in the statement. The point hand pops with that statement on the beat after impression, then idles. The accessible name is the plain sentence. The action is Button role secondary, labeled Start a project, with onClick opening the project modal. expandLast still ends on the full-bleed tile, flush with FooterReveal.Brand. Reduced motion leaves both sequences at rest, shapes and hands included, on one static frame, and keeps the grid inset. The ruled-footer page is Pattern \u2014 marketing hero ruled grid.",
+            "Full marketing page on the navy footer. HeroIntro is the h1 and sequences the subtext on type-display-2 at normal weight and display-2 leading — the same size and line-height as the gallery statement. The first line is An Austin, TX studio specializing in brand and product design. Austin, and TX stay together. Then Your brand, a rock RiveHand, is already online, then Make it impossible to ignore. The Austin line sequences first. The brand line waits 0.7s and the last line waits 1.05s so the 0.07s stagger continues. The rock hand uses inline, in place of the asterisk, drawn at about 1.15em with its outline bottom on the text baseline, and aria-hidden. That slot pops with the hero sequence on the beat after brand, with the same scale, rotation, and back.out(1.8) ease as the circle and the pill. Idle starts after the pop. The circle and pill stay at about 1.15em. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. An asterisk, a point RiveHand after impression, and an accent diamond sit in the statement. The point hand pops with that statement on the beat after impression, then idles. The accessible name is the plain sentence. The action is Button role secondary, labeled Start a project, with onClick opening the project modal. expandLast still ends on the full-bleed tile, flush with FooterReveal.Brand. Reduced motion leaves both sequences at rest, shapes and hands included, on one static frame, and keeps the grid inset. The ruled-footer page is Pattern — marketing hero ruled grid.",
         },
       },
     },
@@ -477,7 +477,7 @@ export const SequencedMarketingHero: Story = {
 };
 
 export const SequencedGalleryReducedMotion: Story = {
-  name: "Sequenced gallery \u2014 reduced motion",
+  name: "Sequenced gallery — reduced motion",
   tags: ["test", "!dev", "!autodocs"],
   parameters: {
     wmdsLayout: "fullscreen",
@@ -496,7 +496,7 @@ export const SequencedGalleryReducedMotion: Story = {
 };
 
 export const MarketingHeroRuledPattern: Story = {
-  name: "Pattern \u2014 marketing hero ruled grid",
+  name: "Pattern — marketing hero ruled grid",
   tags: ["test"],
   parameters: withStoryCopySource(
     {
@@ -504,7 +504,7 @@ export const MarketingHeroRuledPattern: Story = {
       docs: {
         description: {
           story:
-            "The one full marketing page. Sequenced hero (same as Pattern \u2014 marketing hero text sequence): HeroIntro is the h1 on type-display-2. The first line is An Austin, TX studio specializing in brand and product design. The rock hand sits inline after Your brand. Then ScrollHorizontal with Intro and expandLast. Then FooterReveal.Ruled on footerRevealRuledFieldClasses. Horizontal rules span the footer field; content and the grid edges stay in the page grid box. The intro action is Button role secondary, onClick openProjectModal. Show code is that whole page. Reduced motion leaves the sequences at rest. The gallery section ends on the expanded tile, flush with the ruled footer.",
+            "The one full marketing page. Sequenced hero (same as Pattern — marketing hero text sequence): HeroIntro is the h1 on type-display-2. The first line is An Austin, TX studio specializing in brand and product design. The rock hand sits inline after Your brand. Then ScrollHorizontal with Intro and expandLast. Then FooterReveal.Ruled on footerRevealRuledFieldClasses. Horizontal rules span the footer field; content and the grid edges stay in the page grid box. The intro action is Button role secondary, onClick openProjectModal. Show code is that whole page. Reduced motion leaves the sequences at rest. The gallery section ends on the expanded tile, flush with the ruled footer.",
         },
       },
     },
