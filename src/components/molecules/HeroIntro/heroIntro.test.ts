@@ -35,8 +35,11 @@ describe("HeroIntro", () => {
     expect(page?.className).toContain("!py-0");
     expect(intro?.className).toContain("lg:col-start-4");
     expect(intro?.className).toContain("lg:col-end-10");
-    expect(intro?.className).toContain("type-large");
-    expect(intro?.className).not.toContain("type-display-2");
+    expect(intro?.className).toContain("type-display-2");
+    expect(intro?.className).toContain("!font-normal");
+    expect(intro?.className).toContain("text-pretty");
+    expect(intro?.className).not.toContain("type-large");
+    expect(spans?.[0]?.className).not.toContain("whitespace-nowrap");
     expect(spans).toHaveLength(2);
     expect(spans?.[0]?.className).toBe(heroIntroLeadClasses);
     expect(spans?.[0]?.textContent).toBe(leadCopy);
@@ -62,6 +65,7 @@ describe("HeroIntro", () => {
     const intro = container.querySelector("p");
     expect(intro?.className).toContain("type-display-2");
     expect(intro?.className).toContain("!font-normal");
+    expect(intro?.className).toContain("text-pretty");
     expect(intro?.className).toContain("col-span-full");
     expect(intro?.className).not.toContain("lg:col-start-4");
     const lead = intro?.querySelector(":scope > span");

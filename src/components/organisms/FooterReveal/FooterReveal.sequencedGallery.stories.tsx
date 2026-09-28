@@ -424,12 +424,25 @@ function expectSequencedHeroMatchesGallery(root: ParentNode) {
   if (!(heroSeq instanceof HTMLElement) || !(heading instanceof HTMLElement)) {
     throw new Error("hero subtext missing");
   }
+  const heroCopy = heroSeq.closest("p");
+  if (!(heroCopy instanceof HTMLElement)) throw new Error("hero subtext missing");
+  const heroStyle = getComputedStyle(heroCopy);
+  const statementStyle = getComputedStyle(statement);
   expect(Math.abs(intro.getBoundingClientRect().left - pageGridContentStart())).toBeLessThanOrEqual(1);
-  expect(getComputedStyle(heroSeq).fontSize).toBe(getComputedStyle(statement).fontSize);
-  expect(getComputedStyle(heroSeq).fontWeight).toBe("400");
-  expect(getComputedStyle(statement).fontWeight).toBe("400");
+  expect(heroStyle.fontSize).toBe(statementStyle.fontSize);
+  expect(heroStyle.fontWeight).toBe("400");
+  expect(statementStyle.fontWeight).toBe("400");
+  expect(heroCopy.className).toContain("type-display-2");
+  expect(statement.className).toContain("type-display-2");
+  expect(heroCopy.className).toContain("text-pretty");
+  expect(statement.className).toContain("text-pretty");
+  expect(heroStyle.textWrap).toBe("pretty");
+  expect(statementStyle.textWrap).toBe("pretty");
+  expect(heroCopy.scrollWidth).toBeLessThanOrEqual(heroCopy.clientWidth + 1);
+  expect(statement.scrollWidth).toBeLessThanOrEqual(statement.clientWidth + 1);
+  expect(statement.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1);
   expect(Number.parseFloat(getComputedStyle(heading).fontSize)).toBeGreaterThan(
-    Number.parseFloat(getComputedStyle(heroSeq).fontSize),
+    Number.parseFloat(heroStyle.fontSize),
   );
 }
 

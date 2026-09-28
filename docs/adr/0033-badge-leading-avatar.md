@@ -20,7 +20,7 @@ The hero subtext is the one place a badge is decorative. Everywhere else, badges
 - **`badgeAvatarSize`**: badge `sm` → Avatar `xsm` (20px, matches `h-5`); badge `md` → Avatar `sm` (24px, matches `h-6`).
 - Mutually exclusive with **`icon`**, **`iconOnly`**, and **`count`**. Passing more than one warns and the avatar label wins over icon and count.
 - `alt` is the Avatar accessible name. Pass `alt=""` when the badge label already speaks the word, so the image is not announced twice. A non-empty `alt` is announced with the label.
-- No Badge `lg`. `md` (24px) matches the `type-large` hero line. Add a larger size only if a later layout shows `md` as too small.
+- No Badge `lg`. `md` (24px) stays the inline mark on the hero line. The hero line is now `type-display-2`. Add a larger size only if a later layout shows `md` as too small.
 - Exported from `src/index.ts`: `BadgeAvatar`, `badgeAvatarSize`. **Badge** stays an atom in `package.manifest.ts`.
 
 ### Atom exception
@@ -30,6 +30,12 @@ Badge may import **Avatar** for this slot only. That is the exception to ADR-000
 ### Decorative marketing use
 
 The one sanctioned decorative use of Badge is inline emphasis in **Components/Layout/HeroTileStack → Pattern — marketing hero**. The badge is not clickable. The sentence still reads in order. The hero marks the word `online` with the globe placeholder in `public/hero-badges/`. Product images replace that file.
+
+## Update — hero line is type-display-2
+
+**Date:** 2026-09-28
+
+The marketing hero intro is `type-display-2`. Badge `md` (24px) stays the inline mark on that line. No new badge size.
 
 ## Non-goals
 

@@ -23,9 +23,9 @@ const meta = {
 
 Centered intro under a marketing headline. Pass the first sentence as \`lead\` and the rest as children. **HeroIntro** owns the line break and the page-grid span.
 
-\`step="large"\` (default) is \`type-large\` at normal weight, columns 4–9 from \`lg\`. \`step="display"\` is \`type-display-2\` at normal weight, full width of the page grid — the sequenced hero subtext, the same size as **ScrollHorizontal.Intro**.
+Both steps are \`type-display-2\` at normal weight, the same font-size as **ScrollHorizontal.Intro**. \`step="large"\` (default) is columns 4–9 from \`lg\`. \`step="display"\` is full width of the page grid — the sequenced hero.
 
-From \`md\`, \`lead\` stays on one line. Below \`md\` it may wrap. Children always start on the next line. Both lines use the type-large leading and stay centered.
+\`lead\` wraps when the measure is shorter than the line, including from \`md\`. Children always start on the next line. Both lines stay centered, with \`text-wrap: pretty\`.
 
 Paste it inside **Components/Layout/HeroTileStack → Pattern — marketing hero**.
 
@@ -33,19 +33,20 @@ Paste it inside **Components/Layout/HeroTileStack → Pattern — marketing hero
 
 \`\`\`
 HeroIntro — grid-page, page block pad removed
-└── p — type-large, font-normal, text-muted, centered
-    ├── lead — one line from md; may wrap below md
+└── p — type-display-2, normal weight, text-pretty, text-muted, centered
+    ├── lead — wraps, including from md
     └── children — always the next line
-        columns 4–9 from lg; full width of the page grid below lg
+        large: columns 4–9 from lg; full width of the page grid below lg
+        display: full width of the page grid
 \`\`\`
 
 ## Best practices
 
 - Pass the first sentence, including its period, as \`lead\`. Do not insert a line break in the copy.
 - Keep children on the same sentence rhythm. The marketing hero puts one inline **Badge** in that line.
-- \`className\` is layout only (width, margin). The column span and the nowrap lead are part of the component.
-- Do not restyle the two lines to different type steps. They share the step you pass.
-- Use \`step="display"\` for the sequenced marketing hero. Leave the default hero on \`large\`.
+- \`className\` is layout only (width, margin). The column span is part of the component.
+- Do not restyle the two lines to different type steps. They share \`type-display-2\`.
+- Use \`step="display"\` for the sequenced marketing hero, where the line is full width. The default hero stays on \`large\` and the same size.
         `.trim(),
       },
     },
@@ -76,7 +77,7 @@ export const TwoLineIntro: Story = {
       docs: {
         description: {
           story:
-            "lead is the Austin sentence and stays on one line from md. Below md that sentence may wrap. The rest, including the inline online Badge, always starts on the next line. Same type-large step, regular weight, and type-large leading. Centered on grid-page, columns 4–9 from lg.",
+            "lead is the Austin sentence and wraps inside the measure, including from md. The rest, including the inline online Badge, always starts on the next line. type-display-2 at normal weight, the same font-size as the gallery statement, with text-wrap pretty. Centered on grid-page, columns 4–9 from lg.",
         },
       },
     },

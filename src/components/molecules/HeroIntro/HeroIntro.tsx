@@ -12,23 +12,22 @@ import {
 /** Layout-only — width and margin. Not for re-theming or forcing a line break. */
 export type HeroIntroLayoutClassName = string;
 
-/** `large` is the default marketing intro. `display` matches the gallery statement. */
+/** `large` is the default marketing intro. `display` is the full-width sequenced hero. Both are `type-display-2`. */
 export const heroIntroSteps = ["large", "display"] as const;
 export type HeroIntroStep = (typeof heroIntroSteps)[number];
 
 export interface HeroIntroProps {
   /**
-   * First sentence. On `large`, stays on one line from `md` and may wrap below `md`.
-   * On `display`, wraps when the page-grid measure is short.
+   * First sentence. Wraps when the measure is shorter than the line, including from `md`.
    * The rest of the intro always starts on the next line.
    */
   lead: ReactNode;
   /** Rest of the intro. Always starts on a new line, on the same type step and leading. */
   children: ReactNode;
   /**
-   * `large` — `type-large`, columns 4–9 from `lg`.
-   * `display` — `type-display-2` at normal weight, full width of the page grid.
-   * Same computed size as **ScrollHorizontal.Intro**. The sequenced hero uses this.
+   * `large` — `type-display-2` at normal weight, columns 4–9 from `lg`. The default hero.
+   * `display` — the same size, full width of the page grid. The sequenced hero.
+   * Both match the computed font-size of **ScrollHorizontal.Intro**.
    */
   step?: HeroIntroStep;
   /** Layout only — width and margin. */

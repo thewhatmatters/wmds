@@ -94,6 +94,12 @@ The gallery statement animates with **TextSequence** (ADR-0037).
 - `href` renders the same **Button** on an anchor via `render={<a href />}` — the same link pattern **Button** already uses. It does not invent a second control.
 - **FooterReveal → Pattern — marketing hero ruled grid** is the full page: sequenced hero, this intro with `onClick`, `expandLast`, then **FooterReveal.Ruled**. Show code is that page.
 
+## Update — text-wrap pretty
+
+**Date:** 2026-09-28
+
+The statement `h2` stays `type-display-2` at normal weight and the display-1 leading. It also sets `text-wrap: pretty`, so the last word is not left on a line by itself. The hero subtext uses that same font-size (ADR-0035 update).
+
 ## Non-goals
 
 - Motion+.

@@ -402,6 +402,7 @@ export const MarketingHeroWithGalleryIntro: Story = {
     const intro = section.querySelector("[data-scroll-horizontal-intro]");
     expect(track?.firstElementChild).toBe(intro);
     expect(section.querySelector("[data-pattern='eyebrow']")?.textContent).toBe("SELECTED WORK");
+    expectDefaultHeroMatchesGallery(canvasElement);
     await expectLastTileFillsViewport(canvasElement);
   },
 };
@@ -434,6 +435,36 @@ const expandViewportOptions = {
   },
 };
 
+function expectDefaultHeroMatchesGallery(root: ParentNode) {
+  const section = root.querySelector("[data-scroll-horizontal]");
+  const statement = section?.querySelector("h2");
+  const hero = [...root.querySelectorAll("p")].find((node) => (node.textContent ?? "").includes("Austin"));
+  if (!(statement instanceof HTMLElement) || !(hero instanceof HTMLElement)) {
+    throw new Error("hero and gallery statement missing");
+  }
+  const heroStyle = getComputedStyle(hero);
+  const statementStyle = getComputedStyle(statement);
+  const lead = hero.querySelector(":scope > span");
+  if (!(lead instanceof HTMLElement)) throw new Error("hero lead missing");
+  expect(heroStyle.fontSize).toBe(statementStyle.fontSize);
+  expect(heroStyle.fontWeight).toBe("400");
+  expect(statementStyle.fontWeight).toBe("400");
+  expect(hero.className).toContain("type-display-2");
+  expect(statement.className).toContain("type-display-2");
+  expect(hero.className).toContain("text-pretty");
+  expect(statement.className).toContain("text-pretty");
+  expect(heroStyle.textWrap).toBe("pretty");
+  expect(statementStyle.textWrap).toBe("pretty");
+  expect(getComputedStyle(lead).whiteSpace).toBe("normal");
+  expect(lead.scrollWidth).toBeLessThanOrEqual(lead.clientWidth + 1);
+  expect(hero.scrollWidth).toBeLessThanOrEqual(hero.clientWidth + 1);
+  expect(statement.scrollWidth).toBeLessThanOrEqual(statement.clientWidth + 1);
+  expect(lead.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1);
+  expect(statement.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1);
+  const lineHeight = Number.parseFloat(getComputedStyle(lead).lineHeight);
+  expect(lead.getBoundingClientRect().height).toBeGreaterThan(lineHeight * 1.25);
+}
+
 function expandViewportStory(id: keyof typeof expandViewportOptions, minWidth: number, maxWidth: number): Story {
   return {
     name: `Handoff — intro expand at ${id.replace("review", "")}`,
@@ -450,6 +481,7 @@ function expandViewportStory(id: keyof typeof expandViewportOptions, minWidth: n
     play: async ({ canvasElement }) => {
       expect(window.innerWidth).toBeGreaterThanOrEqual(minWidth);
       expect(window.innerWidth).toBeLessThanOrEqual(maxWidth);
+      expectDefaultHeroMatchesGallery(canvasElement);
       await expectLastTileFillsViewport(canvasElement);
     },
   };
