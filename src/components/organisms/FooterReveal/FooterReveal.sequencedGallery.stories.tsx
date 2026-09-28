@@ -143,6 +143,7 @@ export function SequencedMarketingHeroPage() {
           </h1>
           </div>
           <HeroIntro
+            step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 Your brand <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
@@ -292,6 +293,7 @@ function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
           </h1>
           </div>
           <HeroIntro
+            step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 Your brand <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
@@ -422,19 +424,12 @@ function expectSequencedHeroMatchesGallery(root: ParentNode) {
   if (!(heroSeq instanceof HTMLElement) || !(heading instanceof HTMLElement)) {
     throw new Error("hero subtext missing");
   }
-  const heroCopy = heroSeq.closest("p");
-  if (!(heroCopy instanceof HTMLElement)) throw new Error("hero subtext missing");
-  const heroStyle = getComputedStyle(heroCopy);
-  const statementStyle = getComputedStyle(statement);
   expect(Math.abs(intro.getBoundingClientRect().left - pageGridContentStart())).toBeLessThanOrEqual(1);
-  expect(heroStyle.fontSize).toBe(statementStyle.fontSize);
-  expect(heroStyle.lineHeight).toBe(statementStyle.lineHeight);
-  expect(heroStyle.fontWeight).toBe("400");
-  expect(statementStyle.fontWeight).toBe("400");
-  expect(heroCopy.className).toContain("type-large");
-  expect(statement.className).toContain("type-large");
+  expect(getComputedStyle(heroSeq).fontSize).toBe(getComputedStyle(statement).fontSize);
+  expect(getComputedStyle(heroSeq).fontWeight).toBe("400");
+  expect(getComputedStyle(statement).fontWeight).toBe("400");
   expect(Number.parseFloat(getComputedStyle(heading).fontSize)).toBeGreaterThan(
-    Number.parseFloat(heroStyle.fontSize),
+    Number.parseFloat(getComputedStyle(heroSeq).fontSize),
   );
 }
 
@@ -492,7 +487,7 @@ export const SequencedMarketingHero: Story = {
       docs: {
         description: {
           story:
-            "Full marketing page on the navy footer. The h1 stays We Are WhatMatters on type-display-1, with the rock and point hands on the e, the W, and the final s. HeroIntro sequences the subtext on type-large at normal weight — the same size, weight, and leading as the gallery statement: Your brand is already online, then Make it impossible to ignore. Shapes sit inline at about 1.15em. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. Three shapes sit in the statement (asterisk after screen, brand-soft pill after impression, accent diamond after yours). The accessible name is the plain sentence. The action is Button role secondary, labeled Start a project, with onClick opening the project modal. expandLast still ends on the full-bleed tile, flush with FooterReveal.Brand. Reduced motion leaves both sequences at rest, shapes included, and keeps the grid inset. The ruled-footer page is Pattern — marketing hero ruled grid.",
+            "Full marketing page on the navy footer. The h1 stays We Are WhatMatters on type-display-1, with the rock and point hands on the e, the W, and the final s. HeroIntro step display sequences the subtext on type-display-2 at normal weight — the same size as the gallery statement: Your brand is already online, then Make it impossible to ignore. Shapes sit inline at about 1.15em. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. Three shapes sit in the statement (asterisk after screen, brand-soft pill after impression, accent diamond after yours). The accessible name is the plain sentence. The action is Button role secondary, labeled Start a project, with onClick opening the project modal. expandLast still ends on the full-bleed tile, flush with FooterReveal.Brand. Reduced motion leaves both sequences at rest, shapes included, and keeps the grid inset. The ruled-footer page is Pattern — marketing hero ruled grid.",
         },
       },
     },
@@ -532,7 +527,7 @@ export const MarketingHeroRuledPattern: Story = {
       docs: {
         description: {
           story:
-            "The one full marketing page. Sequenced hero (same as Pattern — marketing hero text sequence): h1 We Are WhatMatters on type-display-1, HeroIntro on type-large (same size, weight, and leading as the gallery statement). Then ScrollHorizontal with Intro and expandLast. Then FooterReveal.Ruled on footerRevealRuledFieldClasses. Horizontal rules span the footer field; content and the grid edges stay in the page grid box. The intro action is Button role secondary, onClick openProjectModal. Show code is that whole page. Reduced motion leaves the sequences at rest. The gallery section ends on the expanded tile, flush with the ruled footer.",
+            "The one full marketing page. Sequenced hero (same as Pattern — marketing hero text sequence): h1 We Are WhatMatters on type-display-1, HeroIntro step display on type-display-2. Then ScrollHorizontal with Intro and expandLast. Then FooterReveal.Ruled on footerRevealRuledFieldClasses. Horizontal rules span the footer field; content and the grid edges stay in the page grid box. The intro action is Button role secondary, onClick openProjectModal. Show code is that whole page. Reduced motion leaves the sequences at rest. The gallery section ends on the expanded tile, flush with the ruled footer.",
         },
       },
     },
