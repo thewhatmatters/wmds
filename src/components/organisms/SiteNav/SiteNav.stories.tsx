@@ -365,7 +365,9 @@ function CompactHugSpecimen() {
 }
 
 function expectCompactPillHugs(root: ParentNode) {
-  const pill = root.querySelector<HTMLElement>('[data-state="compact"]');
+  const pill = [...root.querySelectorAll<HTMLElement>('[data-state="compact"]')].find(
+    (el) => el.tagName !== "HEADER",
+  );
   const slots = pill?.firstElementChild;
   if (!(pill instanceof HTMLElement) || !(slots instanceof HTMLElement)) {
     throw new Error("compact pill missing");
@@ -400,9 +402,10 @@ function compactHugStory(id: "review1024" | "review1440", minWidth: number, maxW
     play: async ({ canvasElement }) => {
       expect(window.innerWidth).toBeGreaterThanOrEqual(minWidth);
       expect(window.innerWidth).toBeLessThanOrEqual(maxWidth);
-      const middle = canvasElement.querySelector("[data-state='compact']")?.children[0]?.children[1];
-      expect(middle).toBeTruthy();
-      expect(getComputedStyle(middle as HTMLElement).display).not.toBe("none");
+      const product = [...canvasElement.querySelectorAll("a")].find((anchor) =>
+        anchor.textContent?.includes("Product"),
+      );
+      expect(product?.getBoundingClientRect().width ?? 0).toBeGreaterThan(0);
       expectCompactPillHugs(canvasElement);
     },
   };
