@@ -47,7 +47,7 @@ The marketing heroes need the last placeholder to become a full-viewport section
 The gallery can open on a statement instead of a centered first card.
 
 - `intro` is optional. Pass **ScrollHorizontal.Intro** (`eyebrow`, `statement`, optional `action`). It is the first panel of the track. `heading` is not rendered when `intro` is set.
-- The eyebrow is a **Badge** `eyebrow` (mono, uppercase, `--font-size-xs`, accent fill). It is the section's accessible name (`aria-labelledby`). The statement is an `h2` on `type-display-2` at `--font-weight-normal`, with `--text-display-1-leading`. That is the largest display step that wraps to about four or five lines in the left columns. No new size token.
+- The eyebrow is a **Badge** `eyebrow` (mono, uppercase, `--font-size-xs`, accent fill). It is the section's accessible name (`aria-labelledby`). The statement is an `h2` on `type-display-2` at `--font-weight-normal` and the display-2 leading (`--text-display-2-leading`, `1.2`). That is the largest display step that wraps to about four or five lines in the left columns. No new size token.
 - The action was first **Button** `role="outline"` `size="sm"` `mono` with `endIcon`. See the later update: it is now `role="secondary"`.
 - The panel width follows the page grid: every column below `md`, 4 of 8 from `md`, 6 of 12 from `lg`. At 1440px that is about 42% of the viewport. Padding-left is the grid content edge. Top padding is `--site-nav-height` plus `1rem` (`--spacing * 4`), the compact site nav pin, so the eyebrow clears the pill.
 - Travel parks the last card on the viewport center, same end frame as a gallery with no intro, so `expandLast` still grows from that card to `inset(0)`. Without `intro`, distance and clip are unchanged.
@@ -98,7 +98,7 @@ The gallery statement animates with **TextSequence** (ADR-0037).
 
 **Date:** 2026-09-28
 
-The statement `h2` stays `type-display-2` at normal weight and the display-1 leading. It also sets `text-wrap: pretty`, so the last word is not left on a line by itself. The hero subtext uses that same font-size (ADR-0035 update).
+The statement `h2` stays `type-display-2` at normal weight and the display-2 leading (`1.2`). It also sets `text-wrap: pretty`, so the last word is not left on a line by itself. The hero `h1` uses that same font-size and line-height (ADR-0035 update).
 
 ## Non-goals
 

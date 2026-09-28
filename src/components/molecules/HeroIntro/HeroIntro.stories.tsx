@@ -23,7 +23,7 @@ const meta = {
 
 Centered intro under a marketing headline. Pass the first sentence as \`lead\` and the rest as children. **HeroIntro** owns the line break and the page-grid span.
 
-Both steps are \`type-display-2\` at normal weight, the same font-size as **ScrollHorizontal.Intro**. \`step="large"\` (default) is columns 4–9 from \`lg\`. \`step="display"\` is full width of the page grid — the sequenced hero.
+Both steps are an \`h1\` on \`type-display-2\` at normal weight, the same font-size and line-height as **ScrollHorizontal.Intro**. \`step="large"\` (default) is columns 4–9 from \`lg\`. \`step="display"\` is full width of the page grid — the sequenced hero.
 
 \`lead\` wraps when the measure is shorter than the line, including from \`md\`. Children always start on the next line. Both lines stay centered, with \`text-wrap: pretty\`.
 
@@ -33,7 +33,7 @@ Paste it inside **Components/Layout/HeroTileStack → Pattern — marketing hero
 
 \`\`\`
 HeroIntro — grid-page, page block pad removed
-└── p — type-display-2, normal weight, text-pretty, text-muted, centered
+└── h1 — type-display-2, normal weight, text-pretty, text-muted, centered
     ├── lead — wraps, including from md
     └── children — always the next line
         large: columns 4–9 from lg; full width of the page grid below lg

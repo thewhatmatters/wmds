@@ -208,7 +208,8 @@ describe("marketing hero text sequence story", () => {
     expect(variant).toContain('variant="pill"');
     expect(variant).toContain('variant="circle"');
     expect(variant).not.toContain("<Badge");
-    expect(variant).toContain("We Are");
-    expect(variant).toContain("WhatMatters");
+    expect(variant).toContain('hand="rock"');
+    expect(variant).toContain('size="1cap"');
+    expect(variant).not.toContain("We Are WhatMatters");
   });
 });

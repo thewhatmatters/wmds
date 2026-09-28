@@ -27,7 +27,7 @@ export interface HeroIntroProps {
   /**
    * `large` — `type-display-2` at normal weight, columns 4–9 from `lg`. The default hero.
    * `display` — the same size, full width of the page grid. The sequenced hero.
-   * Both match the computed font-size of **ScrollHorizontal.Intro**.
+   * Both match the computed font-size and line-height of **ScrollHorizontal.Intro**.
    */
   step?: HeroIntroStep;
   /** Layout only — width and margin. */
@@ -35,17 +35,17 @@ export interface HeroIntroProps {
 }
 
 /**
- * Centered marketing intro under the hero headline.
- * `lead` is line 1. `children` is line 2. The component owns the break.
+ * Marketing hero heading. `lead` is line 1. `children` is line 2.
+ * The component owns the break. This is the page `h1`.
  */
 export function HeroIntro({ lead, children, step = "large", className }: HeroIntroProps) {
   const display = step === "display";
   return (
     <div className={cn(heroIntroPageClasses, className)}>
-      <p className={display ? heroIntroDisplayCopyClasses : heroIntroCopyClasses}>
+      <h1 className={display ? heroIntroDisplayCopyClasses : heroIntroCopyClasses}>
         <span className={display ? heroIntroDisplayLeadClasses : heroIntroLeadClasses}>{lead}</span>
         <span className={heroIntroRestClasses}>{children}</span>
-      </p>
+      </h1>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sparkles } from "lucide-react";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { expect, fn, waitFor } from "storybook/test";
 import { Button } from "../../atoms/Button/Button";
 import { RiveHand } from "../../atoms/RiveHand/RiveHand";
@@ -52,7 +52,6 @@ const marketingHeroWithGalleryIntroCopySource = `
 // Copy public/rive/interactive-icon-set.riv so the app serves /rive/interactive-icon-set.riv.
 // Hand art: CC BY 4.0, Silvia Sguotti and Gabriele Montinaro.
 
-import { useState } from "react";
 import { Sparkles } from "lucide-react";
 import { Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence, footerRevealFieldClasses } from "@whatmatters/wmds";
 
@@ -82,7 +81,6 @@ const projects = [
 function openProjectModal() {}
 
 export function SequencedMarketingHeroPage() {
-  const [handsActive, setHandsActive] = useState(false);
   return (
     <FooterReveal>
       <FooterReveal.Content>
@@ -111,42 +109,11 @@ export function SequencedMarketingHeroPage() {
         />
         <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-12 text-center">
           <div className="flex w-full flex-col items-center gap-6">
-          <div className="w-full px-[var(--grid-margin)]">
-          <h1
-            className="type-display-1 isolate text-fg"
-              tabIndex={0}
-              onMouseEnter={() => setHandsActive(true)}
-              onMouseLeave={() => setHandsActive(false)}
-              onFocus={() => setHandsActive(true)}
-              onBlur={() => setHandsActive(false)}
-            >
-              {[
-                <span key="lead" className="relative inline-block whitespace-nowrap">{[
-                  <span key="gap" className="absolute inset-y-0 right-0 w-0">{[
-                    <span key="clip" className="absolute z-10 overflow-clip -right-[0.94em] -top-[0.17em] bottom-[0.22em] w-[1.7em] md:-right-[1.07em] md:-top-[0.54em] md:w-[2.2em]">{[
-                      <RiveHand key="rock" hand="rock" size="2.2em" active={handsActive} idle entrance="slide-up" className="absolute top-0 max-md:!h-[1.7em] max-md:!w-[1.7em]" />,
-                    ]}</span>,
-                  ]}</span>,
-                  "We Ar",
-                  <span key="e" className="relative z-20">e</span>,
-                ]}</span>,
-                " ",
-                <span key="brand" className="relative inline-block whitespace-nowrap">{[
-                  <span key="w" className="relative z-0">W</span>,
-                  "hatMatter",
-                  <span key="s" className="relative">{[
-                    "s",
-                    <RiveHand key="point" hand="point" size="2.2em" active={handsActive} idle entrance="grow" className="absolute z-10 -right-[1.2em] -top-[0.4em] max-md:!h-[1.7em] max-md:!w-[1.7em] md:-right-[1.53em] md:-top-[0.7em]" />,
-                  ]}</span>,
-                ]}</span>,
-              ]}
-          </h1>
-          </div>
           <HeroIntro
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                Your brand <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
+                Your brand <RiveHand hand="rock" size="1cap" idle entrance="none" aria-hidden className="inline-block align-middle" /> <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
               </TextSequence>
             }
           >
@@ -170,7 +137,7 @@ export function SequencedMarketingHeroPage() {
                   {"Every screen"}
                   <TextSequence.Shape variant="asterisk" />
                   {" is a first impression"}
-                  <TextSequence.Shape variant="pill" tone="brand-soft" />
+                  <RiveHand hand="point" size="1cap" idle entrance="none" aria-hidden className="inline-block align-middle" />
                   {" and we make yours"}
                   <TextSequence.Shape variant="diamond" tone="accent" />
                   {" the one they remember."}
@@ -232,7 +199,6 @@ const marketingHeroRuledCopySource = marketingHeroWithGalleryIntroCopySource
   );
 
 function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
-  const [handsActive, setHandsActive] = useState(false);
   return (
     <FooterReveal>
       <FooterReveal.Content>
@@ -261,42 +227,11 @@ function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
         />
         <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full flex-col items-center justify-center overflow-x-clip overflow-y-visible bg-body py-12 text-center">
           <div className="flex w-full flex-col items-center gap-6">
-          <div className="w-full px-[var(--grid-margin)]">
-          <h1
-            className="type-display-1 isolate text-fg"
-              tabIndex={0}
-              onMouseEnter={() => setHandsActive(true)}
-              onMouseLeave={() => setHandsActive(false)}
-              onFocus={() => setHandsActive(true)}
-              onBlur={() => setHandsActive(false)}
-            >
-              {[
-                <span key="lead" className="relative inline-block whitespace-nowrap">{[
-                  <span key="gap" className="absolute inset-y-0 right-0 w-0">{[
-                    <span key="clip" className="absolute z-10 overflow-clip -right-[0.94em] -top-[0.17em] bottom-[0.22em] w-[1.7em] md:-right-[1.07em] md:-top-[0.54em] md:w-[2.2em]">{[
-                      <RiveHand key="rock" hand="rock" size="2.2em" active={handsActive} idle entrance="slide-up" className="absolute top-0 max-md:!h-[1.7em] max-md:!w-[1.7em]" />,
-                    ]}</span>,
-                  ]}</span>,
-                  "We Ar",
-                  <span key="e" className="relative z-20">e</span>,
-                ]}</span>,
-                " ",
-                <span key="brand" className="relative inline-block whitespace-nowrap">{[
-                  <span key="w" className="relative z-0">W</span>,
-                  "hatMatter",
-                  <span key="s" className="relative">{[
-                    "s",
-                    <RiveHand key="point" hand="point" size="2.2em" active={handsActive} idle entrance="grow" className="absolute z-10 -right-[1.2em] -top-[0.4em] max-md:!h-[1.7em] max-md:!w-[1.7em] md:-right-[1.53em] md:-top-[0.7em]" />,
-                  ]}</span>,
-                ]}</span>,
-              ]}
-          </h1>
-          </div>
           <HeroIntro
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                Your brand <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
+                Your brand <RiveHand hand="rock" size="1cap" idle entrance="none" aria-hidden className="inline-block align-middle" /> <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
               </TextSequence>
             }
           >
@@ -320,7 +255,7 @@ function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
                   {"Every screen"}
                   <TextSequence.Shape variant="asterisk" />
                   {" is a first impression"}
-                  <TextSequence.Shape variant="pill" tone="brand-soft" />
+                  <RiveHand hand="point" size="1cap" idle entrance="none" aria-hidden className="inline-block align-middle" />
                   {" and we make yours"}
                   <TextSequence.Shape variant="diamond" tone="accent" />
                   {" the one they remember."}
@@ -415,21 +350,19 @@ function expectSequencedHeroMatchesGallery(root: ParentNode) {
   const heroSeq = [...root.querySelectorAll("[data-text-sequence]")].find(
     (node) => !section.contains(node),
   );
-  const heading = [...root.querySelectorAll("h1")].find((node) =>
-    (node.textContent ?? "").includes("WhatMatters"),
-  );
   if (!(intro instanceof HTMLElement) || !(statement instanceof HTMLElement)) {
     throw new Error("gallery intro missing");
   }
-  if (!(heroSeq instanceof HTMLElement) || !(heading instanceof HTMLElement)) {
+  if (!(heroSeq instanceof HTMLElement)) {
     throw new Error("hero subtext missing");
   }
-  const heroCopy = heroSeq.closest("p");
+  const heroCopy = heroSeq.closest("h1");
   if (!(heroCopy instanceof HTMLElement)) throw new Error("hero subtext missing");
   const heroStyle = getComputedStyle(heroCopy);
   const statementStyle = getComputedStyle(statement);
   expect(Math.abs(intro.getBoundingClientRect().left - pageGridContentStart())).toBeLessThanOrEqual(1);
   expect(heroStyle.fontSize).toBe(statementStyle.fontSize);
+  expect(heroStyle.lineHeight).toBe(statementStyle.lineHeight);
   expect(heroStyle.fontWeight).toBe("400");
   expect(statementStyle.fontWeight).toBe("400");
   expect(heroCopy.className).toContain("type-display-2");
@@ -441,8 +374,11 @@ function expectSequencedHeroMatchesGallery(root: ParentNode) {
   expect(heroCopy.scrollWidth).toBeLessThanOrEqual(heroCopy.clientWidth + 1);
   expect(statement.scrollWidth).toBeLessThanOrEqual(statement.clientWidth + 1);
   expect(statement.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1);
-  expect(Number.parseFloat(getComputedStyle(heading).fontSize)).toBeGreaterThan(
-    Number.parseFloat(heroStyle.fontSize),
+  const hand = heroCopy.querySelector("[data-rive-hand='rock']");
+  if (!(hand instanceof HTMLElement)) throw new Error("inline rock hand missing");
+  expect(hand.getAttribute("aria-hidden")).toBe("true");
+  expect(hand.getBoundingClientRect().height).toBeLessThanOrEqual(
+    Number.parseFloat(heroStyle.lineHeight) + 1,
   );
 }
 
@@ -455,12 +391,16 @@ async function playSequencedMarketingHero(canvasElement: HTMLElement) {
   const intro = section.querySelector("[data-scroll-horizontal-intro]");
   expect(track?.firstElementChild).toBe(intro);
   expect(section.querySelector("[data-pattern='eyebrow']")?.textContent).toBe("SELECTED WORK");
-  expect(canvasElement.querySelector("h1")?.textContent?.replace(/\s+/g, " ").trim()).toBe("We Are WhatMatters");
+  const heading = canvasElement.querySelector("h1");
+  expect(heading?.textContent?.replace(/\s+/g, " ")).toContain("Your brand is already online");
+  expect(heading?.textContent).not.toContain("We Are WhatMatters");
+  expect(heading?.querySelector("[data-rive-hand='rock']")?.getAttribute("aria-hidden")).toBe("true");
+  expect(section.querySelector("[data-rive-hand='point']")?.getAttribute("aria-hidden")).toBe("true");
   const text = canvasElement.textContent?.replace(/\s+/g, " ") ?? "";
   expect(text).toContain("Your brand is already online");
   expect(text).toContain("Make it impossible to ignore");
   expect(text).toContain(scrollHorizontalIntroStatement);
-  expect(section.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(3);
+  expect(section.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(2);
   expect(canvasElement.querySelectorAll("[data-text-sequence]")).toHaveLength(3);
   const action = [...section.querySelectorAll("button")].find((node) => node.textContent?.includes("Start a project"));
   expect(action?.getAttribute("data-role")).toBe("secondary");
@@ -500,7 +440,7 @@ export const SequencedMarketingHero: Story = {
       docs: {
         description: {
           story:
-            "Full marketing page on the navy footer. The h1 stays We Are WhatMatters on type-display-1, with the rock and point hands on the e, the W, and the final s. HeroIntro step display sequences the subtext on type-display-2 at normal weight — the same size as the gallery statement: Your brand is already online, then Make it impossible to ignore. Shapes sit inline at about 1.15em. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. Three shapes sit in the statement (asterisk after screen, brand-soft pill after impression, accent diamond after yours). The accessible name is the plain sentence. The action is Button role secondary, labeled Start a project, with onClick opening the project modal. expandLast still ends on the full-bleed tile, flush with FooterReveal.Brand. Reduced motion leaves both sequences at rest, shapes included, and keeps the grid inset. The ruled-footer page is Pattern — marketing hero ruled grid.",
+            "Full marketing page on the navy footer. HeroIntro is the h1 and sequences the subtext on type-display-2 at normal weight and display-2 leading — the same size and line-height as the gallery statement: Your brand, then a rock RiveHand, then is already online, then Make it impossible to ignore. The hand is 1cap, align-middle, and aria-hidden. Shapes sit inline at about 1.15em. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. An asterisk, a point RiveHand after impression, and an accent diamond sit in the statement. The accessible name is the plain sentence. The action is Button role secondary, labeled Start a project, with onClick opening the project modal. expandLast still ends on the full-bleed tile, flush with FooterReveal.Brand. Reduced motion leaves both sequences at rest, shapes included, and keeps the grid inset. The ruled-footer page is Pattern — marketing hero ruled grid.",
         },
       },
     },
@@ -540,7 +480,7 @@ export const MarketingHeroRuledPattern: Story = {
       docs: {
         description: {
           story:
-            "The one full marketing page. Sequenced hero (same as Pattern — marketing hero text sequence): h1 We Are WhatMatters on type-display-1, HeroIntro step display on type-display-2. Then ScrollHorizontal with Intro and expandLast. Then FooterReveal.Ruled on footerRevealRuledFieldClasses. Horizontal rules span the footer field; content and the grid edges stay in the page grid box. The intro action is Button role secondary, onClick openProjectModal. Show code is that whole page. Reduced motion leaves the sequences at rest. The gallery section ends on the expanded tile, flush with the ruled footer.",
+            "The one full marketing page. Sequenced hero (same as Pattern — marketing hero text sequence): HeroIntro is the h1 on type-display-2, with the rock hand inline after Your brand. Then ScrollHorizontal with Intro and expandLast. Then FooterReveal.Ruled on footerRevealRuledFieldClasses. Horizontal rules span the footer field; content and the grid edges stay in the page grid box. The intro action is Button role secondary, onClick openProjectModal. Show code is that whole page. Reduced motion leaves the sequences at rest. The gallery section ends on the expanded tile, flush with the ruled footer.",
         },
       },
     },

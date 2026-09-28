@@ -713,7 +713,8 @@ describe("scrollHorizontal intro", () => {
       [...(statement?.querySelectorAll("[data-text-sequence-shape]") ?? [])].map((shape) =>
         shape.getAttribute("data-variant"),
       ),
-    ).toEqual(["asterisk", "pill", "diamond"]);
+    ).toEqual(["asterisk", "diamond"]);
+    expect(statement?.querySelector("[data-rive-hand='point']")?.getAttribute("aria-hidden")).toBe("true");
     const action = section?.querySelector("[data-role='secondary']");
     expect(action?.textContent).toContain(scrollHorizontalIntroActionLabel);
     expect(action?.getAttribute("data-mono")).toBeNull();
@@ -794,7 +795,8 @@ describe("scrollHorizontal intro", () => {
     expect(statement?.textContent?.replace(/\s+/g, " ").trim()).toBe(scrollHorizontalIntroStatement);
     expect(statement?.getAttribute("aria-label")).toBeNull();
     expect(statement?.querySelector("[data-text-sequence]")?.getAttribute("data-text-sequence-state")).toBe("rest");
-    expect(statement?.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(3);
+    expect(statement?.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(2);
+    expect(statement?.querySelector("[data-rive-hand='point']")).not.toBeNull();
     expect(section?.textContent).not.toContain("Selected work");
     expect(row?.getAttribute("style") ?? "").not.toMatch(/translate/i);
     view.unmount();

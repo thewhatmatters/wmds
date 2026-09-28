@@ -328,7 +328,13 @@ export function RiveHand({
 
   if (!playSlide && !playGrow) {
     return (
-      <div ref={hostRef} aria-hidden={ariaHidden} className={hostClassName} style={hostStyle}>
+      <div
+        ref={hostRef}
+        aria-hidden={ariaHidden}
+        data-rive-hand={hand}
+        className={hostClassName}
+        style={hostStyle}
+      >
         {canvas}
       </div>
     );
@@ -338,6 +344,7 @@ export function RiveHand({
     <motion.div
       ref={hostRef}
       aria-hidden={ariaHidden}
+      data-rive-hand={hand}
       className={hostClassName}
       style={hostStyle}
       initial={playSlide ? { y: "100%" } : { scale: 0 }}

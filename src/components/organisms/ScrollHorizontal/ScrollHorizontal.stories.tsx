@@ -37,7 +37,7 @@ Omit \`color\` to cycle \`--color-brand\`, \`--color-brand-soft\`, \`--color-pri
 
 \`heading\` names the section. It is \`sr-only\` while the window is pinned, so it does not sit under the site nav, and visible above the row when motion is reduced.
 
-\`intro\` replaces \`heading\`. **ScrollHorizontal.Intro** is the first panel: an eyebrow **Badge**, a \`type-display-2\` statement (normal weight, display-1 leading) run through **TextSequence** (\`emphasis="none"\`, \`trigger="inView"\`), and a secondary **Button** (\`role="secondary"\`, label Start a project, \`onClick\` or \`href\`). The panel sits in the left columns of the page grid, with top padding \`--site-nav-height\` plus the compact nav's 1rem offset, so it clears the pinned site nav. Tiles follow to the right and scroll in as the panel leaves to the left. The eyebrow is the section name. The statement is the \`h2\`. Words slide up once when that heading scrolls into view. **TextSequence.Shape** marks between words pop on that same timeline (about 1.15em, token fills). Reduced motion stacks that panel above the native row and leaves the sentence and shapes at rest.
+\`intro\` replaces \`heading\`. **ScrollHorizontal.Intro** is the first panel: an eyebrow **Badge**, a \`type-display-2\` statement (normal weight, display-2 leading, the same line-height as **HeroIntro**) run through **TextSequence** (\`emphasis="none"\`, \`trigger="inView"\`), and a secondary **Button** (\`role="secondary"\`, label Start a project, \`onClick\` or \`href\`). The panel sits in the left columns of the page grid, with top padding \`--site-nav-height\` plus the compact nav's 1rem offset, so it clears the pinned site nav. Tiles follow to the right and scroll in as the panel leaves to the left. The eyebrow is the section name. The statement is the \`h2\`. Words slide up once when that heading scrolls into view. **TextSequence.Shape** marks between words pop on that same timeline (about 1.15em, token fills). Reduced motion stacks that panel above the native row and leaves the sentence and shapes at rest.
 
 \`prefers-reduced-motion\`, and \`MotionConfig\` \`reducedMotion="always"\`, skip the transform. The track height is auto, the window is not sticky, and the row is a native horizontal scroller with vertical padding (\`py-12\`). The heading is visible on that branch. The server render matches the motion shell. The OS preference is applied before paint.
 
@@ -340,7 +340,7 @@ export const WithIntro: Story = {
       docs: {
         description: {
           story:
-            "The intro is the first panel. At rest its left edge is the page-grid content start, the same inset as grid-page. Scroll translates the panel off to the left with the tiles. The eyebrow names the section. The statement is the h2 on type-display-2 at normal weight, with text-wrap pretty. TextSequence runs once when that heading scrolls into view: words slide up, and an asterisk, a brand-soft pill, and an accent diamond pop between words at about 1.15em. Tiles sit to the right and scroll in as the panel leaves left. expandLast still grows the last tile. Reduced motion stacks the same intro above the native row, with the same inset, and the sentence and shapes at rest. Do not pass heading — the eyebrow replaces it.",
+            "The intro is the first panel. At rest its left edge is the page-grid content start, the same inset as grid-page. Scroll translates the panel off to the left with the tiles. The eyebrow names the section. The statement is the h2 on type-display-2 at normal weight and display-2 leading, with text-wrap pretty, the same line-height as HeroIntro. TextSequence runs once when that heading scrolls into view: words slide up, and an asterisk and an accent diamond pop between words at about 1.15em. A point RiveHand sits inline after "is a first impression", at cap height, aria-hidden. Tiles sit to the right and scroll in as the panel leaves left. expandLast still grows the last tile. Reduced motion stacks the same intro above the native row, with the same inset, and the sentence and shapes at rest. Do not pass heading — the eyebrow replaces it.",
         },
       },
     },
@@ -390,9 +390,9 @@ export const IntroContract: Story = {
     const shapes = [...(statement?.querySelectorAll("[data-text-sequence-shape]") ?? [])];
     expect(shapes.map((shape) => shape.getAttribute("data-variant"))).toEqual([
       "asterisk",
-      "pill",
       "diamond",
     ]);
+    expect(statement?.querySelector("[data-rive-hand='point']")?.getAttribute("aria-hidden")).toBe("true");
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     await waitFor(() => {
       expect(statement?.getAttribute("aria-label")).toBe(reduced ? null : scrollHorizontalIntroStatement);
@@ -586,7 +586,8 @@ export const IntroSequenceReduced: Story = {
     expect(statement.getAttribute("aria-label")).toBeNull();
     expect(statement.textContent?.replace(/\s+/g, " ").trim()).toBe(scrollHorizontalIntroStatement);
     const shapes = [...statement.querySelectorAll("[data-text-sequence-shape]")];
-    expect(shapes).toHaveLength(3);
+    expect(shapes).toHaveLength(2);
+    expect(statement.querySelector("[data-rive-hand='point']")?.getAttribute("aria-hidden")).toBe("true");
     for (const shape of shapes) expect(shape.getAttribute("aria-hidden")).toBe("true");
     const word = statement.querySelector("[data-text-sequence-word]");
     expect(word).not.toBeNull();

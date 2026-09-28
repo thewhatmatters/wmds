@@ -29,7 +29,7 @@ describe("HeroIntro", () => {
     });
 
     const page = container.firstElementChild;
-    const intro = container.querySelector("p");
+    const intro = container.querySelector("h1");
     const spans = intro?.querySelectorAll(":scope > span");
     expect(page?.className).toContain("grid-page");
     expect(page?.className).toContain("!py-0");
@@ -62,7 +62,7 @@ describe("HeroIntro", () => {
       );
     });
 
-    const intro = container.querySelector("p");
+    const intro = container.querySelector("h1");
     expect(intro?.className).toContain("type-display-2");
     expect(intro?.className).toContain("!font-normal");
     expect(intro?.className).toContain("text-pretty");

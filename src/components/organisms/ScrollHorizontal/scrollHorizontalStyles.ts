@@ -176,12 +176,12 @@ export const scrollHorizontalIntroCopyClasses = "flex w-full min-w-0 flex-col it
 /**
  * Statement. `type-display-2` is the largest display step that wraps to about
  * four or five lines in the left columns. Weight is `--font-weight-normal`
- * (display tokens bake in semibold/bold). Leading is the tighter display-1 token.
- * `text-pretty` keeps the last word off a line by itself.
+ * (display tokens bake in semibold/bold). Leading is the display-2 token, the
+ * same line-height as **HeroIntro**. `text-pretty` keeps the last word off a
+ * line by itself.
  */
 export const scrollHorizontalIntroStatementClasses = [
   "type-display-2 m-0 max-w-full min-w-0 text-left text-fg break-words text-pretty",
   "!font-normal",
-  "!leading-[var(--text-display-1-leading)]",
   "!tracking-[var(--text-display-1-tracking)]",
 ].join(" ");
