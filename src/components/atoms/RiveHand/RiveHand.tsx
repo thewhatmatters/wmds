@@ -309,8 +309,26 @@ export function RiveHand({
     };
     resampleRef.current = resample;
 
+    // The inline slot is 0px tall. The canvas starts at 0×0 until the host's em box
+    // has been laid out — at 390 that box can still be 0 on the first sample.
+    let frames = 0;
+    let frame = 0;
+    const kick = () => {
+      resample();
+      const box = hostRef.current;
+      const canvas = box?.shadowRoot?.querySelector("canvas");
+      const canvasWaiting = !canvas || canvas.clientWidth < 1 || canvas.clientHeight < 1;
+      const hostWaiting = !box || !box.isConnected || box.clientWidth < 1 || box.clientHeight < 1;
+      if ((canvasWaiting || hostWaiting) && box?.isConnected && frames < 8) {
+        frames += 1;
+        frame = requestAnimationFrame(kick);
+      }
+    };
+    kick();
+
     if (typeof ResizeObserver === "undefined") {
       return () => {
+        cancelAnimationFrame(frame);
         resampleRef.current = () => {};
       };
     }
@@ -319,6 +337,7 @@ export function RiveHand({
     });
     observer.observe(host);
     return () => {
+      cancelAnimationFrame(frame);
       observer.disconnect();
       resampleRef.current = () => {};
     };

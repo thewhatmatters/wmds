@@ -1,5 +1,5 @@
 /** @vitest-environment happy-dom */
-import { createElement, type ReactNode } from "react";
+import { createElement, useRef, type ReactNode } from "react";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -183,6 +183,74 @@ describe("TextSequence shapes", () => {
     expect(html).toContain("var(--color-brand)");
     expect(html).toContain("var(--color-brand-soft)");
     expect(html).not.toMatch(/#[0-9a-fA-F]{3,8}/);
+  });
+});
+
+function RockSlot() {
+  const ref = useRef<HTMLCanvasElement>(null);
+  return createElement(
+    "span",
+    {
+      "data-rive-hand-slot": "rock",
+      "data-rive-hand": "rock",
+      style: { display: "inline-block", width: "0.74em", height: "0px" },
+    },
+    createElement("canvas", { ref, width: 73, height: 73 }),
+  );
+}
+
+describe("TextSequence hand slot", () => {
+  it("keeps the rock canvas connected after the words split", async () => {
+    vi.stubGlobal(
+      "matchMedia",
+      (query: string) =>
+        ({
+          matches: false,
+          media: query,
+          onchange: null,
+          addListener() {},
+          removeListener() {},
+          addEventListener() {},
+          removeEventListener() {},
+          dispatchEvent() {
+            return false;
+          },
+        }) as MediaQueryList,
+    );
+    const container = document.createElement("div");
+    container.style.fontSize = "32px";
+    container.style.width = "720px";
+    document.body.appendChild(container);
+    const root = createRoot(container);
+    let live: HTMLCanvasElement | null = null;
+    await act(async () => {
+      root.render(
+        createElement(
+          TextSequence,
+          { trigger: "mount", emphasis: "none", idle: false, lines: true },
+          "Your brand ",
+          createElement(RockSlot),
+          " is already online",
+        ),
+      );
+    });
+    live = container.querySelector("canvas");
+    expect(live).toBeInstanceOf(HTMLCanvasElement);
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 350));
+    });
+    const slot = container.querySelector("[data-rive-hand-slot='rock']");
+    const canvas = slot?.querySelector("canvas");
+    expect(slot?.isConnected).toBe(true);
+    expect(live?.isConnected).toBe(true);
+    expect(canvas).toBe(live);
+    expect(slot?.previousSibling?.nodeType).toBe(Node.TEXT_NODE);
+    expect(slot?.previousSibling?.textContent ?? "").toMatch(/\s/);
+    expect(slot?.nextSibling?.nodeType).toBe(Node.TEXT_NODE);
+    expect(slot?.nextSibling?.textContent ?? "").toMatch(/\s/);
+    root.unmount();
+    container.remove();
+    vi.unstubAllGlobals();
   });
 });
 

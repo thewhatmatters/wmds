@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sparkles } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { expect, userEvent, waitFor } from "storybook/test";
 import { Badge } from "../../atoms/Badge/Badge";
 import { HeroIntro } from "../../molecules/HeroIntro/HeroIntro";
@@ -621,7 +621,11 @@ export function MarketingHeroTextSequence() {
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                Your brand <RiveHand hand="rock" inline idle entrance="none" aria-hidden /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
+                {"Your brand "}
+                <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
+                {" is already "}
+                <TextSequence.Shape variant="circle" tone="accent" />
+                {" online"}
               </TextSequence>
             }
           >
@@ -677,7 +681,11 @@ function MarketingHeroTextSequenceView() {
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                Your brand <RiveHand hand="rock" inline idle entrance="none" aria-hidden /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
+                {"Your brand "}
+                <RiveHand hand="rock" inline idle entrance="none" aria-hidden />
+                {" is already "}
+                <TextSequence.Shape variant="circle" tone="accent" />
+                {" online"}
               </TextSequence>
             }
           >
@@ -697,6 +705,92 @@ function MarketingHeroTextSequenceView() {
       />
     </>
   );
+}
+
+function expectWordSpace(node: Node | null) {
+  expect(node?.nodeType).toBe(Node.TEXT_NODE);
+  expect(node?.textContent ?? "").toMatch(/\s/);
+}
+
+/** Rock canvas stays on the live host after SplitText, with a real box at this viewport. */
+async function expectRockHandCanvas(root: ParentNode) {
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  await waitFor(
+    () => {
+      const sequence = [...root.querySelectorAll("[data-text-sequence]")].find((node) =>
+        node.querySelector("[data-rive-hand-slot='rock']"),
+      );
+      expect(sequence?.getAttribute("data-text-sequence-state")).toBe(reduced ? "rest" : "playing");
+      const host = root.querySelector("[data-rive-hand='rock']");
+      if (!(host instanceof HTMLElement)) throw new Error("rock host missing");
+      const canvas = host.shadowRoot?.querySelector("canvas");
+      if (!(canvas instanceof HTMLCanvasElement)) throw new Error("rock canvas missing");
+      expect(canvas.isConnected).toBe(true);
+      expect(canvas.clientWidth).toBeGreaterThan(0);
+      expect(canvas.clientHeight).toBeGreaterThan(0);
+      const slot = host.parentElement;
+      if (!(slot instanceof HTMLElement)) throw new Error("rock slot missing");
+      expect(slot.getAttribute("data-rive-hand-slot")).toBe("rock");
+      expect(slot.isConnected).toBe(true);
+      expectWordSpace(slot.previousSibling);
+      expectWordSpace(slot.nextSibling);
+    },
+    { timeout: 4000 },
+  );
+}
+
+function reducedMotionList(query: string): MediaQueryList {
+  return {
+    matches: true,
+    media: query,
+    onchange: null,
+    addListener() {},
+    removeListener() {},
+    addEventListener() {},
+    removeEventListener() {},
+    dispatchEvent() {
+      return false;
+    },
+  };
+}
+
+function ReducedMotionFrame({ children }: { children: ReactNode }) {
+  const restore = useRef<typeof window.matchMedia | null>(null);
+  if (typeof window !== "undefined") {
+    if (!restore.current) restore.current = window.matchMedia.bind(window);
+    const original = restore.current;
+    window.matchMedia = (query: string) =>
+      query.includes("prefers-reduced-motion") ? reducedMotionList(query) : original(query);
+  }
+  useEffect(() => {
+    const original = restore.current;
+    return () => {
+      if (original) window.matchMedia = original;
+    };
+  }, []);
+  return children;
+}
+
+function rockHandViewport(width: number, height: number) {
+  const name = `rock${width}`;
+  return {
+    globals: {
+      viewport: { value: name, isRotated: false },
+    },
+    parameters: {
+      wmdsLayout: "fullscreen" as const,
+      docs: { disable: true },
+      viewport: {
+        options: {
+          [name]: {
+            name: `${width}`,
+            styles: { width: `${width}px`, height: `${height}px` },
+            type: (width < 600 ? "mobile" : "desktop") as "mobile" | "desktop",
+          },
+        },
+      },
+    },
+  };
 }
 
 function expectSequenceInsideViewport(root: ParentNode) {
@@ -763,6 +857,7 @@ export const MarketingHeroTextSequence: Story = {
         expect(heading.getAttribute("aria-label")).toContain("Make it impossible to ignore");
       }
     });
+    await expectRockHandCanvas(canvasElement);
   },
 };
 
@@ -808,5 +903,51 @@ export const MarketingHeroTextSequenceNarrow: Story = {
       expect(canvasElement.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(2);
     });
     expectSequenceInsideViewport(canvasElement);
+    await expectRockHandCanvas(canvasElement);
+  },
+};
+
+export const RockHandCanvas1440: Story = {
+  name: "Rock hand canvas at 1440",
+  tags: ["test", "!dev", "!autodocs"],
+  ...rockHandViewport(1440, 900),
+  render: () => <MarketingHeroTextSequenceView />,
+  play: async ({ canvasElement }) => {
+    expect(window.innerWidth).toBeGreaterThanOrEqual(1440);
+    expect(window.innerWidth).toBeLessThanOrEqual(1460);
+    expect(window.matchMedia("(prefers-reduced-motion: reduce)").matches).toBe(false);
+    await expectRockHandCanvas(canvasElement);
+  },
+};
+
+export const RockHandCanvas1440Reduced: Story = {
+  name: "Rock hand canvas at 1440 reduced motion",
+  tags: ["test", "!dev", "!autodocs"],
+  ...rockHandViewport(1440, 900),
+  render: () => (
+    <ReducedMotionFrame>
+      <MarketingHeroTextSequenceView />
+    </ReducedMotionFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    expect(window.innerWidth).toBeGreaterThanOrEqual(1440);
+    expect(window.matchMedia("(prefers-reduced-motion: reduce)").matches).toBe(true);
+    await expectRockHandCanvas(canvasElement);
+  },
+};
+
+export const RockHandCanvas390Reduced: Story = {
+  name: "Rock hand canvas at 390 reduced motion",
+  tags: ["test", "!dev", "!autodocs"],
+  ...rockHandViewport(390, 844),
+  render: () => (
+    <ReducedMotionFrame>
+      <MarketingHeroTextSequenceView />
+    </ReducedMotionFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    expect(window.innerWidth).toBeLessThanOrEqual(400);
+    expect(window.matchMedia("(prefers-reduced-motion: reduce)").matches).toBe(true);
+    await expectRockHandCanvas(canvasElement);
   },
 };

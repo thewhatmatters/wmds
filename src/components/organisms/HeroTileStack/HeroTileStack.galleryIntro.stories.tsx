@@ -105,7 +105,7 @@ export function MarketingHeroWithGalleryIntro() {
               <>
                 {"Every screen"}
                 <TextSequence.Shape variant="asterisk" />
-                {" is a first impression"}
+                {" is a first impression "}
                 <RiveHand hand="point" inline idle entrance="none" aria-hidden />
                 {" and we make yours"}
                 <TextSequence.Shape variant="diamond" tone="accent" />
