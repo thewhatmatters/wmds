@@ -113,7 +113,7 @@ export function SequencedMarketingHeroPage() {
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                Your brand <RiveHand hand="rock" size="1cap" idle entrance="none" aria-hidden className="inline-block align-middle" /> <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
+                Your brand <RiveHand hand="rock" inline idle entrance="none" aria-hidden /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
               </TextSequence>
             }
           >
@@ -137,7 +137,7 @@ export function SequencedMarketingHeroPage() {
                   {"Every screen"}
                   <TextSequence.Shape variant="asterisk" />
                   {" is a first impression"}
-                  <RiveHand hand="point" size="1cap" idle entrance="none" aria-hidden className="inline-block align-middle" />
+                  <RiveHand hand="point" inline idle entrance="none" aria-hidden />
                   {" and we make yours"}
                   <TextSequence.Shape variant="diamond" tone="accent" />
                   {" the one they remember."}
@@ -231,7 +231,7 @@ function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                Your brand <RiveHand hand="rock" size="1cap" idle entrance="none" aria-hidden className="inline-block align-middle" /> <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
+                Your brand <RiveHand hand="rock" inline idle entrance="none" aria-hidden /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
               </TextSequence>
             }
           >
@@ -255,7 +255,7 @@ function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
                   {"Every screen"}
                   <TextSequence.Shape variant="asterisk" />
                   {" is a first impression"}
-                  <RiveHand hand="point" size="1cap" idle entrance="none" aria-hidden className="inline-block align-middle" />
+                  <RiveHand hand="point" inline idle entrance="none" aria-hidden />
                   {" and we make yours"}
                   <TextSequence.Shape variant="diamond" tone="accent" />
                   {" the one they remember."}
@@ -375,11 +375,13 @@ function expectSequencedHeroMatchesGallery(root: ParentNode) {
   expect(statement.scrollWidth).toBeLessThanOrEqual(statement.clientWidth + 1);
   expect(statement.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1);
   const hand = heroCopy.querySelector("[data-rive-hand='rock']");
-  if (!(hand instanceof HTMLElement)) throw new Error("inline rock hand missing");
+  const slot = hand?.parentElement;
+  if (!(hand instanceof HTMLElement) || !(slot instanceof HTMLElement)) throw new Error("inline rock hand missing");
   expect(hand.getAttribute("aria-hidden")).toBe("true");
-  expect(hand.getBoundingClientRect().height).toBeLessThanOrEqual(
-    Number.parseFloat(heroStyle.lineHeight) + 1,
-  );
+  expect(getComputedStyle(slot).height).toBe("0px");
+  const lineHeight = Number.parseFloat(heroStyle.lineHeight);
+  const lines = Math.round(heroCopy.getBoundingClientRect().height / lineHeight);
+  expect(Math.abs(heroCopy.getBoundingClientRect().height - lines * lineHeight)).toBeLessThanOrEqual(1.5);
 }
 
 async function playSequencedMarketingHero(canvasElement: HTMLElement) {
@@ -440,7 +442,7 @@ export const SequencedMarketingHero: Story = {
       docs: {
         description: {
           story:
-            "Full marketing page on the navy footer. HeroIntro is the h1 and sequences the subtext on type-display-2 at normal weight and display-2 leading — the same size and line-height as the gallery statement: Your brand, then a rock RiveHand, then is already online, then Make it impossible to ignore. The hand is 1cap, align-middle, and aria-hidden. Shapes sit inline at about 1.15em. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. An asterisk, a point RiveHand after impression, and an accent diamond sit in the statement. The accessible name is the plain sentence. The action is Button role secondary, labeled Start a project, with onClick opening the project modal. expandLast still ends on the full-bleed tile, flush with FooterReveal.Brand. Reduced motion leaves both sequences at rest, shapes included, and keeps the grid inset. The ruled-footer page is Pattern — marketing hero ruled grid.",
+            "Full marketing page on the navy footer. HeroIntro is the h1 and sequences the subtext on type-display-2 at normal weight and display-2 leading — the same size and line-height as the gallery statement: Your brand, then a rock RiveHand, then is already online, then Make it impossible to ignore. The rock hand uses inline, in place of the asterisk, drawn at about 1.15em and aria-hidden. The circle and pill stay at about 1.15em. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. An asterisk, a point RiveHand after impression, and an accent diamond sit in the statement. The accessible name is the plain sentence. The action is Button role secondary, labeled Start a project, with onClick opening the project modal. expandLast still ends on the full-bleed tile, flush with FooterReveal.Brand. Reduced motion leaves both sequences at rest, shapes included, and keeps the grid inset. The ruled-footer page is Pattern — marketing hero ruled grid.",
         },
       },
     },

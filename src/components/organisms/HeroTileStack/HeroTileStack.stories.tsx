@@ -621,7 +621,7 @@ export function MarketingHeroTextSequence() {
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                Your brand <RiveHand hand="rock" size="1cap" idle entrance="none" aria-hidden className="inline-block align-middle" /> <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
+                Your brand <RiveHand hand="rock" inline idle entrance="none" aria-hidden /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
               </TextSequence>
             }
           >
@@ -677,7 +677,7 @@ function MarketingHeroTextSequenceView() {
             step="display"
             lead={
               <TextSequence idle emphasis="none" stagger={0.07}>
-                Your brand <RiveHand hand="rock" size="1cap" idle entrance="none" aria-hidden className="inline-block align-middle" /> <TextSequence.Shape variant="asterisk" /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
+                Your brand <RiveHand hand="rock" inline idle entrance="none" aria-hidden /> is already <TextSequence.Shape variant="circle" tone="accent" /> online
               </TextSequence>
             }
           >
@@ -719,7 +719,7 @@ export const MarketingHeroTextSequence: Story = {
       docs: {
         description: {
           story:
-            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. HeroIntro is the h1 on type-display-2 at normal weight, the same font-size and line-height as the gallery statement, full width of the page grid. The two lines are Your brand is already online and Make it impossible to ignore, with no periods. A rock RiveHand sits inline immediately after Your brand, sized to the cap height (1cap) with align-middle so it stays in the line box. Outline is brand navy (#011272) from --color-brand. The hand is aria-hidden and entrance is none; reduced motion pauses on the first frame. Asterisk, circle, and pill shapes stay inline at about 1.15em. emphasis is none. Shapes are aria-hidden. idle spins the asterisk and stretches the pill. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
+            "Same marketing hero as Pattern — marketing hero, with the intro sequenced. HeroIntro is the h1 on type-display-2 at normal weight, the same font-size and line-height as the gallery statement, full width of the page grid. The two lines are Your brand is already online and Make it impossible to ignore, with no periods. A rock RiveHand replaces the asterisk immediately after Your brand. inline sizes the canvas past the artboard padding so the drawn hand is about 1.15em, the same height as the circle and the pill, and the zero-height slot keeps the line box. Outline is brand navy (#011272) from --color-brand. The hand is aria-hidden and entrance is none; reduced motion pauses on the first frame. The circle and the pill stay inline at about 1.15em. emphasis is none. Shapes are aria-hidden. idle spins the asterisk and stretches the pill. prefers-reduced-motion leaves the intro at rest. The tile fan and ScrollHorizontal are unchanged.",
         },
       },
     },
@@ -736,14 +736,16 @@ export const MarketingHeroTextSequence: Story = {
     expect(text).toContain("Make it impossible to ignore");
     expect(text).not.toContain("We Are WhatMatters");
     const hand = heading.querySelector("[data-rive-hand='rock']");
-    if (!(hand instanceof HTMLElement)) throw new Error("inline rock hand missing");
+    const slot = hand?.parentElement;
+    if (!(hand instanceof HTMLElement) || !(slot instanceof HTMLElement)) throw new Error("inline rock hand missing");
     expect(hand.getAttribute("aria-hidden")).toBe("true");
-    expect(hand.className).toContain("inline-block");
-    expect(hand.className).toContain("align-middle");
+    expect(slot.getAttribute("data-rive-hand-slot")).toBe("rock");
+    expect(getComputedStyle(slot).height).toBe("0px");
     const lineHeight = Number.parseFloat(getComputedStyle(heading).lineHeight);
-    expect(hand.getBoundingClientRect().height).toBeLessThanOrEqual(lineHeight + 1);
+    const lines = Math.round(heading.getBoundingClientRect().height / lineHeight);
+    expect(Math.abs(heading.getBoundingClientRect().height - lines * lineHeight)).toBeLessThanOrEqual(1.5);
     const shapes = [...canvasElement.querySelectorAll("[data-text-sequence-shape]")];
-    expect(shapes).toHaveLength(3);
+    expect(shapes.map((shape) => shape.getAttribute("data-variant"))).toEqual(["circle", "pill"]);
     for (const shape of shapes) {
       expect(shape.getAttribute("aria-hidden")).toBe("true");
     }
@@ -793,14 +795,17 @@ export const MarketingHeroTextSequenceNarrow: Story = {
     expect(heading?.textContent?.replace(/\s+/g, " ")).toContain("Your brand");
     expect(heading?.textContent).not.toContain("We Are WhatMatters");
     const hand = heading?.querySelector("[data-rive-hand='rock']");
-    if (!(hand instanceof HTMLElement) || !(heading instanceof HTMLElement)) throw new Error("inline hand missing");
+    const slot = hand?.parentElement;
+    if (!(hand instanceof HTMLElement) || !(slot instanceof HTMLElement) || !(heading instanceof HTMLElement)) {
+      throw new Error("inline hand missing");
+    }
     expect(hand.getAttribute("aria-hidden")).toBe("true");
-    expect(hand.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1);
-    expect(hand.getBoundingClientRect().height).toBeLessThanOrEqual(
-      Number.parseFloat(getComputedStyle(heading).lineHeight) + 1,
-    );
+    expect(slot.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1);
+    const lineHeight = Number.parseFloat(getComputedStyle(heading).lineHeight);
+    const lines = Math.round(heading.getBoundingClientRect().height / lineHeight);
+    expect(Math.abs(heading.getBoundingClientRect().height - lines * lineHeight)).toBeLessThanOrEqual(1.5);
     await waitFor(() => {
-      expect(canvasElement.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(3);
+      expect(canvasElement.querySelectorAll("[data-text-sequence-shape]")).toHaveLength(2);
     });
     expectSequenceInsideViewport(canvasElement);
   },

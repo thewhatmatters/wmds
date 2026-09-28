@@ -52,7 +52,7 @@ Handled with `matchMedia('(prefers-reduced-motion: reduce)')`, not Motion’s re
 
 The display-1 **We Are WhatMatters** headline is gone. Hands sit in the line, not on letter spans.
 
-The rock hand is inline in **HeroIntro** immediately after “Your brand” on **Pattern — marketing hero text sequence**. The point hand is inline in **ScrollHorizontal.Intro** immediately after “is a first impression”, in place of the pill glyph. Asterisk and diamond stay. Both hands use `size="1cap"` and `className="inline-block align-middle"` so the box is the cap height and stays inside the display-2 line box. `entrance="none"`. `idle` still pulses when motion is allowed. `aria-hidden` stays true. Outline remains `--color-brand` (`#011272`). Reduced motion pauses on the first frame.
+The rock hand is inline in **HeroIntro** immediately after “Your brand” on **Pattern — marketing hero text sequence**, in place of the asterisk. The point hand is inline in **ScrollHorizontal.Intro** immediately after “is a first impression”, in place of the pill glyph. Asterisk and diamond stay on the statement. `inline` scales the canvas past the artboard padding so the drawn hand is about 1.15em and shifts it so that ink is centered. The in-flow slot is zero height and as wide as the ink, so the display-2 line box does not grow. `entrance="none"`. `idle` still pulses when motion is allowed. `aria-hidden` stays true. Outline remains `--color-brand` (`#011272`). Reduced motion pauses on the first frame.
 
 ### Consuming the pattern
 

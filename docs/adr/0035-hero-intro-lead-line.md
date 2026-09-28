@@ -42,7 +42,7 @@ The default intro and the gallery statement share `type-display-2` at normal wei
 
 **Date:** 2026-09-28
 
-The display-1 **We Are WhatMatters** headline is gone. **HeroIntro** is the page `h1`. The sequenced hero places a rock **RiveHand** inline after “Your brand”, at `1cap`, `align-middle`, `aria-hidden`. Reduced motion keeps that hand on its first frame.
+The display-1 **We Are WhatMatters** headline is gone. **HeroIntro** is the page `h1`. The sequenced hero places a rock **RiveHand** `inline` after “Your brand”, in place of the asterisk. The drawn hand is about 1.15em and `aria-hidden`. Reduced motion keeps that hand on its first frame.
 
 ## References
 

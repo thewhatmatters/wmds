@@ -206,12 +206,12 @@ describe("marketing hero text sequence story", () => {
     expect(variant).toContain("online");
     expect(variant).toContain("Make it");
     expect(variant).toContain("impossible to ignore");
-    expect(variant).toContain('TextSequence.Shape variant="asterisk"');
+    expect(variant).not.toContain('variant="asterisk"');
     expect(variant).toContain('variant="pill"');
     expect(variant).toContain('variant="circle"');
     expect(variant).not.toContain("<Badge");
     expect(variant).toContain('hand="rock"');
-    expect(variant).toContain('size="1cap"');
+    expect(variant).toContain("inline");
     expect(variant).not.toContain("We Are WhatMatters");
   });
 });

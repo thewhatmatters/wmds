@@ -130,7 +130,7 @@ export function MarketingHeroWithGalleryIntroPage() {
                   {"Every screen"}
                   <TextSequence.Shape variant="asterisk" />
                   {" is a first impression"}
-                  <RiveHand hand="point" size="1cap" idle entrance="none" aria-hidden className="inline-block align-middle" />
+                  <RiveHand hand="point" inline idle entrance="none" aria-hidden />
                   {" and we make yours"}
                   <TextSequence.Shape variant="diamond" tone="accent" />
                   {" the one they remember."}
@@ -209,7 +209,7 @@ function GalleryIntroHeroPage() {
                   {"Every screen"}
                   <TextSequence.Shape variant="asterisk" />
                   {" is a first impression"}
-                  <RiveHand hand="point" size="1cap" idle entrance="none" aria-hidden className="inline-block align-middle" />
+                  <RiveHand hand="point" inline idle entrance="none" aria-hidden />
                   {" and we make yours"}
                   <TextSequence.Shape variant="diamond" tone="accent" />
                   {" the one they remember."}
