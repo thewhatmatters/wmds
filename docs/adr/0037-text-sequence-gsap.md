@@ -32,6 +32,12 @@ The h1 stays the Rive hand headline (ADR-0034). SplitText rewrites text into mas
 
 The intro stays **HeroIntro** with `step="display"`: `type-display-2` at normal weight, the same size as **ScrollHorizontal.Intro**, full width of the page grid. Copy is two lines with no periods: “Your brand is already online” and “Make it impossible to ignore”. A few **`TextSequence.Shape`** marks (about 1.15em) replace the inline **Badge** / **Avatar** used on the default pattern. `emphasis="none"` keeps every word regular. Headline `useState` for the hands lives on the headline, so a hover does not re-render the sequence and wipe the split DOM. The default **Pattern — marketing hero** stays on `step="large"` (`type-large`, columns 4–9).
 
+## Update — type-large intros
+
+**Date:** 2026-09-28
+
+**HeroIntro** no longer has `step="display"`. The sequenced subtext and the gallery statement are both `type-large` at normal weight and the type-large leading, columns 4–9 from `lg` for the hero. Shapes stay about 1.15em of that step.
+
 ## Non-goals
 
 - GSAP on any component other than **TextSequence** (no ScrollTrigger, no page transitions, no replacement for `motion/react`).

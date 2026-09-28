@@ -705,6 +705,9 @@ describe("scrollHorizontal intro", () => {
     const statement = section?.querySelector("h2");
     expect(statement?.tagName).toBe("H2");
     expect(statement?.getAttribute("role")).toBeNull();
+    expect(statement?.className).toContain("type-large");
+    expect(statement?.className).toContain("!font-normal");
+    expect(statement?.className).not.toContain("type-display-2");
     expect(statement?.textContent?.replace(/\s+/g, " ").trim()).toBe(scrollHorizontalIntroStatement);
     expect(statement?.querySelector("[data-text-sequence]")?.getAttribute("data-plain")).toBe(
       scrollHorizontalIntroStatement,
@@ -791,6 +794,9 @@ describe("scrollHorizontal intro", () => {
     expect(intro?.compareDocumentPosition(row as Node) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(track?.className).toContain("group-data-[reduce=true]/scroll-horizontal:!flex-col");
     const statement = section?.querySelector("h2");
+    expect(statement?.className).toContain("type-large");
+    expect(statement?.className).toContain("!font-normal");
+    expect(statement?.className).not.toContain("type-display-2");
     expect(statement?.textContent?.replace(/\s+/g, " ").trim()).toBe(scrollHorizontalIntroStatement);
     expect(statement?.getAttribute("aria-label")).toBeNull();
     expect(statement?.querySelector("[data-text-sequence]")?.getAttribute("data-text-sequence-state")).toBe("rest");

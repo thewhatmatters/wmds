@@ -167,20 +167,21 @@ export const scrollHorizontalIntroWindowClasses = [
   "group-data-[reduce=true]/scroll-horizontal:scroll-fade-x",
 ].join(" ");
 
-/** Eyebrow, statement, and action. The statement uses the panel width as its measure. */
+/**
+ * Eyebrow, statement, and action. The statement uses the panel width as its measure.
+ * `gap-6` keeps the secondary action with the type-large statement.
+ */
 export const scrollHorizontalIntroBodyClasses =
-  "flex w-full min-w-0 flex-col items-start gap-8 pr-[var(--grid-column-gap)]";
+  "flex w-full min-w-0 flex-col items-start gap-6 pr-[var(--grid-column-gap)]";
 
 export const scrollHorizontalIntroCopyClasses = "flex w-full min-w-0 flex-col items-start gap-3";
 
 /**
- * Statement. `type-display-2` is the largest display step that wraps to about
- * four or five lines in the left columns. Weight is `--font-weight-normal`
- * (display tokens bake in semibold/bold). Leading is the tighter display-1 token.
+ * Statement. `type-large` at normal weight and the type-large leading — the same
+ * step as **HeroIntro**. `!font-normal` beats the token's semibold. Shapes stay
+ * about 1.15em of this size. Left edge is the page-grid content start.
  */
 export const scrollHorizontalIntroStatementClasses = [
-  "type-display-2 m-0 max-w-full min-w-0 text-left text-fg break-words",
+  "type-large m-0 max-w-full min-w-0 text-left text-fg break-words",
   "!font-normal",
-  "!leading-[var(--text-display-1-leading)]",
-  "!tracking-[var(--text-display-1-tracking)]",
 ].join(" ");

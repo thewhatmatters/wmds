@@ -42,7 +42,7 @@ export interface ScrollHorizontalIntroProps {
 
 /**
  * First panel of **ScrollHorizontal**. Composes **Badge** `eyebrow`, a
- * `type-display-2` **TextSequence** inside the `h2`, and **Button**
+ * `type-large` **TextSequence** inside the `h2`, and **Button**
  * `role="secondary"` with no extra className. Secondary has no icon slot.
  * The eyebrow is the section's accessible name. The statement is the `h2`.
  * The sequence runs once, when the statement scrolls into view.

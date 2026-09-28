@@ -77,6 +77,12 @@ The gallery statement animates with **TextSequence** (ADR-0037).
 - The action is **Button** `role="secondary"`, label Start a project, sentence case, with no `className`. Secondary has no icon slot, so there is no trailing arrow. `action.onClick` is that button. `action.href` composes the same button on an anchor.
 - **Pattern — gallery intro**, **HeroTileStack → Marketing hero with gallery intro**, **FooterReveal → Marketing hero with gallery intro**, and **FooterReveal → Pattern — marketing hero with sequenced gallery** use this copy and this action.
 
+## Update — type-large statement
+
+**Date:** 2026-09-28
+
+The statement `h2` is `type-large` at `--font-weight-normal` (`!font-normal`) and the type-large leading. It is the same computed font-size and line-height as **HeroIntro**. The display-2 size and the display-1 leading override are gone. Shapes stay about 1.15em of this step. The panel's left edge is still the page-grid content start. The cluster uses `gap-6` so the secondary **Button** stays with the smaller statement.
+
 ## Update — expand with an intro, cascade-safe padding
 
 **Date:** 2026-09-27
