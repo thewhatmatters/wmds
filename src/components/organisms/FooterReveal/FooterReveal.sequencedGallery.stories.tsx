@@ -491,7 +491,7 @@ export const MarketingHeroRuledPattern: Story = {
       docs: {
         description: {
           story:
-            "The one full marketing page. Sequenced hero (same as Pattern — marketing hero text sequence): HeroIntro is the h1 on type-display-2. The first line is An Austin, TX studio specializing in brand and product design. The rock hand sits inline immediately after TX. Then ScrollHorizontal with Intro and expandLast. Then FooterReveal.Ruled on footerRevealRuledFieldClasses. Horizontal rules span the footer field; content and the grid edges stay in the page grid box. The intro action is Button role secondary, onClick openProjectModal. Show code is that whole page. Reduced motion leaves the sequences at rest. The gallery section ends on the expanded tile, flush with the ruled footer.",
+            "The one full marketing page. Sequenced hero (same as Pattern — marketing hero text sequence): HeroIntro is the h1 on type-display-2. The first line is An Austin, TX studio specializing in brand and product design. The rock hand sits inline immediately after TX. Then ScrollHorizontal with Intro and expandLast. Then FooterReveal.Ruled on footerRevealRuledFieldClasses: centered Services, Resources, and About, the fitted WhatMatters wordmark, and randy@whatmatters.so. The intro action is Button role secondary, onClick openProjectModal. Show code is that whole page. Reduced motion leaves the sequences at rest. The gallery section ends on the expanded tile, flush with the footer.",
         },
       },
     },
@@ -501,15 +501,19 @@ export const MarketingHeroRuledPattern: Story = {
   play: async ({ canvasElement }) => {
     await playSequencedMarketingHero(canvasElement);
     const fade = canvasElement.querySelector<HTMLElement>("[data-footer-reveal='fade']");
-    const band = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='band']");
-    const grid = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='grid']");
-    if (!fade || !band || !grid) throw new Error("ruled footer missing");
-    const bandBox = band.getBoundingClientRect();
-    const gridBox = grid.getBoundingClientRect();
-    expect(Math.abs(band.offsetWidth - fade.offsetWidth)).toBeLessThanOrEqual(1);
-    expect(Math.abs(gridBox.left - bandBox.left - (bandBox.right - gridBox.right))).toBeLessThanOrEqual(1);
-    expect(getComputedStyle(band).borderBottomColor.replace(/\s/g, "")).toBe("rgb(1,18,114)");
-    expect(canvasElement.querySelector("[data-footer-ruled='wordmark']")?.textContent).toBe("WhatMatters");
+    const frame = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='wordmark-frame']");
+    const wordmark = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='wordmark']");
+    if (!fade || !frame || !wordmark) throw new Error("ruled footer missing");
+    expect(Math.abs(frame.offsetWidth - fade.offsetWidth)).toBeLessThanOrEqual(1);
+    expect(wordmark.textContent).toBe("WhatMatters");
+    expect(canvasElement.querySelector("a[href='mailto:randy@whatmatters.so']")?.textContent).toBe(
+      "randy@whatmatters.so",
+    );
+    expect(canvasElement.querySelector("[data-footer-ruled='socials']")).toBeNull();
+    const navLinks = [...canvasElement.querySelectorAll("[data-footer-ruled='links'] a")].map(
+      (link) => link.textContent,
+    );
+    expect(navLinks).toEqual(["Services", "Resources", "About"]);
     expect(canvasElement.textContent).not.toContain("WHATMATTERS");
     expect(canvasElement.textContent).not.toContain("We Build WhatMatters");
     expect(canvasElement.textContent).not.toContain("Selected work");

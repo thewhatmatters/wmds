@@ -51,12 +51,10 @@ export { footerRevealFieldClasses, footerRevealFieldLinkClasses, footerRevealRul
 export type {
   FooterRevealRuledLink,
   FooterRevealRuledProps,
-  FooterRevealRuledSocial,
 } from "./FooterRevealRuled";
 export {
   footerRevealRuledDefaultCopy,
   footerRevealRuledDefaultLinks,
-  footerRevealRuledDefaultSocials,
   footerRevealRuledEmailHref,
 } from "./FooterRevealRuled";
 

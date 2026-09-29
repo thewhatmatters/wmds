@@ -504,7 +504,6 @@ export {
   footerRevealFieldLinkClasses,
   footerRevealRuledDefaultCopy,
   footerRevealRuledDefaultLinks,
-  footerRevealRuledDefaultSocials,
   footerRevealRuledEmailHref,
   footerRevealRuledFieldClasses,
   type FooterRevealBrandProps,
@@ -514,7 +513,6 @@ export {
   type FooterRevealProps,
   type FooterRevealRuledLink,
   type FooterRevealRuledProps,
-  type FooterRevealRuledSocial,
   type FooterRevealSocialLink,
 } from "./components/organisms/FooterReveal/FooterReveal";
 export {

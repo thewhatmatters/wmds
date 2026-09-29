@@ -41,7 +41,7 @@ As the cover's bottom edge meets the viewport bottom, the footer scrubs from tra
 | **FooterReveal.Content** | Page body. Opaque (\`bg-body\` by default). Do not clip overflow on the root |
 | **FooterReveal.Footer** | Footer contents. \`className\` lands on the fading field — use **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-on-brand\`) |
 | **FooterReveal.Brand** | Headline, inverse CTA, underlined social row, and a decorative wordmark on the navy field |
-| **FooterReveal.Ruled** | Ruled grid on the page background: identity, nav, contact, social cells, fitted wordmark, credit |
+| **FooterReveal.Ruled** | Cream field: centered nav, fitted wordmark, quiet meta row |
 | \`useFooterRevealProgress\` | Reveal progress MotionValue, 0 covered → 1 uncovered (stuck at 1 when reduced motion is on) |
 
 ## Anatomy
@@ -57,12 +57,9 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
         │   ├── social links (underlined, https opens in a new tab)
         │   └── wordmark (aria-hidden, spans the footer width, cropped at the bottom edge)
         └── FooterReveal.Ruled
-            ├── identity (copyright, mono blurb, typographic mark, decorative plus)
-            ├── nav (Services, Resources, About; dotted rules, ArrowUpRight)
-            ├── contact (email anchor, services line)
-            ├── social cells (icon-only anchors, ButtonIcon)
-            ├── wordmark (aria-hidden, fills the frame)
-            └── credit bar (WM mark and the full credit)
+            ├── nav (Services, Resources, About; centered mono uppercase stack)
+            ├── wordmark (aria-hidden, fitted to the footer width, fully visible)
+            └── quiet row (WM + copyright, randy@whatmatters.so, credit)
 \`\`\`
 
 ## Best practices
@@ -72,10 +69,10 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
 - The CTA is a **Button** \`role="inverse"\` \`type="button"\` (\`onCtaClick\`). It opens a modal; there is no default route. Pass \`ctaHref\` only when the control should be a link. Do not recolor it with \`className\`.
 - Social links use **\`footerRevealFieldLinkClasses\`** at heading-1 size. \`https\` hrefs set \`target="_blank"\` and \`rel="noopener"\`. Placeholder hashes stay on the same page.
 - The wordmark is decorative (\`aria-hidden\`). It spans the footer width: font-size is \`100cqi\` divided by the measured advance width of the word, with no breakpoint cap. The brand panel crops it at the bottom edge, so it does not widen the page.
-- Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. The brand panel and the footer field clip the wordmark.
+- Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. The brand panel clips its wordmark. **FooterReveal.Ruled** fits its wordmark inside the footer width so the letters stay visible.
 - Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`. The brand panel clips its own wordmark.
 - When **ScrollHorizontal** \`expandLast\` is the last section in the cover, the guide \`grid-page\` after it uses \`!py-0\`. Default \`grid-page\` block padding is \`--grid-pad\` (24px top and bottom). On a guide-only host that padding is a page-background strip between the full-bleed tile and the footer. The reduced-motion \`h-svh\` section meets the footer the same way.
-- **FooterReveal.Ruled** is the ruled-grid footer. Pass **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) on **Footer**. Rules are 1px \`border-brand\`. Horizontal rules span the footer field. The vertical edges sit on the outer column edges (inset by \`--grid-margin\`). Content, internal dividers, and the wordmark stay inside that border. Below \`md\` the bands stack; the nav stays one list; social cells stay one row. The wordmark fills the grid box. There is no cropped WM row. The credit bar keeps a small WM mark and the full credit. Plus glyphs are decorative (\`aria-hidden\`) and show from \`md\`. Social cells are icon-only anchors with accessible names and a brand focus ring. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — the defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. Dark theme keeps the field on \`--color-on-brand\` so the navy rules stay readable. **FooterReveal.Brand** stays the navy field.
+- **FooterReveal.Ruled** is the cream marketing footer. Pass **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) on **Footer**. The nav is one centered stack: Services, Resources, About, in the mono uppercase footer link type. The wordmark is \`WhatMatters\`, fitted to the footer width (\`100cqi\` / measured em) so it stays inside the viewport and is not cropped. Under it, a quiet row: the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below \`md\` that row stacks and stays centered. Dark theme keeps the field on \`--color-on-brand\`. **FooterReveal.Brand** stays the navy field.
         `.trim(),
       },
     },
@@ -643,15 +640,35 @@ function expectFittedWord(text: HTMLElement | null, frame: HTMLElement | null) {
   expect(footerRevealWordmarkFillsFrame(text, frame)).toBe(true);
 }
 
-/** Wordmark fills the column-edge box, not a narrower padded track. */
-function expectFillsRuledBox(text: HTMLElement | null, box: HTMLElement) {
-  if (!text) throw new Error("fitted word missing");
-  const width = text.getBoundingClientRect().width;
-  const boxWidth = box.getBoundingClientRect().width;
-  expect(boxWidth).toBeGreaterThan(0);
-  expect(width / boxWidth).toBeGreaterThanOrEqual(0.9);
-  expect(text.getBoundingClientRect().left).toBeGreaterThanOrEqual(box.getBoundingClientRect().left - 1);
-  expect(text.getBoundingClientRect().right).toBeLessThanOrEqual(box.getBoundingClientRect().right + 1);
+/**
+ * The wordmark fills the footer frame and stays inside the viewport.
+ * A cropped word fails this: its ink box would leave the frame or the window.
+ */
+function expectWordmarkFitsViewport(root: ParentNode) {
+  const field = root.querySelector<HTMLElement>("[data-footer-ruled-field]");
+  const frame = root.querySelector<HTMLElement>("[data-footer-ruled='wordmark-frame']");
+  const text = root.querySelector<HTMLElement>("[data-footer-ruled='wordmark']");
+  if (!field || !frame || !text) throw new Error("fitted word missing");
+  expectFittedWord(text, frame);
+
+  const fieldBox = field.getBoundingClientRect();
+  const frameBox = frame.getBoundingClientRect();
+  const textBox = text.getBoundingClientRect();
+  expect(fieldBox.width).toBeGreaterThan(0);
+  expect(frameBox.width / fieldBox.width).toBeGreaterThanOrEqual(0.98);
+  expect(textBox.width / frameBox.width).toBeGreaterThanOrEqual(0.9);
+  expect(textBox.left).toBeGreaterThanOrEqual(frameBox.left - 1);
+  expect(textBox.right).toBeLessThanOrEqual(frameBox.right + 1);
+  expect(textBox.top).toBeGreaterThanOrEqual(frameBox.top - 1);
+  expect(textBox.bottom).toBeLessThanOrEqual(frameBox.bottom + 1);
+  expect(textBox.left).toBeGreaterThanOrEqual(-1);
+  expect(textBox.right).toBeLessThanOrEqual(window.innerWidth + 1);
+  expect(textBox.bottom).toBeLessThanOrEqual(window.innerHeight + 1);
+  expect(getComputedStyle(frame).overflowX).not.toBe("hidden");
+  expect(getComputedStyle(frame).overflowY).not.toBe("hidden");
+  expect(getComputedStyle(text).transform === "none" || getComputedStyle(text).transform === "matrix(1, 0, 0, 1, 0, 0)").toBe(
+    true,
+  );
 }
 
 function expectNoCrop(root: ParentNode) {
@@ -682,52 +699,61 @@ function expectRuledFooterFits(root: ParentNode) {
   expectCreditFits(root);
 }
 
-/** Social-cell rules meet the band's bottom rule. No gap, no overshoot. */
-function expectSocialDividersMeetRow(root: ParentNode) {
-  const socials = root.querySelector<HTMLElement>("[data-footer-ruled='socials']");
-  const band = socials?.closest<HTMLElement>("[data-footer-ruled='band']");
-  if (!socials || !band) throw new Error("social row missing");
-  const bandBox = band.getBoundingClientRect();
-  const ruleBottom = bandBox.bottom - parseFloat(getComputedStyle(band).borderBottomWidth);
-  const rowTop = socials.getBoundingClientRect().top;
-  const dividers = [...socials.querySelectorAll<HTMLElement>("a")].filter(
-    (cell) => parseFloat(getComputedStyle(cell).borderRightWidth) > 0,
-  );
-  expect(dividers.length).toBeGreaterThan(0);
-  for (const cell of dividers) {
-    const box = cell.getBoundingClientRect();
-    expect(Math.abs(box.bottom - ruleBottom)).toBeLessThanOrEqual(0.5);
-    expect(Math.abs(box.top - rowTop)).toBeLessThanOrEqual(0.5);
-    expect(parseFloat(getComputedStyle(cell).borderBottomWidth)).toBe(0);
+function footerNavLinks(root: ParentNode): HTMLAnchorElement[] {
+  const nav = root.querySelector<HTMLElement>("[data-footer-ruled='links']");
+  if (!nav) throw new Error("footer nav missing");
+  expect(nav.getAttribute("aria-label")).toBe("Footer");
+  return [...nav.querySelectorAll("a")];
+}
+
+/** Services, Resources, About — one centered stack. No second column. */
+function expectCenteredLinkStack(root: ParentNode) {
+  const nav = root.querySelector<HTMLElement>("[data-footer-ruled='links']");
+  const footer = root.querySelector<HTMLElement>("[data-footer-ruled='root']");
+  if (!nav || !footer) throw new Error("footer nav missing");
+  const navLinks = footerNavLinks(root);
+  expect(navLinks.map((link) => link.textContent)).toEqual(["Services", "Resources", "About"]);
+  expect(navLinks.map((link) => link.getAttribute("href"))).toEqual([
+    "/services",
+    "/resources",
+    "/about",
+  ]);
+  expect(nav.textContent).not.toContain("Website");
+  expect(nav.textContent).not.toContain("Studio");
+  const center = footer.getBoundingClientRect().left + footer.getBoundingClientRect().width / 2;
+  for (const link of navLinks) {
+    const box = link.getBoundingClientRect();
+    expect(Math.abs(box.left + box.width / 2 - center)).toBeLessThanOrEqual(2);
+    expect(link.className).toContain("focus-visible:ring-brand");
   }
-}
-
-/** Contact copy starts at the cell's left edge plus the shared ruled inset. */
-function expectContactBlockInset(root: ParentNode) {
-  const cell = root.querySelector<HTMLElement>("[data-footer-ruled='contact']");
-  const block = root.querySelector<HTMLElement>("[data-footer-ruled='contact-block']");
-  const identity = root.querySelector<HTMLElement>("[data-footer-ruled='identity']");
-  if (!cell || !block || !identity) throw new Error("contact block missing");
-  const inset = parseFloat(getComputedStyle(cell).paddingLeft);
-  expect(inset).toBeGreaterThan(0);
-  expect(Math.abs(inset - parseFloat(getComputedStyle(identity).paddingLeft))).toBeLessThanOrEqual(0.5);
-  expect(Math.abs(block.getBoundingClientRect().left - (cell.getBoundingClientRect().left + inset))).toBeLessThanOrEqual(
-    0.5,
+  expect(navLinks[0]!.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+    navLinks[1]!.getBoundingClientRect().top + 1,
   );
-  expect(getComputedStyle(block).textAlign).toBe("left");
+  expect(navLinks[1]!.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+    navLinks[2]!.getBoundingClientRect().top + 1,
+  );
 }
 
-function expectVerticalRulesOnColumns(root: ParentNode) {
-  const columns = [...root.querySelectorAll<HTMLElement>(".grid-guides-col")];
-  expect(columns.length).toBeGreaterThan(1);
-  const first = columns[0]!.getBoundingClientRect();
-  const last = columns[columns.length - 1]!.getBoundingClientRect();
-  const grids = [...root.querySelectorAll<HTMLElement>("[data-footer-ruled='grid']")];
-  expect(grids.length).toBeGreaterThan(0);
-  for (const grid of grids) {
-    const box = grid.getBoundingClientRect();
-    expect(Math.abs(box.left - first.left)).toBeLessThanOrEqual(1);
-    expect(Math.abs(box.right - last.right)).toBeLessThanOrEqual(1);
+/** Links, then the wordmark, then the quiet row. The row stacks below `md`. */
+function expectFooterStack(root: ParentNode) {
+  const links = root.querySelector<HTMLElement>("[data-footer-ruled='links']");
+  const wordmark = root.querySelector<HTMLElement>("[data-footer-ruled='wordmark']");
+  const meta = root.querySelector<HTMLElement>("[data-footer-ruled='meta']");
+  const identity = root.querySelector<HTMLElement>("[data-footer-ruled='identity']");
+  const contact = root.querySelector<HTMLElement>("[data-footer-ruled='contact']");
+  const credit = root.querySelector<HTMLElement>("[data-footer-ruled='credit']");
+  if (!links || !wordmark || !meta || !identity || !contact || !credit) {
+    throw new Error("footer stack missing");
+  }
+  expect(links.getBoundingClientRect().bottom).toBeLessThanOrEqual(wordmark.getBoundingClientRect().top + 1);
+  expect(wordmark.getBoundingClientRect().bottom).toBeLessThanOrEqual(meta.getBoundingClientRect().top + 1);
+  if (window.innerWidth >= 768) {
+    expect(Math.abs(identity.getBoundingClientRect().top - contact.getBoundingClientRect().top)).toBeLessThanOrEqual(2);
+    expect(identity.getBoundingClientRect().right).toBeLessThanOrEqual(contact.getBoundingClientRect().left + 1);
+    expect(contact.getBoundingClientRect().right).toBeLessThanOrEqual(credit.getBoundingClientRect().left + 1);
+  } else {
+    expect(identity.getBoundingClientRect().bottom).toBeLessThanOrEqual(contact.getBoundingClientRect().top + 1);
+    expect(contact.getBoundingClientRect().bottom).toBeLessThanOrEqual(credit.getBoundingClientRect().top + 1);
   }
 }
 
@@ -759,20 +785,17 @@ const ruledReviewViewports = {
   },
 };
 
-/** Ruled footer under the same column tracks as GridOverlay. Guides are not part of Show code. */
-function RuledGridWithGuides() {
-  return (
-    <div className="relative bg-body">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="grid-page h-full !py-0">
-          <GridOverlay visible keyboardShortcut={false} />
-        </div>
-      </div>
-      <div className={footerRevealRuledFieldClasses} data-footer-ruled-field="">
-        <FooterReveal.Ruled />
-      </div>
-    </div>
-  );
+function expectDroppedChrome(root: ParentNode) {
+  expect(root.querySelector("[data-footer-ruled='socials']")).toBeNull();
+  expect(root.querySelector("[data-footer-ruled='plus']")).toBeNull();
+  expect(root.querySelector("[data-footer-ruled='band']")).toBeNull();
+  expect(root.querySelector("[data-footer-ruled='grid']")).toBeNull();
+  const text = root.textContent ?? "";
+  expect(text).not.toContain("Website");
+  expect(text).not.toContain("Studio");
+  expect(text).not.toContain("Privacy");
+  expect(text).not.toContain("Coming soon");
+  expect(text).not.toContain("Frequently asked");
 }
 
 export const RuledGridFooterPattern: Story = {
@@ -784,7 +807,7 @@ export const RuledGridFooterPattern: Story = {
       docs: {
         description: {
           story:
-            "Ruled grid on the page background. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. Horizontal rules are 1px `border-brand` and span the footer field. The vertical edges sit on the outer column edges (inset by `--grid-margin`). Content, internal dividers, and the wordmark stay inside that border. Default copy is WhatMatters © 2026, a mono blurb, a nav of Services, Resources, and About, randy@whatmatters.so, Brand / Product / Web, five social cells, the WhatMatters wordmark, and Created by WhatMatters 2024–2026. There is no cropped WM row. Below `md` the bands stack; the nav stays one list; the social cells stay one row. Plus glyphs are decorative and show from `md`. Social cells are icon-only anchors. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. `https` links open in a new tab.",
+            "Cream marketing footer. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. The nav is one centered stack: Services, Resources, About, mono uppercase. The WhatMatters wordmark is fitted to the footer width and stays fully visible. The quiet row is the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below `md` that row stacks. There is no cropped wordmark, no two-column nav, and no social row. Dark theme keeps the field on `--color-on-brand`.",
         },
       },
     },
@@ -794,84 +817,34 @@ export const RuledGridFooterPattern: Story = {
   play: async ({ canvasElement }) => {
     const root = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='root']");
     const field = canvasElement.querySelector<HTMLElement>("[data-footer-ruled-field]");
-    const band = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='band']");
-    const grid = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='grid']");
-    const identity = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='identity']");
-    const links = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='links']");
-    if (!root || !field || !band || !grid || !identity || !links) throw new Error("ruled footer missing");
+    if (!root || !field) throw new Error("ruled footer missing");
 
-    const fieldBox = field.getBoundingClientRect();
-    const bandBox = band.getBoundingClientRect();
-    const gridBox = grid.getBoundingClientRect();
-    expect(Math.abs(band.offsetWidth - field.offsetWidth)).toBeLessThanOrEqual(1);
-    expect(Math.abs(bandBox.left - fieldBox.left)).toBeLessThanOrEqual(1);
-    expect(Math.abs(gridBox.left - bandBox.left - (bandBox.right - gridBox.right))).toBeLessThanOrEqual(1);
-    expect(identity.getBoundingClientRect().left).toBeGreaterThanOrEqual(gridBox.left - 1);
-    expect(identity.getBoundingClientRect().right).toBeLessThanOrEqual(gridBox.right + 1);
-
-    const border = getComputedStyle(band).borderTopColor.replace(/\s/g, "");
-    expect(border).toBe("rgb(1,18,114)");
-    expect(getComputedStyle(band).borderBottomWidth).toBe("1px");
-    expect(getComputedStyle(grid).borderLeftWidth).toBe("1px");
-    expect(getComputedStyle(grid).borderRightWidth).toBe("1px");
     const fieldFill = getComputedStyle(field).backgroundColor.replace(/\s/g, "");
     expect(fieldFill === "rgb(248,248,248)" || fieldFill === "rgb(255,255,255)").toBe(true);
+    const ink = getComputedStyle(root).color.replace(/\s/g, "");
+    expect(ink).toBe("rgb(1,18,114)");
 
     const wordmark = canvasElement.querySelector("[data-footer-ruled='wordmark']");
     expect(wordmark?.textContent).toBe("WhatMatters");
     expect(wordmark?.getAttribute("aria-hidden")).toBe("true");
     expectNoCrop(canvasElement);
+    expect(canvasElement.textContent).toContain(footerRevealRuledDefaultCopy.copyright);
     expect(canvasElement.textContent).toContain(footerRevealRuledDefaultCopy.credit);
     expect(canvasElement.textContent).not.toContain("What Matters");
-
-    const socials = canvasElement.querySelectorAll<HTMLAnchorElement>("[data-footer-ruled='socials'] a");
-    expect(socials).toHaveLength(5);
-    for (const link of socials) {
-      expect(link.getAttribute("aria-label")?.length ?? 0).toBeGreaterThan(0);
-      expect(link.className).toContain("focus-visible:ring-brand");
-    }
-    const instagram = canvasElement.querySelector("a[href='https://www.instagram.com/thewhatmatters']");
-    expect(instagram?.getAttribute("target")).toBe("_blank");
-    expect(instagram?.getAttribute("rel")).toBe("noopener");
-    expect(instagram?.getAttribute("aria-label")).toBe("WhatMatters on Instagram");
+    expectDroppedChrome(canvasElement);
 
     const email = canvasElement.querySelector("a[href='mailto:randy@whatmatters.so']");
     expect(email?.textContent).toBe("randy@whatmatters.so");
-    expectSocialDividersMeetRow(canvasElement);
-    expectContactBlockInset(canvasElement);
+    expect(email?.className).toContain("focus-visible:ring-brand");
 
-    for (const plus of canvasElement.querySelectorAll<HTMLElement>("[data-footer-ruled='plus']")) {
-      expect(plus.getAttribute("aria-hidden")).toBe("true");
-      expect(plus.className).toContain("md:inline-flex");
-      // A flex item blockifies `inline-flex` to `flex`. `none` means the hide utility won.
-      expect(getComputedStyle(plus).display).toBe(window.innerWidth >= 768 ? "flex" : "none");
-    }
-
-    const navs = links.querySelectorAll("nav");
-    expect(navs).toHaveLength(1);
-    expect(navs[0]?.getAttribute("aria-label")).toBe("Footer");
-    const navLinks = [...navs[0]!.querySelectorAll("a")];
-    expect(navLinks.map((link) => link.textContent)).toEqual(["Services", "Resources", "About"]);
-    expect(navLinks.map((link) => link.getAttribute("href"))).toEqual([
-      "/services",
-      "/resources",
-      "/about",
-    ]);
-    expect(links.textContent).not.toContain("Website");
-    expect(links.textContent).not.toContain("Studio");
-
-    if (window.innerWidth >= 768) {
-      expect(Math.abs(identity.getBoundingClientRect().top - links.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
-    }
+    expectCenteredLinkStack(canvasElement);
+    expectFooterStack(canvasElement);
 
     await waitFor(() => {
-      expectFittedWord(
-        canvasElement.querySelector("[data-footer-ruled='wordmark']"),
-        canvasElement.querySelector("[data-footer-ruled='wordmark-frame']"),
-      );
-      expectFillsRuledBox(canvasElement.querySelector("[data-footer-ruled='wordmark']"), grid);
+      expectWordmarkFitsViewport(canvasElement);
     });
     expectCreditFits(canvasElement);
+    expectRuledFooterFits(canvasElement);
 
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
       document.documentElement.clientWidth + 1,
@@ -888,56 +861,26 @@ export const RuledGridOverflow390: Story = {
     docs: { disable: true },
     viewport: { options: { ...storybookViewports, ...ruledReviewViewports } },
   },
-  render: () => <RuledGridWithGuides />,
+  render: () => <RuledGridFooterSpecimen />,
   play: async ({ canvasElement }) => {
     expect(window.innerWidth).toBeLessThan(768);
     expect(window.innerWidth).toBeGreaterThanOrEqual(390 - 2);
     expect(window.innerHeight).toBeGreaterThanOrEqual(820);
     expect(window.innerHeight).toBeLessThanOrEqual(860);
 
-    const identity = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='identity']");
-    const links = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='links']");
-    const contact = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='contact']");
-    const socials = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='socials']");
-    const wordmark = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='wordmark']");
-    const credit = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='credit']");
-    if (!identity || !links || !contact || !socials || !wordmark || !credit) {
-      throw new Error("ruled footer bands missing");
-    }
+    expectCenteredLinkStack(canvasElement);
+    expectFooterStack(canvasElement);
+    expectDroppedChrome(canvasElement);
+    const email = canvasElement.querySelector("a[href='mailto:randy@whatmatters.so']");
+    expect(email?.textContent).toBe("randy@whatmatters.so");
 
-    expect(identity.getBoundingClientRect().bottom).toBeLessThanOrEqual(links.getBoundingClientRect().top + 1);
-    expect(links.getBoundingClientRect().bottom).toBeLessThanOrEqual(contact.getBoundingClientRect().top + 1);
-    expect(contact.getBoundingClientRect().bottom).toBeLessThanOrEqual(socials.getBoundingClientRect().top + 1);
-    expect(wordmark.getBoundingClientRect().bottom).toBeLessThanOrEqual(credit.getBoundingClientRect().top + 1);
-
-    const navs = links.querySelectorAll("nav");
-    expect(navs).toHaveLength(1);
-    const navLinks = [...navs[0]!.querySelectorAll("a")];
-    expect(navLinks.map((link) => link.textContent)).toEqual(["Services", "Resources", "About"]);
-    expect(navLinks[0]!.getBoundingClientRect().bottom).toBeLessThanOrEqual(
-      navLinks[1]!.getBoundingClientRect().top + 1,
-    );
-    expect(socials.querySelectorAll("a")).toHaveLength(5);
-    expectSocialDividersMeetRow(canvasElement);
-    expectContactBlockInset(canvasElement);
-
-    const grid = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='grid']");
-    if (!grid) throw new Error("ruled grid missing");
     await waitFor(() => {
-      expectFittedWord(wordmark, canvasElement.querySelector("[data-footer-ruled='wordmark-frame']"));
-      expectFillsRuledBox(wordmark, grid);
-      expectVerticalRulesOnColumns(canvasElement);
+      expectWordmarkFitsViewport(canvasElement);
     });
     expectRuledFooterFits(canvasElement);
 
     const root = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='root']");
-    const field = canvasElement.querySelector<HTMLElement>("[data-footer-ruled-field]");
-    const band = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='band']");
-    if (!root || !field || !band) throw new Error("ruled footer missing");
-    expect(Math.abs(band.offsetWidth - field.offsetWidth)).toBeLessThanOrEqual(1);
-    for (const plus of canvasElement.querySelectorAll<HTMLElement>("[data-footer-ruled='plus']")) {
-      expect(getComputedStyle(plus).display).toBe("none");
-    }
+    if (!root) throw new Error("ruled footer missing");
     expect(root.scrollWidth).toBeLessThanOrEqual(root.clientWidth + 1);
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
       document.documentElement.clientWidth + 1,
@@ -945,15 +888,15 @@ export const RuledGridOverflow390: Story = {
   },
 };
 
-function ruledColumnsStory(
-  id: "review1024" | "review1440" | "review2560",
+function ruledFitStory(
+  id: "review900" | "review1024" | "review1440" | "review2560",
   minWidth: number,
   maxWidth: number,
   minHeight: number,
   maxHeight: number,
 ): Story {
   return {
-    name: `Ruled grid — columns at ${id.replace("review", "")}`,
+    name: `Ruled grid — fit at ${id.replace("review", "")}`,
     tags: ["test", "!dev", "!autodocs"],
     globals: {
       viewport: { value: id, isRotated: false },
@@ -963,34 +906,27 @@ function ruledColumnsStory(
       docs: { disable: true },
       viewport: { options: ruledReviewViewports },
     },
-    render: () => <RuledGridWithGuides />,
+    render: () => <RuledGridFooterSpecimen />,
     play: async ({ canvasElement }) => {
       expect(window.innerWidth).toBeGreaterThanOrEqual(minWidth);
       expect(window.innerWidth).toBeLessThanOrEqual(maxWidth);
       expect(window.innerHeight).toBeGreaterThanOrEqual(minHeight);
       expect(window.innerHeight).toBeLessThanOrEqual(maxHeight);
-      const field = canvasElement.querySelector<HTMLElement>("[data-footer-ruled-field]");
-      const band = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='band']");
-      const grid = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='grid']");
-      if (!field || !band || !grid) throw new Error("ruled footer missing");
-      expect(Math.abs(band.offsetWidth - field.offsetWidth)).toBeLessThanOrEqual(1);
-      expect(Math.abs(band.getBoundingClientRect().left - field.getBoundingClientRect().left)).toBeLessThanOrEqual(1);
+      expectCenteredLinkStack(canvasElement);
+      expectFooterStack(canvasElement);
+      expectDroppedChrome(canvasElement);
       await waitFor(() => {
-        expectVerticalRulesOnColumns(canvasElement);
-        expectFillsRuledBox(canvasElement.querySelector("[data-footer-ruled='wordmark']"), grid);
-        expectFittedWord(
-          canvasElement.querySelector("[data-footer-ruled='wordmark']"),
-          canvasElement.querySelector("[data-footer-ruled='wordmark-frame']"),
-        );
+        expectWordmarkFitsViewport(canvasElement);
       });
       expectRuledFooterFits(canvasElement);
-      expectSocialDividersMeetRow(canvasElement);
-      expectContactBlockInset(canvasElement);
+      expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
+        document.documentElement.clientWidth + 1,
+      );
     },
   };
 }
 
-export const RuledGridDividers900: Story = ruledColumnsStory("review900", 900, 910, 780, 820);
-export const RuledGridFits1024: Story = ruledColumnsStory("review1024", 1024, 1040, 600, 640);
-export const RuledGridColumns1440: Story = ruledColumnsStory("review1440", 1440, 1455, 880, 920);
-export const RuledGridColumns2560: Story = ruledColumnsStory("review2560", 2560, 2575, 1400, 1460);
+export const RuledGridDividers900: Story = ruledFitStory("review900", 900, 910, 780, 820);
+export const RuledGridFits1024: Story = ruledFitStory("review1024", 1024, 1040, 600, 640);
+export const RuledGridColumns1440: Story = ruledFitStory("review1440", 1440, 1455, 880, 920);
+export const RuledGridColumns2560: Story = ruledFitStory("review2560", 2560, 2575, 1400, 1460);
