@@ -1,7 +1,7 @@
 import { motionTransition } from "../../../lib/motion";
 
 export const textLinkClasses =
-  "font-medium text-fg underline decoration-dotted decoration-border-emphasized underline-offset-4 " +
+  "font-medium text-fg underline decoration-solid decoration-border-emphasized underline-offset-4 " +
   "transition-[color,text-decoration-color] " +
   motionTransition("fast") +
   " hover:decoration-fg focus-visible:rounded-sm focus-visible:outline-none " +
