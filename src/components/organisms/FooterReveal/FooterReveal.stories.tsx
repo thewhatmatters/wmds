@@ -57,7 +57,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
         │   ├── social links (underlined, https opens in a new tab)
         │   └── wordmark (aria-hidden, spans the footer width, cropped at the bottom edge)
         └── FooterReveal.Ruled
-            ├── nav (Services, Resources, About; centered sans stack at 4rem)
+            ├── nav (TextLink: Services, Resources, About; parent is sans at 4rem)
             ├── wordmark (aria-hidden, fitted to the footer width, fully visible)
             └── quiet row (WM + copyright, randy@whatmatters.so, credit)
 \`\`\`
@@ -72,7 +72,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
 - Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. The brand panel clips its wordmark. **FooterReveal.Ruled** fits its wordmark inside the footer width so the letters stay visible.
 - Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`. The brand panel clips its own wordmark.
 - When **ScrollHorizontal** \`expandLast\` is the last section in the cover, the guide \`grid-page\` after it uses \`!py-0\`. Default \`grid-page\` block padding is \`--grid-pad\` (24px top and bottom). On a guide-only host that padding is a page-background strip between the full-bleed tile and the footer. The reduced-motion \`h-svh\` section meets the footer the same way.
-- **FooterReveal.Ruled** is the cream marketing footer. Pass **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) on **Footer**. The nav is one centered stack: Services, Resources, About, in Geist sans at 4rem. The wordmark is \`WhatMatters\`, fitted to the footer width (\`100cqi\` / measured em) so it stays inside the viewport and is not cropped. Under it, a quiet row: the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below \`md\` that row stacks and stays centered. Dark theme keeps the field on \`--color-on-brand\`. **FooterReveal.Brand** stays the navy field.
+- **FooterReveal.Ruled** is the cream marketing footer. Pass **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) on **Footer**. The nav is one centered stack of **TextLink**: Services, Resources, About. The list sets Geist sans at 4rem; **TextLink** keeps its dotted underline, medium weight, and focus ring. The wordmark is \`WhatMatters\`, fitted to the footer width (\`100cqi\` / measured em) so it stays inside the viewport and is not cropped. Under it, a quiet row: the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below \`md\` that row stacks and stays centered. Dark theme keeps the field on \`--color-on-brand\`. **FooterReveal.Brand** stays the navy field.
         `.trim(),
       },
     },
@@ -616,13 +616,31 @@ export const ExpandFooterHandoffReduced: Story = {
 };
 
 const ruledGridFooterCopySource = `
-import { FooterReveal, footerRevealRuledFieldClasses } from "@whatmatters/wmds";
+import { FooterReveal, TextLink, footerRevealRuledFieldClasses } from "@whatmatters/wmds";
 
 export function RuledGridFooter() {
   return (
     <div className={footerRevealRuledFieldClasses}>
       <FooterReveal.Ruled />
     </div>
+  );
+}
+
+export function FooterRevealRuledNav() {
+  return (
+    <nav aria-label="Footer">
+      <ul className="m-0 flex list-none flex-col items-center gap-3 whitespace-nowrap p-0 font-sans text-[4rem] leading-none">
+        <li>
+          <TextLink href="/services">Services</TextLink>
+        </li>
+        <li>
+          <TextLink href="/resources">Resources</TextLink>
+        </li>
+        <li>
+          <TextLink href="/about">About</TextLink>
+        </li>
+      </ul>
+    </nav>
   );
 }
 `.trim();
@@ -724,14 +742,20 @@ function expectCenteredLinkStack(root: ParentNode) {
   for (const link of navLinks) {
     const box = link.getBoundingClientRect();
     expect(Math.abs(box.left + box.width / 2 - center)).toBeLessThanOrEqual(2);
-    expect(link.className).toContain("focus-visible:ring-brand");
+    expect(box.left).toBeGreaterThanOrEqual(-1);
+    expect(box.right).toBeLessThanOrEqual(window.innerWidth + 1);
+    expect(link.className).toContain("decoration-dotted");
+    expect(link.className).toContain("font-medium");
+    expect(link.className).toContain("focus-visible:ring-focus-ring");
+    expect(link.className).not.toContain("uppercase");
+    expect(link.className).not.toContain("font-mono");
+    expect(getComputedStyle(link).fontSize).toBe("64px");
+    expect(getComputedStyle(link).fontFamily).toContain("Geist");
   }
-  expect(navLinks[0]!.getBoundingClientRect().bottom).toBeLessThanOrEqual(
-    navLinks[1]!.getBoundingClientRect().top + 1,
-  );
-  expect(navLinks[1]!.getBoundingClientRect().bottom).toBeLessThanOrEqual(
-    navLinks[2]!.getBoundingClientRect().top + 1,
-  );
+  const rows = navLinks.map((link) => link.parentElement?.getBoundingClientRect());
+  if (rows.some((row) => !row)) throw new Error("footer nav row missing");
+  expect(rows[0]!.bottom).toBeLessThanOrEqual(rows[1]!.top + 1);
+  expect(rows[1]!.bottom).toBeLessThanOrEqual(rows[2]!.top + 1);
 }
 
 /** Links, then the wordmark, then the quiet row. The row stacks below `md`. */
@@ -807,7 +831,7 @@ export const RuledGridFooterPattern: Story = {
       docs: {
         description: {
           story:
-            "Cream marketing footer. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. The nav is one centered stack: Services, Resources, About, Geist sans at 4rem. The WhatMatters wordmark is fitted to the footer width and stays fully visible. The quiet row is the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below `md` that row stacks. There is no cropped wordmark, no two-column nav, and no social row. Dark theme keeps the field on `--color-on-brand`.",
+            "Cream marketing footer. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. The nav is one centered stack of **TextLink**: Services, Resources, About. The list sets Geist sans at 4rem. **TextLink** keeps its dotted underline, medium weight, and focus ring. The WhatMatters wordmark is fitted to the footer width and stays fully visible. The quiet row is the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below `md` that row stacks. There is no cropped wordmark, no two-column nav, and no social row. Dark theme keeps the field on `--color-on-brand`.",
         },
       },
     },

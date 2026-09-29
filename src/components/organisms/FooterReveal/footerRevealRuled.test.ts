@@ -4,8 +4,6 @@ import {
   footerRevealRuledCreditCopyClasses,
   footerRevealRuledEmailClasses,
   footerRevealRuledFieldClasses,
-  footerRevealRuledLinkClasses,
-  footerRevealRuledLinkLabelClasses,
   footerRevealRuledLinkListClasses,
   footerRevealRuledMetaClasses,
   footerRevealRuledRootClasses,
@@ -39,13 +37,11 @@ describe("ruled footer contract", () => {
     expect(footerRevealRuledRootClasses).not.toContain("border");
     expect(footerRevealRuledLinkListClasses).toContain("items-center");
     expect(footerRevealRuledLinkListClasses).toContain("flex-col");
-    expect(footerRevealRuledLinkClasses).toContain("focus-visible:ring-brand");
-    expect(footerRevealRuledLinkClasses).not.toContain("border-dotted");
-    expect(footerRevealRuledLinkLabelClasses).toContain("font-sans");
-    expect(footerRevealRuledLinkLabelClasses).not.toContain("font-mono");
-    expect(footerRevealRuledLinkLabelClasses).not.toContain("uppercase");
-    expect(footerRevealRuledLinkLabelClasses).toContain("text-[4rem]");
-    expect(footerRevealRuledLinkLabelClasses).not.toContain("var(--font-size-");
+    expect(footerRevealRuledLinkListClasses).toContain("font-sans");
+    expect(footerRevealRuledLinkListClasses).toContain("text-[4rem]");
+    expect(footerRevealRuledLinkListClasses).not.toContain("font-mono");
+    expect(footerRevealRuledLinkListClasses).not.toContain("uppercase");
+    expect(footerRevealRuledLinkListClasses).not.toContain("var(--font-size-");
     expect(footerRevealRuledMetaClasses).toContain("md:grid-cols-3");
     expect(footerRevealRuledEmailClasses).toContain("focus-visible:ring-brand");
     expect(footerRevealRuledWordmarkFrameClasses).toContain("w-full");
@@ -60,7 +56,7 @@ describe("ruled footer contract", () => {
     const shell = [
       footerRevealRuledFieldClasses,
       footerRevealRuledRootClasses,
-      footerRevealRuledLinkClasses,
+      footerRevealRuledLinkListClasses,
       footerRevealRuledWordmarkClasses,
       footerRevealRuledWordmarkFrameClasses,
     ].join(" ");
@@ -88,5 +84,13 @@ describe("ruled footer contract", () => {
       { label: "Resources", href: "/resources" },
       { label: "About", href: "/about" },
     ]);
+    const ruled = readFileSync(new URL("./FooterRevealRuled.tsx", import.meta.url), "utf8");
+    expect(ruled).toContain("<TextLink");
+    expect(ruled).not.toContain("footerRevealRuledLinkClasses");
+    expect(ruled).not.toMatch(/<TextLink[^>]*className=/);
+    const stories = readFileSync(new URL("./FooterReveal.stories.tsx", import.meta.url), "utf8");
+    expect(stories).toContain('<TextLink href="/services">Services</TextLink>');
+    expect(stories).toContain('<TextLink href="/resources">Resources</TextLink>');
+    expect(stories).toContain('<TextLink href="/about">About</TextLink>');
   });
 });

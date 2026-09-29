@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef } from "react";
+import { TextLink } from "../../atoms/TextLink/TextLink";
 import { cn } from "../../../lib/cn";
 import { footerRevealExternalLinkProps, footerRevealWordmarkFontSize } from "./footerRevealStyles";
 import {
@@ -10,8 +11,6 @@ import {
   footerRevealRuledCreditCopyClasses,
   footerRevealRuledEmailClasses,
   footerRevealRuledIdentityClasses,
-  footerRevealRuledLinkClasses,
-  footerRevealRuledLinkLabelClasses,
   footerRevealRuledLinkListClasses,
   footerRevealRuledLinksClasses,
   footerRevealRuledMarkClasses,
@@ -172,13 +171,9 @@ export function FooterRevealRuled({
         <ul className={footerRevealRuledLinkListClasses}>
           {links.map((link) => (
             <li key={link.href}>
-              <a
-                href={link.href}
-                className={footerRevealRuledLinkClasses}
-                {...footerRevealExternalLinkProps(link.href)}
-              >
-                <span className={footerRevealRuledLinkLabelClasses}>{link.label}</span>
-              </a>
+              <TextLink href={link.href} external={/^https?:\/\//i.test(link.href)}>
+                {link.label}
+              </TextLink>
             </li>
           ))}
         </ul>

@@ -135,24 +135,13 @@ export const footerRevealRuledRootClasses =
 export const footerRevealRuledLinksClasses =
   "flex w-full min-w-0 justify-center px-[var(--grid-margin)]";
 
+/**
+ * Parent of the three **TextLink**s. 4rem and Geist sans are inherited.
+ * No type token is 4rem. **TextLink** keeps its own dotted underline,
+ * medium weight, and focus ring — do not pass those on `className`.
+ */
 export const footerRevealRuledLinkListClasses =
-  "m-0 flex list-none flex-col items-center gap-3 p-0";
-
-/**
- * Footer link. The anchor is only the focus ring — no stretched dotted rule
- * and no end arrow.
- */
-export const footerRevealRuledLinkClasses =
-  "inline-flex text-brand focus-visible:rounded-sm focus-visible:outline-none " +
-  "focus-visible:ring-2 focus-visible:ring-brand";
-
-/**
- * 4rem. No type token is 4rem. Geist sans — the same face as headings and
- * body (`--font-family-heading` / `--font-family-body`). Sentence case, on
- * these three links only.
- */
-export const footerRevealRuledLinkLabelClasses =
-  "whitespace-nowrap font-sans text-[4rem] leading-none";
+  "m-0 flex list-none flex-col items-center gap-3 whitespace-nowrap p-0 font-sans text-[4rem] leading-none";
 
 /**
  * Quiet meta row. One centered stack below `md`. From `md`, seal and copyright
