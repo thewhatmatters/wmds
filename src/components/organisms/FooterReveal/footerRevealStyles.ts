@@ -139,20 +139,20 @@ export const footerRevealRuledLinkListClasses =
   "m-0 flex list-none flex-col items-center gap-3 p-0";
 
 /**
- * Footer link. Mono uppercase lives on the label. The anchor is only the
- * focus ring — no stretched dotted rule and no end arrow.
+ * Footer link. The anchor is only the focus ring — no stretched dotted rule
+ * and no end arrow.
  */
 export const footerRevealRuledLinkClasses =
   "inline-flex text-brand focus-visible:rounded-sm focus-visible:outline-none " +
   "focus-visible:ring-2 focus-visible:ring-brand";
 
 /**
- * 4rem. No type token is 4rem. Same mono uppercase link type, on these three
- * links only. Below `sm`, tracking tightens from 0.14em to 0.04em so
- * Resources stays inside a 390px viewport.
+ * 4rem. No type token is 4rem. Geist sans — the same face as headings and
+ * body (`--font-family-heading` / `--font-family-body`). Sentence case, on
+ * these three links only.
  */
 export const footerRevealRuledLinkLabelClasses =
-  "font-mono text-[4rem] uppercase leading-none tracking-[0.04em] sm:tracking-[0.14em]";
+  "whitespace-nowrap font-sans text-[4rem] leading-none";
 
 /**
  * Quiet meta row. One centered stack below `md`. From `md`, seal and copyright

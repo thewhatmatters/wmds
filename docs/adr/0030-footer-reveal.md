@@ -32,13 +32,13 @@ Ship **FooterReveal** as an organism under **Components/Layout**:
 
 **Date:** 2026-09-29
 
-**FooterReveal.Ruled** nav is one list, in order: Services, Resources, About. Link type stays the mono uppercase style already on every footer link. Rules, randy@whatmatters.so, and the corner plus marks stay.
+**FooterReveal.Ruled** nav is one list, in order: Services, Resources, About. Rules, randy@whatmatters.so, and the corner plus marks stay.
 
 ## Update — centered stack, fitted wordmark
 
 **Date:** 2026-09-29
 
-**FooterReveal.Ruled** follows a centered stack on the cream field (`bg-body` / `text-brand`, `#011272`). The nav is Services, Resources, About, still the mono uppercase link type, centered, at `4rem`. No type token is 4rem, so the size is set on those links only. Below `sm`, tracking is `0.04em` instead of `0.14em` so Resources stays inside a 390px viewport. The WhatMatters wordmark is fitted to the footer width (`100cqi` divided by the measured advance width) with a 12px inset so side-bearing ink stays inside the viewport at 390, 1440, and 2560. The frame does not use `overflow: hidden` and the word does not translate off the bottom edge. The quiet row is the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below `md` that row stacks. The two-column rules, the social cells, the services line, and the blurb are gone. **FooterReveal.Brand** still crops its own wordmark on the navy field. The reveal scrub is unchanged.
+**FooterReveal.Ruled** follows a centered stack on the cream field (`bg-body` / `text-brand`, `#011272`). The nav is Services, Resources, About, centered, at `4rem`, in Geist sans (the heading and body face). No type token is 4rem, so the size is set on those links only. They are sentence case, not mono and not uppercase. The WhatMatters wordmark is fitted to the footer width (`100cqi` divided by the measured advance width) with a 12px inset so side-bearing ink stays inside the viewport at 390, 1440, and 2560. The frame does not use `overflow: hidden` and the word does not translate off the bottom edge. The quiet row is the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below `md` that row stacks. The two-column rules, the social cells, the services line, and the blurb are gone. **FooterReveal.Brand** still crops its own wordmark on the navy field. The reveal scrub is unchanged.
 
 ## Non-goals
 
