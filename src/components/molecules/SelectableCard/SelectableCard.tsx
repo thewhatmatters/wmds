@@ -13,6 +13,7 @@ import {
   selectableCardClasses,
   selectableCardGridClasses,
   selectableCardGroupClasses,
+  selectableCardToggleClasses,
   selectableCardMarkClasses,
   selectableCardSelectedClasses,
 } from "./selectableCardStyles";
@@ -79,7 +80,7 @@ function SelectableCardGroup({
         aria-label={label}
         className={cn(selectableCardGroupClasses, className)}
       >
-        {toggle}
+        {toggle != null ? <div className={selectableCardToggleClasses}>{toggle}</div> : null}
         <div className={selectableCardGridClasses}>{children}</div>
       </div>
     </SelectableCardContext.Provider>

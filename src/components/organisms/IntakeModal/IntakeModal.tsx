@@ -13,6 +13,7 @@ import { motionTransitionProp } from "../../../lib/motion";
 import {
   intakeModalBodyClasses,
   intakeModalBrandClasses,
+  intakeModalCenteredContentClasses,
   intakeModalContentClasses,
   intakeModalFooterClasses,
   intakeModalHeaderClasses,
@@ -38,6 +39,8 @@ export interface IntakeModalProps {
   showProgress?: boolean;
   /** Hide the Back / Continue footer. Confirmation screens pass true. */
   hideFooter?: boolean;
+  /** Omit Continue. Step 4 passes true — confirm lives in the step, not the footer. */
+  hideContinue?: boolean;
   onBack?: () => void;
   onContinue?: () => void;
   backDisabled?: boolean;
@@ -60,6 +63,7 @@ export function IntakeModal({
   title = "Start a project",
   showProgress = true,
   hideFooter = false,
+  hideContinue = false,
   onBack,
   onContinue,
   backDisabled = false,
@@ -161,7 +165,13 @@ export function IntakeModal({
             </div>
           ) : null}
           <div className={intakeModalBodyClasses}>
-            <div className={intakeModalContentClasses}>{children}</div>
+            <div
+              className={
+                hideFooter ? intakeModalCenteredContentClasses : intakeModalContentClasses
+              }
+            >
+              {children}
+            </div>
           </div>
           {hideFooter ? null : (
             <footer className={intakeModalFooterClasses}>
@@ -173,14 +183,16 @@ export function IntakeModal({
               >
                 Back
               </Button>
-              <Button
-                role="primary"
-                type="button"
-                disabled={continueDisabled}
-                onClick={onContinue}
-              >
-                {continueLabel}
-              </Button>
+              {hideContinue ? null : (
+                <Button
+                  role="primary"
+                  type="button"
+                  disabled={continueDisabled}
+                  onClick={onContinue}
+                >
+                  {continueLabel}
+                </Button>
+              )}
             </footer>
           )}
         </motion.div>

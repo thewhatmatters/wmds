@@ -3,11 +3,12 @@
 import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
 import { cn } from "../../../lib/cn";
-import { typographyClass } from "../../../lib/typography";
 import { useConfettiOnMount } from "../Confetti/Confetti";
 import {
+  intakeConfirmationBodyClasses,
   intakeConfirmationClasses,
   intakeConfirmationCopy,
+  intakeConfirmationTitleClasses,
   intakeConfettiColors,
   type IntakeConfirmationVariant,
 } from "./intakeConfirmationStyles";
@@ -58,11 +59,11 @@ export function IntakeConfirmation({
       className={cn(intakeConfirmationClasses, className)}
       data-intake-confirmation={variant}
     >
-      <Badge variant={variant === "booked" ? "success" : "info"} emphasis="muted">
+      <Badge variant={variant === "booked" ? "neutral" : "info"} emphasis="muted">
         {copy.badge}
       </Badge>
-      <h2 className={typographyClass("page-heading")}>{copy.title}</h2>
-      <p className={typographyClass("body")}>{copy.body}</p>
+      <h2 className={intakeConfirmationTitleClasses}>{copy.title}</h2>
+      <p className={intakeConfirmationBodyClasses}>{copy.body}</p>
       {onDone != null ? (
         <Button role="primary" type="button" onClick={onDone}>
           Done

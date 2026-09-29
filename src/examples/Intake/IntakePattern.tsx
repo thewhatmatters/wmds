@@ -133,6 +133,7 @@ export function StartAProject({ initialOpen = true }: { initialOpen?: boolean })
         steps={4}
         showProgress={phase.kind === "step"}
         hideFooter={phase.kind === "done"}
+        hideContinue={phase.kind === "step" && phase.step === 4}
         backDisabled={phase.kind !== "step" || phase.step === 1}
         continueDisabled={continueDisabled}
         onBack={goBack}
@@ -364,6 +365,7 @@ export function StartAProject({ initialOpen = true }: { initialOpen?: boolean })
         steps={4}
         showProgress={phase.kind === "step"}
         hideFooter={phase.kind === "done"}
+        hideContinue={phase.kind === "step" && phase.step === 4}
         backDisabled={phase.kind !== "step" || phase.step === 1}
         continueDisabled={continueDisabled}
         onBack={goBack}

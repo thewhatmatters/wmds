@@ -3,6 +3,12 @@ import { focusRingTransitionClasses } from "../../../lib/motion";
 
 export const selectableCardGroupClasses = "flex w-full flex-col gap-8";
 
+/**
+ * The group is a column, so a default stretch would widen a hugged
+ * SegmentedControl to the grid. `self-start` keeps `layout="hug"`.
+ */
+export const selectableCardToggleClasses = "self-start";
+
 /** Two columns on mobile, three from the desktop grid (`lg`). */
 export const selectableCardGridClasses = "grid grid-cols-2 gap-3 lg:grid-cols-3 lg:gap-4";
 

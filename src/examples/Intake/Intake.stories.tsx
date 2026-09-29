@@ -16,7 +16,7 @@ Four steps inside **IntakeModal**, then a confirmation.
 1. **What do you need?** — **SelectableCard** plus a hugged **SegmentedControl** (Starting fresh / Refreshing what I have).
 2. **Budget** — **PillGroup**, including a muted **Not sure yet** pill.
 3. **About you** — **IntakeForm**. Continue stays off until name, email, and details are valid.
-4. **Book a call** — **CalEmbed**. Confirm this time opens **You're booked**. Skip, just email me opens **We'll be in touch**.
+4. **Book a call** — **CalEmbed**. Continue is not rendered. Confirm this time opens **You're booked**. Skip, just email me opens **We'll be in touch**.
 
 The confirmation mounts inside **ConfettiProvider** and fires once. Reduced motion keeps the static screen.
 
@@ -38,7 +38,7 @@ export const StartAProjectPattern: Story = {
       docs: {
         description: {
           story:
-            "Full intake. Continue is disabled until the step is valid. Step 4 finishes from Confirm this time or Skip, just email me. Confetti fires when the confirmation mounts.",
+            "Full intake. Continue is disabled until the step is valid, and it is omitted on the calendar step. Confirm this time or Skip, just email me opens the centered confirmation. Confetti fires when that screen mounts.",
         },
       },
     },

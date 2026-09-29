@@ -23,7 +23,7 @@ Full-screen intake shell. Open it from any **Start a project** action.
 | **Wordmark** | Typographic **WM** mark and **WhatMatters**. There is no separate logo asset. |
 | **Close** | **IconButton** with Lucide **X**. Accessible name **Close**. |
 | **Progress** | **StepProgress** under the header. Label reads **Step N of 4**. |
-| **Footer** | **Back** is **Button** \`role="secondary"\`. **Continue** is **Button** \`role="primary"\`. The footer stays pinned while the step body scrolls. |
+| **Footer** | **Back** is **Button** \`role="secondary"\`. **Continue** is **Button** \`role="primary"\`. Pass \`hideContinue\` on the calendar step so Continue is not rendered. The footer stays pinned while the step body scrolls. Confirmation (\`hideFooter\`) centers in the body. |
 | **Overlay** | Portal, \`aria-modal\`, focus trap, Escape, scroll lock. |
 
 ## Anatomy

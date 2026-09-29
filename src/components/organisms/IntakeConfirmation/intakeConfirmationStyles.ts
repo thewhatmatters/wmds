@@ -35,5 +35,11 @@ export const intakeConfirmationCopy: Record<
 };
 
 export const intakeConfirmationClasses = cn(
-  "mx-auto flex w-full max-w-md flex-col items-center gap-4 text-center",
+  "flex w-full max-w-3xl flex-col items-center gap-8 text-center",
 );
+
+/** Existing display-2 — the confirmation headline, larger than the step titles. */
+export const intakeConfirmationTitleClasses = "type-display-2 text-balance text-fg";
+
+/** Existing heading-2 — the confirmation sentence under the headline. */
+export const intakeConfirmationBodyClasses = "type-heading-2 max-w-2xl text-balance text-fg";

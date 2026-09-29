@@ -26,7 +26,7 @@ Mount **ConfettiProvider** once above the surface. Reduced motion skips the burs
 \`\`\`
 ConfettiProvider
 └── IntakeConfirmation
-    ├── Badge — Booked or Sent
+    ├── Badge — Booked (neutral) or Sent (info)
     ├── heading
     ├── body
     └── Button — Done

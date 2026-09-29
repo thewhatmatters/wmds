@@ -24,6 +24,10 @@ export const intakeModalBodyClasses = "min-h-0 flex-1 overflow-y-auto";
 export const intakeModalContentClasses =
   "mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-10 md:px-8 md:py-14";
 
+/** Confirmation body — fills the scrollport and centers the block. */
+export const intakeModalCenteredContentClasses =
+  "mx-auto flex min-h-full w-full max-w-3xl flex-col items-center justify-center px-4 py-10 md:px-8";
+
 /** Pinned under the scrolling step on every width, including mobile. */
 export const intakeModalFooterClasses = cn(
   "flex shrink-0 items-center justify-between gap-3 border-t border-border bg-body px-4 py-4 md:px-8",

@@ -115,7 +115,8 @@ export const SelectionAndContinue: Story = {
     await waitFor(() => {
       expect(within(dialog).getByRole("heading", { name: "Book a call" })).toBeInTheDocument();
     });
-    expect(continueButton).toBeDisabled();
+    expect(within(dialog).queryByRole("button", { name: "Continue" })).not.toBeInTheDocument();
+    expect(within(dialog).getByRole("button", { name: "Back" })).toBeEnabled();
     expect(bursts().length).toBe(0);
 
     await userEvent.click(within(dialog).getByRole("button", { name: "Confirm this time" }));
