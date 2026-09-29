@@ -50,16 +50,14 @@ import { FooterRevealRuled } from "./FooterRevealRuled";
 export { footerRevealFieldClasses, footerRevealFieldLinkClasses, footerRevealRuledFieldClasses };
 export type {
   FooterRevealRuledLink,
-  FooterRevealRuledLinkGroup,
   FooterRevealRuledProps,
   FooterRevealRuledSocial,
 } from "./FooterRevealRuled";
 export {
   footerRevealRuledDefaultCopy,
-  footerRevealRuledDefaultLinkGroups,
+  footerRevealRuledDefaultLinks,
   footerRevealRuledDefaultSocials,
   footerRevealRuledEmailHref,
-  footerRevealRuledNavLabel,
 } from "./FooterRevealRuled";
 
 /** Layout-only — placement. Do not add overflow clipping; it breaks the sticky footer. */

@@ -7,7 +7,6 @@ import { cn } from "../../../lib/cn";
 import { footerRevealExternalLinkProps, footerRevealWordmarkFontSize } from "./footerRevealStyles";
 import {
   footerRevealRuledBlurbClasses,
-  footerRevealRuledColumnHeadingClasses,
   footerRevealRuledContactClasses,
   footerRevealRuledContactLabelClasses,
   footerRevealRuledContactRowClasses,
@@ -22,7 +21,6 @@ import {
   footerRevealRuledGridClasses,
   footerRevealRuledIdentityClasses,
   footerRevealRuledLinkClasses,
-  footerRevealRuledLinkColumnsClasses,
   footerRevealRuledLinkLabelClasses,
   footerRevealRuledLinkListClasses,
   footerRevealRuledLinksClasses,
@@ -43,12 +41,6 @@ export interface FooterRevealRuledLink {
   href: string;
 }
 
-export interface FooterRevealRuledLinkGroup {
-  /** Column label, including the trailing colon when the design uses one. */
-  heading: string;
-  links: readonly FooterRevealRuledLink[];
-}
-
 export interface FooterRevealRuledSocial {
   /** Accessible name. The cell has no visible text. */
   label: string;
@@ -67,8 +59,8 @@ export interface FooterRevealRuledProps {
    * Default `WM` — there is no separate logo asset.
    */
   mark?: string;
-  /** Two link columns. Each link is an anchor on a dotted rule. */
-  linkGroups?: readonly FooterRevealRuledLinkGroup[];
+  /** Footer nav. Default: Services, Resources, About. Each link is an anchor on a dotted rule. */
+  links?: readonly FooterRevealRuledLink[];
   /** Label above the email. Default: `Contact us:`. */
   contactLabel?: string;
   /** Visible email address. */
@@ -91,23 +83,10 @@ export interface FooterRevealRuledProps {
   className?: string;
 }
 
-export const footerRevealRuledDefaultLinkGroups: readonly FooterRevealRuledLinkGroup[] = [
-  {
-    heading: "Website:",
-    links: [
-      { label: "Work", href: "/work" },
-      { label: "About", href: "/about" },
-      { label: "Contact", href: "/contact" },
-    ],
-  },
-  {
-    heading: "Studio:",
-    links: [
-      { label: "Journal", href: "/journal" },
-      { label: "Notes", href: "/notes" },
-      { label: "Start", href: "/start" },
-    ],
-  },
+export const footerRevealRuledDefaultLinks: readonly FooterRevealRuledLink[] = [
+  { label: "Services", href: "/services" },
+  { label: "Resources", href: "/resources" },
+  { label: "About", href: "/about" },
 ];
 
 const socialGlyph = { strokeWidth: 1.75 } as const;
@@ -152,11 +131,6 @@ export const footerRevealRuledDefaultCopy = {
 export function footerRevealRuledEmailHref(email: string, emailHref?: string): string {
   if (emailHref) return emailHref;
   return `mailto:${email}`;
-}
-
-/** Column heading without a trailing colon, for the nav accessible name. */
-export function footerRevealRuledNavLabel(heading: string): string {
-  return heading.replace(/:\s*$/, "");
 }
 
 function useFittedWordmark(text: string) {
@@ -267,14 +241,13 @@ function RuledPlus({ align }: { align: "start" | "end" }) {
 /**
  * Ruled-grid marketing footer. Brand ink and 1px brand rules on the page
  * background. Horizontal rules span the footer field. Vertical edges sit on the
- * outer column edges. Below `md` the bands stack; the
- * two link columns stay side by side and the social cells stay one row.
+ * outer column edges. Below `md` the bands stack and the social cells stay one row.
  */
 export function FooterRevealRuled({
   copyright = footerRevealRuledDefaultCopy.copyright,
   blurb = footerRevealRuledDefaultCopy.blurb,
   mark = footerRevealRuledDefaultCopy.mark,
-  linkGroups = footerRevealRuledDefaultLinkGroups,
+  links = footerRevealRuledDefaultLinks,
   contactLabel = footerRevealRuledDefaultCopy.contactLabel,
   email = footerRevealRuledDefaultCopy.email,
   emailHref,
@@ -301,29 +274,24 @@ export function FooterRevealRuled({
           <RuledPlus align="start" />
         </div>
         <div className={footerRevealRuledLinksClasses} data-footer-ruled="links">
-          <div className={footerRevealRuledLinkColumnsClasses}>
-            {linkGroups.map((group) => (
-              <nav key={group.heading} aria-label={footerRevealRuledNavLabel(group.heading)} className="min-w-0">
-                <p className={footerRevealRuledColumnHeadingClasses}>{group.heading}</p>
-                <ul className={footerRevealRuledLinkListClasses}>
-                  {group.links.map((link) => (
-                    <li key={`${group.heading}-${link.label}`}>
-                      <a
-                        href={link.href}
-                        className={footerRevealRuledLinkClasses}
-                        {...footerRevealExternalLinkProps(link.href)}
-                      >
-                        <span className={footerRevealRuledLinkLabelClasses}>{link.label}</span>
-                        <span className={footerRevealRuledGlyphClasses} aria-hidden="true">
-                          <ArrowUpRight strokeWidth={1.75} />
-                        </span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            ))}
-          </div>
+          <nav aria-label="Footer" className="min-w-0">
+            <ul className={footerRevealRuledLinkListClasses}>
+              {links.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className={footerRevealRuledLinkClasses}
+                    {...footerRevealExternalLinkProps(link.href)}
+                  >
+                    <span className={footerRevealRuledLinkLabelClasses}>{link.label}</span>
+                    <span className={footerRevealRuledGlyphClasses} aria-hidden="true">
+                      <ArrowUpRight strokeWidth={1.75} />
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
           <RuledPlus align="end" />
         </div>
       </div>
