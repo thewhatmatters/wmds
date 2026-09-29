@@ -146,8 +146,9 @@ export const footerRevealRuledLinkClasses =
   "inline-flex text-brand focus-visible:rounded-sm focus-visible:outline-none " +
   "focus-visible:ring-2 focus-visible:ring-brand";
 
+/** One step above `--font-size-sm`. Same mono uppercase link type. */
 export const footerRevealRuledLinkLabelClasses =
-  "font-mono text-[length:var(--font-size-sm)] uppercase leading-none tracking-[0.14em]";
+  "font-mono text-[length:var(--font-size-base)] uppercase leading-none tracking-[0.14em]";
 
 /**
  * Quiet meta row. One centered stack below `md`. From `md`, seal and copyright
