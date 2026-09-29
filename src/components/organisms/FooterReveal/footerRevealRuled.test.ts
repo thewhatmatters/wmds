@@ -43,8 +43,8 @@ describe("ruled footer contract", () => {
     expect(footerRevealRuledLinkClasses).not.toContain("border-dotted");
     expect(footerRevealRuledLinkLabelClasses).toContain("font-mono");
     expect(footerRevealRuledLinkLabelClasses).toContain("uppercase");
-    expect(footerRevealRuledLinkLabelClasses).toContain("var(--font-size-base)");
-    expect(footerRevealRuledLinkLabelClasses).not.toContain("var(--font-size-sm)");
+    expect(footerRevealRuledLinkLabelClasses).toContain("text-[4rem]");
+    expect(footerRevealRuledLinkLabelClasses).not.toContain("var(--font-size-");
     expect(footerRevealRuledMetaClasses).toContain("md:grid-cols-3");
     expect(footerRevealRuledEmailClasses).toContain("focus-visible:ring-brand");
     expect(footerRevealRuledWordmarkFrameClasses).toContain("w-full");

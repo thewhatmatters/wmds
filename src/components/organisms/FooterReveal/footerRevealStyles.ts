@@ -146,9 +146,13 @@ export const footerRevealRuledLinkClasses =
   "inline-flex text-brand focus-visible:rounded-sm focus-visible:outline-none " +
   "focus-visible:ring-2 focus-visible:ring-brand";
 
-/** One step above `--font-size-sm`. Same mono uppercase link type. */
+/**
+ * 4rem. No type token is 4rem. Same mono uppercase link type, on these three
+ * links only. Below `sm`, tracking tightens from 0.14em to 0.04em so
+ * Resources stays inside a 390px viewport.
+ */
 export const footerRevealRuledLinkLabelClasses =
-  "font-mono text-[length:var(--font-size-base)] uppercase leading-none tracking-[0.14em]";
+  "font-mono text-[4rem] uppercase leading-none tracking-[0.04em] sm:tracking-[0.14em]";
 
 /**
  * Quiet meta row. One centered stack below `md`. From `md`, seal and copyright
