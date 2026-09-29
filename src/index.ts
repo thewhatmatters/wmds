@@ -157,6 +157,11 @@ export {
   type AccordionVariant,
 } from "./components/molecules/Accordion/Accordion";
 export {
+  CalEmbed,
+  type CalEmbedLayoutClassName,
+  type CalEmbedProps,
+} from "./components/molecules/CalEmbed/CalEmbed";
+export {
   Card,
   cardAddressClasses,
   cardBodyTextClasses,
@@ -226,6 +231,15 @@ export {
   type HeroIntroStep,
 } from "./components/molecules/HeroIntro/HeroIntro";
 export {
+  IntakeForm,
+  intakeAboutEmpty,
+  intakeDetailsMax,
+  isIntakeAboutValid,
+  type IntakeAboutValues,
+  type IntakeFormLayoutClassName,
+  type IntakeFormProps,
+} from "./components/molecules/IntakeForm/IntakeForm";
+export {
   NavList,
   navListLabelAlignments,
   type NavListIcon,
@@ -245,6 +259,14 @@ export {
   type PageHeaderProps,
   type PageHeaderVariant,
 } from "./components/molecules/PageHeader/PageHeader";
+export {
+  PillGroup,
+  pillGroupEmphases,
+  type PillGroupEmphasis,
+  type PillGroupItemProps,
+  type PillGroupLayoutClassName,
+  type PillGroupProps,
+} from "./components/molecules/PillGroup/PillGroup";
 export {
   RadioGroup,
   radioGroupOrientations,
@@ -268,6 +290,12 @@ export {
   type SelectProps,
   type SelectSize,
 } from "./components/molecules/Select/Select";
+export {
+  SelectableCard,
+  type SelectableCardGroupProps,
+  type SelectableCardLayoutClassName,
+  type SelectableCardProps,
+} from "./components/molecules/SelectableCard/SelectableCard";
 export {
   SegmentedControl,
   segmentedControlLayouts,
@@ -293,6 +321,13 @@ export {
   type StatTrend,
   type StatTrendDirection,
 } from "./components/molecules/Stat/Stat";
+export {
+  StepProgress,
+  isStepProgressSegmentFilled,
+  stepProgressLabel,
+  type StepProgressLayoutClassName,
+  type StepProgressProps,
+} from "./components/molecules/StepProgress/StepProgress";
 export {
   TaskRows,
   taskRowStatuses,
@@ -508,6 +543,20 @@ export {
   type HeroTileStackTile,
   type HeroTileVelocityInput,
 } from "./components/organisms/HeroTileStack/HeroTileStack";
+export {
+  IntakeConfirmation,
+  intakeConfirmationCopy,
+  intakeConfirmationVariants,
+  intakeConfettiColors,
+  type IntakeConfirmationLayoutClassName,
+  type IntakeConfirmationProps,
+  type IntakeConfirmationVariant,
+} from "./components/organisms/IntakeConfirmation/IntakeConfirmation";
+export {
+  IntakeModal,
+  type IntakeModalLayoutClassName,
+  type IntakeModalProps,
+} from "./components/organisms/IntakeModal/IntakeModal";
 export {
   ScrollHorizontal,
   type ScrollHorizontalIntroAction,

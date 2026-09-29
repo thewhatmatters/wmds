@@ -22,9 +22,9 @@ const atoms = [
   "Tooltip",
 ] as const;
 
-const molecules = ["Accordion", "Card", "CheckboxGroup", "Chip", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "HeroIntro", "NavList", "PageHeader", "Pagination", "RadioGroup", "Search", "Select", "SegmentedControl", "Stat", "TaskRows", "TextSequence"] as const;
+const molecules = ["Accordion", "CalEmbed", "Card", "CheckboxGroup", "Chip", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "HeroIntro", "IntakeForm", "NavList", "PageHeader", "Pagination", "PillGroup", "RadioGroup", "Search", "Select", "SelectableCard", "SegmentedControl", "Stat", "StepProgress", "TaskRows", "TextSequence"] as const;
 
-const organisms = ["Carousel", "Chart", "Confetti", "Dialog", "FooterReveal", "HeroTileStack", "MoreMenu", "Panel", "ScrollHorizontal", "Sheet", "SiteNav", "Tab", "Table", "Toast"] as const;
+const organisms = ["Carousel", "Chart", "Confetti", "Dialog", "FooterReveal", "HeroTileStack", "IntakeConfirmation", "IntakeModal", "MoreMenu", "Panel", "ScrollHorizontal", "Sheet", "SiteNav", "Tab", "Table", "Toast"] as const;
 
 export const packageManifest = {
   /** Modules exported from src/index.ts today. */
