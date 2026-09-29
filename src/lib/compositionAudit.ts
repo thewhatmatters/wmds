@@ -96,6 +96,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "SegmentedControl owns the connected segment radio shell — not an action Button.",
   },
   {
+    file: "components/molecules/SelectableCard/SelectableCard.tsx",
+    ruleId: "lucide-import",
+    reason: "SelectableCard owns the checked-state Lucide check passed into Badge iconOnly.",
+  },
+  {
     file: "components/molecules/TaskRows/TaskRows.tsx",
     ruleId: "lucide-import",
     reason: "Check / X passed into Badge iconOnly for default status leading marks.",
@@ -109,6 +114,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     file: "components/organisms/Dialog/OverlayPanelHeader.tsx",
     ruleId: "lucide-import",
     reason: "OverlayPanelHeader owns the built-in dismiss glyph (IconButton close).",
+  },
+  {
+    file: "components/organisms/IntakeModal/IntakeModal.tsx",
+    ruleId: "lucide-import",
+    reason: "IntakeModal owns the built-in dismiss glyph (IconButton close).",
   },
   {
     file: "components/organisms/Chart/Chart.tsx",
