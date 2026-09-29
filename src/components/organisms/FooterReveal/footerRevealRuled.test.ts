@@ -17,10 +17,9 @@ import {
 } from "./footerRevealStyles";
 import {
   footerRevealRuledDefaultCopy,
-  footerRevealRuledDefaultLinkGroups,
+  footerRevealRuledDefaultLinks,
   footerRevealRuledDefaultSocials,
   footerRevealRuledEmailHref,
-  footerRevealRuledNavLabel,
 } from "./FooterRevealRuled";
 
 describe("footerRevealRuledEmailHref", () => {
@@ -30,13 +29,6 @@ describe("footerRevealRuledEmailHref", () => {
 
   it("keeps an explicit href", () => {
     expect(footerRevealRuledEmailHref("randy@whatmatters.so", "/contact")).toBe("/contact");
-  });
-});
-
-describe("footerRevealRuledNavLabel", () => {
-  it("drops a trailing colon from the column heading", () => {
-    expect(footerRevealRuledNavLabel("Website:")).toBe("Website");
-    expect(footerRevealRuledNavLabel("Studio:")).toBe("Studio");
   });
 });
 
@@ -111,7 +103,11 @@ describe("ruled grid footer contract", () => {
     expect("crop" in footerRevealRuledDefaultCopy).toBe(false);
     expect(footerRevealRuledDefaultCopy.email).toBe("randy@whatmatters.so");
     expect(JSON.stringify(footerRevealRuledDefaultCopy)).not.toContain("What Matters");
-    expect(footerRevealRuledDefaultLinkGroups).toHaveLength(2);
+    expect(footerRevealRuledDefaultLinks).toEqual([
+      { label: "Services", href: "/services" },
+      { label: "Resources", href: "/resources" },
+      { label: "About", href: "/about" },
+    ]);
     expect(footerRevealRuledDefaultSocials).toHaveLength(5);
     for (const social of footerRevealRuledDefaultSocials) {
       expect(social.label.length).toBeGreaterThan(0);

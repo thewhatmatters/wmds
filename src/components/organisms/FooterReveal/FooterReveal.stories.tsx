@@ -41,7 +41,7 @@ As the cover's bottom edge meets the viewport bottom, the footer scrubs from tra
 | **FooterReveal.Content** | Page body. Opaque (\`bg-body\` by default). Do not clip overflow on the root |
 | **FooterReveal.Footer** | Footer contents. \`className\` lands on the fading field — use **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-on-brand\`) |
 | **FooterReveal.Brand** | Headline, inverse CTA, underlined social row, and a decorative wordmark on the navy field |
-| **FooterReveal.Ruled** | Ruled grid on the page background: identity, link columns, contact, social cells, fitted wordmark, credit |
+| **FooterReveal.Ruled** | Ruled grid on the page background: identity, nav, contact, social cells, fitted wordmark, credit |
 | \`useFooterRevealProgress\` | Reveal progress MotionValue, 0 covered → 1 uncovered (stuck at 1 when reduced motion is on) |
 
 ## Anatomy
@@ -58,7 +58,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
         │   └── wordmark (aria-hidden, spans the footer width, cropped at the bottom edge)
         └── FooterReveal.Ruled
             ├── identity (copyright, mono blurb, typographic mark, decorative plus)
-            ├── two link columns (dotted rules, ArrowUpRight)
+            ├── nav (Services, Resources, About; dotted rules, ArrowUpRight)
             ├── contact (email anchor, services line)
             ├── social cells (icon-only anchors, ButtonIcon)
             ├── wordmark (aria-hidden, fills the frame)
@@ -75,7 +75,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
 - Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. The brand panel and the footer field clip the wordmark.
 - Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`. The brand panel clips its own wordmark.
 - When **ScrollHorizontal** \`expandLast\` is the last section in the cover, the guide \`grid-page\` after it uses \`!py-0\`. Default \`grid-page\` block padding is \`--grid-pad\` (24px top and bottom). On a guide-only host that padding is a page-background strip between the full-bleed tile and the footer. The reduced-motion \`h-svh\` section meets the footer the same way.
-- **FooterReveal.Ruled** is the ruled-grid footer. Pass **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) on **Footer**. Rules are 1px \`border-brand\`. Horizontal rules span the footer field. The vertical edges sit on the outer column edges (inset by \`--grid-margin\`). Content, internal dividers, and the wordmark stay inside that border. Below \`md\` the bands stack; the two link columns stay side by side; social cells stay one row. The wordmark fills the grid box. There is no cropped WM row. The credit bar keeps a small WM mark and the full credit. Plus glyphs are decorative (\`aria-hidden\`) and show from \`md\`. Social cells are icon-only anchors with accessible names and a brand focus ring. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — the defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. Dark theme keeps the field on \`--color-on-brand\` so the navy rules stay readable. **FooterReveal.Brand** stays the navy field.
+- **FooterReveal.Ruled** is the ruled-grid footer. Pass **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) on **Footer**. Rules are 1px \`border-brand\`. Horizontal rules span the footer field. The vertical edges sit on the outer column edges (inset by \`--grid-margin\`). Content, internal dividers, and the wordmark stay inside that border. Below \`md\` the bands stack; the nav stays one list; social cells stay one row. The wordmark fills the grid box. There is no cropped WM row. The credit bar keeps a small WM mark and the full credit. Plus glyphs are decorative (\`aria-hidden\`) and show from \`md\`. Social cells are icon-only anchors with accessible names and a brand focus ring. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — the defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. Dark theme keeps the field on \`--color-on-brand\` so the navy rules stay readable. **FooterReveal.Brand** stays the navy field.
         `.trim(),
       },
     },
@@ -784,7 +784,7 @@ export const RuledGridFooterPattern: Story = {
       docs: {
         description: {
           story:
-            "Ruled grid on the page background. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. Horizontal rules are 1px `border-brand` and span the footer field. The vertical edges sit on the outer column edges (inset by `--grid-margin`). Content, internal dividers, and the wordmark stay inside that border. Default copy is WhatMatters © 2026, a mono blurb, Website and Studio link columns, randy@whatmatters.so, Brand / Product / Web, five social cells, the WhatMatters wordmark, and Created by WhatMatters 2024–2026. There is no cropped WM row. Below `md` the bands stack; the link columns stay side by side; the social cells stay one row. Plus glyphs are decorative and show from `md`. Social cells are icon-only anchors. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. `https` links open in a new tab.",
+            "Ruled grid on the page background. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. Horizontal rules are 1px `border-brand` and span the footer field. The vertical edges sit on the outer column edges (inset by `--grid-margin`). Content, internal dividers, and the wordmark stay inside that border. Default copy is WhatMatters © 2026, a mono blurb, a nav of Services, Resources, and About, randy@whatmatters.so, Brand / Product / Web, five social cells, the WhatMatters wordmark, and Created by WhatMatters 2024–2026. There is no cropped WM row. Below `md` the bands stack; the nav stays one list; the social cells stay one row. Plus glyphs are decorative and show from `md`. Social cells are icon-only anchors. Lucide has no brand marks for X, Dribbble, Instagram, or LinkedIn — defaults use X, CircleDot, Camera, and Briefcase. Sparkle is Lucide's sparkle. `https` links open in a new tab.",
         },
       },
     },
@@ -848,8 +848,17 @@ export const RuledGridFooterPattern: Story = {
     }
 
     const navs = links.querySelectorAll("nav");
-    expect(navs).toHaveLength(2);
-    expect(Math.abs(navs[0]!.getBoundingClientRect().top - navs[1]!.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
+    expect(navs).toHaveLength(1);
+    expect(navs[0]?.getAttribute("aria-label")).toBe("Footer");
+    const navLinks = [...navs[0]!.querySelectorAll("a")];
+    expect(navLinks.map((link) => link.textContent)).toEqual(["Services", "Resources", "About"]);
+    expect(navLinks.map((link) => link.getAttribute("href"))).toEqual([
+      "/services",
+      "/resources",
+      "/about",
+    ]);
+    expect(links.textContent).not.toContain("Website");
+    expect(links.textContent).not.toContain("Studio");
 
     if (window.innerWidth >= 768) {
       expect(Math.abs(identity.getBoundingClientRect().top - links.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
@@ -902,8 +911,12 @@ export const RuledGridOverflow390: Story = {
     expect(wordmark.getBoundingClientRect().bottom).toBeLessThanOrEqual(credit.getBoundingClientRect().top + 1);
 
     const navs = links.querySelectorAll("nav");
-    expect(navs).toHaveLength(2);
-    expect(Math.abs(navs[0]!.getBoundingClientRect().top - navs[1]!.getBoundingClientRect().top)).toBeLessThanOrEqual(1);
+    expect(navs).toHaveLength(1);
+    const navLinks = [...navs[0]!.querySelectorAll("a")];
+    expect(navLinks.map((link) => link.textContent)).toEqual(["Services", "Resources", "About"]);
+    expect(navLinks[0]!.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+      navLinks[1]!.getBoundingClientRect().top + 1,
+    );
     expect(socials.querySelectorAll("a")).toHaveLength(5);
     expectSocialDividersMeetRow(canvasElement);
     expectContactBlockInset(canvasElement);

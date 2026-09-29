@@ -156,11 +156,6 @@ export const footerRevealRuledIdentityClasses =
 
 export const footerRevealRuledLinksClasses = "flex min-w-0 flex-col gap-4 p-[var(--grid-pad)]";
 
-export const footerRevealRuledLinkColumnsClasses =
-  "grid min-w-0 grid-cols-2 gap-x-[var(--grid-gutter)]";
-
-export const footerRevealRuledColumnHeadingClasses = "type-label mb-4 text-brand";
-
 export const footerRevealRuledLinkListClasses = "m-0 flex list-none flex-col gap-3 p-0";
 
 /** Column link. Dotted rule spans the column; the arrow sits on the end. */
