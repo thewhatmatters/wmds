@@ -5,6 +5,7 @@ import {
   footerRevealRuledEmailClasses,
   footerRevealRuledFieldClasses,
   footerRevealRuledLinkListClasses,
+  footerRevealRuledNavLinkClasses,
   footerRevealRuledMetaClasses,
   footerRevealRuledRootClasses,
   footerRevealRuledWordmarkClasses,
@@ -38,10 +39,12 @@ describe("ruled footer contract", () => {
     expect(footerRevealRuledLinkListClasses).toContain("items-center");
     expect(footerRevealRuledLinkListClasses).toContain("flex-col");
     expect(footerRevealRuledLinkListClasses).toContain("font-sans");
-    expect(footerRevealRuledLinkListClasses).toContain("text-[4rem]");
+    expect(footerRevealRuledLinkListClasses).toContain("text-[length:var(--font-size-4xl)]");
+    expect(footerRevealRuledLinkListClasses).toContain("sm:text-[4rem]");
     expect(footerRevealRuledLinkListClasses).not.toContain("font-mono");
     expect(footerRevealRuledLinkListClasses).not.toContain("uppercase");
-    expect(footerRevealRuledLinkListClasses).not.toContain("var(--font-size-");
+    expect(footerRevealRuledLinkListClasses).not.toContain("var(--font-size-6xl)");
+    expect(footerRevealRuledLinkListClasses).not.toContain("var(--font-size-base)");
     expect(footerRevealRuledMetaClasses).toContain("md:grid-cols-3");
     expect(footerRevealRuledEmailClasses).toContain("focus-visible:ring-brand");
     expect(footerRevealRuledWordmarkFrameClasses).toContain("w-full");
@@ -87,10 +90,11 @@ describe("ruled footer contract", () => {
     const ruled = readFileSync(new URL("./FooterRevealRuled.tsx", import.meta.url), "utf8");
     expect(ruled).toContain("<TextLink");
     expect(ruled).not.toContain("footerRevealRuledLinkClasses");
-    expect(ruled).not.toMatch(/<TextLink[^>]*className=/);
+    expect(ruled).toContain("className={footerRevealRuledNavLinkClasses}");
+    expect(footerRevealRuledNavLinkClasses).toBe("!text-brand");
     const stories = readFileSync(new URL("./FooterReveal.stories.tsx", import.meta.url), "utf8");
-    expect(stories).toContain('<TextLink href="/services">Services</TextLink>');
-    expect(stories).toContain('<TextLink href="/resources">Resources</TextLink>');
-    expect(stories).toContain('<TextLink href="/about">About</TextLink>');
+    expect(stories).toContain('<TextLink href="/services" className="!text-brand">Services</TextLink>');
+    expect(stories).toContain('<TextLink href="/resources" className="!text-brand">Resources</TextLink>');
+    expect(stories).toContain('<TextLink href="/about" className="!text-brand">About</TextLink>');
   });
 });
