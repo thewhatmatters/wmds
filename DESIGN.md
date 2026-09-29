@@ -30,7 +30,7 @@ Do **not** set `--spacing` to 8px on this live project. Re-scaling the spacing s
 | `--grid-pad` / `--grid-row-gap` | `--leading-base` (relaxed rows) |
 | `--leading-base` | 24px — also the `leading-base` utility |
 
-Guide tints (`--grid-guide-*`) mix **existing** `--color-primary` / `--color-info`. WhatMatters brand navy is `--color-brand` (`#011272`) in both themes. Rive hand `outline` reads `--color-brand` (`#011272` in both themes), with that navy hardcoded when the token is missing. `--color-brand-outline` is the lighter mix for other strokes on dark surfaces. The navy footer wordmark uses `--color-brand-soft` and spans the footer width. **FooterReveal.Ruled** uses `text-brand` and 1px `border-brand` on `bg-body` (see **Pattern — ruled grid footer**).
+Guide tints (`--grid-guide-*`) mix **existing** `--color-primary` / `--color-info`. WhatMatters brand navy is `--color-brand` (`#011272`) in both themes. Rive hand `outline` reads `--color-brand` (`#011272` in both themes), with that navy hardcoded when the token is missing. `--color-brand-outline` is the lighter mix for other strokes on dark surfaces. The navy footer wordmark uses `--color-brand-soft` and spans the footer width. **FooterReveal.Ruled** uses `text-brand` on `bg-body` (see **Pattern — ruled grid footer**). Its wordmark is fitted to the footer width and is not cropped.
 
 ### Utilities
 

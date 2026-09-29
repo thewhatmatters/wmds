@@ -1,24 +1,18 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
-  footerRevealRuledBandClasses,
-  footerRevealRuledBandTopClasses,
-  footerRevealRuledContactClasses,
-  footerRevealRuledContactRowClasses,
   footerRevealRuledCreditCopyClasses,
   footerRevealRuledEmailClasses,
   footerRevealRuledFieldClasses,
-  footerRevealRuledGridClasses,
-  footerRevealRuledLinkClasses,
-  footerRevealRuledPlusClasses,
+  footerRevealRuledLinkListClasses,
+  footerRevealRuledMetaClasses,
   footerRevealRuledRootClasses,
-  footerRevealRuledSocialCellClasses,
   footerRevealRuledWordmarkClasses,
+  footerRevealRuledWordmarkFrameClasses,
 } from "./footerRevealStyles";
 import {
   footerRevealRuledDefaultCopy,
   footerRevealRuledDefaultLinks,
-  footerRevealRuledDefaultSocials,
   footerRevealRuledEmailHref,
 } from "./FooterRevealRuled";
 
@@ -32,58 +26,39 @@ describe("footerRevealRuledEmailHref", () => {
   });
 });
 
-describe("ruled grid footer contract", () => {
-  it("paints brand ink on the page background with 1px brand rules", () => {
+describe("ruled footer contract", () => {
+  it("paints brand ink on the page background and fits the wordmark to the footer", () => {
     expect(footerRevealRuledFieldClasses).toContain("bg-body");
     expect(footerRevealRuledFieldClasses).toContain("text-brand");
     expect(footerRevealRuledFieldClasses).toContain("footer-reveal-ruled-field");
-    expect(footerRevealRuledBandClasses).toContain("border-b");
-    expect(footerRevealRuledBandClasses).toContain("border-brand");
-    expect(footerRevealRuledBandClasses).not.toContain("max-w-");
-    expect(footerRevealRuledBandTopClasses).toBe("border-t");
-    expect(footerRevealRuledGridClasses).toContain("border-x");
-    expect(footerRevealRuledGridClasses).toContain("border-brand");
-    expect(footerRevealRuledGridClasses).toContain(
-      "w-[calc(100%-2*var(--grid-margin))]",
-    );
-    expect(footerRevealRuledGridClasses).toContain(
-      "max-w-[calc(var(--grid-max)-2*var(--grid-margin))]",
-    );
-    expect(footerRevealRuledGridClasses).not.toMatch(/(?:^|\s)w-full(?:\s|$)/);
+    expect(footerRevealRuledRootClasses).toContain("flex-col");
+    expect(footerRevealRuledRootClasses).toContain("items-center");
     expect(footerRevealRuledRootClasses).not.toContain("max-w-");
     expect(footerRevealRuledRootClasses).not.toContain("border");
-    expect(footerRevealRuledPlusClasses).toContain("max-md:hidden");
-    expect(footerRevealRuledPlusClasses).toContain("md:inline-flex");
-    expect(footerRevealRuledPlusClasses).not.toMatch(/(?:^|\s)hidden(?:\s|$)/);
-    expect(footerRevealRuledPlusClasses).not.toMatch(/(?:^|\s)inline-flex(?:\s|$)/);
-    expect(footerRevealRuledLinkClasses).toContain("border-dotted");
-    expect(footerRevealRuledLinkClasses).toContain("border-brand");
-    expect(footerRevealRuledLinkClasses).toContain("focus-visible:ring-brand");
-    expect(footerRevealRuledSocialCellClasses).toContain("focus-visible:ring-brand");
-    expect(footerRevealRuledSocialCellClasses).toContain("h-full");
-    expect(footerRevealRuledSocialCellClasses).toContain("min-h-[max(100%,2.75rem)]");
-    expect(footerRevealRuledSocialCellClasses).toContain("self-stretch");
-    expect(footerRevealRuledContactClasses).toContain("items-start");
-    expect(footerRevealRuledContactClasses).toContain("text-left");
-    expect(footerRevealRuledContactClasses).toContain("p-[var(--grid-pad)]");
-    expect(footerRevealRuledContactClasses).not.toContain("justify-center");
-    expect(footerRevealRuledContactRowClasses).toContain("items-start");
-    expect(footerRevealRuledContactRowClasses).toContain("text-left");
-    expect(footerRevealRuledContactRowClasses).toContain("w-fit");
-    expect(footerRevealRuledContactRowClasses).not.toContain("justify-between");
-    expect(footerRevealRuledContactRowClasses).not.toContain("justify-center");
+    expect(footerRevealRuledLinkListClasses).toContain("items-center");
+    expect(footerRevealRuledLinkListClasses).toContain("flex-col");
+    expect(footerRevealRuledLinkListClasses).toContain("font-sans");
+    expect(footerRevealRuledLinkListClasses).toContain("text-[4rem]");
+    expect(footerRevealRuledLinkListClasses).not.toContain("font-mono");
+    expect(footerRevealRuledLinkListClasses).not.toContain("uppercase");
+    expect(footerRevealRuledLinkListClasses).not.toContain("var(--font-size-");
+    expect(footerRevealRuledMetaClasses).toContain("md:grid-cols-3");
     expect(footerRevealRuledEmailClasses).toContain("focus-visible:ring-brand");
+    expect(footerRevealRuledWordmarkFrameClasses).toContain("w-full");
+    expect(footerRevealRuledWordmarkFrameClasses).toContain("overflow-visible");
+    expect(footerRevealRuledWordmarkFrameClasses).not.toContain("overflow-hidden");
+    expect(footerRevealRuledWordmarkFrameClasses).not.toContain("max-w-");
     expect(footerRevealRuledWordmarkClasses).toContain("text-brand");
+    expect(footerRevealRuledWordmarkClasses).not.toContain("translate-");
     expect(footerRevealRuledCreditCopyClasses).toContain("font-mono");
     expect(footerRevealRuledCreditCopyClasses).toContain("break-words");
 
     const shell = [
       footerRevealRuledFieldClasses,
       footerRevealRuledRootClasses,
-      footerRevealRuledBandClasses,
-      footerRevealRuledGridClasses,
-      footerRevealRuledLinkClasses,
-      footerRevealRuledSocialCellClasses,
+      footerRevealRuledLinkListClasses,
+      footerRevealRuledWordmarkClasses,
+      footerRevealRuledWordmarkFrameClasses,
     ].join(" ");
     expect(shell).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
   });
@@ -95,12 +70,13 @@ describe("ruled grid footer contract", () => {
     expect(theme).toContain("color: var(--color-brand)");
   });
 
-  it("uses WhatMatters placeholder copy and five social cells", () => {
+  it("uses WhatMatters placeholder copy and the centered nav", () => {
     expect(footerRevealRuledDefaultCopy.copyright).toBe("WhatMatters © 2026");
     expect(footerRevealRuledDefaultCopy.wordmark).toBe("WhatMatters");
     expect(footerRevealRuledDefaultCopy.mark).toBe("WM");
     expect(footerRevealRuledDefaultCopy.credit).toBe("Created by WhatMatters 2024\u20132026");
     expect("crop" in footerRevealRuledDefaultCopy).toBe(false);
+    expect("socials" in footerRevealRuledDefaultCopy).toBe(false);
     expect(footerRevealRuledDefaultCopy.email).toBe("randy@whatmatters.so");
     expect(JSON.stringify(footerRevealRuledDefaultCopy)).not.toContain("What Matters");
     expect(footerRevealRuledDefaultLinks).toEqual([
@@ -108,17 +84,13 @@ describe("ruled grid footer contract", () => {
       { label: "Resources", href: "/resources" },
       { label: "About", href: "/about" },
     ]);
-    expect(footerRevealRuledDefaultSocials).toHaveLength(5);
-    for (const social of footerRevealRuledDefaultSocials) {
-      expect(social.label.length).toBeGreaterThan(0);
-      expect(social.href.length).toBeGreaterThan(0);
-    }
-    expect(footerRevealRuledDefaultSocials.map((social) => social.label)).toEqual([
-      "WhatMatters on X",
-      "WhatMatters on Dribbble",
-      "WhatMatters on Instagram",
-      "WhatMatters on LinkedIn",
-      "WhatMatters highlights",
-    ]);
+    const ruled = readFileSync(new URL("./FooterRevealRuled.tsx", import.meta.url), "utf8");
+    expect(ruled).toContain("<TextLink");
+    expect(ruled).not.toContain("footerRevealRuledLinkClasses");
+    expect(ruled).not.toMatch(/<TextLink[^>]*className=/);
+    const stories = readFileSync(new URL("./FooterReveal.stories.tsx", import.meta.url), "utf8");
+    expect(stories).toContain('<TextLink href="/services">Services</TextLink>');
+    expect(stories).toContain('<TextLink href="/resources">Resources</TextLink>');
+    expect(stories).toContain('<TextLink href="/about">About</TextLink>');
   });
 });

@@ -117,116 +117,67 @@ export function footerRevealExternalLinkProps(
 }
 
 /**
- * Ruled-grid field. Page background with brand ink.
- * Dark theme repaints this class to `--color-on-brand` — brand navy on the
- * dark body is under 3:1. See `theme.css`.
+ * Cream field with brand ink. Page background (`bg-body`) and `--color-brand`
+ * (`#011272`). Dark theme repaints this class to `--color-on-brand` — brand
+ * navy on the dark body is under 3:1. See `theme.css`.
  */
 export const footerRevealRuledFieldClasses =
   "footer-reveal-ruled-field bg-body text-brand";
 
 /**
- * Full-bleed shell. Horizontal rules live on the bands (`border-t` / `border-b`),
- * not on a centered box — a max-width frame would stop the rules short of the viewport.
+ * Full-bleed shell. Centered link stack, then the fitted wordmark, then the
+ * quiet meta row. No max-width — the wordmark has to reach the viewport.
  */
-export const footerRevealRuledRootClasses = "w-full min-w-0 text-brand";
+export const footerRevealRuledRootClasses =
+  "flex w-full min-w-0 flex-col items-center gap-[var(--grid-pad)] py-[var(--grid-pad)] text-center text-brand";
 
-/** Full-bleed row. `border-b` is the horizontal rule, edge to edge of the footer field. */
-export const footerRevealRuledBandClasses = "w-full min-w-0 border-b border-brand";
-
-/** Top of the footer. Longhand only — not the `border` shorthand beside `border-b`. */
-export const footerRevealRuledBandTopClasses = "border-t";
+/** Centered link stack. The list hugs its labels; it does not stretch into columns. */
+export const footerRevealRuledLinksClasses =
+  "flex w-full min-w-0 justify-center px-[var(--grid-margin)]";
 
 /**
- * Column-edge box. Inset by `--grid-margin` from the page grid box so `border-x`
- * sits on the outer column edges (the same content edge as `grid-page` and the
- * nav). Horizontal rules stay on the full-bleed bands. Content, internal
- * dividers, and the wordmark stay inside this border.
+ * Parent of the three **TextLink**s. 4rem and Geist sans are inherited.
+ * No type token is 4rem. **TextLink** keeps its own dotted underline,
+ * medium weight, and focus ring — do not pass those on `className`.
  */
-export const footerRevealRuledGridClasses =
-  "mx-auto w-[calc(100%-2*var(--grid-margin))] min-w-0 max-w-[calc(var(--grid-max)-2*var(--grid-margin))] border-x border-brand";
-
-export const footerRevealRuledSplitClasses = "grid grid-cols-1 md:grid-cols-2";
+export const footerRevealRuledLinkListClasses =
+  "m-0 flex list-none flex-col items-center gap-3 whitespace-nowrap p-0 font-sans text-[4rem] leading-none";
 
 /**
- * `max-md:border-b` is the stacked rule. It is not the class `border-b`, so a
- * later `.border-b` cannot keep that edge at `md` and double the band rule.
+ * Quiet meta row. One centered stack below `md`. From `md`, seal and copyright
+ * lead, the email is centered, and the credit sits on the end.
  */
+export const footerRevealRuledMetaClasses =
+  "grid w-full min-w-0 grid-cols-1 items-center gap-3 px-[var(--grid-margin)] md:grid-cols-3 md:gap-4";
+
 export const footerRevealRuledIdentityClasses =
-  "flex min-w-0 flex-col gap-4 border-brand p-[var(--grid-pad)] max-md:border-b md:border-r";
-
-export const footerRevealRuledLinksClasses = "flex min-w-0 flex-col gap-4 p-[var(--grid-pad)]";
-
-export const footerRevealRuledLinkListClasses = "m-0 flex list-none flex-col gap-3 p-0";
-
-/** Column link. Dotted rule spans the column; the arrow sits on the end. */
-export const footerRevealRuledLinkClasses =
-  "flex min-w-0 items-center justify-between gap-2 border-b border-dotted border-brand py-2 text-brand " +
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand";
-
-export const footerRevealRuledLinkLabelClasses =
-  "min-w-0 font-mono text-[length:var(--font-size-sm)] uppercase leading-none tracking-[0.14em]";
-
-/** Shell glyph slot — smaller than ButtonIcon's xs (28px) cluster target. */
-export const footerRevealRuledGlyphClasses =
-  "inline-flex size-3.5 shrink-0 text-brand [&>svg]:size-full [&>svg]:stroke-current";
-
-/**
- * Decorative plus. Hidden below `md`, where the bands stack.
- * Display is `max-md:hidden` and `md:inline-flex` only. An unprefixed `hidden`
- * or `inline-flex` on this element loses to whichever a consuming stylesheet
- * emits last, and the identity and links cells lose the mark's row.
- */
-export const footerRevealRuledPlusClasses =
-  "pointer-events-none mt-auto size-3.5 shrink-0 text-brand [&>svg]:size-full [&>svg]:stroke-current max-md:hidden md:inline-flex";
+  "flex min-w-0 items-center justify-center gap-2 md:justify-start";
 
 export const footerRevealRuledCopyrightClasses = "type-supporting min-w-0 text-brand";
 
-export const footerRevealRuledBlurbClasses =
-  "max-w-[36ch] font-mono text-[length:var(--font-size-sm)] leading-[1.45] text-brand";
-
-/** Corner mark. Typographic WM — not a separate logo asset. */
+/** Small typographic WM beside the copyright. Not a separate logo asset. */
 export const footerRevealRuledMarkClasses =
-  "shrink-0 font-sans text-[length:var(--font-size-5xl)] font-bold leading-[0.8] tracking-[-0.04em] text-brand";
-
-export const footerRevealRuledContactClasses =
-  "flex min-w-0 flex-col items-start border-brand p-[var(--grid-pad)] text-left max-md:border-b md:border-r";
-
-/** Left-aligned stack. Hugs the copy so its left edge is the cell's inner padding. */
-export const footerRevealRuledContactRowClasses =
-  "flex w-fit min-w-0 flex-col items-start gap-4 text-left";
-
-export const footerRevealRuledContactLabelClasses = "type-label text-brand";
-
-export const footerRevealRuledEmailClasses =
-  "type-label text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand";
-
-export const footerRevealRuledServicesClasses =
-  "type-label flex min-w-0 items-center gap-2 text-brand";
-
-/** Fills the split row so cell rules can meet the band's horizontal rules. */
-export const footerRevealRuledSocialGridClasses = "grid h-full min-h-0 min-w-0 self-stretch";
-
-/**
- * Square when the row is content-sized. `h-full` stretches the border box when
- * the contact cell is taller, so `border-r` meets the band rules. The min-height
- * floor is 2.75rem (44px) when that percentage does not resolve.
- */
-export const footerRevealRuledSocialCellClasses =
-  "flex aspect-square h-full min-h-[max(100%,2.75rem)] w-full min-w-0 items-center justify-center self-stretch border-r border-brand text-brand last:border-r-0 " +
-  "hover:bg-neutral focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand";
-
-export const footerRevealRuledWordmarkFrameClasses =
-  "@container flex w-full min-w-0 items-center overflow-hidden py-[var(--grid-baseline)]";
-
-/** Fully visible. `leading-none` keeps the caps inside the row. */
-export const footerRevealRuledWordmarkClasses =
-  "w-max max-w-none shrink-0 whitespace-nowrap font-sans font-bold leading-none tracking-[-0.045em] text-brand";
-
-export const footerRevealRuledCreditClasses =
-  "flex min-w-0 items-center justify-between gap-4 px-[var(--grid-pad)] py-[var(--grid-baseline)]";
-
-export const footerRevealRuledCreditMarkClasses =
   "shrink-0 font-sans text-[length:var(--font-size-xl)] font-bold leading-none tracking-[-0.04em] text-brand";
 
+export const footerRevealRuledContactClasses = "flex min-w-0 justify-center";
+
+export const footerRevealRuledEmailClasses =
+  "type-label text-brand focus-visible:rounded-sm focus-visible:outline-none " +
+  "focus-visible:ring-2 focus-visible:ring-brand";
+
+/**
+ * Wordmark frame. Full footer width so `100cqi` tracks the viewport, not the
+ * page grid. A 12px inset keeps side-bearing ink off the viewport edge. Overflow
+ * stays visible — a hidden frame is what cropped the previous giant word.
+ */
+export const footerRevealRuledWordmarkFrameClasses =
+  "@container flex w-full min-w-0 items-center justify-center overflow-visible px-3 py-[var(--grid-baseline)]";
+
+/** Fully visible. `leading-none` keeps the line box on the caps. No crop shift. */
+export const footerRevealRuledWordmarkClasses =
+  "w-max max-w-none shrink-0 whitespace-nowrap text-center font-sans font-bold leading-none tracking-[-0.045em] text-brand";
+
+export const footerRevealRuledCreditClasses = "flex min-w-0 justify-center md:justify-end";
+
 export const footerRevealRuledCreditCopyClasses =
-  "min-w-0 text-right font-mono text-[length:var(--font-size-sm)] leading-none text-brand break-words";
+  "min-w-0 max-w-full text-center font-mono text-[length:var(--font-size-sm)] leading-none text-brand break-words md:text-right";
