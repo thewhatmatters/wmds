@@ -5,6 +5,7 @@ import { hydrateRoot } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { FooterReveal } from "./FooterReveal";
+import { footerRevealRuledFieldClasses } from "./footerRevealStyles";
 
 function footerTree() {
   return createElement(
@@ -13,8 +14,8 @@ function footerTree() {
     createElement(FooterReveal.Content, null, "Cover"),
     createElement(
       FooterReveal.Footer,
-      { className: "bg-brand" },
-      createElement(FooterReveal.Brand, null),
+      { className: footerRevealRuledFieldClasses },
+      createElement(FooterReveal.Ruled, null),
     ),
   );
 }
@@ -54,12 +55,19 @@ describe("footer reveal reduced motion SSR", () => {
     container.remove();
   });
 
-  it("renders the CTA as a button unless ctaHref is passed", () => {
+  it("renders the navy compound CTA as a button unless ctaHref is passed", () => {
     stubReducedMotion(true);
-    const html = renderToString(footerTree());
-    expect(html).toContain("Start a project");
-    expect(html).toContain('type="button"');
-    expect(html).not.toContain('href="/start"');
+    const button = renderToString(
+      createElement(
+        FooterReveal,
+        null,
+        createElement(FooterReveal.Content, null, "Cover"),
+        createElement(FooterReveal.Footer, null, createElement(FooterReveal.Brand, null)),
+      ),
+    );
+    expect(button).toContain("Start a project");
+    expect(button).toContain('type="button"');
+    expect(button).not.toContain('href="/start"');
 
     const linked = renderToString(
       createElement(

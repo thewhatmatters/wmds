@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sparkles } from "lucide-react";
-import { expect, fn, waitFor } from "storybook/test";
+import { expect, waitFor } from "storybook/test";
 import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
 import { RiveHand } from "../../atoms/RiveHand/RiveHand";
@@ -14,7 +14,7 @@ import { ScrollHorizontal } from "../ScrollHorizontal/ScrollHorizontal";
 import { scrollHorizontalMarketingItems } from "../ScrollHorizontal/scrollHorizontalExamples";
 import { SiteNav } from "../SiteNav/SiteNav";
 import { FooterReveal } from "./FooterReveal";
-import { footerRevealFieldClasses } from "./footerRevealStyles";
+import { footerRevealRuledFieldClasses } from "./footerRevealStyles";
 
 const meta = {
   title: "Components/Layout/FooterReveal",
@@ -27,13 +27,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
-  { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
-] as const;
-
 const tiles = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },
   { src: "/hero-tiles/focus.svg", alt: "Blue focus card" },
@@ -43,8 +36,6 @@ const tiles = [
 
 const projects = scrollHorizontalMarketingItems;
 
-const openProjectModal = fn();
-
 const marketingHeroWithGalleryIntroCopySource = `
 "use client";
 
@@ -53,14 +44,7 @@ const marketingHeroWithGalleryIntroCopySource = `
 // Hand art: CC BY 4.0, Silvia Sguotti and Gabriele Montinaro.
 
 import { Sparkles } from "lucide-react";
-import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence, footerRevealFieldClasses } from "@whatmatters/wmds";
-
-const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
-  { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
-] as const;
+import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence, footerRevealRuledFieldClasses } from "@whatmatters/wmds";
 
 const tiles = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },
@@ -76,9 +60,6 @@ const projects = [
   { id: "project-four", label: "Project Four", color: "var(--color-info-muted)" },
   { id: "project-five", label: "Project Five", color: "var(--color-accent)" },
 ];
-
-// Opens the multi-step project form. There is no /start route.
-function openProjectModal() {}
 
 export function MarketingHeroWithGalleryIntroPage() {
   return (
@@ -144,14 +125,8 @@ export function MarketingHeroWithGalleryIntroPage() {
           <GridOverlay visible keyboardShortcut={false} />
         </main>
       </FooterReveal.Content>
-      <FooterReveal.Footer className={footerRevealFieldClasses}>
-        <FooterReveal.Brand
-          headline="We Build WhatMatters"
-          ctaLabel="Start a project"
-          onCtaClick={openProjectModal}
-          wordmark="WHATMATTERS"
-          socialLinks={socialLinks}
-        />
+      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
+        <FooterReveal.Ruled />
       </FooterReveal.Footer>
     </FooterReveal>
   );
@@ -223,14 +198,8 @@ function GalleryIntroHeroPage() {
           <GridOverlay visible keyboardShortcut={false} />
         </main>
       </FooterReveal.Content>
-      <FooterReveal.Footer className={footerRevealFieldClasses}>
-        <FooterReveal.Brand
-          headline="We Build WhatMatters"
-          ctaLabel="Start a project"
-          onCtaClick={openProjectModal}
-          wordmark="WHATMATTERS"
-          socialLinks={socialLinks}
-        />
+      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
+        <FooterReveal.Ruled />
       </FooterReveal.Footer>
     </FooterReveal>
   );
@@ -322,7 +291,7 @@ export const MarketingHeroWithGalleryIntro: Story = {
       docs: {
         description: {
           story:
-            "Same marketing hero as Pattern — marketing hero, with ScrollHorizontal.Intro as the first gallery panel. expandLast still ends on the full-bleed tile, flush with FooterReveal. The default pattern keeps the sr-only Selected work heading.",
+            "Same marketing hero as Pattern — marketing hero, with ScrollHorizontal.Intro as the first gallery panel. expandLast still ends on the full-bleed tile, flush with FooterReveal.Ruled on footerRevealRuledFieldClasses. The default pattern keeps the sr-only Selected work heading.",
         },
       },
     },

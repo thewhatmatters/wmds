@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sparkles } from "lucide-react";
 import { MotionConfig } from "motion/react";
-import { expect, fn, waitFor } from "storybook/test";
+import { expect, waitFor } from "storybook/test";
 import { Badge } from "../../atoms/Badge/Badge";
 import { GridOverlay } from "../../../lib/GridOverlay";
 import { stickyFooterInFlowTop } from "../../../lib/gridOverlayUtils";
@@ -16,7 +16,7 @@ import { SiteNav } from "../SiteNav/SiteNav";
 import { FooterReveal } from "./FooterReveal";
 import { footerRevealRuledDefaultCopy } from "./FooterRevealRuled";
 import { footerRevealWordmarkFillsFrame } from "./footerRevealWordmark";
-import { footerRevealFieldClasses, footerRevealRuledFieldClasses } from "./footerRevealStyles";
+import { footerRevealRuledFieldClasses } from "./footerRevealStyles";
 
 const meta = {
   title: "Components/Layout/FooterReveal",
@@ -30,7 +30,7 @@ const meta = {
         component: `
 ## Usage
 
-Page root for a marketing scroll: **FooterReveal.Content** (the cover) then **FooterReveal.Footer** (the brand footer, or any footer). The cover is at least \`100dvh\`, painted with the page background, and stacked above the footer. The footer sticks to the bottom of the viewport underneath that cover.
+Page root for a marketing scroll: **FooterReveal.Content** (the cover) then **FooterReveal.Footer** (the cream marketing footer). The cover is at least \`100dvh\`, painted with the page background, and stacked above the footer. The footer sticks to the bottom of the viewport underneath that cover.
 
 As the cover's bottom edge meets the viewport bottom, the footer scrubs from transparent / 0.9 scale / 12px blur to opaque / full size / sharp, across one footer-height of scroll. \`will-change\` is set only while that scrub is in progress.
 
@@ -39,9 +39,8 @@ As the cover's bottom edge meets the viewport bottom, the footer scrubs from tra
 | Slot | Purpose |
 |------|---------|
 | **FooterReveal.Content** | Page body. Opaque (\`bg-body\` by default). Do not clip overflow on the root |
-| **FooterReveal.Footer** | Footer contents. \`className\` lands on the fading field — use **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-on-brand\`) |
-| **FooterReveal.Brand** | Headline, inverse CTA, underlined social row, and a decorative wordmark on the navy field |
-| **FooterReveal.Ruled** | Cream field: centered nav, fitted wordmark, quiet meta row |
+| **FooterReveal.Footer** | Footer contents. \`className\` lands on the fading field — use **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) |
+| **FooterReveal.Ruled** | The marketing footer: centered nav, fitted wordmark, quiet meta row |
 | \`useFooterRevealProgress\` | Reveal progress MotionValue, 0 covered → 1 uncovered (stuck at 1 when reduced motion is on) |
 
 ## Anatomy
@@ -51,11 +50,6 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
 ├── FooterReveal.Content — relative, z-index 1, min-height 100dvh, bg-body
 └── FooterReveal.Footer — sticky, bottom 0, z-index -1
     └── fade (opacity) → scale / blur (origin 50% 100%, blur 12px → 0) → footer contents
-        ├── FooterReveal.Brand
-        │   ├── headline (type-display-1, centered)
-        │   ├── Button role="inverse" type="button" (onCtaClick)
-        │   ├── social links (underlined, https opens in a new tab)
-        │   └── wordmark (aria-hidden, spans the footer width, cropped at the bottom edge)
         └── FooterReveal.Ruled
             ├── nav (TextLink: Services, Resources, About; parent is sans, 4xl below sm, 4rem from sm, text-brand)
             ├── wordmark (aria-hidden, fitted to the footer width, fully visible)
@@ -65,14 +59,12 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
 ## Best practices
 
 - One **FooterReveal** per page. Put **SiteNav** and the page or marketing hero inside **Content**.
-- Field color is **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-on-brand\`). \`--color-brand\` is \`#011272\` in both themes. White on that navy reports **15.8:1**. The wordmark uses \`--color-brand-soft\` (40% white on the navy) so it stays visible.
-- The CTA is a **Button** \`role="inverse"\` \`type="button"\` (\`onCtaClick\`). It opens a modal; there is no default route. Pass \`ctaHref\` only when the control should be a link. Do not recolor it with \`className\`.
-- Social links use **\`footerRevealFieldLinkClasses\`** at heading-1 size. \`https\` hrefs set \`target="_blank"\` and \`rel="noopener"\`. Placeholder hashes stay on the same page.
-- The wordmark is decorative (\`aria-hidden\`). It spans the footer width: font-size is \`100cqi\` divided by the measured advance width of the word, with no breakpoint cap. The brand panel crops it at the bottom edge, so it does not widen the page.
-- Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. The brand panel clips its wordmark. **FooterReveal.Ruled** fits its wordmark inside the footer width so the letters stay visible.
-- Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`. The brand panel clips its own wordmark.
+- The marketing footer is **FooterReveal.Ruled** on **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`). Every page pattern uses that composition.
+- The nav is one centered stack of **TextLink**: Services, Resources, About. The list sets Geist sans at \`--font-size-4xl\` below \`sm\` and 4rem from \`sm\`, and the links are \`text-brand\`. **TextLink** keeps its dotted underline, medium weight, and focus ring.
+- The wordmark is \`WhatMatters\`, fitted to the footer width (\`100cqi\` / measured em) so it stays inside the viewport and is not cropped. Under it, a quiet row: the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below \`md\` that row stacks and stays centered. Dark theme keeps the field on \`--color-on-brand\`.
+- Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. Footer guides use the same tracks and sit under the footer content (\`z-0\` under \`z-[1]\`).
+- Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`. The fitted wordmark stays fully visible.
 - When **ScrollHorizontal** \`expandLast\` is the last section in the cover, the guide \`grid-page\` after it uses \`!py-0\`. Default \`grid-page\` block padding is \`--grid-pad\` (24px top and bottom). On a guide-only host that padding is a page-background strip between the full-bleed tile and the footer. The reduced-motion \`h-svh\` section meets the footer the same way.
-- **FooterReveal.Ruled** is the cream marketing footer. Pass **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) on **Footer**. The nav is one centered stack of **TextLink**: Services, Resources, About. The list sets Geist sans at \`--font-size-4xl\` below \`sm\` and 4rem from \`sm\`, and the links are \`text-brand\`. **TextLink** keeps its dotted underline, medium weight, and focus ring. The wordmark is \`WhatMatters\`, fitted to the footer width (\`100cqi\` / measured em) so it stays inside the viewport and is not cropped. Under it, a quiet row: the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below \`md\` that row stacks and stays centered. Dark theme keeps the field on \`--color-on-brand\`. **FooterReveal.Brand** stays the navy field.
         `.trim(),
       },
     },
@@ -81,13 +73,6 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
-  { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
-] as const;
 
 const tiles = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },
@@ -99,18 +84,8 @@ const tiles = [
 const projects = scrollHorizontalMarketingItems;
 
 const marketingPageCopySource = `
-import { Button, FooterReveal, SiteNav, footerRevealFieldClasses } from "@whatmatters/wmds";
+import { Button, FooterReveal, SiteNav, footerRevealRuledFieldClasses } from "@whatmatters/wmds";
 import { Sparkles } from "lucide-react";
-
-const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
-  { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
-] as const;
-
-// Opens the multi-step project form. There is no /start route.
-function openProjectModal() {}
 
 export function MarketingPage() {
   return (
@@ -159,21 +134,13 @@ export function MarketingPage() {
           </div>
         </main>
       </FooterReveal.Content>
-      <FooterReveal.Footer className={footerRevealFieldClasses}>
-        <FooterReveal.Brand
-          headline="We Build WhatMatters"
-          ctaLabel="Start a project"
-          onCtaClick={openProjectModal}
-          wordmark="WHATMATTERS"
-          socialLinks={socialLinks}
-        />
+      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
+        <FooterReveal.Ruled />
       </FooterReveal.Footer>
     </FooterReveal>
   );
 }
 `.trim();
-
-const openProjectModal = fn();
 
 function MarketingPage() {
   return (
@@ -222,14 +189,8 @@ function MarketingPage() {
           </div>
         </main>
       </FooterReveal.Content>
-      <FooterReveal.Footer className={footerRevealFieldClasses}>
-        <FooterReveal.Brand
-          headline="We Build WhatMatters"
-          ctaLabel="Start a project"
-          onCtaClick={openProjectModal}
-          wordmark="WHATMATTERS"
-          socialLinks={socialLinks}
-        />
+      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
+        <FooterReveal.Ruled />
       </FooterReveal.Footer>
     </FooterReveal>
   );
@@ -243,7 +204,7 @@ export const MarketingPagePattern: Story = {
       docs: {
         description: {
           story:
-            "Marketing page: **SiteNav** and `grid-page` sit in **FooterReveal.Content**. **FooterReveal.Footer** uses **footerRevealFieldClasses** (`bg-brand` / `text-on-brand`). **FooterReveal.Brand** centers the headline, an inverse CTA, and the social row, with a full-width wordmark along the bottom. Scroll until the cover ends — the footer fades, scales, and sharpens from 12px of blur across its own height. Reduced motion stays sharp. The scrollbar stays visible.",
+            "Marketing page: **SiteNav** and `grid-page` sit in **FooterReveal.Content**. **FooterReveal.Footer** uses **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`) and renders **FooterReveal.Ruled**. The nav is Services, Resources, and About as **TextLink**, brand navy, `--font-size-4xl` below `sm` and 4rem from `sm`. The WhatMatters wordmark is fitted to the footer width. The quiet row is the WM mark, WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Scroll until the cover ends — the footer fades, scales, and sharpens from 12px of blur across its own height. Reduced motion stays sharp. The scrollbar stays visible.",
         },
       },
     },
@@ -256,14 +217,7 @@ const marketingHeroCopySource = `
 "use client";
 
 import { Sparkles } from "lucide-react";
-import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, ScrollHorizontal, SiteNav, footerRevealFieldClasses } from "@whatmatters/wmds";
-
-const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
-  { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
-] as const;
+import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, ScrollHorizontal, SiteNav, footerRevealRuledFieldClasses } from "@whatmatters/wmds";
 
 const tiles = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },
@@ -279,9 +233,6 @@ const projects = [
   { id: "project-four", label: "Project Four", color: "var(--color-info-muted)" },
   { id: "project-five", label: "Project Five", color: "var(--color-accent)" },
 ];
-
-// Opens the multi-step project form. There is no /start route.
-function openProjectModal() {}
 
 export function MarketingHeroPage() {
   return (
@@ -331,14 +282,8 @@ export function MarketingHeroPage() {
           <GridOverlay visible keyboardShortcut={false} />
         </main>
       </FooterReveal.Content>
-      <FooterReveal.Footer className={footerRevealFieldClasses}>
-        <FooterReveal.Brand
-          headline="We Build WhatMatters"
-          ctaLabel="Start a project"
-          onCtaClick={openProjectModal}
-          wordmark="WHATMATTERS"
-          socialLinks={socialLinks}
-        />
+      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
+        <FooterReveal.Ruled />
       </FooterReveal.Footer>
     </FooterReveal>
   );
@@ -397,14 +342,8 @@ function MarketingHeroCanvas() {
           <GridOverlay visible keyboardShortcut={false} />
         </main>
       </FooterReveal.Content>
-      <FooterReveal.Footer className={footerRevealFieldClasses}>
-        <FooterReveal.Brand
-          headline="We Build WhatMatters"
-          ctaLabel="Start a project"
-          onCtaClick={openProjectModal}
-          wordmark="WHATMATTERS"
-          socialLinks={socialLinks}
-        />
+      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
+        <FooterReveal.Ruled />
       </FooterReveal.Footer>
     </FooterReveal>
   );
@@ -418,7 +357,7 @@ export const MarketingHeroPattern: Story = {
       docs: {
         description: {
           story:
-            "The marketing hero (SiteNav, headline, intro, tile fan) fills **FooterReveal.Content**, then **ScrollHorizontal** with expandLast (Selected work is the accessible name, sr-only while the window is pinned — solid token-color placeholders), then the page grid (\`grid-page\` with \`!py-0\`, a guide host with no block padding). **FooterReveal.Brand** is the sticky footer underneath. Scroll past the hero — the gallery translates from the first card centered to the last, then the last tile grows to fill the viewport and scrolls away. The gallery section ends on that tile, so its bottom edge meets the footer. The brand field fades in from about 12px of blur after that cover. Reduced motion keeps the gallery as a native horizontal scroller with the heading visible above it, follows it with the last tile as a full-viewport section flush with the footer, and shows the footer sharp.",
+            "The marketing hero (SiteNav, headline, intro, tile fan) fills **FooterReveal.Content**, then **ScrollHorizontal** with expandLast (Selected work is the accessible name, sr-only while the window is pinned — solid token-color placeholders), then the page grid (\`grid-page\` with \`!py-0\`, a guide host with no block padding). **FooterReveal.Ruled** on **footerRevealRuledFieldClasses** is the sticky footer underneath: Services, Resources, and About as **TextLink**, the fitted WhatMatters wordmark, and the quiet meta row. Scroll past the hero — the gallery translates from the first card centered to the last, then the last tile grows to fill the viewport and scrolls away. The gallery section ends on that tile, so its bottom edge meets the footer. The cream field fades in from about 12px of blur after that cover. Reduced motion keeps the gallery as a native horizontal scroller with the heading visible above it, follows it with the last tile as a full-viewport section flush with the footer, and shows the footer sharp.",
         },
       },
     },
@@ -462,10 +401,8 @@ export const MarketingHeroPattern: Story = {
 
     const fieldGuides = footer.querySelector("[data-footer-reveal='guides']");
     const field = footer.querySelector("[data-footer-reveal='field']");
-    const headline = [...footer.querySelectorAll("h2")].find(
-      (node) => node.textContent === "We Build WhatMatters",
-    );
-    if (!fieldGuides || !field || !headline) throw new Error("footer field guides missing");
+    const services = [...footer.querySelectorAll("a")].find((node) => node.textContent === "Services");
+    if (!fieldGuides || !field || !services) throw new Error("footer field guides missing");
     expect(getComputedStyle(fieldGuides).display).not.toBe("none");
     const fieldCols = fieldGuides.querySelector(".grid-guides-cols");
     expect(fieldCols?.getBoundingClientRect().height ?? 0).toBeGreaterThan(40);
@@ -474,25 +411,18 @@ export const MarketingHeroPattern: Story = {
     expect(fieldZ).toBeGreaterThan(guideZ);
     const cover = canvasElement.querySelector("[data-footer-reveal='content']");
     if (cover instanceof HTMLElement) window.scrollTo(0, cover.offsetHeight);
-    const headlineBox = headline.getBoundingClientRect();
+    const servicesBox = services.getBoundingClientRect();
     const hit = document.elementFromPoint(
-      headlineBox.left + headlineBox.width / 2,
-      headlineBox.top + headlineBox.height / 2,
+      servicesBox.left + servicesBox.width / 2,
+      servicesBox.top + servicesBox.height / 2,
     );
-    expect(hit === headline || headline.contains(hit)).toBe(true);
+    expect(hit === services || services.contains(hit)).toBe(true);
+    expect(footer.textContent).not.toContain("We Build WhatMatters");
+    expect(footer.querySelector("[data-footer-ruled='wordmark']")?.textContent).toBe("WhatMatters");
 
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
       document.documentElement.clientWidth + 1,
     );
-
-    const cta = [...canvasElement.querySelectorAll("button")].find(
-      (node) => node.textContent === "Start a project",
-    );
-    expect(cta?.getAttribute("type")).toBe("button");
-    cta?.click();
-    await waitFor(() => {
-      expect(openProjectModal).toHaveBeenCalled();
-    });
   },
 };
 

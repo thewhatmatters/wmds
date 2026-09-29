@@ -14,7 +14,7 @@ import { ScrollHorizontal } from "../ScrollHorizontal/ScrollHorizontal";
 import { scrollHorizontalIntroStatement, scrollHorizontalMarketingItems } from "../ScrollHorizontal/scrollHorizontalExamples";
 import { SiteNav } from "../SiteNav/SiteNav";
 import { FooterReveal } from "./FooterReveal";
-import { footerRevealFieldClasses, footerRevealRuledFieldClasses } from "./footerRevealStyles";
+import { footerRevealRuledFieldClasses } from "./footerRevealStyles";
 
 const meta = {
   title: "Components/Layout/FooterReveal",
@@ -26,13 +26,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
-  { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
-] as const;
 
 const tiles = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },
@@ -53,14 +46,7 @@ const marketingHeroWithGalleryIntroCopySource = `
 // Hand art: CC BY 4.0, Silvia Sguotti and Gabriele Montinaro.
 
 import { Sparkles } from "lucide-react";
-import { Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence, footerRevealFieldClasses } from "@whatmatters/wmds";
-
-const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
-  { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
-] as const;
+import { Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence, footerRevealRuledFieldClasses } from "@whatmatters/wmds";
 
 const tiles = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },
@@ -153,14 +139,8 @@ export function SequencedMarketingHeroPage() {
           <GridOverlay visible keyboardShortcut={false} />
         </main>
       </FooterReveal.Content>
-      <FooterReveal.Footer className={footerRevealFieldClasses}>
-        <FooterReveal.Brand
-          headline="We Build WhatMatters"
-          ctaLabel="Start a project"
-          onCtaClick={openProjectModal}
-          wordmark="WHATMATTERS"
-          socialLinks={socialLinks}
-        />
+      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
+        <FooterReveal.Ruled />
       </FooterReveal.Footer>
     </FooterReveal>
   );
@@ -168,39 +148,12 @@ export function SequencedMarketingHeroPage() {
 
 `.trim();
 
-const marketingHeroRuledCopySource = marketingHeroWithGalleryIntroCopySource
-  .replaceAll("footerRevealFieldClasses", "footerRevealRuledFieldClasses")
-  .replace(
-    `      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
-        <FooterReveal.Brand
-          headline="We Build WhatMatters"
-          ctaLabel="Start a project"
-          onCtaClick={openProjectModal}
-          wordmark="WHATMATTERS"
-          socialLinks={socialLinks}
-        />
-      </FooterReveal.Footer>`,
-    `      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
-        <FooterReveal.Ruled />
-      </FooterReveal.Footer>`,
-  )
-  .replace(
-    `const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
-  { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
-] as const;
+const marketingHeroRuledCopySource = marketingHeroWithGalleryIntroCopySource.replace(
+  "export function SequencedMarketingHeroPage()",
+  "export function MarketingHeroRuledPage()",
+);
 
-`,
-    "",
-  )
-  .replace(
-    "export function SequencedMarketingHeroPage()",
-    "export function MarketingHeroRuledPage()",
-  );
-
-function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
+function SequencedGalleryHeroPage() {
   return (
     <FooterReveal>
       <FooterReveal.Content>
@@ -273,18 +226,8 @@ function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
           <GridOverlay visible keyboardShortcut={false} />
         </main>
       </FooterReveal.Content>
-      <FooterReveal.Footer className={ruled ? footerRevealRuledFieldClasses : footerRevealFieldClasses}>
-        {ruled ? (
-          <FooterReveal.Ruled />
-        ) : (
-          <FooterReveal.Brand
-            headline="We Build WhatMatters"
-            ctaLabel="Start a project"
-            onCtaClick={openProjectModal}
-            wordmark="WHATMATTERS"
-            socialLinks={socialLinks}
-          />
-        )}
+      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
+        <FooterReveal.Ruled />
       </FooterReveal.Footer>
     </FooterReveal>
   );
@@ -435,6 +378,13 @@ async function playSequencedMarketingHero(canvasElement: HTMLElement) {
   });
   expectSequencedHeroMatchesGallery(canvasElement);
 
+  expect(canvasElement.querySelector("[data-footer-ruled='wordmark']")?.textContent).toBe("WhatMatters");
+  expect(canvasElement.textContent).not.toContain("We Build WhatMatters");
+  const navLinks = [...canvasElement.querySelectorAll("[data-footer-ruled='links'] a")].map(
+    (link) => link.textContent,
+  );
+  expect(navLinks).toEqual(["Services", "Resources", "About"]);
+
   const footer = canvasElement.querySelector("[data-footer-reveal='sticky']");
   if (!(footer instanceof HTMLElement)) throw new Error("footer missing");
   const footerTop = stickyFooterInFlowTop(footer);
@@ -451,7 +401,7 @@ export const SequencedMarketingHero: Story = {
       docs: {
         description: {
           story:
-            "Full marketing page on the navy footer. HeroIntro is the h1 and sequences that sentence on type-display-2 at normal weight and display-2 leading — the same size and line-height as the gallery statement. The h1 is only An Austin, TX studio specializing in brand and product design. Austin, and TX stay together. The rock hand sits in that line, immediately after TX, inside the same nowrap phrase. The rock hand uses inline, drawn at about 1.15em and centered on the line, and aria-hidden. That slot pops with the hero sequence on the beat after TX, with scale from 0, rotation -16, and back.out(1.8). Idle starts after the pop. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. An asterisk, a point RiveHand after impression, and an accent diamond sit in the statement. The point hand pops with that statement on the beat after impression, then idles. The accessible name is the plain sentence. The action is Button role secondary, labeled Start a project, with onClick opening the project modal. expandLast still ends on the full-bleed tile, flush with FooterReveal.Brand. Reduced motion leaves both sequences at rest, shapes and hands included, on one static frame, and keeps the grid inset. The ruled-footer page is Pattern — marketing hero ruled grid.",
+            "Full marketing page on the cream footer. HeroIntro is the h1 and sequences that sentence on type-display-2 at normal weight and display-2 leading — the same size and line-height as the gallery statement. The h1 is only An Austin, TX studio specializing in brand and product design. Austin, and TX stay together. The rock hand sits in that line, immediately after TX, inside the same nowrap phrase. The rock hand uses inline, drawn at about 1.15em and centered on the line, and aria-hidden. That slot pops with the hero sequence on the beat after TX, with scale from 0, rotation -16, and back.out(1.8). Idle starts after the pop. ScrollHorizontal.Intro sequences the gallery statement once, when that panel scrolls into view. At rest the panel's left edge is the page-grid content start; scroll carries it off with the tiles. An asterisk, a point RiveHand after impression, and an accent diamond sit in the statement. The point hand pops with that statement on the beat after impression, then idles. The accessible name is the plain sentence. The action is Button role secondary, labeled Start a project, with onClick opening the project modal. expandLast still ends on the full-bleed tile, flush with FooterReveal.Ruled on footerRevealRuledFieldClasses: Services, Resources, and About, the fitted WhatMatters wordmark, and the quiet meta row. Reduced motion leaves both sequences at rest, shapes and hands included, on one static frame, and keeps the grid inset.",
         },
       },
     },
@@ -497,7 +447,7 @@ export const MarketingHeroRuledPattern: Story = {
     },
     marketingHeroRuledCopySource,
   ),
-  render: () => <SequencedGalleryHeroPage ruled />,
+  render: () => <SequencedGalleryHeroPage />,
   play: async ({ canvasElement }) => {
     await playSequencedMarketingHero(canvasElement);
     const fade = canvasElement.querySelector<HTMLElement>("[data-footer-reveal='fade']");

@@ -167,7 +167,7 @@ export const InverseAction: Story = {
       docs: {
         description: {
           story:
-            "White pill with brand text. Use it on a brand-navy field (**FooterReveal**). Brand text (`#011272`) on white (`#ffffff`) reports **15.8:1**. **FooterReveal** passes `type=\"button\"` and `onCtaClick`. Compose `render={<a href />}` when this control navigates.",
+            "White pill with brand text. Brand text (`#011272`) on white (`#ffffff`) reports **15.8:1**. Compose `render={<a href />}` when this control navigates.",
         },
       },
     },

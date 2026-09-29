@@ -97,4 +97,21 @@ describe("ruled footer contract", () => {
     expect(stories).toContain('<TextLink href="/resources" className="!text-brand">Resources</TextLink>');
     expect(stories).toContain('<TextLink href="/about" className="!text-brand">About</TextLink>');
   });
+
+  it("mounts Ruled on every marketing page story", () => {
+    const files = [
+      "./FooterReveal.stories.tsx",
+      "./FooterReveal.sequencedGallery.stories.tsx",
+      "./FooterReveal.galleryIntro.stories.tsx",
+    ];
+    const footer = `<FooterReveal.Footer className={footerRevealRuledFieldClasses}>
+        <FooterReveal.Ruled />
+      </FooterReveal.Footer>`;
+    for (const file of files) {
+      const source = readFileSync(new URL(file, import.meta.url), "utf8");
+      expect(source).toContain(footer);
+      expect(source).not.toContain("<FooterReveal.Brand");
+      expect(source).not.toContain("footerRevealFieldClasses");
+    }
+  });
 });

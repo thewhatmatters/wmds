@@ -76,7 +76,7 @@ export interface FooterRevealContentProps {
 export interface FooterRevealFooterProps {
   /** Footer contents — any node, including a composed marketing footer. */
   children?: ReactNode;
-  /** Merged onto the fading field. Put the field color here (`footerRevealFieldClasses`). */
+  /** Merged onto the fading field. The marketing footer uses `footerRevealRuledFieldClasses`. */
   className?: FooterRevealLayoutClassName;
 }
 
