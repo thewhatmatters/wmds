@@ -12,6 +12,7 @@ import {
   footerRevealRuledEmailClasses,
   footerRevealRuledIdentityClasses,
   footerRevealRuledLinkListClasses,
+  footerRevealRuledNavLinkClasses,
   footerRevealRuledLinksClasses,
   footerRevealRuledMarkClasses,
   footerRevealRuledMetaClasses,
@@ -171,7 +172,11 @@ export function FooterRevealRuled({
         <ul className={footerRevealRuledLinkListClasses}>
           {links.map((link) => (
             <li key={link.href}>
-              <TextLink href={link.href} external={/^https?:\/\//i.test(link.href)}>
+              <TextLink
+                href={link.href}
+                external={/^https?:\/\//i.test(link.href)}
+                className={footerRevealRuledNavLinkClasses}
+              >
                 {link.label}
               </TextLink>
             </li>
