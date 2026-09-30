@@ -14,6 +14,7 @@ import {
   inputStatusGapClasses,
   textareaBaseClasses,
   textareaCompoundFieldPaddingClasses,
+  textareaInlineClasses,
   textareaCompoundInnerFieldClassesFor,
   textareaFixedPaddingClasses,
   textareaMinHeightClasses,
@@ -53,6 +54,11 @@ export interface TextAreaProps
   rows?: number;
   /** Native resize — default **`vertical`**. */
   resize?: TextAreaResize;
+  /**
+   * Inside **PromptBar** — no outer shell. The parent pill owns border, radius, and focus.
+   * Not for standalone forms.
+   */
+  inline?: boolean;
   className?: TextAreaLayoutClassName;
 }
 
@@ -64,9 +70,14 @@ function assertTextAreaA11y(
   }
 }
 
-function assertTextAreaPattern(props: Pick<TextAreaProps, "status" | "message">) {
+function assertTextAreaPattern(
+  props: Pick<TextAreaProps, "status" | "message" | "inline" | "label" | "description">,
+) {
   if (props.message != null && props.status == null) {
     console.warn("[WMDS TextArea] `message` requires `status`.");
+  }
+  if (props.inline && (props.label != null || props.description != null || props.status != null || props.message != null)) {
+    console.warn("[WMDS TextArea] `inline` is for PromptBar only — omit label, description, and validation.");
   }
 }
 
@@ -85,6 +96,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
     loading = false,
     rows = 4,
     resize = "vertical",
+    inline = false,
     className,
     disabled,
     id: idProp,
@@ -96,7 +108,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
   const generatedId = useId();
   const controlId = idProp ?? generatedId;
   assertTextAreaA11y({ label, "aria-label": rest["aria-label"], "aria-labelledby": rest["aria-labelledby"] });
-  assertTextAreaPattern({ status, message });
+  assertTextAreaPattern({ status, message, inline, label, description });
 
   const hasMessage = message != null && message.length > 0 && status != null;
   const showTrailingStatusIcon = !hasMessage && (loading || status != null);
@@ -104,6 +116,21 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
   const messageId = hasMessage ? `${controlId}-message` : undefined;
   const describedBy =
     [ariaDescribedBy, descriptionId, messageId].filter(Boolean).join(" ") || undefined;
+
+  if (inline) {
+    return (
+      <textarea
+        {...rest}
+        ref={ref}
+        id={controlId}
+        rows={rows}
+        disabled={disabled}
+        aria-invalid={status === "error" || undefined}
+        aria-describedby={describedBy}
+        className={cn(inputDisabledClasses, textareaInlineClasses, className)}
+      />
+    );
+  }
 
   const textareaElement = (
     <textarea

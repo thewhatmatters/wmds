@@ -268,6 +268,12 @@ export {
   type PillGroupProps,
 } from "./components/molecules/PillGroup/PillGroup";
 export {
+  PromptBar,
+  promptBarPlaceholder,
+  type PromptBarLayoutClassName,
+  type PromptBarProps,
+} from "./components/molecules/PromptBar/PromptBar";
+export {
   RadioGroup,
   radioGroupOrientations,
   type RadioGroupItemProps,

@@ -176,6 +176,14 @@ export function textareaStatusBannerClassesFor(
 
 export const textareaBaseClasses = cn(inputBaseClasses, "block leading-normal");
 
+/**
+ * Inside **PromptBar** — the parent pill owns border, radius, and focus ring.
+ * No element shell, no min-height, no resize grip.
+ */
+export const textareaInlineClasses =
+  "block w-full min-w-0 resize-none rounded-none border-0 bg-transparent font-sans font-normal tracking-normal text-fg shadow-none " +
+  "placeholder:text-disabled focus-visible:outline-none focus-visible:ring-0";
+
 export {
   inputAttachedFieldClasses,
   inputAttachedInputClasses,
