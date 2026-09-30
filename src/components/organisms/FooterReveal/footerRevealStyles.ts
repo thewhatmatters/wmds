@@ -134,9 +134,14 @@ export const footerRevealRuledFieldClasses =
  * Centered link stack, then the fitted wordmark, then the quiet meta row.
  * No max-width and no overflow clip — the nav, wordmark, and meta row stay
  * visible. The wordmark has to reach the viewport width.
+ *
+ * Top padding clears the pinned site nav on every mount. `--site-nav-height`
+ * is the nav band. `var(--spacing) * 4` is that pill's 1rem pin (`top-4`).
+ * The bottom inset stays `--grid-pad`.
  */
 export const footerRevealRuledRootClasses =
-  "flex min-h-[100vh] w-full min-w-0 flex-col items-center gap-[var(--grid-pad)] py-[var(--grid-pad)] text-center text-brand";
+  "flex min-h-[100vh] w-full min-w-0 flex-col items-center gap-[var(--grid-pad)] " +
+  "pb-[var(--grid-pad)] pt-[calc(var(--site-nav-height)+var(--spacing)*4)] text-center text-brand";
 
 /** Centered link stack. The list hugs its labels; it does not stretch into columns. */
 export const footerRevealRuledLinksClasses =

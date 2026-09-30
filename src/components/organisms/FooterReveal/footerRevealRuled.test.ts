@@ -36,6 +36,11 @@ describe("ruled footer contract", () => {
     expect(footerRevealRuledFieldClasses).not.toContain("max-h-");
     expect(footerRevealRuledFieldClasses).not.toContain("overflow-hidden");
     expect(footerRevealRuledRootClasses).toContain("min-h-[100vh]");
+    expect(footerRevealRuledRootClasses).toContain(
+      "pt-[calc(var(--site-nav-height)+var(--spacing)*4)]",
+    );
+    expect(footerRevealRuledRootClasses).toContain("pb-[var(--grid-pad)]");
+    expect(footerRevealRuledRootClasses).not.toMatch(/pt-\[\d/);
     expect(footerRevealRuledRootClasses).toContain("flex-col");
     expect(footerRevealRuledRootClasses).toContain("items-center");
     expect(footerRevealRuledRootClasses).not.toContain("max-h-");

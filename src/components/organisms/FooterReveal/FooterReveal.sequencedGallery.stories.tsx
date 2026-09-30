@@ -511,6 +511,14 @@ export const MarketingHeroRuledPattern: Story = {
     expect(Number.parseFloat(getComputedStyle(fade).minHeight)).toBeGreaterThanOrEqual(viewportTall);
     expect(Number.parseFloat(getComputedStyle(ruledRoot).minHeight)).toBeGreaterThanOrEqual(viewportTall);
     expect(getComputedStyle(ruledRoot).overflowY).not.toBe("hidden");
+    const navClearance = document.createElement("div");
+    navClearance.style.cssText =
+      "position:absolute;visibility:hidden;pointer-events:none;height:calc(var(--site-nav-height) + var(--spacing) * 4)";
+    document.body.append(navClearance);
+    const clearance = navClearance.getBoundingClientRect().height;
+    navClearance.remove();
+    expect(clearance).toBeGreaterThan(0);
+    expect(Number.parseFloat(getComputedStyle(ruledRoot).paddingTop)).toBeGreaterThanOrEqual(clearance - 0.5);
     expect(Math.abs(frame.offsetWidth - fade.offsetWidth)).toBeLessThanOrEqual(1);
     expect(wordmark.textContent).toBe("WhatMatters");
     expect(canvasElement.querySelector("a[href='mailto:randy@whatmatters.so']")?.textContent).toBe(
