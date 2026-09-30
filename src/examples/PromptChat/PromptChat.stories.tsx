@@ -28,17 +28,17 @@ Voice and attachments are not part of this version. The trace and the reply are 
 | **Reply** | \`type-body\`, full width of the thread. Words resolve in place. One **TextLink** in the sentence. Not a card |
 | **Actions** | **IconButton** \`sm\`, ghost. Copy, helpful, not helpful. After the stream |
 | **Follow-ups** | **Button** \`role="outline"\` \`size="md"\`, same column as the reply, quiet \`border-border\`. Prompts the user could send next |
-| **Composer** | **PromptBar**, columns 4–9 from \`lg\`, pinned under the scrolling thread |
+| **Composer** | **PromptBar**, same narrowed column as the thread, pinned under the scrolling stage |
 | **Motion** | \`motion\` via \`motionTransitionProp\`. The sent line fades in. Fast for each word |
 
 ## Anatomy
 
 \`\`\`
-Page — cream field, no sidebar, existing page grid
+Page — cream field, no sidebar, narrowed page grid (40rem)
 ├── Landing — headline, centered. No nav
-│   or Chat — SiteNav, thread on the full grid (scrolls)
+│   or Chat — SiteNav, thread in that column (scrolls)
 │              user pill, thinking trace until the reply starts, reply, actions, follow-ups
-└── PromptBar — columns 4–9 from lg, pinned
+└── PromptBar — same column, pinned
 \`\`\`
 
 ## Best practices
