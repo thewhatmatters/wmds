@@ -9,11 +9,12 @@ import {
   AskWhatMatters,
   promptChatHeadline,
   promptChatPatternCopySource,
-  promptChatSampleReply,
 } from "./PromptChatPattern";
 import {
+  promptChatActionsClasses,
   promptChatBarClasses,
   promptChatColumnClasses,
+  promptChatFollowUpsClasses,
   promptChatHeadlineClasses,
   promptChatPageClasses,
   promptChatReplyClasses,
@@ -21,6 +22,7 @@ import {
   promptChatThreadClasses,
   promptChatUserClasses,
 } from "./promptChatStyles";
+import { promptChatPartDelay, promptChatReplyParts, promptChatSampleReply } from "./promptChatStream";
 
 function mount() {
   const container = document.createElement("div");
@@ -85,6 +87,8 @@ describe("prompt chat pattern", () => {
     expect(view.container.querySelector("header")).not.toBeNull();
     expect(view.container.textContent).toContain("What services do you offer?");
     expect(view.container.textContent).toContain(promptChatSampleReply);
+    expect(view.container.querySelector("a[href='/notes']")?.textContent).toBe("studio notes");
+    expect(view.container.querySelector("[aria-label='Copy reply']")).toBeNull();
     expect(view.field).toHaveProperty("value", "");
   });
 
@@ -134,6 +138,8 @@ describe("prompt chat pattern", () => {
       promptChatThreadClasses,
       promptChatUserClasses,
       promptChatReplyClasses,
+      promptChatActionsClasses,
+      promptChatFollowUpsClasses,
       promptChatBarClasses,
     ]) {
       expect(source).toContain(classes);
@@ -141,11 +147,31 @@ describe("prompt chat pattern", () => {
     }
     expect(promptChatPatternCopySource).toContain('from "@whatmatters/wmds"');
     expect(promptChatPatternCopySource).toContain("PromptBar");
+    expect(promptChatPatternCopySource).toContain("TextLink");
+    expect(promptChatPatternCopySource).toContain("IconButton");
     expect(promptChatPatternCopySource).toContain("SiteNav");
     expect(promptChatPatternCopySource).toContain("motion/react");
     expect(promptChatPatternCopySource).toContain("useReducedMotion");
     expect(promptChatPatternCopySource).toContain(promptChatHeadline);
     expect(promptChatPatternCopySource).toContain(promptChatSampleReply);
     expect(promptChatPatternCopySource).not.toContain("ExampleGridControls");
+  });
+});
+
+describe("prompt chat stream timing", () => {
+  const sourceIndex = promptChatReplyParts.findIndex((part) => part.kind === "source");
+
+  it("holds the source until the word before it has arrived", () => {
+    const before = promptChatPartDelay(sourceIndex - 1);
+    const source = promptChatPartDelay(sourceIndex);
+    const after = promptChatPartDelay(sourceIndex + 1);
+    expect(source - before).toBeCloseTo(0.175);
+    expect(after - source).toBeCloseTo(0.175);
+    expect(promptChatPartDelay(1)).toBeCloseTo(0.06);
+  });
+
+  it("shows every part immediately when motion is reduced", () => {
+    expect(promptChatPartDelay(sourceIndex, true)).toBe(0);
+    expect(promptChatPartDelay(promptChatReplyParts.length - 1, true)).toBe(0);
   });
 });

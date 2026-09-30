@@ -32,8 +32,14 @@ export const promptChatThreadClasses = "col-span-full flex flex-col items-start 
 export const promptChatUserClasses =
   "ml-auto max-w-full rounded-full bg-fill-selected px-4 py-2 type-body text-fg";
 
-/** Plain reply. Not a card. */
+/** Plain reply. Not a card. Words stream inside this line. */
 export const promptChatReplyClasses = "type-body text-fg";
+
+/** Copy, helpful, and not helpful. Existing icon buttons, shown when the stream ends. */
+export const promptChatActionsClasses = "flex items-center gap-1";
+
+/** Suggested prompts. Text buttons, not a new chip. */
+export const promptChatFollowUpsClasses = "flex flex-col items-start gap-2";
 
 /** Same column as the stage. Stays at the bottom of the viewport. */
 export const promptChatBarClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
