@@ -46,6 +46,12 @@ Ship **FooterReveal** as an organism under **Components/Layout**:
 
 **FooterReveal.Ruled** is at least `100vh` on every mount. The floor is `min-h-[100vh]` on **`footerRevealRuledFieldClasses`** and **`footerRevealRuledRootClasses`**, not a page override. Content taller than the viewport grows the field. The nav, the fitted wordmark, and the quiet meta row stay visible. **FooterReveal.Brand** is unchanged.
 
+## Update — ruled stack is vertically centered
+
+**Date:** 2026-09-30
+
+The link stack, fitted wordmark, and quiet row are one block. **`footerRevealRuledRootClasses`** uses `justify-center-safe`, so when the block is shorter than the field the leftover space is shared above the links and below the quiet row. Top padding still clears the pinned site nav. `safe` keeps a short viewport packed under that padding instead of centering the links into the nav. **FooterReveal.Brand** is unchanged.
+
 ## Non-goals
 
 - A second marketing footer organism. **FooterReveal.Brand** and **FooterReveal.Ruled** are compounds of this one. Other footer contents stay children of **FooterReveal.Footer**.

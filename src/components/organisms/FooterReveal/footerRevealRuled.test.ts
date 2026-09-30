@@ -43,6 +43,7 @@ describe("ruled footer contract", () => {
     expect(footerRevealRuledRootClasses).not.toMatch(/pt-\[\d/);
     expect(footerRevealRuledRootClasses).toContain("flex-col");
     expect(footerRevealRuledRootClasses).toContain("items-center");
+    expect(footerRevealRuledRootClasses).toContain("justify-center-safe");
     expect(footerRevealRuledRootClasses).not.toContain("max-h-");
     expect(footerRevealRuledRootClasses).not.toContain("overflow-hidden");
     expect(footerRevealRuledRootClasses).not.toContain("max-w-");
