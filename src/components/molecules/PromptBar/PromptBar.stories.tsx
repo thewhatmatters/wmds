@@ -80,8 +80,8 @@ Voice and attachments are not part of this version.
 
 | Piece | Composition |
 |-------|-------------|
-| **Field** | \`TextArea inline\` — one line, grows a little if the text wraps |
-| **Send** | \`IconButton\` — Lucide **ArrowUp**. Disabled while the draft is empty |
+| **Field** | \`TextArea inline\` — one line when empty, grows through 3 lines, then scrolls |
+| **Send** | \`IconButton\` \`sm\` — Lucide **ArrowRight**, inset with even padding. Muted while empty |
 | **Fill** | \`--color-brand\` / \`--color-on-brand\` (\`#011272\`) when there is text |
 
 Enter sends. Shift+Enter inserts a newline. Placeholder is **Ask anything…**.
@@ -89,11 +89,12 @@ Enter sends. Shift+Enter inserts a newline. Placeholder is **Ask anything…**.
 ## Anatomy
 
 \`\`\`
-PromptBar — pill shell, bg-surface, border-border-control
-├── TextArea inline, rows 1, type-body
-└── IconButton size md — Send
-    disabled until the draft has text
-    brand navy fill from the shell (\`--color-brand\`)
+PromptBar — pill shell, bg-surface, one border
+├── TextArea inline — 1 line empty, max 3, then scroll
+└── IconButton sm — ArrowRight, even inset
+    muted until the draft has text
+    brand navy when it can send
+    no second focus ring
 \`\`\`
 
 ## Best practices
@@ -163,13 +164,13 @@ export const WithText: Story = {
     docs: {
       description: {
         story:
-          "Draft with text. The send control is enabled and uses brand navy (#011272). Voice and attachments are not part of this version.",
+          "Three lines of text. The pill stops there and the field scrolls. The send circle sits inside with even padding and uses brand navy (#011272). Voice and attachments are not part of this version.",
       },
     },
   },
   render: () => (
     <PromptBarFrame>
-      <PromptBar defaultValue="How should we name the work?" />
+      <PromptBar defaultValue={"How should we name the work we are starting?\nWhat should the first screen say when someone arrives?\nKeep the third line inside the pill, then scroll."} />
     </PromptBarFrame>
   ),
 };

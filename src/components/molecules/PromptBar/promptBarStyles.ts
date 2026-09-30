@@ -1,26 +1,35 @@
 import { focusRingTransitionClasses } from "../../../lib/motion";
 
 /**
- * Wide prompt pill — taller than the compact Search shell (`h-11`)
- * so it can sit under a headline. Surface on the page background.
- * Border and focus ring match Search: the shell owns them.
+ * One-line shell is a pill. IconButton `sm` is 2.25rem and the inset is 0.5rem,
+ * so the outer height is 3.25rem and the radius is half of that (1.625rem).
+ * The radius stays put when the field grows, and the circle keeps the same inset.
+ * The shell owns the single focus ring (inset, so it does not stack a second edge).
  */
 export const promptBarShellClasses =
-  "flex w-full items-end gap-3 rounded-full border border-border-control bg-surface " +
-  "py-3 pr-3 pl-6 " +
-  "focus-within:outline-none focus-within:ring-2 focus-within:ring-focus-ring focus-within:ring-offset-2 focus-within:ring-offset-body " +
+  "flex w-full items-end gap-2 rounded-[1.625rem] border border-border-control bg-surface p-2 pl-5 " +
+  "focus-within:outline-none focus-within:ring-2 focus-within:ring-inset focus-within:ring-focus-ring " +
   focusRingTransitionClasses;
 
 /**
- * One line, then a little extra if the text wraps (`field-sizing: content`, max three-ish lines).
- * Parent shell owns the border. `type-body` is the field size — not a new step.
+ * Empty is one line — min height matches the send circle, with padding that centers that line.
+ * Grows with the text, stops at three lines (`max-h`), then scrolls.
  */
 export const promptBarFieldClasses =
-  "min-h-11 min-w-0 flex-1 overflow-y-auto py-3 type-body [field-sizing:content] max-h-24";
+  "min-h-9 min-w-0 flex-1 overflow-y-auto py-2 type-body [field-sizing:content] " +
+  "max-h-[4.75rem]";
 
 /**
- * Send control fill. IconButton has no brand role — `--color-primary` is slate, not navy.
- * `!` beats the role fill. Token is `--color-brand` (`#011272`) with `--color-on-brand`.
- * No new Button variant and no new color.
+ * No focus ring on the circle. IconButton's ring-offset would sit on the pill border.
  */
-export const promptBarSendClasses = "!bg-brand !text-on-brand hover:!bg-brand active:!bg-brand";
+export const promptBarSendClasses =
+  "focus-visible:!ring-0 focus-visible:!ring-offset-0 focus-visible:!shadow-none";
+
+/** Enabled send — existing brand navy, not a new blue. */
+export const promptBarSendReadyClasses = "!bg-brand !text-on-brand hover:!bg-brand active:!bg-brand";
+
+/**
+ * Empty send. Neutral fill and disabled ink — muted, not a faded navy.
+ * `disabled:!opacity-100` keeps that pair; IconButton's opacity-50 would wash it out.
+ */
+export const promptBarSendMutedClasses = "!bg-neutral !text-disabled disabled:!opacity-100";

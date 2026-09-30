@@ -98,7 +98,7 @@ export const compositionShellExceptions: CompositionShellException[] = [
   {
     file: "components/molecules/PromptBar/PromptBar.tsx",
     ruleId: "lucide-import",
-    reason: "PromptBar owns the send glyph (Lucide ArrowUp) passed to IconButton.",
+    reason: "PromptBar owns the send glyph (Lucide ArrowRight) passed to IconButton.",
   },
   {
     file: "components/molecules/SelectableCard/SelectableCard.tsx",

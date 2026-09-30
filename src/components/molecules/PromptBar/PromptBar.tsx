@@ -4,11 +4,17 @@ import {
   type KeyboardEvent,
   type TextareaHTMLAttributes,
 } from "react";
-import { ArrowUp } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { cn } from "../../../lib/cn";
 import { IconButton } from "../../atoms/IconButton/IconButton";
 import { TextArea } from "../../atoms/TextArea/TextArea";
-import { promptBarFieldClasses, promptBarSendClasses, promptBarShellClasses } from "./promptBarStyles";
+import {
+  promptBarFieldClasses,
+  promptBarSendClasses,
+  promptBarSendMutedClasses,
+  promptBarSendReadyClasses,
+  promptBarShellClasses,
+} from "./promptBarStyles";
 
 /** Layout-only — width, margin, flex placement. Not for colors. */
 export type PromptBarLayoutClassName = string;
@@ -47,8 +53,9 @@ function draftCanSend(value: string): boolean {
 
 /**
  * Wide prompt pill — inline {@link TextArea} plus an {@link IconButton} send control.
- * Enter sends. Shift+Enter inserts a newline. The send control stays disabled until there is text,
- * then uses brand navy (`--color-brand`). Voice and attachments are not part of this version.
+ * Enter sends. Shift+Enter inserts a newline. The field stays one line until the text wraps,
+ * grows through three lines, then scrolls. The send control is muted until there is text,
+ * then brand navy (`--color-brand`). Voice and attachments are not part of this version.
  */
 export const PromptBar = forwardRef<HTMLTextAreaElement, PromptBarProps>(function PromptBar(
   {
@@ -115,12 +122,12 @@ export const PromptBar = forwardRef<HTMLTextAreaElement, PromptBarProps>(functio
       <IconButton
         type="button"
         role="primary"
-        size="md"
-        icon={<ArrowUp strokeWidth={2} />}
+        size="sm"
+        icon={<ArrowRight strokeWidth={2} />}
         aria-label={sendLabel}
         title={sendLabel}
         disabled={!canSend}
-        className={promptBarSendClasses}
+        className={cn(promptBarSendClasses, canSend ? promptBarSendReadyClasses : promptBarSendMutedClasses)}
         onClick={send}
       />
     </div>

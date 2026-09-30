@@ -41,6 +41,9 @@ describe("PromptBar", () => {
     expect(view.field).toHaveProperty("placeholder", "Ask anything…");
     expect(view.send).toHaveProperty("disabled", true);
     expect(view.send.getAttribute("aria-label")).toBe("Send");
+    expect(view.send.className).toContain("bg-neutral");
+    expect(view.send.className).not.toContain("bg-brand");
+    expect(view.field.className).toContain("overflow-y-auto");
   });
 
   it("disables send when the draft is only whitespace", () => {
