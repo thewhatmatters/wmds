@@ -14,6 +14,7 @@ import {
   promptChatActionsClasses,
   promptChatBarClasses,
   promptChatColumnClasses,
+  promptChatComposerClasses,
   promptChatFollowUpClasses,
   promptChatFollowUpsClasses,
   promptChatHeadlineClasses,
@@ -171,6 +172,7 @@ describe("prompt chat pattern", () => {
     for (const classes of [
       promptChatPageClasses,
       promptChatColumnClasses,
+      promptChatComposerClasses,
       promptChatStageClasses,
       promptChatHeadlineClasses,
       promptChatThreadClasses,
@@ -202,6 +204,10 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).toContain(promptChatSampleReply);
     expect(promptChatPatternCopySource).toContain(promptChatThinkingLabel);
     expect(promptChatPatternCopySource).not.toContain(promptChatThoughtLabel);
+    expect(promptChatColumnClasses).not.toContain("--grid-max");
+    expect(promptChatComposerClasses).toContain("lg:col-start-4");
+    expect(promptChatComposerClasses).toContain("lg:col-end-10");
+    expect(promptChatPatternCopySource).not.toContain("--grid-max");
     expect(promptChatPatternCopySource).toContain("!border-border");
     expect(promptChatPatternCopySource).not.toContain("ExampleGridControls");
   });

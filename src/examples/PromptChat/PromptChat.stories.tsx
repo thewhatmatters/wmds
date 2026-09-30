@@ -25,19 +25,20 @@ Voice and attachments are not part of this version. The trace and the reply are 
 | **Chat chrome** | **SiteNav** — existing brand mark and menu. The mark is home |
 | **User turn** | Trailing pill on \`bg-fill-selected\`. Not a new Badge or Button variant |
 | **Thinking** | Steps on this pattern. The label shimmers while the reply has not started, then the trace leaves. Reasoning, search, and coding keep the settled disclosure |
-| **Reply** | \`type-body\`. Words resolve in place after the trace settles. One **TextLink** in the sentence. Not a card |
+| **Reply** | \`type-body\`, full width of the thread. Words resolve in place. One **TextLink** in the sentence. Not a card |
 | **Actions** | **IconButton** \`sm\`, ghost. Copy, helpful, not helpful. After the stream |
-| **Follow-ups** | **Button** \`role="outline"\` \`size="md"\`, full width of the column, quiet \`border-border\`. Prompts the user could send next |
-| **Composer** | **PromptBar**, pinned to the bottom of the column |
+| **Follow-ups** | **Button** \`role="outline"\` \`size="md"\`, same column as the reply, quiet \`border-border\`. Prompts the user could send next |
+| **Composer** | **PromptBar**, columns 4–9 from \`lg\`, pinned under the scrolling thread |
 | **Motion** | \`motion\` via \`motionTransitionProp\` — medium for the travel, fast for each word |
 
 ## Anatomy
 
 \`\`\`
-Page — cream field, no sidebar
+Page — cream field, no sidebar, existing page grid
 ├── Landing — headline, centered. No nav
-│   or Chat — SiteNav, user pill, thinking trace until the reply starts, streaming reply, actions, follow-ups
-└── PromptBar — pinned to the bottom
+│   or Chat — SiteNav, thread on the full grid (scrolls)
+│              user pill, thinking trace until the reply starts, reply, actions, follow-ups
+└── PromptBar — columns 4–9 from lg, pinned
 \`\`\`
 
 ## Best practices

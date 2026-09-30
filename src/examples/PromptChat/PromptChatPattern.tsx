@@ -13,6 +13,7 @@ import {
   promptChatActionsClasses,
   promptChatBarClasses,
   promptChatColumnClasses,
+  promptChatComposerClasses,
   promptChatFollowUpClasses,
   promptChatFollowUpsClasses,
   promptChatHeadlineClasses,
@@ -50,15 +51,15 @@ import { LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { Button, IconButton, PromptBar, SiteNav, TextLink, motionTransitionProp } from "@whatmatters/wmds";
 
 const pageClasses = "flex h-full min-h-0 w-full flex-1 flex-col bg-body";
-const columnClasses = "flex min-h-0 w-full flex-1 flex-col [--grid-max:40rem]";
+const columnClasses = "flex min-h-0 w-full flex-1 flex-col";
 const stageClasses = "grid-page min-h-0 w-full flex-1 overflow-y-auto !py-0";
 const landingClasses = "place-content-center";
 const headlineClasses =
   "col-span-full type-display-2 !font-normal text-balance text-center text-brand";
-const threadClasses = "col-span-full flex flex-col items-start gap-6 pt-6";
+const threadClasses = "col-span-full flex w-full min-w-0 flex-col items-start gap-6 pt-6";
 const userClasses =
   "ml-auto max-w-full rounded-full bg-fill-selected px-4 py-2 type-body text-fg";
-const replyClasses = "type-body text-fg";
+const replyClasses = "w-full type-body text-fg";
 const traceClasses = "flex w-full flex-col items-start gap-2";
 const traceBodyClasses =
   "flex w-full flex-col items-start gap-2 border-l border-border-control py-0.5 pl-3";
@@ -72,6 +73,7 @@ const actionsClasses = "flex items-center gap-1";
 const followUpsClasses = "flex w-full flex-col gap-2";
 const followUpClasses = "w-full !justify-start !border-border";
 const barClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
+const composerClasses = "col-span-full lg:col-start-4 lg:col-end-10";
 
 const headline = "What should we make?";
 const sampleReply =
@@ -379,7 +381,7 @@ export function AskWhatMatters() {
             )}
           </main>
           <div className={barClasses}>
-            <div className="col-span-full">
+            <div className={composerClasses}>
               <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
             </div>
           </div>
@@ -448,6 +450,8 @@ function ReplyWord({
  * Send or Enter: the bar stays, the headline fades, the sent line travels into the trailing pill,
  * then a Steps trace plays until the reply starts. The trace leaves when the reply starts.
  * A source link arrives with the words around it.
+ * The thread uses the full page grid and scrolls. Follow-ups share that column.
+ * The composer stays pinned in columns 4–9 from lg.
  * Actions and follow-up prompts appear when the stream finishes. The chat keeps SiteNav;
  * the brand mark returns to the landing.
  * Reduced motion skips the travel and the trace play, and shows the finished reply.
@@ -708,7 +712,7 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
             )}
           </main>
           <div className={promptChatBarClasses}>
-            <div className="col-span-full">
+            <div className={promptChatComposerClasses}>
               <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
             </div>
           </div>
