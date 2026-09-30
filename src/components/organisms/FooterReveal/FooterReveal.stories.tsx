@@ -707,6 +707,32 @@ function expectCreditFits(root: ParentNode) {
   expect(box.bottom).toBeLessThanOrEqual(window.innerHeight + 1);
 }
 
+/** Pinned site nav: band token plus the compact pill's 1rem offset. */
+function siteNavPinClearancePx(): number {
+  const probe = document.createElement("div");
+  probe.style.cssText =
+    "position:absolute;visibility:hidden;pointer-events:none;height:calc(var(--site-nav-height) + var(--spacing) * 4)";
+  document.body.append(probe);
+  const height = probe.getBoundingClientRect().height;
+  probe.remove();
+  return height;
+}
+
+/** Services starts below the pinned site nav. The wordmark and credit are not clipped. */
+function expectRuledContentClearsSiteNav(root: ParentNode) {
+  const footer = root.querySelector<HTMLElement>("[data-footer-ruled='root']");
+  const services = root.querySelector<HTMLElement>("[data-footer-ruled='links'] a");
+  if (!footer || !services) throw new Error("ruled footer missing");
+  const clearance = siteNavPinClearancePx();
+  expect(clearance).toBeGreaterThan(0);
+  const pad = Number.parseFloat(getComputedStyle(footer).paddingTop);
+  expect(pad).toBeGreaterThanOrEqual(clearance - 0.5);
+  const footerTop = footer.getBoundingClientRect().top;
+  expect(services.getBoundingClientRect().top - footerTop).toBeGreaterThanOrEqual(clearance - 1);
+  expect(getComputedStyle(footer).overflowY).not.toBe("hidden");
+  expect(getComputedStyle(services).overflow).not.toBe("hidden");
+}
+
 /** The ruled field is at least one viewport tall. Taller content may grow it. */
 function expectRuledFooterFillsViewport(root: ParentNode) {
   const footer = root.querySelector<HTMLElement>("[data-footer-ruled='root']");
@@ -715,6 +741,7 @@ function expectRuledFooterFillsViewport(root: ParentNode) {
   const min = window.innerHeight - 1;
   expect(footer.getBoundingClientRect().height).toBeGreaterThanOrEqual(min);
   expect(Number.parseFloat(getComputedStyle(footer).minHeight)).toBeGreaterThanOrEqual(min);
+  expectRuledContentClearsSiteNav(root);
   if (field) {
     expect(field.getBoundingClientRect().height).toBeGreaterThanOrEqual(min);
     expect(Number.parseFloat(getComputedStyle(field).minHeight)).toBeGreaterThanOrEqual(min);
