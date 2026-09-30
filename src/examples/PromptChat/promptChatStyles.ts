@@ -1,16 +1,18 @@
 /**
- * Immersive ask page. The column is a narrowed page grid so the statement,
- * the thread, and the prompt bar share one measure. Not the marketing homepage.
+ * Immersive ask page on the existing page grid. Not the marketing homepage.
+ * The thread uses the full grid. The composer sits in columns 4–9 from `lg`.
  */
 
-/** Viewport shell. SiteNav stays on the page grid; the column below narrows separately. */
+/** Viewport shell. SiteNav stays outside this column and is not restyled. */
 export const promptChatPageClasses = "flex h-full min-h-0 w-full flex-1 flex-col bg-body";
 
-/** Statement, thread, and prompt bar. `--grid-max` keeps that column from stretching across 1440. */
-export const promptChatColumnClasses =
-  "flex min-h-0 w-full flex-1 flex-col [--grid-max:40rem]";
+/** Statement, scrolling thread, and pinned prompt bar. The page grid, not a separate measure. */
+export const promptChatColumnClasses = "flex min-h-0 w-full flex-1 flex-col";
 
-/** Stage above the pinned bar. Landing centers the headline; chat starts at the top. */
+/**
+ * Stage above the pinned bar. This region scrolls when the thread is taller
+ * than the view. The composer stays outside it.
+ */
 export const promptChatStageClasses = "grid-page min-h-0 w-full flex-1 overflow-y-auto !py-0";
 
 export const promptChatLandingClasses = "place-content-center";
@@ -22,8 +24,9 @@ export const promptChatLandingClasses = "place-content-center";
 export const promptChatHeadlineClasses =
   "col-span-full type-display-2 !font-normal text-balance text-center text-brand";
 
-/** User turn under the nav, reply underneath, empty space down to the bar. */
-export const promptChatThreadClasses = "col-span-full flex flex-col items-start gap-6 pt-6";
+/** User turn, reply, and follow-ups. One full-width column of the page grid. */
+export const promptChatThreadClasses =
+  "col-span-full flex w-full min-w-0 flex-col items-start gap-6 pt-6";
 
 /**
  * The sent line. Existing selected-pill fill — not a new Badge or Button variant.
@@ -32,8 +35,8 @@ export const promptChatThreadClasses = "col-span-full flex flex-col items-start 
 export const promptChatUserClasses =
   "ml-auto max-w-full rounded-full bg-fill-selected px-4 py-2 type-body text-fg";
 
-/** Plain reply. Not a card. Words stream inside this line. */
-export const promptChatReplyClasses = "type-body text-fg";
+/** Plain reply. Same column as the follow-ups. Not a card. Words stream inside this line. */
+export const promptChatReplyClasses = "w-full type-body text-fg";
 
 /** Thinking trace. One disclosure, then the body for whichever script is playing. */
 export const promptChatTraceClasses = "flex w-full flex-col items-start gap-2";
@@ -62,7 +65,7 @@ export const promptChatTraceChevronClasses = "size-4 shrink-0 text-muted";
 /** Copy, helpful, and not helpful. Existing icon buttons, shown when the stream ends. */
 export const promptChatActionsClasses = "flex items-center gap-1";
 
-/** Suggested prompts. Outline pills, stacked to the column width. */
+/** Suggested prompts. Same thread column as the reply, stacked to that width. */
 export const promptChatFollowUpsClasses = "flex w-full flex-col gap-2";
 
 /**
@@ -72,5 +75,11 @@ export const promptChatFollowUpsClasses = "flex w-full flex-col gap-2";
  */
 export const promptChatFollowUpClasses = "w-full !justify-start !border-border";
 
-/** Same column as the stage. Stays at the bottom of the viewport. */
+/** Same page grid as the thread. Stays pinned under the scrolling stage. */
 export const promptChatBarClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
+
+/**
+ * Composer placement on that grid. Columns 4–9 from `lg`
+ * (`col-start-4` through `col-end-10`). Full width of the page grid below `lg`.
+ */
+export const promptChatComposerClasses = "col-span-full lg:col-start-4 lg:col-end-10";

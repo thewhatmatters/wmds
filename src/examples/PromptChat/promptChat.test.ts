@@ -14,6 +14,7 @@ import {
   promptChatActionsClasses,
   promptChatBarClasses,
   promptChatColumnClasses,
+  promptChatComposerClasses,
   promptChatFollowUpClasses,
   promptChatFollowUpsClasses,
   promptChatHeadlineClasses,
@@ -171,6 +172,7 @@ describe("prompt chat pattern", () => {
     for (const classes of [
       promptChatPageClasses,
       promptChatColumnClasses,
+      promptChatComposerClasses,
       promptChatStageClasses,
       promptChatHeadlineClasses,
       promptChatThreadClasses,
@@ -197,11 +199,17 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).toContain("IconButton");
     expect(promptChatPatternCopySource).toContain("SiteNav");
     expect(promptChatPatternCopySource).toContain("motion/react");
+    expect(promptChatPatternCopySource).toContain("opacity: 0");
+    expect(promptChatPatternCopySource).not.toContain("layoutId");
     expect(promptChatPatternCopySource).toContain("useReducedMotion");
     expect(promptChatPatternCopySource).toContain(promptChatHeadline);
     expect(promptChatPatternCopySource).toContain(promptChatSampleReply);
     expect(promptChatPatternCopySource).toContain(promptChatThinkingLabel);
     expect(promptChatPatternCopySource).not.toContain(promptChatThoughtLabel);
+    expect(promptChatColumnClasses).not.toContain("--grid-max");
+    expect(promptChatComposerClasses).toContain("lg:col-start-4");
+    expect(promptChatComposerClasses).toContain("lg:col-end-10");
+    expect(promptChatPatternCopySource).not.toContain("--grid-max");
     expect(promptChatPatternCopySource).toContain("!border-border");
     expect(promptChatPatternCopySource).not.toContain("ExampleGridControls");
   });

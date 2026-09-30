@@ -13,11 +13,11 @@ const meta = {
         component: `
 ## Usage
 
-An ask page. The landing is a short headline and **PromptBar**. Send keeps the bar in place: the headline fades, the sent line travels into a trailing pill, then a Steps trace plays. The trace leaves when the reply starts. The reply streams word by word out of a blur. One **TextLink** arrives with the words around it. When the stream finishes, **IconButton** actions and follow-up prompts become usable. The chat keeps **SiteNav**. The brand mark returns to the landing.
+An ask page. The landing is a short headline and **PromptBar**. Send keeps the bar in place: the headline fades, the sent line fades in where it rests, then a Steps trace plays. The trace leaves when the reply starts. The reply streams word by word out of a blur. One **TextLink** arrives with the words around it. When the stream finishes, **IconButton** actions and follow-up prompts become usable. The chat keeps **SiteNav**. The brand mark returns to the landing.
 
 This story is the pattern alone. It is not mounted on the marketing page. **SiteNav** is reused as it exists — not restyled.
 
-Voice and attachments are not part of this version. The trace and the reply are scripted sample copy. Nothing calls a model. \`prefers-reduced-motion\` skips the travel and the trace play, and shows the finished reply.
+Voice and attachments are not part of this version. The trace and the reply are scripted sample copy. Nothing calls a model. \`prefers-reduced-motion\` skips the fade and the trace play, and shows the finished reply.
 
 | Piece | Composition |
 |-------|-------------|
@@ -25,19 +25,20 @@ Voice and attachments are not part of this version. The trace and the reply are 
 | **Chat chrome** | **SiteNav** — existing brand mark and menu. The mark is home |
 | **User turn** | Trailing pill on \`bg-fill-selected\`. Not a new Badge or Button variant |
 | **Thinking** | Steps on this pattern. The label shimmers while the reply has not started, then the trace leaves. Reasoning, search, and coding keep the settled disclosure |
-| **Reply** | \`type-body\`. Words resolve in place after the trace settles. One **TextLink** in the sentence. Not a card |
+| **Reply** | \`type-body\`, full width of the thread. Words resolve in place. One **TextLink** in the sentence. Not a card |
 | **Actions** | **IconButton** \`sm\`, ghost. Copy, helpful, not helpful. After the stream |
-| **Follow-ups** | **Button** \`role="outline"\` \`size="md"\`, full width of the column, quiet \`border-border\`. Prompts the user could send next |
-| **Composer** | **PromptBar**, pinned to the bottom of the column |
-| **Motion** | \`motion\` via \`motionTransitionProp\` — medium for the travel, fast for each word |
+| **Follow-ups** | **Button** \`role="outline"\` \`size="md"\`, same column as the reply, quiet \`border-border\`. Prompts the user could send next |
+| **Composer** | **PromptBar**, columns 4–9 from \`lg\`, pinned under the scrolling thread |
+| **Motion** | \`motion\` via \`motionTransitionProp\`. The sent line fades in. Fast for each word |
 
 ## Anatomy
 
 \`\`\`
-Page — cream field, no sidebar
+Page — cream field, no sidebar, existing page grid
 ├── Landing — headline, centered. No nav
-│   or Chat — SiteNav, user pill, thinking trace until the reply starts, streaming reply, actions, follow-ups
-└── PromptBar — pinned to the bottom
+│   or Chat — SiteNav, thread on the full grid (scrolls)
+│              user pill, thinking trace until the reply starts, reply, actions, follow-ups
+└── PromptBar — columns 4–9 from lg, pinned
 \`\`\`
 
 ## Best practices
@@ -64,7 +65,7 @@ export const LandingToChat: Story = {
       docs: {
         description: {
           story:
-            "Landing first. Enter or the send control fades the headline and moves the sent line into the trailing pill. A Steps trace plays until the reply starts, then leaves. The reply streams after that. Actions and follow-ups wait until the stream finishes. SiteNav stays on the chat. The brand mark returns to the landing. Reduced motion shows the finished reply. Voice and attachments are not part of this version.",
+            "Landing first. Enter or the send control fades the headline, and the sent line fades in where it rests. A Steps trace plays until the reply starts, then leaves. The reply streams after that. Actions and follow-ups wait until the stream finishes. SiteNav stays on the chat. The brand mark returns to the landing. Reduced motion shows the finished reply. Voice and attachments are not part of this version.",
         },
       },
     },
