@@ -151,7 +151,7 @@ export const footerRevealRuledLinksClasses =
  * Parent of the three **TextLink**s. Geist sans is inherited. Below `sm` the
  * size is `--font-size-4xl` (2.1875rem) so the stack does not fill a phone.
  * From `sm` it is 4rem. No type token is 4rem. **TextLink** keeps its own
- * dotted underline, medium weight, and focus ring.
+ * solid underline, medium weight, and focus ring.
  */
 export const footerRevealRuledLinkListClasses =
   "m-0 flex list-none flex-col items-center gap-3 whitespace-nowrap p-0 font-sans " +
@@ -160,7 +160,7 @@ export const footerRevealRuledLinkListClasses =
 /**
  * Brand ink on these three footer links. **TextLink** sets `text-fg` on the
  * anchor, which wins over a parent `text-brand`. `!` keeps `--color-brand`
- * (`#011272`) on the words only. The dotted underline stays TextLink's.
+ * (`#011272`) on the words only. The solid underline stays TextLink's.
  */
 export const footerRevealRuledNavLinkClasses = "!text-brand";
 

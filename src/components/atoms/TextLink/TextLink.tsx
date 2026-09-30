@@ -22,7 +22,7 @@ export interface TextLinkProps
   className?: TextLinkLayoutClassName;
 }
 
-/** Inline text navigation with the canonical dotted underline treatment. */
+/** Inline text navigation with the canonical solid underline treatment. */
 export function TextLink({
   href,
   children,

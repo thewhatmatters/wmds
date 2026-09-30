@@ -14,7 +14,7 @@ const meta = {
         component: `
 ## Usage
 
-Use **TextLink** for inline navigation inside prose. Its dotted underline keeps links visible without overpowering the surrounding copy; hover strengthens the underline and keyboard focus adds the WMDS focus ring.
+Use **TextLink** for inline navigation inside prose. Its solid underline keeps links visible without overpowering the surrounding copy; hover strengthens the underline and keyboard focus adds the WMDS focus ring.
 
 Set \`external\` when the destination opens in a new tab. WMDS appends Lucide **SquareArrowOutUpRight**, adds spoken new-tab context, and supplies a safe \`rel\`.
 
@@ -57,7 +57,7 @@ export const InlineProse: Story = {
     docs: {
       description: {
         story:
-          "The dotted underline remains identifiable at rest and strengthens on hover without changing the paragraph’s line height.",
+          "The solid underline remains identifiable at rest and strengthens on hover without changing the paragraph’s line height.",
       },
     },
     ...storyCopySource(`
