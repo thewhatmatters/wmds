@@ -14,6 +14,7 @@ import {
   promptChatActionsClasses,
   promptChatBarClasses,
   promptChatColumnClasses,
+  promptChatFollowUpClasses,
   promptChatFollowUpsClasses,
   promptChatHeadlineClasses,
   promptChatPageClasses,
@@ -27,6 +28,7 @@ import {
   promptChatTraceClasses,
   promptChatTraceIconClasses,
   promptChatTraceLineClasses,
+  promptChatTraceSpinClasses,
   promptChatUserClasses,
 } from "./promptChatStyles";
 import { promptChatPartDelay, promptChatReplyParts, promptChatSampleReply } from "./promptChatStream";
@@ -160,7 +162,9 @@ describe("prompt chat pattern", () => {
   promptChatThoughtLabelClasses,
   promptChatTraceIconClasses,
   promptChatTraceChevronClasses,
+  promptChatTraceSpinClasses,
   promptChatActionsClasses,
+      promptChatFollowUpClasses,
       promptChatFollowUpsClasses,
       promptChatBarClasses,
     ]) {

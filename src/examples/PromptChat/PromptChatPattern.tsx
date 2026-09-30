@@ -13,6 +13,7 @@ import {
   promptChatActionsClasses,
   promptChatBarClasses,
   promptChatColumnClasses,
+  promptChatFollowUpClasses,
   promptChatFollowUpsClasses,
   promptChatHeadlineClasses,
   promptChatLandingClasses,
@@ -31,6 +32,7 @@ import {
 import {
   promptChatTraceBeatSeconds,
   promptChatTraceDurationSeconds,
+  promptChatTraceSpinSeconds,
   promptChatTraces,
   type PromptChatTraceKind,
 } from "./promptChatThinking";
@@ -43,7 +45,7 @@ type Point = { top: number; left: number };
 
 export const promptChatPatternCopySource = `
 import { useEffect, useRef, useState, type MouseEvent } from "react";
-import { Check, ChevronRight, Copy, Sparkles, ThumbsDown, ThumbsUp } from "lucide-react";
+import { Check, ChevronRight, Copy, LoaderCircle, Sparkles, ThumbsDown, ThumbsUp } from "lucide-react";
 import { LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { Button, IconButton, PromptBar, SiteNav, TextLink, motionTransitionProp } from "@whatmatters/wmds";
 
@@ -58,15 +60,18 @@ const userClasses =
   "ml-auto max-w-full rounded-full bg-fill-selected px-4 py-2 type-body text-fg";
 const replyClasses = "type-body text-fg";
 const traceClasses = "flex w-full flex-col items-start gap-2";
-const traceBodyClasses = "flex w-full flex-col items-start gap-1.5 pl-1";
+const traceBodyClasses =
+  "flex w-full flex-col items-start gap-2 border-l border-border-control py-0.5 pl-3";
 const traceLineClasses = "flex items-center gap-2 type-body text-fg";
 const thinkingLabelClasses =
   "inline-block bg-[linear-gradient(90deg,var(--color-text-secondary),var(--color-brand),var(--color-text-secondary))] bg-[length:200%_100%] bg-clip-text text-transparent";
 const thoughtLabelClasses = "type-body text-muted";
 const traceIconClasses = "size-4 shrink-0 text-brand";
+const traceSpinClasses = "size-4 shrink-0 animate-spin text-brand";
 const traceChevronClasses = "size-4 shrink-0 text-muted";
 const actionsClasses = "flex items-center gap-1";
-const followUpsClasses = "flex flex-col items-start gap-2";
+const followUpsClasses = "flex w-full flex-col gap-2";
+const followUpClasses = "w-full !justify-start";
 const barClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
 
 const headline = "What should we make?";
@@ -97,6 +102,7 @@ const followUps = [
 const thinkingLabel = "Thinking";
 const thoughtLabel = "Thought for a few seconds";
 const traceBeatSeconds = 0.48;
+const traceSpinSeconds = 0.32;
 const traceHoldSeconds = 0.55;
 const traces = {
   steps: [
@@ -154,6 +160,7 @@ export function AskWhatMatters() {
   const [streamDone, setStreamDone] = useState(false);
   const [mark, setMark] = useState<"up" | "down" | null>(null);
   const [revealed, setRevealed] = useState(0);
+  const [resolved, setResolved] = useState(0);
   const [traceSettled, setTraceSettled] = useState(false);
   const [traceOpen, setTraceOpen] = useState(false);
   const [replyReady, setReplyReady] = useState(false);
@@ -174,9 +181,11 @@ export function AskWhatMatters() {
   useEffect(() => {
     if (reduce || sent == null) return;
     const beatMs = traceBeatSeconds * 1000;
+    const spinMs = traceSpinSeconds * 1000;
     const timers = [];
     for (let index = 1; index <= lines.length; index += 1) {
       timers.push(window.setTimeout(() => setRevealed(index), index * beatMs));
+      timers.push(window.setTimeout(() => setResolved(index), index * beatMs + spinMs));
     }
     timers.push(window.setTimeout(() => {
       setTraceSettled(true);
@@ -197,6 +206,7 @@ export function AskWhatMatters() {
     setStreamDone(false);
     setMark(null);
     setRevealed(0);
+    setResolved(0);
     setTraceSettled(false);
     setTraceOpen(false);
     setReplyReady(false);
@@ -228,6 +238,7 @@ export function AskWhatMatters() {
     setStreamKey((key) => key + 1);
     setStreamDone(reduce);
     setRevealed(reduce ? lines.length : 0);
+    setResolved(reduce ? lines.length : 0);
     setTraceSettled(reduce);
     setTraceOpen(!reduce);
     setReplyReady(reduce);
@@ -305,7 +316,7 @@ export function AskWhatMatters() {
                   </Button>
                   {traceOpen ? (
                     <div className={traceBodyClasses}>
-                      {lines.slice(0, revealed).map((entry) => (
+                      {lines.slice(0, revealed).map((entry, index) => (
                         <motion.div
                           key={entry.text}
                           className={traceLineClasses}
@@ -313,7 +324,11 @@ export function AskWhatMatters() {
                           animate={{ opacity: 1, filter: "blur(0px)" }}
                           transition={reduce ? { duration: 0 } : fast}
                         >
-                          <Check className={traceIconClasses} strokeWidth={2} aria-hidden />
+                          {index < resolved ? (
+                            <Check className={traceIconClasses} strokeWidth={2} aria-hidden />
+                          ) : (
+                            <LoaderCircle className={traceSpinClasses} strokeWidth={2} aria-hidden />
+                          )}
                           {entry.text}
                         </motion.div>
                       ))}
@@ -361,7 +376,7 @@ export function AskWhatMatters() {
                     </motion.div>
                     <div className={followUpsClasses}>
                       {followUps.map((prompt) => (
-                        <Button key={prompt} role="ghost" size="sm" type="button" onClick={() => send(prompt)}>
+                        <Button key={prompt} role="outline" size="md" type="button" className={followUpClasses} onClick={() => send(prompt)}>
                           {prompt}
                         </Button>
                       ))}
@@ -461,6 +476,7 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
   const [streamDone, setStreamDone] = useState(false);
   const [mark, setMark] = useState<"up" | "down" | null>(null);
   const [revealed, setRevealed] = useState(0);
+  const [resolved, setResolved] = useState(0);
   const [traceSettled, setTraceSettled] = useState(false);
   const [traceOpen, setTraceOpen] = useState(false);
   const [replyReady, setReplyReady] = useState(false);
@@ -481,9 +497,11 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
     if (reduce || sent == null) return;
     const count = promptChatTraces[trace].length;
     const beatMs = promptChatTraceBeatSeconds * 1000;
+    const spinMs = promptChatTraceSpinSeconds * 1000;
     const timers: number[] = [];
     for (let index = 1; index <= count; index += 1) {
       timers.push(window.setTimeout(() => setRevealed(index), index * beatMs));
+      timers.push(window.setTimeout(() => setResolved(index), index * beatMs + spinMs));
     }
     timers.push(
       window.setTimeout(() => {
@@ -506,6 +524,7 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
     setStreamDone(false);
     setMark(null);
     setRevealed(0);
+    setResolved(0);
     setTraceSettled(false);
     setTraceOpen(false);
     setReplyReady(false);
@@ -538,6 +557,7 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
     setStreamKey((key) => key + 1);
     setStreamDone(reduce);
     setRevealed(reduce ? count : 0);
+    setResolved(reduce ? count : 0);
     setTraceSettled(reduce);
     setTraceOpen(!reduce);
     setReplyReady(reduce);
@@ -612,6 +632,7 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
                   key={streamKey}
                   entries={promptChatTraces[trace]}
                   revealed={revealed}
+                  resolved={resolved}
                   settled={traceSettled}
                   open={traceOpen}
                   onToggle={() => setTraceOpen((current) => !current)}
@@ -673,7 +694,14 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
                     </motion.div>
                     <div className={promptChatFollowUpsClasses}>
                       {promptChatFollowUps.map((prompt) => (
-                        <Button key={prompt} role="ghost" size="sm" type="button" onClick={() => send(prompt)}>
+                        <Button
+                          key={prompt}
+                          role="outline"
+                          size="md"
+                          type="button"
+                          className={promptChatFollowUpClasses}
+                          onClick={() => send(prompt)}
+                        >
                           {prompt}
                         </Button>
                       ))}

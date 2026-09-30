@@ -38,7 +38,9 @@ export const promptChatReplyClasses = "type-body text-fg";
 /** Thinking trace. One disclosure, then the body for whichever script is playing. */
 export const promptChatTraceClasses = "flex w-full flex-col items-start gap-2";
 
-export const promptChatTraceBodyClasses = "flex w-full flex-col items-start gap-1.5 pl-1";
+/** Rows hang off one existing control hairline. Not a new tone. */
+export const promptChatTraceBodyClasses =
+  "flex w-full flex-col items-start gap-2 border-l border-border-control py-0.5 pl-3";
 
 export const promptChatTraceLineClasses = "flex items-center gap-2 type-body text-fg";
 
@@ -52,13 +54,19 @@ export const promptChatThoughtLabelClasses = "type-body text-muted";
 /** Lucide mark on a resolved line. Brand navy is `--color-brand` (`#011272`). */
 export const promptChatTraceIconClasses = "size-4 shrink-0 text-brand";
 
+/** Current step. Same box as the check, so the row does not jump when it resolves. */
+export const promptChatTraceSpinClasses = "size-4 shrink-0 animate-spin text-brand";
+
 export const promptChatTraceChevronClasses = "size-4 shrink-0 text-muted";
 
 /** Copy, helpful, and not helpful. Existing icon buttons, shown when the stream ends. */
 export const promptChatActionsClasses = "flex items-center gap-1";
 
-/** Suggested prompts. Text buttons, not a new chip. */
-export const promptChatFollowUpsClasses = "flex flex-col items-start gap-2";
+/** Suggested prompts. Outline pills, stacked to the column width. */
+export const promptChatFollowUpsClasses = "flex w-full flex-col gap-2";
+
+/** Layout only: the outline pill fills the column and keeps the label at the start. */
+export const promptChatFollowUpClasses = "w-full !justify-start";
 
 /** Same column as the stage. Stays at the bottom of the viewport. */
 export const promptChatBarClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";

@@ -14,6 +14,9 @@ export const promptChatThoughtLabel = "Thought for a few seconds";
 /** Time between trace lines. The row collapses after the last line plus the hold. */
 export const promptChatTraceBeatSeconds = 0.48;
 
+/** How long the current step shows a circle spinner before that circle becomes the check. */
+export const promptChatTraceSpinSeconds = 0.32;
+
 export const promptChatTraceHoldSeconds = 0.55;
 
 export type PromptChatTraceEntry =

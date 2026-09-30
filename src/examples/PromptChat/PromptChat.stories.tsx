@@ -27,7 +27,7 @@ Voice and attachments are not part of this version. The trace and the reply are 
 | **Thinking** | One disclosure. The label shimmers, then becomes “Thought for a few seconds”. Steps, reasoning, search, and coding are the same trace |
 | **Reply** | \`type-body\`. Words resolve in place after the trace settles. One **TextLink** in the sentence. Not a card |
 | **Actions** | **IconButton** \`sm\`, ghost. Copy, helpful, not helpful. After the stream |
-| **Follow-ups** | **Button** \`role="ghost"\` \`size="sm"\`. Prompts the user could send next |
+| **Follow-ups** | **Button** \`role="outline"\` \`size="md"\`, full width of the column. Prompts the user could send next |
 | **Composer** | **PromptBar**, pinned to the bottom of the column |
 | **Motion** | \`motion\` via \`motionTransitionProp\` — medium for the travel, fast for each word |
 

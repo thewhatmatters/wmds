@@ -1,4 +1,4 @@
-import { Check, ChevronRight, FileText, Pencil, Search, Terminal } from "lucide-react";
+import { Check, ChevronRight, FileText, LoaderCircle, Pencil, Search, Terminal } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { cn } from "../../lib/cn";
 import { motionTransitionProp } from "../../lib/motion";
@@ -12,6 +12,7 @@ import {
   promptChatTraceClasses,
   promptChatTraceIconClasses,
   promptChatTraceLineClasses,
+  promptChatTraceSpinClasses,
 } from "./promptChatStyles";
 import {
   promptChatThinkingLabel,
@@ -26,12 +27,15 @@ import {
 export function PromptChatTrace({
   entries,
   revealed,
+  resolved,
   settled,
   open,
   onToggle,
 }: {
   entries: PromptChatTraceEntry[];
   revealed: number;
+  /** Checks that have finished spinning. The current step is revealed and not yet resolved. */
+  resolved: number;
   settled: boolean;
   open: boolean;
   onToggle: () => void;
@@ -81,7 +85,7 @@ export function PromptChatTrace({
               animate={{ opacity: 1, filter: "blur(0px)" }}
               transition={reduce ? { duration: 0 } : fast}
             >
-              <TraceEntry entry={entry} />
+              <TraceEntry entry={entry} spinning={entry.kind === "check" && index >= resolved} />
             </motion.div>
           ))}
         </div>
@@ -90,11 +94,15 @@ export function PromptChatTrace({
   );
 }
 
-function TraceEntry({ entry }: { entry: PromptChatTraceEntry }) {
+function TraceEntry({ entry, spinning }: { entry: PromptChatTraceEntry; spinning: boolean }) {
   if (entry.kind === "check") {
     return (
       <>
-        <Check className={promptChatTraceIconClasses} strokeWidth={2} aria-hidden />
+        {spinning ? (
+          <LoaderCircle className={promptChatTraceSpinClasses} strokeWidth={2} aria-hidden />
+        ) : (
+          <Check className={promptChatTraceIconClasses} strokeWidth={2} aria-hidden />
+        )}
         {entry.text}
       </>
     );
