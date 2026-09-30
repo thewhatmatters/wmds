@@ -65,13 +65,12 @@ const traceBodyClasses =
 const traceLineClasses = "flex items-center gap-2 type-body text-fg";
 const thinkingLabelClasses =
   "inline-block bg-[linear-gradient(90deg,var(--color-text-secondary),var(--color-brand),var(--color-text-secondary))] bg-[length:200%_100%] bg-clip-text text-transparent";
-const thoughtLabelClasses = "type-body text-muted";
 const traceIconClasses = "size-4 shrink-0 text-brand";
 const traceSpinClasses = "size-4 shrink-0 animate-spin text-brand";
 const traceChevronClasses = "size-4 shrink-0 text-muted";
 const actionsClasses = "flex items-center gap-1";
 const followUpsClasses = "flex w-full flex-col gap-2";
-const followUpClasses = "w-full !justify-start";
+const followUpClasses = "w-full !justify-start !border-border";
 const barClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
 
 const headline = "What should we make?";
@@ -100,7 +99,6 @@ const followUps = [
   "How do you start a product design?",
 ];
 const thinkingLabel = "Thinking";
-const thoughtLabel = "Thought for a few seconds";
 const traceBeatSeconds = 0.48;
 const traceSpinSeconds = 0.32;
 const traceHoldSeconds = 0.55;
@@ -161,7 +159,6 @@ export function AskWhatMatters() {
   const [mark, setMark] = useState<"up" | "down" | null>(null);
   const [revealed, setRevealed] = useState(0);
   const [resolved, setResolved] = useState(0);
-  const [traceSettled, setTraceSettled] = useState(false);
   const [traceOpen, setTraceOpen] = useState(false);
   const [replyReady, setReplyReady] = useState(false);
   const lines = traces.steps;
@@ -188,7 +185,6 @@ export function AskWhatMatters() {
       timers.push(window.setTimeout(() => setResolved(index), index * beatMs + spinMs));
     }
     timers.push(window.setTimeout(() => {
-      setTraceSettled(true);
       setTraceOpen(false);
       setReplyReady(true);
     }, (lines.length * traceBeatSeconds + traceHoldSeconds) * 1000));
@@ -207,7 +203,6 @@ export function AskWhatMatters() {
     setMark(null);
     setRevealed(0);
     setResolved(0);
-    setTraceSettled(false);
     setTraceOpen(false);
     setReplyReady(false);
   }
@@ -239,7 +234,6 @@ export function AskWhatMatters() {
     setStreamDone(reduce);
     setRevealed(reduce ? lines.length : 0);
     setResolved(reduce ? lines.length : 0);
-    setTraceSettled(reduce);
     setTraceOpen(!reduce);
     setReplyReady(reduce);
     const skipTravel = reduce || !fromLanding || field == null;
@@ -299,19 +293,16 @@ export function AskWhatMatters() {
                 ) : (
                   <span className="sr-only">{sent}</span>
                 )}
-                <div className={traceClasses} aria-busy={traceSettled ? undefined : true}>
+                {replyReady ? null : (
+                <div className={traceClasses} aria-busy="true">
                   <Button layout="row" role="ghost" type="button" className="!w-auto" aria-expanded={traceOpen} onClick={() => setTraceOpen((current) => !current)}>
-                    {traceSettled ? (
-                      <span className={thoughtLabelClasses}>{thoughtLabel}</span>
-                    ) : (
-                      <motion.span
-                        className={thinkingLabelClasses}
-                        animate={reduce ? undefined : { backgroundPosition: ["100% center", "0% center"] }}
-                        transition={reduce ? { duration: 0 } : { duration: 1.1, repeat: Infinity, ease: "linear" }}
-                      >
-                        {thinkingLabel}
-                      </motion.span>
-                    )}
+                    <motion.span
+                      className={thinkingLabelClasses}
+                      animate={reduce ? undefined : { backgroundPosition: ["100% center", "0% center"] }}
+                      transition={reduce ? { duration: 0 } : { duration: 1.1, repeat: Infinity, ease: "linear" }}
+                    >
+                      {thinkingLabel}
+                    </motion.span>
                     <ChevronRight className={traceChevronClasses + (traceOpen ? " rotate-90" : "")} strokeWidth={2} aria-hidden />
                   </Button>
                   {traceOpen ? (
@@ -335,6 +326,7 @@ export function AskWhatMatters() {
                     </div>
                   ) : null}
                 </div>
+                )}
                 {replyReady ? (
                 <p key={streamKey} className={replyClasses} aria-busy={streamDone ? undefined : true}>
                   {replyParts.map((part, index) => (
@@ -454,11 +446,11 @@ function ReplyWord({
 /**
  * Landing statement, then one chat exchange.
  * Send or Enter: the bar stays, the headline fades, the sent line travels into the trailing pill,
- * then a thinking trace plays and collapses. The reply streams after that.
+ * then a Steps trace plays until the reply starts. The trace leaves when the reply starts.
  * A source link arrives with the words around it.
  * Actions and follow-up prompts appear when the stream finishes. The chat keeps SiteNav;
  * the brand mark returns to the landing.
- * Reduced motion skips the travel and the trace play, and shows the settled trace with the finished reply.
+ * Reduced motion skips the travel and the trace play, and shows the finished reply.
  * Voice and attachments are not part of this version.
  */
 export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKind } = {}) {
@@ -628,6 +620,7 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
                 ) : (
                   <span className="sr-only">{sent}</span>
                 )}
+                {trace === "steps" && replyReady ? null : (
                 <PromptChatTrace
                   key={streamKey}
                   entries={promptChatTraces[trace]}
@@ -637,6 +630,7 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
                   open={traceOpen}
                   onToggle={() => setTraceOpen((current) => !current)}
                 />
+                )}
                 {replyReady ? (
                 <>
                 <p

@@ -4,7 +4,7 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import {
   AskWhatMatters,
   promptChatHeadline,
@@ -20,7 +20,6 @@ import {
   promptChatPageClasses,
   promptChatReplyClasses,
   promptChatStageClasses,
-  promptChatThoughtLabelClasses,
   promptChatThreadClasses,
   promptChatThinkingLabelClasses,
   promptChatTraceBodyClasses,
@@ -39,12 +38,34 @@ import {
   promptChatTraces,
 } from "./promptChatThinking";
 
-function mount() {
+const nativeAnimate = HTMLElement.prototype.animate;
+
+beforeAll(() => {
+  // happy-dom rejects Animation.cancel. The trace unmounts mid-shimmer when the reply starts.
+  HTMLElement.prototype.animate = () =>
+    ({
+      cancel: () => undefined,
+      finish: () => undefined,
+      play: () => undefined,
+      pause: () => undefined,
+      persist: () => undefined,
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+      finished: Promise.resolve(),
+      ready: Promise.resolve(),
+    }) as unknown as Animation;
+});
+
+afterAll(() => {
+  HTMLElement.prototype.animate = nativeAnimate;
+});
+
+function mount(trace?: "steps" | "reasoning") {
   const container = document.createElement("div");
   document.body.appendChild(container);
   const root = createRoot(container);
   act(() => {
-    root.render(createElement(AskWhatMatters));
+    root.render(createElement(AskWhatMatters, trace == null ? {} : { trace }));
   });
   const field = container.querySelector("textarea");
   const send = container.querySelector("button");
@@ -159,7 +180,6 @@ describe("prompt chat pattern", () => {
   promptChatTraceBodyClasses,
   promptChatTraceLineClasses,
   promptChatThinkingLabelClasses,
-  promptChatThoughtLabelClasses,
   promptChatTraceIconClasses,
   promptChatTraceChevronClasses,
   promptChatTraceSpinClasses,
@@ -181,8 +201,48 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).toContain(promptChatHeadline);
     expect(promptChatPatternCopySource).toContain(promptChatSampleReply);
     expect(promptChatPatternCopySource).toContain(promptChatThinkingLabel);
-    expect(promptChatPatternCopySource).toContain(promptChatThoughtLabel);
+    expect(promptChatPatternCopySource).not.toContain(promptChatThoughtLabel);
+    expect(promptChatPatternCopySource).toContain("!border-border");
     expect(promptChatPatternCopySource).not.toContain("ExampleGridControls");
+  });
+
+  it("removes the steps trace when the reply starts", async () => {
+    const view = mount();
+    root = view.root;
+    container = view.container;
+
+    typeDraft(view.field, "What services do you offer?");
+    act(() => {
+      view.send.click();
+    });
+
+    expect(view.container.textContent).toContain("Thinking");
+
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 2800));
+    });
+
+    expect(view.container.textContent).toContain(promptChatSampleReply);
+    expect(view.container.textContent).not.toContain("Thinking");
+    expect(view.container.textContent).not.toContain(promptChatThoughtLabel);
+  });
+
+  it("keeps the settled trace on the reasoning story", async () => {
+    const view = mount("reasoning");
+    root = view.root;
+    container = view.container;
+
+    typeDraft(view.field, "What services do you offer?");
+    act(() => {
+      view.send.click();
+    });
+
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+    });
+
+    expect(view.container.textContent).toContain(promptChatSampleReply);
+    expect(view.container.textContent).toContain(promptChatThoughtLabel);
   });
 });
 

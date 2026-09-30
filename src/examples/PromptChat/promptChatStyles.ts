@@ -65,8 +65,12 @@ export const promptChatActionsClasses = "flex items-center gap-1";
 /** Suggested prompts. Outline pills, stacked to the column width. */
 export const promptChatFollowUpsClasses = "flex w-full flex-col gap-2";
 
-/** Layout only: the outline pill fills the column and keeps the label at the start. */
-export const promptChatFollowUpClasses = "w-full !justify-start";
+/**
+ * Layout on the existing outline button. The pill fills the column, the label
+ * stays at the start, and the stroke is the quiet divider (`--color-border`),
+ * not the outline role’s `border-fg`.
+ */
+export const promptChatFollowUpClasses = "w-full !justify-start !border-border";
 
 /** Same column as the stage. Stays at the bottom of the viewport. */
 export const promptChatBarClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
