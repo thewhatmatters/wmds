@@ -121,15 +121,22 @@ export function footerRevealExternalLinkProps(
  * (`#011272`). Dark theme repaints this class to `--color-on-brand` — brand
  * navy on the dark body is under 3:1. See `theme.css`.
  */
+/**
+ * Cream field. At least one viewport (`100vh`) so a short stack cannot leave
+ * the page showing above the footer. Taller content grows the field.
+ */
 export const footerRevealRuledFieldClasses =
-  "footer-reveal-ruled-field bg-body text-brand";
+  "footer-reveal-ruled-field min-h-[100vh] bg-body text-brand";
 
 /**
- * Full-bleed shell. Centered link stack, then the fitted wordmark, then the
- * quiet meta row. No max-width — the wordmark has to reach the viewport.
+ * Full-bleed shell. At least `100vh`, same floor as the field, so every mount
+ * of **FooterReveal.Ruled** fills the viewport. Taller content grows it.
+ * Centered link stack, then the fitted wordmark, then the quiet meta row.
+ * No max-width and no overflow clip — the nav, wordmark, and meta row stay
+ * visible. The wordmark has to reach the viewport width.
  */
 export const footerRevealRuledRootClasses =
-  "flex w-full min-w-0 flex-col items-center gap-[var(--grid-pad)] py-[var(--grid-pad)] text-center text-brand";
+  "flex min-h-[100vh] w-full min-w-0 flex-col items-center gap-[var(--grid-pad)] py-[var(--grid-pad)] text-center text-brand";
 
 /** Centered link stack. The list hugs its labels; it does not stretch into columns. */
 export const footerRevealRuledLinksClasses =

@@ -41,7 +41,7 @@ As the cover's bottom edge meets the viewport bottom, the footer scrubs from tra
 | **FooterReveal.Content** | Page body. Opaque (\`bg-body\` by default). Do not clip overflow on the root |
 | **FooterReveal.Footer** | Footer contents. \`className\` lands on the fading field — use **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-on-brand\`) |
 | **FooterReveal.Brand** | Headline, inverse CTA, underlined social row, and a decorative wordmark on the navy field |
-| **FooterReveal.Ruled** | Cream field: centered nav, fitted wordmark, quiet meta row |
+| **FooterReveal.Ruled** | Cream field, at least 100vh: centered nav, fitted wordmark, quiet meta row |
 | \`useFooterRevealProgress\` | Reveal progress MotionValue, 0 covered → 1 uncovered (stuck at 1 when reduced motion is on) |
 
 ## Anatomy
@@ -56,7 +56,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
         │   ├── Button role="inverse" type="button" (onCtaClick)
         │   ├── social links (underlined, https opens in a new tab)
         │   └── wordmark (aria-hidden, spans the footer width, cropped at the bottom edge)
-        └── FooterReveal.Ruled
+        └── FooterReveal.Ruled — min-height 100vh; grows when the content is taller
             ├── nav (TextLink: Services, Resources, About; parent is sans, 4xl below sm, 4rem from sm, text-brand)
             ├── wordmark (aria-hidden, fitted to the footer width, fully visible)
             └── quiet row (WM + copyright, randy@whatmatters.so, credit)
@@ -72,7 +72,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
 - Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. The brand panel clips its wordmark. **FooterReveal.Ruled** fits its wordmark inside the footer width so the letters stay visible.
 - Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`. The brand panel clips its own wordmark.
 - When **ScrollHorizontal** \`expandLast\` is the last section in the cover, the guide \`grid-page\` after it uses \`!py-0\`. Default \`grid-page\` block padding is \`--grid-pad\` (24px top and bottom). On a guide-only host that padding is a page-background strip between the full-bleed tile and the footer. The reduced-motion \`h-svh\` section meets the footer the same way.
-- **FooterReveal.Ruled** is the cream marketing footer. Pass **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) on **Footer**. The nav is one centered stack of **TextLink**: Services, Resources, About. The list sets Geist sans at \`--font-size-4xl\` below \`sm\` and 4rem from \`sm\`, and the links are \`text-brand\`. **TextLink** keeps its dotted underline, medium weight, and focus ring. The wordmark is \`WhatMatters\`, fitted to the footer width (\`100cqi\` / measured em) so it stays inside the viewport and is not cropped. Under it, a quiet row: the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below \`md\` that row stacks and stays centered. Dark theme keeps the field on \`--color-on-brand\`. **FooterReveal.Brand** stays the navy field.
+- **FooterReveal.Ruled** is the cream marketing footer. Pass **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) on **Footer**. The field and the ruled shell are at least \`100vh\`; taller content grows them. The nav, wordmark, and quiet row are not clipped. The nav is one centered stack of **TextLink**: Services, Resources, About. The list sets Geist sans at \`--font-size-4xl\` below \`sm\` and 4rem from \`sm\`, and the links are \`text-brand\`. **TextLink** keeps its dotted underline, medium weight, and focus ring. The wordmark is \`WhatMatters\`, fitted to the footer width (\`100cqi\` / measured em) so it stays inside the viewport and is not cropped. Under it, a quiet row: the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below \`md\` that row stacks and stays centered. Dark theme keeps the field on \`--color-on-brand\`. **FooterReveal.Brand** stays the navy field.
         `.trim(),
       },
     },
@@ -707,12 +707,20 @@ function expectCreditFits(root: ParentNode) {
   expect(box.bottom).toBeLessThanOrEqual(window.innerHeight + 1);
 }
 
-/** The ruled footer, wordmark included, fits the viewport. */
-function expectRuledFooterFits(root: ParentNode) {
+/** The ruled field is at least one viewport tall. Taller content may grow it. */
+function expectRuledFooterFillsViewport(root: ParentNode) {
   const footer = root.querySelector<HTMLElement>("[data-footer-ruled='root']");
+  const field = root.querySelector<HTMLElement>("[data-footer-ruled-field]");
   if (!footer) throw new Error("ruled footer missing");
-  expect(footer.getBoundingClientRect().height).toBeLessThanOrEqual(window.innerHeight + 1);
-  expect(footer.getBoundingClientRect().bottom).toBeLessThanOrEqual(window.innerHeight + 1);
+  const min = window.innerHeight - 1;
+  expect(footer.getBoundingClientRect().height).toBeGreaterThanOrEqual(min);
+  expect(Number.parseFloat(getComputedStyle(footer).minHeight)).toBeGreaterThanOrEqual(min);
+  if (field) {
+    expect(field.getBoundingClientRect().height).toBeGreaterThanOrEqual(min);
+    expect(Number.parseFloat(getComputedStyle(field).minHeight)).toBeGreaterThanOrEqual(min);
+  }
+  expect(getComputedStyle(footer).overflowY).not.toBe("hidden");
+  expect(getComputedStyle(footer).overflowX).not.toBe("hidden");
   expectNoCrop(root);
   expectCreditFits(root);
 }
@@ -834,7 +842,7 @@ export const RuledGridFooterPattern: Story = {
       docs: {
         description: {
           story:
-            "Cream marketing footer. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. The nav is one centered stack of **TextLink**: Services, Resources, About. The list sets Geist sans at `--font-size-4xl` below `sm` and 4rem from `sm`, and the links are `text-brand`. **TextLink** keeps its dotted underline, medium weight, and focus ring. The WhatMatters wordmark is fitted to the footer width and stays fully visible. The quiet row is the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below `md` that row stacks. There is no cropped wordmark, no two-column nav, and no social row. Dark theme keeps the field on `--color-on-brand`.",
+            "Cream marketing footer. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`, at least 100vh) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. The field grows when the content is taller than the viewport. The nav, wordmark, and quiet row are not clipped. The nav is one centered stack of **TextLink**: Services, Resources, About. The list sets Geist sans at `--font-size-4xl` below `sm` and 4rem from `sm`, and the links are `text-brand`. **TextLink** keeps its dotted underline, medium weight, and focus ring. The WhatMatters wordmark is fitted to the footer width and stays fully visible. The quiet row is the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below `md` that row stacks. There is no cropped wordmark, no two-column nav, and no social row. Dark theme keeps the field on `--color-on-brand`.",
         },
       },
     },
@@ -871,7 +879,7 @@ export const RuledGridFooterPattern: Story = {
       expectWordmarkFitsViewport(canvasElement);
     });
     expectCreditFits(canvasElement);
-    expectRuledFooterFits(canvasElement);
+    expectRuledFooterFillsViewport(canvasElement);
 
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
       document.documentElement.clientWidth + 1,
@@ -904,7 +912,7 @@ export const RuledGridOverflow390: Story = {
     await waitFor(() => {
       expectWordmarkFitsViewport(canvasElement);
     });
-    expectRuledFooterFits(canvasElement);
+    expectRuledFooterFillsViewport(canvasElement);
 
     const root = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='root']");
     if (!root) throw new Error("ruled footer missing");
@@ -945,7 +953,7 @@ function ruledFitStory(
       await waitFor(() => {
         expectWordmarkFitsViewport(canvasElement);
       });
-      expectRuledFooterFits(canvasElement);
+      expectRuledFooterFillsViewport(canvasElement);
       expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
         document.documentElement.clientWidth + 1,
       );

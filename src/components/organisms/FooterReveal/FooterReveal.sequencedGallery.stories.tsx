@@ -491,7 +491,7 @@ export const MarketingHeroRuledPattern: Story = {
       docs: {
         description: {
           story:
-            "The one full marketing page. Sequenced hero (same as Pattern — marketing hero text sequence): HeroIntro is the h1 on type-display-2. The first line is An Austin, TX studio specializing in brand and product design. The rock hand sits inline immediately after TX. Then ScrollHorizontal with Intro and expandLast. Then FooterReveal.Ruled on footerRevealRuledFieldClasses: centered Services, Resources, and About, the fitted WhatMatters wordmark, and randy@whatmatters.so. The intro action is Button role secondary, onClick openProjectModal. Show code is that whole page. Reduced motion leaves the sequences at rest. The gallery section ends on the expanded tile, flush with the footer.",
+            "The one full marketing page. Sequenced hero (same as Pattern — marketing hero text sequence): HeroIntro is the h1 on type-display-2. The first line is An Austin, TX studio specializing in brand and product design. The rock hand sits inline immediately after TX. Then ScrollHorizontal with Intro and expandLast. Then FooterReveal.Ruled on footerRevealRuledFieldClasses: the cream field is at least 100vh and grows when the content is taller. Centered Services, Resources, and About, the fitted WhatMatters wordmark, and randy@whatmatters.so stay fully visible. The intro action is Button role secondary, onClick openProjectModal. Show code is that whole page. Reduced motion leaves the sequences at rest. The gallery section ends on the expanded tile, flush with the footer.",
         },
       },
     },
@@ -503,7 +503,14 @@ export const MarketingHeroRuledPattern: Story = {
     const fade = canvasElement.querySelector<HTMLElement>("[data-footer-reveal='fade']");
     const frame = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='wordmark-frame']");
     const wordmark = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='wordmark']");
-    if (!fade || !frame || !wordmark) throw new Error("ruled footer missing");
+    const ruledRoot = canvasElement.querySelector<HTMLElement>("[data-footer-ruled='root']");
+    if (!fade || !frame || !wordmark || !ruledRoot) throw new Error("ruled footer missing");
+    const viewportTall = window.innerHeight - 1;
+    expect(fade.offsetHeight).toBeGreaterThanOrEqual(viewportTall);
+    expect(ruledRoot.offsetHeight).toBeGreaterThanOrEqual(viewportTall);
+    expect(Number.parseFloat(getComputedStyle(fade).minHeight)).toBeGreaterThanOrEqual(viewportTall);
+    expect(Number.parseFloat(getComputedStyle(ruledRoot).minHeight)).toBeGreaterThanOrEqual(viewportTall);
+    expect(getComputedStyle(ruledRoot).overflowY).not.toBe("hidden");
     expect(Math.abs(frame.offsetWidth - fade.offsetWidth)).toBeLessThanOrEqual(1);
     expect(wordmark.textContent).toBe("WhatMatters");
     expect(canvasElement.querySelector("a[href='mailto:randy@whatmatters.so']")?.textContent).toBe(
