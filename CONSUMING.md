@@ -176,6 +176,7 @@ import {
 | `Chip` | `size`, `value`, `selected`, `onRemove`, `icon`, `count`, `readOnly` | Components/Forms/Chip — use `ChipFilterGroup` for multi-select filters |
 | `Input` | `label`, `description`, `status`, `message`, `loading`, `endBadge`, `icon`, `size` | Components/Forms/Input — pill shell; Required via `endBadge={<Badge>…</Badge>}` |
 | `Search` | `size`, `placeholder`, `onSubmit` | Components/Forms/Search — inline input + button row |
+| `PromptBar` | `value`, `onValueChange`, `onSend`, `placeholder` (default Ask anything…) | Components/Forms/PromptBar — **Pattern — prompt bar**. Wide pill, inline field (one line empty, up to 3 lines, then scroll), inset **IconButton** send. Muted until there is text, then `--color-brand` (`#011272`). Enter sends. Page pattern: **Patterns/Prompt chat → Pattern — landing to chat**. Voice and attachments are not part of this version. |
 | `Card` | `variant`, `shape`, `padding` | Components/Layout/Card — `Card.Header` (`start` | `end`), **`Card.Body` slot** (no default fill), `Card.Footer` |
 | `Accordion` | `variant`, `Accordion.Item` `leading` / `label` / `trailing` / `open` | Components/Layout/Accordion — FAQ, settings sections |
 | `TaskRows` | `variant`, `status`, `meta`, `detailsLayout`, `TaskRows.Detail` | Components/Data display/TaskRows — **Pattern — status rows**, **capsules**, **action details** (`Detail variant="button"`), **tag chips** (`Chip readOnly size="sm"`), detail lines (`Detail` + `onPress` → `Button layout="row"`) |

@@ -53,6 +53,7 @@ const meta = {
 | **Status only** | \`status\` without \`message\` — border + top-trailing icon |
 | **Loading** | \`loading\` — trailing spinner |
 | **Resize** | \`resize="none" | "vertical" | "both"\` — default \`vertical\` |
+| **Inline** | \`inline\` — no shell. **PromptBar** owns the pill. Not a standalone field |
 
 ## Anatomy
 
@@ -66,6 +67,7 @@ const meta = {
 - **Do** set \`aria-label\` when \`label\` is omitted.
 - **Do** keep \`resize="vertical"\` unless layout must stay fixed height.
 - **Don't** restyle the shell with \`className\` — layout width only.
+- **Don't** use \`inline\` outside **PromptBar**. The parent pill owns the border and focus ring.
         `.trim(),
       },
     },
