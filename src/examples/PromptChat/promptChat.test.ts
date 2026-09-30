@@ -13,6 +13,7 @@ import {
 } from "./PromptChatPattern";
 import {
   promptChatBarClasses,
+  promptChatColumnClasses,
   promptChatHeadlineClasses,
   promptChatPageClasses,
   promptChatReplyClasses,
@@ -63,6 +64,7 @@ describe("prompt chat pattern", () => {
     container = view.container;
 
     expect(view.container.querySelector("h1")?.textContent).toBe(promptChatHeadline);
+    expect(view.container.querySelector("header")).toBeNull();
     expect(view.container.textContent).not.toContain(promptChatSampleReply);
     expect(view.send).toHaveProperty("disabled", true);
   });
@@ -80,9 +82,32 @@ describe("prompt chat pattern", () => {
     });
 
     expect(view.container.querySelector("h1")).toBeNull();
+    expect(view.container.querySelector("header")).not.toBeNull();
     expect(view.container.textContent).toContain("What services do you offer?");
     expect(view.container.textContent).toContain(promptChatSampleReply);
     expect(view.field).toHaveProperty("value", "");
+  });
+
+  it("returns to the landing when the brand mark is pressed", () => {
+    const view = mount();
+    root = view.root;
+    container = view.container;
+
+    typeDraft(view.field, "What services do you offer?");
+    act(() => {
+      view.send.click();
+    });
+
+    const home = view.container.querySelector("a[aria-label='WhatMatters']");
+    if (home == null) {
+      throw new Error("Chat did not render the SiteNav brand mark");
+    }
+    act(() => {
+      home.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+    });
+
+    expect(view.container.querySelector("h1")?.textContent).toBe(promptChatHeadline);
+    expect(view.container.querySelector("header")).toBeNull();
   });
 
   it("moves to chat when the send control is clicked", () => {
@@ -103,6 +128,7 @@ describe("prompt chat pattern", () => {
     const source = readFileSync(join(import.meta.dirname, "promptChatStyles.ts"), "utf8");
     for (const classes of [
       promptChatPageClasses,
+      promptChatColumnClasses,
       promptChatStageClasses,
       promptChatHeadlineClasses,
       promptChatThreadClasses,
@@ -115,9 +141,11 @@ describe("prompt chat pattern", () => {
     }
     expect(promptChatPatternCopySource).toContain('from "@whatmatters/wmds"');
     expect(promptChatPatternCopySource).toContain("PromptBar");
+    expect(promptChatPatternCopySource).toContain("SiteNav");
+    expect(promptChatPatternCopySource).toContain("motion/react");
+    expect(promptChatPatternCopySource).toContain("useReducedMotion");
     expect(promptChatPatternCopySource).toContain(promptChatHeadline);
     expect(promptChatPatternCopySource).toContain(promptChatSampleReply);
     expect(promptChatPatternCopySource).not.toContain("ExampleGridControls");
-    expect(promptChatPatternCopySource).not.toContain("SiteNav");
   });
 });

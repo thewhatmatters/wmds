@@ -3,9 +3,12 @@
  * the thread, and the prompt bar share one measure. Not the marketing homepage.
  */
 
-/** Viewport shell. `--grid-max` keeps the column from stretching across 1440. */
-export const promptChatPageClasses =
-  "flex h-full min-h-0 w-full flex-1 flex-col bg-body [--grid-max:40rem]";
+/** Viewport shell. SiteNav stays on the page grid; the column below narrows separately. */
+export const promptChatPageClasses = "flex h-full min-h-0 w-full flex-1 flex-col bg-body";
+
+/** Statement, thread, and prompt bar. `--grid-max` keeps that column from stretching across 1440. */
+export const promptChatColumnClasses =
+  "flex min-h-0 w-full flex-1 flex-col [--grid-max:40rem]";
 
 /** Stage above the pinned bar. Landing centers the headline; chat starts at the top. */
 export const promptChatStageClasses = "grid-page min-h-0 w-full flex-1 overflow-y-auto !py-0";
@@ -19,8 +22,8 @@ export const promptChatLandingClasses = "place-content-center";
 export const promptChatHeadlineClasses =
   "col-span-full type-display-2 !font-normal text-balance text-center text-brand";
 
-/** User turn near the top, reply underneath, empty space down to the bar. */
-export const promptChatThreadClasses = "col-span-full flex flex-col items-start gap-6 pt-12 sm:pt-16";
+/** User turn under the nav, reply underneath, empty space down to the bar. */
+export const promptChatThreadClasses = "col-span-full flex flex-col items-start gap-6 pt-6";
 
 /**
  * The sent line. Existing selected-pill fill — not a new Badge or Button variant.
