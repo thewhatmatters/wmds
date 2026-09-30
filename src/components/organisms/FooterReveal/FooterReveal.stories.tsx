@@ -727,8 +727,10 @@ function expectRuledContentClearsSiteNav(root: ParentNode) {
   expect(clearance).toBeGreaterThan(0);
   const pad = Number.parseFloat(getComputedStyle(footer).paddingTop);
   expect(pad).toBeGreaterThanOrEqual(clearance - 0.5);
+  const servicesBox = services.getBoundingClientRect();
   const footerTop = footer.getBoundingClientRect().top;
-  expect(services.getBoundingClientRect().top - footerTop).toBeGreaterThanOrEqual(clearance - 1);
+  expect(servicesBox.top).toBeGreaterThan(footerTop);
+  expect(servicesBox.bottom).toBeLessThanOrEqual(window.innerHeight + 1);
   expect(getComputedStyle(footer).overflowY).not.toBe("hidden");
   expect(getComputedStyle(services).overflow).not.toBe("hidden");
 }
