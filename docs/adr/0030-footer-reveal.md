@@ -40,6 +40,12 @@ Ship **FooterReveal** as an organism under **Components/Layout**:
 
 **FooterReveal.Ruled** follows a centered stack on the cream field (`bg-body` / `text-brand`, `#011272`). The nav is Services, Resources, About, centered, each a **TextLink**. The list sets Geist sans (the heading and body face) so the links inherit it: `--font-size-4xl` below `sm`, `4rem` from `sm`. No type token is 4rem. Those three links set `!text-brand` (`#011272`) because **TextLink**'s `text-fg` would otherwise win. **TextLink** keeps its dotted underline, medium weight, and focus ring. They are sentence case, not mono and not uppercase. The WhatMatters wordmark is fitted to the footer width (`100cqi` divided by the measured advance width) with a 12px inset so side-bearing ink stays inside the viewport at 390, 1440, and 2560. The frame does not use `overflow: hidden` and the word does not translate off the bottom edge. The quiet row is the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below `md` that row stacks. The two-column rules, the social cells, the services line, and the blurb are gone. **FooterReveal.Brand** still crops its own wordmark on the navy field. The reveal scrub is unchanged.
 
+## Update — ruled field is at least one viewport
+
+**Date:** 2026-09-30
+
+**FooterReveal.Ruled** is at least `100vh` on every mount. The floor is `min-h-[100vh]` on **`footerRevealRuledFieldClasses`** and **`footerRevealRuledRootClasses`**, not a page override. Content taller than the viewport grows the field. The nav, the fitted wordmark, and the quiet meta row stay visible. **FooterReveal.Brand** is unchanged.
+
 ## Non-goals
 
 - A second marketing footer organism. **FooterReveal.Brand** and **FooterReveal.Ruled** are compounds of this one. Other footer contents stay children of **FooterReveal.Footer**.

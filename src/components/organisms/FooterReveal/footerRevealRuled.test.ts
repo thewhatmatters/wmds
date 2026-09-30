@@ -32,8 +32,14 @@ describe("ruled footer contract", () => {
     expect(footerRevealRuledFieldClasses).toContain("bg-body");
     expect(footerRevealRuledFieldClasses).toContain("text-brand");
     expect(footerRevealRuledFieldClasses).toContain("footer-reveal-ruled-field");
+    expect(footerRevealRuledFieldClasses).toContain("min-h-[100vh]");
+    expect(footerRevealRuledFieldClasses).not.toContain("max-h-");
+    expect(footerRevealRuledFieldClasses).not.toContain("overflow-hidden");
+    expect(footerRevealRuledRootClasses).toContain("min-h-[100vh]");
     expect(footerRevealRuledRootClasses).toContain("flex-col");
     expect(footerRevealRuledRootClasses).toContain("items-center");
+    expect(footerRevealRuledRootClasses).not.toContain("max-h-");
+    expect(footerRevealRuledRootClasses).not.toContain("overflow-hidden");
     expect(footerRevealRuledRootClasses).not.toContain("max-w-");
     expect(footerRevealRuledRootClasses).not.toContain("border");
     expect(footerRevealRuledLinkListClasses).toContain("items-center");
