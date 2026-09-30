@@ -96,8 +96,8 @@ const followUps = [
 ];
 const thinkingLabel = "Thinking";
 const thoughtLabel = "Thought for a few seconds";
-const traceBeatSeconds = 0.32;
-const traceHoldSeconds = 0.4;
+const traceBeatSeconds = 0.48;
+const traceHoldSeconds = 0.55;
 const traces = {
   steps: [
     { kind: "check", text: "Read the brief" },

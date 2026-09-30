@@ -12,9 +12,9 @@ export const promptChatThinkingLabel = "Thinking";
 export const promptChatThoughtLabel = "Thought for a few seconds";
 
 /** Time between trace lines. The row collapses after the last line plus the hold. */
-export const promptChatTraceBeatSeconds = 0.32;
+export const promptChatTraceBeatSeconds = 0.48;
 
-export const promptChatTraceHoldSeconds = 0.4;
+export const promptChatTraceHoldSeconds = 0.55;
 
 export type PromptChatTraceEntry =
   | { kind: "check"; text: string }
