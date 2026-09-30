@@ -35,6 +35,25 @@ export const promptChatUserClasses =
 /** Plain reply. Not a card. Words stream inside this line. */
 export const promptChatReplyClasses = "type-body text-fg";
 
+/** Thinking trace. One disclosure, then the body for whichever script is playing. */
+export const promptChatTraceClasses = "flex w-full flex-col items-start gap-2";
+
+export const promptChatTraceBodyClasses = "flex w-full flex-col items-start gap-1.5 pl-1";
+
+export const promptChatTraceLineClasses = "flex items-center gap-2 type-body text-fg";
+
+/** Working label. Existing muted ink and brand navy — a moving highlight, not a new tone. */
+export const promptChatThinkingLabelClasses =
+  "inline-block bg-[linear-gradient(90deg,var(--color-text-secondary),var(--color-brand),var(--color-text-secondary))] bg-[length:200%_100%] bg-clip-text text-transparent";
+
+/** Settled label. Past tense, quiet. */
+export const promptChatThoughtLabelClasses = "type-body text-muted";
+
+/** Lucide mark on a resolved line. Brand navy is `--color-brand` (`#011272`). */
+export const promptChatTraceIconClasses = "size-4 shrink-0 text-brand";
+
+export const promptChatTraceChevronClasses = "size-4 shrink-0 text-muted";
+
 /** Copy, helpful, and not helpful. Existing icon buttons, shown when the stream ends. */
 export const promptChatActionsClasses = "flex items-center gap-1";
 

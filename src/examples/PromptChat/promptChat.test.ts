@@ -19,10 +19,23 @@ import {
   promptChatPageClasses,
   promptChatReplyClasses,
   promptChatStageClasses,
+  promptChatThoughtLabelClasses,
   promptChatThreadClasses,
+  promptChatThinkingLabelClasses,
+  promptChatTraceBodyClasses,
+  promptChatTraceChevronClasses,
+  promptChatTraceClasses,
+  promptChatTraceIconClasses,
+  promptChatTraceLineClasses,
   promptChatUserClasses,
 } from "./promptChatStyles";
 import { promptChatPartDelay, promptChatReplyParts, promptChatSampleReply } from "./promptChatStream";
+import {
+  promptChatThoughtLabel,
+  promptChatThinkingLabel,
+  promptChatTraceDurationSeconds,
+  promptChatTraces,
+} from "./promptChatThinking";
 
 function mount() {
   const container = document.createElement("div");
@@ -86,8 +99,9 @@ describe("prompt chat pattern", () => {
     expect(view.container.querySelector("h1")).toBeNull();
     expect(view.container.querySelector("header")).not.toBeNull();
     expect(view.container.textContent).toContain("What services do you offer?");
-    expect(view.container.textContent).toContain(promptChatSampleReply);
-    expect(view.container.querySelector("a[href='/notes']")?.textContent).toBe("studio notes");
+    expect(view.container.textContent).toContain("Thinking");
+    expect(view.container.textContent).not.toContain("Thought for a few seconds");
+    expect(view.container.textContent).not.toContain(promptChatSampleReply);
     expect(view.container.querySelector("[aria-label='Copy reply']")).toBeNull();
     expect(view.field).toHaveProperty("value", "");
   });
@@ -125,7 +139,8 @@ describe("prompt chat pattern", () => {
     });
 
     expect(view.container.querySelector("h1")).toBeNull();
-    expect(view.container.textContent).toContain(promptChatSampleReply);
+    expect(view.container.textContent).toContain("Thinking");
+    expect(view.container.textContent).not.toContain(promptChatSampleReply);
   });
 
   it("mirrors the pattern in Show code", () => {
@@ -137,8 +152,15 @@ describe("prompt chat pattern", () => {
       promptChatHeadlineClasses,
       promptChatThreadClasses,
       promptChatUserClasses,
-      promptChatReplyClasses,
-      promptChatActionsClasses,
+  promptChatReplyClasses,
+  promptChatTraceClasses,
+  promptChatTraceBodyClasses,
+  promptChatTraceLineClasses,
+  promptChatThinkingLabelClasses,
+  promptChatThoughtLabelClasses,
+  promptChatTraceIconClasses,
+  promptChatTraceChevronClasses,
+  promptChatActionsClasses,
       promptChatFollowUpsClasses,
       promptChatBarClasses,
     ]) {
@@ -154,6 +176,8 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).toContain("useReducedMotion");
     expect(promptChatPatternCopySource).toContain(promptChatHeadline);
     expect(promptChatPatternCopySource).toContain(promptChatSampleReply);
+    expect(promptChatPatternCopySource).toContain(promptChatThinkingLabel);
+    expect(promptChatPatternCopySource).toContain(promptChatThoughtLabel);
     expect(promptChatPatternCopySource).not.toContain("ExampleGridControls");
   });
 });
@@ -173,5 +197,16 @@ describe("prompt chat stream timing", () => {
   it("shows every part immediately when motion is reduced", () => {
     expect(promptChatPartDelay(sourceIndex, true)).toBe(0);
     expect(promptChatPartDelay(promptChatReplyParts.length - 1, true)).toBe(0);
+  });
+});
+
+describe("prompt chat thinking trace", () => {
+  it("keeps four scripts on one trace and skips the play when motion is reduced", () => {
+    expect(promptChatTraces.steps.length).toBeGreaterThan(1);
+    expect(promptChatTraces.reasoning.length).toBeGreaterThan(0);
+    expect(promptChatTraces.search.some((entry) => entry.kind === "source")).toBe(true);
+    expect(promptChatTraces.coding.some((entry) => entry.kind === "command")).toBe(true);
+    expect(promptChatTraceDurationSeconds(promptChatTraces.steps.length)).toBeGreaterThan(0);
+    expect(promptChatTraceDurationSeconds(promptChatTraces.steps.length, true)).toBe(0);
   });
 });

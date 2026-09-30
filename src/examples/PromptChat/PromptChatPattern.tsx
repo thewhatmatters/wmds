@@ -8,6 +8,7 @@ import { IconButton } from "../../components/atoms/IconButton/IconButton";
 import { TextLink } from "../../components/atoms/TextLink/TextLink";
 import { PromptBar } from "../../components/molecules/PromptBar/PromptBar";
 import { SiteNav } from "../../components/organisms/SiteNav/SiteNav";
+import { PromptChatTrace } from "./PromptChatTrace";
 import {
   promptChatActionsClasses,
   promptChatBarClasses,
@@ -27,6 +28,12 @@ import {
   promptChatReplyParts,
   promptChatSampleReply,
 } from "./promptChatStream";
+import {
+  promptChatTraceBeatSeconds,
+  promptChatTraceDurationSeconds,
+  promptChatTraces,
+  type PromptChatTraceKind,
+} from "./promptChatThinking";
 
 export const promptChatHeadline = "What should we make?";
 
@@ -36,7 +43,7 @@ type Point = { top: number; left: number };
 
 export const promptChatPatternCopySource = `
 import { useEffect, useRef, useState, type MouseEvent } from "react";
-import { Copy, Sparkles, ThumbsDown, ThumbsUp } from "lucide-react";
+import { Check, ChevronRight, Copy, Sparkles, ThumbsDown, ThumbsUp } from "lucide-react";
 import { LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { Button, IconButton, PromptBar, SiteNav, TextLink, motionTransitionProp } from "@whatmatters/wmds";
 
@@ -50,6 +57,14 @@ const threadClasses = "col-span-full flex flex-col items-start gap-6 pt-6";
 const userClasses =
   "ml-auto max-w-full rounded-full bg-fill-selected px-4 py-2 type-body text-fg";
 const replyClasses = "type-body text-fg";
+const traceClasses = "flex w-full flex-col items-start gap-2";
+const traceBodyClasses = "flex w-full flex-col items-start gap-1.5 pl-1";
+const traceLineClasses = "flex items-center gap-2 type-body text-fg";
+const thinkingLabelClasses =
+  "inline-block bg-[linear-gradient(90deg,var(--color-text-secondary),var(--color-brand),var(--color-text-secondary))] bg-[length:200%_100%] bg-clip-text text-transparent";
+const thoughtLabelClasses = "type-body text-muted";
+const traceIconClasses = "size-4 shrink-0 text-brand";
+const traceChevronClasses = "size-4 shrink-0 text-muted";
 const actionsClasses = "flex items-center gap-1";
 const followUpsClasses = "flex flex-col items-start gap-2";
 const barClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
@@ -79,6 +94,34 @@ const followUps = [
   "What does a brand engagement include?",
   "How do you start a product design?",
 ];
+const thinkingLabel = "Thinking";
+const thoughtLabel = "Thought for a few seconds";
+const traceBeatSeconds = 0.32;
+const traceHoldSeconds = 0.4;
+const traces = {
+  steps: [
+    { kind: "check", text: "Read the brief" },
+    { kind: "check", text: "Name the brand" },
+    { kind: "check", text: "Check the product site" },
+    { kind: "check", text: "Find the studio notes" },
+  ],
+  reasoning: [
+    { kind: "prose", text: "Brand, product, and the site have to say the same thing." },
+    { kind: "prose", text: "The notes are where that line gets written down." },
+  ],
+  search: [
+    { kind: "query", text: "sites that explain the brand" },
+    { kind: "source", text: "Studio notes", href: "/notes" },
+    { kind: "source", text: "Product", href: "/product" },
+    { kind: "source", text: "What we make", href: "/services" },
+  ],
+  coding: [
+    { kind: "file", text: "brief.md" },
+    { kind: "file", text: "homepage.tsx" },
+    { kind: "edit", text: "Set the brand line in brief.md" },
+    { kind: "command", text: "npm run validate:composition" },
+  ],
+};
 const sentLineLayoutId = "prompt-chat-sent-line";
 
 type Point = { top: number; left: number };
@@ -107,10 +150,14 @@ export function AskWhatMatters() {
   const [origin, setOrigin] = useState<Point | null>(null);
   const [settled, setSettled] = useState(false);
   const [headlineExit, setHeadlineExit] = useState<Point | null>(null);
-  const [replyWaits, setReplyWaits] = useState(false);
   const [streamKey, setStreamKey] = useState(0);
   const [streamDone, setStreamDone] = useState(false);
   const [mark, setMark] = useState<"up" | "down" | null>(null);
+  const [revealed, setRevealed] = useState(0);
+  const [traceSettled, setTraceSettled] = useState(false);
+  const [traceOpen, setTraceOpen] = useState(false);
+  const [replyReady, setReplyReady] = useState(false);
+  const lines = traces.steps;
 
   useEffect(() => {
     if (reduce || origin == null || settled) return;
@@ -124,15 +171,35 @@ export function AskWhatMatters() {
     };
   }, [reduce, origin, settled]);
 
+  useEffect(() => {
+    if (reduce || sent == null) return;
+    const beatMs = traceBeatSeconds * 1000;
+    const timers = [];
+    for (let index = 1; index <= lines.length; index += 1) {
+      timers.push(window.setTimeout(() => setRevealed(index), index * beatMs));
+    }
+    timers.push(window.setTimeout(() => {
+      setTraceSettled(true);
+      setTraceOpen(false);
+      setReplyReady(true);
+    }, (lines.length * traceBeatSeconds + traceHoldSeconds) * 1000));
+    return () => {
+      for (const timer of timers) window.clearTimeout(timer);
+    };
+  }, [reduce, sent, streamKey, lines.length]);
+
   function goHome() {
     setSent(null);
     setDraft("");
     setOrigin(null);
     setSettled(false);
     setHeadlineExit(null);
-    setReplyWaits(false);
     setStreamDone(false);
     setMark(null);
+    setRevealed(0);
+    setTraceSettled(false);
+    setTraceOpen(false);
+    setReplyReady(false);
   }
 
   function onBrandClick(event: MouseEvent<HTMLDivElement>) {
@@ -160,8 +227,11 @@ export function AskWhatMatters() {
     setMark(null);
     setStreamKey((key) => key + 1);
     setStreamDone(reduce);
+    setRevealed(reduce ? lines.length : 0);
+    setTraceSettled(reduce);
+    setTraceOpen(!reduce);
+    setReplyReady(reduce);
     const skipTravel = reduce || !fromLanding || field == null;
-    setReplyWaits(!skipTravel);
     if (skipTravel) {
       setOrigin(null);
       setSettled(true);
@@ -173,9 +243,7 @@ export function AskWhatMatters() {
     setHeadlineExit(title == null ? null : { top: title.top, left: title.left });
   }
 
-  const travelSeconds = typeof travel.duration === "number" ? travel.duration : 0;
   const settleSeconds = typeof fast.duration === "number" ? fast.duration : 0.175;
-  const replyBase = reduce || !replyWaits ? 0 : travelSeconds;
 
   return (
     <LayoutGroup>
@@ -220,6 +288,39 @@ export function AskWhatMatters() {
                 ) : (
                   <span className="sr-only">{sent}</span>
                 )}
+                <div className={traceClasses} aria-busy={traceSettled ? undefined : true}>
+                  <Button layout="row" role="ghost" type="button" className="!w-auto" aria-expanded={traceOpen} onClick={() => setTraceOpen((current) => !current)}>
+                    {traceSettled ? (
+                      <span className={thoughtLabelClasses}>{thoughtLabel}</span>
+                    ) : (
+                      <motion.span
+                        className={thinkingLabelClasses}
+                        animate={reduce ? undefined : { backgroundPosition: ["100% center", "0% center"] }}
+                        transition={reduce ? { duration: 0 } : { duration: 1.1, repeat: Infinity, ease: "linear" }}
+                      >
+                        {thinkingLabel}
+                      </motion.span>
+                    )}
+                    <ChevronRight className={traceChevronClasses + (traceOpen ? " rotate-90" : "")} strokeWidth={2} aria-hidden />
+                  </Button>
+                  {traceOpen ? (
+                    <div className={traceBodyClasses}>
+                      {lines.slice(0, revealed).map((entry) => (
+                        <motion.div
+                          key={entry.text}
+                          className={traceLineClasses}
+                          initial={reduce ? false : { opacity: 0, filter: "blur(4px)" }}
+                          animate={{ opacity: 1, filter: "blur(0px)" }}
+                          transition={reduce ? { duration: 0 } : fast}
+                        >
+                          <Check className={traceIconClasses} strokeWidth={2} aria-hidden />
+                          {entry.text}
+                        </motion.div>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+                {replyReady ? (
                 <p key={streamKey} className={replyClasses} aria-busy={streamDone ? undefined : true}>
                   {replyParts.map((part, index) => (
                     <ReplyWord
@@ -227,12 +328,13 @@ export function AskWhatMatters() {
                       part={part}
                       index={index}
                       reduce={reduce}
-                      delay={replyBase + partDelay(index, reduce, settleSeconds)}
+                      delay={partDelay(index, reduce, settleSeconds)}
                       settle={fast}
                       onDone={index === replyParts.length - 1 ? () => setStreamDone(true) : undefined}
                     />
                   ))}
                 </p>
+                ) : null}
                 {streamDone ? (
                   <>
                     <motion.div
@@ -337,12 +439,14 @@ function ReplyWord({
 /**
  * Landing statement, then one chat exchange.
  * Send or Enter: the bar stays, the headline fades, the sent line travels into the trailing pill,
- * then the reply streams word by word. A source link arrives with the words around it.
+ * then a thinking trace plays and collapses. The reply streams after that.
+ * A source link arrives with the words around it.
  * Actions and follow-up prompts appear when the stream finishes. The chat keeps SiteNav;
  * the brand mark returns to the landing.
- * Reduced motion skips the travel and shows the finished reply. Voice and attachments are not part of this version.
+ * Reduced motion skips the travel and the trace play, and shows the settled trace with the finished reply.
+ * Voice and attachments are not part of this version.
  */
-export function AskWhatMatters() {
+export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKind } = {}) {
   const reduce = useReducedMotion() === true;
   const travel = motionTransitionProp("medium");
   const fast = motionTransitionProp("fast");
@@ -353,10 +457,13 @@ export function AskWhatMatters() {
   const [origin, setOrigin] = useState<Point | null>(null);
   const [settled, setSettled] = useState(false);
   const [headlineExit, setHeadlineExit] = useState<Point | null>(null);
-  const [replyWaits, setReplyWaits] = useState(false);
   const [streamKey, setStreamKey] = useState(0);
   const [streamDone, setStreamDone] = useState(false);
   const [mark, setMark] = useState<"up" | "down" | null>(null);
+  const [revealed, setRevealed] = useState(0);
+  const [traceSettled, setTraceSettled] = useState(false);
+  const [traceOpen, setTraceOpen] = useState(false);
+  const [replyReady, setReplyReady] = useState(false);
 
   useEffect(() => {
     if (reduce || origin == null || settled) return;
@@ -370,15 +477,38 @@ export function AskWhatMatters() {
     };
   }, [reduce, origin, settled]);
 
+  useEffect(() => {
+    if (reduce || sent == null) return;
+    const count = promptChatTraces[trace].length;
+    const beatMs = promptChatTraceBeatSeconds * 1000;
+    const timers: number[] = [];
+    for (let index = 1; index <= count; index += 1) {
+      timers.push(window.setTimeout(() => setRevealed(index), index * beatMs));
+    }
+    timers.push(
+      window.setTimeout(() => {
+        setTraceSettled(true);
+        setTraceOpen(false);
+        setReplyReady(true);
+      }, promptChatTraceDurationSeconds(count) * 1000),
+    );
+    return () => {
+      for (const timer of timers) window.clearTimeout(timer);
+    };
+  }, [reduce, sent, streamKey, trace]);
+
   function goHome() {
     setSent(null);
     setDraft("");
     setOrigin(null);
     setSettled(false);
     setHeadlineExit(null);
-    setReplyWaits(false);
     setStreamDone(false);
     setMark(null);
+    setRevealed(0);
+    setTraceSettled(false);
+    setTraceOpen(false);
+    setReplyReady(false);
   }
 
   function onBrandClick(event: MouseEvent<HTMLDivElement>) {
@@ -399,6 +529,7 @@ export function AskWhatMatters() {
     const text = value.trim();
     if (text.length === 0) return;
     const fromLanding = sent == null;
+    const count = promptChatTraces[trace].length;
     const field = fieldRef.current?.getBoundingClientRect();
     const title = headlineRef.current?.getBoundingClientRect();
     setSent(text);
@@ -406,8 +537,11 @@ export function AskWhatMatters() {
     setMark(null);
     setStreamKey((key) => key + 1);
     setStreamDone(reduce);
+    setRevealed(reduce ? count : 0);
+    setTraceSettled(reduce);
+    setTraceOpen(!reduce);
+    setReplyReady(reduce);
     const skipTravel = reduce || !fromLanding || field == null;
-    setReplyWaits(!skipTravel);
     if (skipTravel) {
       setOrigin(null);
       setSettled(true);
@@ -419,9 +553,7 @@ export function AskWhatMatters() {
     setHeadlineExit(title == null ? null : { top: title.top, left: title.left });
   }
 
-  const travelSeconds = typeof travel.duration === "number" ? travel.duration : 0;
   const settleSeconds = typeof fast.duration === "number" ? fast.duration : 0.175;
-  const replyBase = reduce || !replyWaits ? 0 : travelSeconds;
 
   return (
     <LayoutGroup>
@@ -476,6 +608,16 @@ export function AskWhatMatters() {
                 ) : (
                   <span className="sr-only">{sent}</span>
                 )}
+                <PromptChatTrace
+                  key={streamKey}
+                  entries={promptChatTraces[trace]}
+                  revealed={revealed}
+                  settled={traceSettled}
+                  open={traceOpen}
+                  onToggle={() => setTraceOpen((current) => !current)}
+                />
+                {replyReady ? (
+                <>
                 <p
                   key={streamKey}
                   className={promptChatReplyClasses}
@@ -490,7 +632,7 @@ export function AskWhatMatters() {
                       transition={
                         reduce
                           ? { duration: 0 }
-                          : { ...fast, delay: replyBase + promptChatPartDelay(index, false, settleSeconds) }
+                          : { ...fast, delay: promptChatPartDelay(index, false, settleSeconds) }
                       }
                       onAnimationComplete={
                         index === promptChatReplyParts.length - 1 ? () => setStreamDone(true) : undefined
@@ -537,6 +679,8 @@ export function AskWhatMatters() {
                       ))}
                     </div>
                   </>
+                ) : null}
+                </>
                 ) : null}
               </div>
             )}
