@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { Copy, Sparkles, ThumbsDown, ThumbsUp } from "lucide-react";
-import { LayoutGroup, motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { cn } from "../../lib/cn";
 import { motionTransitionProp } from "../../lib/motion";
 import { Button } from "../../components/atoms/Button/Button";
@@ -40,14 +40,12 @@ import {
 
 export const promptChatHeadline = "What should we make?";
 
-const sentLineLayoutId = "prompt-chat-sent-line";
-
 type Point = { top: number; left: number };
 
 export const promptChatPatternCopySource = `
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { Check, ChevronRight, Copy, LoaderCircle, Sparkles, ThumbsDown, ThumbsUp } from "lucide-react";
-import { LayoutGroup, motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { Button, IconButton, PromptBar, SiteNav, TextLink, motionTransitionProp } from "@whatmatters/wmds";
 
 const pageClasses = "flex h-full min-h-0 w-full flex-1 flex-col bg-body";
@@ -128,8 +126,6 @@ const traces = {
     { kind: "command", text: "npm run validate:composition" },
   ],
 };
-const sentLineLayoutId = "prompt-chat-sent-line";
-
 type Point = { top: number; left: number };
 type ReplyPart = (typeof replyParts)[number];
 
@@ -153,8 +149,6 @@ export function AskWhatMatters() {
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const [draft, setDraft] = useState("");
   const [sent, setSent] = useState<string | null>(null);
-  const [origin, setOrigin] = useState<Point | null>(null);
-  const [settled, setSettled] = useState(false);
   const [headlineExit, setHeadlineExit] = useState<Point | null>(null);
   const [streamKey, setStreamKey] = useState(0);
   const [streamDone, setStreamDone] = useState(false);
@@ -164,18 +158,6 @@ export function AskWhatMatters() {
   const [traceOpen, setTraceOpen] = useState(false);
   const [replyReady, setReplyReady] = useState(false);
   const lines = traces.steps;
-
-  useEffect(() => {
-    if (reduce || origin == null || settled) return;
-    let inner = 0;
-    const outer = requestAnimationFrame(() => {
-      inner = requestAnimationFrame(() => setSettled(true));
-    });
-    return () => {
-      cancelAnimationFrame(outer);
-      cancelAnimationFrame(inner);
-    };
-  }, [reduce, origin, settled]);
 
   useEffect(() => {
     if (reduce || sent == null) return;
@@ -198,8 +180,6 @@ export function AskWhatMatters() {
   function goHome() {
     setSent(null);
     setDraft("");
-    setOrigin(null);
-    setSettled(false);
     setHeadlineExit(null);
     setStreamDone(false);
     setMark(null);
@@ -227,7 +207,6 @@ export function AskWhatMatters() {
     const text = value.trim();
     if (text.length === 0) return;
     const fromLanding = sent == null;
-    const field = fieldRef.current?.getBoundingClientRect();
     const title = headlineRef.current?.getBoundingClientRect();
     setSent(text);
     setDraft("");
@@ -238,22 +217,16 @@ export function AskWhatMatters() {
     setResolved(reduce ? lines.length : 0);
     setTraceOpen(!reduce);
     setReplyReady(reduce);
-    const skipTravel = reduce || !fromLanding || field == null;
-    if (skipTravel) {
-      setOrigin(null);
-      setSettled(true);
+    if (reduce || !fromLanding || title == null) {
       setHeadlineExit(null);
       return;
     }
-    setOrigin({ top: field.top, left: field.left });
-    setSettled(false);
-    setHeadlineExit(title == null ? null : { top: title.top, left: title.left });
+    setHeadlineExit({ top: title.top, left: title.left });
   }
 
   const settleSeconds = typeof fast.duration === "number" ? fast.duration : 0.175;
 
   return (
-    <LayoutGroup>
       <div className={pageClasses}>
         {sent != null ? (
           <div onClick={onBrandClick}>
@@ -288,13 +261,15 @@ export function AskWhatMatters() {
               <h1 ref={headlineRef} className={headlineClasses}>{headline}</h1>
             ) : (
               <div className={threadClasses}>
-                {settled ? (
-                  <motion.p layoutId={sentLineLayoutId} className={userClasses} transition={travel}>
-                    {sent}
-                  </motion.p>
-                ) : (
-                  <span className="sr-only">{sent}</span>
-                )}
+                <motion.p
+                  key={sent}
+                  className={userClasses}
+                  initial={reduce ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={reduce ? { duration: 0 } : fast}
+                >
+                  {sent}
+                </motion.p>
                 {replyReady ? null : (
                 <div className={traceClasses} aria-busy="true">
                   <Button layout="row" role="ghost" type="button" className="!w-auto" aria-expanded={traceOpen} onClick={() => setTraceOpen((current) => !current)}>
@@ -386,17 +361,6 @@ export function AskWhatMatters() {
             </div>
           </div>
         </div>
-        {origin != null && !settled ? (
-          <motion.p
-            layoutId={sentLineLayoutId}
-            className={userClasses + " pointer-events-none fixed z-10"}
-            style={{ top: origin.top, left: origin.left }}
-            initial={false}
-            transition={travel}
-          >
-            {sent}
-          </motion.p>
-        ) : null}
         {headlineExit != null ? (
           <motion.p
             aria-hidden
@@ -411,7 +375,6 @@ export function AskWhatMatters() {
           </motion.p>
         ) : null}
       </div>
-    </LayoutGroup>
   );
 }
 
@@ -447,14 +410,14 @@ function ReplyWord({
 
 /**
  * Landing statement, then one chat exchange.
- * Send or Enter: the bar stays, the headline fades, the sent line travels into the trailing pill,
+ * Send or Enter: the bar stays, the headline fades, and the sent line fades in where it rests.
  * then a Steps trace plays until the reply starts. The trace leaves when the reply starts.
  * A source link arrives with the words around it.
  * The thread uses the full page grid and scrolls. Follow-ups share that column.
  * The composer stays pinned in columns 4–9 from lg.
  * Actions and follow-up prompts appear when the stream finishes. The chat keeps SiteNav;
  * the brand mark returns to the landing.
- * Reduced motion skips the travel and the trace play, and shows the finished reply.
+ * Reduced motion skips the fade and the trace play, and shows the finished reply.
  * Voice and attachments are not part of this version.
  */
 export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKind } = {}) {
@@ -465,8 +428,6 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const [draft, setDraft] = useState("");
   const [sent, setSent] = useState<string | null>(null);
-  const [origin, setOrigin] = useState<Point | null>(null);
-  const [settled, setSettled] = useState(false);
   const [headlineExit, setHeadlineExit] = useState<Point | null>(null);
   const [streamKey, setStreamKey] = useState(0);
   const [streamDone, setStreamDone] = useState(false);
@@ -476,18 +437,6 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
   const [traceSettled, setTraceSettled] = useState(false);
   const [traceOpen, setTraceOpen] = useState(false);
   const [replyReady, setReplyReady] = useState(false);
-
-  useEffect(() => {
-    if (reduce || origin == null || settled) return;
-    let inner = 0;
-    const outer = requestAnimationFrame(() => {
-      inner = requestAnimationFrame(() => setSettled(true));
-    });
-    return () => {
-      cancelAnimationFrame(outer);
-      cancelAnimationFrame(inner);
-    };
-  }, [reduce, origin, settled]);
 
   useEffect(() => {
     if (reduce || sent == null) return;
@@ -514,8 +463,6 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
   function goHome() {
     setSent(null);
     setDraft("");
-    setOrigin(null);
-    setSettled(false);
     setHeadlineExit(null);
     setStreamDone(false);
     setMark(null);
@@ -545,7 +492,6 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
     if (text.length === 0) return;
     const fromLanding = sent == null;
     const count = promptChatTraces[trace].length;
-    const field = fieldRef.current?.getBoundingClientRect();
     const title = headlineRef.current?.getBoundingClientRect();
     setSent(text);
     setDraft("");
@@ -557,22 +503,16 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
     setTraceSettled(reduce);
     setTraceOpen(!reduce);
     setReplyReady(reduce);
-    const skipTravel = reduce || !fromLanding || field == null;
-    if (skipTravel) {
-      setOrigin(null);
-      setSettled(true);
+    if (reduce || !fromLanding || title == null) {
       setHeadlineExit(null);
       return;
     }
-    setOrigin({ top: field.top, left: field.left });
-    setSettled(false);
-    setHeadlineExit(title == null ? null : { top: title.top, left: title.left });
+    setHeadlineExit({ top: title.top, left: title.left });
   }
 
   const settleSeconds = typeof fast.duration === "number" ? fast.duration : 0.175;
 
   return (
-    <LayoutGroup>
       <div className={promptChatPageClasses}>
         {sent != null ? (
           <div onClick={onBrandClick}>
@@ -617,13 +557,15 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
               </h1>
             ) : (
               <div className={promptChatThreadClasses}>
-                {settled ? (
-                  <motion.p layoutId={sentLineLayoutId} className={promptChatUserClasses} transition={travel}>
-                    {sent}
-                  </motion.p>
-                ) : (
-                  <span className="sr-only">{sent}</span>
-                )}
+                <motion.p
+                  key={sent}
+                  className={promptChatUserClasses}
+                  initial={reduce ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={reduce ? { duration: 0 } : fast}
+                >
+                  {sent}
+                </motion.p>
                 {trace === "steps" && replyReady ? null : (
                 <PromptChatTrace
                   key={streamKey}
@@ -717,17 +659,6 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
             </div>
           </div>
         </div>
-        {origin != null && !settled ? (
-          <motion.p
-            layoutId={sentLineLayoutId}
-            className={cn(promptChatUserClasses, "pointer-events-none fixed z-10")}
-            style={{ top: origin.top, left: origin.left }}
-            initial={false}
-            transition={travel}
-          >
-            {sent}
-          </motion.p>
-        ) : null}
         {headlineExit != null ? (
           <motion.p
             aria-hidden
@@ -742,6 +673,5 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
           </motion.p>
         ) : null}
       </div>
-    </LayoutGroup>
   );
 }

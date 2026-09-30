@@ -199,6 +199,8 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).toContain("IconButton");
     expect(promptChatPatternCopySource).toContain("SiteNav");
     expect(promptChatPatternCopySource).toContain("motion/react");
+    expect(promptChatPatternCopySource).toContain("opacity: 0");
+    expect(promptChatPatternCopySource).not.toContain("layoutId");
     expect(promptChatPatternCopySource).toContain("useReducedMotion");
     expect(promptChatPatternCopySource).toContain(promptChatHeadline);
     expect(promptChatPatternCopySource).toContain(promptChatSampleReply);
