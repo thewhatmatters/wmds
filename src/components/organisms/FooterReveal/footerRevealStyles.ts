@@ -135,12 +135,17 @@ export const footerRevealRuledFieldClasses =
  * No max-width and no overflow clip — the nav, wordmark, and meta row stay
  * visible. The wordmark has to reach the viewport width.
  *
+ * That stack is one block. `justify-center-safe` places it in the vertical
+ * center of the field when it fits, so the leftover cream is shared above
+ * the links and below the quiet row. `safe` keeps a short viewport on
+ * `flex-start` instead of sliding the links under the pinned nav.
+ *
  * Top padding clears the pinned site nav on every mount. `--site-nav-height`
  * is the nav band. `var(--spacing) * 4` is that pill's 1rem pin (`top-4`).
  * The bottom inset stays `--grid-pad`.
  */
 export const footerRevealRuledRootClasses =
-  "flex min-h-[100vh] w-full min-w-0 flex-col items-center gap-[var(--grid-pad)] " +
+  "flex min-h-[100vh] w-full min-w-0 flex-col items-center justify-center-safe gap-[var(--grid-pad)] " +
   "pb-[var(--grid-pad)] pt-[calc(var(--site-nav-height)+var(--spacing)*4)] text-center text-brand";
 
 /** Centered link stack. The list hugs its labels; it does not stretch into columns. */

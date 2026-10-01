@@ -152,10 +152,12 @@ function FittedLine({
 /**
  * Marketing footer on the page background. The shell is at least `100vh` and
  * grows when the content is taller. The link stack, fitted wordmark, and quiet
- * row start below the pinned site nav (`--site-nav-height` plus its 1rem pin).
- * A centered link stack, a wordmark fitted to the footer width, then a quiet
- * row: mark and copyright, the email, and the credit. The nav, wordmark, and
- * quiet row are fully visible — they do not crop.
+ * row are one block, vertically centered in the field when that block fits.
+ * Top padding still clears the pinned site nav (`--site-nav-height` plus its
+ * 1rem pin); a short viewport keeps the block under that nav. A centered link
+ * stack, a wordmark fitted to the footer width, then a quiet row: mark and
+ * copyright, the email, and the credit. The nav, wordmark, and quiet row are
+ * fully visible — they do not crop.
  */
 export function FooterRevealRuled({
   copyright = footerRevealRuledDefaultCopy.copyright,
