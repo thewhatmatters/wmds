@@ -222,6 +222,37 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).not.toContain("ExampleGridControls");
   });
 
+  it("scrolls again after the reply has grown", async () => {
+    const view = mount();
+    root = view.root;
+    container = view.container;
+    const stage = view.container.querySelector("main");
+    if (stage == null) throw new Error("Prompt chat did not render a stage");
+    const writes: number[] = [];
+    Object.defineProperty(stage, "scrollHeight", { configurable: true, get: () => 940 });
+    Object.defineProperty(stage, "scrollTop", {
+      configurable: true,
+      get: () => writes.at(-1) ?? 0,
+      set: (value: number) => {
+        writes.push(value);
+      },
+    });
+
+    typeDraft(view.field, "What services do you offer?");
+    act(() => {
+      view.send.click();
+    });
+    const afterSend = writes.length;
+    expect(afterSend).toBeGreaterThan(0);
+
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 2800));
+    });
+
+    expect(writes.length).toBeGreaterThan(afterSend);
+    expect(writes.at(-1)).toBe(940);
+  });
+
   it("removes the steps trace when the reply starts", async () => {
     const view = mount();
     root = view.root;

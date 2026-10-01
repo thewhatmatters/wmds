@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
 import { Copy, Sparkles, ThumbsDown, ThumbsUp } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { cn } from "../../lib/cn";
@@ -43,7 +43,7 @@ export const promptChatHeadline = "What should we make?";
 type Point = { top: number; left: number };
 
 export const promptChatPatternCopySource = `
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
 import { Check, ChevronRight, Copy, LoaderCircle, Sparkles, ThumbsDown, ThumbsUp } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { Button, IconButton, PromptBar, SiteNav, TextLink, motionTransitionProp } from "@whatmatters/wmds";
@@ -148,11 +148,13 @@ function Exchange({
   latest,
   reduce,
   onFollowUp,
+  onReplyGrown,
 }: {
   prompt: string;
   latest: boolean;
   reduce: boolean;
   onFollowUp: (value: string) => void;
+  onReplyGrown: () => void;
 }) {
   const fast = motionTransitionProp("fast");
   const lines = traces.steps;
@@ -190,6 +192,11 @@ function Exchange({
     const timer = window.setTimeout(() => setStreamDone(true), wait);
     return () => window.clearTimeout(timer);
   }, [replyReady, reduce, streamDone, settleSeconds]);
+
+  useLayoutEffect(() => {
+    if (!replyReady) return;
+    onReplyGrown();
+  }, [replyReady, streamDone, onReplyGrown]);
 
   function copyReply() {
     if (typeof navigator === "undefined" || navigator.clipboard == null) return;
@@ -306,11 +313,15 @@ export function AskWhatMatters() {
   const [headlineExit, setHeadlineExit] = useState<Point | null>(null);
   const chatting = turns.length > 0;
 
-  useEffect(() => {
+  const scrollStageToEnd = useCallback(() => {
     const stage = stageRef.current;
     if (stage == null) return;
     stage.scrollTop = stage.scrollHeight;
-  }, [turns.length]);
+  }, []);
+
+  useEffect(() => {
+    scrollStageToEnd();
+  }, [turns.length, scrollStageToEnd]);
 
   function goHome() {
     setTurns([]);
@@ -383,6 +394,7 @@ export function AskWhatMatters() {
                     latest={index === turns.length - 1}
                     reduce={reduce}
                     onFollowUp={send}
+                    onReplyGrown={scrollStageToEnd}
                   />
                 ))}
               </div>
@@ -455,12 +467,14 @@ function PromptChatExchange({
   latest,
   reduce,
   onFollowUp,
+  onReplyGrown,
 }: {
   prompt: string;
   trace: PromptChatTraceKind;
   latest: boolean;
   reduce: boolean;
   onFollowUp: (value: string) => void;
+  onReplyGrown: () => void;
 }) {
   const fast = motionTransitionProp("fast");
   const count = promptChatTraces[trace].length;
@@ -502,6 +516,11 @@ function PromptChatExchange({
     const timer = window.setTimeout(() => setStreamDone(true), wait);
     return () => window.clearTimeout(timer);
   }, [replyReady, reduce, streamDone, settleSeconds]);
+
+  useLayoutEffect(() => {
+    if (!replyReady) return;
+    onReplyGrown();
+  }, [replyReady, streamDone, onReplyGrown]);
 
   function copyReply() {
     if (typeof navigator === "undefined" || navigator.clipboard == null) return;
@@ -603,7 +622,8 @@ function PromptChatExchange({
  * A Steps trace plays until that reply starts, then leaves. A follow-up appends the next user
  * line in the same thread. Earlier messages stay.
  * The thread, follow-ups, and composer share one narrowed page grid (`--grid-max: 40rem`).
- * The thread scrolls inside that column. The composer stays pinned.
+ * The thread scrolls inside that column when a turn is added, and again after the reply has grown,
+ * so the newest line finishes above the composer. The composer stays pinned.
  * Reduced motion skips the fade and the trace play, and shows the finished reply.
  * Voice and attachments are not part of this version.
  */
@@ -619,11 +639,15 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
   const [headlineExit, setHeadlineExit] = useState<Point | null>(null);
   const chatting = turns.length > 0;
 
-  useEffect(() => {
+  const scrollStageToEnd = useCallback(() => {
     const stage = stageRef.current;
     if (stage == null) return;
     stage.scrollTop = stage.scrollHeight;
-  }, [turns.length]);
+  }, []);
+
+  useEffect(() => {
+    scrollStageToEnd();
+  }, [turns.length, scrollStageToEnd]);
 
   function goHome() {
     setTurns([]);
@@ -708,6 +732,7 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
                   latest={index === turns.length - 1}
                   reduce={reduce}
                   onFollowUp={send}
+                  onReplyGrown={scrollStageToEnd}
                 />
               ))}
             </div>
