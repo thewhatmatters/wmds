@@ -211,6 +211,9 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).toContain(promptChatSampleReply);
     expect(promptChatPatternCopySource).toContain(promptChatThinkingLabel);
     expect(promptChatPatternCopySource).not.toContain(promptChatThoughtLabel);
+    expect(promptChatPageClasses).toContain("h-[100svh]");
+    expect(promptChatPageClasses).toContain("overflow-hidden");
+    expect(promptChatPageClasses).not.toContain("h-full");
     expect(promptChatColumnClasses).toContain("[--grid-max:40rem]");
     expect(promptChatComposerClasses).toBe("col-span-full");
     expect(promptChatPatternCopySource).toContain("[--grid-max:40rem]");
