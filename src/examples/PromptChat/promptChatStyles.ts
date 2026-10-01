@@ -32,7 +32,11 @@ export const promptChatLandingClasses = "place-content-center";
 export const promptChatHeadlineClasses =
   "col-span-full type-display-2 !font-normal text-balance text-center text-brand";
 
-/** User turn, reply, and follow-ups. One column of the narrowed grid. */
+/**
+ * User turn, reply, and follow-ups. One column of the narrowed grid.
+ * The thread's bottom padding is the composer's measured height, so the newest
+ * text ends above the bar while a reply is still growing and after it finishes.
+ */
 export const promptChatThreadClasses =
   "col-span-full flex w-full min-w-0 flex-col items-start gap-6 pt-6";
 
