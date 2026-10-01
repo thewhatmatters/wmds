@@ -23,6 +23,7 @@ import {
   cardLayoutShellClasses,
   cardLayoutShellBottomClasses,
   cardLayoutShellTopClasses,
+  cardLayoutScrollBodyClasses,
   cardLayoutShellShapeClasses,
   cardLayoutTerminalBodyClasses,
   cardLayoutVariantClasses,
@@ -165,11 +166,13 @@ function CardHeader({
 function CardBody({ className, children, ...props }: CardSectionProps) {
   const padding = useCardPadding();
   const terminal = useContext(CardBodyTerminalContext);
+  const isLayout = padding === "none";
   return (
     <div
       className={cn(
         cardSectionPaddingClasses[padding].body,
-        padding === "none" && terminal && cardLayoutTerminalBodyClasses,
+        isLayout && terminal && cardLayoutTerminalBodyClasses,
+        isLayout && !terminal && cardLayoutScrollBodyClasses,
         className,
       )}
       {...props}
@@ -197,6 +200,8 @@ function CardDivider({ className, ...props }: HTMLAttributes<HTMLHRElement>) {
  * Layout cards (`padding="none"`) — shell + optional **Header** (`start` | `end`) + **Body** slot
  * (2px gutter, square, transparent — occupant owns fill and chrome).
  * Headerless Body densifies shell top to 2px; footerless / `bodyTerminal` densifies shell bottom to 2px.
+ * Pin a height on the root (`className`) with Header + Body + Footer — Header/Footer stay put;
+ * **Card.Body** scrolls. No new variant.
  */
 export const Card = Object.assign(CardRoot, {
   Header: CardHeader,

@@ -41,8 +41,13 @@ export const cardRootPaddingClasses: Record<CardPadding, string> = {
   lg: "p-6",
 };
 
-/** Layout shell stack — gap only. Vertical pad via {@link cardLayoutShellTopClasses} / {@link cardLayoutShellBottomClasses}. */
-export const cardLayoutShellClasses = "gap-3";
+/**
+ * Layout shell stack — gap only for vertical pad (see top/bottom helpers).
+ * `min-h-0 overflow-hidden` lets a pinned root height constrain **Card.Body** so
+ * Header/Footer stay put and Body can scroll. Content-sized cards still grow with
+ * their children (`height: auto`); overflow clips only overflowing descendants.
+ */
+export const cardLayoutShellClasses = "min-h-0 gap-3 overflow-hidden";
 
 /** Layout shell top pad — 16px beside Header; 2px when Header is omitted. */
 export function cardLayoutShellTopClasses(hasHeader = true): string {
@@ -81,6 +86,7 @@ export const cardLayoutHeaderRowClasses = "flex items-start justify-between gap-
 
 export const cardLayoutHeaderClasses = [
   cardLayoutSectionInsetXClasses,
+  "shrink-0",
   cardLayoutHeaderRowClasses,
 ].join(" ");
 
@@ -95,6 +101,13 @@ export const cardLayoutBodyWellClasses = [
   cardLayoutBodyGutterClasses,
   "flex min-h-0 w-full flex-col",
 ].join(" ");
+
+/**
+ * Body between Header and Footer — consumes remaining shell height and scrolls.
+ * Applied whenever layout Body is not terminal. Content-sized shells still size to
+ * content (no scrollbar until the root height is pinned via layout `className`).
+ */
+export const cardLayoutScrollBodyClasses = "min-h-0 flex-1 overflow-y-auto";
 
 /** Terminal Body fills stretched cards; its single occupant consumes the remaining Body region. */
 export const cardLayoutTerminalBodyClasses =
@@ -124,7 +137,7 @@ export const cardLayoutBodyOccupantDotGridWellClasses = [
 
 export const cardLayoutFooterClasses = [
   cardLayoutSectionInsetXClasses,
-  "flex items-center justify-between gap-3",
+  "flex shrink-0 items-center justify-between gap-3",
 ].join(" ");
 
 /** Simple padded cards — flat sections with dividers (legacy when padding md/lg + sections). */

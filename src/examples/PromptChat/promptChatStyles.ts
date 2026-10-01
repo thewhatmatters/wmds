@@ -111,6 +111,18 @@ export const promptChatBarClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
 /** Composer fills that column, the same measure as the reply and follow-ups. */
 export const promptChatComposerClasses = "col-span-full";
 
+/**
+ * Start Project Card shell — one height on steps 1–4 so the bar does not jump.
+ * Matches the natural step-1 shell (options list). Layout `className` only —
+ * **Card** pins Header/Footer and scrolls **Card.Body** (no Card variant, no
+ * Dialog/IntakeModal scroll classes copied onto the gate).
+ */
+export const promptChatStartGateCardClasses = "h-[411px]";
+
+/** Occupant well fills the body scrollport when step content is short. */
+export const promptChatStartGateOccupantClasses =
+  "flex min-h-full w-full flex-col gap-3 py-3";
+
 /** Step index in Card.Header `end`. Supporting muted — not a new token. */
 export const promptChatStartGateStepClasses = "type-supporting text-muted px-1 tabular-nums";
 
