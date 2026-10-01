@@ -249,7 +249,10 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).toContain("Start Project");
     expect(promptChatPatternCopySource).toContain("Card");
     expect(promptChatPatternCopySource).toContain("Checkbox");
+    expect(promptChatPatternCopySource).toContain("Badge");
     expect(promptChatPatternCopySource).toContain(promptChatStartGateTitle);
+    expect(promptChatPatternCopySource).toContain("What are we making?");
+    expect(promptChatPatternCopySource).toContain("justify-end");
     expect(promptChatStartOptions.map((option) => option.label).join("|")).toContain("Brand identity");
     expect(promptChatStartOptions.every((option) => option.label !== "Web experience")).toBe(true);
     expect(promptChatPageClasses).toContain("h-[100svh]");
@@ -532,10 +535,12 @@ describe("prompt chat start project gate", () => {
       });
 
       expect(view.container.textContent).toContain(promptChatStartGateTitle);
+      expect(view.container.textContent).toContain("What are we making?");
       expect(view.container.textContent).toContain("1 of 4");
       expect(view.container.textContent).toContain("Brand identity");
       expect(view.container.textContent).toContain("Design system");
       expect(view.container.textContent).not.toContain("Web experience");
+      expect(view.container.textContent).not.toContain("A sharp presence");
       expect(view.container.querySelector("textarea")).toBeNull();
       expect(view.container.textContent).toContain("What services do you offer?");
 

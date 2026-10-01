@@ -111,20 +111,23 @@ export const promptChatBarClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
 /** Composer fills that column, the same measure as the reply and follow-ups. */
 export const promptChatComposerClasses = "col-span-full";
 
-/** Start-project gate header cluster: back, forward, step, close. */
+/** Start-project gate header cluster: back, step, forward, close — Paper order. */
 export const promptChatStartGateHeaderEndClasses = "flex items-center gap-1";
 
 /** Step index in the gate header. Same quiet supporting step as thinking. */
 export const promptChatStartGateStepClasses = "type-supporting text-muted px-1 tabular-nums";
 
-/** Selectable choice stack inside Card.Body. */
-export const promptChatStartGateOptionsClasses = "flex w-full flex-col gap-3";
+/** Selectable choice stack inside Card.Body — hairline between rows. */
+export const promptChatStartGateOptionsClasses = "flex w-full flex-col";
 
-/** One choice: checkbox + trailing index. */
-export const promptChatStartGateOptionClasses = "flex w-full items-start gap-3";
+/**
+ * One choice: checkbox + muted count Badge. Hairline under each row except the last.
+ */
+export const promptChatStartGateOptionClasses =
+  "flex w-full items-center gap-3 border-b border-border py-3 last:border-b-0";
 
-/** Trailing index on each choice row. */
-export const promptChatStartGateOptionNumberClasses = "type-supporting text-muted shrink-0 pt-1 tabular-nums";
+/** Trailing index Badge placement on each choice row. */
+export const promptChatStartGateOptionNumberClasses = "shrink-0";
 
-/** Cancel left, Next right — existing Button roles. */
-export const promptChatStartGateFooterClasses = "flex w-full items-center justify-between gap-3";
+/** Cancel + Next both trailing — existing Button roles. */
+export const promptChatStartGateFooterClasses = "flex w-full items-center justify-end gap-2";

@@ -49,10 +49,10 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type MouseEv
 import { Check, ChevronDown, ChevronLeft, ChevronRight, Copy, LoaderCircle, Sparkle, Sparkles, ThumbsDown, ThumbsUp, X } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import {
+  Badge,
   Button,
   Card,
   cardLayoutBodyOccupantInsetXClasses,
-  cardLayoutBodyOccupantPadYClasses,
   cardSubtitleClasses,
   cardTitleClasses,
   Checkbox,
@@ -93,18 +93,19 @@ const barClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
 const composerClasses = "col-span-full";
 const startGateHeaderEndClasses = "flex items-center gap-1";
 const startGateStepClasses = "type-supporting text-muted px-1 tabular-nums";
-const startGateOptionsClasses = "flex w-full flex-col gap-3";
-const startGateOptionClasses = "flex w-full items-start gap-3";
-const startGateOptionNumberClasses = "type-supporting text-muted shrink-0 pt-1 tabular-nums";
-const startGateFooterClasses = "flex w-full items-center justify-between gap-3";
+const startGateOptionsClasses = "flex w-full flex-col";
+const startGateOptionClasses =
+  "flex w-full items-center gap-3 border-b border-border py-3 last:border-b-0";
+const startGateOptionNumberClasses = "shrink-0";
+const startGateFooterClasses = "flex w-full items-center justify-end gap-2";
 const startOptions = [
-  { value: "brand", label: "Brand identity", description: "Name, mark, and a system you can actually use.", number: "01" },
-  { value: "website", label: "Website", description: "A site that explains the work and earns the next conversation.", number: "02" },
-  { value: "product", label: "Product design", description: "Flows, screens, and the details in between.", number: "03" },
-  { value: "system", label: "Design system", description: "Components, tokens, and the rules that keep them honest.", number: "04" },
+  { value: "brand", label: "Brand identity", description: "Name, mark, and a system you can actually use.", number: 1 },
+  { value: "website", label: "Website", description: "A site that explains the work and earns the next conversation.", number: 2 },
+  { value: "product", label: "Product design", description: "Flows, screens, and the details in between.", number: 3 },
+  { value: "system", label: "Design system", description: "Components, tokens, and the rules that keep them honest.", number: 4 },
 ];
-const startGateTitle = "What are we making?";
-const startGateSubtitle = "Pick everything that fits. We'll shape the work around it.";
+const startGateTitle = "Name the work";
+const startGateSubtitle = "What are we making?";
 
 const headline = "What should we make?";
 const sampleReply =
@@ -395,14 +396,14 @@ function StartGate({
         end={
           <div className={startGateHeaderEndClasses}>
             <IconButton aria-label="Previous step" size="sm" icon={<ChevronLeft />} disabled={atStart} onClick={onBack} />
-            <IconButton aria-label="Next step" size="sm" icon={<ChevronRight />} disabled={atEnd || values.length === 0} onClick={onNext} />
             <span className={startGateStepClasses}>{step} of 4</span>
+            <IconButton aria-label="Next step" size="sm" icon={<ChevronRight />} disabled={atEnd || values.length === 0} onClick={onNext} />
             <IconButton aria-label="Close starter" size="sm" icon={<X />} onClick={onCancel} />
           </div>
         }
       />
       <Card.Body>
-        <div className={startGateOptionsClasses + " " + cardLayoutBodyOccupantInsetXClasses + " " + cardLayoutBodyOccupantPadYClasses} role="group" aria-label={startGateTitle}>
+        <div className={startGateOptionsClasses + " " + cardLayoutBodyOccupantInsetXClasses} role="group" aria-label={startGateSubtitle}>
           {startOptions.map((option) => (
             <div key={option.value} className={startGateOptionClasses}>
               <Checkbox
@@ -413,14 +414,14 @@ function StartGate({
                 checked={values.includes(option.value)}
                 onChange={(event) => toggle(option.value, event.target.checked)}
               />
-              <span className={startGateOptionNumberClasses} aria-hidden>{option.number}</span>
+              <Badge className={startGateOptionNumberClasses} variant="neutral" emphasis="muted" size="sm" count={option.number} />
             </div>
           ))}
         </div>
       </Card.Body>
       <Card.Footer>
         <div className={startGateFooterClasses}>
-          <Button role="ghost" size="md" type="button" onClick={onCancel}>Cancel</Button>
+          <Button role="secondary" size="md" type="button" onClick={onCancel}>Cancel</Button>
           <Button role="primary" size="md" type="button" disabled={values.length === 0} onClick={onNext}>Next</Button>
         </div>
       </Card.Footer>

@@ -1,11 +1,11 @@
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Badge } from "../../components/atoms/Badge/Badge";
 import { Button } from "../../components/atoms/Button/Button";
 import { Checkbox } from "../../components/atoms/Checkbox/Checkbox";
 import { IconButton } from "../../components/atoms/IconButton/IconButton";
 import {
   Card,
   cardLayoutBodyOccupantInsetXClasses,
-  cardLayoutBodyOccupantPadYClasses,
   cardSubtitleClasses,
   cardTitleClasses,
 } from "../../components/molecules/Card/Card";
@@ -19,42 +19,48 @@ import {
   promptChatStartGateStepClasses,
 } from "./promptChatStyles";
 
-/** Step 1 choices — from the starter intake, not four identical placeholders. */
+/**
+ * Step 1 choices from the starter intake — not four identical
+ * “Web experience” placeholders from the Paper file.
+ */
 export const promptChatStartOptions = [
   {
     value: "brand",
     label: "Brand identity",
     description: "Name, mark, and a system you can actually use.",
-    number: "01",
+    number: 1,
   },
   {
     value: "website",
     label: "Website",
     description: "A site that explains the work and earns the next conversation.",
-    number: "02",
+    number: 2,
   },
   {
     value: "product",
     label: "Product design",
     description: "Flows, screens, and the details in between.",
-    number: "03",
+    number: 3,
   },
   {
     value: "system",
     label: "Design system",
     description: "Components, tokens, and the rules that keep them honest.",
-    number: "04",
+    number: 4,
   },
 ] as const;
 
 export const promptChatStartGateSteps = 4;
 
-export const promptChatStartGateTitle = "What are we making?";
-export const promptChatStartGateSubtitle = "Pick everything that fits. We'll shape the work around it.";
+/** Card title — Paper header lead. */
+export const promptChatStartGateTitle = "Name the work";
+
+/** Quieter subtitle under the title — Paper secondary line. */
+export const promptChatStartGateSubtitle = "What are we making?";
 
 /**
  * Gated starter form. Replaces the composer in place. Existing Card + Checkbox +
- * Button + IconButton — no new variant.
+ * Badge + Button + IconButton — no new variant.
  */
 export function PromptChatStartGate({
   step,
@@ -100,6 +106,9 @@ export function PromptChatStartGate({
               disabled={atStart}
               onClick={onBack}
             />
+            <span className={promptChatStartGateStepClasses}>
+              {step} of {promptChatStartGateSteps}
+            </span>
             <IconButton
               aria-label="Next step"
               size="sm"
@@ -107,22 +116,15 @@ export function PromptChatStartGate({
               disabled={atEnd || values.length === 0}
               onClick={onNext}
             />
-            <span className={promptChatStartGateStepClasses}>
-              {step} of {promptChatStartGateSteps}
-            </span>
             <IconButton aria-label="Close starter" size="sm" icon={<X />} onClick={onCancel} />
           </div>
         }
       />
       <Card.Body>
         <div
-          className={cn(
-            promptChatStartGateOptionsClasses,
-            cardLayoutBodyOccupantInsetXClasses,
-            cardLayoutBodyOccupantPadYClasses,
-          )}
+          className={cn(promptChatStartGateOptionsClasses, cardLayoutBodyOccupantInsetXClasses)}
           role="group"
-          aria-label={promptChatStartGateTitle}
+          aria-label={promptChatStartGateSubtitle}
         >
           {promptChatStartOptions.map((option) => (
             <div key={option.value} className={promptChatStartGateOptionClasses}>
@@ -134,16 +136,20 @@ export function PromptChatStartGate({
                 checked={values.includes(option.value)}
                 onChange={(event) => toggle(option.value, event.target.checked)}
               />
-              <span className={promptChatStartGateOptionNumberClasses} aria-hidden>
-                {option.number}
-              </span>
+              <Badge
+                className={promptChatStartGateOptionNumberClasses}
+                variant="neutral"
+                emphasis="muted"
+                size="sm"
+                count={option.number}
+              />
             </div>
           ))}
         </div>
       </Card.Body>
       <Card.Footer>
         <div className={promptChatStartGateFooterClasses}>
-          <Button role="ghost" size="md" type="button" onClick={onCancel}>
+          <Button role="secondary" size="md" type="button" onClick={onCancel}>
             Cancel
           </Button>
           <Button
