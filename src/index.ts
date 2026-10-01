@@ -66,6 +66,10 @@ export {
   type KbdSize,
 } from "./components/atoms/Kbd/Kbd";
 export {
+  useKbdChoiceKeys,
+  type UseKbdChoiceKeysOptions,
+} from "./components/atoms/Kbd/useKbdChoiceKeys";
+export {
   Radio,
   radioSizes,
   type RadioLayoutClassName,

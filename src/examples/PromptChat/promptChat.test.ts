@@ -250,7 +250,14 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).toContain("padding=\"none\"");
     expect(promptChatPatternCopySource).toContain("cardLayoutBodyOccupantWellClasses");
     expect(promptChatPatternCopySource).toContain("Checkbox");
-    expect(promptChatPatternCopySource).toContain("Badge");
+    expect(promptChatPatternCopySource).toContain("Kbd");
+    expect(promptChatPatternCopySource).toContain("useKbdChoiceKeys");
+    expect(promptChatPatternCopySource).not.toContain("Badge");
+    expect(promptChatPatternCopySource).toContain("PillGroup");
+    expect(promptChatPatternCopySource).toContain("IntakeForm");
+    expect(promptChatPatternCopySource).toContain("CalEmbed");
+    expect(promptChatPatternCopySource).toContain("IntakeConfirmation");
+    expect(promptChatPatternCopySource).toContain("ConfettiProvider");
     expect(promptChatPatternCopySource).toContain(promptChatStartGateTitle);
     expect(promptChatPatternCopySource).toContain("What are we making?");
     expect(promptChatPatternCopySource).toContain("ml-auto");
@@ -555,6 +562,10 @@ describe("prompt chat start project gate", () => {
       );
       expect(body?.className).toContain("px-[2px]");
 
+      const keycaps = view.container.querySelectorAll("kbd");
+      expect(keycaps.length).toBe(4);
+      expect([...keycaps].map((node) => node.textContent).join("")).toBe("1234");
+
       const cancel = Array.from(view.container.querySelectorAll("button")).find(
         (button) => button.textContent === "Cancel",
       );
@@ -565,6 +576,139 @@ describe("prompt chat start project gate", () => {
 
       expect(view.container.querySelector("textarea")).not.toBeNull();
       expect(view.container.textContent).not.toContain(promptChatStartGateTitle);
+    },
+    12_000,
+  );
+
+  it(
+    "toggles step-1 choices with digit keys while the gate is open",
+    async () => {
+      const view = mount();
+      root = view.root;
+      container = view.container;
+
+      typeDraft(view.field, "What services do you offer?");
+      act(() => {
+        view.send.click();
+      });
+
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, stepsReadyMs));
+      });
+
+      const start = Array.from(view.container.querySelectorAll("button")).find(
+        (button) => button.textContent === "Start Project",
+      );
+      if (start == null) throw new Error("Start Project control missing in chat");
+      act(() => {
+        start.click();
+      });
+
+      const brand = Array.from(view.container.querySelectorAll('input[type="checkbox"]')).find(
+        (input) => input.closest("label")?.textContent?.includes("Brand identity"),
+      );
+      if (!(brand instanceof HTMLInputElement)) {
+        throw new Error("Brand identity checkbox missing");
+      }
+      expect(brand.checked).toBe(false);
+
+      act(() => {
+        window.dispatchEvent(new KeyboardEvent("keydown", { key: "1", bubbles: true, cancelable: true }));
+      });
+      expect(brand.checked).toBe(true);
+
+      act(() => {
+        window.dispatchEvent(new KeyboardEvent("keydown", { key: "1", bubbles: true, cancelable: true }));
+      });
+      expect(brand.checked).toBe(false);
+    },
+    12_000,
+  );
+
+  it(
+    "advances through intake steps 2–4 inside the starter card",
+    async () => {
+      const view = mount();
+      root = view.root;
+      container = view.container;
+
+      typeDraft(view.field, "What services do you offer?");
+      act(() => {
+        view.send.click();
+      });
+
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, stepsReadyMs));
+      });
+
+      const start = Array.from(view.container.querySelectorAll("button")).find(
+        (button) => button.textContent === "Start Project",
+      );
+      if (start == null) throw new Error("Start Project control missing in chat");
+      act(() => {
+        start.click();
+      });
+
+      act(() => {
+        window.dispatchEvent(new KeyboardEvent("keydown", { key: "1", bubbles: true, cancelable: true }));
+      });
+
+      const next = () => {
+        const button = Array.from(view.container.querySelectorAll("button")).find(
+          (node) => node.textContent === "Next",
+        );
+        if (!(button instanceof HTMLButtonElement)) throw new Error("Next missing");
+        act(() => {
+          button.click();
+        });
+      };
+
+      next();
+      expect(view.container.textContent).toContain("What's the budget?");
+      expect(view.container.textContent).toContain("2 of 4");
+
+      const budget = view.container.querySelector('input[type="radio"][value="10-25"]');
+      if (!(budget instanceof HTMLInputElement)) throw new Error("Budget pill missing");
+      act(() => {
+        budget.click();
+      });
+      next();
+
+      expect(view.container.textContent).toContain("About you");
+      expect(view.container.textContent).toContain("3 of 4");
+      const name = view.container.querySelector('input[aria-label="Name"]');
+      const email = view.container.querySelector('input[aria-label="Email"]');
+      const details = view.container.querySelector("textarea");
+      if (
+        !(name instanceof HTMLInputElement) ||
+        !(email instanceof HTMLInputElement) ||
+        !(details instanceof HTMLTextAreaElement)
+      ) {
+        throw new Error("About form fields missing");
+      }
+      const setValue = (field: HTMLInputElement | HTMLTextAreaElement, value: string) => {
+        const proto =
+          field instanceof HTMLTextAreaElement
+            ? window.HTMLTextAreaElement.prototype
+            : window.HTMLInputElement.prototype;
+        const setter = Object.getOwnPropertyDescriptor(proto, "value")?.set;
+        act(() => {
+          setter?.call(field, value);
+          field.dispatchEvent(new Event("input", { bubbles: true }));
+        });
+      };
+      setValue(name, "Randy");
+      setValue(email, "randy@whatmatters.so");
+      setValue(details, "A starter site and brand line.");
+      next();
+
+      expect(view.container.textContent).toContain("Book a call");
+      expect(view.container.textContent).toContain("4 of 4");
+      expect(
+        Array.from(view.container.querySelectorAll("button")).some(
+          (button) => button.textContent === "Next",
+        ),
+      ).toBe(false);
     },
     12_000,
   );

@@ -6,8 +6,18 @@ import { motionTransitionProp } from "../../lib/motion";
 import { Button } from "../../components/atoms/Button/Button";
 import { IconButton } from "../../components/atoms/IconButton/IconButton";
 import { TextLink } from "../../components/atoms/TextLink/TextLink";
+import {
+  intakeAboutEmpty,
+  type IntakeAboutValues,
+} from "../../components/molecules/IntakeForm/IntakeForm";
 import { PromptBar } from "../../components/molecules/PromptBar/PromptBar";
+import { ConfettiProvider } from "../../components/organisms/Confetti/Confetti";
 import { SiteNav } from "../../components/organisms/SiteNav/SiteNav";
+import {
+  canContinueIntake,
+  type IntakePhase,
+  type IntakeStep,
+} from "../Intake/IntakePattern";
 import { PromptChatTrace } from "./PromptChatTrace";
 import { PromptChatStartGate } from "./PromptChatStartGate";
 import {
@@ -49,19 +59,25 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type MouseEv
 import { Check, ChevronDown, ChevronLeft, ChevronRight, Copy, LoaderCircle, Sparkle, Sparkles, ThumbsDown, ThumbsUp, X } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import {
-  Badge,
   Button,
+  CalEmbed,
   Card,
   cardLayoutBodyOccupantInsetXClasses,
   cardLayoutBodyOccupantWellClasses,
   cardSubtitleClasses,
   cardTitleClasses,
   Checkbox,
+  ConfettiProvider,
   IconButton,
+  IntakeConfirmation,
+  IntakeForm,
+  Kbd,
+  PillGroup,
   PromptBar,
   SiteNav,
   TextLink,
   motionTransitionProp,
+  useKbdChoiceKeys,
 } from "@whatmatters/wmds";
 
 const pageClasses = "flex h-[100svh] min-h-0 w-full flex-col overflow-hidden bg-body";
@@ -103,8 +119,31 @@ const startOptions = [
   { value: "product", label: "Product design", description: "Flows, screens, and the details in between.", number: 3 },
   { value: "system", label: "Design system", description: "Components, tokens, and the rules that keep them honest.", number: 4 },
 ];
-const startGateTitle = "Name the work";
-const startGateSubtitle = "What are we making?";
+const startBudgets = [
+  { value: "under-10", label: "<$10k", emphasis: "solid" },
+  { value: "10-25", label: "$10–25k", emphasis: "solid" },
+  { value: "25-50", label: "$25–50k", emphasis: "solid" },
+  { value: "50-plus", label: "$50k+", emphasis: "solid" },
+  { value: "unsure", label: "Not sure yet", emphasis: "muted" },
+];
+const startGateCopy = {
+  1: { title: "Name the work", subtitle: "What are we making?" },
+  2: { title: "What's the budget?", subtitle: "A range is enough. We can tighten it after the first conversation." },
+  3: { title: "About you", subtitle: "A few sentences is enough. We'll reply to the email you leave here." },
+  4: { title: "Book a call", subtitle: "Pick a time, or skip this and we'll write to you instead." },
+};
+const startGateTitle = startGateCopy[1].title;
+const startGateSubtitle = startGateCopy[1].subtitle;
+const aboutEmpty = { name: "", email: "", company: "", details: "" };
+
+function canContinueStart(step, needs, budget, about) {
+  if (step === 1) return needs.length > 0;
+  if (step === 2) return budget != null;
+  if (step === 3) {
+    return about.name.trim().length > 0 && about.email.trim().length > 0 && about.details.trim().length > 0;
+  }
+  return false;
+}
 
 const headline = "What should we make?";
 const sampleReply =
@@ -360,70 +399,124 @@ function Exchange({
 }
 
 function StartGate({
-  step,
-  values,
-  onValuesChange,
+  phase,
+  needs,
+  onNeedsChange,
+  budget,
+  onBudgetChange,
+  about,
+  onAboutChange,
   onCancel,
   onBack,
   onNext,
-}: {
-  step: number;
-  values: string[];
-  onValuesChange: (values: string[]) => void;
-  onCancel: () => void;
-  onBack: () => void;
-  onNext: () => void;
+  onBooked,
+  onEmailed,
+  onDone,
 }) {
-  const atStart = step <= 1;
-  const atEnd = step >= 4;
-  function toggle(value: string, checked: boolean) {
+  const step = phase.kind === "step" ? phase.step : 4;
+  const copy = startGateCopy[step];
+  const atStart = phase.kind !== "step" || phase.step <= 1;
+  const hideContinue = phase.kind === "done" || (phase.kind === "step" && phase.step === 4);
+  const hideFooter = phase.kind === "done";
+  const continueDisabled =
+    phase.kind !== "step" || !canContinueStart(phase.step, needs, budget, about);
+  const stepOneOpen = phase.kind === "step" && phase.step === 1;
+
+  function toggleNeed(value, checked) {
     if (checked) {
-      onValuesChange([...values, value]);
+      onNeedsChange([...needs, value]);
       return;
     }
-    onValuesChange(values.filter((item) => item !== value));
+    onNeedsChange(needs.filter((item) => item !== value));
   }
+
+  useKbdChoiceKeys({
+    enabled: stepOneOpen,
+    choices: Object.fromEntries(
+      startOptions.map((option) => [
+        String(option.number),
+        () => toggleNeed(option.value, !needs.includes(option.value)),
+      ]),
+    ),
+  });
+
   return (
-    <Card shape="rounded" padding="none" variant="surface" aria-label={startGateTitle}>
+    <Card shape="rounded" padding="none" variant="surface" aria-label={copy.title}>
       <Card.Header
         start={
-          <>
-            <h2 className={cardTitleClasses}>{startGateTitle}</h2>
-            <p className={cardSubtitleClasses}>{startGateSubtitle}</p>
-          </>
+          phase.kind === "done" ? (
+            <h2 className={cardTitleClasses}>Start a project</h2>
+          ) : (
+            <>
+              <h2 className={cardTitleClasses}>{copy.title}</h2>
+              <p className={cardSubtitleClasses}>{copy.subtitle}</p>
+            </>
+          )
         }
         end={
           <>
-            <IconButton aria-label="Previous step" size="sm" icon={<ChevronLeft />} disabled={atStart} onClick={onBack} />
-            <span className={startGateStepClasses}>{step} of 4</span>
-            <IconButton aria-label="Next step" size="sm" icon={<ChevronRight />} disabled={atEnd || values.length === 0} onClick={onNext} />
+            {phase.kind === "step" ? (
+              <>
+                <IconButton aria-label="Previous step" size="sm" icon={<ChevronLeft />} disabled={atStart} onClick={onBack} />
+                <span className={startGateStepClasses}>{step} of 4</span>
+                <IconButton aria-label="Next step" size="sm" icon={<ChevronRight />} disabled={hideContinue || continueDisabled} onClick={onNext} />
+              </>
+            ) : null}
             <IconButton aria-label="Close starter" size="sm" icon={<X />} onClick={onCancel} />
           </>
         }
       />
       <Card.Body>
-        <div className={cardLayoutBodyOccupantWellClasses + " " + cardLayoutBodyOccupantInsetXClasses + " " + startGateOptionsClasses} role="group" aria-label={startGateSubtitle}>
-          {startOptions.map((option) => (
-            <div key={option.value} className={startGateOptionClasses}>
-              <Checkbox
-                className="min-w-0 flex-1"
-                size="md"
-                label={option.label}
-                description={option.description}
-                checked={values.includes(option.value)}
-                onChange={(event) => toggle(option.value, event.target.checked)}
-              />
-              <Badge className={startGateOptionNumberClasses} variant="neutral" emphasis="muted" size="sm" count={option.number} />
+        <div className={cardLayoutBodyOccupantWellClasses + " " + cardLayoutBodyOccupantInsetXClasses + " flex w-full flex-col gap-3 py-3"}>
+          {phase.kind === "done" ? <IntakeConfirmation variant={phase.variant} onDone={onDone} /> : null}
+          {phase.kind === "step" && phase.step === 1 ? (
+            <div className={startGateOptionsClasses} role="group" aria-label={copy.subtitle}>
+              {startOptions.map((option) => (
+                <div key={option.value} className={startGateOptionClasses}>
+                  <Checkbox
+                    className="min-w-0 flex-1"
+                    size="md"
+                    label={option.label}
+                    description={option.description}
+                    checked={needs.includes(option.value)}
+                    onChange={(event) => toggleNeed(option.value, event.target.checked)}
+                  />
+                  <Kbd className={startGateOptionNumberClasses} aria-label={"Press " + option.number}>
+                    {option.number}
+                  </Kbd>
+                </div>
+              ))}
             </div>
-          ))}
+          ) : null}
+          {phase.kind === "step" && phase.step === 2 ? (
+            <PillGroup aria-label="Budget" value={budget} onValueChange={onBudgetChange}>
+              {startBudgets.map((option) => (
+                <PillGroup.Item key={option.value} value={option.value} emphasis={option.emphasis}>
+                  {option.label}
+                </PillGroup.Item>
+              ))}
+            </PillGroup>
+          ) : null}
+          {phase.kind === "step" && phase.step === 3 ? (
+            <IntakeForm values={about} onChange={onAboutChange} />
+          ) : null}
+          {phase.kind === "step" && phase.step === 4 ? (
+            <CalEmbed onSkip={onEmailed}>
+              <Button role="primary" type="button" onClick={onBooked}>Confirm this time</Button>
+            </CalEmbed>
+          ) : null}
         </div>
       </Card.Body>
-      <Card.Footer>
-        <div className="ml-auto flex items-center gap-2">
-          <Button role="secondary" size="md" type="button" onClick={onCancel}>Cancel</Button>
-          <Button role="primary" size="md" type="button" disabled={values.length === 0} onClick={onNext}>Next</Button>
-        </div>
-      </Card.Footer>
+      {hideFooter ? null : (
+        <Card.Footer>
+          <div className="ml-auto flex items-center gap-2">
+            <Button role="secondary" size="md" type="button" onClick={onCancel}>Cancel</Button>
+            {hideContinue ? null : (
+              <Button role="primary" size="md" type="button" disabled={continueDisabled} onClick={onNext}>Next</Button>
+            )}
+          </div>
+        </Card.Footer>
+      )}
     </Card>
   );
 }
@@ -431,15 +524,17 @@ function StartGate({
 export function AskWhatMatters() {
   const reduce = useReducedMotion() === true;
   const travel = motionTransitionProp("medium");
-  const fieldRef = useRef<HTMLTextAreaElement>(null);
-  const headlineRef = useRef<HTMLHeadingElement>(null);
-  const stageRef = useRef<HTMLElement>(null);
-  const threadRef = useRef<HTMLDivElement>(null);
-  const composerRef = useRef<HTMLDivElement>(null);
+  const fieldRef = useRef(null);
+  const headlineRef = useRef(null);
+  const stageRef = useRef(null);
+  const threadRef = useRef(null);
+  const composerRef = useRef(null);
   const stickToEnd = useRef(true);
   const [startGateOpen, setStartGateOpen] = useState(false);
-  const [startGateStep, setStartGateStep] = useState(1);
+  const [startPhase, setStartPhase] = useState({ kind: "step", step: 1 });
   const [startNeeds, setStartNeeds] = useState([]);
+  const [startBudget, setStartBudget] = useState(null);
+  const [startAbout, setStartAbout] = useState(aboutEmpty);
   const suppressScroll = useRef(false);
   const nextId = useRef(1);
   const [draft, setDraft] = useState("");
@@ -513,13 +608,17 @@ export function AskWhatMatters() {
 
   function closeStartGate() {
     setStartGateOpen(false);
-    setStartGateStep(1);
+    setStartPhase({ kind: "step", step: 1 });
     setStartNeeds([]);
+    setStartBudget(null);
+    setStartAbout(aboutEmpty);
   }
 
   function openStartGate() {
-    setStartGateStep(1);
+    setStartPhase({ kind: "step", step: 1 });
     setStartNeeds([]);
+    setStartBudget(null);
+    setStartAbout(aboutEmpty);
     setStartGateOpen(true);
   }
 
@@ -557,6 +656,7 @@ export function AskWhatMatters() {
   }
 
   return (
+    <ConfettiProvider>
       <div className={pageClasses}>
         {chatting ? (
           <div onClick={onBrandClick}>
@@ -608,19 +708,27 @@ export function AskWhatMatters() {
             <div ref={composerRef} className={composerClasses}>
               {startGateOpen ? (
                 <StartGate
-                  step={startGateStep}
-                  values={startNeeds}
-                  onValuesChange={setStartNeeds}
+                  phase={startPhase}
+                  needs={startNeeds}
+                  onNeedsChange={setStartNeeds}
+                  budget={startBudget}
+                  onBudgetChange={setStartBudget}
+                  about={startAbout}
+                  onAboutChange={setStartAbout}
                   onCancel={closeStartGate}
-                  onBack={() => setStartGateStep((current) => Math.max(1, current - 1))}
-                  onNext={() => {
-                    if (startNeeds.length === 0) return;
-                    if (startGateStep >= 4) {
-                      closeStartGate();
-                      return;
-                    }
-                    setStartGateStep((current) => current + 1);
+                  onBack={() => {
+                    if (startPhase.kind !== "step" || startPhase.step <= 1) return;
+                    setStartPhase({ kind: "step", step: startPhase.step - 1 });
                   }}
+                  onNext={() => {
+                    if (startPhase.kind !== "step") return;
+                    if (!canContinueStart(startPhase.step, startNeeds, startBudget, startAbout)) return;
+                    if (startPhase.step >= 4) return;
+                    setStartPhase({ kind: "step", step: startPhase.step + 1 });
+                  }}
+                  onBooked={() => setStartPhase({ kind: "done", variant: "booked" })}
+                  onEmailed={() => setStartPhase({ kind: "done", variant: "emailed" })}
+                  onDone={closeStartGate}
                 />
               ) : (
                 <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
@@ -642,6 +750,7 @@ export function AskWhatMatters() {
           </motion.p>
         ) : null}
       </div>
+    </ConfettiProvider>
   );
 }
 
@@ -876,8 +985,10 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
   const composerRef = useRef<HTMLDivElement>(null);
   const stickToEnd = useRef(true);
   const [startGateOpen, setStartGateOpen] = useState(false);
-  const [startGateStep, setStartGateStep] = useState(1);
+  const [startPhase, setStartPhase] = useState<IntakePhase>({ kind: "step", step: 1 });
   const [startNeeds, setStartNeeds] = useState<string[]>([]);
+  const [startBudget, setStartBudget] = useState<string | null>(null);
+  const [startAbout, setStartAbout] = useState<IntakeAboutValues>(intakeAboutEmpty);
   const suppressScroll = useRef(false);
   const nextId = useRef(1);
   const [draft, setDraft] = useState("");
@@ -957,29 +1068,43 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
   }
 
   function openStartGate() {
-    setStartGateStep(1);
+    setStartPhase({ kind: "step", step: 1 });
     setStartNeeds([]);
+    setStartBudget(null);
+    setStartAbout(intakeAboutEmpty);
     setStartGateOpen(true);
   }
 
   function closeStartGate() {
     setStartGateOpen(false);
-    setStartGateStep(1);
+    setStartPhase({ kind: "step", step: 1 });
     setStartNeeds([]);
+    setStartBudget(null);
+    setStartAbout(intakeAboutEmpty);
   }
 
   function onStartGateNext() {
-    if (startNeeds.length === 0) return;
-    if (startGateStep >= 4) {
-      closeStartGate();
+    if (startPhase.kind !== "step") return;
+    if (!canContinueIntake({ step: startPhase.step, needs: startNeeds, budget: startBudget, about: startAbout })) {
       return;
     }
-    setStartGateStep((current) => current + 1);
+    if (startPhase.step >= 4) return;
+    const next = (startPhase.step + 1) as IntakeStep;
+    setStartPhase({ kind: "step", step: next });
   }
 
   function onStartGateBack() {
-    if (startGateStep <= 1) return;
-    setStartGateStep((current) => current - 1);
+    if (startPhase.kind !== "step" || startPhase.step <= 1) return;
+    const previous = (startPhase.step - 1) as IntakeStep;
+    setStartPhase({ kind: "step", step: previous });
+  }
+
+  function onStartGateBooked() {
+    setStartPhase({ kind: "done", variant: "booked" });
+  }
+
+  function onStartGateEmailed() {
+    setStartPhase({ kind: "done", variant: "emailed" });
   }
 
   function onBrandClick(event: MouseEvent<HTMLDivElement>) {
@@ -1009,103 +1134,112 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
   }
 
   return (
-    <div className={promptChatPageClasses}>
-      {chatting ? (
-        <div onClick={onBrandClick}>
-          <SiteNav
-            start={<SiteNav.Brand href="/" aria-label="WhatMatters" icon={<Sparkles />} />}
-            middle={
-              <SiteNav.Links>
-                <SiteNav.Link href="/product" current>
-                  Product
-                </SiteNav.Link>
-                <SiteNav.Link href="/pricing">Pricing</SiteNav.Link>
-                <SiteNav.Link href="/customers">Customers</SiteNav.Link>
-              </SiteNav.Links>
-            }
-            end={
-              <>
-                <Button role="ghost" size="sm" render={<a href="/signin" />} className="whitespace-nowrap">
-                  Sign in
-                </Button>
-                <Button
-                  role="primary"
-                  size="sm"
-                  type="button"
-                  className="whitespace-nowrap"
-                  onClick={openStartGate}
-                >
-                  Start Project
-                </Button>
-              </>
-            }
-            mobile={
-              <>
-                <SiteNav.MobileLink href="/product" current>
-                  Product
-                </SiteNav.MobileLink>
-                <SiteNav.MobileLink href="/pricing">Pricing</SiteNav.MobileLink>
-                <SiteNav.MobileLink href="/customers">Customers</SiteNav.MobileLink>
-              </>
-            }
-          />
-        </div>
-      ) : null}
-      <div className={promptChatColumnClasses}>
-        <main
-          ref={stageRef}
-          className={cn(promptChatStageClasses, !chatting && promptChatLandingClasses)}
-        >
-          {chatting ? (
-            <div ref={threadRef} className={promptChatThreadClasses} style={{ paddingBottom: composerSpace }}>
-              {turns.map((turn, index) => (
-                <PromptChatExchange
-                  key={turn.id}
-                  prompt={turn.prompt}
-                  trace={trace}
-                  latest={index === turns.length - 1}
-                  reduce={reduce}
-                  onFollowUp={send}
-                  onReplyGrown={scrollStageToEnd}
-                />
-              ))}
-            </div>
-          ) : (
-            <h1 ref={headlineRef} className={promptChatHeadlineClasses}>
-              {promptChatHeadline}
-            </h1>
-          )}
-        </main>
-        <div className={promptChatBarClasses}>
-          <div ref={composerRef} className={promptChatComposerClasses}>
-            {startGateOpen ? (
-              <PromptChatStartGate
-                step={startGateStep}
-                values={startNeeds}
-                onValuesChange={setStartNeeds}
-                onCancel={closeStartGate}
-                onBack={onStartGateBack}
-                onNext={onStartGateNext}
-              />
+    <ConfettiProvider>
+      <div className={promptChatPageClasses}>
+        {chatting ? (
+          <div onClick={onBrandClick}>
+            <SiteNav
+              start={<SiteNav.Brand href="/" aria-label="WhatMatters" icon={<Sparkles />} />}
+              middle={
+                <SiteNav.Links>
+                  <SiteNav.Link href="/product" current>
+                    Product
+                  </SiteNav.Link>
+                  <SiteNav.Link href="/pricing">Pricing</SiteNav.Link>
+                  <SiteNav.Link href="/customers">Customers</SiteNav.Link>
+                </SiteNav.Links>
+              }
+              end={
+                <>
+                  <Button role="ghost" size="sm" render={<a href="/signin" />} className="whitespace-nowrap">
+                    Sign in
+                  </Button>
+                  <Button
+                    role="primary"
+                    size="sm"
+                    type="button"
+                    className="whitespace-nowrap"
+                    onClick={openStartGate}
+                  >
+                    Start Project
+                  </Button>
+                </>
+              }
+              mobile={
+                <>
+                  <SiteNav.MobileLink href="/product" current>
+                    Product
+                  </SiteNav.MobileLink>
+                  <SiteNav.MobileLink href="/pricing">Pricing</SiteNav.MobileLink>
+                  <SiteNav.MobileLink href="/customers">Customers</SiteNav.MobileLink>
+                </>
+              }
+            />
+          </div>
+        ) : null}
+        <div className={promptChatColumnClasses}>
+          <main
+            ref={stageRef}
+            className={cn(promptChatStageClasses, !chatting && promptChatLandingClasses)}
+          >
+            {chatting ? (
+              <div ref={threadRef} className={promptChatThreadClasses} style={{ paddingBottom: composerSpace }}>
+                {turns.map((turn, index) => (
+                  <PromptChatExchange
+                    key={turn.id}
+                    prompt={turn.prompt}
+                    trace={trace}
+                    latest={index === turns.length - 1}
+                    reduce={reduce}
+                    onFollowUp={send}
+                    onReplyGrown={scrollStageToEnd}
+                  />
+                ))}
+              </div>
             ) : (
-              <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
+              <h1 ref={headlineRef} className={promptChatHeadlineClasses}>
+                {promptChatHeadline}
+              </h1>
             )}
+          </main>
+          <div className={promptChatBarClasses}>
+            <div ref={composerRef} className={promptChatComposerClasses}>
+              {startGateOpen ? (
+                <PromptChatStartGate
+                  phase={startPhase}
+                  needs={startNeeds}
+                  onNeedsChange={setStartNeeds}
+                  budget={startBudget}
+                  onBudgetChange={setStartBudget}
+                  about={startAbout}
+                  onAboutChange={setStartAbout}
+                  onCancel={closeStartGate}
+                  onBack={onStartGateBack}
+                  onNext={onStartGateNext}
+                  onBooked={onStartGateBooked}
+                  onEmailed={onStartGateEmailed}
+                  onDone={closeStartGate}
+                />
+              ) : (
+                <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
+              )}
+            </div>
           </div>
         </div>
+        {headlineExit != null ? (
+          <motion.p
+            aria-hidden
+            className={cn(promptChatHeadlineClasses, "pointer-events-none fixed z-10 m-0")}
+            style={{ top: headlineExit.top, left: headlineExit.left }}
+            initial={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 0, y: -12 }}
+            transition={travel}
+            onAnimationComplete={() => setHeadlineExit(null)}
+          >
+            {promptChatHeadline}
+          </motion.p>
+        ) : null}
       </div>
-      {headlineExit != null ? (
-        <motion.p
-          aria-hidden
-          className={cn(promptChatHeadlineClasses, "pointer-events-none fixed z-10 m-0")}
-          style={{ top: headlineExit.top, left: headlineExit.left }}
-          initial={{ opacity: 1, y: 0 }}
-          animate={{ opacity: 0, y: -12 }}
-          transition={travel}
-          onAnimationComplete={() => setHeadlineExit(null)}
-        >
-          {promptChatHeadline}
-        </motion.p>
-      ) : null}
-    </div>
+    </ConfettiProvider>
   );
 }
