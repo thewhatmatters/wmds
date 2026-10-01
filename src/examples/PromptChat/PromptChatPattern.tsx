@@ -49,7 +49,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { Button, IconButton, PromptBar, SiteNav, TextLink, motionTransitionProp } from "@whatmatters/wmds";
 
 const pageClasses = "flex h-full min-h-0 w-full flex-1 flex-col bg-body";
-const columnClasses = "flex min-h-0 w-full flex-1 flex-col";
+const columnClasses = "flex min-h-0 w-full flex-1 flex-col [--grid-max:40rem]";
 const stageClasses = "grid-page min-h-0 w-full flex-1 overflow-y-auto !py-0";
 const landingClasses = "place-content-center";
 const headlineClasses =
@@ -71,7 +71,7 @@ const actionsClasses = "flex items-center gap-1";
 const followUpsClasses = "flex w-full flex-col gap-2";
 const followUpClasses = "w-full !justify-start !border-border";
 const barClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
-const composerClasses = "col-span-full lg:col-start-4 lg:col-end-10";
+const composerClasses = "col-span-full";
 
 const headline = "What should we make?";
 const sampleReply =
@@ -413,8 +413,7 @@ function ReplyWord({
  * Send or Enter: the bar stays, the headline fades, and the sent line fades in where it rests.
  * then a Steps trace plays until the reply starts. The trace leaves when the reply starts.
  * A source link arrives with the words around it.
- * The thread uses the full page grid and scrolls. Follow-ups share that column.
- * The composer stays pinned in columns 4–9 from lg.
+ * The thread, follow-ups, and composer share one narrowed page grid (`--grid-max: 40rem`) and the thread scrolls.
  * Actions and follow-up prompts appear when the stream finishes. The chat keeps SiteNav;
  * the brand mark returns to the landing.
  * Reduced motion skips the fade and the trace play, and shows the finished reply.

@@ -1,13 +1,14 @@
 /**
- * Immersive ask page on the existing page grid. Not the marketing homepage.
- * The thread uses the full grid. The composer sits in columns 4–9 from `lg`.
+ * Immersive ask page. The column is a narrowed page grid (`--grid-max: 40rem`)
+ * so the thread, follow-ups, and composer share one measure. Not the marketing homepage.
  */
 
 /** Viewport shell. SiteNav stays outside this column and is not restyled. */
 export const promptChatPageClasses = "flex h-full min-h-0 w-full flex-1 flex-col bg-body";
 
-/** Statement, scrolling thread, and pinned prompt bar. The page grid, not a separate measure. */
-export const promptChatColumnClasses = "flex min-h-0 w-full flex-1 flex-col";
+/** Statement, scrolling thread, and pinned prompt bar. One narrowed page grid. */
+export const promptChatColumnClasses =
+  "flex min-h-0 w-full flex-1 flex-col [--grid-max:40rem]";
 
 /**
  * Stage above the pinned bar. This region scrolls when the thread is taller
@@ -24,7 +25,7 @@ export const promptChatLandingClasses = "place-content-center";
 export const promptChatHeadlineClasses =
   "col-span-full type-display-2 !font-normal text-balance text-center text-brand";
 
-/** User turn, reply, and follow-ups. One full-width column of the page grid. */
+/** User turn, reply, and follow-ups. One column of the narrowed grid. */
 export const promptChatThreadClasses =
   "col-span-full flex w-full min-w-0 flex-col items-start gap-6 pt-6";
 
@@ -75,11 +76,8 @@ export const promptChatFollowUpsClasses = "flex w-full flex-col gap-2";
  */
 export const promptChatFollowUpClasses = "w-full !justify-start !border-border";
 
-/** Same page grid as the thread. Stays pinned under the scrolling stage. */
+/** Same narrowed grid as the thread. Stays pinned under the scrolling stage. */
 export const promptChatBarClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
 
-/**
- * Composer placement on that grid. Columns 4–9 from `lg`
- * (`col-start-4` through `col-end-10`). Full width of the page grid below `lg`.
- */
-export const promptChatComposerClasses = "col-span-full lg:col-start-4 lg:col-end-10";
+/** Composer fills that column, the same measure as the reply and follow-ups. */
+export const promptChatComposerClasses = "col-span-full";

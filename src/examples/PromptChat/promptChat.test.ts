@@ -206,10 +206,10 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).toContain(promptChatSampleReply);
     expect(promptChatPatternCopySource).toContain(promptChatThinkingLabel);
     expect(promptChatPatternCopySource).not.toContain(promptChatThoughtLabel);
-    expect(promptChatColumnClasses).not.toContain("--grid-max");
-    expect(promptChatComposerClasses).toContain("lg:col-start-4");
-    expect(promptChatComposerClasses).toContain("lg:col-end-10");
-    expect(promptChatPatternCopySource).not.toContain("--grid-max");
+    expect(promptChatColumnClasses).toContain("[--grid-max:40rem]");
+    expect(promptChatComposerClasses).toBe("col-span-full");
+    expect(promptChatPatternCopySource).toContain("[--grid-max:40rem]");
+    expect(promptChatPatternCopySource).not.toContain("lg:col-start-4");
     expect(promptChatPatternCopySource).toContain("!border-border");
     expect(promptChatPatternCopySource).not.toContain("ExampleGridControls");
   });
