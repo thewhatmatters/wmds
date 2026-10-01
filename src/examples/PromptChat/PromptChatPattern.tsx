@@ -307,21 +307,68 @@ export function AskWhatMatters() {
   const fieldRef = useRef<HTMLTextAreaElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const stageRef = useRef<HTMLElement>(null);
+  const threadRef = useRef<HTMLDivElement>(null);
+  const composerRef = useRef<HTMLDivElement>(null);
+  const stickToEnd = useRef(true);
+  const suppressScroll = useRef(false);
   const nextId = useRef(1);
   const [draft, setDraft] = useState("");
   const [turns, setTurns] = useState<Turn[]>([]);
   const [headlineExit, setHeadlineExit] = useState<Point | null>(null);
+  const [composerSpace, setComposerSpace] = useState(0);
   const chatting = turns.length > 0;
 
   const scrollStageToEnd = useCallback(() => {
     const stage = stageRef.current;
-    if (stage == null) return;
+    if (stage == null || !stickToEnd.current) return;
+    const before = stage.scrollTop;
+    suppressScroll.current = true;
     stage.scrollTop = stage.scrollHeight;
+    if (stage.scrollTop === before) suppressScroll.current = false;
+  }, []);
+
+  useLayoutEffect(() => {
+    const composer = composerRef.current;
+    if (composer == null) return;
+    const apply = () => {
+      const next = composer.offsetHeight;
+      setComposerSpace((current) => (current === next ? current : next));
+    };
+    apply();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(apply);
+    observer.observe(composer);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
+    const stage = stageRef.current;
+    if (stage == null) return;
+    const onScroll = () => {
+      if (suppressScroll.current) {
+        suppressScroll.current = false;
+        return;
+      }
+      const distance = stage.scrollHeight - stage.clientHeight - stage.scrollTop;
+      stickToEnd.current = distance <= 4;
+    };
+    stage.addEventListener("scroll", onScroll, { passive: true });
+    return () => stage.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const thread = threadRef.current;
+    if (thread == null || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => {
+      scrollStageToEnd();
+    });
+    observer.observe(thread);
+    return () => observer.disconnect();
+  }, [chatting, scrollStageToEnd]);
+
+  useLayoutEffect(() => {
     scrollStageToEnd();
-  }, [turns.length, scrollStageToEnd]);
+  }, [turns.length, composerSpace, scrollStageToEnd]);
 
   function goHome() {
     setTurns([]);
@@ -341,6 +388,7 @@ export function AskWhatMatters() {
   function send(value: string) {
     const text = value.trim();
     if (text.length === 0) return;
+    stickToEnd.current = true;
     const fromLanding = turns.length === 0;
     const title = headlineRef.current?.getBoundingClientRect();
     const id = nextId.current;
@@ -386,7 +434,7 @@ export function AskWhatMatters() {
         <div className={columnClasses}>
           <main ref={stageRef} className={chatting ? stageClasses : stageClasses + " " + landingClasses}>
             {chatting ? (
-              <div className={threadClasses}>
+              <div ref={threadRef} className={threadClasses} style={{ paddingBottom: composerSpace }}>
                 {turns.map((turn, index) => (
                   <Exchange
                     key={turn.id}
@@ -403,7 +451,7 @@ export function AskWhatMatters() {
             )}
           </main>
           <div className={barClasses}>
-            <div className={composerClasses}>
+            <div ref={composerRef} className={composerClasses}>
               <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
             </div>
           </div>
@@ -622,8 +670,8 @@ function PromptChatExchange({
  * A Steps trace plays until that reply starts, then leaves. A follow-up appends the next user
  * line in the same thread. Earlier messages stay.
  * The thread, follow-ups, and composer share one narrowed page grid (`--grid-max: 40rem`).
- * The thread scrolls inside that column when a turn is added, and again after the reply has grown,
- * so the newest line finishes above the composer. The composer stays pinned.
+ * The thread reserves the composer's measured height at the bottom and keeps that end in view
+ * while a reply grows, so the newest text finishes above the composer. The composer stays pinned.
  * Reduced motion skips the fade and the trace play, and shows the finished reply.
  * Voice and attachments are not part of this version.
  */
@@ -633,21 +681,68 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
   const fieldRef = useRef<HTMLTextAreaElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const stageRef = useRef<HTMLElement>(null);
+  const threadRef = useRef<HTMLDivElement>(null);
+  const composerRef = useRef<HTMLDivElement>(null);
+  const stickToEnd = useRef(true);
+  const suppressScroll = useRef(false);
   const nextId = useRef(1);
   const [draft, setDraft] = useState("");
   const [turns, setTurns] = useState<PromptChatTurn[]>([]);
   const [headlineExit, setHeadlineExit] = useState<Point | null>(null);
+  const [composerSpace, setComposerSpace] = useState(0);
   const chatting = turns.length > 0;
 
   const scrollStageToEnd = useCallback(() => {
     const stage = stageRef.current;
-    if (stage == null) return;
+    if (stage == null || !stickToEnd.current) return;
+    const before = stage.scrollTop;
+    suppressScroll.current = true;
     stage.scrollTop = stage.scrollHeight;
+    if (stage.scrollTop === before) suppressScroll.current = false;
+  }, []);
+
+  useLayoutEffect(() => {
+    const composer = composerRef.current;
+    if (composer == null) return;
+    const apply = () => {
+      const next = composer.offsetHeight;
+      setComposerSpace((current) => (current === next ? current : next));
+    };
+    apply();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(apply);
+    observer.observe(composer);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
+    const stage = stageRef.current;
+    if (stage == null) return;
+    const onScroll = () => {
+      if (suppressScroll.current) {
+        suppressScroll.current = false;
+        return;
+      }
+      const distance = stage.scrollHeight - stage.clientHeight - stage.scrollTop;
+      stickToEnd.current = distance <= 4;
+    };
+    stage.addEventListener("scroll", onScroll, { passive: true });
+    return () => stage.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const thread = threadRef.current;
+    if (thread == null || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => {
+      scrollStageToEnd();
+    });
+    observer.observe(thread);
+    return () => observer.disconnect();
+  }, [chatting, scrollStageToEnd]);
+
+  useLayoutEffect(() => {
     scrollStageToEnd();
-  }, [turns.length, scrollStageToEnd]);
+  }, [turns.length, composerSpace, scrollStageToEnd]);
 
   function goHome() {
     setTurns([]);
@@ -667,6 +762,7 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
   function send(value: string) {
     const text = value.trim();
     if (text.length === 0) return;
+    stickToEnd.current = true;
     const fromLanding = turns.length === 0;
     const title = headlineRef.current?.getBoundingClientRect();
     const id = nextId.current;
@@ -723,7 +819,7 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
           className={cn(promptChatStageClasses, !chatting && promptChatLandingClasses)}
         >
           {chatting ? (
-            <div className={promptChatThreadClasses}>
+            <div ref={threadRef} className={promptChatThreadClasses} style={{ paddingBottom: composerSpace }}>
               {turns.map((turn, index) => (
                 <PromptChatExchange
                   key={turn.id}
@@ -743,7 +839,7 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
           )}
         </main>
         <div className={promptChatBarClasses}>
-          <div className={promptChatComposerClasses}>
+          <div ref={composerRef} className={promptChatComposerClasses}>
             <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
           </div>
         </div>
