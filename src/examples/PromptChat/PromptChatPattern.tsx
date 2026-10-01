@@ -9,6 +9,7 @@ import { TextLink } from "../../components/atoms/TextLink/TextLink";
 import { PromptBar } from "../../components/molecules/PromptBar/PromptBar";
 import { SiteNav } from "../../components/organisms/SiteNav/SiteNav";
 import { PromptChatTrace } from "./PromptChatTrace";
+import { PromptChatStartGate } from "./PromptChatStartGate";
 import {
   promptChatActionsClasses,
   promptChatBarClasses,
@@ -45,9 +46,22 @@ type Point = { top: number; left: number };
 
 export const promptChatPatternCopySource = `
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
-import { Check, ChevronDown, Copy, LoaderCircle, Sparkle, Sparkles, ThumbsDown, ThumbsUp } from "lucide-react";
+import { Check, ChevronDown, ChevronLeft, ChevronRight, Copy, LoaderCircle, Sparkle, Sparkles, ThumbsDown, ThumbsUp, X } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
-import { Button, IconButton, PromptBar, SiteNav, TextLink, motionTransitionProp } from "@whatmatters/wmds";
+import {
+  Button,
+  Card,
+  cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantPadYClasses,
+  cardSubtitleClasses,
+  cardTitleClasses,
+  Checkbox,
+  IconButton,
+  PromptBar,
+  SiteNav,
+  TextLink,
+  motionTransitionProp,
+} from "@whatmatters/wmds";
 
 const pageClasses = "flex h-[100svh] min-h-0 w-full flex-col overflow-hidden bg-body";
 const columnClasses = "flex min-h-0 w-full flex-1 flex-col overflow-hidden [--grid-max:40rem]";
@@ -77,6 +91,20 @@ const followUpsClasses = "flex w-full flex-col gap-2";
 const followUpClasses = "w-full !justify-start !border-border";
 const barClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
 const composerClasses = "col-span-full";
+const startGateHeaderEndClasses = "flex items-center gap-1";
+const startGateStepClasses = "type-supporting text-muted px-1 tabular-nums";
+const startGateOptionsClasses = "flex w-full flex-col gap-3";
+const startGateOptionClasses = "flex w-full items-start gap-3";
+const startGateOptionNumberClasses = "type-supporting text-muted shrink-0 pt-1 tabular-nums";
+const startGateFooterClasses = "flex w-full items-center justify-between gap-3";
+const startOptions = [
+  { value: "brand", label: "Brand identity", description: "Name, mark, and a system you can actually use.", number: "01" },
+  { value: "website", label: "Website", description: "A site that explains the work and earns the next conversation.", number: "02" },
+  { value: "product", label: "Product design", description: "Flows, screens, and the details in between.", number: "03" },
+  { value: "system", label: "Design system", description: "Components, tokens, and the rules that keep them honest.", number: "04" },
+];
+const startGateTitle = "What are we making?";
+const startGateSubtitle = "Pick everything that fits. We'll shape the work around it.";
 
 const headline = "What should we make?";
 const sampleReply =
@@ -331,6 +359,75 @@ function Exchange({
   );
 }
 
+function StartGate({
+  step,
+  values,
+  onValuesChange,
+  onCancel,
+  onBack,
+  onNext,
+}: {
+  step: number;
+  values: string[];
+  onValuesChange: (values: string[]) => void;
+  onCancel: () => void;
+  onBack: () => void;
+  onNext: () => void;
+}) {
+  const atStart = step <= 1;
+  const atEnd = step >= 4;
+  function toggle(value: string, checked: boolean) {
+    if (checked) {
+      onValuesChange([...values, value]);
+      return;
+    }
+    onValuesChange(values.filter((item) => item !== value));
+  }
+  return (
+    <Card padding="none" variant="surface" aria-label={startGateTitle}>
+      <Card.Header
+        start={
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <p className={cardTitleClasses}>{startGateTitle}</p>
+            <p className={cardSubtitleClasses}>{startGateSubtitle}</p>
+          </div>
+        }
+        end={
+          <div className={startGateHeaderEndClasses}>
+            <IconButton aria-label="Previous step" size="sm" icon={<ChevronLeft />} disabled={atStart} onClick={onBack} />
+            <IconButton aria-label="Next step" size="sm" icon={<ChevronRight />} disabled={atEnd || values.length === 0} onClick={onNext} />
+            <span className={startGateStepClasses}>{step} of 4</span>
+            <IconButton aria-label="Close starter" size="sm" icon={<X />} onClick={onCancel} />
+          </div>
+        }
+      />
+      <Card.Body>
+        <div className={startGateOptionsClasses + " " + cardLayoutBodyOccupantInsetXClasses + " " + cardLayoutBodyOccupantPadYClasses} role="group" aria-label={startGateTitle}>
+          {startOptions.map((option) => (
+            <div key={option.value} className={startGateOptionClasses}>
+              <Checkbox
+                className="min-w-0 flex-1"
+                size="md"
+                label={option.label}
+                description={option.description}
+                checked={values.includes(option.value)}
+                onChange={(event) => toggle(option.value, event.target.checked)}
+              />
+              <span className={startGateOptionNumberClasses} aria-hidden>{option.number}</span>
+            </div>
+          ))}
+        </div>
+      </Card.Body>
+      <Card.Footer>
+        <div className={startGateFooterClasses}>
+          <Button role="ghost" size="md" type="button" onClick={onCancel}>Cancel</Button>
+          <Button role="primary" size="md" type="button" disabled={values.length === 0} onClick={onNext}>Next</Button>
+        </div>
+      </Card.Footer>
+    </Card>
+  );
+}
+
 export function AskWhatMatters() {
   const reduce = useReducedMotion() === true;
   const travel = motionTransitionProp("medium");
@@ -340,6 +437,9 @@ export function AskWhatMatters() {
   const threadRef = useRef<HTMLDivElement>(null);
   const composerRef = useRef<HTMLDivElement>(null);
   const stickToEnd = useRef(true);
+  const [startGateOpen, setStartGateOpen] = useState(false);
+  const [startGateStep, setStartGateStep] = useState(1);
+  const [startNeeds, setStartNeeds] = useState([]);
   const suppressScroll = useRef(false);
   const nextId = useRef(1);
   const [draft, setDraft] = useState("");
@@ -411,10 +511,23 @@ export function AskWhatMatters() {
     scrollStageToEnd();
   }, [turns.length, composerSpace, scrollStageToEnd]);
 
+  function closeStartGate() {
+    setStartGateOpen(false);
+    setStartGateStep(1);
+    setStartNeeds([]);
+  }
+
+  function openStartGate() {
+    setStartGateStep(1);
+    setStartNeeds([]);
+    setStartGateOpen(true);
+  }
+
   function goHome() {
     setTurns([]);
     setDraft("");
     setHeadlineExit(null);
+    closeStartGate();
   }
 
   function onBrandClick(event: MouseEvent<HTMLDivElement>) {
@@ -459,7 +572,7 @@ export function AskWhatMatters() {
               end={
                 <>
                   <Button role="ghost" size="sm" render={<a href="/signin" />} className="whitespace-nowrap">Sign in</Button>
-                  <Button role="primary" size="sm" render={<a href="/start" />} className="whitespace-nowrap">Get started</Button>
+                  <Button role="primary" size="sm" type="button" className="whitespace-nowrap" onClick={openStartGate}>Start Project</Button>
                 </>
               }
               mobile={
@@ -493,7 +606,25 @@ export function AskWhatMatters() {
           </main>
           <div className={barClasses}>
             <div ref={composerRef} className={composerClasses}>
-              <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
+              {startGateOpen ? (
+                <StartGate
+                  step={startGateStep}
+                  values={startNeeds}
+                  onValuesChange={setStartNeeds}
+                  onCancel={closeStartGate}
+                  onBack={() => setStartGateStep((current) => Math.max(1, current - 1))}
+                  onNext={() => {
+                    if (startNeeds.length === 0) return;
+                    if (startGateStep >= 4) {
+                      closeStartGate();
+                      return;
+                    }
+                    setStartGateStep((current) => current + 1);
+                  }}
+                />
+              ) : (
+                <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
+              )}
             </div>
           </div>
         </div>
@@ -744,6 +875,9 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
   const threadRef = useRef<HTMLDivElement>(null);
   const composerRef = useRef<HTMLDivElement>(null);
   const stickToEnd = useRef(true);
+  const [startGateOpen, setStartGateOpen] = useState(false);
+  const [startGateStep, setStartGateStep] = useState(1);
+  const [startNeeds, setStartNeeds] = useState<string[]>([]);
   const suppressScroll = useRef(false);
   const nextId = useRef(1);
   const [draft, setDraft] = useState("");
@@ -819,6 +953,33 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
     setTurns([]);
     setDraft("");
     setHeadlineExit(null);
+    closeStartGate();
+  }
+
+  function openStartGate() {
+    setStartGateStep(1);
+    setStartNeeds([]);
+    setStartGateOpen(true);
+  }
+
+  function closeStartGate() {
+    setStartGateOpen(false);
+    setStartGateStep(1);
+    setStartNeeds([]);
+  }
+
+  function onStartGateNext() {
+    if (startNeeds.length === 0) return;
+    if (startGateStep >= 4) {
+      closeStartGate();
+      return;
+    }
+    setStartGateStep((current) => current + 1);
+  }
+
+  function onStartGateBack() {
+    if (startGateStep <= 1) return;
+    setStartGateStep((current) => current - 1);
   }
 
   function onBrandClick(event: MouseEvent<HTMLDivElement>) {
@@ -867,8 +1028,14 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
                 <Button role="ghost" size="sm" render={<a href="/signin" />} className="whitespace-nowrap">
                   Sign in
                 </Button>
-                <Button role="primary" size="sm" render={<a href="/start" />} className="whitespace-nowrap">
-                  Get started
+                <Button
+                  role="primary"
+                  size="sm"
+                  type="button"
+                  className="whitespace-nowrap"
+                  onClick={openStartGate}
+                >
+                  Start Project
                 </Button>
               </>
             }
@@ -911,7 +1078,18 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
         </main>
         <div className={promptChatBarClasses}>
           <div ref={composerRef} className={promptChatComposerClasses}>
-            <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
+            {startGateOpen ? (
+              <PromptChatStartGate
+                step={startGateStep}
+                values={startNeeds}
+                onValuesChange={setStartNeeds}
+                onCancel={closeStartGate}
+                onBack={onStartGateBack}
+                onNext={onStartGateNext}
+              />
+            ) : (
+              <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
+            )}
           </div>
         </div>
       </div>

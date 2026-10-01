@@ -22,6 +22,12 @@ import {
   promptChatReplyBlockClasses,
   promptChatReplyClasses,
   promptChatStageClasses,
+  promptChatStartGateFooterClasses,
+  promptChatStartGateHeaderEndClasses,
+  promptChatStartGateOptionClasses,
+  promptChatStartGateOptionNumberClasses,
+  promptChatStartGateOptionsClasses,
+  promptChatStartGateStepClasses,
   promptChatThreadClasses,
   promptChatThinkingLabelClasses,
   promptChatThoughtLabelClasses,
@@ -46,6 +52,10 @@ import {
   promptChatTraceDurationSeconds,
   promptChatTraces,
 } from "./promptChatThinking";
+import {
+  promptChatStartGateTitle,
+  promptChatStartOptions,
+} from "./PromptChatStartGate";
 
 /** Steps duration (~4s) plus a buffer so the reply has started. */
 const stepsReadyMs = Math.ceil(promptChatTraceDurationSeconds(promptChatTraces.steps.length) * 1000) + 400;
@@ -208,6 +218,12 @@ describe("prompt chat pattern", () => {
       promptChatFollowUpClasses,
       promptChatFollowUpsClasses,
       promptChatBarClasses,
+      promptChatStartGateHeaderEndClasses,
+      promptChatStartGateStepClasses,
+      promptChatStartGateOptionsClasses,
+      promptChatStartGateOptionClasses,
+      promptChatStartGateOptionNumberClasses,
+      promptChatStartGateFooterClasses,
     ]) {
       expect(source).toContain(classes);
       expect(promptChatPatternCopySource).toContain(classes);
@@ -230,6 +246,12 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).toContain("group-hover/reply");
     expect(promptChatPatternCopySource).toContain("data-actions=");
     expect(promptChatPatternCopySource).toContain('data-reply-actions=""');
+    expect(promptChatPatternCopySource).toContain("Start Project");
+    expect(promptChatPatternCopySource).toContain("Card");
+    expect(promptChatPatternCopySource).toContain("Checkbox");
+    expect(promptChatPatternCopySource).toContain(promptChatStartGateTitle);
+    expect(promptChatStartOptions.map((option) => option.label).join("|")).toContain("Brand identity");
+    expect(promptChatStartOptions.every((option) => option.label !== "Web experience")).toBe(true);
     expect(promptChatPageClasses).toContain("h-[100svh]");
     expect(promptChatPageClasses).toContain("overflow-hidden");
     expect(promptChatPageClasses).not.toContain("h-full");
@@ -467,4 +489,67 @@ describe("prompt chat thinking trace", () => {
     expect(promptChatThoughtForLabel(1)).toBe("Thought for 1 second");
     expect(promptChatThoughtForLabel(4)).toBe(promptChatThoughtLabel);
   });
+});
+
+describe("prompt chat start project gate", () => {
+  let root: Root | undefined;
+  let container: HTMLDivElement | undefined;
+
+  afterEach(() => {
+    act(() => {
+      root?.unmount();
+    });
+    container?.remove();
+    root = undefined;
+    container = undefined;
+  });
+
+  it(
+    "replaces the composer with the starter card in full chat, and Cancel restores it",
+    async () => {
+      const view = mount();
+      root = view.root;
+      container = view.container;
+
+      typeDraft(view.field, "What services do you offer?");
+      act(() => {
+        view.send.click();
+      });
+
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, stepsReadyMs));
+      });
+
+      expect(view.container.querySelector("textarea")).not.toBeNull();
+      expect(view.container.textContent).not.toContain(promptChatStartGateTitle);
+
+      const start = Array.from(view.container.querySelectorAll("button")).find(
+        (button) => button.textContent === "Start Project",
+      );
+      if (start == null) throw new Error("Start Project control missing in chat");
+      act(() => {
+        start.click();
+      });
+
+      expect(view.container.textContent).toContain(promptChatStartGateTitle);
+      expect(view.container.textContent).toContain("1 of 4");
+      expect(view.container.textContent).toContain("Brand identity");
+      expect(view.container.textContent).toContain("Design system");
+      expect(view.container.textContent).not.toContain("Web experience");
+      expect(view.container.querySelector("textarea")).toBeNull();
+      expect(view.container.textContent).toContain("What services do you offer?");
+
+      const cancel = Array.from(view.container.querySelectorAll("button")).find(
+        (button) => button.textContent === "Cancel",
+      );
+      if (cancel == null) throw new Error("Cancel missing on starter card");
+      act(() => {
+        cancel.click();
+      });
+
+      expect(view.container.querySelector("textarea")).not.toBeNull();
+      expect(view.container.textContent).not.toContain(promptChatStartGateTitle);
+    },
+    12_000,
+  );
 });
