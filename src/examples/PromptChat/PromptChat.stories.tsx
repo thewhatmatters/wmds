@@ -13,7 +13,7 @@ const meta = {
         component: `
 ## Usage
 
-An ask page. The landing is a short headline and **PromptBar**. Send keeps the bar in place: the headline fades, the sent line fades in where it rests, then a Steps trace plays. The trace leaves when the reply starts. The reply streams word by word out of a blur. One **TextLink** arrives with the words around it. When the stream finishes, **IconButton** actions and follow-up prompts become usable. The chat keeps **SiteNav**. The brand mark returns to the landing.
+An ask page. The landing is a short headline and **PromptBar**. Send keeps the bar in place: the headline fades, the sent line fades in where it rests, then a Steps trace plays. The trace leaves when the reply starts. The reply streams word by word out of a blur. One **TextLink** arrives with the words around it. When the stream finishes, **IconButton** actions and follow-up prompts become usable. A follow-up, or another send, appends that line in the same thread. Earlier messages stay. The thread scrolls inside the narrowed column. The composer stays pinned. The chat keeps **SiteNav**. The brand mark returns to the landing.
 
 This story is the pattern alone. It is not mounted on the marketing page. **SiteNav** is reused as it exists — not restyled.
 
@@ -27,7 +27,7 @@ Voice and attachments are not part of this version. The trace and the reply are 
 | **Thinking** | Steps on this pattern. The label shimmers while the reply has not started, then the trace leaves. Reasoning, search, and coding keep the settled disclosure |
 | **Reply** | \`type-body\`, full width of the thread. Words resolve in place. One **TextLink** in the sentence. Not a card |
 | **Actions** | **IconButton** \`sm\`, ghost. Copy, helpful, not helpful. After the stream |
-| **Follow-ups** | **Button** \`role="outline"\` \`size="md"\`, same column as the reply, quiet \`border-border\`. Prompts the user could send next |
+| **Follow-ups** | **Button** \`role="outline"\` \`size="md"\`, same column as the reply, quiet \`border-border\`. Clicking one appends that line in the same thread |
 | **Composer** | **PromptBar**, same narrowed column as the thread, pinned under the scrolling stage |
 | **Motion** | \`motion\` via \`motionTransitionProp\`. The sent line fades in. Fast for each word |
 
@@ -37,7 +37,8 @@ Voice and attachments are not part of this version. The trace and the reply are 
 Page — cream field, no sidebar, narrowed page grid (40rem)
 ├── Landing — headline, centered. No nav
 │   or Chat — SiteNav, thread in that column (scrolls)
-│              user pill, thinking trace until the reply starts, reply, actions, follow-ups
+│              each turn stays: user pill, thinking trace until that reply starts, reply, actions
+│              follow-ups on the latest turn only. The stage scrolls; the bar does not
 └── PromptBar — same column, pinned
 \`\`\`
 
@@ -65,7 +66,7 @@ export const LandingToChat: Story = {
       docs: {
         description: {
           story:
-            "Landing first. Enter or the send control fades the headline, and the sent line fades in where it rests. A Steps trace plays until the reply starts, then leaves. The reply streams after that. Actions and follow-ups wait until the stream finishes. SiteNav stays on the chat. The brand mark returns to the landing. Reduced motion shows the finished reply. Voice and attachments are not part of this version.",
+            "Landing first. Enter or the send control fades the headline, and the sent line fades in where it rests. A Steps trace plays until the reply starts, then leaves. The reply streams after that. Actions and follow-ups wait until the stream finishes. A follow-up appends the next user line in the same thread. The thread scrolls inside the narrowed column. The composer stays pinned. SiteNav stays on the chat. The brand mark returns to the landing. Reduced motion shows the finished reply. Voice and attachments are not part of this version.",
         },
       },
     },

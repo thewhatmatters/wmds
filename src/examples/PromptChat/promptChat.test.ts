@@ -31,7 +31,12 @@ import {
   promptChatTraceSpinClasses,
   promptChatUserClasses,
 } from "./promptChatStyles";
-import { promptChatPartDelay, promptChatReplyParts, promptChatSampleReply } from "./promptChatStream";
+import {
+  promptChatFollowUps,
+  promptChatPartDelay,
+  promptChatReplyParts,
+  promptChatSampleReply,
+} from "./promptChatStream";
 import {
   promptChatThoughtLabel,
   promptChatThinkingLabel,
@@ -233,6 +238,41 @@ describe("prompt chat pattern", () => {
     expect(view.container.textContent).toContain(promptChatSampleReply);
     expect(view.container.textContent).not.toContain("Thinking");
     expect(view.container.textContent).not.toContain(promptChatThoughtLabel);
+  });
+
+  it("appends a follow-up in the same thread", async () => {
+    const view = mount();
+    root = view.root;
+    container = view.container;
+
+    typeDraft(view.field, "What services do you offer?");
+    act(() => {
+      view.send.click();
+    });
+
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 2800));
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+    });
+
+    const followUp = Array.from(view.container.querySelectorAll("button")).find(
+      (button) => button.textContent === promptChatFollowUps[0],
+    );
+    if (followUp == null) {
+      throw new Error("The first reply did not offer a follow-up");
+    }
+    act(() => {
+      followUp.click();
+    });
+
+    const text = view.container.textContent ?? "";
+    expect(text).toContain("What services do you offer?");
+    expect(text.split(promptChatSampleReply).length - 1).toBe(1);
+    expect(text).toContain(promptChatFollowUps[0]);
+    expect(text).toContain("Thinking");
+    expect(view.container.querySelector("h1")).toBeNull();
   });
 
   it("keeps the settled trace on the reasoning story", async () => {
