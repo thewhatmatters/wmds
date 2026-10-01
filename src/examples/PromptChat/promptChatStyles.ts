@@ -6,9 +6,12 @@
 /** Viewport shell. SiteNav stays outside this column and is not restyled. */
 export const promptChatPageClasses = "flex h-full min-h-0 w-full flex-1 flex-col bg-body";
 
-/** Statement, scrolling thread, and pinned prompt bar. One narrowed page grid. */
+/**
+ * Statement, scrolling thread, and pinned prompt bar. One narrowed page grid.
+ * The column clips; the stage inside it is the scrollport.
+ */
 export const promptChatColumnClasses =
-  "flex min-h-0 w-full flex-1 flex-col [--grid-max:40rem]";
+  "flex min-h-0 w-full flex-1 flex-col overflow-hidden [--grid-max:40rem]";
 
 /**
  * Stage above the pinned bar. This region scrolls when the thread is taller
