@@ -61,11 +61,10 @@ const replyClasses = "w-full type-body text-fg";
 const traceClasses = "flex w-full flex-col items-start gap-2";
 const traceBodyClasses =
   "flex w-full flex-col items-start gap-2 border-l border-border-control py-0.5 pl-3";
-const traceLineClasses = "flex items-center gap-2 type-body text-fg";
-const thinkingLabelClasses =
-  "inline-block bg-[linear-gradient(90deg,var(--color-text-secondary),var(--color-brand),var(--color-text-secondary))] bg-[length:200%_100%] bg-clip-text text-transparent";
-const traceIconClasses = "size-4 shrink-0 text-brand";
-const traceSpinClasses = "size-4 shrink-0 animate-spin text-brand";
+const traceLineClasses = "flex items-center gap-2 type-supporting text-muted";
+const thinkingLabelClasses = "type-supporting text-muted";
+const traceIconClasses = "size-4 shrink-0 text-muted";
+const traceSpinClasses = "size-4 shrink-0 animate-spin text-muted";
 const traceChevronClasses = "size-4 shrink-0 text-muted";
 const actionsClasses = "flex items-center gap-1";
 const followUpsClasses = "flex w-full flex-col gap-2";
@@ -216,13 +215,7 @@ function Exchange({
       {replyReady ? null : (
         <div className={traceClasses} aria-busy="true">
           <Button layout="row" role="ghost" type="button" className="!w-auto" aria-expanded={traceOpen} onClick={() => setTraceOpen((current) => !current)}>
-            <motion.span
-              className={thinkingLabelClasses}
-              animate={reduce ? undefined : { backgroundPosition: ["100% center", "0% center"] }}
-              transition={reduce ? { duration: 0 } : { duration: 1.1, repeat: Infinity, ease: "linear" }}
-            >
-              {thinkingLabel}
-            </motion.span>
+            <span className={thinkingLabelClasses}>{thinkingLabel}</span>
             <ChevronRight className={traceChevronClasses + (traceOpen ? " rotate-90" : "")} strokeWidth={2} aria-hidden />
           </Button>
           {traceOpen ? (
@@ -678,8 +671,8 @@ function PromptChatExchange({
 /**
  * Landing statement, then a thread that keeps growing.
  * Send or Enter: the bar stays, the headline fades, and the sent line fades in where it rests.
- * A Steps trace plays until that reply starts, then leaves. A follow-up appends the next user
- * line in the same thread. Earlier messages stay.
+ * A Steps trace plays as a fleeting supporting muted status until that reply starts, then leaves.
+ * A follow-up appends the next user line in the same thread. Earlier messages stay.
  * The thread, follow-ups, and composer share one narrowed page grid (`--grid-max: 40rem`).
  * The thread reserves the composer's measured height plus the space under the pill, and keeps
  * that end in view while a reply grows, so the reply and its follow-ups finish above the composer.

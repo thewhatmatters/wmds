@@ -47,7 +47,7 @@ import {
 const nativeAnimate = HTMLElement.prototype.animate;
 
 beforeAll(() => {
-  // happy-dom rejects Animation.cancel. The trace unmounts mid-shimmer when the reply starts.
+  // happy-dom rejects Animation.cancel. The trace unmounts mid-play when the reply starts.
   HTMLElement.prototype.animate = () =>
     ({
       cancel: () => undefined,

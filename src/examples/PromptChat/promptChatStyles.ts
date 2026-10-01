@@ -58,20 +58,23 @@ export const promptChatTraceClasses = "flex w-full flex-col items-start gap-2";
 export const promptChatTraceBodyClasses =
   "flex w-full flex-col items-start gap-2 border-l border-border-control py-0.5 pl-3";
 
-export const promptChatTraceLineClasses = "flex items-center gap-2 type-body text-fg";
+/** Step lines. Smaller and quieter than the reply (`type-body` / `text-fg`). */
+export const promptChatTraceLineClasses = "flex items-center gap-2 type-supporting text-muted";
 
-/** Working label. Existing muted ink and brand navy — a moving highlight, not a new tone. */
-export const promptChatThinkingLabelClasses =
-  "inline-block bg-[linear-gradient(90deg,var(--color-text-secondary),var(--color-brand),var(--color-text-secondary))] bg-[length:200%_100%] bg-clip-text text-transparent";
+/**
+ * Working label. Supporting size and `--color-muted` (`--color-text-secondary`) —
+ * a passing status, not brand navy and not the reply's body type.
+ */
+export const promptChatThinkingLabelClasses = "type-supporting text-muted";
 
-/** Settled label. Past tense, quiet. */
-export const promptChatThoughtLabelClasses = "type-body text-muted";
+/** Settled label. Same quiet supporting step as the working label. */
+export const promptChatThoughtLabelClasses = "type-supporting text-muted";
 
-/** Lucide mark on a resolved line. Brand navy is `--color-brand` (`#011272`). */
-export const promptChatTraceIconClasses = "size-4 shrink-0 text-brand";
+/** Lucide mark on a resolved line. Same muted gray as the status copy. */
+export const promptChatTraceIconClasses = "size-4 shrink-0 text-muted";
 
 /** Current step. Same box as the check, so the row does not jump when it resolves. */
-export const promptChatTraceSpinClasses = "size-4 shrink-0 animate-spin text-brand";
+export const promptChatTraceSpinClasses = "size-4 shrink-0 animate-spin text-muted";
 
 export const promptChatTraceChevronClasses = "size-4 shrink-0 text-muted";
 
