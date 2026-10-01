@@ -337,6 +337,7 @@ export function AskWhatMatters() {
       const bottoms = [stage, stage?.parentElement]
         .filter((node) => node instanceof HTMLElement)
         .map((node) => node.getBoundingClientRect().bottom);
+      if (typeof window !== "undefined") bottoms.push(window.innerHeight);
       const tail = bottoms.reduce((extra, bottom) => Math.max(extra, bottom - composerBottom), 0);
       const next = Math.ceil(height + Math.max(0, tail));
       setComposerSpace((current) => (current === next ? current : next));
@@ -721,6 +722,7 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
       const bottoms = [stage, stage?.parentElement]
         .filter((node) => node instanceof HTMLElement)
         .map((node) => node.getBoundingClientRect().bottom);
+      if (typeof window !== "undefined") bottoms.push(window.innerHeight);
       const tail = bottoms.reduce((extra, bottom) => Math.max(extra, bottom - composerBottom), 0);
       const next = Math.ceil(height + Math.max(0, tail));
       setComposerSpace((current) => (current === next ? current : next));
