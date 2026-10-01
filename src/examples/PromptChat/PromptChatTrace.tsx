@@ -21,7 +21,7 @@ import {
 } from "./promptChatThinking";
 
 /**
- * One thinking trace. The label shimmers while lines resolve, then the row collapses.
+ * One thinking trace. Supporting muted status while lines resolve, then the row collapses.
  * Steps, reasoning, search, and coding are entries in the same list — not separate components.
  */
 export function PromptChatTrace({
@@ -57,17 +57,7 @@ export function PromptChatTrace({
         {settled ? (
           <span className={promptChatThoughtLabelClasses}>{promptChatThoughtLabel}</span>
         ) : (
-          <motion.span
-            className={promptChatThinkingLabelClasses}
-            animate={
-              reduce
-                ? undefined
-                : { backgroundPosition: ["100% center", "0% center"] }
-            }
-            transition={reduce ? { duration: 0 } : { duration: 1.1, repeat: Infinity, ease: "linear" }}
-          >
-            {promptChatThinkingLabel}
-          </motion.span>
+          <span className={promptChatThinkingLabelClasses}>{promptChatThinkingLabel}</span>
         )}
         <ChevronRight
           className={cn(promptChatTraceChevronClasses, open && "rotate-90")}
