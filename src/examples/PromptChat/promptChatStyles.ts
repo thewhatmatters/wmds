@@ -3,8 +3,12 @@
  * so the thread, follow-ups, and composer share one measure. Not the marketing homepage.
  */
 
-/** Viewport shell. SiteNav stays outside this column and is not restyled. */
-export const promptChatPageClasses = "flex h-full min-h-0 w-full flex-1 flex-col bg-body";
+/**
+ * Viewport shell. The page owns `100svh`, so the stage can scroll without a
+ * height-constrained parent. SiteNav stays outside this column and is not restyled.
+ */
+export const promptChatPageClasses =
+  "flex h-[100svh] min-h-0 w-full flex-col overflow-hidden bg-body";
 
 /**
  * Statement, scrolling thread, and pinned prompt bar. One narrowed page grid.

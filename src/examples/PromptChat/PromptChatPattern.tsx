@@ -48,7 +48,7 @@ import { Check, ChevronRight, Copy, LoaderCircle, Sparkles, ThumbsDown, ThumbsUp
 import { motion, useReducedMotion } from "motion/react";
 import { Button, IconButton, PromptBar, SiteNav, TextLink, motionTransitionProp } from "@whatmatters/wmds";
 
-const pageClasses = "flex h-full min-h-0 w-full flex-1 flex-col bg-body";
+const pageClasses = "flex h-[100svh] min-h-0 w-full flex-col overflow-hidden bg-body";
 const columnClasses = "flex min-h-0 w-full flex-1 flex-col overflow-hidden [--grid-max:40rem]";
 const stageClasses = "grid-page min-h-0 w-full flex-1 overflow-y-auto !py-0";
 const landingClasses = "place-content-center";
