@@ -120,9 +120,9 @@ export const promptChatStartGateStepClasses = "type-supporting text-muted px-1 t
  */
 export const promptChatStartGateOptionsClasses = "flex w-full flex-col";
 
-/** One choice on the body occupant: checkbox + muted count Badge. */
+/** One choice on the body occupant: checkbox + trailing digit **Kbd**. */
 export const promptChatStartGateOptionClasses =
   "flex w-full items-center gap-3 border-b border-border py-3 last:border-b-0";
 
-/** Trailing index Badge placement on each choice row. */
+/** Trailing digit **Kbd** placement on each choice row. */
 export const promptChatStartGateOptionNumberClasses = "shrink-0";
