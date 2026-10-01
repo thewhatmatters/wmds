@@ -111,23 +111,18 @@ export const promptChatBarClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
 /** Composer fills that column, the same measure as the reply and follow-ups. */
 export const promptChatComposerClasses = "col-span-full";
 
-/** Start-project gate header cluster: back, step, forward, close — Paper order. */
-export const promptChatStartGateHeaderEndClasses = "flex items-center gap-1";
-
-/** Step index in the gate header. Same quiet supporting step as thinking. */
+/** Step index in Card.Header `end`. Supporting muted — not a new token. */
 export const promptChatStartGateStepClasses = "type-supporting text-muted px-1 tabular-nums";
 
-/** Selectable choice stack inside Card.Body — hairline between rows. */
+/**
+ * Choice stack on the Card.Body occupant (well + 14px inset). Hairlines between
+ * rows only — no Card shell padding invented here.
+ */
 export const promptChatStartGateOptionsClasses = "flex w-full flex-col";
 
-/**
- * One choice: checkbox + muted count Badge. Hairline under each row except the last.
- */
+/** One choice on the body occupant: checkbox + muted count Badge. */
 export const promptChatStartGateOptionClasses =
   "flex w-full items-center gap-3 border-b border-border py-3 last:border-b-0";
 
 /** Trailing index Badge placement on each choice row. */
 export const promptChatStartGateOptionNumberClasses = "shrink-0";
-
-/** Cancel + Next both trailing — existing Button roles. */
-export const promptChatStartGateFooterClasses = "flex w-full items-center justify-end gap-2";

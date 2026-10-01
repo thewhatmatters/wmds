@@ -53,6 +53,7 @@ import {
   Button,
   Card,
   cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantWellClasses,
   cardSubtitleClasses,
   cardTitleClasses,
   Checkbox,
@@ -91,13 +92,11 @@ const followUpsClasses = "flex w-full flex-col gap-2";
 const followUpClasses = "w-full !justify-start !border-border";
 const barClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
 const composerClasses = "col-span-full";
-const startGateHeaderEndClasses = "flex items-center gap-1";
 const startGateStepClasses = "type-supporting text-muted px-1 tabular-nums";
 const startGateOptionsClasses = "flex w-full flex-col";
 const startGateOptionClasses =
   "flex w-full items-center gap-3 border-b border-border py-3 last:border-b-0";
 const startGateOptionNumberClasses = "shrink-0";
-const startGateFooterClasses = "flex w-full items-center justify-end gap-2";
 const startOptions = [
   { value: "brand", label: "Brand identity", description: "Name, mark, and a system you can actually use.", number: 1 },
   { value: "website", label: "Website", description: "A site that explains the work and earns the next conversation.", number: 2 },
@@ -385,25 +384,25 @@ function StartGate({
     onValuesChange(values.filter((item) => item !== value));
   }
   return (
-    <Card padding="none" variant="surface" aria-label={startGateTitle}>
+    <Card shape="rounded" padding="none" variant="surface" aria-label={startGateTitle}>
       <Card.Header
         start={
-          <div className="flex min-w-0 flex-col gap-0.5">
-            <p className={cardTitleClasses}>{startGateTitle}</p>
+          <>
+            <h2 className={cardTitleClasses}>{startGateTitle}</h2>
             <p className={cardSubtitleClasses}>{startGateSubtitle}</p>
-          </div>
+          </>
         }
         end={
-          <div className={startGateHeaderEndClasses}>
+          <>
             <IconButton aria-label="Previous step" size="sm" icon={<ChevronLeft />} disabled={atStart} onClick={onBack} />
             <span className={startGateStepClasses}>{step} of 4</span>
             <IconButton aria-label="Next step" size="sm" icon={<ChevronRight />} disabled={atEnd || values.length === 0} onClick={onNext} />
             <IconButton aria-label="Close starter" size="sm" icon={<X />} onClick={onCancel} />
-          </div>
+          </>
         }
       />
       <Card.Body>
-        <div className={startGateOptionsClasses + " " + cardLayoutBodyOccupantInsetXClasses} role="group" aria-label={startGateSubtitle}>
+        <div className={cardLayoutBodyOccupantWellClasses + " " + cardLayoutBodyOccupantInsetXClasses + " " + startGateOptionsClasses} role="group" aria-label={startGateSubtitle}>
           {startOptions.map((option) => (
             <div key={option.value} className={startGateOptionClasses}>
               <Checkbox
@@ -420,7 +419,7 @@ function StartGate({
         </div>
       </Card.Body>
       <Card.Footer>
-        <div className={startGateFooterClasses}>
+        <div className="ml-auto flex items-center gap-2">
           <Button role="secondary" size="md" type="button" onClick={onCancel}>Cancel</Button>
           <Button role="primary" size="md" type="button" disabled={values.length === 0} onClick={onNext}>Next</Button>
         </div>

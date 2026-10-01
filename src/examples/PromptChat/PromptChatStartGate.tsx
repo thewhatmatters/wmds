@@ -6,13 +6,12 @@ import { IconButton } from "../../components/atoms/IconButton/IconButton";
 import {
   Card,
   cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantWellClasses,
   cardSubtitleClasses,
   cardTitleClasses,
 } from "../../components/molecules/Card/Card";
 import { cn } from "../../lib/cn";
 import {
-  promptChatStartGateFooterClasses,
-  promptChatStartGateHeaderEndClasses,
   promptChatStartGateOptionClasses,
   promptChatStartGateOptionNumberClasses,
   promptChatStartGateOptionsClasses,
@@ -52,15 +51,17 @@ export const promptChatStartOptions = [
 
 export const promptChatStartGateSteps = 4;
 
-/** Card title — Paper header lead. */
+/** Card.Header title — same slot pattern as Components/Layout/Card. */
 export const promptChatStartGateTitle = "Name the work";
 
-/** Quieter subtitle under the title — Paper secondary line. */
+/** Card.Header subtitle. */
 export const promptChatStartGateSubtitle = "What are we making?";
 
 /**
- * Gated starter form. Replaces the composer in place. Existing Card + Checkbox +
- * Badge + Button + IconButton — no new variant.
+ * Gated starter form in the composer slot. Real WMDS **Card** with
+ * **Card.Header** / **Card.Body** / **Card.Footer** — `padding="none"` so Body
+ * keeps the 2px gutter. Occupant uses the documented inset well. No new Card
+ * variant and no Card restyle.
  */
 export function PromptChatStartGate({
   step,
@@ -89,16 +90,16 @@ export function PromptChatStartGate({
   }
 
   return (
-    <Card padding="none" variant="surface" aria-label={promptChatStartGateTitle}>
+    <Card shape="rounded" padding="none" variant="surface" aria-label={promptChatStartGateTitle}>
       <Card.Header
         start={
-          <div className="flex min-w-0 flex-col gap-0.5">
-            <p className={cardTitleClasses}>{promptChatStartGateTitle}</p>
+          <>
+            <h2 className={cardTitleClasses}>{promptChatStartGateTitle}</h2>
             <p className={cardSubtitleClasses}>{promptChatStartGateSubtitle}</p>
-          </div>
+          </>
         }
         end={
-          <div className={promptChatStartGateHeaderEndClasses}>
+          <>
             <IconButton
               aria-label="Previous step"
               size="sm"
@@ -117,12 +118,16 @@ export function PromptChatStartGate({
               onClick={onNext}
             />
             <IconButton aria-label="Close starter" size="sm" icon={<X />} onClick={onCancel} />
-          </div>
+          </>
         }
       />
       <Card.Body>
         <div
-          className={cn(promptChatStartGateOptionsClasses, cardLayoutBodyOccupantInsetXClasses)}
+          className={cn(
+            cardLayoutBodyOccupantWellClasses,
+            cardLayoutBodyOccupantInsetXClasses,
+            promptChatStartGateOptionsClasses,
+          )}
           role="group"
           aria-label={promptChatStartGateSubtitle}
         >
@@ -148,7 +153,7 @@ export function PromptChatStartGate({
         </div>
       </Card.Body>
       <Card.Footer>
-        <div className={promptChatStartGateFooterClasses}>
+        <div className="ml-auto flex items-center gap-2">
           <Button role="secondary" size="md" type="button" onClick={onCancel}>
             Cancel
           </Button>

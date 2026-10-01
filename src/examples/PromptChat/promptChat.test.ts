@@ -22,8 +22,6 @@ import {
   promptChatReplyBlockClasses,
   promptChatReplyClasses,
   promptChatStageClasses,
-  promptChatStartGateFooterClasses,
-  promptChatStartGateHeaderEndClasses,
   promptChatStartGateOptionClasses,
   promptChatStartGateOptionNumberClasses,
   promptChatStartGateOptionsClasses,
@@ -218,12 +216,10 @@ describe("prompt chat pattern", () => {
       promptChatFollowUpClasses,
       promptChatFollowUpsClasses,
       promptChatBarClasses,
-      promptChatStartGateHeaderEndClasses,
       promptChatStartGateStepClasses,
       promptChatStartGateOptionsClasses,
       promptChatStartGateOptionClasses,
       promptChatStartGateOptionNumberClasses,
-      promptChatStartGateFooterClasses,
     ]) {
       expect(source).toContain(classes);
       expect(promptChatPatternCopySource).toContain(classes);
@@ -248,11 +244,16 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).toContain('data-reply-actions=""');
     expect(promptChatPatternCopySource).toContain("Start Project");
     expect(promptChatPatternCopySource).toContain("Card");
+    expect(promptChatPatternCopySource).toContain("Card.Header");
+    expect(promptChatPatternCopySource).toContain("Card.Body");
+    expect(promptChatPatternCopySource).toContain("Card.Footer");
+    expect(promptChatPatternCopySource).toContain("padding=\"none\"");
+    expect(promptChatPatternCopySource).toContain("cardLayoutBodyOccupantWellClasses");
     expect(promptChatPatternCopySource).toContain("Checkbox");
     expect(promptChatPatternCopySource).toContain("Badge");
     expect(promptChatPatternCopySource).toContain(promptChatStartGateTitle);
     expect(promptChatPatternCopySource).toContain("What are we making?");
-    expect(promptChatPatternCopySource).toContain("justify-end");
+    expect(promptChatPatternCopySource).toContain("ml-auto");
     expect(promptChatStartOptions.map((option) => option.label).join("|")).toContain("Brand identity");
     expect(promptChatStartOptions.every((option) => option.label !== "Web experience")).toBe(true);
     expect(promptChatPageClasses).toContain("h-[100svh]");
@@ -543,6 +544,16 @@ describe("prompt chat start project gate", () => {
       expect(view.container.textContent).not.toContain("A sharp presence");
       expect(view.container.querySelector("textarea")).toBeNull();
       expect(view.container.textContent).toContain("What services do you offer?");
+
+      const card = view.container.querySelector('[aria-label="Name the work"]');
+      expect(card?.getAttribute("data-layout")).toBe("shell");
+      expect(card?.getAttribute("data-padding")).toBe("none");
+      expect(card?.querySelector(":scope > header")).not.toBeNull();
+      expect(card?.querySelector(":scope > footer")).not.toBeNull();
+      const body = [...(card?.children ?? [])].find(
+        (el) => el instanceof HTMLElement && el.tagName === "DIV",
+      );
+      expect(body?.className).toContain("px-[2px]");
 
       const cancel = Array.from(view.container.querySelectorAll("button")).find(
         (button) => button.textContent === "Cancel",
