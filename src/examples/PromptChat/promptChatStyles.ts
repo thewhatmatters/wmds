@@ -34,8 +34,9 @@ export const promptChatHeadlineClasses =
 
 /**
  * User turn, reply, and follow-ups. One column of the narrowed grid.
- * The thread's bottom padding is the composer's measured height, so the newest
- * text ends above the bar while a reply is still growing and after it finishes.
+ * The thread's bottom padding is the composer's measured height plus the space
+ * under the pill to the bottom of the column, so the reply and its follow-ups
+ * end above the bar while a reply is still growing and after it finishes.
  */
 export const promptChatThreadClasses =
   "col-span-full flex w-full min-w-0 flex-col items-start gap-6 pt-6";

@@ -331,13 +331,23 @@ export function AskWhatMatters() {
     const composer = composerRef.current;
     if (composer == null) return;
     const apply = () => {
-      const next = composer.offsetHeight;
+      const stage = stageRef.current;
+      const height = composer.offsetHeight;
+      const composerBottom = composer.getBoundingClientRect().bottom;
+      const bottoms = [stage, stage?.parentElement]
+        .filter((node) => node instanceof HTMLElement)
+        .map((node) => node.getBoundingClientRect().bottom);
+      const tail = bottoms.reduce((extra, bottom) => Math.max(extra, bottom - composerBottom), 0);
+      const next = Math.ceil(height + Math.max(0, tail));
       setComposerSpace((current) => (current === next ? current : next));
     };
     apply();
     if (typeof ResizeObserver === "undefined") return;
     const observer = new ResizeObserver(apply);
     observer.observe(composer);
+    const stage = stageRef.current;
+    if (stage != null) observer.observe(stage);
+    if (stage?.parentElement != null) observer.observe(stage.parentElement);
     return () => observer.disconnect();
   }, []);
 
@@ -670,8 +680,8 @@ function PromptChatExchange({
  * A Steps trace plays until that reply starts, then leaves. A follow-up appends the next user
  * line in the same thread. Earlier messages stay.
  * The thread, follow-ups, and composer share one narrowed page grid (`--grid-max: 40rem`).
- * The thread reserves the composer's measured height at the bottom and keeps that end in view
- * while a reply grows, so the newest text finishes above the composer. The composer stays pinned.
+ * The thread reserves the composer's measured height plus the space under the pill, and keeps
+ * that end in view while a reply grows, so the reply and its follow-ups finish above the composer.
  * Reduced motion skips the fade and the trace play, and shows the finished reply.
  * Voice and attachments are not part of this version.
  */
@@ -705,13 +715,23 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
     const composer = composerRef.current;
     if (composer == null) return;
     const apply = () => {
-      const next = composer.offsetHeight;
+      const stage = stageRef.current;
+      const height = composer.offsetHeight;
+      const composerBottom = composer.getBoundingClientRect().bottom;
+      const bottoms = [stage, stage?.parentElement]
+        .filter((node) => node instanceof HTMLElement)
+        .map((node) => node.getBoundingClientRect().bottom);
+      const tail = bottoms.reduce((extra, bottom) => Math.max(extra, bottom - composerBottom), 0);
+      const next = Math.ceil(height + Math.max(0, tail));
       setComposerSpace((current) => (current === next ? current : next));
     };
     apply();
     if (typeof ResizeObserver === "undefined") return;
     const observer = new ResizeObserver(apply);
     observer.observe(composer);
+    const stage = stageRef.current;
+    if (stage != null) observer.observe(stage);
+    if (stage?.parentElement != null) observer.observe(stage.parentElement);
     return () => observer.disconnect();
   }, []);
 
