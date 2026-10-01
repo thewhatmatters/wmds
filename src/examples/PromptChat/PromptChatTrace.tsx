@@ -1,11 +1,20 @@
-import { Check, ChevronRight, FileText, LoaderCircle, Pencil, Search, Terminal } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  Check,
+  ChevronDown,
+  FileText,
+  LoaderCircle,
+  Pencil,
+  Search,
+  Sparkle,
+  Terminal,
+} from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { cn } from "../../lib/cn";
 import { motionTransitionProp } from "../../lib/motion";
 import { Button } from "../../components/atoms/Button/Button";
 import { TextLink } from "../../components/atoms/TextLink/TextLink";
 import {
-  promptChatThinkingLabelClasses,
   promptChatThoughtLabelClasses,
   promptChatTraceBodyClasses,
   promptChatTraceChevronClasses,
@@ -13,16 +22,17 @@ import {
   promptChatTraceIconClasses,
   promptChatTraceLineClasses,
   promptChatTraceSpinClasses,
+  promptChatTraceTriggerClasses,
 } from "./promptChatStyles";
 import {
-  promptChatThinkingLabel,
+  promptChatThoughtForLabel,
   promptChatThoughtLabel,
   type PromptChatTraceEntry,
 } from "./promptChatThinking";
 
 /**
- * One thinking trace. Supporting muted status while lines resolve, then the row collapses.
- * Steps, reasoning, search, and coding are entries in the same list — not separate components.
+ * One thinking trace. Default is a collapsed sparkle + timer row. The user can
+ * expand it while steps resolve. Supporting muted gray — not brand navy.
  */
 export function PromptChatTrace({
   entries,
@@ -43,6 +53,15 @@ export function PromptChatTrace({
   const reduce = useReducedMotion() === true;
   const fast = motionTransitionProp("fast");
   const visible = entries.slice(0, revealed);
+  const [seconds, setSeconds] = useState(1);
+
+  useEffect(() => {
+    if (settled || reduce) return;
+    const timer = window.setInterval(() => {
+      setSeconds((current) => current + 1);
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [settled, reduce]);
 
   return (
     <div className={promptChatTraceClasses} aria-busy={settled ? undefined : true}>
@@ -50,17 +69,16 @@ export function PromptChatTrace({
         layout="row"
         role="ghost"
         type="button"
-        className="!w-auto"
+        className={promptChatTraceTriggerClasses}
         aria-expanded={open}
         onClick={onToggle}
       >
-        {settled ? (
-          <span className={promptChatThoughtLabelClasses}>{promptChatThoughtLabel}</span>
-        ) : (
-          <span className={promptChatThinkingLabelClasses}>{promptChatThinkingLabel}</span>
-        )}
-        <ChevronRight
-          className={cn(promptChatTraceChevronClasses, open && "rotate-90")}
+        <Sparkle className={promptChatTraceIconClasses} strokeWidth={2} aria-hidden />
+        <span className={promptChatThoughtLabelClasses}>
+          {settled ? promptChatThoughtLabel : promptChatThoughtForLabel(seconds)}
+        </span>
+        <ChevronDown
+          className={cn(promptChatTraceChevronClasses, open && "rotate-180")}
           strokeWidth={2}
           aria-hidden
         />

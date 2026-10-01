@@ -19,16 +19,19 @@ import {
   promptChatFollowUpsClasses,
   promptChatHeadlineClasses,
   promptChatPageClasses,
+  promptChatReplyBlockClasses,
   promptChatReplyClasses,
   promptChatStageClasses,
   promptChatThreadClasses,
   promptChatThinkingLabelClasses,
+  promptChatThoughtLabelClasses,
   promptChatTraceBodyClasses,
   promptChatTraceChevronClasses,
   promptChatTraceClasses,
   promptChatTraceIconClasses,
   promptChatTraceLineClasses,
   promptChatTraceSpinClasses,
+  promptChatTraceTriggerClasses,
   promptChatUserClasses,
 } from "./promptChatStyles";
 import {
@@ -38,11 +41,19 @@ import {
   promptChatSampleReply,
 } from "./promptChatStream";
 import {
+  promptChatThoughtForLabel,
   promptChatThoughtLabel,
-  promptChatThinkingLabel,
   promptChatTraceDurationSeconds,
   promptChatTraces,
 } from "./promptChatThinking";
+
+/** Steps duration (~4s) plus a buffer so the reply has started. */
+const stepsReadyMs = Math.ceil(promptChatTraceDurationSeconds(promptChatTraces.steps.length) * 1000) + 400;
+/** Reasoning duration plus buffer. */
+const reasoningReadyMs =
+  Math.ceil(promptChatTraceDurationSeconds(promptChatTraces.reasoning.length) * 1000) + 400;
+/** Word stream after the reply starts (last part delay + settle + slack). */
+const streamDoneMs = 2200;
 
 const nativeAnimate = HTMLElement.prototype.animate;
 
@@ -128,8 +139,8 @@ describe("prompt chat pattern", () => {
     expect(view.container.querySelector("h1")).toBeNull();
     expect(view.container.querySelector("header")).not.toBeNull();
     expect(view.container.textContent).toContain("What services do you offer?");
-    expect(view.container.textContent).toContain("Thinking");
-    expect(view.container.textContent).not.toContain("Thought for a few seconds");
+    expect(view.container.textContent).toContain(promptChatThoughtForLabel(1));
+    expect(view.container.textContent).not.toContain("Thinking");
     expect(view.container.textContent).not.toContain(promptChatSampleReply);
     expect(view.container.querySelector("[aria-label='Copy reply']")).toBeNull();
     expect(view.field).toHaveProperty("value", "");
@@ -168,7 +179,7 @@ describe("prompt chat pattern", () => {
     });
 
     expect(view.container.querySelector("h1")).toBeNull();
-    expect(view.container.textContent).toContain("Thinking");
+    expect(view.container.textContent).toContain(promptChatThoughtForLabel(1));
     expect(view.container.textContent).not.toContain(promptChatSampleReply);
   });
 
@@ -182,15 +193,18 @@ describe("prompt chat pattern", () => {
       promptChatHeadlineClasses,
       promptChatThreadClasses,
       promptChatUserClasses,
-  promptChatReplyClasses,
-  promptChatTraceClasses,
-  promptChatTraceBodyClasses,
-  promptChatTraceLineClasses,
-  promptChatThinkingLabelClasses,
-  promptChatTraceIconClasses,
-  promptChatTraceChevronClasses,
-  promptChatTraceSpinClasses,
-  promptChatActionsClasses,
+      promptChatReplyClasses,
+      promptChatReplyBlockClasses,
+      promptChatTraceClasses,
+      promptChatTraceTriggerClasses,
+      promptChatTraceBodyClasses,
+      promptChatTraceLineClasses,
+      promptChatThinkingLabelClasses,
+      promptChatThoughtLabelClasses,
+      promptChatTraceIconClasses,
+      promptChatTraceChevronClasses,
+      promptChatTraceSpinClasses,
+      promptChatActionsClasses,
       promptChatFollowUpClasses,
       promptChatFollowUpsClasses,
       promptChatBarClasses,
@@ -203,14 +217,19 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).toContain("TextLink");
     expect(promptChatPatternCopySource).toContain("IconButton");
     expect(promptChatPatternCopySource).toContain("SiteNav");
+    expect(promptChatPatternCopySource).toContain("Sparkle");
+    expect(promptChatPatternCopySource).toContain("ChevronDown");
     expect(promptChatPatternCopySource).toContain("motion/react");
     expect(promptChatPatternCopySource).toContain("opacity: 0");
     expect(promptChatPatternCopySource).not.toContain("layoutId");
     expect(promptChatPatternCopySource).toContain("useReducedMotion");
     expect(promptChatPatternCopySource).toContain(promptChatHeadline);
     expect(promptChatPatternCopySource).toContain(promptChatSampleReply);
-    expect(promptChatPatternCopySource).toContain(promptChatThinkingLabel);
-    expect(promptChatPatternCopySource).not.toContain(promptChatThoughtLabel);
+    expect(promptChatPatternCopySource).toContain(promptChatThoughtLabel);
+    expect(promptChatPatternCopySource).toContain("thoughtForLabel");
+    expect(promptChatPatternCopySource).toContain("group-hover/reply");
+    expect(promptChatPatternCopySource).toContain("data-actions=");
+    expect(promptChatPatternCopySource).toContain('data-reply-actions=""');
     expect(promptChatPageClasses).toContain("h-[100svh]");
     expect(promptChatPageClasses).toContain("overflow-hidden");
     expect(promptChatPageClasses).not.toContain("h-full");
@@ -222,110 +241,201 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).not.toContain("ExampleGridControls");
   });
 
-  it("scrolls again after the reply has grown", async () => {
-    const view = mount();
-    root = view.root;
-    container = view.container;
-    const stage = view.container.querySelector("main");
-    if (stage == null) throw new Error("Prompt chat did not render a stage");
-    const writes: number[] = [];
-    Object.defineProperty(stage, "scrollHeight", { configurable: true, get: () => 940 });
-    Object.defineProperty(stage, "scrollTop", {
-      configurable: true,
-      get: () => writes.at(-1) ?? 0,
-      set: (value: number) => {
-        writes.push(value);
-      },
-    });
+  it(
+    "scrolls again after the reply has grown",
+    async () => {
+      const view = mount();
+      root = view.root;
+      container = view.container;
+      const stage = view.container.querySelector("main");
+      if (stage == null) throw new Error("Prompt chat did not render a stage");
+      const writes: number[] = [];
+      Object.defineProperty(stage, "scrollHeight", { configurable: true, get: () => 940 });
+      Object.defineProperty(stage, "scrollTop", {
+        configurable: true,
+        get: () => writes.at(-1) ?? 0,
+        set: (value: number) => {
+          writes.push(value);
+        },
+      });
 
-    typeDraft(view.field, "What services do you offer?");
-    act(() => {
-      view.send.click();
-    });
-    const afterSend = writes.length;
-    expect(afterSend).toBeGreaterThan(0);
+      typeDraft(view.field, "What services do you offer?");
+      act(() => {
+        view.send.click();
+      });
+      const afterSend = writes.length;
+      expect(afterSend).toBeGreaterThan(0);
 
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 2800));
-    });
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, stepsReadyMs));
+      });
 
-    expect(writes.length).toBeGreaterThan(afterSend);
-    expect(writes.at(-1)).toBe(940);
-  });
+      expect(writes.length).toBeGreaterThan(afterSend);
+      expect(writes.at(-1)).toBe(940);
+    },
+    10_000,
+  );
 
-  it("removes the steps trace when the reply starts", async () => {
-    const view = mount();
-    root = view.root;
-    container = view.container;
+  it(
+    "removes the steps trace when the reply starts",
+    async () => {
+      const view = mount();
+      root = view.root;
+      container = view.container;
 
-    typeDraft(view.field, "What services do you offer?");
-    act(() => {
-      view.send.click();
-    });
+      typeDraft(view.field, "What services do you offer?");
+      act(() => {
+        view.send.click();
+      });
 
-    expect(view.container.textContent).toContain("Thinking");
+      expect(view.container.textContent).toContain(promptChatThoughtForLabel(1));
+      expect(
+        Array.from(view.container.querySelectorAll("button")).some((button) =>
+          (button.textContent ?? "").includes("Thought for"),
+        ),
+      ).toBe(true);
 
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 2800));
-    });
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, stepsReadyMs));
+      });
 
-    expect(view.container.textContent).toContain(promptChatSampleReply);
-    expect(view.container.textContent).not.toContain("Thinking");
-    expect(view.container.textContent).not.toContain(promptChatThoughtLabel);
-  });
+      expect(view.container.textContent).toContain(promptChatSampleReply);
+      expect(view.container.textContent).not.toContain("Thought for");
+      expect(
+        Array.from(view.container.querySelectorAll("button")).some((button) =>
+          (button.textContent ?? "").includes("Thought for"),
+        ),
+      ).toBe(false);
+    },
+    10_000,
+  );
 
-  it("appends a follow-up in the same thread", async () => {
-    const view = mount();
-    root = view.root;
-    container = view.container;
+  it(
+    "expands the collapsed thought row while thinking",
+    async () => {
+      const view = mount();
+      root = view.root;
+      container = view.container;
 
-    typeDraft(view.field, "What services do you offer?");
-    act(() => {
-      view.send.click();
-    });
+      typeDraft(view.field, "What services do you offer?");
+      act(() => {
+        view.send.click();
+      });
 
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 2800));
-    });
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-    });
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 550));
+      });
 
-    const followUp = Array.from(view.container.querySelectorAll("button")).find(
-      (button) => button.textContent === promptChatFollowUps[0],
-    );
-    if (followUp == null) {
-      throw new Error("The first reply did not offer a follow-up");
-    }
-    act(() => {
-      followUp.click();
-    });
+      const trigger = Array.from(view.container.querySelectorAll("button")).find((button) =>
+        (button.textContent ?? "").includes("Thought for"),
+      );
+      if (!(trigger instanceof HTMLButtonElement)) {
+        throw new Error("Collapsed thought row did not render");
+      }
+      expect(trigger.getAttribute("aria-expanded")).toBe("false");
 
-    const text = view.container.textContent ?? "";
-    expect(text).toContain("What services do you offer?");
-    expect(text.split(promptChatSampleReply).length - 1).toBe(1);
-    expect(text).toContain(promptChatFollowUps[0]);
-    expect(text).toContain("Thinking");
-    expect(view.container.querySelector("h1")).toBeNull();
-  });
+      act(() => {
+        trigger.click();
+      });
 
-  it("keeps the settled trace on the reasoning story", async () => {
-    const view = mount("reasoning");
-    root = view.root;
-    container = view.container;
+      expect(trigger.getAttribute("aria-expanded")).toBe("true");
+      expect(view.container.textContent).toContain("Read the brief");
+    },
+    10_000,
+  );
 
-    typeDraft(view.field, "What services do you offer?");
-    act(() => {
-      view.send.click();
-    });
+  it(
+    "keeps reply actions hidden until the reply is hovered",
+    async () => {
+      const view = mount();
+      root = view.root;
+      container = view.container;
 
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-    });
+      typeDraft(view.field, "What services do you offer?");
+      act(() => {
+        view.send.click();
+      });
 
-    expect(view.container.textContent).toContain(promptChatSampleReply);
-    expect(view.container.textContent).toContain(promptChatThoughtLabel);
-  });
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, stepsReadyMs));
+      });
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, streamDoneMs));
+      });
+
+      const copy = view.container.querySelector("[aria-label='Copy reply']");
+      if (!(copy instanceof HTMLElement)) {
+        throw new Error("Copy action did not render after the stream");
+      }
+      const actions = copy.parentElement;
+      if (actions == null) throw new Error("Actions row missing");
+      expect(actions.className).toContain("opacity-0");
+      expect(actions.className).toContain("group-hover/reply:opacity-100");
+      expect(view.container.querySelector("[data-reply-actions]")).not.toBeNull();
+    },
+    12_000,
+  );
+
+  it(
+    "appends a follow-up in the same thread",
+    async () => {
+      const view = mount();
+      root = view.root;
+      container = view.container;
+
+      typeDraft(view.field, "What services do you offer?");
+      act(() => {
+        view.send.click();
+      });
+
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, stepsReadyMs));
+      });
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, streamDoneMs));
+      });
+
+      const followUp = Array.from(view.container.querySelectorAll("button")).find(
+        (button) => button.textContent === promptChatFollowUps[0],
+      );
+      if (followUp == null) {
+        throw new Error("The first reply did not offer a follow-up");
+      }
+      act(() => {
+        followUp.click();
+      });
+
+      const text = view.container.textContent ?? "";
+      expect(text).toContain("What services do you offer?");
+      expect(text.split(promptChatSampleReply).length - 1).toBe(1);
+      expect(text).toContain(promptChatFollowUps[0]);
+      expect(text).toContain("Thought for");
+      expect(view.container.querySelector("h1")).toBeNull();
+    },
+    10_000,
+  );
+
+  it(
+    "keeps the settled trace on the reasoning story",
+    async () => {
+      const view = mount("reasoning");
+      root = view.root;
+      container = view.container;
+
+      typeDraft(view.field, "What services do you offer?");
+      act(() => {
+        view.send.click();
+      });
+
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, reasoningReadyMs));
+      });
+
+      expect(view.container.textContent).toContain(promptChatSampleReply);
+      expect(view.container.textContent).toContain(promptChatThoughtLabel);
+    },
+    10_000,
+  );
 });
 
 describe("prompt chat stream timing", () => {
@@ -352,7 +462,9 @@ describe("prompt chat thinking trace", () => {
     expect(promptChatTraces.reasoning.length).toBeGreaterThan(0);
     expect(promptChatTraces.search.some((entry) => entry.kind === "source")).toBe(true);
     expect(promptChatTraces.coding.some((entry) => entry.kind === "command")).toBe(true);
-    expect(promptChatTraceDurationSeconds(promptChatTraces.steps.length)).toBeGreaterThan(0);
+    expect(promptChatTraceDurationSeconds(promptChatTraces.steps.length)).toBeCloseTo(4);
     expect(promptChatTraceDurationSeconds(promptChatTraces.steps.length, true)).toBe(0);
+    expect(promptChatThoughtForLabel(1)).toBe("Thought for 1 second");
+    expect(promptChatThoughtForLabel(4)).toBe(promptChatThoughtLabel);
   });
 });
