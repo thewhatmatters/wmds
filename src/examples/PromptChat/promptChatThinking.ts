@@ -9,15 +9,23 @@ export type PromptChatTraceKind = (typeof promptChatTraceKinds)[number];
 
 export const promptChatThinkingLabel = "Thinking";
 
-export const promptChatThoughtLabel = "Thought for a few seconds";
+/** Collapsed status copy. The live timer fills the seconds; this is the scripted end value. */
+export const promptChatThoughtLabel = "Thought for 4 seconds";
 
-/** Time between trace lines. The row collapses after the last line plus the hold. */
+/** Time between trace lines. The row stays until the last line plus the hold (~4s). */
 export const promptChatTraceBeatSeconds = 0.48;
 
 /** How long the current step shows a circle spinner before that circle becomes the check. */
 export const promptChatTraceSpinSeconds = 0.32;
 
-export const promptChatTraceHoldSeconds = 0.55;
+/** Hold after the last step so the collapsed timer can reach four seconds. */
+export const promptChatTraceHoldSeconds = 2.08;
+
+/** Format the collapsed sparkle row. Always at least one second. */
+export function promptChatThoughtForLabel(seconds: number): string {
+  const n = Math.max(1, Math.floor(seconds));
+  return n === 1 ? "Thought for 1 second" : `Thought for ${n} seconds`;
+}
 
 export type PromptChatTraceEntry =
   | { kind: "check"; text: string }

@@ -9,6 +9,7 @@ import { TextLink } from "../../components/atoms/TextLink/TextLink";
 import { PromptBar } from "../../components/molecules/PromptBar/PromptBar";
 import { SiteNav } from "../../components/organisms/SiteNav/SiteNav";
 import { PromptChatTrace } from "./PromptChatTrace";
+import { PromptChatStartGate } from "./PromptChatStartGate";
 import {
   promptChatActionsClasses,
   promptChatBarClasses,
@@ -19,6 +20,7 @@ import {
   promptChatHeadlineClasses,
   promptChatLandingClasses,
   promptChatPageClasses,
+  promptChatReplyBlockClasses,
   promptChatReplyClasses,
   promptChatStageClasses,
   promptChatThreadClasses,
@@ -44,9 +46,22 @@ type Point = { top: number; left: number };
 
 export const promptChatPatternCopySource = `
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
-import { Check, ChevronRight, Copy, LoaderCircle, Sparkles, ThumbsDown, ThumbsUp } from "lucide-react";
+import { Check, ChevronDown, ChevronLeft, ChevronRight, Copy, LoaderCircle, Sparkle, Sparkles, ThumbsDown, ThumbsUp, X } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
-import { Button, IconButton, PromptBar, SiteNav, TextLink, motionTransitionProp } from "@whatmatters/wmds";
+import {
+  Badge,
+  Button,
+  Card,
+  cardLayoutBodyOccupantInsetXClasses,
+  cardSubtitleClasses,
+  cardTitleClasses,
+  Checkbox,
+  IconButton,
+  PromptBar,
+  SiteNav,
+  TextLink,
+  motionTransitionProp,
+} from "@whatmatters/wmds";
 
 const pageClasses = "flex h-[100svh] min-h-0 w-full flex-col overflow-hidden bg-body";
 const columnClasses = "flex min-h-0 w-full flex-1 flex-col overflow-hidden [--grid-max:40rem]";
@@ -58,19 +73,39 @@ const threadClasses = "col-span-full flex w-full min-w-0 flex-col items-start ga
 const userClasses =
   "ml-auto max-w-full rounded-full bg-fill-selected px-4 py-2 type-body text-fg";
 const replyClasses = "w-full type-body text-fg";
+const replyBlockClasses =
+  "group/reply w-full outline-none [&[data-actions=open]]:outline-none";
 const traceClasses = "flex w-full flex-col items-start gap-2";
+const traceTriggerClasses = "!w-auto !gap-1.5";
 const traceBodyClasses =
   "flex w-full flex-col items-start gap-2 border-l border-border-control py-0.5 pl-3";
 const traceLineClasses = "flex items-center gap-2 type-supporting text-muted";
 const thinkingLabelClasses = "type-supporting text-muted";
+const thoughtLabelClasses = "type-supporting text-muted";
 const traceIconClasses = "size-4 shrink-0 text-muted";
 const traceSpinClasses = "size-4 shrink-0 animate-spin text-muted";
 const traceChevronClasses = "size-4 shrink-0 text-muted";
-const actionsClasses = "flex items-center gap-1";
+const actionsClasses =
+  "flex items-center gap-1 opacity-0 pointer-events-none transition-opacity duration-fast ease-standard group-hover/reply:opacity-100 group-hover/reply:pointer-events-auto group-focus-within/reply:opacity-100 group-focus-within/reply:pointer-events-auto group-data-[actions=open]/reply:opacity-100 group-data-[actions=open]/reply:pointer-events-auto";
 const followUpsClasses = "flex w-full flex-col gap-2";
 const followUpClasses = "w-full !justify-start !border-border";
 const barClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
 const composerClasses = "col-span-full";
+const startGateHeaderEndClasses = "flex items-center gap-1";
+const startGateStepClasses = "type-supporting text-muted px-1 tabular-nums";
+const startGateOptionsClasses = "flex w-full flex-col";
+const startGateOptionClasses =
+  "flex w-full items-center gap-3 border-b border-border py-3 last:border-b-0";
+const startGateOptionNumberClasses = "shrink-0";
+const startGateFooterClasses = "flex w-full items-center justify-end gap-2";
+const startOptions = [
+  { value: "brand", label: "Brand identity", description: "Name, mark, and a system you can actually use.", number: 1 },
+  { value: "website", label: "Website", description: "A site that explains the work and earns the next conversation.", number: 2 },
+  { value: "product", label: "Product design", description: "Flows, screens, and the details in between.", number: 3 },
+  { value: "system", label: "Design system", description: "Components, tokens, and the rules that keep them honest.", number: 4 },
+];
+const startGateTitle = "Name the work";
+const startGateSubtitle = "What are we making?";
 
 const headline = "What should we make?";
 const sampleReply =
@@ -97,10 +132,14 @@ const followUps = [
   "What does a brand engagement include?",
   "How do you start a product design?",
 ];
-const thinkingLabel = "Thinking";
+const thoughtLabel = "Thought for 4 seconds";
+function thoughtForLabel(seconds) {
+  const n = Math.max(1, Math.floor(seconds));
+  return n === 1 ? "Thought for 1 second" : "Thought for " + n + " seconds";
+}
 const traceBeatSeconds = 0.48;
 const traceSpinSeconds = 0.32;
-const traceHoldSeconds = 0.55;
+const traceHoldSeconds = 2.08;
 const traces = {
   steps: [
     { kind: "check", text: "Read the brief" },
@@ -160,9 +199,17 @@ function Exchange({
   const [mark, setMark] = useState<"up" | "down" | null>(null);
   const [revealed, setRevealed] = useState(reduce ? lines.length : 0);
   const [resolved, setResolved] = useState(reduce ? lines.length : 0);
-  const [traceOpen, setTraceOpen] = useState(!reduce);
+  const [traceOpen, setTraceOpen] = useState(false);
   const [replyReady, setReplyReady] = useState(reduce);
   const [streamDone, setStreamDone] = useState(reduce);
+  const [actionsOpen, setActionsOpen] = useState(false);
+  const [thoughtSeconds, setThoughtSeconds] = useState(1);
+
+  useEffect(() => {
+    if (reduce || replyReady) return;
+    const timer = window.setInterval(() => setThoughtSeconds((current) => current + 1), 1000);
+    return () => window.clearInterval(timer);
+  }, [reduce, replyReady]);
 
   useEffect(() => {
     if (reduce) return;
@@ -192,6 +239,18 @@ function Exchange({
     return () => window.clearTimeout(timer);
   }, [replyReady, reduce, streamDone, settleSeconds]);
 
+  useEffect(() => {
+    if (!actionsOpen) return;
+    const onPointerDown = (event) => {
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (target.closest?.("[data-reply-actions]") != null) return;
+      setActionsOpen(false);
+    };
+    window.addEventListener("pointerdown", onPointerDown);
+    return () => window.removeEventListener("pointerdown", onPointerDown);
+  }, [actionsOpen]);
+
   useLayoutEffect(() => {
     if (!replyReady) return;
     onReplyGrown();
@@ -214,9 +273,10 @@ function Exchange({
       </motion.p>
       {replyReady ? null : (
         <div className={traceClasses} aria-busy="true">
-          <Button layout="row" role="ghost" type="button" className="!w-auto" aria-expanded={traceOpen} onClick={() => setTraceOpen((current) => !current)}>
-            <span className={thinkingLabelClasses}>{thinkingLabel}</span>
-            <ChevronRight className={traceChevronClasses + (traceOpen ? " rotate-90" : "")} strokeWidth={2} aria-hidden />
+          <Button layout="row" role="ghost" type="button" className={traceTriggerClasses} aria-expanded={traceOpen} onClick={() => setTraceOpen((current) => !current)}>
+            <Sparkle className={traceIconClasses} strokeWidth={2} aria-hidden />
+            <span className={thoughtLabelClasses}>{thoughtForLabel(thoughtSeconds)}</span>
+            <ChevronDown className={traceChevronClasses + (traceOpen ? " rotate-180" : "")} strokeWidth={2} aria-hidden />
           </Button>
           {traceOpen ? (
             <div className={traceBodyClasses}>
@@ -241,45 +301,51 @@ function Exchange({
         </div>
       )}
       {replyReady ? (
-        <p className={replyClasses} aria-busy={streamDone ? undefined : true}>
-          {replyParts.map((part, index) => (
-            <ReplyWord
-              key={part.kind + "-" + index}
-              part={part}
-              index={index}
-              reduce={reduce}
-              delay={partDelay(index, reduce, settleSeconds)}
-              settle={fast}
-              onDone={index === replyParts.length - 1 ? () => setStreamDone(true) : undefined}
-            />
-          ))}
-        </p>
-      ) : null}
-      {streamDone ? (
         <>
-          <motion.div
-            className={actionsClasses}
-            initial={reduce ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={reduce ? { duration: 0 } : fast}
+          <div
+            className={replyBlockClasses}
+            data-reply-actions=""
+            data-actions={actionsOpen ? "open" : undefined}
+            onClick={() => {
+              if (typeof window === "undefined") return;
+              if (!window.matchMedia("(hover: none)").matches) return;
+              setActionsOpen(true);
+            }}
           >
-            <IconButton aria-label="Copy reply" size="sm" icon={<Copy />} onClick={copyReply} />
-            <IconButton
-              aria-label="Mark this reply helpful"
-              size="sm"
-              icon={<ThumbsUp />}
-              aria-pressed={mark === "up"}
-              onClick={() => setMark((current) => (current === "up" ? null : "up"))}
-            />
-            <IconButton
-              aria-label="Mark this reply not helpful"
-              size="sm"
-              icon={<ThumbsDown />}
-              aria-pressed={mark === "down"}
-              onClick={() => setMark((current) => (current === "down" ? null : "down"))}
-            />
-          </motion.div>
-          {latest ? (
+            <p className={replyClasses} aria-busy={streamDone ? undefined : true}>
+              {replyParts.map((part, index) => (
+                <ReplyWord
+                  key={part.kind + "-" + index}
+                  part={part}
+                  index={index}
+                  reduce={reduce}
+                  delay={partDelay(index, reduce, settleSeconds)}
+                  settle={fast}
+                  onDone={index === replyParts.length - 1 ? () => setStreamDone(true) : undefined}
+                />
+              ))}
+            </p>
+            {streamDone ? (
+              <div className={actionsClasses}>
+                <IconButton aria-label="Copy reply" size="sm" icon={<Copy />} onClick={copyReply} />
+                <IconButton
+                  aria-label="Mark this reply helpful"
+                  size="sm"
+                  icon={<ThumbsUp />}
+                  aria-pressed={mark === "up"}
+                  onClick={() => setMark((current) => (current === "up" ? null : "up"))}
+                />
+                <IconButton
+                  aria-label="Mark this reply not helpful"
+                  size="sm"
+                  icon={<ThumbsDown />}
+                  aria-pressed={mark === "down"}
+                  onClick={() => setMark((current) => (current === "down" ? null : "down"))}
+                />
+              </div>
+            ) : null}
+          </div>
+          {streamDone && latest ? (
             <div className={followUpsClasses}>
               {followUps.map((next) => (
                 <Button key={next} role="outline" size="md" type="button" className={followUpClasses} onClick={() => onFollowUp(next)}>
@@ -294,6 +360,75 @@ function Exchange({
   );
 }
 
+function StartGate({
+  step,
+  values,
+  onValuesChange,
+  onCancel,
+  onBack,
+  onNext,
+}: {
+  step: number;
+  values: string[];
+  onValuesChange: (values: string[]) => void;
+  onCancel: () => void;
+  onBack: () => void;
+  onNext: () => void;
+}) {
+  const atStart = step <= 1;
+  const atEnd = step >= 4;
+  function toggle(value: string, checked: boolean) {
+    if (checked) {
+      onValuesChange([...values, value]);
+      return;
+    }
+    onValuesChange(values.filter((item) => item !== value));
+  }
+  return (
+    <Card padding="none" variant="surface" aria-label={startGateTitle}>
+      <Card.Header
+        start={
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <p className={cardTitleClasses}>{startGateTitle}</p>
+            <p className={cardSubtitleClasses}>{startGateSubtitle}</p>
+          </div>
+        }
+        end={
+          <div className={startGateHeaderEndClasses}>
+            <IconButton aria-label="Previous step" size="sm" icon={<ChevronLeft />} disabled={atStart} onClick={onBack} />
+            <span className={startGateStepClasses}>{step} of 4</span>
+            <IconButton aria-label="Next step" size="sm" icon={<ChevronRight />} disabled={atEnd || values.length === 0} onClick={onNext} />
+            <IconButton aria-label="Close starter" size="sm" icon={<X />} onClick={onCancel} />
+          </div>
+        }
+      />
+      <Card.Body>
+        <div className={startGateOptionsClasses + " " + cardLayoutBodyOccupantInsetXClasses} role="group" aria-label={startGateSubtitle}>
+          {startOptions.map((option) => (
+            <div key={option.value} className={startGateOptionClasses}>
+              <Checkbox
+                className="min-w-0 flex-1"
+                size="md"
+                label={option.label}
+                description={option.description}
+                checked={values.includes(option.value)}
+                onChange={(event) => toggle(option.value, event.target.checked)}
+              />
+              <Badge className={startGateOptionNumberClasses} variant="neutral" emphasis="muted" size="sm" count={option.number} />
+            </div>
+          ))}
+        </div>
+      </Card.Body>
+      <Card.Footer>
+        <div className={startGateFooterClasses}>
+          <Button role="secondary" size="md" type="button" onClick={onCancel}>Cancel</Button>
+          <Button role="primary" size="md" type="button" disabled={values.length === 0} onClick={onNext}>Next</Button>
+        </div>
+      </Card.Footer>
+    </Card>
+  );
+}
+
 export function AskWhatMatters() {
   const reduce = useReducedMotion() === true;
   const travel = motionTransitionProp("medium");
@@ -303,6 +438,9 @@ export function AskWhatMatters() {
   const threadRef = useRef<HTMLDivElement>(null);
   const composerRef = useRef<HTMLDivElement>(null);
   const stickToEnd = useRef(true);
+  const [startGateOpen, setStartGateOpen] = useState(false);
+  const [startGateStep, setStartGateStep] = useState(1);
+  const [startNeeds, setStartNeeds] = useState([]);
   const suppressScroll = useRef(false);
   const nextId = useRef(1);
   const [draft, setDraft] = useState("");
@@ -374,10 +512,23 @@ export function AskWhatMatters() {
     scrollStageToEnd();
   }, [turns.length, composerSpace, scrollStageToEnd]);
 
+  function closeStartGate() {
+    setStartGateOpen(false);
+    setStartGateStep(1);
+    setStartNeeds([]);
+  }
+
+  function openStartGate() {
+    setStartGateStep(1);
+    setStartNeeds([]);
+    setStartGateOpen(true);
+  }
+
   function goHome() {
     setTurns([]);
     setDraft("");
     setHeadlineExit(null);
+    closeStartGate();
   }
 
   function onBrandClick(event: MouseEvent<HTMLDivElement>) {
@@ -422,7 +573,7 @@ export function AskWhatMatters() {
               end={
                 <>
                   <Button role="ghost" size="sm" render={<a href="/signin" />} className="whitespace-nowrap">Sign in</Button>
-                  <Button role="primary" size="sm" render={<a href="/start" />} className="whitespace-nowrap">Get started</Button>
+                  <Button role="primary" size="sm" type="button" className="whitespace-nowrap" onClick={openStartGate}>Start Project</Button>
                 </>
               }
               mobile={
@@ -456,7 +607,25 @@ export function AskWhatMatters() {
           </main>
           <div className={barClasses}>
             <div ref={composerRef} className={composerClasses}>
-              <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
+              {startGateOpen ? (
+                <StartGate
+                  step={startGateStep}
+                  values={startNeeds}
+                  onValuesChange={setStartNeeds}
+                  onCancel={closeStartGate}
+                  onBack={() => setStartGateStep((current) => Math.max(1, current - 1))}
+                  onNext={() => {
+                    if (startNeeds.length === 0) return;
+                    if (startGateStep >= 4) {
+                      closeStartGate();
+                      return;
+                    }
+                    setStartGateStep((current) => current + 1);
+                  }}
+                />
+              ) : (
+                <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
+              )}
             </div>
           </div>
         </div>
@@ -534,9 +703,10 @@ function PromptChatExchange({
   const [revealed, setRevealed] = useState(reduce ? count : 0);
   const [resolved, setResolved] = useState(reduce ? count : 0);
   const [traceSettled, setTraceSettled] = useState(reduce);
-  const [traceOpen, setTraceOpen] = useState(!reduce);
+  const [traceOpen, setTraceOpen] = useState(false);
   const [replyReady, setReplyReady] = useState(reduce);
   const [streamDone, setStreamDone] = useState(reduce);
+  const [actionsOpen, setActionsOpen] = useState(false);
 
   useEffect(() => {
     if (reduce) return;
@@ -558,6 +728,19 @@ function PromptChatExchange({
       for (const timer of timers) window.clearTimeout(timer);
     };
   }, [count, reduce]);
+
+  useEffect(() => {
+    if (!actionsOpen) return;
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      const block = (target as Element).closest?.("[data-reply-actions]");
+      if (block != null) return;
+      setActionsOpen(false);
+    };
+    window.addEventListener("pointerdown", onPointerDown);
+    return () => window.removeEventListener("pointerdown", onPointerDown);
+  }, [actionsOpen]);
 
   const settleSeconds = typeof fast.duration === "number" ? fast.duration : 0.175;
 
@@ -601,33 +784,37 @@ function PromptChatExchange({
       )}
       {replyReady ? (
         <>
-          <p className={promptChatReplyClasses} aria-busy={streamDone ? undefined : true}>
-            {promptChatReplyParts.map((part, index) => (
-              <motion.span
-                key={`${part.kind}-${index}`}
-                className="inline"
-                initial={reduce ? false : { opacity: 0, filter: "blur(4px)" }}
-                animate={{ opacity: 1, filter: "blur(0px)" }}
-                transition={
-                  reduce ? { duration: 0 } : { ...fast, delay: promptChatPartDelay(index, false, settleSeconds) }
-                }
-                onAnimationComplete={
-                  index === promptChatReplyParts.length - 1 ? () => setStreamDone(true) : undefined
-                }
-              >
-                {index > 0 ? " " : null}
-                {part.kind === "source" ? <TextLink href={part.href}>{part.text}</TextLink> : part.text}
-              </motion.span>
-            ))}
-          </p>
-          {streamDone ? (
-            <>
-              <motion.div
-                className={promptChatActionsClasses}
-                initial={reduce ? false : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={reduce ? { duration: 0 } : fast}
-              >
+          <div
+            className={promptChatReplyBlockClasses}
+            data-reply-actions=""
+            data-actions={actionsOpen ? "open" : undefined}
+            onClick={() => {
+              if (typeof window === "undefined") return;
+              if (!window.matchMedia("(hover: none)").matches) return;
+              setActionsOpen(true);
+            }}
+          >
+            <p className={promptChatReplyClasses} aria-busy={streamDone ? undefined : true}>
+              {promptChatReplyParts.map((part, index) => (
+                <motion.span
+                  key={`${part.kind}-${index}`}
+                  className="inline"
+                  initial={reduce ? false : { opacity: 0, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, filter: "blur(0px)" }}
+                  transition={
+                    reduce ? { duration: 0 } : { ...fast, delay: promptChatPartDelay(index, false, settleSeconds) }
+                  }
+                  onAnimationComplete={
+                    index === promptChatReplyParts.length - 1 ? () => setStreamDone(true) : undefined
+                  }
+                >
+                  {index > 0 ? " " : null}
+                  {part.kind === "source" ? <TextLink href={part.href}>{part.text}</TextLink> : part.text}
+                </motion.span>
+              ))}
+            </p>
+            {streamDone ? (
+              <div className={promptChatActionsClasses}>
                 <IconButton aria-label="Copy reply" size="sm" icon={<Copy />} onClick={copyReply} />
                 <IconButton
                   aria-label="Mark this reply helpful"
@@ -643,24 +830,24 @@ function PromptChatExchange({
                   aria-pressed={mark === "down"}
                   onClick={() => setMark((current) => (current === "down" ? null : "down"))}
                 />
-              </motion.div>
-              {latest ? (
-                <div className={promptChatFollowUpsClasses}>
-                  {promptChatFollowUps.map((next) => (
-                    <Button
-                      key={next}
-                      role="outline"
-                      size="md"
-                      type="button"
-                      className={promptChatFollowUpClasses}
-                      onClick={() => onFollowUp(next)}
-                    >
-                      {next}
-                    </Button>
-                  ))}
-                </div>
-              ) : null}
-            </>
+              </div>
+            ) : null}
+          </div>
+          {streamDone && latest ? (
+            <div className={promptChatFollowUpsClasses}>
+              {promptChatFollowUps.map((next) => (
+                <Button
+                  key={next}
+                  role="outline"
+                  size="md"
+                  type="button"
+                  className={promptChatFollowUpClasses}
+                  onClick={() => onFollowUp(next)}
+                >
+                  {next}
+                </Button>
+              ))}
+            </div>
           ) : null}
         </>
       ) : null}
@@ -671,7 +858,8 @@ function PromptChatExchange({
 /**
  * Landing statement, then a thread that keeps growing.
  * Send or Enter: the bar stays, the headline fades, and the sent line fades in where it rests.
- * A Steps trace plays as a fleeting supporting muted status until that reply starts, then leaves.
+ * A collapsed sparkle + Thought-for timer plays until that reply starts, then leaves.
+ * Expand the row while it is thinking to read the steps. Reply actions stay hidden until hover.
  * A follow-up appends the next user line in the same thread. Earlier messages stay.
  * The thread, follow-ups, and composer share one narrowed page grid (`--grid-max: 40rem`).
  * The thread reserves the composer's measured height plus the space under the pill, and keeps
@@ -688,6 +876,9 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
   const threadRef = useRef<HTMLDivElement>(null);
   const composerRef = useRef<HTMLDivElement>(null);
   const stickToEnd = useRef(true);
+  const [startGateOpen, setStartGateOpen] = useState(false);
+  const [startGateStep, setStartGateStep] = useState(1);
+  const [startNeeds, setStartNeeds] = useState<string[]>([]);
   const suppressScroll = useRef(false);
   const nextId = useRef(1);
   const [draft, setDraft] = useState("");
@@ -763,6 +954,33 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
     setTurns([]);
     setDraft("");
     setHeadlineExit(null);
+    closeStartGate();
+  }
+
+  function openStartGate() {
+    setStartGateStep(1);
+    setStartNeeds([]);
+    setStartGateOpen(true);
+  }
+
+  function closeStartGate() {
+    setStartGateOpen(false);
+    setStartGateStep(1);
+    setStartNeeds([]);
+  }
+
+  function onStartGateNext() {
+    if (startNeeds.length === 0) return;
+    if (startGateStep >= 4) {
+      closeStartGate();
+      return;
+    }
+    setStartGateStep((current) => current + 1);
+  }
+
+  function onStartGateBack() {
+    if (startGateStep <= 1) return;
+    setStartGateStep((current) => current - 1);
   }
 
   function onBrandClick(event: MouseEvent<HTMLDivElement>) {
@@ -811,8 +1029,14 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
                 <Button role="ghost" size="sm" render={<a href="/signin" />} className="whitespace-nowrap">
                   Sign in
                 </Button>
-                <Button role="primary" size="sm" render={<a href="/start" />} className="whitespace-nowrap">
-                  Get started
+                <Button
+                  role="primary"
+                  size="sm"
+                  type="button"
+                  className="whitespace-nowrap"
+                  onClick={openStartGate}
+                >
+                  Start Project
                 </Button>
               </>
             }
@@ -855,7 +1079,18 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
         </main>
         <div className={promptChatBarClasses}>
           <div ref={composerRef} className={promptChatComposerClasses}>
-            <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
+            {startGateOpen ? (
+              <PromptChatStartGate
+                step={startGateStep}
+                values={startNeeds}
+                onValuesChange={setStartNeeds}
+                onCancel={closeStartGate}
+                onBack={onStartGateBack}
+                onNext={onStartGateNext}
+              />
+            ) : (
+              <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
+            )}
           </div>
         </div>
       </div>

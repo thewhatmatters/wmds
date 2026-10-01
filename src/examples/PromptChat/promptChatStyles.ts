@@ -51,8 +51,18 @@ export const promptChatUserClasses =
 /** Plain reply. Same column as the follow-ups. Not a card. Words stream inside this line. */
 export const promptChatReplyClasses = "w-full type-body text-fg";
 
-/** Thinking trace. One disclosure, then the body for whichever script is playing. */
+/**
+ * Reply plus its actions. Hover or focus-within reveals the actions. On touch,
+ * `data-actions="open"` pins them for that reply only.
+ */
+export const promptChatReplyBlockClasses =
+  "group/reply w-full outline-none [&[data-actions=open]]:outline-none";
+
+/** Thinking trace. Collapsed sparkle row by default; steps when expanded. */
 export const promptChatTraceClasses = "flex w-full flex-col items-start gap-2";
+
+/** Collapsed trigger: sparkle, timer label, chevron — one quiet row. */
+export const promptChatTraceTriggerClasses = "!w-auto !gap-1.5";
 
 /** Rows hang off one existing control hairline. Not a new tone. */
 export const promptChatTraceBodyClasses =
@@ -78,8 +88,12 @@ export const promptChatTraceSpinClasses = "size-4 shrink-0 animate-spin text-mut
 
 export const promptChatTraceChevronClasses = "size-4 shrink-0 text-muted";
 
-/** Copy, helpful, and not helpful. Existing icon buttons, shown when the stream ends. */
-export const promptChatActionsClasses = "flex items-center gap-1";
+/**
+ * Copy, helpful, and not helpful. Hidden at rest; shown on hover / focus-within
+ * of that reply, or when the reply block is touch-opened.
+ */
+export const promptChatActionsClasses =
+  "flex items-center gap-1 opacity-0 pointer-events-none transition-opacity duration-fast ease-standard group-hover/reply:opacity-100 group-hover/reply:pointer-events-auto group-focus-within/reply:opacity-100 group-focus-within/reply:pointer-events-auto group-data-[actions=open]/reply:opacity-100 group-data-[actions=open]/reply:pointer-events-auto";
 
 /** Suggested prompts. Same thread column as the reply, stacked to that width. */
 export const promptChatFollowUpsClasses = "flex w-full flex-col gap-2";
@@ -96,3 +110,24 @@ export const promptChatBarClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
 
 /** Composer fills that column, the same measure as the reply and follow-ups. */
 export const promptChatComposerClasses = "col-span-full";
+
+/** Start-project gate header cluster: back, step, forward, close — Paper order. */
+export const promptChatStartGateHeaderEndClasses = "flex items-center gap-1";
+
+/** Step index in the gate header. Same quiet supporting step as thinking. */
+export const promptChatStartGateStepClasses = "type-supporting text-muted px-1 tabular-nums";
+
+/** Selectable choice stack inside Card.Body — hairline between rows. */
+export const promptChatStartGateOptionsClasses = "flex w-full flex-col";
+
+/**
+ * One choice: checkbox + muted count Badge. Hairline under each row except the last.
+ */
+export const promptChatStartGateOptionClasses =
+  "flex w-full items-center gap-3 border-b border-border py-3 last:border-b-0";
+
+/** Trailing index Badge placement on each choice row. */
+export const promptChatStartGateOptionNumberClasses = "shrink-0";
+
+/** Cancel + Next both trailing — existing Button roles. */
+export const promptChatStartGateFooterClasses = "flex w-full items-center justify-end gap-2";
