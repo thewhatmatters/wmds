@@ -24,8 +24,8 @@ export interface CalEmbedProps {
 
 /**
  * Placeholder for a Cal.com embed.
- * Theme the embed with `--color-brand` (#011272), `--color-background-body`,
- * and `--color-background-surface`. The skip action is **TextLink**.
+ * Theme the embed with `--color-brand`, `--color-background-body`, and
+ * `--color-background-surface` (existing tokens). The skip action is **TextLink**.
  */
 export function CalEmbed({
   children,
@@ -48,7 +48,7 @@ export function CalEmbed({
         <div className="flex flex-col gap-2">
           <p className={typographyClass("subheading")}>Calendar</p>
           <p className={typographyClass("caption")}>
-            Cal.com mounts in this frame. Theme it with --color-brand (#011272),
+            Cal.com mounts in this frame. Theme it with --color-brand,
             --color-background-body, and --color-background-surface.
           </p>
         </div>

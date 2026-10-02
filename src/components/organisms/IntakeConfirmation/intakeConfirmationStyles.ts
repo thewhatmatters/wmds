@@ -43,3 +43,10 @@ export const intakeConfirmationTitleClasses = "type-display-2 text-balance text-
 
 /** Existing heading-2 — the confirmation sentence under the headline. */
 export const intakeConfirmationBodyClasses = "type-heading-2 max-w-2xl text-balance text-fg";
+
+/** Booked time under the body — supporting muted type. */
+export const intakeConfirmationMetaClasses = "type-body text-balance text-muted";
+
+/** Optional booking actions — **TextLink** / **Button** stack, same center column. */
+export const intakeConfirmationActionsClasses =
+  "flex w-full max-w-md flex-col items-center gap-3";

@@ -17,7 +17,9 @@ const meta = {
 
 About-you step. **Field** wraps **Input** and **TextArea**. Project details shows a character counter in the field description (\`12 / 400\`). The counter is not a **TextArea** prop.
 
-\`isIntakeAboutValid\` is true when name, email, and details are present and details stay within the counter. Company is optional.
+\`isIntakeAboutValid\` is true when name, email, and details are present, details stay within the counter, and an optional link is empty or a valid http(s) URL. Company and link are optional.
+
+Required fields show **Input** / **TextArea** \`status\` + \`message\` on blur when invalid. Company never requires a value.
 
 ## Anatomy
 
@@ -26,13 +28,15 @@ IntakeForm
 ├── Field — Name / Input
 ├── Field — Email / Input
 ├── Field — Company / Input (optional)
+├── Field — Link / Input (optional URL)
 └── Field — Project details / TextArea + counter
 \`\`\`
 
 ## Best practices
 
-- **Do** keep validation on this helper. **Field** does not own error state.
+- **Do** keep validation on **Input** / **TextArea** (\`status\` + \`message\`). **Field** does not own error state.
 - **Do** leave **TextArea** as it ships. The counter is the description.
+- **Don't** require company or invent a required-asterisk pattern.
 - **Don't** add a counter variant to **TextArea**.
         `.trim(),
       },
@@ -54,6 +58,7 @@ export const AboutYouPattern: Story = {
       name: "Jordan Lee",
       email: "jordan@northwind.com",
       company: "Northwind",
+      url: "https://northwind.example",
       details: "We need a calmer site and a brand that can stretch past the launch.",
     });
 
