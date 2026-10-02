@@ -6,18 +6,19 @@ import { Kbd } from "../../components/atoms/Kbd/Kbd";
 import { useKbdChoiceKeys } from "../../components/atoms/Kbd/useKbdChoiceKeys";
 import { CalEmbed } from "../../components/molecules/CalEmbed/CalEmbed";
 import {
-  IntakeForm,
-  intakeAboutEmpty,
-  type IntakeAboutValues,
-} from "../../components/molecules/IntakeForm/IntakeForm";
-import { PillGroup } from "../../components/molecules/PillGroup/PillGroup";
-import {
   Card,
   cardLayoutBodyOccupantInsetXClasses,
   cardLayoutBodyOccupantWellClasses,
   cardSubtitleClasses,
   cardTitleClasses,
 } from "../../components/molecules/Card/Card";
+import type { ChatQaPair } from "../../components/molecules/ChatQa/ChatQa";
+import {
+  IntakeForm,
+  intakeAboutEmpty,
+  type IntakeAboutValues,
+} from "../../components/molecules/IntakeForm/IntakeForm";
+import { PillGroup } from "../../components/molecules/PillGroup/PillGroup";
 import { IntakeConfirmation } from "../../components/organisms/IntakeConfirmation/IntakeConfirmation";
 import { cn } from "../../lib/cn";
 import {
@@ -96,6 +97,36 @@ export const promptChatStartGateSubtitle = promptChatStartGateCopy[1].subtitle;
 export { intakeAboutEmpty };
 
 export type PromptChatStartGatePhase = IntakePhase;
+
+/**
+ * Format Start Project answers as **ChatQa** pairs for the thread.
+ * Answers are plain strings — multi-select joined with commas.
+ */
+export function promptChatIntakeQaPairs(input: {
+  needs: readonly string[];
+  budget: string | null;
+  about: IntakeAboutValues;
+  outcome: "booked" | "emailed";
+}): ChatQaPair[] {
+  const needsAnswer = promptChatStartOptions
+    .filter((option) => input.needs.includes(option.value))
+    .map((option) => option.label)
+    .join(", ");
+  const budgetAnswer =
+    intakeBudgets.find((option) => option.value === input.budget)?.label ?? "";
+  const aboutAnswer = [input.about.name.trim(), input.about.company.trim()]
+    .filter((part) => part.length > 0)
+    .join(", ");
+  const followUpAnswer =
+    input.outcome === "booked" ? "Booked a call" : "Email me";
+
+  return [
+    { question: "What are we making?", answer: needsAnswer },
+    { question: "What's the budget?", answer: budgetAnswer },
+    { question: "About you", answer: aboutAnswer },
+    { question: "How should we follow up?", answer: followUpAnswer },
+  ].filter((pair) => pair.answer.length > 0);
+}
 
 /**
  * Gated starter form in the composer slot. Real WMDS **Card** with

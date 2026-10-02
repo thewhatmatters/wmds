@@ -29,7 +29,8 @@ Voice and attachments are not part of this version. The trace and the reply are 
 | **Actions** | **IconButton** \`sm\`, ghost. Copy, helpful, not helpful. Under the reply, hidden until hover / focus-within (or touch-open on that reply) |
 | **Follow-ups** | **Button** \`role="outline"\` \`size="md"\`, same column as the reply, quiet \`border-border\`. Clicking one appends that line in the same thread |
 | **Composer** | **PromptBar**, same narrowed column as the thread, pinned under the scrolling stage. **Start Project** in **SiteNav** swaps it for a starter **Card** gate in place; Cancel restores the bar |
-| **Start gate** | Real **Card** \`padding="none"\` with **Card.Header** / **Card.Body** / **Card.Footer**. Body keeps the 2px gutter; occupant uses the documented inset well. **Checkbox** rows + muted **Badge** counts. **Button** Cancel / Next trailing. Distinct WhatMatters choices — not four identical placeholders |
+| **Start gate** | Real **Card** \`padding="none"\` with **Card.Header** / **Card.Body** / **Card.Footer**. Body keeps the 2px gutter; occupant uses the documented inset well. **Checkbox** rows + **Kbd** digits. **Button** Cancel / Next trailing. Distinct WhatMatters choices — not four identical placeholders |
+| **Intake summary** | After **Done**, collected answers append as **ChatQa** in the thread — quiet surface panel, muted questions, heavier answers. The scripted reply sits directly under the panel (no thinking row between them) |
 | **Motion** | \`motion\` via \`motionTransitionProp\`. The sent line fades in. Fast for each word |
 
 ## Anatomy
@@ -39,6 +40,7 @@ Page — cream field, no sidebar, narrowed page grid (40rem)
 ├── Landing — headline, centered. No nav
 │   or Chat — SiteNav, thread in that column (scrolls)
 │              each turn stays: user pill, Thought-for row until that reply starts, reply, hover actions
+│              Start Project Done → ChatQa panel + reply under it (no thinking between)
 │              follow-ups on the latest turn only. The stage scrolls; the bar does not
 └── PromptBar — same column, pinned
 \`\`\`

@@ -6,6 +6,7 @@ import { motionTransitionProp } from "../../lib/motion";
 import { Button } from "../../components/atoms/Button/Button";
 import { IconButton } from "../../components/atoms/IconButton/IconButton";
 import { TextLink } from "../../components/atoms/TextLink/TextLink";
+import { ChatQa, type ChatQaPair } from "../../components/molecules/ChatQa/ChatQa";
 import {
   intakeAboutEmpty,
   type IntakeAboutValues,
@@ -19,7 +20,7 @@ import {
   type IntakeStep,
 } from "../Intake/IntakePattern";
 import { PromptChatTrace } from "./PromptChatTrace";
-import { PromptChatStartGate } from "./PromptChatStartGate";
+import { PromptChatStartGate, promptChatIntakeQaPairs } from "./PromptChatStartGate";
 import {
   promptChatActionsClasses,
   promptChatBarClasses,
@@ -66,6 +67,7 @@ import {
   cardLayoutBodyOccupantWellClasses,
   cardSubtitleClasses,
   cardTitleClasses,
+  ChatQa,
   Checkbox,
   ConfettiProvider,
   IconButton,
@@ -206,6 +208,7 @@ const traces = {
 };
 type Point = { top: number; left: number };
 type ReplyPart = (typeof replyParts)[number];
+type ChatQaPair = { question: string; answer: string };
 
 function partDelay(index: number, reduce: boolean, settleSeconds: number) {
   if (reduce || index <= 0) return 0;
@@ -219,7 +222,126 @@ function partDelay(index: number, reduce: boolean, settleSeconds: number) {
   return time;
 }
 
-type Turn = { id: number; prompt: string };
+function intakeQaPairs(needs, budget, about, outcome) {
+  const needsAnswer = startOptions
+    .filter((option) => needs.includes(option.value))
+    .map((option) => option.label)
+    .join(", ");
+  const budgetAnswer = startBudgets.find((option) => option.value === budget)?.label ?? "";
+  const aboutAnswer = [about.name.trim(), about.company.trim()].filter((part) => part.length > 0).join(", ");
+  const followUpAnswer = outcome === "booked" ? "Booked a call" : "Email me";
+  return [
+    { question: "What are we making?", answer: needsAnswer },
+    { question: "What's the budget?", answer: budgetAnswer },
+    { question: "About you", answer: aboutAnswer },
+    { question: "How should we follow up?", answer: followUpAnswer },
+  ].filter((pair) => pair.answer.length > 0);
+}
+
+type Turn =
+  | { id: number; kind: "prompt"; prompt: string }
+  | { id: number; kind: "intake"; pairs: ChatQaPair[] };
+
+function IntakeExchange({
+  pairs,
+  latest,
+  reduce,
+  onFollowUp,
+  onReplyGrown,
+}) {
+  const fast = motionTransitionProp("fast");
+  const [mark, setMark] = useState(null);
+  const [streamDone, setStreamDone] = useState(reduce);
+  const [actionsOpen, setActionsOpen] = useState(false);
+  const settleSeconds = typeof fast.duration === "number" ? fast.duration : 0.175;
+
+  useEffect(() => {
+    if (!actionsOpen) return;
+    const onPointerDown = (event) => {
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (target.closest?.("[data-reply-actions]") != null) return;
+      setActionsOpen(false);
+    };
+    window.addEventListener("pointerdown", onPointerDown);
+    return () => window.removeEventListener("pointerdown", onPointerDown);
+  }, [actionsOpen]);
+
+  useEffect(() => {
+    if (streamDone) return;
+    const last = replyParts.length - 1;
+    const wait = (partDelay(last, reduce, settleSeconds) + settleSeconds) * 1000;
+    const timer = window.setTimeout(() => setStreamDone(true), wait);
+    return () => window.clearTimeout(timer);
+  }, [reduce, streamDone, settleSeconds]);
+
+  useLayoutEffect(() => {
+    onReplyGrown();
+  }, [streamDone, onReplyGrown]);
+
+  function copyReply() {
+    if (typeof navigator === "undefined" || navigator.clipboard == null) return;
+    void navigator.clipboard.writeText(sampleReply).catch(() => undefined);
+  }
+
+  return (
+    <>
+      <ChatQa pairs={pairs} />
+      <div
+        className={replyBlockClasses}
+        data-reply-actions=""
+        data-actions={actionsOpen ? "open" : undefined}
+        onClick={() => {
+          if (typeof window === "undefined") return;
+          if (!window.matchMedia("(hover: none)").matches) return;
+          setActionsOpen(true);
+        }}
+      >
+        <p className={replyClasses} aria-busy={streamDone ? undefined : true}>
+          {replyParts.map((part, index) => (
+            <ReplyWord
+              key={part.kind + "-" + index}
+              part={part}
+              index={index}
+              reduce={reduce}
+              delay={partDelay(index, reduce, settleSeconds)}
+              settle={fast}
+              onDone={index === replyParts.length - 1 ? () => setStreamDone(true) : undefined}
+            />
+          ))}
+        </p>
+        {streamDone ? (
+          <div className={actionsClasses}>
+            <IconButton aria-label="Copy reply" size="sm" icon={<Copy />} onClick={copyReply} />
+            <IconButton
+              aria-label="Mark this reply helpful"
+              size="sm"
+              icon={<ThumbsUp />}
+              aria-pressed={mark === "up"}
+              onClick={() => setMark((current) => (current === "up" ? null : "up"))}
+            />
+            <IconButton
+              aria-label="Mark this reply not helpful"
+              size="sm"
+              icon={<ThumbsDown />}
+              aria-pressed={mark === "down"}
+              onClick={() => setMark((current) => (current === "down" ? null : "down"))}
+            />
+          </div>
+        ) : null}
+      </div>
+      {streamDone && latest ? (
+        <div className={followUpsClasses}>
+          {followUps.map((next) => (
+            <Button key={next} role="outline" size="md" type="button" className={followUpClasses} onClick={() => onFollowUp(next)}>
+              {next}
+            </Button>
+          ))}
+        </div>
+      ) : null}
+    </>
+  );
+}
 
 function Exchange({
   prompt,
@@ -649,12 +771,22 @@ export function AskWhatMatters() {
     const id = nextId.current;
     nextId.current += 1;
     setDraft("");
-    setTurns((current) => [...current, { id, prompt: text }]);
+    setTurns((current) => [...current, { id, kind: "prompt", prompt: text }]);
     if (reduce || !fromLanding || title == null) {
       setHeadlineExit(null);
       return;
     }
     setHeadlineExit({ top: title.top, left: title.left });
+  }
+
+  function finishStartGate() {
+    const outcome = startPhase.kind === "done" ? startPhase.variant : "emailed";
+    const pairs = intakeQaPairs(startNeeds, startBudget, startAbout, outcome);
+    stickToEnd.current = true;
+    const id = nextId.current;
+    nextId.current += 1;
+    setTurns((current) => [...current, { id, kind: "intake", pairs }]);
+    closeStartGate();
   }
 
   return (
@@ -691,16 +823,27 @@ export function AskWhatMatters() {
           <main ref={stageRef} className={chatting ? stageClasses : stageClasses + " " + landingClasses}>
             {chatting ? (
               <div ref={threadRef} className={threadClasses} style={{ paddingBottom: composerSpace }}>
-                {turns.map((turn, index) => (
-                  <Exchange
-                    key={turn.id}
-                    prompt={turn.prompt}
-                    latest={index === turns.length - 1}
-                    reduce={reduce}
-                    onFollowUp={send}
-                    onReplyGrown={scrollStageToEnd}
-                  />
-                ))}
+                {turns.map((turn, index) =>
+                  turn.kind === "intake" ? (
+                    <IntakeExchange
+                      key={turn.id}
+                      pairs={turn.pairs}
+                      latest={index === turns.length - 1}
+                      reduce={reduce}
+                      onFollowUp={send}
+                      onReplyGrown={scrollStageToEnd}
+                    />
+                  ) : (
+                    <Exchange
+                      key={turn.id}
+                      prompt={turn.prompt}
+                      latest={index === turns.length - 1}
+                      reduce={reduce}
+                      onFollowUp={send}
+                      onReplyGrown={scrollStageToEnd}
+                    />
+                  ),
+                )}
               </div>
             ) : (
               <h1 ref={headlineRef} className={headlineClasses}>{headline}</h1>
@@ -730,7 +873,7 @@ export function AskWhatMatters() {
                   }}
                   onBooked={() => setStartPhase({ kind: "done", variant: "booked" })}
                   onEmailed={() => setStartPhase({ kind: "done", variant: "emailed" })}
-                  onDone={closeStartGate}
+                  onDone={finishStartGate}
                 />
               ) : (
                 <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
@@ -786,7 +929,134 @@ function ReplyWord({
 }
 `.trim();
 
-type PromptChatTurn = { id: number; prompt: string };
+type PromptChatTurn =
+  | { id: number; kind: "prompt"; prompt: string }
+  | { id: number; kind: "intake"; pairs: ChatQaPair[] };
+
+/**
+ * Start Project answers in the thread — quiet **ChatQa**, then the scripted reply.
+ * No thinking row between the panel and the reply. Hover actions stay under the reply.
+ */
+function PromptChatIntakeExchange({
+  pairs,
+  latest,
+  reduce,
+  onFollowUp,
+  onReplyGrown,
+}: {
+  pairs: readonly ChatQaPair[];
+  latest: boolean;
+  reduce: boolean;
+  onFollowUp: (value: string) => void;
+  onReplyGrown: () => void;
+}) {
+  const fast = motionTransitionProp("fast");
+  const [mark, setMark] = useState<"up" | "down" | null>(null);
+  const [streamDone, setStreamDone] = useState(reduce);
+  const [actionsOpen, setActionsOpen] = useState(false);
+  const settleSeconds = typeof fast.duration === "number" ? fast.duration : 0.175;
+
+  useEffect(() => {
+    if (!actionsOpen) return;
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      const block = (target as Element).closest?.("[data-reply-actions]");
+      if (block != null) return;
+      setActionsOpen(false);
+    };
+    window.addEventListener("pointerdown", onPointerDown);
+    return () => window.removeEventListener("pointerdown", onPointerDown);
+  }, [actionsOpen]);
+
+  useEffect(() => {
+    if (streamDone) return;
+    const last = promptChatReplyParts.length - 1;
+    const wait = (promptChatPartDelay(last, reduce, settleSeconds) + settleSeconds) * 1000;
+    const timer = window.setTimeout(() => setStreamDone(true), wait);
+    return () => window.clearTimeout(timer);
+  }, [reduce, streamDone, settleSeconds]);
+
+  useLayoutEffect(() => {
+    onReplyGrown();
+  }, [streamDone, onReplyGrown]);
+
+  function copyReply() {
+    if (typeof navigator === "undefined" || navigator.clipboard == null) return;
+    void navigator.clipboard.writeText(promptChatSampleReply).catch(() => undefined);
+  }
+
+  return (
+    <>
+      <ChatQa pairs={pairs} />
+      <div
+        className={promptChatReplyBlockClasses}
+        data-reply-actions=""
+        data-actions={actionsOpen ? "open" : undefined}
+        onClick={() => {
+          if (typeof window === "undefined") return;
+          if (!window.matchMedia("(hover: none)").matches) return;
+          setActionsOpen(true);
+        }}
+      >
+        <p className={promptChatReplyClasses} aria-busy={streamDone ? undefined : true}>
+          {promptChatReplyParts.map((part, index) => (
+            <motion.span
+              key={`${part.kind}-${index}`}
+              className="inline"
+              initial={reduce ? false : { opacity: 0, filter: "blur(4px)" }}
+              animate={{ opacity: 1, filter: "blur(0px)" }}
+              transition={
+                reduce ? { duration: 0 } : { ...fast, delay: promptChatPartDelay(index, false, settleSeconds) }
+              }
+              onAnimationComplete={
+                index === promptChatReplyParts.length - 1 ? () => setStreamDone(true) : undefined
+              }
+            >
+              {index > 0 ? " " : null}
+              {part.kind === "source" ? <TextLink href={part.href}>{part.text}</TextLink> : part.text}
+            </motion.span>
+          ))}
+        </p>
+        {streamDone ? (
+          <div className={promptChatActionsClasses}>
+            <IconButton aria-label="Copy reply" size="sm" icon={<Copy />} onClick={copyReply} />
+            <IconButton
+              aria-label="Mark this reply helpful"
+              size="sm"
+              icon={<ThumbsUp />}
+              aria-pressed={mark === "up"}
+              onClick={() => setMark((current) => (current === "up" ? null : "up"))}
+            />
+            <IconButton
+              aria-label="Mark this reply not helpful"
+              size="sm"
+              icon={<ThumbsDown />}
+              aria-pressed={mark === "down"}
+              onClick={() => setMark((current) => (current === "down" ? null : "down"))}
+            />
+          </div>
+        ) : null}
+      </div>
+      {streamDone && latest ? (
+        <div className={promptChatFollowUpsClasses}>
+          {promptChatFollowUps.map((next) => (
+            <Button
+              key={next}
+              role="outline"
+              size="md"
+              type="button"
+              className={promptChatFollowUpClasses}
+              onClick={() => onFollowUp(next)}
+            >
+              {next}
+            </Button>
+          ))}
+        </div>
+      ) : null}
+    </>
+  );
+}
 
 /**
  * One exchange in the thread. Earlier turns stay mounted when a follow-up is sent.
@@ -1085,6 +1355,21 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
     setStartAbout(intakeAboutEmpty);
   }
 
+  function onStartGateDone() {
+    const outcome = startPhase.kind === "done" ? startPhase.variant : "emailed";
+    const pairs = promptChatIntakeQaPairs({
+      needs: startNeeds,
+      budget: startBudget,
+      about: startAbout,
+      outcome,
+    });
+    stickToEnd.current = true;
+    const id = nextId.current;
+    nextId.current += 1;
+    setTurns((current) => [...current, { id, kind: "intake", pairs }]);
+    closeStartGate();
+  }
+
   function onStartGateNext() {
     if (startPhase.kind !== "step") return;
     if (!canContinueIntake({ step: startPhase.step, needs: startNeeds, budget: startBudget, about: startAbout })) {
@@ -1127,7 +1412,7 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
     const id = nextId.current;
     nextId.current += 1;
     setDraft("");
-    setTurns((current) => [...current, { id, prompt: text }]);
+    setTurns((current) => [...current, { id, kind: "prompt", prompt: text }]);
     if (reduce || !fromLanding || title == null) {
       setHeadlineExit(null);
       return;
@@ -1186,17 +1471,28 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
           >
             {chatting ? (
               <div ref={threadRef} className={promptChatThreadClasses} style={{ paddingBottom: composerSpace }}>
-                {turns.map((turn, index) => (
-                  <PromptChatExchange
-                    key={turn.id}
-                    prompt={turn.prompt}
-                    trace={trace}
-                    latest={index === turns.length - 1}
-                    reduce={reduce}
-                    onFollowUp={send}
-                    onReplyGrown={scrollStageToEnd}
-                  />
-                ))}
+                {turns.map((turn, index) =>
+                  turn.kind === "intake" ? (
+                    <PromptChatIntakeExchange
+                      key={turn.id}
+                      pairs={turn.pairs}
+                      latest={index === turns.length - 1}
+                      reduce={reduce}
+                      onFollowUp={send}
+                      onReplyGrown={scrollStageToEnd}
+                    />
+                  ) : (
+                    <PromptChatExchange
+                      key={turn.id}
+                      prompt={turn.prompt}
+                      trace={trace}
+                      latest={index === turns.length - 1}
+                      reduce={reduce}
+                      onFollowUp={send}
+                      onReplyGrown={scrollStageToEnd}
+                    />
+                  ),
+                )}
               </div>
             ) : (
               <h1 ref={headlineRef} className={promptChatHeadlineClasses}>
@@ -1220,7 +1516,7 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
                   onNext={onStartGateNext}
                   onBooked={onStartGateBooked}
                   onEmailed={onStartGateEmailed}
-                  onDone={closeStartGate}
+                  onDone={onStartGateDone}
                 />
               ) : (
                 <PromptBar ref={fieldRef} value={draft} onValueChange={setDraft} onSend={send} />
