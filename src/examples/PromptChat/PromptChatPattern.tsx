@@ -136,7 +136,7 @@ const startGateCopy = {
 };
 const startGateTitle = startGateCopy[1].title;
 const startGateSubtitle = startGateCopy[1].subtitle;
-const aboutEmpty = { name: "", email: "", company: "", details: "" };
+const aboutEmpty = { name: "", email: "", company: "", url: "", details: "" };
 
 function canContinueStart(step, needs, budget, about) {
   if (step === 1) return needs.length > 0;

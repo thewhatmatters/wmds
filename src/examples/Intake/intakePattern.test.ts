@@ -20,6 +20,7 @@ const about = {
   name: "Jordan Lee",
   email: "jordan@northwind.com",
   company: "Northwind",
+  url: "https://northwind.example",
   details: "A calmer brief.",
 };
 

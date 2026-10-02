@@ -17,7 +17,7 @@ const meta = {
 
 Placeholder frame for a Cal.com embed, plus a **Skip, just email me** **TextLink**.
 
-Theme the embed with the page tokens. Brand navy is \`--color-brand\` (#011272). The page floor is \`--color-background-body\`. Cards and the frame use \`--color-background-surface\`.
+Theme the embed with the page tokens: \`--color-brand\`, \`--color-background-body\`, and \`--color-background-surface\`. The visible caption lists those token names only — not a hex literal.
 
 Pass the embed as \`children\`. \`onSkip\` runs the email path and cancels the href.
 

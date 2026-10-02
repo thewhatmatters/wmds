@@ -239,6 +239,7 @@ export {
   intakeAboutEmpty,
   intakeDetailsMax,
   isIntakeAboutValid,
+  isIntakeUrlValid,
   type IntakeAboutValues,
   type IntakeFormLayoutClassName,
   type IntakeFormProps,

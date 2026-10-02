@@ -17,7 +17,9 @@ const meta = {
 
 Two confirmation surfaces. **Booked** reads **You're booked**. **Emailed** reads **We'll be in touch**.
 
-Each one calls \`useConfettiOnMount\` when it mounts. The burst uses the existing Confetti colors option with brand tokens, including \`--color-brand\` (#011272). Do not fire from the button that opened the screen.
+Each one calls \`useConfettiOnMount\` when it mounts. The burst uses the existing Confetti colors option with brand tokens, including \`--color-brand\`. Do not fire from the button that opened the screen.
+
+Optional booking slots — \`bookingTime\`, \`videoHref\`, \`googleCalendarHref\`, \`icsHref\` — render with existing **TextLink** and **Button**. Omit them when the path has no calendar details.
 
 Mount **ConfettiProvider** once above the surface. Reduced motion skips the burst and leaves the static copy.
 
@@ -29,6 +31,11 @@ ConfettiProvider
     ├── Badge — Booked (neutral) or Sent (info)
     ├── heading
     ├── body
+    ├── booking actions (optional)
+    │   ├── booking time
+    │   ├── TextLink — video
+    │   ├── TextLink — Google Calendar
+    │   └── Button render={<a/>} — .ics
     └── Button — Done
 \`\`\`
 
@@ -36,6 +43,7 @@ ConfettiProvider
 
 - **Do** mount the confirmation only after the booking or the skip succeeds.
 - **Do** keep one provider at the root.
+- **Do** pass booking slots only when you have real URLs — reuse **TextLink** / **Button**, do not invent a second confirmation style.
 - **Don't** call \`fire()\` from Continue, Confirm, or the skip link.
         `.trim(),
       },
@@ -53,7 +61,14 @@ export const BookedPattern: Story = {
   },
   render: () => (
     <ConfettiProvider>
-      <IntakeConfirmation variant="booked" onDone={() => undefined} />
+      <IntakeConfirmation
+        variant="booked"
+        bookingTime="Thu, Oct 9 · 10:00–10:30am CT"
+        videoHref="https://meet.example.com/whatmatters"
+        googleCalendarHref="https://calendar.google.com/calendar/render?action=TEMPLATE"
+        icsHref="/calendar/whatmatters-intake.ics"
+        onDone={() => undefined}
+      />
     </ConfettiProvider>
   ),
   parameters: storyCopySource(`
@@ -62,7 +77,14 @@ import { ConfettiProvider, IntakeConfirmation } from "@whatmatters/wmds";
 export function Booked() {
   return (
     <ConfettiProvider>
-      <IntakeConfirmation variant="booked" onDone={() => undefined} />
+      <IntakeConfirmation
+        variant="booked"
+        bookingTime="Thu, Oct 9 · 10:00–10:30am CT"
+        videoHref="https://meet.example.com/whatmatters"
+        googleCalendarHref="https://calendar.google.com/calendar/render?action=TEMPLATE"
+        icsHref="/calendar/whatmatters-intake.ics"
+        onDone={() => undefined}
+      />
     </ConfettiProvider>
   );
 }
