@@ -107,6 +107,7 @@ const meta = {
 | **Headerless density** | Omit **Header** — shell top densifies to **2px** (\`pt-[2px]\`); same rule as footerless / \`bodyTerminal\` bottom. Copy **Pattern — headerless media** |
 | **Body slot** | TaskRows, form, **Chart** (SegmentedBar KPI or **Cartesian** history), or custom UI — occupant owns fill, radius, and padding |
 | **Inset well** | \`cardLayoutBodyOccupantWellClasses\` on the occupant — \`bg-body\` + concentric **14px** radius (\`--radius-card-body\`); radius-only occupants → \`cardLayoutBodyOccupantRadiusClasses\`; dot-grid → \`cardLayoutBodyOccupantDotGridWellClasses\` |
+| **Pinned height** | Layout \`className\` height on the root with **Header** + **Body** + **Footer** — Header/Footer stay put; **Card.Body** scrolls (2px gutter unchanged). No new variant. Copy **Pattern — pinned height** |
 | **Outlined layout** | \`Card variant="outlined"\` — \`shadow-soft-card\`, no stroke. Radius stays \`--radius-card-shell\` |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
 
@@ -118,10 +119,11 @@ Default \`variant="surface"\` and \`variant="outlined"\` both use **\`shadow-sof
 Card (bg-surface shell, gap-3)
 │   top: 16px (pt-4) when Header is present; 2px (pt-[2px]) when Header is omitted
 │   bottom: 16px (pb-4) when Footer is present; 2px (pb-[2px]) when footerless / bodyTerminal
-├── Card.Header   — optional — start | end slots — 16px horizontal inset (px-4)
+├── Card.Header   — optional — start | end slots — 16px horizontal inset (px-4); shrink-0
 ├── Card.Body     — slot — 2px horizontal gutter (px-[2px]); transparent; occupant paints the region
+│                   with Footer: fills remaining height and scrolls when the root height is pinned
 │   └── occupant  — e.g. cardLayoutBodyOccupantWellClasses (bg-body, --radius-card-body)
-└── Card.Footer   — optional — status, actions — 16px horizontal inset (px-4)
+└── Card.Footer   — optional — status, actions — 16px horizontal inset (px-4); shrink-0
 \`\`\`
 
 **Inset well radius:** layout shell uses \`--radius-card-shell\` (**16px**). **Card.Body** inset is **2px** on each side. Inner well radius = **16px − 2px = 14px** (\`--radius-card-body\`) so corners stay concentric with the shell. Copy **Example — body slot (occupancy history)** or **Example — body slot (occupancy KPI, inset well)**.
@@ -131,6 +133,7 @@ Card (bg-surface shell, gap-3)
 - **Do** set \`padding="none"\` when using Header/Body/Footer.
 - **Do** put leading copy in \`start\` and trailing actions in \`end\` — do not hand-roll the header row.
 - **Do** put overflow / **MoreMenu** triggers in **Card.Header** \`end\` (right). \`end\` stays trailing even when \`start\` is omitted — never left-align kebab or flow-over actions.
+- **Do** pin a layout height on the Card root (\`className="h-[…]"\`) when Header/Body/Footer should share one size — Body scrolls; Header and Footer stay put. No new variant.
 - **Do** use \`cardLayoutBodyOccupantPadYClasses\` (\`py-[16px]\`) + \`cardLayoutBodyOccupantInsetXClasses\` on body occupants — 16px vertical, horizontal aligns with **Header** (2px gutter + 14px).
 - **Do** paint inset body backgrounds with \`cardLayoutBodyOccupantWellClasses\` (\`bg-body\` + \`--radius-card-body\`) — concentric with the shell (16px − 2px gutter); radius-only media → \`cardLayoutBodyOccupantRadiusClasses\`; chart canvas texture → \`cardLayoutBodyOccupantDotGridWellClasses\`.
 - **Do** let a headerless layout **Card.Body** densify the shell top automatically — when there is no **Header**, Card applies the matching 2px top inset so media occupants sit flush to the shell. Use \`headerless\` only to override slot detection in a wrapper.
@@ -479,6 +482,95 @@ Form controls in the Body slot — no occupant background here, so the shell sur
         <Button role="primary" size="sm">
           Update
         </Button>
+      </Card.Footer>
+    </Card>
+  ),
+};
+
+export const PinnedHeight: Story = {
+  name: "Pattern — pinned height",
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "padded",
+      docs: {
+        description: {
+          story:
+            "Pin a layout height on the Card root. **Header** and **Footer** stay put; only **Card.Body** scrolls. The 2px body gutter and occupant well are unchanged — no new Card variant.",
+        },
+      },
+    },
+    `
+import {
+  Button,
+  Card,
+  cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantWellClasses,
+  cardSubtitleClasses,
+  cardTitleClasses,
+} from "@whatmatters/wmds";
+
+<Card shape="rounded" padding="none" variant="surface" className="h-[280px] max-w-lg">
+  <Card.Header
+    start={
+      <>
+        <h2 className={cardTitleClasses}>About you</h2>
+        <p className={cardSubtitleClasses}>A few sentences is enough.</p>
+      </>
+    }
+  />
+  <Card.Body>
+    <div className={cardLayoutBodyOccupantWellClasses + " " + cardLayoutBodyOccupantInsetXClasses + " flex flex-col gap-3 py-3"}>
+      <p>Name</p>
+      <p>Email</p>
+      <p>Company</p>
+      <p>Project details that run longer than the pinned shell.</p>
+      <p>Extra lines stay in the body scrollport.</p>
+      <p>Header and footer do not move.</p>
+    </div>
+  </Card.Body>
+  <Card.Footer>
+    <div className="ml-auto flex items-center gap-2">
+      <Button role="secondary" size="md" type="button">Cancel</Button>
+      <Button role="primary" size="md" type="button">Next</Button>
+    </div>
+  </Card.Footer>
+</Card>
+`,
+  ),
+  render: () => (
+    <Card shape="rounded" padding="none" variant="surface" className="h-[280px] max-w-lg">
+      <Card.Header
+        start={
+          <>
+            <h2 className={cardTitleClasses}>About you</h2>
+            <p className={cardSubtitleClasses}>A few sentences is enough.</p>
+          </>
+        }
+      />
+      <Card.Body>
+        <div
+          className={`${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses} flex flex-col gap-3 py-3`}
+        >
+          <p className={cardBodyTextClasses}>Name</p>
+          <p className={cardBodyTextClasses}>Email</p>
+          <p className={cardBodyTextClasses}>Company</p>
+          <p className={cardBodyTextClasses}>
+            Project details that run longer than the pinned shell.
+          </p>
+          <p className={cardBodyTextClasses}>Extra lines stay in the body scrollport.</p>
+          <p className={cardBodyTextClasses}>Header and footer do not move.</p>
+          <p className={cardBodyTextClasses}>Scroll to confirm the footer stays pinned.</p>
+        </div>
+      </Card.Body>
+      <Card.Footer>
+        <div className="ml-auto flex items-center gap-2">
+          <Button role="secondary" size="md" type="button">
+            Cancel
+          </Button>
+          <Button role="primary" size="md" type="button">
+            Next
+          </Button>
+        </div>
       </Card.Footer>
     </Card>
   ),

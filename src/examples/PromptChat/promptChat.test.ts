@@ -22,6 +22,8 @@ import {
   promptChatReplyBlockClasses,
   promptChatReplyClasses,
   promptChatStageClasses,
+  promptChatStartGateCardClasses,
+  promptChatStartGateOccupantClasses,
   promptChatStartGateOptionClasses,
   promptChatStartGateOptionNumberClasses,
   promptChatStartGateOptionsClasses,
@@ -217,6 +219,8 @@ describe("prompt chat pattern", () => {
       promptChatFollowUpsClasses,
       promptChatBarClasses,
       promptChatStartGateStepClasses,
+      promptChatStartGateCardClasses,
+      promptChatStartGateOccupantClasses,
       promptChatStartGateOptionsClasses,
       promptChatStartGateOptionClasses,
       promptChatStartGateOptionNumberClasses,
@@ -224,6 +228,12 @@ describe("prompt chat pattern", () => {
       expect(source).toContain(classes);
       expect(promptChatPatternCopySource).toContain(classes);
     }
+    expect(promptChatStartGateCardClasses).toBe("h-[411px]");
+    expect(promptChatPatternCopySource).toContain("h-[411px]");
+    expect(promptChatPatternCopySource).toContain('className={startGateCardClasses}');
+    expect(promptChatPatternCopySource).not.toContain("startGateBodyClasses");
+    expect(promptChatPatternCopySource).not.toContain("intakeModalBodyClasses");
+    expect(promptChatPatternCopySource).not.toContain("overlayPanelBodyScrollClasses");
     expect(promptChatPatternCopySource).toContain('from "@whatmatters/wmds"');
     expect(promptChatPatternCopySource).toContain("PromptBar");
     expect(promptChatPatternCopySource).toContain("TextLink");
@@ -555,12 +565,16 @@ describe("prompt chat start project gate", () => {
       const card = view.container.querySelector('[aria-label="Name the work"]');
       expect(card?.getAttribute("data-layout")).toBe("shell");
       expect(card?.getAttribute("data-padding")).toBe("none");
+      expect(card?.className).toContain("h-[411px]");
       expect(card?.querySelector(":scope > header")).not.toBeNull();
       expect(card?.querySelector(":scope > footer")).not.toBeNull();
       const body = [...(card?.children ?? [])].find(
         (el) => el instanceof HTMLElement && el.tagName === "DIV",
       );
       expect(body?.className).toContain("px-[2px]");
+      // Scroll comes from Card when Footer is present — not a gate one-off.
+      expect(body?.className).toContain("overflow-y-auto");
+      expect(body?.className).toContain("flex-1");
 
       const keycaps = view.container.querySelectorAll("kbd");
       expect(keycaps.length).toBe(4);
@@ -621,6 +635,64 @@ describe("prompt chat start project gate", () => {
         window.dispatchEvent(new KeyboardEvent("keydown", { key: "1", bubbles: true, cancelable: true }));
       });
       expect(brand.checked).toBe(false);
+    },
+    12_000,
+  );
+
+  it(
+    "keeps one Start Project card height from step 1 through About you",
+    async () => {
+      const view = mount();
+      root = view.root;
+      container = view.container;
+
+      typeDraft(view.field, "What services do you offer?");
+      act(() => {
+        view.send.click();
+      });
+
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, stepsReadyMs));
+      });
+
+      const start = Array.from(view.container.querySelectorAll("button")).find(
+        (button) => button.textContent === "Start Project",
+      );
+      if (start == null) throw new Error("Start Project control missing in chat");
+      act(() => {
+        start.click();
+      });
+
+      const step1 = view.container.querySelector('[aria-label="Name the work"]');
+      expect(step1?.className).toContain(promptChatStartGateCardClasses);
+
+      act(() => {
+        window.dispatchEvent(new KeyboardEvent("keydown", { key: "1", bubbles: true, cancelable: true }));
+      });
+      const next = Array.from(view.container.querySelectorAll("button")).find(
+        (button) => button.textContent === "Next",
+      );
+      if (!(next instanceof HTMLButtonElement)) throw new Error("Next missing");
+      act(() => {
+        next.click();
+      });
+
+      const budget = view.container.querySelector('input[type="radio"][value="10-25"]');
+      if (!(budget instanceof HTMLInputElement)) throw new Error("Budget pill missing");
+      act(() => {
+        budget.click();
+      });
+      act(() => {
+        next.click();
+      });
+
+      const about = view.container.querySelector('[aria-label="About you"]');
+      expect(about?.className).toContain(promptChatStartGateCardClasses);
+      expect(about?.className).toBe(step1?.className);
+      const aboutBody = [...(about?.children ?? [])].find(
+        (el) => el instanceof HTMLElement && el.tagName === "DIV",
+      );
+      expect(aboutBody?.className).toContain("overflow-y-auto");
     },
     12_000,
   );

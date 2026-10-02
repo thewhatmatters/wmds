@@ -1,9 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
+  cardLayoutFooterClasses,
+  cardLayoutHeaderClasses,
   cardLayoutHeaderEndClasses,
+  cardLayoutScrollBodyClasses,
   cardLayoutShellBottomClasses,
   cardLayoutShellClasses,
   cardLayoutShellTopClasses,
+  cardLayoutTerminalBodyClasses,
 } from "./cardStyles";
 
 describe("Card.Header end slot", () => {
@@ -16,8 +20,19 @@ describe("Card.Header end slot", () => {
 describe("Card layout shell density", () => {
   it("keeps gap on the shared shell and does not bake vertical pad", () => {
     expect(cardLayoutShellClasses).toContain("gap-3");
+    expect(cardLayoutShellClasses).toContain("min-h-0");
+    expect(cardLayoutShellClasses).toContain("overflow-hidden");
     expect(cardLayoutShellClasses).not.toContain("pt-");
     expect(cardLayoutShellClasses).not.toContain("pb-");
+  });
+
+  it("pins Header and Footer and scrolls Body when height is constrained", () => {
+    expect(cardLayoutHeaderClasses).toContain("shrink-0");
+    expect(cardLayoutFooterClasses).toContain("shrink-0");
+    expect(cardLayoutScrollBodyClasses).toContain("flex-1");
+    expect(cardLayoutScrollBodyClasses).toContain("overflow-y-auto");
+    expect(cardLayoutTerminalBodyClasses).toContain("flex-1");
+    expect(cardLayoutTerminalBodyClasses).not.toContain("overflow-y-auto");
   });
 
   it("keeps 16px top when Header is present", () => {

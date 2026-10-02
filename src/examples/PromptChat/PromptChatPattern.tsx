@@ -108,6 +108,8 @@ const followUpsClasses = "flex w-full flex-col gap-2";
 const followUpClasses = "w-full !justify-start !border-border";
 const barClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
 const composerClasses = "col-span-full";
+const startGateCardClasses = "h-[411px]";
+const startGateOccupantClasses = "flex min-h-full w-full flex-col gap-3 py-3";
 const startGateStepClasses = "type-supporting text-muted px-1 tabular-nums";
 const startGateOptionsClasses = "flex w-full flex-col";
 const startGateOptionClasses =
@@ -441,7 +443,7 @@ function StartGate({
   });
 
   return (
-    <Card shape="rounded" padding="none" variant="surface" aria-label={copy.title}>
+    <Card shape="rounded" padding="none" variant="surface" aria-label={copy.title} className={startGateCardClasses}>
       <Card.Header
         start={
           phase.kind === "done" ? (
@@ -467,7 +469,7 @@ function StartGate({
         }
       />
       <Card.Body>
-        <div className={cardLayoutBodyOccupantWellClasses + " " + cardLayoutBodyOccupantInsetXClasses + " flex w-full flex-col gap-3 py-3"}>
+        <div className={cardLayoutBodyOccupantWellClasses + " " + cardLayoutBodyOccupantInsetXClasses + " " + startGateOccupantClasses}>
           {phase.kind === "done" ? <IntakeConfirmation variant={phase.variant} onDone={onDone} /> : null}
           {phase.kind === "step" && phase.step === 1 ? (
             <div className={startGateOptionsClasses} role="group" aria-label={copy.subtitle}>

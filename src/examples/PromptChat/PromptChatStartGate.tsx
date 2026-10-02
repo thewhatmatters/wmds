@@ -27,6 +27,8 @@ import {
   type IntakeStep,
 } from "../Intake/IntakePattern";
 import {
+  promptChatStartGateCardClasses,
+  promptChatStartGateOccupantClasses,
   promptChatStartGateOptionClasses,
   promptChatStartGateOptionNumberClasses,
   promptChatStartGateOptionsClasses,
@@ -97,10 +99,11 @@ export type PromptChatStartGatePhase = IntakePhase;
 
 /**
  * Gated starter form in the composer slot. Real WMDS **Card** with
- * **Card.Header** / **Card.Body** / **Card.Footer**. Step 1 trailing digits are
- * **Kbd** plus **`useKbdChoiceKeys`** (1–4 toggle while the gate is open and
- * focus is not in a text field). Steps 2–4 reuse the existing intake
- * **PillGroup**, **IntakeForm**, **CalEmbed**, and **IntakeConfirmation**.
+ * **Card.Header** / **Card.Body** / **Card.Footer**. One fixed shell height on
+ * steps 1–4; taller content scrolls inside **Card.Body** (2px gutter + occupant
+ * well unchanged). Step 1 trailing digits are **Kbd** plus **`useKbdChoiceKeys`**.
+ * Steps 2–4 reuse the existing intake **PillGroup**, **IntakeForm**,
+ * **CalEmbed**, and **IntakeConfirmation**.
  */
 export function PromptChatStartGate({
   phase,
@@ -160,7 +163,13 @@ export function PromptChatStartGate({
   });
 
   return (
-    <Card shape="rounded" padding="none" variant="surface" aria-label={copy.title}>
+    <Card
+      shape="rounded"
+      padding="none"
+      variant="surface"
+      aria-label={copy.title}
+      className={promptChatStartGateCardClasses}
+    >
       <Card.Header
         start={
           phase.kind === "done" ? (
@@ -204,7 +213,7 @@ export function PromptChatStartGate({
           className={cn(
             cardLayoutBodyOccupantWellClasses,
             cardLayoutBodyOccupantInsetXClasses,
-            "flex w-full flex-col gap-3 py-3",
+            promptChatStartGateOccupantClasses,
           )}
         >
           {phase.kind === "done" ? (
