@@ -15,7 +15,7 @@ const samplePairs = [
   { question: "What are you shipping next?", answer: "A new feature" },
   { question: "Which platforms does it need to cover?", answer: "Web, Chrome extension" },
   {
-    question: "Rank what matters most for this launch",
+    question: "Rank WhatMatters most for this launch",
     answer: "Ranked: 1. Speed to ship, 2. Polish, 3. Marketing readiness, 4. Test coverage",
   },
 ] as const;
