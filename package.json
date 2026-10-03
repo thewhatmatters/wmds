@@ -1,13 +1,27 @@
 {
   "name": "@whatmatters/wmds",
-  "description": "WhatMatters Design System — Tailwind v4 theme + Storybook",
-  "private": true,
-  "version": "0.1.0",
+  "description": "WhatMatters Design System — React components, Tailwind v4 theme, and Storybook patterns",
+  "version": "0.2.0",
   "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thewhatmatters/wmds.git"
+  },
+  "homepage": "https://github.com/thewhatmatters/wmds#readme",
+  "bugs": {
+    "url": "https://github.com/thewhatmatters/wmds/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
+    "public/rive/interactive-icon-set.riv",
+    "public/rive/CREDITS.md",
     "README.md",
-    "CONSUMING.md"
+    "CONSUMING.md",
+    "CHANGELOG.md"
   ],
   "exports": {
     ".": {
@@ -34,7 +48,6 @@
     "build:app": "tsc -b && vite build",
     "prepare": "npm run build",
     "lint": "oxlint",
-    "prepublishOnly": "npm run build",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
@@ -44,7 +57,9 @@
     "validate:composition": "vitest --project unit run src/lib/compositionAudit.test.ts",
     "validate:manifest": "node scripts/validate-manifest.mjs",
     "validate:case": "node scripts/check-case-collisions.mjs",
-    "typecheck": "tsc -b"
+    "typecheck": "tsc -b",
+    "check:pack": "node scripts/check-pack.mjs",
+    "check:changelog": "node scripts/check-changelog.mjs"
   },
   "peerDependencies": {
     "@visx/visx": "^4.0.0",
