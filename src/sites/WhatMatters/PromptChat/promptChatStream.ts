@@ -1,4 +1,4 @@
-import { motionDurationFallbackMs } from "../../../lib/motion";
+import { motionDurationFallbackMs, motionStaggerSeconds } from "../../../lib/motion";
 
 export type PromptChatReplyPart =
   | { kind: "word"; text: string }
@@ -35,7 +35,7 @@ export const promptChatFollowUps = [
 ];
 
 /** Gap between ordinary words. The source waits out a full fast-tier arrival. */
-export const promptChatWordStaggerSeconds = 0.06;
+export const promptChatWordStaggerSeconds = motionStaggerSeconds(null);
 
 export function promptChatPartDelay(
   index: number,

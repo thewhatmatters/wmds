@@ -54,8 +54,10 @@ const runtime = vi.hoisted(() => {
   const useViewModelInstanceColor = vi.fn(() => ({ setRgb }));
   const useStateMachineInput = vi.fn(() => input);
   const setWasmUrl = vi.fn();
+  const riveClass = { suppressDeprecationWarnings: [] as readonly string[] };
   return {
     setWasmUrl,
+    riveClass,
     setRgb,
     pause,
     drawFrame,
@@ -105,6 +107,7 @@ vi.mock("@rive-app/react-canvas", () => {
   return {
     Fit: { Contain: "contain" },
     Layout,
+    Rive: runtime.riveClass,
     RuntimeLoader: { setWasmUrl: runtime.setWasmUrl },
     useRive: runtime.useRive,
     useViewModelInstanceColor: runtime.useViewModelInstanceColor,
@@ -152,6 +155,10 @@ describe("rive hand tokens", () => {
       expect(Number.parseFloat(yPart)).toBeCloseTo(-50 - (ink.centerY - 0.5) * 100, 1);
     }
     expect(riveHandSequenceOrigin).toBe("50% 50%");
+  });
+
+  it("silences only the state-machine-inputs deprecation", () => {
+    expect(runtime.riveClass.suppressDeprecationWarnings).toEqual(["state-machine-inputs"]);
   });
 
   it("loads the runtime WASM from the app, beside the .riv file", () => {
@@ -204,7 +211,7 @@ describe("RiveHand", () => {
     expect(params).toMatchObject({
       src: riveHandSrc,
       artboard: "31_Cigarette",
-      stateMachines: riveHandStateMachine,
+      stateMachine: riveHandStateMachine,
       autoBind: true,
     });
     expect(params.layout.fit).toBe("contain");

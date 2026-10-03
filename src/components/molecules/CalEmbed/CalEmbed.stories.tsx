@@ -16,11 +16,9 @@ const meta = {
         component: `
 ## Usage
 
-Placeholder frame for a Cal.com embed, plus a **Skip, just email me** **TextLink**.
+Frame for a Cal.com embed, plus a **Skip, just email me** **TextLink**.
 
-Theme the embed with the page tokens: \`--color-brand\`, \`--color-background-body\`, and \`--color-background-surface\`. The visible caption lists those token names only — not a hex literal.
-
-Pass the embed as \`children\`. \`onSkip\` runs the email path and cancels the href.
+Pass the embed as \`children\` and theme it with the page tokens: \`--color-brand\`, \`--color-background-body\`, and \`--color-background-surface\`. With no children the frame shows a visitor-facing **empty state** (\`emptyTitle\`, \`emptyDescription\`) that points at the skip — never a blank frame or developer notes. \`onSkip\` runs the email path and cancels the href.
 
 When the calendar sits in **Card.Body**, place **CalEmbed.Skip** in **Card.Footer** and pass \`skip={false}\` (or \`skip={<CalEmbed.Skip />}\`) so the in-body skip is omitted. The skip is the same **TextLink**. Do not fork **Card**.
 
@@ -28,7 +26,7 @@ When the calendar sits in **Card.Body**, place **CalEmbed.Skip** in **Card.Foote
 
 \`\`\`
 CalEmbed
-└── frame — theming note + children slot
+└── frame — children (the embed), or the empty state: emptyTitle + emptyDescription
 CalEmbed.Skip — TextLink (after the frame by default, or Card.Footer)
 \`\`\`
 

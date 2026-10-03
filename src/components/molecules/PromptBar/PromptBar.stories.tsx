@@ -51,6 +51,90 @@ function AskPrompt() {
   );
 }
 
+const marketingComposerCopySource = `
+import { useState } from "react";
+import { PromptBar } from "@whatmatters/wmds";
+
+/**
+ * Marketing homepage composer, pinned to the bottom of the viewport on the page grid.
+ * Sending hands off to the ask page: route to /ask?q=<prompt>, where the ask page passes
+ * \`q\` to AskWhatMatters as \`initialPrompt\`.
+ * Next.js: onHandOff={(prompt) => router.push(\`/ask?q=\${encodeURIComponent(prompt)}\`)}
+ */
+export function MarketingComposer({ onHandOff }: { onHandOff: (prompt: string) => void }) {
+  const [draft, setDraft] = useState("");
+
+  return (
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 pb-[max(1rem,env(safe-area-inset-bottom))]">
+      <div className="grid-page [--grid-max:40rem]">
+        <div className="band">
+          <div className="pointer-events-auto col-span-full">
+            <PromptBar
+              value={draft}
+              onValueChange={setDraft}
+              onSend={(value) => {
+                const prompt = value.trim();
+                if (prompt.length === 0) return;
+                setDraft("");
+                onHandOff(prompt);
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+`.trim();
+
+function MarketingComposer({ onHandOff }: { onHandOff: (prompt: string) => void }) {
+  const [draft, setDraft] = useState("");
+
+  return (
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 pb-[max(1rem,env(safe-area-inset-bottom))]">
+      <div className="grid-page [--grid-max:40rem]">
+        <div className="band">
+          <div className="pointer-events-auto col-span-full">
+            <PromptBar
+              value={draft}
+              onValueChange={setDraft}
+              onSend={(value) => {
+                const prompt = value.trim();
+                if (prompt.length === 0) return;
+                setDraft("");
+                onHandOff(prompt);
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MarketingComposerSpecimen() {
+  const [handOff, setHandOff] = useState<string | null>(null);
+
+  return (
+    <div className="min-h-[200vh] bg-body">
+      <main className="grid-page pt-24">
+        <div className="band">
+          <div className="col-span-full flex flex-col gap-4 lg:col-span-8">
+            <h1 className="type-display-2 text-fg">We build what matters.</h1>
+            <p className="type-large text-muted">
+              Scroll the page: the composer stays pinned to the bottom of the viewport.
+            </p>
+            <p className="type-body text-muted" aria-live="polite" data-testid="handoff">
+              {handOff ? `Hands off to /ask?q=${encodeURIComponent(handOff)}` : "Send a prompt to see the hand-off URL."}
+            </p>
+          </div>
+        </div>
+      </main>
+      <MarketingComposer onHandOff={setHandOff} />
+    </div>
+  );
+}
+
 function PromptBarFrame({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-full min-h-full w-full flex-1 items-center justify-center bg-body px-4">
@@ -74,7 +158,7 @@ const meta = {
         component: `
 ## Usage
 
-Wide prompt pill for a line under a headline. One field, one send control. This story is the composer alone — it is not mounted on the marketing page.
+Wide prompt pill for a line under a headline. One field, one send control. **Pattern — prompt bar** is the composer alone. On the marketing homepage, copy **Pattern — marketing composer**: the bar pinned to the bottom of the viewport, handing off to the ask page.
 
 Voice and attachments are not part of this version.
 
@@ -133,6 +217,23 @@ export const PatternPromptBar: Story = {
       <AskPrompt />
     </PromptBarFrame>
   ),
+};
+
+export const PatternMarketingComposer: Story = {
+  name: "Pattern — marketing composer",
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "fullscreen",
+      docs: {
+        description: {
+          story:
+            "**PromptBar** on the marketing homepage, pinned to the bottom of the viewport on the page grid (`--grid-max: 40rem`, the ask page's column) above the safe area. Sending hands off to the ask page — route to `/ask?q=…` and pass `q` to **AskWhatMatters** as `initialPrompt` (**Sites/WhatMatters/Prompt chat → State — opened from the marketing composer**). The wrapper ignores pointer events so the page under its edges stays clickable; only the bar takes input. It sits under **SiteNav** (`z-50`).",
+        },
+      },
+    },
+    marketingComposerCopySource,
+  ),
+  render: () => <MarketingComposerSpecimen />,
 };
 
 export const At390: Story = {

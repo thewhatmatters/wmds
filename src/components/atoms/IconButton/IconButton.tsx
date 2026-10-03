@@ -122,6 +122,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
 
   const classNameMerged = cn(
     buttonBaseClasses,
+    "justify-center",
     buttonRoleClasses[role],
     hitClass,
     iconButtonShapeClass,

@@ -240,6 +240,78 @@ export function motionTransitionProp(
   };
 }
 
+/** Fallbacks mirror the choreography tokens in src/theme/motion.css — used in tests and SSR. */
+export const motionChoreographyFallbacks = {
+  staggerMs: 60,
+  beatMs: 160,
+  blurRevealPx: 4,
+} as const;
+
+/** Choreography token reference for Foundation docs. */
+export const motionChoreography: MotionToken[] = [
+  {
+    token: "--motion-stagger",
+    value: "60ms",
+    role: "Delay between items in a sequenced reveal",
+    usedIn: ["Streamed reply words"],
+  },
+  {
+    token: "--motion-beat",
+    value: "160ms",
+    role: "Rhythm unit for step sequences — count timings in beats",
+    usedIn: ["Thinking trace steps (3 beats), spinner (2), hold (13)"],
+  },
+  {
+    token: "--motion-blur-reveal",
+    value: "4px",
+    role: "Blur a revealed item starts from before it sharpens",
+    usedIn: ["Streamed reply words", "Sent prompt line"],
+  },
+];
+
+function readCssNumber(
+  name: string,
+  unit: "ms" | "px",
+  root: Element | null | undefined,
+): number | undefined {
+  if (!root) return undefined;
+  const raw = getComputedStyle(root).getPropertyValue(name).trim();
+  if (!raw.endsWith(unit)) return undefined;
+  const value = Number.parseFloat(raw.slice(0, -unit.length));
+  return Number.isFinite(value) ? value : undefined;
+}
+
+const defaultRoot = (): Element | null =>
+  typeof document !== "undefined" ? document.documentElement : null;
+
+/** Delay between items in a sequenced reveal, in seconds (`--motion-stagger`). */
+export function motionStaggerSeconds(root: Element | null | undefined = defaultRoot()): number {
+  return (readCssNumber("--motion-stagger", "ms", root) ?? motionChoreographyFallbacks.staggerMs) / 1000;
+}
+
+/** `beats` × `--motion-beat`, in seconds — timings for step sequences such as the thinking trace. */
+export function motionBeatSeconds(beats = 1, root: Element | null | undefined = defaultRoot()): number {
+  return (beats * (readCssNumber("--motion-beat", "ms", root) ?? motionChoreographyFallbacks.beatMs)) / 1000;
+}
+
+/**
+ * Blur-and-fade reveal for Motion: spread onto a `motion.*` element. Starts at
+ * `--motion-blur-reveal`; under reduced motion it renders the rest state with no initial frame.
+ */
+export function motionBlurReveal(
+  reduce: boolean,
+  root: Element | null | undefined = defaultRoot(),
+): {
+  initial: false | { opacity: number; filter: string };
+  animate: { opacity: number; filter: string };
+} {
+  const blur = readCssNumber("--motion-blur-reveal", "px", root) ?? motionChoreographyFallbacks.blurRevealPx;
+  return {
+    initial: reduce ? false : { opacity: 0, filter: `blur(${blur}px)` },
+    animate: { opacity: 1, filter: "blur(0px)" },
+  };
+}
+
 /** Medium-tier transition — panel / secondary column reveal. */
 export function motionPanelRevealTransition(root?: Element | null): Transition {
   return motionTransitionProp("medium", "standard", root);

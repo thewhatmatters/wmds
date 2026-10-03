@@ -20,8 +20,23 @@ export const buttonLayouts = ["pill", "row", "nav"] as const;
 
 export type ButtonLayout = (typeof buttonLayouts)[number];
 
+/** `layout="row"` width: `fill` (default) spans the container; `hug` sizes to its content. */
+export const buttonWidths = ["fill", "hug"] as const;
+
+export type ButtonWidth = (typeof buttonWidths)[number];
+
+/** Pill content alignment: `center` (default) or `start` for full-width suggestion and choice rows. */
+export const buttonAligns = ["center", "start"] as const;
+
+export type ButtonAlign = (typeof buttonAligns)[number];
+
+/** `role="outline"` border: `strong` (default, `border-fg`) or `quiet` (`border-border` hairline). */
+export const buttonEmphases = ["strong", "quiet"] as const;
+
+export type ButtonEmphasis = (typeof buttonEmphases)[number];
+
 export const buttonBaseClasses =
-  "inline-flex cursor-pointer items-center justify-center font-sans font-medium tracking-normal " +
+  "inline-flex cursor-pointer items-center font-sans font-medium tracking-normal " +
   "transition-[color,transform,box-shadow,border-color,outline-color,background-color] " +
   motionTransition("fast") +
   " " +
@@ -45,6 +60,16 @@ export const buttonRoleClasses: Record<ButtonRole, string> = {
   inverse: "bg-on-brand text-brand shadow-raised hover:bg-on-brand-hover active:bg-on-brand-hover",
   /** Hairline outline, transparent fill. Gallery intro action. */
   outline: "border border-fg bg-transparent text-fg hover:bg-ghost-hover active:bg-ghost-active",
+};
+
+/** `role="outline"` with `emphasis="quiet"` — the same outline on the quiet `border-border` hairline. */
+export const buttonOutlineQuietClasses =
+  "border border-border bg-transparent text-fg hover:bg-ghost-hover active:bg-ghost-active";
+
+/** Content alignment inside a pill (and IconButton / status pills, which stay centered). */
+export const buttonAlignClasses: Record<ButtonAlign, string> = {
+  center: "justify-center",
+  start: "justify-start text-left",
 };
 
 /**
@@ -89,17 +114,23 @@ export const iconButtonSizeClasses: Record<IconButtonSize, string> = {
   lg: "size-12 shrink-0",
 };
 
-/** Flat full-width row — TaskRows detail lines, settings rows (not a pill CTA). */
+/** Flat row — TaskRows detail lines, settings rows (not a pill CTA). Width comes from `buttonRowWidthClasses`. */
 export const buttonRowBaseClasses =
-  "flex w-full cursor-pointer items-center font-sans tracking-normal " +
+  "flex cursor-pointer items-center font-sans tracking-normal " +
   "transition-[color,background-color,outline-color] " +
   motionTransition("fast") +
   " focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring " +
   "disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50";
 
 export const buttonRowLayoutClasses =
-  "h-auto min-h-0 justify-between gap-3 rounded-md px-1.5 py-1 text-left font-normal " +
+  "h-auto min-h-0 rounded-md px-1.5 py-1 text-left font-normal " +
   "focus-visible:ring-inset focus-visible:ring-offset-0";
+
+/** `fill` — label and value pushed apart across the row. `hug` — content width, label and value close together. */
+export const buttonRowWidthClasses: Record<ButtonWidth, string> = {
+  fill: "w-full justify-between gap-3",
+  hug: "w-auto justify-start gap-1.5",
+};
 
 /** Inset nav row — **NavList** rows (icon + label + optional count as children). */
 export const buttonNavLayoutClasses =

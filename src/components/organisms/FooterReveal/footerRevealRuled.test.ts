@@ -11,11 +11,10 @@ import {
   footerRevealRuledWordmarkClasses,
   footerRevealRuledWordmarkFrameClasses,
 } from "./footerRevealStyles";
-import {
-  footerRevealRuledDefaultCopy,
-  footerRevealRuledDefaultLinks,
-  footerRevealRuledEmailHref,
-} from "./FooterRevealRuled";
+import { createElement } from "react";
+import { renderToString } from "react-dom/server";
+import { FooterRevealRuled, footerRevealRuledEmailHref } from "./FooterRevealRuled";
+import { footerRevealRuledSample } from "../../../storybook/footerRevealSample";
 
 describe("footerRevealRuledEmailHref", () => {
   it("uses mailto when no href is passed", () => {
@@ -85,20 +84,19 @@ describe("ruled footer contract", () => {
     expect(theme).toContain("color: var(--color-brand)");
   });
 
-  it("uses WhatMatters placeholder copy and the centered nav", () => {
-    expect(footerRevealRuledDefaultCopy.copyright).toBe("WhatMatters © 2026");
-    expect(footerRevealRuledDefaultCopy.wordmark).toBe("WhatMatters");
-    expect(footerRevealRuledDefaultCopy.mark).toBe("WM");
-    expect(footerRevealRuledDefaultCopy.credit).toBe("Created by WhatMatters 2024\u20132026");
-    expect("crop" in footerRevealRuledDefaultCopy).toBe(false);
-    expect("socials" in footerRevealRuledDefaultCopy).toBe(false);
-    expect(footerRevealRuledDefaultCopy.email).toBe("randy@whatmatters.so");
-    expect(JSON.stringify(footerRevealRuledDefaultCopy)).not.toContain("What Matters");
-    expect(footerRevealRuledDefaultLinks).toEqual([
-      { label: "Services", href: "/services" },
-      { label: "Resources", href: "/resources" },
-      { label: "About", href: "/about" },
-    ]);
+  it("ships no content defaults: only the wordmark renders when nothing else is passed", () => {
+    const bare = renderToString(createElement(FooterRevealRuled, { wordmark: "Acme" }));
+    expect(bare).toContain("Acme");
+    expect(bare).not.toContain("mailto:");
+    expect(bare).not.toContain("WhatMatters");
+    expect(bare).not.toContain('aria-label="Footer"');
+
+    const full = renderToString(createElement(FooterRevealRuled, footerRevealRuledSample));
+    expect(full).toContain("mailto:randy@whatmatters.so");
+    expect(full).toContain('aria-label="Footer"');
+    expect(full).toContain(footerRevealRuledSample.copyright);
+    expect(full).toContain(footerRevealRuledSample.credit);
+    expect(JSON.stringify(footerRevealRuledSample)).not.toContain("What Matters");
     const ruled = readFileSync(new URL("./FooterRevealRuled.tsx", import.meta.url), "utf8");
     expect(ruled).toContain("<TextLink");
     expect(ruled).not.toContain("footerRevealRuledLinkClasses");

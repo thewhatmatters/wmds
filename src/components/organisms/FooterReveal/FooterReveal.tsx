@@ -52,11 +52,7 @@ export type {
   FooterRevealRuledLink,
   FooterRevealRuledProps,
 } from "./FooterRevealRuled";
-export {
-  footerRevealRuledDefaultCopy,
-  footerRevealRuledDefaultLinks,
-  footerRevealRuledEmailHref,
-} from "./FooterRevealRuled";
+export { footerRevealRuledEmailHref } from "./FooterRevealRuled";
 
 /** Layout-only — placement. Do not add overflow clipping; it breaks the sticky footer. */
 export type FooterRevealLayoutClassName = string;
@@ -289,11 +285,12 @@ export interface FooterRevealSocialLink {
   href: string;
 }
 
+/** Content is the app's: `headline`, `ctaLabel`, and `wordmark` are required, with no defaults. */
 export interface FooterRevealBrandProps {
-  /** Centered display headline. Default: `We Build WhatMatters`. */
-  headline?: string;
-  /** Sentence-case label on the surface CTA. Default: `Start a project`. */
-  ctaLabel?: string;
+  /** Centered display headline, e.g. `We Build WhatMatters`. */
+  headline: string;
+  /** Sentence-case label on the surface CTA, e.g. `Start a project`. */
+  ctaLabel: string;
   /**
    * Click handler for the CTA. The control is a `<button type="button">`
    * (it opens a modal — there is no default route).
@@ -304,19 +301,12 @@ export interface FooterRevealBrandProps {
    * Omit it to keep the button.
    */
   ctaHref?: string;
-  /** Decorative wordmark along the bottom edge. Spans the footer width. Default: `WHATMATTERS`. */
-  wordmark?: string;
-  /** Underlined text row. `https` links open in a new tab with `rel="noopener"`. */
+  /** Decorative wordmark along the bottom edge. Spans the footer width, e.g. `WHATMATTERS`. */
+  wordmark: string;
+  /** Underlined text row. `https` links open in a new tab with `rel="noopener"`. Omit to render none. */
   socialLinks?: readonly FooterRevealSocialLink[];
   className?: FooterRevealLayoutClassName;
 }
-
-export const footerRevealDefaultSocialLinks: readonly FooterRevealSocialLink[] = [
-  { label: "Contra", href: "#contra-TODO" },
-  { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
-];
 
 /**
  * Decorative wordmark. Measures the word and sets `--footer-wordmark-em` so
@@ -395,12 +385,12 @@ function FooterRevealWordmark({ text }: { text: string }) {
  * social row, and a wordmark that spans the footer width and bleeds off the bottom edge.
  */
 function FooterRevealBrand({
-  headline = "We Build WhatMatters",
-  ctaLabel = "Start a project",
+  headline,
+  ctaLabel,
   onCtaClick,
   ctaHref,
-  wordmark = "WHATMATTERS",
-  socialLinks = footerRevealDefaultSocialLinks,
+  wordmark,
+  socialLinks = [],
   className,
 }: FooterRevealBrandProps) {
   return (
@@ -416,15 +406,17 @@ function FooterRevealBrand({
         >
           {ctaLabel}
         </Button>
-        <ul className={footerRevealSocialListClasses}>
-          {socialLinks.map((link) => (
-            <li key={link.label}>
-              <a href={link.href} className={footerRevealSocialLinkClasses} {...footerRevealExternalLinkProps(link.href)}>
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
+        {socialLinks.length > 0 ? (
+          <ul className={footerRevealSocialListClasses}>
+            {socialLinks.map((link) => (
+              <li key={link.label}>
+                <a href={link.href} className={footerRevealSocialLinkClasses} {...footerRevealExternalLinkProps(link.href)}>
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
       <FooterRevealWordmark text={wordmark} />
     </div>

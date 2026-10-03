@@ -236,7 +236,7 @@ function RfpForm({
   );
 }
 
-export function RfpFlow() {
+export function RfpFlow({ onSubmit }: { onSubmit: (draft: RfpDraft) => Promise<void> }) {
   const [phase, setPhase] = useState<"editing" | "submitting" | "confirmed">("editing");
   const [company, setCompany] = useState("Northwind");
   const [email, setEmail] = useState("ava@northwind.example");
@@ -249,10 +249,9 @@ export function RfpFlow() {
     event.preventDefault();
     if (phase !== "editing") return;
     setPhase("submitting");
-    await new Promise((resolve) => {
-      window.setTimeout(resolve, 600);
-    });
-    setSubmission({ company, email, project, budget, brief });
+    const draft = { company, email, project, budget, brief };
+    await onSubmit(draft);
+    setSubmission(draft);
     setPhase("confirmed");
   }
 
@@ -286,11 +285,12 @@ export function RfpFlow() {
   );
 }
 
-export function RfpSubmittedPage() {
+/** `onSubmit` sends the request (your API or form action); the confirmation shows once it resolves. */
+export function RfpSubmittedPage({ onSubmit }: { onSubmit: (draft: RfpDraft) => Promise<void> }) {
   return (
     <ConfettiProvider>
       <main className="grid-page min-h-dvh bg-body [--grid-column-gap:24px] [--grid-max:80rem]">
-        <RfpFlow />
+        <RfpFlow onSubmit={onSubmit} />
       </main>
     </ConfettiProvider>
   );
@@ -536,7 +536,7 @@ function RfpForm({
   );
 }
 
-function RfpFlow() {
+function RfpFlow({ onSubmit }: { onSubmit: (draft: RfpDraft) => Promise<void> }) {
   const [phase, setPhase] = useState<"editing" | "submitting" | "confirmed">("editing");
   const [company, setCompany] = useState("Northwind");
   const [email, setEmail] = useState("ava@northwind.example");
@@ -549,10 +549,9 @@ function RfpFlow() {
     event.preventDefault();
     if (phase !== "editing") return;
     setPhase("submitting");
-    await new Promise((resolve) => {
-      window.setTimeout(resolve, 600);
-    });
-    setSubmission({ company, email, project, budget, brief });
+    const draft = { company, email, project, budget, brief };
+    await onSubmit(draft);
+    setSubmission(draft);
     setPhase("confirmed");
   }
 
@@ -586,11 +585,12 @@ function RfpFlow() {
   );
 }
 
-export function RfpSubmitted() {
+/** \`onSubmit\` sends the request (your API or form action); the confirmation shows once it resolves. */
+export function RfpSubmitted({ onSubmit }: { onSubmit: (draft: RfpDraft) => Promise<void> }) {
   return (
     <ConfettiProvider>
       <main className="grid-page min-h-dvh bg-body [--grid-column-gap:24px] [--grid-max:80rem]">
-        <RfpFlow />
+        <RfpFlow onSubmit={onSubmit} />
       </main>
     </ConfettiProvider>
   );

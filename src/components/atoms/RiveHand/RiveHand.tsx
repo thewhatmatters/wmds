@@ -3,6 +3,7 @@
 import {
   Fit,
   Layout,
+  Rive,
   RuntimeLoader,
   useRive,
   useStateMachineInput,
@@ -53,6 +54,14 @@ export {
 
 // The runtime defaults to a public CDN. Load the WASM the app serves beside the `.riv` file.
 RuntimeLoader.setWasmUrl(riveHandWasmSrc);
+
+// The hand's interaction is the state-machine input `Boolean 1`. Rive deprecates inputs in favor
+// of data binding, but this `.riv` has no view-model boolean to bind (View Model 1 holds only the
+// two colors). Until the art gains one, silence that single warning and keep any ids the app set.
+// Remove this when RiveHand switches to `useViewModelInstanceBoolean`.
+Rive.suppressDeprecationWarnings = [
+  ...new Set([...Rive.suppressDeprecationWarnings, "state-machine-inputs" as const]),
+];
 
 /** Layout-only — not for colors. Size comes from the `size` prop. */
 export type RiveHandLayoutClassName = string;
@@ -157,7 +166,7 @@ export function RiveHand({
   const { rive, RiveComponent } = useRive({
     src: riveHandSrc,
     artboard: riveHandArtboards[hand],
-    stateMachines: riveHandStateMachine,
+    stateMachine: riveHandStateMachine,
     autoplay: true,
     autoBind: true,
     shouldDisableRiveListeners: true,

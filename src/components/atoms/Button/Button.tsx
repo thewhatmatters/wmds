@@ -11,8 +11,11 @@ import { ButtonIcon } from "./ButtonIcon";
 import { ButtonStatusButton } from "./ButtonStatusButton";
 import type { ButtonStatus } from "./buttonStatusStyles";
 import {
+  buttonAlignClasses,
   buttonBaseClasses,
   buttonEndIconSquareClasses,
+  buttonOutlineQuietClasses,
+  buttonRowWidthClasses,
   buttonMonoLabelClasses,
   buttonPillClass,
   buttonRoleClasses,
@@ -21,13 +24,16 @@ import {
   buttonRowBaseClasses,
   buttonRowLayoutClasses,
   buttonSizeClasses,
+  type ButtonAlign,
+  type ButtonEmphasis,
   type ButtonLayout,
   type ButtonRole,
   type ButtonSize,
+  type ButtonWidth,
 } from "./buttonStyles";
 
-export type { ButtonLayout, ButtonRole, ButtonSize } from "./buttonStyles";
-export { buttonLayouts, buttonRoles } from "./buttonStyles";
+export type { ButtonAlign, ButtonEmphasis, ButtonLayout, ButtonRole, ButtonSize, ButtonWidth } from "./buttonStyles";
+export { buttonAligns, buttonEmphases, buttonLayouts, buttonRoles, buttonWidths } from "./buttonStyles";
 export type { ButtonStatus } from "./buttonStatusStyles";
 export { defaultStatusLabels, getNextButtonStatus } from "./buttonStatusStyles";
 
@@ -45,6 +51,21 @@ export interface ButtonProps
   role?: ButtonRole;
   /** `pill` (default) or `row` — flat full-width lines for detail / settings rows. */
   layout?: ButtonLayout;
+  /**
+   * `layout="row"` only. `fill` (default) spans the container with label and value pushed apart;
+   * `hug` sizes the row to its content with a tight gap — e.g. an inline disclosure trigger.
+   */
+  width?: ButtonWidth;
+  /**
+   * Pill content alignment. `center` (default); `start` left-aligns the label — full-width
+   * suggestion or choice pills. Size the pill with `className` (`w-full`).
+   */
+  align?: ButtonAlign;
+  /**
+   * `role="outline"` only. `strong` (default) is the `border-fg` hairline; `quiet` uses the
+   * `border-border` hairline for secondary choices such as follow-up suggestions.
+   */
+  emphasis?: ButtonEmphasis;
   size?: ButtonSize;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
@@ -91,8 +112,21 @@ export interface ButtonProps
 }
 
 function assertActionPattern(
-  props: Pick<ButtonProps, "status" | "icon" | "count" | "layout" | "render" | "endIcon" | "mono">,
+  props: Pick<
+    ButtonProps,
+    "status" | "icon" | "count" | "layout" | "render" | "endIcon" | "mono" | "width" | "align" | "emphasis" | "role"
+  >,
 ) {
+  if (props.width != null && props.layout !== "row") {
+    console.warn('[WMDS Button] `width` applies to `layout="row"` only.');
+  }
+  if (props.align != null && (props.layout === "row" || props.layout === "nav")) {
+    console.warn('[WMDS Button] `align` applies to pill buttons only.');
+  }
+  if (props.emphasis != null && props.role !== "outline") {
+    console.warn('[WMDS Button] `emphasis` applies to `role="outline"` only.');
+  }
+
   if (
     (props.layout === "row" || props.layout === "nav") &&
     (props.status != null || props.icon != null || props.count != null || props.endIcon != null || props.mono)
@@ -152,6 +186,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     children,
     role = "primary",
     layout = "pill",
+    width,
+    align,
+    emphasis,
     size = "md",
     disabled,
     type = "button",
@@ -174,7 +211,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     form,
     ...buttonProps
   }, ref) {
-  assertActionPattern({ status, icon, count, layout, render, endIcon, mono });
+  assertActionPattern({ status, icon, count, layout, render, endIcon, mono, width, align, emphasis, role });
 
   if (status != null) {
     return (
@@ -216,9 +253,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         id={id}
         name={name}
         form={form}
-        className={cn(buttonRowBaseClasses, buttonRoleClasses[role], buttonRowLayoutClasses, className)}
+        className={cn(
+          buttonRowBaseClasses,
+          buttonRoleClasses[role],
+          buttonRowLayoutClasses,
+          buttonRowWidthClasses[width ?? "fill"],
+          className,
+        )}
         data-role={role}
         data-layout="row"
+        data-width={width ?? "fill"}
       >
         {children}
       </button>
@@ -270,7 +314,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       form={form}
       className={cn(
         buttonBaseClasses,
-        buttonRoleClasses[role],
+        buttonAlignClasses[align ?? "center"],
+        role === "outline" && emphasis === "quiet" ? buttonOutlineQuietClasses : buttonRoleClasses[role],
         buttonSizeClasses[size],
         buttonPillClass,
         "gap-2",
@@ -278,6 +323,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       )}
       data-role={role}
       data-size={size}
+      data-align={align}
+      data-emphasis={role === "outline" ? (emphasis ?? "strong") : undefined}
       data-mono={mono ? "" : undefined}
       data-end-icon={endIcon ? "" : undefined}
     >
