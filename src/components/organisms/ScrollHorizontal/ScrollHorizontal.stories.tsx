@@ -75,7 +75,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const projectGalleryCopySource = `
-import { ScrollHorizontal } from "@whatmatters/wmds";
+import { ScrollHorizontal } from "@thewhatmatters/wmds";
 
 const projects = [
   { id: "project-one", label: "Project One", color: "var(--color-brand)" },
@@ -268,7 +268,7 @@ export const ProjectGalleryPattern: Story = {
 };
 
 const galleryIntroCopySource = `
-import { RiveHand, ScrollHorizontal, TextSequence } from "@whatmatters/wmds";
+import { RiveHand, ScrollHorizontal, TextSequence } from "@thewhatmatters/wmds";
 
 // Opens the multi-step project form. There is no /start route.
 function openProjectModal() {}

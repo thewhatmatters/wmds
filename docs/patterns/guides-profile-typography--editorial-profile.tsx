@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — editorial profile
+// @thewhatmatters/wmds@0.2.0 · Pattern — editorial profile
 // Storybook: Guides/Profile typography → Pattern — editorial profile (?path=/story/guides-profile-typography--editorial-profile)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -11,7 +11,7 @@ import {
   GridOverlay,
   TextLink,
   type DisplayControlThemeMode,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 import { ChevronRight, VolumeX } from "lucide-react";
 
 export function ProfilePage({ onOpenRole }: { onOpenRole: (company: string) => void }) {

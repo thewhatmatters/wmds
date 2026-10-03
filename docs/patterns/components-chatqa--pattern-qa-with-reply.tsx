@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — Q&A with reply
+// @thewhatmatters/wmds@0.2.0 · Pattern — Q&A with reply
 // Storybook: Components/ChatQa → Pattern — Q&A with reply (?path=/story/components-chatqa--pattern-qa-with-reply)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { ChatQa } from "@whatmatters/wmds";
+import { ChatQa } from "@thewhatmatters/wmds";
 
 const pairs = [
   { question: "What are you shipping next?", answer: "A new feature" },

@@ -109,7 +109,7 @@ import {
   DisplayControls,
   GridOverlay,
   type DisplayControlThemeMode,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 export function Page() {
   const [gridVisible, setGridVisible] = useState(false);

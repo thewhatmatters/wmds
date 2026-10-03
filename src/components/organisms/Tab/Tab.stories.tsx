@@ -93,7 +93,7 @@ export const SettingsPages: Story = {
   render: () => <SettingsTabs />,
   parameters: storyCopySource(`
 import { useState } from "react";
-import { Tab } from "@whatmatters/wmds";
+import { Tab } from "@thewhatmatters/wmds";
 
 export function SettingsTabs() {
   const [page, setPage] = useState("profile");

@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — insights row
+// @thewhatmatters/wmds@0.2.0 · Pattern — insights row
 // Storybook: Components/Stat → Pattern — insights row (?path=/story/components-stat--insights-row)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Button, PageHeader, Stat } from "@whatmatters/wmds";
+import { Button, PageHeader, Stat } from "@thewhatmatters/wmds";
 import { Share2 } from "lucide-react";
 
 export function InsightsOverview() {

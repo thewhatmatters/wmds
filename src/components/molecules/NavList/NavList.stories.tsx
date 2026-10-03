@@ -112,7 +112,7 @@ import {
   User,
   Users,
 } from "lucide-react";
-import { NavList } from "@whatmatters/wmds";
+import { NavList } from "@thewhatmatters/wmds";
 
 const sections = [
   {

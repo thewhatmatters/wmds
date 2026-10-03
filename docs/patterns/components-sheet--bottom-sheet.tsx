@@ -1,10 +1,10 @@
-// @whatmatters/wmds@0.2.0 · Pattern — bottom sheet
+// @thewhatmatters/wmds@0.2.0 · Pattern — bottom sheet
 // Storybook: Components/Sheet → Pattern — bottom sheet (?path=/story/components-sheet--bottom-sheet)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { Button, Input, Sheet } from "@whatmatters/wmds";
-import { dialogFooterActionsClasses } from "@whatmatters/wmds";
+import { Button, Input, Sheet } from "@thewhatmatters/wmds";
+import { dialogFooterActionsClasses } from "@thewhatmatters/wmds";
 
 export function FilterSheet() {
   const [open, setOpen] = useState(false);

@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — start a project
+// @thewhatmatters/wmds@0.2.0 · Pattern — start a project
 // Storybook: Sites/WhatMatters/Intake → Pattern — start a project (?path=/story/sites-whatmatters-intake--start-a-project-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -17,7 +17,7 @@ import {
   intakeDetailsMax,
   isIntakeAboutValid,
   type IntakeAboutValues,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 export const intakeNeeds = [
   {

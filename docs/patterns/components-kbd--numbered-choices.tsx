@@ -1,9 +1,9 @@
-// @whatmatters/wmds@0.2.0 · Pattern — numbered choice keys
+// @thewhatmatters/wmds@0.2.0 · Pattern — numbered choice keys
 // Storybook: Components/Kbd → Pattern — numbered choice keys (?path=/story/components-kbd--numbered-choices)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { Checkbox, Kbd, useKbdChoiceKeys } from "@whatmatters/wmds";
+import { Checkbox, Kbd, useKbdChoiceKeys } from "@thewhatmatters/wmds";
 
 const choices = [
   { value: "brand", label: "Brand identity", number: "1" },

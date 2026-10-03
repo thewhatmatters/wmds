@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — chart comparison gallery
+// @thewhatmatters/wmds@0.2.0 · Pattern — chart comparison gallery
 // Storybook: Guides/Chart explorations → Pattern — chart comparison gallery (?path=/story/guides-chart-explorations--comparison-gallery)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -11,7 +11,7 @@ import {
   type ChartHeatmapAxisItem,
   type ChartHeatmapCell,
   type ChartUnitGridPart,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const compositionConfig = chartSeriesConfigFromKeys([
   { key: "women", label: "Women" },

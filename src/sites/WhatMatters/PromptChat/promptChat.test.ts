@@ -236,7 +236,7 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).not.toContain("startGateBodyClasses");
     expect(promptChatPatternCopySource).not.toContain("intakeModalBodyClasses");
     expect(promptChatPatternCopySource).not.toContain("overlayPanelBodyScrollClasses");
-    expect(promptChatPatternCopySource).toContain('from "@whatmatters/wmds"');
+    expect(promptChatPatternCopySource).toContain('from "@thewhatmatters/wmds"');
     expect(promptChatPatternCopySource).toContain("PromptBar");
     expect(promptChatPatternCopySource).toContain("TextLink");
     expect(promptChatPatternCopySource).toContain("IconButton");

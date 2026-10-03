@@ -97,8 +97,8 @@ export const DefaultDialog: Story = {
   },
   parameters: storyCopySource(`
 import { useState } from "react";
-import { Button, Dialog } from "@whatmatters/wmds";
-import { dialogFooterActionsClasses } from "@whatmatters/wmds";
+import { Button, Dialog } from "@thewhatmatters/wmds";
+import { dialogFooterActionsClasses } from "@thewhatmatters/wmds";
 
 export function NotificationSettingsDialog() {
   const [open, setOpen] = useState(false);
@@ -171,8 +171,8 @@ export const FormDialog: Story = {
   },
   parameters: storyCopySource(`
 import { useState } from "react";
-import { Button, Dialog, Input } from "@whatmatters/wmds";
-import { dialogFooterActionsClasses } from "@whatmatters/wmds";
+import { Button, Dialog, Input } from "@thewhatmatters/wmds";
+import { dialogFooterActionsClasses } from "@thewhatmatters/wmds";
 
 export function InviteDialog() {
   const [open, setOpen] = useState(false);
@@ -278,7 +278,7 @@ export const AlertDialogDestructive: Story = {
   },
   parameters: storyCopySource(`
 import { useState } from "react";
-import { AlertDialog, Button } from "@whatmatters/wmds";
+import { AlertDialog, Button } from "@thewhatmatters/wmds";
 
 export function DeleteProjectAlert() {
   const [open, setOpen] = useState(false);

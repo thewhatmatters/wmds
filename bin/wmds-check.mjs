@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * wmds-check — a consumer audit for apps built on @whatmatters/wmds. Run it in the app's CI:
+ * wmds-check — a consumer audit for apps built on @thewhatmatters/wmds. Run it in the app's CI:
  *
  *   npx wmds-check                 # scans ./src, ./app, ./components, ./pages (whichever exist)
  *   npx wmds-check app components  # or name the folders
@@ -9,7 +9,7 @@
  *
  * Rules (errors fail the run; warnings fail it only past --max-warnings):
  *   raw-control       error  <button>, <input>, <select>, <textarea> where a WMDS component exists
- *   important-override error `!` utilities in className on a component imported from @whatmatters/wmds
+ *   important-override error `!` utilities in className on a component imported from @thewhatmatters/wmds
  *   raw-color         error  hex / rgb / hsl colors in className or style
  *   raw-type          warn   text-xs…text-9xl or text-[…] sizes — use type-* utilities
  *   raw-motion        warn   duration-[…] / ease-[…] / delay-[…] utilities, or numeric Motion durations
@@ -39,7 +39,7 @@ const require = createRequire(path.join(cwd, "package.json"));
 let packageRoot = null;
 let packageVersion = null;
 try {
-  const manifest = require.resolve("@whatmatters/wmds/package.json");
+  const manifest = require.resolve("@thewhatmatters/wmds/package.json");
   packageRoot = path.dirname(manifest);
   packageVersion = JSON.parse(readFileSync(manifest, "utf8")).version;
 } catch {
@@ -80,7 +80,7 @@ const rawControls = [
 const strip = (source) =>
   source
     .split("\n")
-    .filter((line) => !/^\/\/ (@whatmatters\/wmds@|Storybook:|Show code)/.test(line))
+    .filter((line) => !/^\/\/ (@thewhatmatters\/wmds@|Storybook:|Show code)/.test(line))
     .join("\n")
     .trim();
 
@@ -90,7 +90,7 @@ for (const file of files) {
 
   // WMDS components imported in this file.
   const wmdsNames = new Set();
-  for (const match of source.matchAll(/import\s*\{([^}]*)\}\s*from\s*["']@whatmatters\/wmds["']/g)) {
+  for (const match of source.matchAll(/import\s*\{([^}]*)\}\s*from\s*["']@thewhatmatters\/wmds["']/g)) {
     for (const part of match[1].split(",")) {
       const name = part.trim().replace(/^type\s+/, "").split(/\s+as\s+/).pop();
       if (name && /^[A-Z]/.test(name)) wmdsNames.add(name);
@@ -140,7 +140,7 @@ for (const file of files) {
   });
 
   // Pasted patterns.
-  const header = lines[0]?.match(/^\/\/ @whatmatters\/wmds@([\w.-]+) · (.+)$/);
+  const header = lines[0]?.match(/^\/\/ @thewhatmatters\/wmds@([\w.-]+) · (.+)$/);
   const id = source.match(/\?path=\/story\/([\w-]+)/)?.[1];
   if (header && id && packageRoot) {
     const shipped = path.join(packageRoot, "docs", "patterns", `${id}.tsx`);
@@ -167,7 +167,7 @@ if (json) {
     console.log(`${finding.file}:${finding.line}  ${finding.severity === "error" ? "error" : "warn "}  ${finding.rule}  ${finding.message}`);
   }
   console.log(
-    `wmds-check: ${files.length} files, ${errors} error${errors === 1 ? "" : "s"}, ${warnings} warning${warnings === 1 ? "" : "s"}${packageVersion ? ` (@whatmatters/wmds ${packageVersion})` : " (@whatmatters/wmds not installed: pattern rules skipped)"}`,
+    `wmds-check: ${files.length} files, ${errors} error${errors === 1 ? "" : "s"}, ${warnings} warning${warnings === 1 ? "" : "s"}${packageVersion ? ` (@thewhatmatters/wmds ${packageVersion})` : " (@thewhatmatters/wmds not installed: pattern rules skipped)"}`,
   );
 }
 process.exit(errors > 0 || warnings > maxWarnings ? 1 : 0);

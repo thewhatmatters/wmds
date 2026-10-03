@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Shapes
+// @thewhatmatters/wmds@0.2.0 · Shapes
 // Storybook: Components/TextSequence → Shapes (?path=/story/components-textsequence--shapes)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { TextSequence } from "@whatmatters/wmds";
+import { TextSequence } from "@thewhatmatters/wmds";
 
 export function ShapeGallery() {
   return (

@@ -32,7 +32,7 @@ WhatMatters needs **designed, named patterns** with narrow extension points — 
 - **`src/theme/`** — semantic roles bridged to utilities for the **package CSS build**
 - **Component `*Styles.ts` files** — centralized class recipes (`buttonStyles.ts`, `semanticVariants.ts`)
 - **`sources.css`** — scan list so dist/styles.css includes what components need
-- App teams import **`@whatmatters/wmds/styles.css`** for baseline + components; they do **not** need to master the utility catalog to ship UI.
+- App teams import **`@thewhatmatters/wmds/styles.css`** for baseline + components; they do **not** need to master the utility catalog to ship UI.
 
 ### When utilities are OK in apps
 

@@ -12,7 +12,7 @@ WHA-304 asks for a **use-grid-system `--profile=app`** spine: column-line + 8px 
 ## Decision
 
 - **`--spacing` stays 0.25rem (4px).** Do not re-scale it. Baseline is an even multiple: `--grid-baseline: calc(var(--spacing) * 2)` (8px). `--leading-base` is 3 × baseline (24px).
-- **Source of truth:** `src/theme/grid.css`, imported from `theme.css` so Storybook and `@whatmatters/wmds/styles.css` share one stack.
+- **Source of truth:** `src/theme/grid.css`, imported from `theme.css` so Storybook and `@thewhatmatters/wmds/styles.css` share one stack.
 - **Utilities:** `grid-page` (wrap + columns) and `band` (subgrid; `@supports` fallback repeats `--grid-cols`).
 - **Column-gap customization:** `--grid-column-gap` controls the uniform gap between tracks on a `grid-page`; it defaults to responsive `--grid-gutter` and is inherited by `band` and `GridOverlay`.
 - **Overlay:** `GridOverlay` is a child of `grid-page`. Press **g**. Same `--grid-*` tokens. Column guides and margin lines spread across the document, including sections before the page, while staying horizontally bound to that page's `--grid-max`, margin, and gutter. Baseline stays in the page box. Do not mount a viewport overlay (`tailwindcss-react-grid-overlay` as published paints the window and ignores `--grid-max` — that is the misalignment bug).

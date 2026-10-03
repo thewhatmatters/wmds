@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — marketing header
+// @thewhatmatters/wmds@0.2.0 · Pattern — marketing header
 // Storybook: Components/SiteNav → Pattern — marketing header (?path=/story/components-sitenav--marketing-header)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Button, SiteNav } from "@whatmatters/wmds";
+import { Button, SiteNav } from "@thewhatmatters/wmds";
 import { BookOpen, FileText, History, Mic, Sparkles, Target, Video } from "lucide-react";
 
 export function MarketingHeader() {

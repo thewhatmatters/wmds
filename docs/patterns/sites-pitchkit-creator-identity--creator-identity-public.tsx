@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — creator identity (public)
+// @thewhatmatters/wmds@0.2.0 · Pattern — creator identity (public)
 // Storybook: Sites/PitchKit/Creator identity → Pattern — creator identity (public) (?path=/story/sites-pitchkit-creator-identity--creator-identity-public)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Avatar, Chip } from "@whatmatters/wmds";
+import { Avatar, Chip } from "@thewhatmatters/wmds";
 
 const compactNumber = new Intl.NumberFormat("en", {
   notation: "compact",

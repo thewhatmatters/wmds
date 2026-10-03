@@ -23,7 +23,7 @@ import {
   Toaster,
   cardTitleClasses,
   toast,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const compactNumber = new Intl.NumberFormat("en", {
   notation: "compact",

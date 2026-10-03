@@ -121,7 +121,7 @@ export const SelectableCardsPattern: Story = {
   },
   parameters: storyCopySource(`
 import { useState } from "react";
-import { SegmentedControl, SelectableCard } from "@whatmatters/wmds";
+import { SegmentedControl, SelectableCard } from "@thewhatmatters/wmds";
 
 const options = [
   { value: "brand", title: "Brand identity", description: "Name, mark, and a system you can actually use." },

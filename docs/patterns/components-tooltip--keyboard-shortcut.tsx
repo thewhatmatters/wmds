@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — keyboard shortcut
+// @thewhatmatters/wmds@0.2.0 · Pattern — keyboard shortcut
 // Storybook: Components/Tooltip → Pattern — keyboard shortcut (?path=/story/components-tooltip--keyboard-shortcut)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { IconButton, Kbd, Tooltip } from "@whatmatters/wmds";
+import { IconButton, Kbd, Tooltip } from "@thewhatmatters/wmds";
 import { Info } from "lucide-react";
 
 <Tooltip>

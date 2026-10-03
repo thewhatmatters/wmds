@@ -1,9 +1,9 @@
-// @whatmatters/wmds@0.2.0 · Pattern — default
+// @thewhatmatters/wmds@0.2.0 · Pattern — default
 // Storybook: Components/Checkbox/CheckboxGroup → Pattern — default (?path=/story/components-checkbox-checkboxgroup--default)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { CheckboxGroup } from "@whatmatters/wmds";
+import { CheckboxGroup } from "@thewhatmatters/wmds";
 
 export function AlertPreferences() {
   const [values, setValues] = useState(["email"]);

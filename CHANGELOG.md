@@ -1,11 +1,11 @@
 # Changelog
 
-Every release of `@whatmatters/wmds` is listed here, newest first.
+Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 - **Versions follow semver.** While the major version is `0`, a minor bump (`0.3.0`) can break an app and a patch bump (`0.2.1`) does not. Apps depend on `^0.2.0`, which accepts patches only.
 - **Every release has a Consumer actions section**: the exact steps an app takes when it moves to that version. It says **None** when there are none. Agents upgrading an app read every Consumer actions section between the old and new version, oldest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
-- **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @whatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
+- **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
 ## 0.2.0
 
@@ -13,15 +13,15 @@ First release on npm. Earlier builds were installed from git commits and all rep
 
 ### Consumer actions
 
-1. **Move from the git pin to npm.** In `package.json`, replace the `github:` / `git+https:` value for `@whatmatters/wmds` with `^0.2.0`, then run `npm install`. Commit `package.json` and `package-lock.json` together. See **CONSUMING.md → Install**.
+1. **Move from the git pin to npm, under the new name.** The npm package is `@thewhatmatters/wmds`; git installs were named `@whatmatters/wmds`, and that npm scope belongs to another account. Uninstall `@whatmatters/wmds`, replace `@whatmatters/wmds` with `@thewhatmatters/wmds` in every import, CSS `@import`, and config file, then `npm install @thewhatmatters/wmds@^0.2.0`. The exact commands are in **CONSUMING.md → Install → Moving from a git pin**. Commit `package.json` and `package-lock.json` together.
 2. **Delete `scripts/copy-wmds-fonts.mjs`** and the `package.json` script that runs it (usually `postinstall`). The fonts now ship in `dist/files` and both style entries reference them.
 3. **Remove `@fontsource-variable/geist` and `@fontsource-variable/geist-mono`** from the app's dependencies, unless the app imports them for something other than WMDS.
 4. **Serve the Rive runtime from the app** (only if the app renders **RiveHand**, for example the marketing hero): copy `node_modules/@rive-app/canvas/rive.wasm` to `public/rive/rive.wasm`. Copy it again whenever `@rive-app/*` changes version. Until it is there, the runtime falls back to its CDN build and logs a warning.
-5. **Copy the Rive art from the package** (same apps): `node_modules/@whatmatters/wmds/public/rive/interactive-icon-set.riv` to `public/rive/interactive-icon-set.riv`. Keep the CC BY 4.0 credit from `public/rive/CREDITS.md`.
+5. **Copy the Rive art from the package** (same apps): `node_modules/@thewhatmatters/wmds/public/rive/interactive-icon-set.riv` to `public/rive/interactive-icon-set.riv`. Keep the CC BY 4.0 credit from `public/rive/CREDITS.md`.
 6. **Install `lucide-react`** if the app does not already have it. It is a peer dependency because 24 shipped modules import it.
-7. **Point the app's agents at the shipped docs:** paste the block from `node_modules/@whatmatters/wmds/docs/consumer-agents.md` into the app's `AGENTS.md` (or `CLAUDE.md`).
+7. **Point the app's agents at the shipped docs:** paste the block from `node_modules/@thewhatmatters/wmds/docs/consumer-agents.md` into the app's `AGENTS.md` (or `CLAUDE.md`).
 8. **Install the agent skills** (optional, recommended): `npx skills add 'thewhatmatters/wmds#v0.2.0' -s use-wmds -s upgrade-wmds -s report-wmds-gap -a claude-code -y`, then commit `.claude/skills/` and `skills-lock.json`.
-9. **Re-copy pasted patterns.** Every Pattern's Show code now compiles in a strict Next 16 app: it exports its component, takes app data and callbacks as typed props, has no placeholders or unused code, and imports only real exports. Replace each pasted copy with `node_modules/@whatmatters/wmds/docs/patterns/<id>.tsx` and re-apply only content, data, and handlers. Most affected:
+9. **Re-copy pasted patterns.** Every Pattern's Show code now compiles in a strict Next 16 app: it exports its component, takes app data and callbacks as typed props, has no placeholders or unused code, and imports only real exports. Replace each pasted copy with `node_modules/@thewhatmatters/wmds/docs/patterns/<id>.tsx` and re-apply only content, data, and handlers. Most affected:
    - **Sites/WhatMatters/Prompt chat → Pattern — landing to chat** (the site's `components/ask-what-matters.tsx`): typed throughout, dead constants removed, step 3 validates with `isIntakeAboutValid`.
    - **Sites/WhatMatters/Intake → Pattern — start a project**: apostrophes escaped in JSX text.
    - **Sites/PitchKit/** — all 15 patterns: exported data types (`PitchKitCreatorIdentity`, `PitchKitPastBrand`, `PitchKitPost`, `PitchKitPageData`, …) and typed props.
@@ -49,5 +49,5 @@ First release on npm. Earlier builds were installed from git commits and all rep
 - **Motion choreography tokens** `--motion-stagger`, `--motion-beat`, `--motion-blur-reveal`, with `motionStaggerSeconds()`, `motionBeatSeconds()`, `motionBlurReveal()`, and the newly exported `readMotionDurationSeconds()`. Show code no longer hard-codes blur or timing values.
 - **RiveHand** passes `stateMachine` (not the deprecated `stateMachines`) and silences only Rive's `state-machine-inputs` deprecation until the art exposes a view-model boolean.
 - **`wmds-check`** consumer audit (`npx wmds-check`): raw controls, `!` overrides on WMDS components, raw color / type / motion values, and pasted patterns that drift from the installed version. See **CONSUMING.md → Consumer check**.
-- **Agent skills** in `skills/`: `use-wmds`, `upgrade-wmds`, `report-wmds-gap`, installable with the `skills` CLI. The package exports `./docs/*` and `./CHANGELOG.md` so scripts can `require("@whatmatters/wmds/docs/exports.json")`.
+- **Agent skills** in `skills/`: `use-wmds`, `upgrade-wmds`, `report-wmds-gap`, installable with the `skills` CLI. The package exports `./docs/*` and `./CHANGELOG.md` so scripts can `require("@thewhatmatters/wmds/docs/exports.json")`.
 - The package is published to npm under the MIT license. `public/rive/interactive-icon-set.riv` and its credits ship in the package.

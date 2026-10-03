@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — occupancy KPI in Card
+// @thewhatmatters/wmds@0.2.0 · Pattern — occupancy KPI in Card
 // Storybook: Components/Chart → Pattern — occupancy KPI in Card (?path=/story/components-chart--occupancy-in-card)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Button, Card, Chart, Select, chartFormatPercent, chartKpiHeroRowClasses, chartKpiHeroValueClasses, chartKpiTrendLabelClasses, chartKpiTrendRowClasses, chartKpiTrendValueClasses, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantPadYClasses, cardLayoutBodyOccupantWellClasses, cardTitleClasses } from "@whatmatters/wmds";
+import { Button, Card, Chart, Select, chartFormatPercent, chartKpiHeroRowClasses, chartKpiHeroValueClasses, chartKpiTrendLabelClasses, chartKpiTrendRowClasses, chartKpiTrendValueClasses, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantPadYClasses, cardLayoutBodyOccupantWellClasses, cardTitleClasses } from "@thewhatmatters/wmds";
 
 const occupied = 144;
 const total = 200;

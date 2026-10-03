@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — side nav (settings)
+// @thewhatmatters/wmds@0.2.0 · Pattern — side nav (settings)
 // Storybook: Components/NavList → Pattern — side nav (settings) (?path=/story/components-navlist--side-nav-settings)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -12,7 +12,7 @@ import {
   User,
   Users,
 } from "lucide-react";
-import { NavList } from "@whatmatters/wmds";
+import { NavList } from "@thewhatmatters/wmds";
 
 const sections = [
   {

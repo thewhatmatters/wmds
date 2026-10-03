@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Example — body slot (occupancy history)
+// @thewhatmatters/wmds@0.2.0 · Example — body slot (occupancy history)
 // Storybook: Components/Card/Card → Example — body slot (occupancy history) (?path=/story/components-card-card--body-slot-occupancy-history)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -13,7 +13,7 @@ import {
   cardTitleClasses,
   type ChartCartesianPoint,
   type SelectOption,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const config = chartSeriesConfigFromKeys([
   { key: "occupied", label: "Occupied units" },

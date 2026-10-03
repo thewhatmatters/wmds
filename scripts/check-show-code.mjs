@@ -32,7 +32,7 @@ if (!skipInstall || !existsSync(path.join(fixture, "node_modules"))) {
     .split("\n")
     .pop();
   renameSync(path.join(fixture, packed), path.join(fixture, "wmds.tgz"));
-  rmSync(path.join(fixture, "node_modules", "@whatmatters"), { recursive: true, force: true });
+  rmSync(path.join(fixture, "node_modules", "@thewhatmatters"), { recursive: true, force: true });
   run("npm", ["install", "--no-audit", "--no-fund", "--no-package-lock"]);
 }
 

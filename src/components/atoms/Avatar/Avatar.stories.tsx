@@ -169,7 +169,7 @@ export const DropdownRow: Story = {
       },
     },
     `
-import { Avatar, Dropdown } from "@whatmatters/wmds";
+import { Avatar, Dropdown } from "@thewhatmatters/wmds";
 
 export function AssigneeMenu() {
   return (

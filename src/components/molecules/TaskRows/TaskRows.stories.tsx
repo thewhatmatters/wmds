@@ -211,7 +211,7 @@ export const Anatomy: Story = {
 export const StatusList: Story = {
   name: "Pattern — status rows",
   parameters: storyCopySource(`
-import { TaskRows } from "@whatmatters/wmds";
+import { TaskRows } from "@thewhatmatters/wmds";
 
 <TaskRows variant="list">
   <TaskRows.Item label="Verified vendor records" meta="12 suppliers" status="done" defaultOpen>
@@ -272,7 +272,7 @@ export const CardWithStatusRows: Story = {
       },
     },
     `
-import { Button, Card, TaskRows } from "@whatmatters/wmds";
+import { Button, Card, TaskRows } from "@thewhatmatters/wmds";
 
 <Card padding="none">
   <Card.Header
@@ -360,7 +360,7 @@ export const Capsules: Story = {
       },
     },
     `
-import { TaskRows } from "@whatmatters/wmds";
+import { TaskRows } from "@thewhatmatters/wmds";
 
 <TaskRows variant="capsule">
   <TaskRows.Item label="Export vendor CSV" meta="12 rows" status="done">
@@ -402,7 +402,7 @@ export const ActionDetails: Story = {
     },
     `
 import { Apple, MapPin, Map as MapIcon } from "lucide-react";
-import { TaskRows } from "@whatmatters/wmds";
+import { TaskRows } from "@thewhatmatters/wmds";
 
 export function SupplierDirections({
   onOpenAppleMaps,
@@ -479,7 +479,7 @@ export const TagChips: Story = {
       },
     },
     `
-import { Chip, TaskRows } from "@whatmatters/wmds";
+import { Chip, TaskRows } from "@thewhatmatters/wmds";
 
 <TaskRows variant="list">
   <TaskRows.Item label="Weekend market booth" meta="Sat–Sun" defaultOpen detailsLayout="chips">
@@ -526,7 +526,7 @@ export const CustomSlots: Story = {
       },
     },
     `
-import { Badge, Status, TaskRows } from "@whatmatters/wmds";
+import { Badge, Status, TaskRows } from "@thewhatmatters/wmds";
 
 <TaskRows variant="list">
   <TaskRows.Item
@@ -603,7 +603,7 @@ export const ControlledExpand: Story = {
     },
     `
 import { useState } from "react";
-import { Button, TaskRows } from "@whatmatters/wmds";
+import { Button, TaskRows } from "@thewhatmatters/wmds";
 
 export function ReorderPanel() {
   const [open, setOpen] = useState(false);

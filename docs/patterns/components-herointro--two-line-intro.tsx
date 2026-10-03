@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — two-line intro
+// @thewhatmatters/wmds@0.2.0 · Pattern — two-line intro
 // Storybook: Components/HeroIntro → Pattern — two-line intro (?path=/story/components-herointro--two-line-intro)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Badge, HeroIntro } from "@whatmatters/wmds";
+import { Badge, HeroIntro } from "@thewhatmatters/wmds";
 
 export function MarketingHeroIntro() {
   return (

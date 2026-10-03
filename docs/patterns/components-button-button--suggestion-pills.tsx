@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — suggestion pills
+// @thewhatmatters/wmds@0.2.0 · Pattern — suggestion pills
 // Storybook: Components/Button/Button → Pattern — suggestion pills (?path=/story/components-button-button--suggestion-pills)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Button } from "@whatmatters/wmds";
+import { Button } from "@thewhatmatters/wmds";
 
 export function FollowUps({ items, onPick }: { items: string[]; onPick: (item: string) => void }) {
   return (

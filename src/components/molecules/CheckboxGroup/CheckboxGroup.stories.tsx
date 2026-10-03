@@ -97,7 +97,7 @@ export const Default: Story = {
   },
   parameters: storyCopySource(`
 import { useState } from "react";
-import { CheckboxGroup } from "@whatmatters/wmds";
+import { CheckboxGroup } from "@thewhatmatters/wmds";
 
 export function AlertPreferences() {
   const [values, setValues] = useState(["email"]);

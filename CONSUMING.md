@@ -7,8 +7,8 @@ WMDS is **not** utility-class-first. You do **not** build product UI by composin
 **Do this:**
 
 ```tsx
-import { Button, Badge, Chip, ChipFilterGroup, IconButton, Input, Status } from "@whatmatters/wmds";
-import "@whatmatters/wmds/styles.css";
+import { Button, Badge, Chip, ChipFilterGroup, IconButton, Input, Status } from "@thewhatmatters/wmds";
+import "@thewhatmatters/wmds/styles.css";
 
 <Button status={status}>Submit</Button>
 <Button role="secondary" count={3}>Inbox</Button>
@@ -29,7 +29,7 @@ Find a component A–Z under **Components/** (or by category on **Components →
 
 **Show code is the product contract.** Pattern story **Show code** (`storyCopySource`) is the drop-in implementation for consuming apps. It must stay a literal mirror of the live canvas — same layout, chrome, spacing, and typography. Copy Show code; do not choose between the Storybook iframe and an older freeze, and do not reconstruct the page from Storybook-only example modules (`*Example.tsx`, `*Styles.ts`). When the canvas changes, Show code is updated to match; apps re-copy the new freeze.
 
-Page-level Example canvases include a Storybook-only grid inspector while designs are being tuned. Show code freezes the approved `--grid-max` / `--grid-column-gap` values and omits **ExampleGridControls** and other development chrome, so the copied result contains only `@whatmatters/wmds` exports and product layout.
+Page-level Example canvases include a Storybook-only grid inspector while designs are being tuned. Show code freezes the approved `--grid-max` / `--grid-column-gap` values and omits **ExampleGridControls** and other development chrome, so the copied result contains only `@thewhatmatters/wmds` exports and product layout.
 
 **Not this:**
 
@@ -68,7 +68,7 @@ The fade tracks the scroll boundary without JavaScript. See **Foundations → Sc
 ### From npm (default)
 
 ```bash
-npm install @whatmatters/wmds@^0.2.0
+npm install @thewhatmatters/wmds@^0.2.0
 ```
 
 Install the peers the components you use need (see **Requirements**): `react`, `react-dom`, `motion`, `lucide-react`, and `@visx/visx` for **Chart**.
@@ -76,19 +76,22 @@ Install the peers the components you use need (see **Requirements**): `react`, `
 **Upgrade** with one command, then read **`CHANGELOG.md` → Consumer actions** for every version you crossed:
 
 ```bash
-npm install @whatmatters/wmds@latest
+npm install @thewhatmatters/wmds@latest
 ```
 
-Versions follow semver. While the major version is `0`, a minor bump (`0.3.0`) can break the app, so `^0.2.0` accepts patches only and a minor upgrade is always a deliberate `npm install @whatmatters/wmds@^0.3.0`. The changelog ships in the package: `node_modules/@whatmatters/wmds/CHANGELOG.md`.
+Versions follow semver. While the major version is `0`, a minor bump (`0.3.0`) can break the app, so `^0.2.0` accepts patches only and a minor upgrade is always a deliberate `npm install @thewhatmatters/wmds@^0.3.0`. The changelog ships in the package: `node_modules/@thewhatmatters/wmds/CHANGELOG.md`.
 
 ### Moving from a git pin
 
-Apps that pinned a commit (`"@whatmatters/wmds": "github:thewhatmatters/wmds#<sha>"`) switch with:
+The npm package is **`@thewhatmatters/wmds`**. Git installs were named `@whatmatters/wmds`; that npm scope belongs to another account. Apps that pinned a commit (`"@whatmatters/wmds": "github:thewhatmatters/wmds#<sha>"`) switch with:
 
 ```bash
 npm uninstall @whatmatters/wmds
-npm install @whatmatters/wmds@^0.2.0
+git grep -l '@whatmatters/wmds' | xargs perl -pi -e 's#\@whatmatters/wmds#\@thewhatmatters/wmds#g'
+npm install @thewhatmatters/wmds@^0.2.0
 ```
+
+The second line renames every import, CSS `@import`, and config reference in tracked files.
 
 Then follow **0.2.0 → Consumer actions** in `CHANGELOG.md` and commit `package.json` and `package-lock.json` together.
 
@@ -101,23 +104,23 @@ To try an unreleased WMDS change in an app before it is published, install a tar
 ```bash
 # in the WMDS checkout, after each change
 npm install            # first time only
-npm pack               # builds dist, writes whatmatters-wmds-<version>.tgz
+npm pack               # builds dist, writes thewhatmatters-wmds-<version>.tgz
 
 # in the app
-npm install ../wmds/whatmatters-wmds-0.2.0.tgz
+npm install ../wmds/thewhatmatters-wmds-0.2.0.tgz
 ```
 
 Repeat both steps after each WMDS change. When done, return to the published version so the `file:` entry is not committed:
 
 ```bash
-npm install @whatmatters/wmds@^0.2.0
+npm install @thewhatmatters/wmds@^0.2.0
 ```
 
 **Faster loop (symlink).** `npm install ../wmds` links the checkout instead, and the app sees each `npm run build` without reinstalling. The linked package resolves `react` from the checkout's own `node_modules`, which gives the app two copies of React (invalid hook call). Only use it when the bundler dedupes React — Vite: `resolve: { dedupe: ["react", "react-dom"] }`. In Next.js prefer the tarball; if you do link, the checkout must sit inside `turbopack.root`.
 
 ## Agent skills and docs
 
-The package ships docs for coding agents in `node_modules/@whatmatters/wmds/docs/` (start at `docs/README.md`). Paste the block from `docs/consumer-agents.md` into the app's `AGENTS.md` or `CLAUDE.md`.
+The package ships docs for coding agents in `node_modules/@thewhatmatters/wmds/docs/` (start at `docs/README.md`). Paste the block from `docs/consumer-agents.md` into the app's `AGENTS.md` or `CLAUDE.md`.
 
 Three agent skills live in this repository under `skills/`. Install them with the [`skills` CLI](https://github.com/vercel-labs/skills), pinned to the release tag that matches the installed package:
 
@@ -128,7 +131,7 @@ npx skills add 'thewhatmatters/wmds#v0.2.0' -s use-wmds -s upgrade-wmds -s repor
 | Skill | When the agent uses it |
 |-------|------------------------|
 | `use-wmds` | Before writing or changing UI: find the component or pattern, props not utilities, `className` for layout only, tokens only, copy Show code verbatim with its version header |
-| `upgrade-wmds` | When bumping `@whatmatters/wmds`: install, apply every Consumer actions step, re-sync pasted patterns, refresh the skills, run checks |
+| `upgrade-wmds` | When bumping `@thewhatmatters/wmds`: install, apply every Consumer actions step, re-sync pasted patterns, refresh the skills, run checks |
 | `report-wmds-gap` | When WMDS is missing something: what to file, where, and how to open a WMDS pull request that follows `AGENTS.md` |
 
 The command copies the skills into `.claude/skills/` and records them in `skills-lock.json`; commit both. Add more `-a` agents (for example `-a codex`) to install for them too. The **upgrade-wmds** skill re-runs the command with the new tag.
@@ -145,7 +148,7 @@ npx wmds-check app components --max-warnings 0
 | Rule | Level | Flags |
 |------|-------|-------|
 | `raw-control` | error | `<button>`, `<input>`, `<select>`, `<textarea>` where a WMDS component exists |
-| `important-override` | error | `!` utilities in `className` on a component imported from `@whatmatters/wmds` |
+| `important-override` | error | `!` utilities in `className` on a component imported from `@thewhatmatters/wmds` |
 | `raw-color` | error | hex, `rgb()`, `hsl()`, `oklch()` values in `className` or `style` |
 | `raw-type` | warning | `text-sm`-style sizes or `text-[…]` — use `type-*` utilities |
 | `raw-motion` | warning | `duration-[…]`, `ease-[…]`, `delay-[…]`, numeric Motion durations |
@@ -158,13 +161,13 @@ It is a line-based heuristic, not a parser. Silence a deliberate exception on th
 ## Wire up styles
 
 ```tsx
-import "@whatmatters/wmds/styles.css";
+import "@thewhatmatters/wmds/styles.css";
 ```
 
 Or theme only (if you configure Tailwind yourself):
 
 ```css
-@import "@whatmatters/wmds/theme.css";
+@import "@thewhatmatters/wmds/theme.css";
 ```
 
 That entry brings the tokens, the fonts, the collapse utilities, and an `@source` for the package's built modules, so the app's Tailwind generates the utilities the components use.
@@ -183,7 +186,7 @@ Toggle on any ancestor — same token names, values from `colors.css`.
 
 ## Grid spine (page layout)
 
-WMDS ships a Müller-Brockmann **app** grid (`--profile=app`): column-line + 8px baseline, relaxed rows. Tokens live in **`src/theme/grid.css`** and are included in `@whatmatters/wmds/styles.css` (and `theme.css` → `grid.css`).
+WMDS ships a Müller-Brockmann **app** grid (`--profile=app`): column-line + 8px baseline, relaxed rows. Tokens live in **`src/theme/grid.css`** and are included in `@thewhatmatters/wmds/styles.css` (and `theme.css` → `grid.css`).
 
 **`--spacing` stays 4px.** Even multiples = 8px baseline. Do not re-scale spacing in the app.
 
@@ -203,7 +206,7 @@ Override on a wrap if a screen needs a different max width (`style={{ "--grid-ma
 ### Band classes
 
 ```tsx
-import { GridOverlay } from "@whatmatters/wmds";
+import { GridOverlay } from "@thewhatmatters/wmds";
 
 <div className="grid-page">
   <GridOverlay />
@@ -251,7 +254,7 @@ import {
   getNextButtonStatus,
   type ButtonRole,
   type ButtonStatus,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 ```
 
 | Component | Key props | Storybook |
@@ -305,7 +308,7 @@ Browse [lucide.dev/icons](https://lucide.dev/icons/).
 
 ### Brand override (`--color-primary`)
 
-The **only** per-app color hook is the primary brand color. The WhatMatters default palette stays in **`src/theme/colors.css`**; an app overrides it by redefining the allowlisted tokens on `:root` (light) and `[data-theme="dark"]` (dark) in a stylesheet imported **after** `@whatmatters/wmds/styles.css`.
+The **only** per-app color hook is the primary brand color. The WhatMatters default palette stays in **`src/theme/colors.css`**; an app overrides it by redefining the allowlisted tokens on `:root` (light) and `[data-theme="dark"]` (dark) in a stylesheet imported **after** `@thewhatmatters/wmds/styles.css`.
 
 **Allowlist**
 
@@ -323,7 +326,7 @@ Everything else is derived, so you set two values and every primary control foll
 
 ```tsx
 // app entry
-import "@whatmatters/wmds/styles.css";
+import "@thewhatmatters/wmds/styles.css";
 import "./brand.css"; // must come after styles.css
 ```
 
@@ -342,7 +345,7 @@ import "./brand.css"; // must come after styles.css
 
 Rules:
 
-- Import order matters — the override must load after `styles.css` (or after `@import "@whatmatters/wmds/theme.css"` if you configure Tailwind yourself). Do not wrap it in a `@layer`; WMDS defaults are unlayered author styles and a layered override would lose.
+- Import order matters — the override must load after `styles.css` (or after `@import "@thewhatmatters/wmds/theme.css"` if you configure Tailwind yourself). Do not wrap it in a `@layer`; WMDS defaults are unlayered author styles and a layered override would lose.
 - Set both the light and the dark value. Leaving `[data-theme="dark"]` unset falls back to the WhatMatters dark primary, not to your light value.
 - Check contrast for `--color-on-primary` on your primary and for `--color-primary` on `--color-body` in both themes.
 

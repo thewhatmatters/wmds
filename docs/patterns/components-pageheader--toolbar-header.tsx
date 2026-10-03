@@ -1,10 +1,10 @@
-// @whatmatters/wmds@0.2.0 · Pattern — toolbar header
+// @thewhatmatters/wmds@0.2.0 · Pattern — toolbar header
 // Storybook: Components/PageHeader → Pattern — toolbar header (?path=/story/components-pageheader--toolbar-header)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
 import { Filter } from "lucide-react";
-import { Button, Chip, PageHeader } from "@whatmatters/wmds";
+import { Button, Chip, PageHeader } from "@thewhatmatters/wmds";
 
 export function InsightsToolbar() {
   const [filter, setFilter] = useState<string[]>(["active"]);

@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — marketing landing
+// @thewhatmatters/wmds@0.2.0 · Pattern — marketing landing
 // Storybook: Sites/WhatMatters/Marketing landing → Pattern — marketing landing (?path=/story/sites-whatmatters-marketing-landing--marketing-landing)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Button, SiteNav } from "@whatmatters/wmds";
+import { Button, SiteNav } from "@thewhatmatters/wmds";
 import { BookOpen, FileText, History, Mic, Sparkles, Target, Video } from "lucide-react";
 
 export function MarketingLanding() {

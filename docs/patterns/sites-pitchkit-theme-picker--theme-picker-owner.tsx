@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — theme picker (owner)
+// @thewhatmatters/wmds@0.2.0 · Pattern — theme picker (owner)
 // Storybook: Sites/PitchKit/Theme picker → Pattern — theme picker (owner) (?path=/story/sites-pitchkit-theme-picker--theme-picker-owner)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -24,7 +24,7 @@ import {
   toast,
   type ChartCartesianPoint,
   type ChartRankedBarItem,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const reachConfig = chartSeriesConfigFromKeys([
   { key: "typical", label: "Typical reach" },

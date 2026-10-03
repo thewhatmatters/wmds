@@ -7,7 +7,7 @@ const storiesSource = readFileSync(join(import.meta.dirname, "Chart.stories.tsx"
 const storyStart = storiesSource.indexOf('name: "Pattern — Cartesian no-data gaps"');
 const storyEnd = storiesSource.indexOf('name: "Reference — Cartesian gap modes"');
 const copySourceStart = storiesSource.indexOf(
-  'import { Chart, chartSeriesConfigFromTone } from "@whatmatters/wmds";',
+  'import { Chart, chartSeriesConfigFromTone } from "@thewhatmatters/wmds";',
   storyStart,
 );
 const showCodeSource = storiesSource.slice(copySourceStart, storyEnd);
@@ -20,7 +20,7 @@ describe("Pattern — Cartesian no-data gaps Show code", () => {
   });
 
   it("freezes the drop-in Cartesian gap contract", () => {
-    expect(showCodeSource).toContain('from "@whatmatters/wmds"');
+    expect(showCodeSource).toContain('from "@thewhatmatters/wmds"');
     expect(showCodeSource).toContain("chartSeriesConfigFromTone");
     expect(showCodeSource).toContain("Chart.Cartesian");
     expect(showCodeSource).toContain("const reach = index < 10 ? null");

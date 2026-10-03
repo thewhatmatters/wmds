@@ -40,7 +40,7 @@ writeFileSync(path.join(app, "package.json"), '{ "name": "app", "private": true 
 describe("wmds-check", () => {
   it("passes WMDS components with layout-only className", () => {
     const result = check({
-      "page.tsx": `import { Button } from "@whatmatters/wmds";
+      "page.tsx": `import { Button } from "@thewhatmatters/wmds";
 export function Page() {
   return <main className="grid-page"><Button role="primary" className="mt-4 w-full">Go</Button></main>;
 }`,
@@ -51,7 +51,7 @@ export function Page() {
 
   it("flags raw controls, ! overrides, and raw colors as errors", () => {
     const result = check({
-      "bad.tsx": `import { Button } from "@whatmatters/wmds";
+      "bad.tsx": `import { Button } from "@thewhatmatters/wmds";
 export function Bad() {
   return (
     <div style={{ color: "#ff0000" }}>

@@ -80,7 +80,7 @@ export const MultiStateBadge: Story = {
     },
     `
 import { useState } from "react";
-import { Button, getNextButtonStatus, type ButtonStatus } from "@whatmatters/wmds";
+import { Button, getNextButtonStatus, type ButtonStatus } from "@thewhatmatters/wmds";
 
 export function SubmitForm() {
   const [status, setStatus] = useState<ButtonStatus>("idle");
@@ -110,7 +110,7 @@ export function SubmitForm() {
 export const PrimaryAction: Story = {
   name: "Pattern — primary action",
   parameters: storyCopySource(`
-import { Button } from "@whatmatters/wmds";
+import { Button } from "@thewhatmatters/wmds";
 
 <Button role="primary">Save changes</Button>
   `),
@@ -120,7 +120,7 @@ import { Button } from "@whatmatters/wmds";
 export const SecondaryAction: Story = {
   name: "Pattern — secondary action",
   parameters: storyCopySource(`
-import { Button } from "@whatmatters/wmds";
+import { Button } from "@thewhatmatters/wmds";
 
 <Button role="secondary">Cancel</Button>
   `),
@@ -140,7 +140,7 @@ export const OutlineMono: Story = {
     },
     `
 import { ArrowRight } from "lucide-react";
-import { Button } from "@whatmatters/wmds";
+import { Button } from "@thewhatmatters/wmds";
 
 <Button role="outline" size="sm" mono endIcon={<ArrowRight />}>
   See our work
@@ -172,7 +172,7 @@ export const InverseAction: Story = {
       },
     },
     `
-import { Button } from "@whatmatters/wmds";
+import { Button } from "@thewhatmatters/wmds";
 
 <Button role="inverse" size="lg">Start a project</Button>
     `,
@@ -183,7 +183,7 @@ import { Button } from "@whatmatters/wmds";
 export const GhostAction: Story = {
   name: "Pattern — ghost action",
   parameters: storyCopySource(`
-import { Button } from "@whatmatters/wmds";
+import { Button } from "@thewhatmatters/wmds";
 
 <Button role="ghost">Learn more</Button>
   `),
@@ -202,7 +202,7 @@ export const LinkRender: Story = {
       },
     },
     `
-import { Button } from "@whatmatters/wmds";
+import { Button } from "@thewhatmatters/wmds";
 
 export function HeaderLinks() {
   return (
@@ -244,7 +244,7 @@ export const RowLayout: Story = {
       },
     },
     `
-import { Button } from "@whatmatters/wmds";
+import { Button } from "@thewhatmatters/wmds";
 
 export function DueDateRow({ onOpenDatePicker }: { onOpenDatePicker: () => void }) {
   return (
@@ -283,7 +283,7 @@ export const RowHug: Story = {
     },
     `
 import { ChevronDown } from "lucide-react";
-import { Button } from "@whatmatters/wmds";
+import { Button } from "@thewhatmatters/wmds";
 
 export function ThoughtToggle({ open, onToggle }: { open: boolean; onToggle: () => void }) {
   return (
@@ -318,7 +318,7 @@ export const SuggestionPills: Story = {
       },
     },
     `
-import { Button } from "@whatmatters/wmds";
+import { Button } from "@thewhatmatters/wmds";
 
 export function FollowUps({ items, onPick }: { items: string[]; onPick: (item: string) => void }) {
   return (
@@ -347,7 +347,7 @@ export function FollowUps({ items, onPick }: { items: string[]; onPick: (item: s
 export const DestructiveAction: Story = {
   name: "Pattern — destructive action",
   parameters: storyCopySource(`
-import { Button } from "@whatmatters/wmds";
+import { Button } from "@thewhatmatters/wmds";
 
 <Button role="destructive">Delete account</Button>
   `),
@@ -366,7 +366,7 @@ export const WithIcon: Story = {
     },
     `
 import { Pencil, Plus, Trash2 } from "lucide-react";
-import { Button } from "@whatmatters/wmds";
+import { Button } from "@thewhatmatters/wmds";
 
 export function ItemActions() {
   return (
@@ -411,7 +411,7 @@ export const WithCount: Story = {
       },
     },
     `
-import { Button } from "@whatmatters/wmds";
+import { Button } from "@thewhatmatters/wmds";
 
 <Button role="primary" count={3}>
   Inbox

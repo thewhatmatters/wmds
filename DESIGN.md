@@ -47,4 +47,4 @@ Do not mount a full-viewport overlay. That ignores `--grid-max` and is the “sl
 
 ### Consumers
 
-Apps import `@whatmatters/wmds/styles.css` and copy `grid-page` + `band` + optional `GridOverlay`. **No new layout atoms in Pitchkit.** Design still owns look. See **`CONSUMING.md`**.
+Apps import `@thewhatmatters/wmds/styles.css` and copy `grid-page` + `band` + optional `GridOverlay`. **No new layout atoms in Pitchkit.** Design still owns look. See **`CONSUMING.md`**.

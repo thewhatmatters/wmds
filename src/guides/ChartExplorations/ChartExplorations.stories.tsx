@@ -54,7 +54,7 @@ import {
   type ChartHeatmapAxisItem,
   type ChartHeatmapCell,
   type ChartUnitGridPart,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const compositionConfig = chartSeriesConfigFromKeys([
   { key: "women", label: "Women" },

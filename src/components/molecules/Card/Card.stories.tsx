@@ -219,7 +219,7 @@ export const OutlinedLayout: Story = {
       },
     },
     `
-import { Card, cardTitleClasses } from "@whatmatters/wmds";
+import { Card, cardTitleClasses } from "@thewhatmatters/wmds";
 
 <Card variant="outlined" shape="rounded" className="max-w-lg">
   <Card.Header
@@ -408,7 +408,7 @@ import {
   Card,
   cardBodyTextClasses,
   cardLayoutBodyOccupantRadiusClasses,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 <Card variant="outlined" shape="rounded">
   <Card.Body>
@@ -508,7 +508,7 @@ import {
   cardLayoutBodyOccupantWellClasses,
   cardSubtitleClasses,
   cardTitleClasses,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 <Card shape="rounded" padding="none" variant="surface" className="h-[280px] max-w-lg">
   <Card.Header
@@ -805,7 +805,7 @@ import {
   cardTitleClasses,
   type ChartCartesianPoint,
   type SelectOption,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const config = chartSeriesConfigFromKeys([
   { key: "occupied", label: "Occupied units" },

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import "@whatmatters/wmds/styles.css";
+import "@thewhatmatters/wmds/styles.css";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (

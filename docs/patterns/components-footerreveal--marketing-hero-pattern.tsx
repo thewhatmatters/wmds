@@ -1,11 +1,11 @@
-// @whatmatters/wmds@0.2.0 · Pattern — marketing hero
+// @thewhatmatters/wmds@0.2.0 · Pattern — marketing hero
 // Storybook: Components/FooterReveal → Pattern — marketing hero (?path=/story/components-footerreveal--marketing-hero-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 "use client";
 
 import { Sparkles } from "lucide-react";
-import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, ScrollHorizontal, SiteNav, footerRevealFieldClasses } from "@whatmatters/wmds";
+import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, ScrollHorizontal, SiteNav, footerRevealFieldClasses } from "@thewhatmatters/wmds";
 
 const socialLinks = [
   { label: "Contra", href: "#contra-TODO" },

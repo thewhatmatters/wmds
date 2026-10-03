@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — disabled control
+// @thewhatmatters/wmds@0.2.0 · Pattern — disabled control
 // Storybook: Components/Tooltip → Pattern — disabled control (?path=/story/components-tooltip--disabled-control)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Button, Tooltip } from "@whatmatters/wmds";
+import { Button, Tooltip } from "@thewhatmatters/wmds";
 
 <Tooltip>
   <Tooltip.Trigger

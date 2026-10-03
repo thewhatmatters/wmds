@@ -87,7 +87,7 @@ export const IntakeModalPattern: Story = {
   },
   parameters: storyCopySource(`
 import { useState } from "react";
-import { Button, IntakeModal } from "@whatmatters/wmds";
+import { Button, IntakeModal } from "@thewhatmatters/wmds";
 
 export function StartAProjectShell() {
   const [open, setOpen] = useState(false);

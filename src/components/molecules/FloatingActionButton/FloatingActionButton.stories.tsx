@@ -74,7 +74,7 @@ export const VerticalActions: Story = {
     },
     `
 import { Camera, FileText, ImageIcon, Pencil } from "lucide-react";
-import { FloatingActionButton } from "@whatmatters/wmds";
+import { FloatingActionButton } from "@thewhatmatters/wmds";
 
 export function QuickActions({ onAction }: { onAction: (id: string) => void }) {
   return (

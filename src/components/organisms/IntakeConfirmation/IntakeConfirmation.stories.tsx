@@ -72,7 +72,7 @@ export const BookedPattern: Story = {
     </ConfettiProvider>
   ),
   parameters: storyCopySource(`
-import { ConfettiProvider, IntakeConfirmation } from "@whatmatters/wmds";
+import { ConfettiProvider, IntakeConfirmation } from "@thewhatmatters/wmds";
 
 export function Booked() {
   return (
@@ -102,7 +102,7 @@ export const EmailedPattern: Story = {
     </ConfettiProvider>
   ),
   parameters: storyCopySource(`
-import { ConfettiProvider, IntakeConfirmation } from "@whatmatters/wmds";
+import { ConfettiProvider, IntakeConfirmation } from "@thewhatmatters/wmds";
 
 export function Emailed() {
   return (

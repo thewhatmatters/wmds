@@ -76,7 +76,7 @@
    *
    * Consumer brand override — the ONLY per-app color hook. An app may set
    * `--color-primary` (and optionally `--color-on-primary`) on `:root` and on
-   * `[data-theme="dark"]` in a stylesheet imported AFTER `@whatmatters/wmds/styles.css`.
+   * `[data-theme="dark"]` in a stylesheet imported AFTER `@thewhatmatters/wmds/styles.css`.
    * `--color-focus-ring` and the primary hover / active mixes (stateColors.css) derive
    * from `--color-primary`, so one light value and one dark value re-brand every
    * primary control. Accent, status, chart, type, and grid tokens are not overridable

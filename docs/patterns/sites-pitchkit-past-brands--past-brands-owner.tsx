@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — past brands (owner)
+// @thewhatmatters/wmds@0.2.0 · Pattern — past brands (owner)
 // Storybook: Sites/PitchKit/Past brands → Pattern — past brands (owner) (?path=/story/sites-pitchkit-past-brands--past-brands-owner)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -17,7 +17,7 @@ import {
   Select,
   cardTitleClasses,
   dialogFooterActionsClasses,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const compactNumber = new Intl.NumberFormat("en", {
   notation: "compact",

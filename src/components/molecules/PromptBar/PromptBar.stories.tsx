@@ -20,7 +20,7 @@ const reviewViewports = {
 
 const promptBarCopySource = `
 import { useState } from "react";
-import { PromptBar } from "@whatmatters/wmds";
+import { PromptBar } from "@thewhatmatters/wmds";
 
 export function AskPrompt() {
   const [draft, setDraft] = useState("");
@@ -53,7 +53,7 @@ function AskPrompt() {
 
 const marketingComposerCopySource = `
 import { useState } from "react";
-import { PromptBar } from "@whatmatters/wmds";
+import { PromptBar } from "@thewhatmatters/wmds";
 
 /**
  * Marketing homepage composer, pinned to the bottom of the viewport on the page grid.

@@ -1,5 +1,5 @@
 {
-  "name": "@whatmatters/wmds",
+  "name": "@thewhatmatters/wmds",
   "description": "WhatMatters Design System — React components, Tailwind v4 theme, and Storybook patterns",
   "version": "0.2.0",
   "type": "module",

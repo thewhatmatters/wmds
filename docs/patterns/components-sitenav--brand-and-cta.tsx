@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — brand + CTA
+// @thewhatmatters/wmds@0.2.0 · Pattern — brand + CTA
 // Storybook: Components/SiteNav → Pattern — brand + CTA (?path=/story/components-sitenav--brand-and-cta)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Button, SiteNav } from "@whatmatters/wmds";
+import { Button, SiteNav } from "@thewhatmatters/wmds";
 import { Sparkles } from "lucide-react";
 
 export function BrandAndCtaNav() {

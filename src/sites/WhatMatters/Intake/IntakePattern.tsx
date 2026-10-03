@@ -245,7 +245,7 @@ import {
   intakeDetailsMax,
   isIntakeAboutValid,
   type IntakeAboutValues,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 export const intakeNeeds = [
   {

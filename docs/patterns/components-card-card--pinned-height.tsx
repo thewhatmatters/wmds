@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — pinned height
+// @thewhatmatters/wmds@0.2.0 · Pattern — pinned height
 // Storybook: Components/Card/Card → Pattern — pinned height (?path=/story/components-card-card--pinned-height)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -9,7 +9,7 @@ import {
   cardLayoutBodyOccupantWellClasses,
   cardSubtitleClasses,
   cardTitleClasses,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 <Card shape="rounded" padding="none" variant="surface" className="h-[280px] max-w-lg">
   <Card.Header

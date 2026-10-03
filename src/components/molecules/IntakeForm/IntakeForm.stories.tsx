@@ -70,7 +70,7 @@ export const AboutYouPattern: Story = {
   },
   parameters: storyCopySource(`
 import { useState } from "react";
-import { IntakeForm, intakeAboutEmpty } from "@whatmatters/wmds";
+import { IntakeForm, intakeAboutEmpty } from "@thewhatmatters/wmds";
 
 export function AboutYou() {
   const [values, setValues] = useState(intakeAboutEmpty);

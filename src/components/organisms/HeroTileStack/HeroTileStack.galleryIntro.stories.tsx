@@ -39,7 +39,7 @@ const marketingHeroWithGalleryIntroCopySource = `
 // Hand art: CC BY 4.0, Silvia Sguotti and Gabriele Montinaro.
 
 import { Sparkles } from "lucide-react";
-import { Badge, Button, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence } from "@whatmatters/wmds";
+import { Badge, Button, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence } from "@thewhatmatters/wmds";
 
 const tiles = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },

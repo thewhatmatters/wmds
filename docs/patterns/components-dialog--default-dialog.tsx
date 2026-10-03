@@ -1,10 +1,10 @@
-// @whatmatters/wmds@0.2.0 · Pattern — dialog
+// @thewhatmatters/wmds@0.2.0 · Pattern — dialog
 // Storybook: Components/Dialog → Pattern — dialog (?path=/story/components-dialog--default-dialog)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { Button, Dialog } from "@whatmatters/wmds";
-import { dialogFooterActionsClasses } from "@whatmatters/wmds";
+import { Button, Dialog } from "@thewhatmatters/wmds";
+import { dialogFooterActionsClasses } from "@thewhatmatters/wmds";
 
 export function NotificationSettingsDialog() {
   const [open, setOpen] = useState(false);

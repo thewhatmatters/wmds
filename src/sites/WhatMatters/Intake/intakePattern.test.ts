@@ -53,7 +53,7 @@ describe("intake pattern", () => {
       .slice(intakePatternCopySource.indexOf("export const intakeNeeds"))
       .trim();
     expect(shown).toBe(live);
-    expect(intakePatternCopySource).toContain('from "@whatmatters/wmds"');
+    expect(intakePatternCopySource).toContain('from "@thewhatmatters/wmds"');
     expect(intakePatternCopySource).toContain("IntakeConfirmation");
     expect(intakePatternCopySource).toContain("ConfettiProvider");
     expect(intakePatternCopySource).not.toContain("ExampleGridControls");

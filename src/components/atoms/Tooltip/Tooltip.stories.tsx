@@ -65,7 +65,7 @@ export const IconAction: Story = {
       },
     },
     `
-import { IconButton, Tooltip } from "@whatmatters/wmds";
+import { IconButton, Tooltip } from "@thewhatmatters/wmds";
 import { Settings } from "lucide-react";
 
 <Tooltip.Provider>
@@ -114,7 +114,7 @@ export const Placement: Story = {
       },
     },
     `
-import { Button, Tooltip } from "@whatmatters/wmds";
+import { Button, Tooltip } from "@thewhatmatters/wmds";
 
 <Tooltip>
   <Tooltip.Trigger render={<Button role="secondary">Details</Button>} />
@@ -150,7 +150,7 @@ export const KeyboardShortcut: Story = {
       },
     },
     `
-import { IconButton, Kbd, Tooltip } from "@whatmatters/wmds";
+import { IconButton, Kbd, Tooltip } from "@thewhatmatters/wmds";
 import { Info } from "lucide-react";
 
 <Tooltip>
@@ -191,7 +191,7 @@ export const DisabledControl: Story = {
       },
     },
     `
-import { Button, Tooltip } from "@whatmatters/wmds";
+import { Button, Tooltip } from "@thewhatmatters/wmds";
 
 <Tooltip>
   <Tooltip.Trigger
@@ -236,7 +236,7 @@ export const Controlled: Story = {
     },
     `
 import { useState } from "react";
-import { IconButton, Tooltip } from "@whatmatters/wmds";
+import { IconButton, Tooltip } from "@thewhatmatters/wmds";
 import { Info } from "lucide-react";
 
 export function ControlledTooltip() {

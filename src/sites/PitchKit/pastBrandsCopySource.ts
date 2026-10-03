@@ -239,7 +239,7 @@ import {
   Select,
   cardTitleClasses,
   dialogFooterActionsClasses,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const compactNumber = new Intl.NumberFormat("en", {
   notation: "compact",
@@ -583,7 +583,7 @@ export function PastBrandsOwnerPage({
 
 export const pastBrandsPublicCopySource = `
 import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
-import { Avatar, Card, Chip, cardTitleClasses } from "@whatmatters/wmds";
+import { Avatar, Card, Chip, cardTitleClasses } from "@thewhatmatters/wmds";
 
 const compactNumber = new Intl.NumberFormat("en", {
   notation: "compact",

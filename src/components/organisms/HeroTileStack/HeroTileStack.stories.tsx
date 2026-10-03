@@ -91,7 +91,7 @@ const marketingHeroCopySource = `
 "use client";
 
 import { Sparkles } from "lucide-react";
-import { Badge, Button, HeroIntro, HeroTileStack, ScrollHorizontal, SiteNav } from "@whatmatters/wmds";
+import { Badge, Button, HeroIntro, HeroTileStack, ScrollHorizontal, SiteNav } from "@thewhatmatters/wmds";
 
 const tiles = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },
@@ -571,7 +571,7 @@ const marketingHeroTextSequenceCopySource = `
 // Hand art: CC BY 4.0, Silvia Sguotti and Gabriele Montinaro.
 
 import { Sparkles } from "lucide-react";
-import { Button, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence } from "@whatmatters/wmds";
+import { Button, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence } from "@thewhatmatters/wmds";
 
 const tiles = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },

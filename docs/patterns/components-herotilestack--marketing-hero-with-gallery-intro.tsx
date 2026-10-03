@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Marketing hero with gallery intro
+// @thewhatmatters/wmds@0.2.0 · Marketing hero with gallery intro
 // Storybook: Components/HeroTileStack → Marketing hero with gallery intro (?path=/story/components-herotilestack--marketing-hero-with-gallery-intro)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -9,7 +9,7 @@
 // Hand art: CC BY 4.0, Silvia Sguotti and Gabriele Montinaro.
 
 import { Sparkles } from "lucide-react";
-import { Badge, Button, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence } from "@whatmatters/wmds";
+import { Badge, Button, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence } from "@thewhatmatters/wmds";
 
 const tiles = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },

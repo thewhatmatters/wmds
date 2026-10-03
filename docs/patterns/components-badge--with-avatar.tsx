@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — with avatar
+// @thewhatmatters/wmds@0.2.0 · Pattern — with avatar
 // Storybook: Components/Badge → Pattern — with avatar (?path=/story/components-badge--with-avatar)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Badge } from "@whatmatters/wmds";
+import { Badge } from "@thewhatmatters/wmds";
 
 export function BadgeWithAvatar() {
   return (

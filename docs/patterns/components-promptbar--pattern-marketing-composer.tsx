@@ -1,9 +1,9 @@
-// @whatmatters/wmds@0.2.0 · Pattern — marketing composer
+// @thewhatmatters/wmds@0.2.0 · Pattern — marketing composer
 // Storybook: Components/PromptBar → Pattern — marketing composer (?path=/story/components-promptbar--pattern-marketing-composer)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { PromptBar } from "@whatmatters/wmds";
+import { PromptBar } from "@thewhatmatters/wmds";
 
 /**
  * Marketing homepage composer, pinned to the bottom of the viewport on the page grid.

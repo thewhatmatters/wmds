@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — notification preferences
+// @thewhatmatters/wmds@0.2.0 · Pattern — notification preferences
 // Storybook: Guides/Overlay flows → Pattern — notification preferences (?path=/story/guides-overlay-flows--notification-preferences)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -17,7 +17,7 @@ import {
   cardSubtitleClasses,
   cardTitleClasses,
   dialogFooterActionsClasses,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 export function NotificationPreferencesPage() {
   const [channelsOpen, setChannelsOpen] = useState(false);

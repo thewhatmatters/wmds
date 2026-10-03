@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Marketing hero with gallery intro
+// @thewhatmatters/wmds@0.2.0 · Marketing hero with gallery intro
 // Storybook: Components/FooterReveal → Marketing hero with gallery intro (?path=/story/components-footerreveal--marketing-hero-with-gallery-intro)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -9,7 +9,7 @@
 // Hand art: CC BY 4.0, Silvia Sguotti and Gabriele Montinaro.
 
 import { Sparkles } from "lucide-react";
-import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence, footerRevealFieldClasses } from "@whatmatters/wmds";
+import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence, footerRevealFieldClasses } from "@thewhatmatters/wmds";
 
 const socialLinks = [
   { label: "Contra", href: "#contra-TODO" },

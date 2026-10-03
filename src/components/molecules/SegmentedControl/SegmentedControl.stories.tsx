@@ -78,7 +78,7 @@ export const ShapeToggle: Story = {
   parameters: {
     ...storyCopySource(`
 import { useState } from "react";
-import { SegmentedControl } from "@whatmatters/wmds";
+import { SegmentedControl } from "@thewhatmatters/wmds";
 
 function CardShapeToggle() {
   const [shape, setShape] = useState("rounded");
@@ -114,7 +114,7 @@ export const ViewSwitcher: Story = {
   parameters: {
     ...storyCopySource(`
 import { useState } from "react";
-import { SegmentedControl } from "@whatmatters/wmds";
+import { SegmentedControl } from "@thewhatmatters/wmds";
 
 function ReportViewSwitcher() {
   const [view, setView] = useState("chart");
@@ -165,7 +165,7 @@ export const ViewSwitcherWithIcons: Story = {
     ...storyCopySource(`
 import { useState } from "react";
 import { LayoutGrid, List, BarChart3 } from "lucide-react";
-import { ButtonIcon, SegmentedControl } from "@whatmatters/wmds";
+import { ButtonIcon, SegmentedControl } from "@thewhatmatters/wmds";
 
 function ReportViewSwitcher() {
   const [view, setView] = useState("chart");
