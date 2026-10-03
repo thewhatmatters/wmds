@@ -313,6 +313,23 @@ async function expectLastTileFillsViewport(canvasElement: HTMLElement) {
   expectEdgesMeet(footerTop ?? 0, documentBottom(section));
 }
 
+/**
+ * Scrolling to the last tile collapses SiteNav into its compact bar, which slides and fades in
+ * (medium tier). The collapse follows a scroll listener, so the bar can mount after the scroll
+ * assertions pass, and the accessibility check runs as soon as play ends. Wait until the compact
+ * bar exists and has stayed fully opaque — a bar caught mid-fade fails color contrast.
+ */
+async function waitForSiteNavSettled(canvasElement: HTMLElement) {
+  const settled = () => {
+    const bars = [...canvasElement.querySelectorAll<HTMLElement>("[data-state='compact']")];
+    expect(bars.length).toBeGreaterThan(0);
+    for (const bar of bars) expect(getComputedStyle(bar).opacity).toBe("1");
+  };
+  await waitFor(settled, { timeout: 3000 });
+  await new Promise((resolve) => setTimeout(resolve, 150));
+  await waitFor(settled, { timeout: 3000 });
+}
+
 export const MarketingHeroWithGalleryIntro: Story = {
   name: "Marketing hero with gallery intro",
   tags: ["test"],
@@ -338,6 +355,7 @@ export const MarketingHeroWithGalleryIntro: Story = {
     expect(section.querySelector("[data-pattern='label']")?.textContent).toBe("SELECTED WORK");
     expectDefaultHeroMatchesGallery(canvasElement);
     await expectLastTileFillsViewport(canvasElement);
+    await waitForSiteNavSettled(canvasElement);
   },
 };
 
@@ -418,6 +436,7 @@ function expandViewportStory(id: keyof typeof expandViewportOptions, minWidth: n
       expect(window.innerWidth).toBeLessThanOrEqual(maxWidth);
       expectDefaultHeroMatchesGallery(canvasElement);
       await expectLastTileFillsViewport(canvasElement);
+      await waitForSiteNavSettled(canvasElement);
     },
   };
 }
