@@ -65,16 +65,55 @@ The fade tracks the scroll boundary without JavaScript. See **Foundations → Sc
 
 ## Install
 
-```bash
-npm install ../wmds   # local
-# or github: / npm when published
-```
-
-Build the package:
+### From npm (default)
 
 ```bash
-cd wmds && npm install && npm run build
+npm install @whatmatters/wmds@^0.2.0
 ```
+
+Install the peers the components you use need (see **Requirements**): `react`, `react-dom`, `motion`, `lucide-react`, and `@visx/visx` for **Chart**.
+
+**Upgrade** with one command, then read **`CHANGELOG.md` → Consumer actions** for every version you crossed:
+
+```bash
+npm install @whatmatters/wmds@latest
+```
+
+Versions follow semver. While the major version is `0`, a minor bump (`0.3.0`) can break the app, so `^0.2.0` accepts patches only and a minor upgrade is always a deliberate `npm install @whatmatters/wmds@^0.3.0`. The changelog ships in the package: `node_modules/@whatmatters/wmds/CHANGELOG.md`.
+
+### Moving from a git pin
+
+Apps that pinned a commit (`"@whatmatters/wmds": "github:thewhatmatters/wmds#<sha>"`) switch with:
+
+```bash
+npm uninstall @whatmatters/wmds
+npm install @whatmatters/wmds@^0.2.0
+```
+
+Then follow **0.2.0 → Consumer actions** in `CHANGELOG.md` and commit `package.json` and `package-lock.json` together.
+
+Git installs keep working while apps move — the `prepare` script builds `dist` on install. To change a git pin, run `npm install github:thewhatmatters/wmds#<sha>`. Do not edit the hash in `package.json` by hand: the lockfile keeps the old commit's integrity and `npm install` skips the update.
+
+### Local checkout (same-day iteration)
+
+To try an unreleased WMDS change in an app before it is published, install a tarball built from the checkout. It is exactly what npm would publish, and the app keeps its own single copy of React:
+
+```bash
+# in the WMDS checkout, after each change
+npm install            # first time only
+npm pack               # builds dist, writes whatmatters-wmds-<version>.tgz
+
+# in the app
+npm install ../wmds/whatmatters-wmds-0.2.0.tgz
+```
+
+Repeat both steps after each WMDS change. When done, return to the published version so the `file:` entry is not committed:
+
+```bash
+npm install @whatmatters/wmds@^0.2.0
+```
+
+**Faster loop (symlink).** `npm install ../wmds` links the checkout instead, and the app sees each `npm run build` without reinstalling. The linked package resolves `react` from the checkout's own `node_modules`, which gives the app two copies of React (invalid hook call). Only use it when the bundler dedupes React — Vite: `resolve: { dedupe: ["react", "react-dom"] }`. In Next.js prefer the tarball; if you do link, the checkout must sit inside `turbopack.root`.
 
 ## Wire up styles
 

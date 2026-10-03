@@ -109,7 +109,7 @@ When adding a component: create its folder in the correct atomic tier, title its
 
 Rules from the 2026-10-03 audit. The check that enforces each one is in parentheses. Full record: **`docs/audits/2026-10-03.md`**.
 
-- **Before pushing:** `npm run lint`, `npm run typecheck`, `npm run test:unit`, `npm run build`, `npm run test:interactions`. CI runs all five.
+- **Before pushing:** `npm run lint`, `npm run typecheck`, `npm run test:unit`, `npm run build`, `npm run test:interactions`. CI runs all five, plus `check:changelog`, `check:pack`, and a publish dry run.
 - **Stories and tests are type-checked.** `tsc -b` covers everything under `src/`, not only shipped code. (CI: Typecheck)
 - **Story types:** `StoryObj<typeof meta>` when stories pass args. `StoryObj<typeof Component>` when stories supply required props in their own JSX. (Typecheck)
 - **Hooks in a story `render` need a named function** — `render: function NameRender() { … }`, not an arrow. (Lint)
@@ -123,6 +123,9 @@ Rules from the 2026-10-03 audit. The check that enforces each one is in parenthe
 - **Play functions:** do not assert on a counter the moment a state flips. Wait for the value to hold, with real time (`settledRockFrameCount`) — `waitFor` also re-runs on DOM mutations.
 - **Unit tests do not use the network.** `vitest.setup.ts` holds runtime WASM requests.
 - **Dependency ranges are pinned** — no `latest`.
+- **Every change apps can see goes in `CHANGELOG.md`** under the top entry, with the exact steps an app takes under **Consumer actions** (or **None.**). Name any **Pattern — …** whose Show code changed so apps re-copy it. If the top entry's version is already on npm, start a new entry and bump `package.json` to match — a minor bump (`0.x.0`) for anything that breaks an app while the major is `0`, a patch otherwise. (CI: Changelog → `npm run check:changelog`)
+- **The tarball is checked.** A new export path or shipped asset goes in `package.json` → `files` / `exports` and in the required list in `scripts/check-pack.mjs`. Sources, stories, tests, decision records, and the Rive WASM never ship. (CI: Package contents → `npm run check:pack`)
+- **Releases publish from CI only**, from a `v<version>` tag, through `.github/workflows/release.yml` with npm trusted publishing. Never run `npm publish` locally and never add an npm token to the repo. Steps: **`docs/releasing.md`**.
 
 ## Resume here (Avatar + overlay family)
 
