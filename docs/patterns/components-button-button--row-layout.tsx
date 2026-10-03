@@ -4,7 +4,11 @@
 
 import { Button } from "@whatmatters/wmds";
 
-<Button role="ghost" layout="row" type="button" onClick={() => openDueDatePicker()}>
-  <span>Due date</span>
-  <span>Sep 12</span>
-</Button>
+export function DueDateRow({ onOpenDatePicker }: { onOpenDatePicker: () => void }) {
+  return (
+    <Button role="ghost" layout="row" type="button" onClick={onOpenDatePicker}>
+      <span>Due date</span>
+      <span>Sep 12</span>
+    </Button>
+  );
+}

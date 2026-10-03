@@ -29,7 +29,6 @@ import {
   promptChatStartGateOptionsClasses,
   promptChatStartGateStepClasses,
   promptChatThreadClasses,
-  promptChatThinkingLabelClasses,
   promptChatThoughtLabelClasses,
   promptChatTraceBodyClasses,
   promptChatTraceChevronClasses,
@@ -54,10 +53,13 @@ import {
 } from "./promptChatThinking";
 import {
   promptChatIntakeQaPairs,
-  promptChatStartGateTitle,
+  promptChatStartGateCopy,
   promptChatStartOptions,
 } from "./PromptChatStartGate";
 import { intakeAboutEmpty } from "../../../components/molecules/IntakeForm/IntakeForm";
+
+/** Card.Header title on step 1 of the Start Project gate. */
+const promptChatStartGateTitle = promptChatStartGateCopy[1].title;
 
 /** Steps duration (~4s) plus a buffer so the reply has started. */
 const stepsReadyMs = Math.ceil(promptChatTraceDurationSeconds(promptChatTraces.steps.length) * 1000) + 400;
@@ -212,7 +214,6 @@ describe("prompt chat pattern", () => {
       promptChatTraceTriggerClasses,
       promptChatTraceBodyClasses,
       promptChatTraceLineClasses,
-      promptChatThinkingLabelClasses,
       promptChatThoughtLabelClasses,
       promptChatTraceIconClasses,
       promptChatTraceChevronClasses,
@@ -250,7 +251,6 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).toContain("useReducedMotion");
     expect(promptChatPatternCopySource).toContain(promptChatHeadline);
     expect(promptChatPatternCopySource).toContain(promptChatSampleReply);
-    expect(promptChatPatternCopySource).toContain(promptChatThoughtLabel);
     expect(promptChatPatternCopySource).toContain("thoughtForLabel");
     expect(promptChatPatternCopySource).toContain("group-hover/reply");
     expect(promptChatPatternCopySource).toContain("data-actions=");

@@ -34,6 +34,8 @@ export const packageManifest = {
   /** Modules exported from src/index.ts today. */
   libExports: [
     { name: "cn", path: "./lib/cn" },
+    { name: "buttonSizeForCluster", path: "./lib/clusterScale", reexport: "buttonSizeForCluster" },
+    { name: "iconButtonSizeForCluster", path: "./lib/clusterScale", reexport: "iconButtonSizeForCluster" },
     { name: "motionTransition", path: "./lib/motion", reexport: "motionTransition" },
     { name: "motionTransitionProp", path: "./lib/motion", reexport: "motionTransitionProp" },
     { name: "focusRingTransitionClasses", path: "./lib/motion", reexport: "focusRingTransitionClasses" },

@@ -82,7 +82,7 @@ export const MultiStateBadge: Story = {
 import { useState } from "react";
 import { Button, getNextButtonStatus, type ButtonStatus } from "@whatmatters/wmds";
 
-function SubmitForm() {
+export function SubmitForm() {
   const [status, setStatus] = useState<ButtonStatus>("idle");
 
   return (
@@ -204,8 +204,14 @@ export const LinkRender: Story = {
     `
 import { Button } from "@whatmatters/wmds";
 
-<Button role="ghost" size="sm" render={<a href="/docs" />}>Docs</Button>
-<Button size="sm" render={<a href="/signup" />}>Get started</Button>
+export function HeaderLinks() {
+  return (
+    <>
+      <Button role="ghost" size="sm" render={<a href="/docs" />}>Docs</Button>
+      <Button size="sm" render={<a href="/signup" />}>Get started</Button>
+    </>
+  );
+}
     `,
   ),
   render: () => (
@@ -240,10 +246,14 @@ export const RowLayout: Story = {
     `
 import { Button } from "@whatmatters/wmds";
 
-<Button role="ghost" layout="row" type="button" onClick={() => openDueDatePicker()}>
-  <span>Due date</span>
-  <span>Sep 12</span>
-</Button>
+export function DueDateRow({ onOpenDatePicker }: { onOpenDatePicker: () => void }) {
+  return (
+    <Button role="ghost" layout="row" type="button" onClick={onOpenDatePicker}>
+      <span>Due date</span>
+      <span>Sep 12</span>
+    </Button>
+  );
+}
     `,
   ),
   render: () => (
@@ -284,9 +294,21 @@ export const WithIcon: Story = {
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { Button } from "@whatmatters/wmds";
 
-<Button role="primary" icon={<Plus strokeWidth={2} />}>
-  New item
-</Button>
+export function ItemActions() {
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      <Button role="primary" icon={<Plus strokeWidth={2} />}>
+        New item
+      </Button>
+      <Button role="secondary" icon={<Pencil strokeWidth={2} />}>
+        Edit
+      </Button>
+      <Button role="destructive" icon={<Trash2 strokeWidth={2} />}>
+        Delete
+      </Button>
+    </div>
+  );
+}
     `,
   ),
   render: () => (

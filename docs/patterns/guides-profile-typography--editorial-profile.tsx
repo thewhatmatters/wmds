@@ -14,7 +14,7 @@ import {
 } from "@whatmatters/wmds";
 import { ChevronRight, VolumeX } from "lucide-react";
 
-export function ProfilePage() {
+export function ProfilePage({ onOpenRole }: { onOpenRole: (company: string) => void }) {
   const [gridVisible, setGridVisible] = useState(false);
   const [theme, setTheme] = useState<DisplayControlThemeMode>("auto");
 
@@ -49,7 +49,7 @@ export function ProfilePage() {
             <h2 className="type-body text-muted">Work</h2>
             <ul className="mt-4 border-t border-border">
               <li className="border-b border-border py-2">
-                <Button role="ghost" layout="row" onClick={() => openRole("WhatMatters")}>
+                <Button role="ghost" layout="row" onClick={() => onOpenRole("WhatMatters")}>
                   <span className="flex items-center gap-3">
                     <Avatar name="WhatMatters" size="xsm" />
                     <span>WhatMatters</span>

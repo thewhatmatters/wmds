@@ -13,11 +13,11 @@ const compactNumber = new Intl.NumberFormat("en", {
 const PITCHKIT_INTRO_SOFT_LIMIT = 160;
 const PITCHKIT_INTRO_HARD_LIMIT = 280;
 
-function pitchKitIntroIsEmpty(intro) {
+function pitchKitIntroIsEmpty(intro: string) {
   return intro.trim().length === 0;
 }
 
-function pitchKitIntroStatus(intro) {
+function pitchKitIntroStatus(intro: string): "warning" | "error" | undefined {
   const length = intro.length;
   if (length >= PITCHKIT_INTRO_HARD_LIMIT) return "error";
   if (length >= PITCHKIT_INTRO_SOFT_LIMIT) return "warning";
@@ -25,7 +25,26 @@ function pitchKitIntroStatus(intro) {
 }
 
 
-function CreatorIdentityStrip({ identity, nameAs = "h1", showProfessionalChip = false }) {
+export interface PitchKitCreatorIdentity {
+  displayName?: string;
+  /** Without the @ — shown as @handle, shared as /k/[handle]. */
+  handle: string;
+  profilePictureUrl?: string;
+  followersCount?: number;
+  professionalAccount?: "Business" | "Creator";
+  connected?: boolean;
+  lastSyncedLabel?: string;
+}
+
+function CreatorIdentityStrip({
+  identity,
+  nameAs = "h1",
+  showProfessionalChip = false,
+}: {
+  identity: PitchKitCreatorIdentity;
+  nameAs?: "h1" | "p";
+  showProfessionalChip?: boolean;
+}) {
   const NameTag = nameAs;
   const avatarName = identity.displayName ?? identity.handle;
   const handleLabel = `@${identity.handle}`;
@@ -67,7 +86,13 @@ function CreatorIdentityStrip({ identity, nameAs = "h1", showProfessionalChip = 
 }
 
 
-function OwnerIntroEditor({ intro, onIntroChange }) {
+function OwnerIntroEditor({
+  intro,
+  onIntroChange,
+}: {
+  intro: string;
+  onIntroChange: (intro: string) => void;
+}) {
   const [editing, setEditing] = useState(!pitchKitIntroIsEmpty(intro));
 
   if (pitchKitIntroIsEmpty(intro) && !editing) {
@@ -92,7 +117,15 @@ function OwnerIntroEditor({ intro, onIntroChange }) {
   );
 }
 
-export function IntroOwnerPage({ identity, intro, onIntroChange }) {
+export function IntroOwnerPage({
+  identity,
+  intro,
+  onIntroChange,
+}: {
+  identity: PitchKitCreatorIdentity;
+  intro: string;
+  onIntroChange: (intro: string) => void;
+}) {
   return (
     <main className="grid-page min-h-screen bg-body [--grid-column-gap:8px] [--grid-max:1140px] [padding-bottom:44px]">
       <div className="band pb-4">

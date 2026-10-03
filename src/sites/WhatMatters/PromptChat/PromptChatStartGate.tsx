@@ -88,12 +88,6 @@ export const promptChatStartGateCopy: Record<
   },
 };
 
-/** Card.Header title for step 1 — kept for tests and Show code mirrors. */
-export const promptChatStartGateTitle = promptChatStartGateCopy[1].title;
-
-/** Card.Header subtitle for step 1. */
-export const promptChatStartGateSubtitle = promptChatStartGateCopy[1].subtitle;
-
 export { intakeAboutEmpty };
 
 export type PromptChatStartGatePhase = IntakePhase;

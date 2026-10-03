@@ -13,7 +13,7 @@ import {
   SegmentedControl,
 } from "@whatmatters/wmds";
 
-function MarketCardHeader() {
+export function MarketCardHeader() {
   const [view, setView] = useState("overview");
 
   return (
@@ -21,7 +21,7 @@ function MarketCardHeader() {
       <Card.Header
         start={
           <>
-            <h2 className={cardTitleClasses}>Texas Farmers' Market at Mueller</h2>
+            <h2 className={cardTitleClasses}>Texas Farmers&apos; Market at Mueller</h2>
             <p className={cardSubtitleClasses}>2006 Philomena St. · Austin, TX</p>
           </>
         }

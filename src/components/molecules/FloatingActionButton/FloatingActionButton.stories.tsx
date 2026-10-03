@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Camera, FileText, Image, Pencil } from "lucide-react";
+import { Camera, FileText, ImageIcon, Pencil } from "lucide-react";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { FloatingActionButton } from "./FloatingActionButton";
 
 const actions = [
   { id: "camera", label: "Camera", icon: <Camera /> },
-  { id: "image", label: "Image", icon: <Image /> },
+  { id: "image", label: "Image", icon: <ImageIcon /> },
   { id: "file", label: "File", icon: <FileText /> },
   { id: "edit", label: "Edit", icon: <Pencil /> },
 ];
@@ -73,20 +73,24 @@ export const VerticalActions: Story = {
       },
     },
     `
-import { Camera, FileText, Image, Pencil } from "lucide-react";
+import { Camera, FileText, ImageIcon, Pencil } from "lucide-react";
 import { FloatingActionButton } from "@whatmatters/wmds";
 
-<FloatingActionButton
-  className="fixed bottom-4 right-4"
-  backdrop
-  items={[
-    { id: "camera", label: "Camera", icon: <Camera /> },
-    { id: "image", label: "Image", icon: <Image /> },
-    { id: "file", label: "File", icon: <FileText /> },
-    { id: "edit", label: "Edit", icon: <Pencil /> },
-  ]}
-  onAction={(id) => performAction(id)}
-/>
+export function QuickActions({ onAction }: { onAction: (id: string) => void }) {
+  return (
+    <FloatingActionButton
+      className="fixed bottom-4 right-4"
+      backdrop
+      items={[
+        { id: "camera", label: "Camera", icon: <Camera /> },
+        { id: "image", label: "Image", icon: <ImageIcon /> },
+        { id: "file", label: "File", icon: <FileText /> },
+        { id: "edit", label: "Edit", icon: <Pencil /> },
+      ]}
+      onAction={onAction}
+    />
+  );
+}
 `,
   ),
 };

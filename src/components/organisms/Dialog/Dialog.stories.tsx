@@ -100,7 +100,7 @@ import { useState } from "react";
 import { Button, Dialog } from "@whatmatters/wmds";
 import { dialogFooterActionsClasses } from "@whatmatters/wmds";
 
-function NotificationSettingsDialog() {
+export function NotificationSettingsDialog() {
   const [open, setOpen] = useState(false);
 
   return (
@@ -174,7 +174,7 @@ import { useState } from "react";
 import { Button, Dialog, Input } from "@whatmatters/wmds";
 import { dialogFooterActionsClasses } from "@whatmatters/wmds";
 
-function InviteDialog() {
+export function InviteDialog() {
   const [open, setOpen] = useState(false);
 
   return (
@@ -280,7 +280,7 @@ export const AlertDialogDestructive: Story = {
 import { useState } from "react";
 import { AlertDialog, Button } from "@whatmatters/wmds";
 
-function DeleteProjectAlert() {
+export function DeleteProjectAlert() {
   const [open, setOpen] = useState(false);
 
   return (

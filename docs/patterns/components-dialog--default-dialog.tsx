@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Button, Dialog } from "@whatmatters/wmds";
 import { dialogFooterActionsClasses } from "@whatmatters/wmds";
 
-function NotificationSettingsDialog() {
+export function NotificationSettingsDialog() {
   const [open, setOpen] = useState(false);
 
   return (

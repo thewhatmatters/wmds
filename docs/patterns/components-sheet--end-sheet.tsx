@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { Button, Sheet, Switch } from "@whatmatters/wmds";
 
-function SettingsSheet() {
+export function SettingsSheet() {
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState(true);
 

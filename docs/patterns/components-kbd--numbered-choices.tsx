@@ -12,10 +12,10 @@ const choices = [
   { value: "system", label: "Design system", number: "4" },
 ];
 
-function NumberedChoices() {
-  const [values, setValues] = useState([]);
+export function NumberedChoices() {
+  const [values, setValues] = useState<string[]>([]);
 
-  function toggle(value, checked) {
+  function toggle(value: string, checked: boolean) {
     if (checked) {
       setValues((current) => [...current, value]);
       return;

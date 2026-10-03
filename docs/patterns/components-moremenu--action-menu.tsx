@@ -5,7 +5,7 @@
 import { Download, Share2 } from "lucide-react";
 import { ButtonIcon, MoreMenu } from "@whatmatters/wmds";
 
-function MarketActions() {
+export function MarketActions() {
   return (
     <MoreMenu
       aria-label="More market actions"

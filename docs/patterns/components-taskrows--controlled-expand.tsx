@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { Button, TaskRows } from "@whatmatters/wmds";
 
-function ReorderPanel() {
+export function ReorderPanel() {
   const [open, setOpen] = useState(false);
 
   return (

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Button, Dialog, Input } from "@whatmatters/wmds";
 import { dialogFooterActionsClasses } from "@whatmatters/wmds";
 
-function InviteDialog() {
+export function InviteDialog() {
   const [open, setOpen] = useState(false);
 
   return (

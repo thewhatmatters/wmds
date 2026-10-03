@@ -4,14 +4,18 @@
 
 import { Chart } from "@whatmatters/wmds";
 
-<Chart.DistributionStrip
-  aria-label="Reach distribution for six recent posts"
-  items={posts.map((post, index) => ({
-    id: post.id,
-    label: `#${index + 1}`,
-    value: post.reach,
-  }))}
-  metricLabel="Reach"
-  reference={{ value: 9300, label: "Typical 9.3K" }}
-  minHeight={240}
-/>
+export function PostReachDistribution({ posts }: { posts: { id: string; reach: number }[] }) {
+  return (
+    <Chart.DistributionStrip
+      aria-label="Reach distribution for six recent posts"
+      items={posts.map((post, index) => ({
+        id: post.id,
+        label: `#${index + 1}`,
+        value: post.reach,
+      }))}
+      metricLabel="Reach"
+      reference={{ value: 9300, label: "Typical 9.3K" }}
+      minHeight={240}
+    />
+  );
+}
