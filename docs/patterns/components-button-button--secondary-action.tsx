@@ -1,0 +1,7 @@
+// @whatmatters/wmds@0.2.0 · Pattern — secondary action
+// Storybook: Components/Button/Button → Pattern — secondary action (?path=/story/components-button-button--secondary-action)
+// Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
+
+import { Button } from "@whatmatters/wmds";
+
+<Button role="secondary">Cancel</Button>
