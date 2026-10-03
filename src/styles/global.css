@@ -20,8 +20,8 @@ body {
 }
 
 /* Native buttons — pointer on hover; preflight can otherwise win over utilities. */
-button:not(:disabled):not([data-app-shell-drag-handle]),
-[type="button"]:not(:disabled):not([data-app-shell-drag-handle]),
+button:not(:disabled),
+[type="button"]:not(:disabled),
 [type="submit"]:not(:disabled),
 [type="reset"]:not(:disabled) {
   cursor: pointer;

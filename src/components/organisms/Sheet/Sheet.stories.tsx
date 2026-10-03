@@ -57,7 +57,8 @@ Sheet (open / onOpenChange)
 } satisfies Meta<typeof Sheet>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/** Stories that pass required props in their own JSX — args stay optional. */
+type Story = StoryObj<typeof Sheet>;
 
 export const BottomSheet: Story = {
   name: "Pattern — bottom sheet",

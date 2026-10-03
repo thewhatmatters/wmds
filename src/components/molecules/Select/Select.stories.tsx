@@ -151,7 +151,7 @@ export const RichOptions: Story = {
       },
     },
   },
-  render: () => {
+  render: function RichOptionsRender() {
     const [value, setValue] = useState("apple");
 
     return (
@@ -169,7 +169,7 @@ export const RichOptions: Story = {
 
 export const Bare: Story = {
   name: "Pattern — bare",
-  render: () => {
+  render: function BareRender() {
     const [value, setValue] = useState("apple");
 
     return (
@@ -187,7 +187,7 @@ export const Bare: Story = {
 
 export const WithLabel: Story = {
   name: "Pattern — with label",
-  render: () => {
+  render: function WithLabelRender() {
     const [value, setValue] = useState("banana");
 
     return (
@@ -213,7 +213,7 @@ export const PeriodFilter: Story = {
       },
     },
   },
-  render: () => {
+  render: function PeriodFilterRender() {
     const [value, setValue] = useState("month");
 
     return (
@@ -232,7 +232,7 @@ export const PeriodFilter: Story = {
 
 export const Sizes: Story = {
   name: "Reference — sizes",
-  render: () => {
+  render: function SizesRender() {
     const [sm, setSm] = useState("week");
     const [md, setMd] = useState("apple");
     const [lg, setLg] = useState("orange");

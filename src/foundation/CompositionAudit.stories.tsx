@@ -187,7 +187,7 @@ export const Gate: Story = {
   render: () => {
     const report = runCompositionAudit();
     return (
-      <pre className={cn(typographyClass("code"), "text-fg")}>{formatCompositionAuditReport(report)}</pre>
+      <pre className={cn("type-code", "text-fg")}>{formatCompositionAuditReport(report)}</pre>
     );
   },
   play: async () => {

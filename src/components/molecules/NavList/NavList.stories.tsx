@@ -43,9 +43,6 @@ const meta = {
   component: NavList,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),
-  argTypes: {
-    variant: { control: false },
-  },
   parameters: {
     wmdsLayout: "padded",
     docs: {

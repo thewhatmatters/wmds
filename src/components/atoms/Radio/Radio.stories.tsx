@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Radio, radioSizes, inputStatuses } from "./Radio";
-import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySource";
+import { storyMetaDocsDefaults } from "../../../lib/storyCopySource";
 
 function RadioSpecimen({ children }: { children: ReactNode }) {
   return <div className="mx-auto w-full max-w-md px-8 py-6">{children}</div>;

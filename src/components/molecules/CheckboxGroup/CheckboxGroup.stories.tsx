@@ -76,7 +76,8 @@ Multi-select option list — group label, shared validation, and optional \`valu
 } satisfies Meta<typeof CheckboxGroup>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/** Stories that pass required props in their own JSX — args stay optional. */
+type Story = StoryObj<typeof CheckboxGroup>;
 
 export const Default: Story = {
   name: "Pattern — default",

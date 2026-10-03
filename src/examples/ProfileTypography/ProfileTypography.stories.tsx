@@ -7,7 +7,7 @@ import { ButtonIcon } from "../../components/atoms/Button/ButtonIcon";
 import { TextLink } from "../../components/atoms/TextLink/TextLink";
 import type { DisplayControlThemeMode } from "../../components/molecules/DisplayControls/DisplayControls";
 import { GridOverlay } from "../../lib/GridOverlay";
-import { storyCopySource, storyMetaDocsDefaults } from "../../lib/storyCopySource";
+import { storyMetaDocsDefaults, withStoryCopySource } from "../../lib/storyCopySource";
 import { ExampleGridControls } from "../ExampleGridControls/ExampleGridControls";
 import {
   profileAliasClasses,
@@ -218,14 +218,16 @@ function EditorialProfilePage() {
 export const EditorialProfile: Story = {
   name: "Pattern — editorial profile",
   render: () => <EditorialProfilePage />,
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Open Layout to change the 960px wrapper or 24px column gap live. Press G for grid guides and T to cycle the theme. Show code omits the Storybook-only inspector harness.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Open Layout to change the 960px wrapper or 24px column gap live. Press G for grid guides and T to cycle the theme. Show code omits the Storybook-only inspector harness.",
+        },
       },
     },
-    ...storyCopySource(`
+    `
 import { useState } from "react";
 import {
   Avatar,
@@ -303,6 +305,6 @@ export function ProfilePage() {
     </main>
   );
 }
-`),
-  },
+`,
+  ),
 };

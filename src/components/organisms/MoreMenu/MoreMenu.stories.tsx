@@ -59,7 +59,8 @@ Menu **right-aligns** to the trigger (\`align="end"\`) and clamps to the nearest
 } satisfies Meta<typeof MoreMenu>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/** Stories that pass required props in their own JSX — args stay optional. */
+type Story = StoryObj<typeof MoreMenu>;
 
 const demoItems = [
   {

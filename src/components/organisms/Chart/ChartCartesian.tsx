@@ -802,7 +802,7 @@ export function ChartCartesianTooltipLayer() {
       return chartTooltipAnchorAboveLeftClasses;
     }
     return chartTooltipAnchorAboveRightClasses;
-  }, [anchorY, crosshairX, margin.left, tooltipData?.index, width]);
+  }, [anchorY, crosshairX, margin.left, width]);
 
   return (
     <>

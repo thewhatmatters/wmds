@@ -40,7 +40,7 @@ const meta = {
 | **FAB** | \`fab\` + \`aria-label\` |
 | **With tooltip** | \`title\` (defaults to \`aria-label\`) |
 | **Async** | \`loading\` + \`aria-label\` |
-| **Inset dismiss** | \`inset\` + \`size="sm" \| "md" \| "lg"\` — removable Chip trailing × |
+| **Inset dismiss** | \`inset\` + \`size="sm" \\| "md" \\| "lg"\` — removable Chip trailing × |
 
 Circular icon-only hit target; \`md\` = cluster lg (44×44px, ADR-0003). \`xs\` / \`sm\` / \`md\` map to cluster sm / md / lg — see **Foundations → Cluster** (ADR-0011).
 

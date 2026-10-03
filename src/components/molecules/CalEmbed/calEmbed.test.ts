@@ -3,7 +3,7 @@ import { createElement } from "react";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { Card } from "../Card/Card";
+import { Card, type CardProps } from "../Card/Card";
 import { CalEmbed } from "./CalEmbed";
 
 describe("CalEmbed caption", () => {
@@ -45,7 +45,7 @@ describe("CalEmbed caption", () => {
 
     act(() => {
       root?.render(
-        createElement(Card, { padding: "none", variant: "surface" }, [
+        createElement(Card, { padding: "none", variant: "surface" } as CardProps, [
           createElement(Card.Body, { key: "body" }, createElement(CalEmbed, { skip: false })),
           createElement(
             Card.Footer,

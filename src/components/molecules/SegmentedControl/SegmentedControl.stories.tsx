@@ -70,7 +70,8 @@ Connected **segmented control** — one track, sliding inset thumb, mutually exc
 } satisfies Meta<typeof SegmentedControl>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/** Stories that pass required props in their own JSX — args stay optional. */
+type Story = StoryObj<typeof SegmentedControl>;
 
 export const ShapeToggle: Story = {
   name: "Pattern — shape toggle (2-up)",
@@ -96,7 +97,7 @@ function CardShapeToggle() {
       },
     },
   },
-  render: () => {
+  render: function ShapeToggleRender() {
     const [shape, setShape] = useState("rounded");
 
     return (
@@ -139,7 +140,7 @@ function ReportViewSwitcher() {
       },
     },
   },
-  render: () => {
+  render: function ViewSwitcherRender() {
     const [view, setView] = useState("chart");
 
     return (
@@ -212,7 +213,7 @@ function ReportViewSwitcher() {
       },
     },
   },
-  render: () => {
+  render: function ViewSwitcherWithIconsRender() {
     const [view, setView] = useState("chart");
 
     return (
@@ -261,7 +262,7 @@ export const SizeReference: Story = {
       },
     },
   },
-  render: () => {
+  render: function SizeReferenceRender() {
     const [value, setValue] = useState("a");
 
     return (

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode } from "react";
 import { Button } from "../../atoms/Button/Button";
 import { Skeleton } from "../../atoms/Skeleton/Skeleton";
 import { Chip } from "../../molecules/Chip/Chip";
@@ -209,6 +209,9 @@ function useChartCardBodyStateFromArgs(args: { bodyState?: ChartCardBodyState })
   };
 }
 
+/** `bodyState` drives the Card pattern stories; it is a story arg, not a Chart prop. */
+type ChartStoryArgs = ComponentProps<typeof Chart> & { bodyState?: ChartCardBodyState };
+
 const meta = {
   title: "Components/Data display/Chart",
   component: Chart,
@@ -239,7 +242,7 @@ Dashboard visualizations on **visx v4** — WMDS owns the **shell**; patterns ow
 
 | Plot family | Pattern | Axes |
 |-------------|---------|------|
-| **Capacity meter** | \`Chart.SegmentedBar\` — \`value\` / \`max\`, \`fill="velocity"\` \| \`semantic\` | No |
+| **Capacity meter** | \`Chart.SegmentedBar\` — \`value\` / \`max\`, \`fill="velocity"\` \\| \`semantic\` | No |
 | **Ranked breakdown** | \`Chart.RankedBars\` — ordered labeled values such as audience country / age | No |
 | **Unit composition** | \`Chart.UnitGrid\` — exact part-to-whole units, typically 100 | Yes |
 | **Distribution strip** | \`Chart.DistributionStrip\` — independent entity values + reference | Yes |
@@ -281,10 +284,11 @@ Card.Header / Footer usually carry KPI copy; the chart mark sits in **Card.Body*
       },
     },
   },
-} satisfies Meta<typeof Chart>;
+} satisfies Meta<ChartStoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/** Stories that pass required props in their own JSX — args stay optional. */
+type Story = StoryObj<ChartStoryArgs>;
 
 const occupancyHistoryWellClasses = `flex flex-col gap-3 ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`;
 

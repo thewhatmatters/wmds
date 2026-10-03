@@ -45,7 +45,8 @@ Dropdown.Menu
 } satisfies Meta<typeof Dropdown.Menu>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/** Stories that pass required props in their own JSX — args stay optional. */
+type Story = StoryObj<typeof Dropdown.Menu>;
 
 export const ItemAnatomy: Story = {
   name: "Reference — item anatomy",

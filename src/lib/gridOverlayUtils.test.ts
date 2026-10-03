@@ -45,27 +45,36 @@ describe("grid.css probe guards", () => {
   });
 });
 
+type GridOverlayKeyEvent = Parameters<typeof gridOverlayKeyShouldToggle>[0];
+
+/** A key event with no modifiers held, unless the test sets one. */
+function keyEvent(init: Partial<GridOverlayKeyEvent> & { key: string }): GridOverlayKeyEvent {
+  return { metaKey: false, ctrlKey: false, altKey: false, target: null, ...init };
+}
+
+/** Stand-in for a DOM node — the helpers only read `tagName` and `isContentEditable`. */
+function target(fields: { tagName?: string; isContentEditable?: boolean }): EventTarget {
+  return fields as unknown as EventTarget;
+}
+
 describe("gridOverlayKeyShouldToggle", () => {
   it("toggles on g / G without modifiers", () => {
-    expect(gridOverlayKeyShouldToggle({ key: "g", target: null })).toBe(true);
-    expect(gridOverlayKeyShouldToggle({ key: "G", target: null })).toBe(true);
+    expect(gridOverlayKeyShouldToggle(keyEvent({ key: "g" }))).toBe(true);
+    expect(gridOverlayKeyShouldToggle(keyEvent({ key: "G" }))).toBe(true);
   });
 
   it("ignores modified keys and non-g keys", () => {
-    expect(gridOverlayKeyShouldToggle({ key: "g", metaKey: true, target: null })).toBe(false);
-    expect(gridOverlayKeyShouldToggle({ key: "g", ctrlKey: true, target: null })).toBe(false);
-    expect(gridOverlayKeyShouldToggle({ key: "x", target: null })).toBe(false);
+    expect(gridOverlayKeyShouldToggle(keyEvent({ key: "g", metaKey: true }))).toBe(false);
+    expect(gridOverlayKeyShouldToggle(keyEvent({ key: "g", ctrlKey: true }))).toBe(false);
+    expect(gridOverlayKeyShouldToggle(keyEvent({ key: "x" }))).toBe(false);
   });
 
   it("does not steal keystrokes from fields", () => {
     expect(
-      gridOverlayKeyShouldToggle({
-        key: "g",
-        target: { tagName: "INPUT" },
-      }),
+      gridOverlayKeyShouldToggle(keyEvent({ key: "g", target: target({ tagName: "INPUT" }) })),
     ).toBe(false);
-    expect(isEditableGridOverlayTarget({ tagName: "TEXTAREA" })).toBe(true);
-    expect(isEditableGridOverlayTarget({ isContentEditable: true })).toBe(true);
+    expect(isEditableGridOverlayTarget(target({ tagName: "TEXTAREA" }))).toBe(true);
+    expect(isEditableGridOverlayTarget(target({ isContentEditable: true }))).toBe(true);
   });
 
   it("exports the document class the overlay CSS reads", () => {

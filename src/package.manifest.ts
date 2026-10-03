@@ -1,6 +1,7 @@
 /**
- * Package export manifest — single source for index.ts, tsconfig.lib, and vite externals.
- * Add a component here when it ships; run `npm run validate:manifest` before publish.
+ * Package export manifest — single source for index.ts and vite externals.
+ * Add a component here when it ships. `npm run build` runs scripts/validate-manifest.mjs,
+ * which reads this file and fails on any drift from src/index.ts, src/components, package.json, or dist.
  * Badge stays an atom. Its leading-avatar contract (`BadgeAvatar`, `badgeAvatarSize`) is exported from `src/index.ts` — ADR-0033.
  */
 
@@ -22,9 +23,12 @@ const atoms = [
   "Tooltip",
 ] as const;
 
-const molecules = ["Accordion", "CalEmbed", "Card", "ChatQa", "CheckboxGroup", "Chip", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "HeroIntro", "IntakeForm", "NavList", "PageHeader", "Pagination", "PillGroup", "PromptBar", "RadioGroup", "Search", "Select", "SelectableCard", "SegmentedControl", "Stat", "StepProgress", "TaskRows", "TextSequence"] as const;
+const molecules = ["Accordion", "CalEmbed", "Card", "ChatQa", "CheckboxGroup", "Chip", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "HeroIntro", "IntakeForm", "NavList", "PageHeader", "PillGroup", "PromptBar", "RadioGroup", "Search", "Select", "SelectableCard", "SegmentedControl", "Stat", "StepProgress", "TaskRows", "TextSequence"] as const;
 
-const organisms = ["Carousel", "Chart", "Confetti", "Dialog", "FooterReveal", "HeroTileStack", "IntakeConfirmation", "IntakeModal", "MoreMenu", "Panel", "ScrollHorizontal", "Sheet", "SiteNav", "Tab", "Table", "Toast"] as const;
+const organisms = ["Chart", "Confetti", "Dialog", "FooterReveal", "HeroTileStack", "IntakeConfirmation", "IntakeModal", "MoreMenu", "Panel", "ScrollHorizontal", "Sheet", "SiteNav", "Tab", "Toast"] as const;
+
+/** In the catalog before the atomic rebuild and not rebuilt yet. Move a name into its tier when it ships. */
+const planned = ["Carousel", "Pagination", "Table"] as const;
 
 export const packageManifest = {
   /** Modules exported from src/index.ts today. */
@@ -41,10 +45,16 @@ export const packageManifest = {
   /** Internal filesystem/import tiers; Storybook uses ADR-0026 functional categories. */
   atomicExports: { atoms, molecules, organisms },
 
-  /** All planned component exports (flat). */
+  /** Every shipped component export (flat). */
   componentExports: [...atoms, ...molecules, ...organisms] as const,
 
-  peerDependencies: ["react", "react-dom", "motion", "@visx/visx"] as const,
+  /** Not exported yet — see `planned` above. */
+  plannedExports: planned,
+
+  peerDependencies: ["react", "react-dom", "motion", "@visx/visx", "lucide-react"] as const,
+
+  /** Imports that arrive through another declared package: Chart imports `@visx/*` and the peer is `@visx/visx`. */
+  umbrellaPackages: { "@visx/": "@visx/visx" } as const,
 
   libExternals: [
     "react",

@@ -72,7 +72,8 @@ const meta = {
 } satisfies Meta<typeof Field>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/** Stories that pass required props in their own JSX — args stay optional. */
+type Story = StoryObj<typeof Field>;
 
 export const HorizontalInput: Story = {
   name: "Pattern — horizontal input",

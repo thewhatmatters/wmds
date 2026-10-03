@@ -29,11 +29,15 @@ Same utility names (`bg-body`, `text-fg`, …) — values swap in `colors.css`. 
 ```bash
 npm install
 npm run storybook   # http://localhost:6006 — read Introduction first
-npm run build       # dist/theme.css + dist/styles.css
+npm run build       # dist/ — modules, types, styles.css, theme partials, fonts — then checks the manifest
+npm run lint        # oxlint
+npm run typecheck   # tsc -b — src, stories, and tests
+npm run test:unit
+npm run test:interactions     # every story in Chromium, accessibility included
 npm run validate:composition  # molecules/organisms must compose atoms (CI)
 ```
 
-**Agents:** read **`AGENTS.md`** and **`.cursor/rules/`** before authoring components — Storybook patterns are the contract; `npm run validate:composition` enforces atomic composition.
+**Agents:** read **`AGENTS.md`** and **`.cursor/rules/`** before authoring components — Storybook patterns are the contract; `npm run validate:composition` enforces atomic composition. **AGENTS.md → Guardrails** lists the rules CI enforces, and **`docs/audits/`** records why.
 
 ## Status
 
@@ -41,8 +45,12 @@ npm run validate:composition  # molecules/organisms must compose atoms (CI)
 
 | Tier | Components |
 |------|------------|
-| Atoms | `Badge`, `Button`, `IconButton`, `Input`, `Status` |
-| Molecules | `Accordion`, `Card`, `Chip`, `ChipFilterGroup`, `Search`, `TaskRows` |
+| Atoms | `Avatar`, `Badge`, `Button`, `Checkbox`, `IconButton`, `Input`, `Kbd`, `Radio`, `RiveHand`, `Skeleton`, `Status`, `Switch`, `TextArea`, `TextLink`, `Tooltip` |
+| Molecules | `Accordion`, `CalEmbed`, `Card`, `ChatQa`, `CheckboxGroup`, `Chip`, `DisplayControls`, `Dropdown`, `Field`, `FloatingActionButton`, `HeroIntro`, `IntakeForm`, `NavList`, `PageHeader`, `PillGroup`, `PromptBar`, `RadioGroup`, `Search`, `Select`, `SelectableCard`, `SegmentedControl`, `Stat`, `StepProgress`, `TaskRows`, `TextSequence` |
+| Organisms | `Chart`, `Confetti`, `Dialog`, `FooterReveal`, `HeroTileStack`, `IntakeConfirmation`, `IntakeModal`, `MoreMenu`, `Panel`, `ScrollHorizontal`, `Sheet`, `SiteNav`, `Tab`, `Toast` |
+| Planned, not built | `Carousel`, `Pagination`, `Table` |
+
+The list is `src/package.manifest.ts`. `npm run build` fails when it and `src/index.ts` disagree.
 
 **Storybook-only:** **Examples/** tier — page-level compositions for copy-paste; not package exports.
 

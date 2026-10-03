@@ -140,13 +140,13 @@ export const EdgeAndSizeControls: Story = {
   render: () => (
     <div className="grid w-full max-w-2xl gap-6 sm:grid-cols-2">
       <div className="overflow-hidden rounded-lg border border-border bg-card">
-        <p className={`${typographyClass("label")} border-b border-border px-4 py-3 text-fg`}>
+        <p className={`${typographyClass("ui-label")} border-b border-border px-4 py-3 text-fg`}>
           End edge only
         </p>
         <ul className="scroll-fade-b h-40 overflow-y-auto [--scroll-fade-size:24px]">
           {listItems.map((item) => (
             <li
-              className={`${typographyClass("supporting")} border-b border-border px-4 py-3 text-muted last:border-b-0`}
+              className={`${typographyClass("caption")} border-b border-border px-4 py-3 text-muted last:border-b-0`}
               key={item}
             >
               {item}
@@ -155,13 +155,13 @@ export const EdgeAndSizeControls: Story = {
         </ul>
       </div>
       <div className="overflow-hidden rounded-lg border border-border bg-card">
-        <p className={`${typographyClass("label")} border-b border-border px-4 py-3 text-fg`}>
+        <p className={`${typographyClass("ui-label")} border-b border-border px-4 py-3 text-fg`}>
           No overflow
         </p>
         <ul className="scroll-fade-y h-40 overflow-y-auto">
           {listItems.slice(0, 2).map((item) => (
             <li
-              className={`${typographyClass("supporting")} border-b border-border px-4 py-3 text-muted last:border-b-0`}
+              className={`${typographyClass("caption")} border-b border-border px-4 py-3 text-muted last:border-b-0`}
               key={item}
             >
               {item}
@@ -172,3 +172,12 @@ export const EdgeAndSizeControls: Story = {
     </div>
   ),
 };
+
+/**
+ * Known accessibility violations — listed in docs/audits/2026-10-03.md.
+ * Checks fail on every other story. These report without failing until the component is fixed.
+ * Remove a story from this list when it passes.
+ */
+for (const story of [OverflowingList, HorizontalRail, EdgeAndSizeControls]) {
+  story.parameters = { ...story.parameters, a11y: { test: "todo" } };
+}

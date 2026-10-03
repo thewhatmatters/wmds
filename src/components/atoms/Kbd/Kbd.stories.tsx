@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { cn } from "../../../lib/cn";
-import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySource";
+import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { typographyClass } from "../../../lib/typography";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { Kbd, kbdSizes } from "./Kbd";
@@ -56,14 +56,16 @@ type Story = StoryObj<typeof meta>;
 
 export const Shortcut: Story = {
   name: "Pattern — keyboard shortcut",
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "A command hint composed from one semantic keycap per physical key.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "A command hint composed from one semantic keycap per physical key.",
+        },
       },
     },
-    ...storyCopySource(`
+    `
 import { Kbd } from "@whatmatters/wmds";
 
 <span className="inline-flex items-center gap-1">
@@ -71,8 +73,8 @@ import { Kbd } from "@whatmatters/wmds";
   <span aria-hidden>+</span>
   <Kbd>K</Kbd>
 </span>
-`),
-  },
+`,
+  ),
   render: () => (
     <span className="inline-flex items-center gap-1 text-muted">
       <Kbd aria-label="Command">⌘</Kbd>
@@ -84,14 +86,16 @@ import { Kbd } from "@whatmatters/wmds";
 
 export const CommandRow: Story = {
   name: "Pattern — command row",
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Keep the command label primary and align the shortcut as trailing supporting information.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Keep the command label primary and align the shortcut as trailing supporting information.",
+        },
       },
     },
-    ...storyCopySource(`
+    `
 import { Kbd } from "@whatmatters/wmds";
 
 <div className="flex items-center justify-between gap-6">
@@ -101,8 +105,8 @@ import { Kbd } from "@whatmatters/wmds";
     <Kbd>K</Kbd>
   </span>
 </div>
-`),
-  },
+`,
+  ),
   render: () => (
     <div
       className={cn(
@@ -171,14 +175,16 @@ function NumberedChoicesDemo() {
 
 export const NumberedChoices: Story = {
   name: "Pattern — numbered choice keys",
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Trailing **Kbd** keycaps document the digit for each choice. **`useKbdChoiceKeys`** selects the same way a click does while focus is not in a text field. No new **Kbd** variant — the hook is the design-system select behavior.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Trailing **Kbd** keycaps document the digit for each choice. **`useKbdChoiceKeys`** selects the same way a click does while focus is not in a text field. No new **Kbd** variant — the hook is the design-system select behavior.",
+        },
       },
     },
-    ...storyCopySource(`
+    `
 import { useState } from "react";
 import { Checkbox, Kbd, useKbdChoiceKeys } from "@whatmatters/wmds";
 
@@ -228,8 +234,8 @@ function NumberedChoices() {
     </div>
   );
 }
-`),
-  },
+`,
+  ),
   render: () => <NumberedChoicesDemo />,
 };
 

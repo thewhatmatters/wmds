@@ -1,10 +1,9 @@
 import react from "@vitejs/plugin-react";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import { packageManifest } from "./src/package.manifest.ts";
 
-const dirname = typeof __dirname !== "undefined" ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+const dirname = import.meta.dirname;
 
 const libExternalPrefixes = packageManifest.libExternalPrefixes;
 
@@ -16,7 +15,11 @@ function isLibExternal(id: string): boolean {
   return libExternalPrefixes.some((prefix) => id.startsWith(prefix));
 }
 
-/** Library bundle — React components only; styles ship via `dist/styles.css`. */
+/**
+ * Library build — React components only; styles ship via `dist/styles.css`.
+ * One output module per source module, so an app that imports `Button` does not also
+ * load the modules behind `TextSequence` (GSAP) or `RiveHand` (Rive).
+ */
 export default defineConfig({
   publicDir: false,
   plugins: [react()],
@@ -24,15 +27,16 @@ export default defineConfig({
     lib: {
       entry: path.resolve(dirname, "src/index.ts"),
       formats: ["es"],
-      fileName: "index",
     },
     outDir: "dist",
     emptyOutDir: false,
     rollupOptions: {
       external: isLibExternal,
       output: {
-        preserveModules: false,
-        /** Next App Router: the entry uses client hooks (scroll, layout effects). */
+        preserveModules: true,
+        preserveModulesRoot: "src",
+        entryFileNames: "[name].js",
+        /** Next App Router: components use client hooks (scroll, layout effects). */
         banner: '"use client";',
       },
       plugins: [

@@ -216,7 +216,7 @@ export const compositionAuditRules: CompositionAuditRule[] = [
     id: "local-icon-wrapper",
     message: "Hand-rolled SVG sizing wrapper.",
     composeFrom: "ButtonIcon / BadgeIcon",
-    testLine: (line) => /\[\&_svg\]/.test(line) || /\[\&>svg\]/.test(line),
+    testLine: (line) => /\[&_svg\]/.test(line) || /\[&>svg\]/.test(line),
   },
   {
     id: "inline-svg",

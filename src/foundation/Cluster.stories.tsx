@@ -81,7 +81,7 @@ export const PairingTable: Story = {
 
 export const ClusterSm: Story = {
   name: "Specimen — cluster sm (28px)",
-  render: () => {
+  render: function ClusterSmRender() {
     const [view, setView] = useState("list");
 
     return (

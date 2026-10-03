@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySource";
+import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { typographyClass } from "../../../lib/typography";
 import { TextLink } from "./TextLink";
 
@@ -53,21 +53,23 @@ export const InlineProse: Story = {
       Read my <TextLink {...args} />, or browse the projects I’ve built.
     </p>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "The solid underline remains identifiable at rest and strengthens on hover without changing the paragraph’s line height.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "The solid underline remains identifiable at rest and strengthens on hover without changing the paragraph’s line height.",
+        },
       },
     },
-    ...storyCopySource(`
+    `
 import { TextLink } from "@whatmatters/wmds";
 
 <p className="type-body text-fg">
   Read my <TextLink href="/writing">writing</TextLink>, or browse the projects I’ve built.
 </p>
-`),
-  },
+`,
+  ),
 };
 
 export const SupportingCopy: Story = {
@@ -78,21 +80,23 @@ export const SupportingCopy: Story = {
       <TextLink href="#terms">terms of service</TextLink>.
     </p>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "TextLink inherits the surrounding type size while retaining its canonical weight and underline.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "TextLink inherits the surrounding type size while retaining its canonical weight and underline.",
+        },
       },
     },
-    ...storyCopySource(`
+    `
 import { TextLink } from "@whatmatters/wmds";
 
 <p className="type-supporting text-muted">
   By continuing, you agree to the <TextLink href="/terms">terms of service</TextLink>.
 </p>
-`),
-  },
+`,
+  ),
 };
 
 export const ExternalDestination: Story = {
@@ -106,19 +110,21 @@ export const ExternalDestination: Story = {
       .
     </p>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "SquareArrowOutUpRight visually reinforces that the destination opens in a new tab; assistive technology receives the same context.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "SquareArrowOutUpRight visually reinforces that the destination opens in a new tab; assistive technology receives the same context.",
+        },
       },
     },
-    ...storyCopySource(`
+    `
 import { TextLink } from "@whatmatters/wmds";
 
 <p className="type-body text-fg">
   View the project on <TextLink href="https://github.com/" external>GitHub</TextLink>.
 </p>
-`),
-  },
+`,
+  ),
 };

@@ -280,7 +280,7 @@ describe("scrollHorizontalReadMetrics", () => {
         },
       }) as DOMRect;
     const previous = window.getComputedStyle.bind(window);
-    window.getComputedStyle = (() => ({ columnGap: "16px" })) as typeof window.getComputedStyle;
+    window.getComputedStyle = (() => ({ columnGap: "16px" })) as unknown as typeof window.getComputedStyle;
     expect(scrollHorizontalReadMetrics(item, row)).toEqual({ itemWidth: 280, gap: 16 });
     window.getComputedStyle = previous;
   });
@@ -794,7 +794,7 @@ describe("scrollHorizontal intro", () => {
     const intro = section?.querySelector("[data-scroll-horizontal-intro]");
     const row = section?.querySelector("ul");
     expect(track?.firstElementChild).toBe(intro);
-    expect(intro?.compareDocumentPosition(row as Node) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect((intro?.compareDocumentPosition(row as Node) ?? 0) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(track?.className).toContain("group-data-[reduce=true]/scroll-horizontal:!flex-col");
     const statement = section?.querySelector("h2");
     expect(statement?.textContent?.replace(/\s+/g, " ").trim()).toBe(scrollHorizontalIntroStatement);

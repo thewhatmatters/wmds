@@ -580,7 +580,7 @@ function SiteNavLinks({
       window.removeEventListener("resize", closeMenu);
       window.removeEventListener("scroll", closeMenu, true);
     };
-  }, [closeMenu, menuOpen]);
+  }, [closeMenu, menuId, menuOpen]);
 
   function handleMoreKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
     const rows = overflowItems.flatMap(overflowRows);

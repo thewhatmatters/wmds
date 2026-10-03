@@ -94,7 +94,8 @@ function mount(trace?: "steps" | "reasoning") {
   document.body.appendChild(container);
   const root = createRoot(container);
   act(() => {
-    root.render(createElement(AskWhatMatters, trace == null ? {} : { trace }));
+    // The component defaults its whole props argument, so the props type is spelled out here.
+    root.render(createElement<{ trace?: "steps" | "reasoning" }>(AskWhatMatters, { trace }));
   });
   const field = container.querySelector("textarea");
   const send = container.querySelector("button");
@@ -279,7 +280,7 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).toContain("What are we making?");
     expect(promptChatPatternCopySource).toContain("ml-auto");
     expect(promptChatStartOptions.map((option) => option.label).join("|")).toContain("Brand identity");
-    expect(promptChatStartOptions.every((option) => option.label !== "Web experience")).toBe(true);
+    expect(promptChatStartOptions.map((option): string => option.label)).not.toContain("Web experience");
     expect(promptChatPageClasses).toContain("h-[100svh]");
     expect(promptChatPageClasses).toContain("overflow-hidden");
     expect(promptChatPageClasses).not.toContain("h-full");

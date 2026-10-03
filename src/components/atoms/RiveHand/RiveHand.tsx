@@ -1,6 +1,13 @@
 "use client";
 
-import { Fit, Layout, useRive, useStateMachineInput, useViewModelInstanceColor } from "@rive-app/react-canvas";
+import {
+  Fit,
+  Layout,
+  RuntimeLoader,
+  useRive,
+  useStateMachineInput,
+  useViewModelInstanceColor,
+} from "@rive-app/react-canvas";
 import { motion } from "motion/react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -29,6 +36,7 @@ import {
   riveHandOutlineProperty,
   riveHandSrc,
   riveHandStateMachine,
+  riveHandWasmSrc,
   riveHands,
   type RiveHandEntrance,
   type RiveHandName,
@@ -37,10 +45,14 @@ import {
 export {
   riveHandArtboards,
   riveHandSrc,
+  riveHandWasmSrc,
   riveHands,
   type RiveHandEntrance,
   type RiveHandName,
 };
+
+// The runtime defaults to a public CDN. Load the WASM the app serves beside the `.riv` file.
+RuntimeLoader.setWasmUrl(riveHandWasmSrc);
 
 /** Layout-only — not for colors. Size comes from the `size` prop. */
 export type RiveHandLayoutClassName = string;
@@ -158,8 +170,9 @@ export function RiveHand({
     },
   });
 
-  const handFill = useViewModelInstanceColor(riveHandFillProperty, rive?.viewModelInstance);
-  const outline = useViewModelInstanceColor(riveHandOutlineProperty, rive?.viewModelInstance);
+  // The hook results are new objects every render. `setRgb` only changes when the color binds.
+  const { setRgb: setHandFill } = useViewModelInstanceColor(riveHandFillProperty, rive?.viewModelInstance);
+  const { setRgb: setOutline } = useViewModelInstanceColor(riveHandOutlineProperty, rive?.viewModelInstance);
   const pressed = useStateMachineInput(rive, riveHandStateMachine, riveHandBooleanInput);
 
   useLayoutEffect(() => {
@@ -188,7 +201,7 @@ export function RiveHand({
   }, []);
 
   useEffect(() => {
-    applyRiveHandTokenColors({ handFill, outline });
+    applyRiveHandTokenColors({ handFill: { setRgb: setHandFill }, outline: { setRgb: setOutline } });
     if (!rive) {
       return;
     }
@@ -198,8 +211,7 @@ export function RiveHand({
       pressed.value = riveHandBooleanValue(active, idlePulse, false);
     }
     settleRiveHandPlayback(rive, hostRef.current, reduced);
-    // `setRgb` identity changes when the view-model color binds. The result objects are new every render.
-  }, [active, handFill.setRgb, idlePulse, outline.setRgb, pressed, reduced, rive, themeEpoch]);
+  }, [active, idlePulse, pressed, reduced, rive, setHandFill, setOutline, themeEpoch]);
 
   useEffect(() => {
     if (!ready || reduced || entrance === "none") {

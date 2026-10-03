@@ -86,8 +86,10 @@ Reply text, thinking, and actions are **siblings below** in the thread — not c
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+/** Stories that pass required props in their own JSX — args stay optional. */
+type RenderStory = StoryObj<typeof ChatQa>;
 
-export const PatternQaWithReply: Story = {
+export const PatternQaWithReply: RenderStory = {
   name: "Pattern — Q&A with reply",
   parameters: withStoryCopySource(
     {

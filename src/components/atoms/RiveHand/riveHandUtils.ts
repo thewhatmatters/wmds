@@ -15,6 +15,13 @@ export const riveHandArtboards: Record<RiveHandName, string> = {
 
 export const riveHandSrc = "/rive/interactive-icon-set.riv";
 
+/**
+ * Where the app serves the Rive runtime WASM, next to the `.riv` file.
+ * Copy `node_modules/@rive-app/canvas/rive.wasm` to `public/rive/rive.wasm`.
+ * When that file is missing the runtime falls back to its CDN build.
+ */
+export const riveHandWasmSrc = "/rive/rive.wasm";
+
 export const riveHandStateMachine = "State Machine 1";
 
 export const riveHandBooleanInput = "Boolean 1";

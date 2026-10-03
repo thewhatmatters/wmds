@@ -59,7 +59,8 @@ AlertDialog — same overlay + compact sm panel + cancel/confirm Buttons
 } satisfies Meta<typeof Dialog>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/** Stories that pass required props in their own JSX — args stay optional. */
+type Story = StoryObj<typeof Dialog>;
 
 export const DefaultDialog: Story = {
   name: "Pattern — dialog",

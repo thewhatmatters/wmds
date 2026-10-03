@@ -73,7 +73,7 @@ Expandable **task / action rows** — composes **Accordion** for disclosure, the
 
 | Pattern | Composition |
 |---------|-------------|
-| **Status rows** | \`variant="list"\` + \`status="done" \| "running" \| …\` |
+| **Status rows** | \`variant="list"\` + \`status="done" \\| "running" \\| …\` |
 | **Capsules** | \`variant="capsule"\` — separated rounded rows (with or without **Card**) |
 | **Action details** | \`detailsLayout="actions"\` + \`TaskRows.Detail variant="button"\` ( **Button** \`size="xs"\`) |
 | **Tag chips** | \`detailsLayout="chips"\` + read-only **Chip** \`size="sm"\` |
@@ -114,7 +114,8 @@ TaskRows
 } satisfies Meta<typeof TaskRows>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/** Stories that pass required props in their own JSX — args stay optional. */
+type Story = StoryObj<typeof TaskRows>;
 
 export const Anatomy: Story = {
   name: "Anatomy",

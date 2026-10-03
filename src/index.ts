@@ -80,6 +80,7 @@ export {
   RiveHand,
   riveHandArtboards,
   riveHandSrc,
+  riveHandWasmSrc,
   riveHands,
   type RiveHandEntrance,
   type RiveHandLayoutClassName,

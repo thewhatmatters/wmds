@@ -58,7 +58,8 @@ Accordion
 } satisfies Meta<typeof Accordion>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/** Stories that pass required props in their own JSX — args stay optional. */
+type Story = StoryObj<typeof Accordion>;
 
 export const FaqPlain: Story = {
   name: "Pattern — FAQ (plain)",

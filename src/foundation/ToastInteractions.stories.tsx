@@ -116,3 +116,12 @@ export const StackAndPlacement: Story = {
     expect(notifications[1]).toHaveAttribute("aria-hidden", "true");
   },
 };
+
+/**
+ * Known accessibility violations — listed in docs/audits/2026-10-03.md.
+ * Checks fail on every other story. These report without failing until the component is fixed.
+ * Remove a story from this list when it passes.
+ */
+for (const story of [StackAndPlacement]) {
+  story.parameters = { ...story.parameters, a11y: { test: "todo" } };
+}

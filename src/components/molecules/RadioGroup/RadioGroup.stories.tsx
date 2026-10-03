@@ -75,7 +75,8 @@ Mutually exclusive options with optional group label, description, and validatio
 } satisfies Meta<typeof RadioGroup>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/** Stories that pass required props in their own JSX — args stay optional. */
+type Story = StoryObj<typeof RadioGroup>;
 
 export const Default: Story = {
   name: "Pattern — vertical",

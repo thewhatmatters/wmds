@@ -71,7 +71,7 @@ export const FilterMultiSelect: Story = {
       },
     },
   },
-  render: () => {
+  render: function FilterMultiSelectRender() {
     const [filters, setFilters] = useState<string[]>(["open-today"]);
 
     return (
@@ -97,7 +97,7 @@ export const FilterMultiSelect: Story = {
 
 export const FilterSingleSelect: Story = {
   name: "Pattern — filter (single)",
-  render: () => {
+  render: function FilterSingleSelectRender() {
     const [view, setView] = useState("list");
 
     return (
@@ -118,7 +118,7 @@ export const FilterSingleSelect: Story = {
 
 export const StandaloneToggle: Story = {
   name: "Pattern — standalone toggle",
-  render: () => {
+  render: function StandaloneToggleRender() {
     const [selected, setSelected] = useState(false);
 
     return (
@@ -172,7 +172,7 @@ export const Sizes: Story = {
 
 export const WithCount: Story = {
   name: "With count",
-  render: () => {
+  render: function WithCountRender() {
     const [filters, setFilters] = useState<string[]>([]);
 
     return (

@@ -25,3 +25,6 @@ dist-ssr
 
 *storybook.log
 storybook-static
+
+# Copied from node_modules by .storybook/main.ts — matches the installed Rive runtime
+public/rive/rive.wasm

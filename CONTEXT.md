@@ -22,7 +22,10 @@ Smallest UI units — Button, Input, Badge, etc. Import only `lib/` + Theme. Sto
 Modular composed units — Field, Card, Chip, Search, etc. May compose atoms and other molecules. Storybook: **`Components/{purpose}/{Name}`**. Exported.
 
 **Organisms** (`src/components/organisms/`):
-Section-scale UI — Table, Tab, MoreMenu, etc. Storybook: **`Components/{purpose}/{Name}`**. Exported.
+Section-scale UI — Dialog, Tab, MoreMenu, etc. Storybook: **`Components/{purpose}/{Name}`**. Exported.
+
+**Planned:**
+**Table**, **Carousel**, and **Pagination** are not built yet — `plannedExports` in `src/package.manifest.ts`. `src/lib/tableLayout/` is the groundwork kept for **Table**.
 
 **Examples** (`src/examples/`):
 Templates and pages — Storybook-only compositions. Storybook: **`Examples/{Name}`**. Never exported.

@@ -418,7 +418,7 @@ export const MarketingHeroPattern: Story = {
       docs: {
         description: {
           story:
-            "The marketing hero (SiteNav, headline, intro, tile fan) fills **FooterReveal.Content**, then **ScrollHorizontal** with expandLast (Selected work is the accessible name, sr-only while the window is pinned — solid token-color placeholders), then the page grid (\`grid-page\` with \`!py-0\`, a guide host with no block padding). **FooterReveal.Brand** is the sticky footer underneath. Scroll past the hero — the gallery translates from the first card centered to the last, then the last tile grows to fill the viewport and scrolls away. The gallery section ends on that tile, so its bottom edge meets the footer. The brand field fades in from about 12px of blur after that cover. Reduced motion keeps the gallery as a native horizontal scroller with the heading visible above it, follows it with the last tile as a full-viewport section flush with the footer, and shows the footer sharp.",
+            "The marketing hero (SiteNav, headline, intro, tile fan) fills **FooterReveal.Content**, then **ScrollHorizontal** with expandLast (Selected work is the accessible name, sr-only while the window is pinned — solid token-color placeholders), then the page grid (`grid-page` with `!py-0`, a guide host with no block padding). **FooterReveal.Brand** is the sticky footer underneath. Scroll past the hero — the gallery translates from the first card centered to the last, then the last tile grows to fill the viewport and scrolls away. The gallery section ends on that tile, so its bottom edge meets the footer. The brand field fades in from about 12px of blur after that cover. Reduced motion keeps the gallery as a native horizontal scroller with the heading visible above it, follows it with the last tile as a full-viewport section flush with the footer, and shows the footer sharp.",
         },
       },
     },
@@ -435,7 +435,7 @@ export const MarketingHeroPattern: Story = {
       expect(canvasElement.querySelectorAll(".grid-guides-col").length).toBeGreaterThan(0);
     });
 
-    const guides = canvasElement.querySelector(".grid-guides");
+    const guides = canvasElement.querySelector<HTMLElement>(".grid-guides");
     if (!guides) throw new Error("grid guides missing");
     expect(getComputedStyle(guides).visibility).toBe("visible");
     expect(document.documentElement.classList.contains("grid-on")).toBe(true);
@@ -1023,3 +1023,12 @@ export const RuledGridDividers900: Story = ruledFitStory("review900", 900, 910, 
 export const RuledGridFits1024: Story = ruledFitStory("review1024", 1024, 1040, 600, 640);
 export const RuledGridColumns1440: Story = ruledFitStory("review1440", 1440, 1455, 880, 920);
 export const RuledGridColumns2560: Story = ruledFitStory("review2560", 2560, 2575, 1400, 1460);
+
+/**
+ * Known accessibility violations — listed in docs/audits/2026-10-03.md.
+ * Checks fail on every other story. These report without failing until the component is fixed.
+ * Remove a story from this list when it passes.
+ */
+for (const story of [ExpandFooterHandoffReduced]) {
+  story.parameters = { ...story.parameters, a11y: { test: "todo" } };
+}

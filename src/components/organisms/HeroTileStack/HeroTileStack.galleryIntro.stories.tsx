@@ -19,7 +19,8 @@ const meta = {
 } satisfies Meta<typeof HeroTileStack>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/** Stories that pass required props in their own JSX — args stay optional. */
+type Story = StoryObj<typeof HeroTileStack>;
 
 const heroTiles = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },

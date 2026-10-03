@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Camera, FileText, Image, Pencil } from "lucide-react";
-import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySource";
+import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { FloatingActionButton } from "./FloatingActionButton";
 
 const actions = [
@@ -63,14 +63,16 @@ export const VerticalActions: Story = {
       <FloatingActionButton {...args} className="absolute bottom-4 right-4" backdrop />
     </div>
   ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "The trigger stays anchored while labeled actions rise straight above it. Escape, backdrop press, or action selection closes the menu.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "The trigger stays anchored while labeled actions rise straight above it. Escape, backdrop press, or action selection closes the menu.",
+        },
       },
     },
-    ...storyCopySource(`
+    `
 import { Camera, FileText, Image, Pencil } from "lucide-react";
 import { FloatingActionButton } from "@whatmatters/wmds";
 
@@ -85,6 +87,6 @@ import { FloatingActionButton } from "@whatmatters/wmds";
   ]}
   onAction={(id) => performAction(id)}
 />
-`),
-  },
+`,
+  ),
 };

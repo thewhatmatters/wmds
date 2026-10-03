@@ -4,7 +4,7 @@ import { Info, Settings } from "lucide-react";
 import { Button } from "../Button/Button";
 import { IconButton } from "../IconButton/IconButton";
 import { Kbd } from "../Kbd/Kbd";
-import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySource";
+import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { Tooltip, tooltipAlignments, tooltipSides } from "./Tooltip";
 
 const meta = {
@@ -55,14 +55,16 @@ type Story = StoryObj<typeof meta>;
 
 export const IconAction: Story = {
   name: "Pattern — icon-only action",
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "The IconButton keeps its accessible name while Tooltip adds the same short visible label for pointer and keyboard users.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "The IconButton keeps its accessible name while Tooltip adds the same short visible label for pointer and keyboard users.",
+        },
       },
     },
-    ...storyCopySource(`
+    `
 import { IconButton, Tooltip } from "@whatmatters/wmds";
 import { Settings } from "lucide-react";
 
@@ -80,8 +82,8 @@ import { Settings } from "lucide-react";
     <Tooltip.Content>Workspace settings</Tooltip.Content>
   </Tooltip>
 </Tooltip.Provider>
-`),
-  },
+`,
+  ),
   render: () => (
     <Tooltip.Provider>
       <Tooltip>
@@ -102,14 +104,16 @@ import { Settings } from "lucide-react";
 
 export const Placement: Story = {
   name: "Pattern — placement",
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Choose a preferred side; collision handling may flip or shift the popup to keep it visible.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Choose a preferred side; collision handling may flip or shift the popup to keep it visible.",
+        },
       },
     },
-    ...storyCopySource(`
+    `
 import { Button, Tooltip } from "@whatmatters/wmds";
 
 <Tooltip>
@@ -118,8 +122,8 @@ import { Button, Tooltip } from "@whatmatters/wmds";
     View market details
   </Tooltip.Content>
 </Tooltip>
-`),
-  },
+`,
+  ),
   render: () => (
     <Tooltip.Provider delay={0}>
       <div className="grid grid-cols-3 items-center gap-8 py-12">
@@ -136,14 +140,16 @@ import { Button, Tooltip } from "@whatmatters/wmds";
 
 export const KeyboardShortcut: Story = {
   name: "Pattern — keyboard shortcut",
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "A short action label may include Kbd as a non-interactive trailing hint.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "A short action label may include Kbd as a non-interactive trailing hint.",
+        },
       },
     },
-    ...storyCopySource(`
+    `
 import { IconButton, Kbd, Tooltip } from "@whatmatters/wmds";
 import { Info } from "lucide-react";
 
@@ -157,8 +163,8 @@ import { Info } from "lucide-react";
     </span>
   </Tooltip.Content>
 </Tooltip>
-`),
-  },
+`,
+  ),
   render: () => (
     <Tooltip>
       <Tooltip.Trigger
@@ -175,14 +181,16 @@ import { Info } from "lucide-react";
 
 export const DisabledControl: Story = {
   name: "Pattern — disabled control",
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Native disabled controls do not emit focus or pointer events. Put the disabled Button inside a focusable wrapper trigger and explain why it is unavailable.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Native disabled controls do not emit focus or pointer events. Put the disabled Button inside a focusable wrapper trigger and explain why it is unavailable.",
+        },
       },
     },
-    ...storyCopySource(`
+    `
 import { Button, Tooltip } from "@whatmatters/wmds";
 
 <Tooltip>
@@ -199,8 +207,8 @@ import { Button, Tooltip } from "@whatmatters/wmds";
   />
   <Tooltip.Content>Choose a date range before exporting</Tooltip.Content>
 </Tooltip>
-`),
-  },
+`,
+  ),
   render: () => (
     <Tooltip>
       <Tooltip.Trigger
@@ -217,14 +225,16 @@ import { Button, Tooltip } from "@whatmatters/wmds";
 
 export const Controlled: Story = {
   name: "Pattern — controlled state",
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Control visibility when product state must observe or coordinate the tooltip; normal hover, focus, and Escape events still report through onOpenChange.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Control visibility when product state must observe or coordinate the tooltip; normal hover, focus, and Escape events still report through onOpenChange.",
+        },
       },
     },
-    ...storyCopySource(`
+    `
 import { useState } from "react";
 import { IconButton, Tooltip } from "@whatmatters/wmds";
 import { Info } from "lucide-react";
@@ -241,8 +251,8 @@ function ControlledTooltip() {
     </Tooltip>
   );
 }
-`),
-  },
+`,
+  ),
   render: function ControlledTooltipStory() {
     const [open, setOpen] = useState(false);
 

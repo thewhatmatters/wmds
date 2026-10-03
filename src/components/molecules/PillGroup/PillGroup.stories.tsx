@@ -39,7 +39,8 @@ PillGroup — role="radiogroup"
 } satisfies Meta<typeof PillGroup>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/** Stories that pass required props in their own JSX — args stay optional. */
+type Story = StoryObj<typeof PillGroup>;
 
 export const PillGroupPattern: Story = {
   name: "Pattern — pill group",

@@ -350,7 +350,7 @@ export const CheckboxGroupOptions: Story = {
       },
     },
   },
-  render: () => {
+  render: function CheckboxGroupOptionsRender() {
     const [values, setValues] = useState(["email"]);
     return (
       <div className="mx-auto w-full max-w-md px-8 py-6">
@@ -383,7 +383,7 @@ export const SwitchSettings: Story = {
       },
     },
   },
-  render: () => {
+  render: function SwitchSettingsRender() {
     const [digest, setDigest] = useState(true);
     const [marketing, setMarketing] = useState(false);
     return (
@@ -416,7 +416,7 @@ export const RadioGroupOptions: Story = {
       },
     },
   },
-  render: () => {
+  render: function RadioGroupOptionsRender() {
     const [value, setValue] = useState("standard");
     return (
       <div className="mx-auto w-full max-w-md px-8 py-6">

@@ -37,6 +37,7 @@ import {
   riveHandOutlineToken,
   riveHandSrc,
   riveHandStateMachine,
+  riveHandWasmSrc,
 } from "./riveHandUtils";
 
 const runtime = vi.hoisted(() => {
@@ -52,7 +53,9 @@ const runtime = vi.hoisted(() => {
   const useRive = vi.fn();
   const useViewModelInstanceColor = vi.fn(() => ({ setRgb }));
   const useStateMachineInput = vi.fn(() => input);
+  const setWasmUrl = vi.fn();
   return {
+    setWasmUrl,
     setRgb,
     pause,
     drawFrame,
@@ -102,6 +105,7 @@ vi.mock("@rive-app/react-canvas", () => {
   return {
     Fit: { Contain: "contain" },
     Layout,
+    RuntimeLoader: { setWasmUrl: runtime.setWasmUrl },
     useRive: runtime.useRive,
     useViewModelInstanceColor: runtime.useViewModelInstanceColor,
     useStateMachineInput: runtime.useStateMachineInput,
@@ -148,6 +152,11 @@ describe("rive hand tokens", () => {
       expect(Number.parseFloat(yPart)).toBeCloseTo(-50 - (ink.centerY - 0.5) * 100, 1);
     }
     expect(riveHandSequenceOrigin).toBe("50% 50%");
+  });
+
+  it("loads the runtime WASM from the app, beside the .riv file", () => {
+    expect(riveHandWasmSrc).toBe("/rive/rive.wasm");
+    expect(runtime.setWasmUrl).toHaveBeenCalledWith(riveHandWasmSrc);
   });
 
   it("maps point and rock to the cleaned artboards", () => {

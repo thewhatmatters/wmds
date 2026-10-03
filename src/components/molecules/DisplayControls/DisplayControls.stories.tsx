@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { GridOverlay } from "../../../lib/GridOverlay";
-import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySource";
+import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import {
   DisplayControls,
   displayControlThemeModes,
@@ -94,14 +94,16 @@ function PageDisplayControlsDemo() {
 export const PageUtilities: Story = {
   name: "Pattern — page display controls",
   render: () => <PageDisplayControlsDemo />,
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Bottom-end placement keeps the cluster available without making it part of page content. The app applies and persists the emitted theme mode.",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Bottom-end placement keeps the cluster available without making it part of page content. The app applies and persists the emitted theme mode.",
+        },
       },
     },
-    ...storyCopySource(`
+    `
 import { useState } from "react";
 import {
   DisplayControls,
@@ -134,6 +136,6 @@ export function Page() {
     </div>
   );
 }
-`),
-  },
+`,
+  ),
 };

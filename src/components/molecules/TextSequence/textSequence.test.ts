@@ -8,7 +8,7 @@ import { join } from "node:path";
 import gsap from "gsap";
 import { describe, expect, it, vi } from "vitest";
 import { riveHandEnteredAttr, riveHandSequenceOrigin } from "../../atoms/RiveHand/riveHandUtils";
-import { TextSequence, sequencePlainText, textSequenceDefaultStagger } from "./TextSequence";
+import { TextSequence, sequencePlainText, textSequenceDefaultStagger, type TextSequenceProps } from "./TextSequence";
 import { textSequenceWordBoldClasses, textSequenceWordRegularClasses } from "./textSequenceStyles";
 import { textSequenceShapeVariants } from "../../atoms/TextSequenceShape/TextSequenceShape";
 import {
@@ -58,7 +58,7 @@ describe("sequencePlainText", () => {
     const html = renderToStaticMarkup(
       createElement(
         TextSequence,
-        { emphasis: "none", idle: false },
+        { emphasis: "none", idle: false } as TextSequenceProps,
         "An ",
         createElement("span", { className: "whitespace-nowrap" }, "Austin,\u00A0TX"),
         " studio specializing in brand and product design.",
@@ -261,7 +261,7 @@ describe("TextSequence hand slot", () => {
       root.render(
         createElement(
           TextSequence,
-          { trigger: "mount", emphasis: "none", idle: false, lines: true },
+          { trigger: "mount", emphasis: "none", idle: false, lines: true } as TextSequenceProps,
           "Your brand ",
           createElement(RockSlot),
           " is already online",
@@ -311,7 +311,7 @@ describe("TextSequence hand slot", () => {
       root.render(
         createElement(
           TextSequence,
-          { trigger: "mount", emphasis: "none", idle: false, lines: true },
+          { trigger: "mount", emphasis: "none", idle: false, lines: true } as TextSequenceProps,
           "Your brand ",
           createElement(RockSlot),
           " is already ",
@@ -373,7 +373,7 @@ describe("TextSequence hand slot", () => {
       root.render(
         createElement(
           TextSequence,
-          { trigger: "mount", emphasis: "none", idle: false, lines: true },
+          { trigger: "mount", emphasis: "none", idle: false, lines: true } as TextSequenceProps,
           "An ",
           createElement(
             "span",
@@ -422,7 +422,7 @@ describe("TextSequence hand slot", () => {
       root.render(
         createElement(
           TextSequence,
-          { trigger: "mount", emphasis: "none", idle: false, lines: true },
+          { trigger: "mount", emphasis: "none", idle: false, lines: true } as TextSequenceProps,
           "Every screen ",
           createElement(TextSequence.Shape, { variant: "asterisk" }),
           " is a first impression ",
@@ -451,7 +451,7 @@ describe("TextSequence hand slot", () => {
       root.render(
         createElement(
           TextSequence,
-          { trigger: "mount", emphasis: "none", idle: false, lines: true },
+          { trigger: "mount", emphasis: "none", idle: false, lines: true } as TextSequenceProps,
           "Your brand ",
           createElement(RockSlot),
           " is already online",

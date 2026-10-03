@@ -3,7 +3,7 @@ import { createElement } from "react";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it } from "vitest";
-import { Card } from "./Card";
+import { Card, type CardProps } from "./Card";
 
 describe("Card pinned height with Footer", () => {
   let root: Root | undefined;
@@ -27,7 +27,7 @@ describe("Card pinned height with Footer", () => {
       root?.render(
         createElement(
           Card,
-          { padding: "none", variant: "surface", className: "h-[280px]" },
+          { padding: "none", variant: "surface", className: "h-[280px]" } as CardProps,
           createElement(Card.Header, { start: createElement("h2", null, "Title") }),
           createElement(
             Card.Body,
@@ -67,7 +67,7 @@ describe("Card pinned height with Footer", () => {
       root?.render(
         createElement(
           Card,
-          { padding: "none", variant: "surface", className: "h-[280px]" },
+          { padding: "none", variant: "surface", className: "h-[280px]" } as CardProps,
           createElement(Card.Header, { start: createElement("h2", null, "Title") }),
           createElement(
             Card.Body,
