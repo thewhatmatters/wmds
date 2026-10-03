@@ -40,6 +40,10 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      # docs/patterns, docs/exports.json and docs/components.md must match Storybook and AGENTS.md.
+      - name: Package docs
+        run: npm run check:docs
+
       - name: Case collisions
         run: npm run validate:case
 

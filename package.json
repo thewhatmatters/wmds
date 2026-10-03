@@ -17,6 +17,12 @@
   },
   "files": [
     "dist",
+    "docs/README.md",
+    "docs/consumer-agents.md",
+    "docs/components.md",
+    "docs/component-contracts.md",
+    "docs/exports.json",
+    "docs/patterns",
     "public/rive/interactive-icon-set.riv",
     "public/rive/CREDITS.md",
     "README.md",
@@ -59,7 +65,9 @@
     "validate:case": "node scripts/check-case-collisions.mjs",
     "typecheck": "tsc -b",
     "check:pack": "node scripts/check-pack.mjs",
-    "check:changelog": "node scripts/check-changelog.mjs"
+    "check:changelog": "node scripts/check-changelog.mjs",
+    "docs:generate": "node scripts/generate-package-docs.mjs",
+    "check:docs": "node scripts/generate-package-docs.mjs --check"
   },
   "peerDependencies": {
     "@visx/visx": "^4.0.0",

@@ -1,0 +1,798 @@
+{
+  "package": "@whatmatters/wmds",
+  "version": "0.2.0",
+  "import": "import { Button } from \"@whatmatters/wmds\";",
+  "styles": [
+    "@whatmatters/wmds/styles.css",
+    "@whatmatters/wmds/theme.css",
+    "@whatmatters/wmds/colors.css",
+    "@whatmatters/wmds/motion.css",
+    "@whatmatters/wmds/typography.css",
+    "@whatmatters/wmds/stateColors.css",
+    "@whatmatters/wmds/grid.css",
+    "@whatmatters/wmds/shape.css",
+    "@whatmatters/wmds/scrollFade.css"
+  ],
+  "peerDependencies": {
+    "@visx/visx": "^4.0.0",
+    "lucide-react": "^1.33.0",
+    "motion": "^13.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.8.0",
+    "@gsap/react": "^2.1.2",
+    "@rive-app/react-canvas": "^4.35.0",
+    "gsap": "^3.15.0"
+  },
+  "components": [
+    {
+      "name": "Accordion",
+      "tier": "molecule",
+      "category": "Container",
+      "summary": "Expand and collapse rows with leading, label, and trailing slots.",
+      "storybook": {
+        "title": "Components/Accordion",
+        "docs": "?path=/docs/components-accordion--docs"
+      },
+      "patterns": []
+    },
+    {
+      "name": "Avatar",
+      "tier": "atom",
+      "category": "Content",
+      "summary": "Circular identity with initials fallback and an optional presence dot.",
+      "storybook": {
+        "title": "Components/Avatar",
+        "docs": "?path=/docs/components-avatar--docs"
+      },
+      "patterns": [
+        "components-avatar--dropdown-row"
+      ]
+    },
+    {
+      "name": "Badge",
+      "tier": "atom",
+      "category": "Feedback & status",
+      "summary": "Compact semantic label in solid or muted fill, with count, icon, and avatar patterns.",
+      "storybook": {
+        "title": "Components/Badge",
+        "docs": "?path=/docs/components-badge--docs"
+      },
+      "patterns": [
+        "components-badge--with-avatar"
+      ]
+    },
+    {
+      "name": "Button",
+      "tier": "atom",
+      "category": "Action",
+      "summary": "Pill action with six roles, plus row and nav layouts for settings lines and NavList.",
+      "storybook": {
+        "title": "Components/Button/Button",
+        "docs": "?path=/docs/components-button-button--docs"
+      },
+      "patterns": [
+        "components-button-button--destructive-action",
+        "components-button-button--ghost-action",
+        "components-button-button--inverse-action",
+        "components-button-button--link-render",
+        "components-button-button--multi-state-badge",
+        "components-button-button--outline-mono",
+        "components-button-button--primary-action",
+        "components-button-button--row-layout",
+        "components-button-button--secondary-action",
+        "components-button-button--with-count",
+        "components-button-button--with-icon"
+      ]
+    },
+    {
+      "name": "CalEmbed",
+      "tier": "molecule",
+      "category": "Form controls",
+      "summary": "Calendar booking slot with a skip link.",
+      "storybook": {
+        "title": "Components/CalEmbed",
+        "docs": "?path=/docs/components-calembed--docs"
+      },
+      "patterns": [
+        "components-calembed--pattern-skip-in-footer"
+      ]
+    },
+    {
+      "name": "Card",
+      "tier": "molecule",
+      "category": "Container",
+      "summary": "Surface with header, body, and footer slots for layout cards and simple cards.",
+      "storybook": {
+        "title": "Components/Card/Card",
+        "docs": "?path=/docs/components-card-card--docs"
+      },
+      "patterns": [
+        "components-card-card--body-slot-occupancy-history",
+        "components-card-card--headerless-media",
+        "components-card-card--outlined-layout",
+        "components-card-card--pinned-height"
+      ]
+    },
+    {
+      "name": "Chart",
+      "tier": "organism",
+      "category": "Data visualization",
+      "summary": "visx-based charts: capacity bars, ranked bars, unit grids, heatmaps, and time series.",
+      "storybook": {
+        "title": "Components/Chart",
+        "docs": "?path=/docs/components-chart--docs"
+      },
+      "patterns": [
+        "components-chart--audience-activity-heatmap",
+        "components-chart--cartesian-no-data-gaps",
+        "components-chart--occupancy-history-in-card",
+        "components-chart--occupancy-in-card",
+        "components-chart--post-reach-distribution",
+        "components-chart--ranked-audience-breakdown",
+        "components-chart--unit-grid-composition"
+      ]
+    },
+    {
+      "name": "ChatQa",
+      "tier": "molecule",
+      "category": "Chat",
+      "summary": "Question-and-answer thread rows.",
+      "storybook": {
+        "title": "Components/ChatQa",
+        "docs": "?path=/docs/components-chatqa--docs"
+      },
+      "patterns": [
+        "components-chatqa--pattern-qa-with-reply"
+      ]
+    },
+    {
+      "name": "Checkbox",
+      "tier": "atom",
+      "category": "Form controls",
+      "summary": "Boolean toggle with label, description, and validation.",
+      "storybook": {
+        "title": "Components/Checkbox/Checkbox",
+        "docs": "?path=/docs/components-checkbox-checkbox--docs"
+      },
+      "patterns": [
+        "components-checkbox-checkbox--default",
+        "components-checkbox-checkbox--with-description"
+      ]
+    },
+    {
+      "name": "CheckboxGroup",
+      "tier": "molecule",
+      "category": "Form controls",
+      "summary": "Multi-select options with a group validation band.",
+      "storybook": {
+        "title": "Components/Checkbox/CheckboxGroup",
+        "docs": "?path=/docs/components-checkbox-checkboxgroup--docs"
+      },
+      "patterns": [
+        "components-checkbox-checkboxgroup--default"
+      ]
+    },
+    {
+      "name": "Chip",
+      "tier": "molecule",
+      "category": "Form controls",
+      "summary": "Filter and toggle pill: multi-select, single-select, removable, or read-only.",
+      "storybook": {
+        "title": "Components/Chip",
+        "docs": "?path=/docs/components-chip--docs"
+      },
+      "patterns": []
+    },
+    {
+      "name": "Confetti",
+      "tier": "organism",
+      "category": "Feedback & status",
+      "summary": "Celebratory burst after an async success, fired from a provider.",
+      "storybook": {
+        "title": "Components/Confetti",
+        "docs": "?path=/docs/components-confetti--docs"
+      },
+      "patterns": []
+    },
+    {
+      "name": "Dialog",
+      "tier": "organism",
+      "category": "Overlay",
+      "summary": "Modal overlay, and AlertDialog for blocking confirmation.",
+      "storybook": {
+        "title": "Components/Dialog",
+        "docs": "?path=/docs/components-dialog--docs"
+      },
+      "patterns": [
+        "components-dialog--alert-dialog-destructive",
+        "components-dialog--default-dialog",
+        "components-dialog--form-dialog"
+      ]
+    },
+    {
+      "name": "DisplayControls",
+      "tier": "molecule",
+      "category": "Layout",
+      "summary": "Grid visibility and theme mode controls with G and T shortcuts.",
+      "storybook": {
+        "title": "Components/DisplayControls",
+        "docs": "?path=/docs/components-displaycontrols--docs"
+      },
+      "patterns": [
+        "components-displaycontrols--page-utilities"
+      ]
+    },
+    {
+      "name": "Dropdown",
+      "tier": "molecule",
+      "category": "Overlay",
+      "summary": "Shared menu panel and three-slot rows used by Select and MoreMenu.",
+      "storybook": {
+        "title": "Components/Dropdown",
+        "docs": "?path=/docs/components-dropdown--docs"
+      },
+      "patterns": []
+    },
+    {
+      "name": "Field",
+      "tier": "molecule",
+      "category": "Form controls",
+      "summary": "Label and layout wrapper, vertical or horizontal.",
+      "storybook": {
+        "title": "Components/Field",
+        "docs": "?path=/docs/components-field--docs"
+      },
+      "patterns": [
+        "components-field--horizontal-input",
+        "components-field--horizontal-text-area",
+        "components-field--multi-control"
+      ]
+    },
+    {
+      "name": "FloatingActionButton",
+      "tier": "molecule",
+      "category": "Action",
+      "summary": "Compact vertical menu of two to four labeled actions above a trigger.",
+      "storybook": {
+        "title": "Components/Button/FloatingActionButton",
+        "docs": "?path=/docs/components-button-floatingactionbutton--docs"
+      },
+      "patterns": [
+        "components-button-floatingactionbutton--vertical-actions"
+      ]
+    },
+    {
+      "name": "FooterReveal",
+      "tier": "organism",
+      "category": "Marketing",
+      "summary": "Marketing page root where the content scrolls away to reveal a sticky footer.",
+      "storybook": {
+        "title": "Components/FooterReveal",
+        "docs": "?path=/docs/components-footerreveal--docs"
+      },
+      "patterns": [
+        "components-footerreveal--marketing-hero-pattern",
+        "components-footerreveal--marketing-hero-ruled-pattern",
+        "components-footerreveal--marketing-hero-with-gallery-intro",
+        "components-footerreveal--marketing-page-pattern",
+        "components-footerreveal--ruled-grid-footer-pattern",
+        "components-footerreveal--sequenced-marketing-hero"
+      ]
+    },
+    {
+      "name": "HeroIntro",
+      "tier": "molecule",
+      "category": "Marketing",
+      "summary": "Marketing page h1 with an optional lead line.",
+      "storybook": {
+        "title": "Components/HeroIntro",
+        "docs": "?path=/docs/components-herointro--docs"
+      },
+      "patterns": [
+        "components-herointro--two-line-intro"
+      ]
+    },
+    {
+      "name": "HeroTileStack",
+      "tier": "organism",
+      "category": "Marketing",
+      "summary": "Hero image fan that scatters away from the pointer.",
+      "storybook": {
+        "title": "Components/HeroTileStack",
+        "docs": "?path=/docs/components-herotilestack--docs"
+      },
+      "patterns": [
+        "components-herotilestack--marketing-hero-pattern",
+        "components-herotilestack--marketing-hero-text-sequence",
+        "components-herotilestack--marketing-hero-with-gallery-intro"
+      ]
+    },
+    {
+      "name": "IconButton",
+      "tier": "atom",
+      "category": "Action",
+      "summary": "Circular icon-only control for toolbars, dismiss, and icon links.",
+      "storybook": {
+        "title": "Components/Button/IconButton",
+        "docs": "?path=/docs/components-button-iconbutton--docs"
+      },
+      "patterns": []
+    },
+    {
+      "name": "Input",
+      "tier": "atom",
+      "category": "Form controls",
+      "summary": "Pill text field with optional icon, end badge, status, and loading.",
+      "storybook": {
+        "title": "Components/Input",
+        "docs": "?path=/docs/components-input--docs"
+      },
+      "patterns": []
+    },
+    {
+      "name": "IntakeConfirmation",
+      "tier": "organism",
+      "category": "Feedback & status",
+      "summary": "Booked or emailed confirmation that ends the Start a project flow.",
+      "storybook": {
+        "title": "Components/IntakeConfirmation",
+        "docs": "?path=/docs/components-intakeconfirmation--docs"
+      },
+      "patterns": [
+        "components-intakeconfirmation--booked-pattern",
+        "components-intakeconfirmation--emailed-pattern"
+      ]
+    },
+    {
+      "name": "IntakeForm",
+      "tier": "molecule",
+      "category": "Form controls",
+      "summary": "Contact details step of the Start a project flow.",
+      "storybook": {
+        "title": "Components/IntakeForm",
+        "docs": "?path=/docs/components-intakeform--docs"
+      },
+      "patterns": [
+        "components-intakeform--about-you-pattern"
+      ]
+    },
+    {
+      "name": "IntakeModal",
+      "tier": "organism",
+      "category": "Overlay",
+      "summary": "Full-screen Start a project shell with step progress and a pinned footer.",
+      "storybook": {
+        "title": "Components/IntakeModal",
+        "docs": "?path=/docs/components-intakemodal--docs"
+      },
+      "patterns": [
+        "components-intakemodal--intake-modal-pattern"
+      ]
+    },
+    {
+      "name": "Kbd",
+      "tier": "atom",
+      "category": "Content",
+      "summary": "One physical keycap; compose several for a shortcut.",
+      "storybook": {
+        "title": "Components/Kbd",
+        "docs": "?path=/docs/components-kbd--docs"
+      },
+      "patterns": [
+        "components-kbd--command-row",
+        "components-kbd--numbered-choices",
+        "components-kbd--shortcut"
+      ]
+    },
+    {
+      "name": "MoreMenu",
+      "tier": "organism",
+      "category": "Action",
+      "summary": "Kebab trigger with a right-aligned action menu for Card headers.",
+      "storybook": {
+        "title": "Components/MoreMenu",
+        "docs": "?path=/docs/components-moremenu--docs"
+      },
+      "patterns": [
+        "components-moremenu--action-menu",
+        "components-moremenu--in-card-header"
+      ]
+    },
+    {
+      "name": "NavList",
+      "tier": "molecule",
+      "category": "Navigation",
+      "summary": "Sectioned secondary navigation with inset pill rows.",
+      "storybook": {
+        "title": "Components/NavList",
+        "docs": "?path=/docs/components-navlist--docs"
+      },
+      "patterns": [
+        "components-navlist--side-nav-settings"
+      ]
+    },
+    {
+      "name": "PageHeader",
+      "tier": "molecule",
+      "category": "Layout",
+      "summary": "Page chrome row: app band, section heading, or toolbar.",
+      "storybook": {
+        "title": "Components/PageHeader",
+        "docs": "?path=/docs/components-pageheader--docs"
+      },
+      "patterns": [
+        "components-pageheader--app-header-pattern",
+        "components-pageheader--page-section-header",
+        "components-pageheader--toolbar-header"
+      ]
+    },
+    {
+      "name": "Panel",
+      "tier": "organism",
+      "category": "Overlay",
+      "summary": "Non-blocking edge rail; the page stays interactive.",
+      "storybook": {
+        "title": "Components/Panel",
+        "docs": "?path=/docs/components-panel--docs"
+      },
+      "patterns": [
+        "components-panel--end-detail-rail"
+      ]
+    },
+    {
+      "name": "PillGroup",
+      "tier": "molecule",
+      "category": "Form controls",
+      "summary": "Wrapping radio pills for a single choice.",
+      "storybook": {
+        "title": "Components/PillGroup",
+        "docs": "?path=/docs/components-pillgroup--docs"
+      },
+      "patterns": [
+        "components-pillgroup--pill-group-pattern"
+      ]
+    },
+    {
+      "name": "PromptBar",
+      "tier": "molecule",
+      "category": "Chat",
+      "summary": "Wide prompt pill that grows to three lines with an inset send button.",
+      "storybook": {
+        "title": "Components/PromptBar",
+        "docs": "?path=/docs/components-promptbar--docs"
+      },
+      "patterns": [
+        "components-promptbar--pattern-prompt-bar"
+      ]
+    },
+    {
+      "name": "Radio",
+      "tier": "atom",
+      "category": "Form controls",
+      "summary": "Single option circle; compose inside RadioGroup.",
+      "storybook": {
+        "title": "Components/Radio/Radio",
+        "docs": "?path=/docs/components-radio-radio--docs"
+      },
+      "patterns": []
+    },
+    {
+      "name": "RadioGroup",
+      "tier": "molecule",
+      "category": "Form controls",
+      "summary": "Mutually exclusive options with a group validation band.",
+      "storybook": {
+        "title": "Components/Radio/RadioGroup",
+        "docs": "?path=/docs/components-radio-radiogroup--docs"
+      },
+      "patterns": [
+        "components-radio-radiogroup--default"
+      ]
+    },
+    {
+      "name": "RiveHand",
+      "tier": "atom",
+      "category": "Marketing",
+      "summary": "Decorative animated hand for the marketing headline. Shown in the HeroTileStack patterns.",
+      "storybook": {
+        "title": "Components/HeroTileStack",
+        "docs": "?path=/docs/components-herotilestack--docs"
+      },
+      "patterns": [
+        "components-herotilestack--marketing-hero-pattern",
+        "components-herotilestack--marketing-hero-text-sequence",
+        "components-herotilestack--marketing-hero-with-gallery-intro"
+      ]
+    },
+    {
+      "name": "ScrollHorizontal",
+      "tier": "organism",
+      "category": "Marketing",
+      "summary": "Sticky horizontal project gallery driven by vertical scroll.",
+      "storybook": {
+        "title": "Components/ScrollHorizontal",
+        "docs": "?path=/docs/components-scrollhorizontal--docs"
+      },
+      "patterns": [
+        "components-scrollhorizontal--project-gallery-pattern",
+        "components-scrollhorizontal--with-intro"
+      ]
+    },
+    {
+      "name": "Search",
+      "tier": "molecule",
+      "category": "Form controls",
+      "summary": "Hero search pill with an inset button and removable filters.",
+      "storybook": {
+        "title": "Components/Search",
+        "docs": "?path=/docs/components-search--docs"
+      },
+      "patterns": []
+    },
+    {
+      "name": "SegmentedControl",
+      "tier": "molecule",
+      "category": "Form controls",
+      "summary": "Connected segments with a sliding thumb for settings and view switching.",
+      "storybook": {
+        "title": "Components/SegmentedControl",
+        "docs": "?path=/docs/components-segmentedcontrol--docs"
+      },
+      "patterns": []
+    },
+    {
+      "name": "Select",
+      "tier": "molecule",
+      "category": "Form controls",
+      "summary": "Pill trigger with a floating listbox.",
+      "storybook": {
+        "title": "Components/Select",
+        "docs": "?path=/docs/components-select--docs"
+      },
+      "patterns": []
+    },
+    {
+      "name": "SelectableCard",
+      "tier": "molecule",
+      "category": "Container",
+      "summary": "Multi-select card grid item with a check badge and optional toggle.",
+      "storybook": {
+        "title": "Components/Card/SelectableCard",
+        "docs": "?path=/docs/components-card-selectablecard--docs"
+      },
+      "patterns": [
+        "components-card-selectablecard--selectable-cards-pattern"
+      ]
+    },
+    {
+      "name": "Sheet",
+      "tier": "organism",
+      "category": "Overlay",
+      "summary": "Dismissible bottom drawer or side panel that blocks the page.",
+      "storybook": {
+        "title": "Components/Sheet",
+        "docs": "?path=/docs/components-sheet--docs"
+      },
+      "patterns": [
+        "components-sheet--bottom-sheet",
+        "components-sheet--end-sheet"
+      ]
+    },
+    {
+      "name": "SiteNav",
+      "tier": "organism",
+      "category": "Navigation",
+      "summary": "Marketing site header that collapses to a pinned pill, with mega menus.",
+      "storybook": {
+        "title": "Components/SiteNav",
+        "docs": "?path=/docs/components-sitenav--docs"
+      },
+      "patterns": [
+        "components-sitenav--brand-and-cta",
+        "components-sitenav--centered-links",
+        "components-sitenav--compact",
+        "components-sitenav--marketing-header",
+        "components-sitenav--mega-menu"
+      ]
+    },
+    {
+      "name": "Skeleton",
+      "tier": "atom",
+      "category": "Feedback & status",
+      "summary": "Shimmering layout placeholders that mirror the resolved UI.",
+      "storybook": {
+        "title": "Components/Skeleton",
+        "docs": "?path=/docs/components-skeleton--docs"
+      },
+      "patterns": []
+    },
+    {
+      "name": "Stat",
+      "tier": "molecule",
+      "category": "Data visualization",
+      "summary": "At-a-glance metric tile with label, value, and optional trend.",
+      "storybook": {
+        "title": "Components/Stat",
+        "docs": "?path=/docs/components-stat--docs"
+      },
+      "patterns": [
+        "components-stat--insights-row"
+      ]
+    },
+    {
+      "name": "Status",
+      "tier": "atom",
+      "category": "Feedback & status",
+      "summary": "Task progress ring or semantic dot at a fixed scale.",
+      "storybook": {
+        "title": "Components/Status",
+        "docs": "?path=/docs/components-status--docs"
+      },
+      "patterns": []
+    },
+    {
+      "name": "StepProgress",
+      "tier": "molecule",
+      "category": "Feedback & status",
+      "summary": "Segmented step indicator with a Step N of M label.",
+      "storybook": {
+        "title": "Components/StepProgress",
+        "docs": "?path=/docs/components-stepprogress--docs"
+      },
+      "patterns": [
+        "components-stepprogress--step-progress-pattern"
+      ]
+    },
+    {
+      "name": "Switch",
+      "tier": "atom",
+      "category": "Form controls",
+      "summary": "Instant on and off, with a settings-row layout.",
+      "storybook": {
+        "title": "Components/Switch",
+        "docs": "?path=/docs/components-switch--docs"
+      },
+      "patterns": [
+        "components-switch--default",
+        "components-switch--settings-row"
+      ]
+    },
+    {
+      "name": "Tab",
+      "tier": "organism",
+      "category": "Navigation",
+      "summary": "Peer page and view tabs with a More overflow menu.",
+      "storybook": {
+        "title": "Components/Tab",
+        "docs": "?path=/docs/components-tab--docs"
+      },
+      "patterns": [
+        "components-tab--settings-pages"
+      ]
+    },
+    {
+      "name": "TaskRows",
+      "tier": "molecule",
+      "category": "Table & list",
+      "summary": "Expandable task rows with status, meta, and detail rails.",
+      "storybook": {
+        "title": "Components/TaskRows",
+        "docs": "?path=/docs/components-taskrows--docs"
+      },
+      "patterns": [
+        "components-taskrows--action-details",
+        "components-taskrows--capsules",
+        "components-taskrows--card-with-status-rows",
+        "components-taskrows--controlled-expand",
+        "components-taskrows--custom-slots",
+        "components-taskrows--status-list",
+        "components-taskrows--tag-chips"
+      ]
+    },
+    {
+      "name": "TextArea",
+      "tier": "atom",
+      "category": "Form controls",
+      "summary": "Multiline field with the same label, status, and loading as Input.",
+      "storybook": {
+        "title": "Components/TextArea",
+        "docs": "?path=/docs/components-textarea--docs"
+      },
+      "patterns": []
+    },
+    {
+      "name": "TextLink",
+      "tier": "atom",
+      "category": "Navigation",
+      "summary": "Inline link inside prose, with an external variant.",
+      "storybook": {
+        "title": "Components/TextLink",
+        "docs": "?path=/docs/components-textlink--docs"
+      },
+      "patterns": [
+        "components-textlink--external-destination",
+        "components-textlink--inline-prose",
+        "components-textlink--supporting-copy"
+      ]
+    },
+    {
+      "name": "TextSequence",
+      "tier": "molecule",
+      "category": "Marketing",
+      "summary": "Masked word-by-word reveal for headlines.",
+      "storybook": {
+        "title": "Components/TextSequence",
+        "docs": "?path=/docs/components-textsequence--docs"
+      },
+      "patterns": [
+        "components-textsequence--default",
+        "components-textsequence--reduced-motion",
+        "components-textsequence--shapes"
+      ]
+    },
+    {
+      "name": "Toast",
+      "tier": "organism",
+      "category": "Overlay",
+      "summary": "Temporary notifications in a layered deck.",
+      "storybook": {
+        "title": "Components/Toast",
+        "docs": "?path=/docs/components-toast--docs"
+      },
+      "patterns": [
+        "components-toast--stacked-notifications"
+      ]
+    },
+    {
+      "name": "Tooltip",
+      "tier": "atom",
+      "category": "Overlay",
+      "summary": "Short supplemental label on hover and focus.",
+      "storybook": {
+        "title": "Components/Tooltip",
+        "docs": "?path=/docs/components-tooltip--docs"
+      },
+      "patterns": [
+        "components-tooltip--controlled",
+        "components-tooltip--disabled-control",
+        "components-tooltip--icon-action",
+        "components-tooltip--keyboard-shortcut",
+        "components-tooltip--placement"
+      ]
+    }
+  ],
+  "planned": [
+    "Carousel",
+    "Pagination",
+    "Table"
+  ],
+  "lib": [
+    "cn",
+    "motionTransition",
+    "motionTransitionProp",
+    "focusRingTransitionClasses",
+    "pressScaleClass",
+    "GridOverlay",
+    "GRID_ON_CLASS"
+  ],
+  "sites": [
+    "Sites/PitchKit/Account settings",
+    "Sites/PitchKit/Creator identity",
+    "Sites/PitchKit/Insights and kit",
+    "Sites/PitchKit/Intro",
+    "Sites/PitchKit/Past brands",
+    "Sites/PitchKit/Theme picker",
+    "Sites/WhatMatters/Intake",
+    "Sites/WhatMatters/Marketing landing",
+    "Sites/WhatMatters/Prompt chat",
+    "Sites/WhatMatters/RFP submitted"
+  ],
+  "guides": [
+    "Guides/Chart explorations",
+    "Guides/Overlay flows",
+    "Guides/Profile typography"
+  ]
+}
