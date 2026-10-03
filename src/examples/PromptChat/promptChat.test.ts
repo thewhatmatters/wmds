@@ -268,6 +268,8 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).toContain("PillGroup");
     expect(promptChatPatternCopySource).toContain("IntakeForm");
     expect(promptChatPatternCopySource).toContain("CalEmbed");
+    expect(promptChatPatternCopySource).toContain("CalEmbed.Skip");
+    expect(promptChatPatternCopySource).toContain("skip={false}");
     expect(promptChatPatternCopySource).toContain("IntakeConfirmation");
     expect(promptChatPatternCopySource).toContain("ChatQa");
     expect(promptChatPatternCopySource).toContain("kind: \"intake\"");
@@ -791,6 +793,9 @@ describe("prompt chat start project gate", () => {
         (node) => node.textContent === "Skip, just email me",
       );
       if (skip == null) throw new Error("CalEmbed skip link missing");
+      expect(skip.closest("[data-cal-embed]")).toBeNull();
+      expect(skip.closest("footer")).not.toBeNull();
+      expect(view.container.querySelector("[data-cal-embed] a")).toBeNull();
       act(() => {
         skip.click();
       });

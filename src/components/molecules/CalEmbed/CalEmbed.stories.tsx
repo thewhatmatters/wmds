@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "../../atoms/Button/Button";
+import { Card } from "../Card/Card";
 import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySource";
 import { CalEmbed } from "./CalEmbed";
 
@@ -21,18 +22,22 @@ Theme the embed with the page tokens: \`--color-brand\`, \`--color-background-bo
 
 Pass the embed as \`children\`. \`onSkip\` runs the email path and cancels the href.
 
+When the calendar sits in **Card.Body**, place **CalEmbed.Skip** in **Card.Footer** and pass \`skip={false}\` (or \`skip={<CalEmbed.Skip />}\`) so the in-body skip is omitted. The skip is the same **TextLink**. Do not fork **Card**.
+
 ## Anatomy
 
 \`\`\`
 CalEmbed
-├── frame — theming note + children slot
-└── TextLink — Skip, just email me
+└── frame — theming note + children slot
+CalEmbed.Skip — TextLink (after the frame by default, or Card.Footer)
 \`\`\`
 
 ## Best practices
 
 - **Do** keep the skip link even after the embed script is mounted.
+- **Do** put **CalEmbed.Skip** in **Card.Footer** when the embed is in **Card.Body**.
 - **Do** theme Cal.com from the tokens above. Do not introduce a new color role.
+- **Don't** render both the in-body skip and **CalEmbed.Skip**.
 - **Don't** build a second calendar component.
         `.trim(),
       },
@@ -43,28 +48,71 @@ CalEmbed
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const CalEmbedPattern: Story = {
-  name: "Pattern — cal embed",
+const skipInFooterSource = `
+import { Button, CalEmbed, Card } from "@whatmatters/wmds";
+
+export function BookACall() {
+  return (
+    <Card padding="none" variant="surface">
+      <Card.Body>
+        <CalEmbed skip={false}>
+          <Button role="primary" type="button">
+            Confirm this time
+          </Button>
+        </CalEmbed>
+      </Card.Body>
+      <Card.Footer>
+        <CalEmbed.Skip onSkip={() => undefined} />
+        <Button role="secondary" type="button">
+          Cancel
+        </Button>
+      </Card.Footer>
+    </Card>
+  );
+}
+`.trim();
+
+export const PatternSkipInFooter: Story = {
+  name: "Pattern — skip in footer",
   render: () => (
     <div className="w-full max-w-xl">
-      <CalEmbed>
+      <Card padding="none" variant="surface">
+        <Card.Body>
+          <CalEmbed skip={false}>
+            <Button role="primary" type="button">
+              Confirm this time
+            </Button>
+          </CalEmbed>
+        </Card.Body>
+        <Card.Footer>
+          <CalEmbed.Skip onSkip={() => undefined} />
+          <Button role="secondary" type="button">
+            Cancel
+          </Button>
+        </Card.Footer>
+      </Card>
+    </div>
+  ),
+  parameters: storyCopySource(skipInFooterSource),
+};
+
+export const ReferenceInBodySkip: Story = {
+  name: "Reference — in-body skip",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Default skip after the frame when there is no Card.Footer. Prefer **Pattern — skip in footer** when the embed is in a Card.",
+      },
+    },
+  },
+  render: () => (
+    <div className="w-full max-w-xl">
+      <CalEmbed onSkip={() => undefined}>
         <Button role="primary" type="button">
           Confirm this time
         </Button>
       </CalEmbed>
     </div>
   ),
-  parameters: storyCopySource(`
-import { Button, CalEmbed } from "@whatmatters/wmds";
-
-export function BookACall() {
-  return (
-    <CalEmbed onSkip={() => undefined}>
-      <Button role="primary" type="button">
-        Confirm this time
-      </Button>
-    </CalEmbed>
-  );
-}
-`),
 };
