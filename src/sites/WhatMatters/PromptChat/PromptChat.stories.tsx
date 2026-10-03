@@ -15,7 +15,7 @@ const meta = {
 
 An ask page. The landing is a short headline and **PromptBar**. Send keeps the bar in place: the headline fades, the sent line fades in where it rests, then a collapsed sparkle row shows a Thought-for timer — supporting type and muted gray, smaller than the reply. Expand it while thinking to read the steps. The whole row leaves when the reply starts. The reply streams word by word out of a blur. One **TextLink** arrives with the words around it. When the stream finishes, copy / thumbs **IconButton** actions sit under that reply and stay hidden until hover (touch opens that reply only). Follow-up prompts become usable after the stream. A follow-up, or another send, appends that line in the same thread. Earlier messages stay. The page shell is \`h-[100svh]\`. When the thread is taller than that view, it scrolls inside the narrowed column. The thread reserves the composer's measured height plus the space under the pill, including while a reply is still growing, so the reply and its follow-ups finish above the composer. The composer stays pinned. The chat keeps **SiteNav**. The brand mark returns to the landing.
 
-This story is the pattern alone. It is not mounted on the marketing page. **SiteNav** is reused as it exists — not restyled.
+The marketing homepage hands off here: **Components/PromptBar → Pattern — marketing composer** routes to \`/ask?q=…\`, and \`initialPrompt\` opens this page on that first exchange. **SiteNav** is reused as it exists — not restyled.
 
 Voice and attachments are not part of this version. The trace and the reply are scripted sample copy. Nothing calls a model. \`prefers-reduced-motion\` skips the fade and the trace play, and shows the finished reply.
 
@@ -118,4 +118,18 @@ export const Coding: Story = {
     },
   },
   render: () => <AskWhatMatters trace="coding" />,
+};
+
+export const FromMarketingComposer: Story = {
+  name: "State — opened from the marketing composer",
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: {
+      description: {
+        story:
+          "The hand-off target of **Components/PromptBar → Pattern — marketing composer**. The app reads `q` from `/ask?q=…` and passes it as `initialPrompt`: the page opens on that first exchange instead of the landing headline, and the trace and reply play as usual.",
+      },
+    },
+  },
+  render: () => <AskWhatMatters trace="steps" initialPrompt="Can you design and build our launch site?" />,
 };

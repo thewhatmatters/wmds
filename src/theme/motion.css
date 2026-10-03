@@ -27,6 +27,11 @@
 
   --motion-press-scale: 0.98;
 
+  /* Choreography — sequenced reveals (streamed words, step lists). Read through lib/motion helpers. */
+  --motion-stagger: 60ms;
+  --motion-beat: 160ms;
+  --motion-blur-reveal: 4px;
+
   /* Legacy aliases — prefer fast/medium/slow tiers in new code */
   --duration-instant: var(--duration-fast-min);
   --duration-base: var(--duration-medium-min);

@@ -1,3 +1,4 @@
+import { motionBeatSeconds } from "../../../lib/motion";
 /**
  * Scripted thinking traces. One shape, four bodies. Nothing calls a model.
  * Steps plays on the landing send. Reasoning, Search, and Coding are the same trace.
@@ -11,13 +12,13 @@ export type PromptChatTraceKind = (typeof promptChatTraceKinds)[number];
 export const promptChatThoughtLabel = "Thought for 4 seconds";
 
 /** Time between trace lines. The row stays until the last line plus the hold (~4s). */
-export const promptChatTraceBeatSeconds = 0.48;
+export const promptChatTraceBeatSeconds = motionBeatSeconds(3, null);
 
 /** How long the current step shows a circle spinner before that circle becomes the check. */
-export const promptChatTraceSpinSeconds = 0.32;
+export const promptChatTraceSpinSeconds = motionBeatSeconds(2, null);
 
 /** Hold after the last step so the collapsed timer can reach four seconds. */
-export const promptChatTraceHoldSeconds = 2.08;
+export const promptChatTraceHoldSeconds = motionBeatSeconds(13, null);
 
 /** Format the collapsed sparkle row. Always at least one second. */
 export function promptChatThoughtForLabel(seconds: number): string {

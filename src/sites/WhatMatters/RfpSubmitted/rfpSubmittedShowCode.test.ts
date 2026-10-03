@@ -17,13 +17,13 @@ function slice(source: string, start: string, end: string): string {
 describe("RFP submitted show code", () => {
   it("is the live confirmation flow with package imports", () => {
     const live = slice(exampleSource, "const projectOptions", "export function RfpSubmittedPage")
-      .replace("export function RfpFlow()", "function RfpFlow()");
+      .replace("export function RfpFlow(", "function RfpFlow(");
     const shown = slice(rfpSubmittedCopySource, "const projectOptions", "export function RfpSubmitted");
     expect(shown).toBe(live);
 
-    const livePage = slice(exampleSource, "export function RfpSubmittedPage()", "export const rfpSubmittedCopySource")
-      .replace("export function RfpSubmittedPage()", "export function RfpSubmitted()");
-    const shownPage = rfpSubmittedCopySource.slice(rfpSubmittedCopySource.indexOf("export function RfpSubmitted()")).trim();
+    const livePage = slice(exampleSource, "export function RfpSubmittedPage(", "export const rfpSubmittedCopySource")
+      .replace("export function RfpSubmittedPage(", "export function RfpSubmitted(");
+    const shownPage = rfpSubmittedCopySource.slice(rfpSubmittedCopySource.indexOf("export function RfpSubmitted(")).trim();
     expect(shownPage).toBe(livePage.trim());
     expect(rfpSubmittedCopySource).not.toContain("ExampleGridControls");
     expect(rfpSubmittedCopySource).not.toContain("submitRef");

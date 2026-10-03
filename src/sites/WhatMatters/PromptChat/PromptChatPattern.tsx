@@ -2,7 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type MouseEv
 import { Copy, Sparkles, ThumbsDown, ThumbsUp } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { cn } from "../../../lib/cn";
-import { motionTransitionProp } from "../../../lib/motion";
+import { motionBlurReveal, motionTransitionProp, readMotionDurationSeconds } from "../../../lib/motion";
 import { Button } from "../../../components/atoms/Button/Button";
 import { IconButton } from "../../../components/atoms/IconButton/IconButton";
 import { TextLink } from "../../../components/atoms/TextLink/TextLink";
@@ -79,7 +79,11 @@ import {
   PromptBar,
   SiteNav,
   TextLink,
+  motionBeatSeconds,
+  motionBlurReveal,
+  motionStaggerSeconds,
   motionTransitionProp,
+  readMotionDurationSeconds,
   useKbdChoiceKeys,
   type ChatQaPair,
   type IntakeAboutValues,
@@ -100,7 +104,6 @@ const replyClasses = "w-full type-body text-fg";
 const replyBlockClasses =
   "group/reply w-full outline-none [&[data-actions=open]]:outline-none";
 const traceClasses = "flex w-full flex-col items-start gap-2";
-const traceTriggerClasses = "!w-auto !gap-1.5";
 const traceBodyClasses =
   "flex w-full flex-col items-start gap-2 border-l border-border-control py-0.5 pl-3";
 const traceLineClasses = "flex items-center gap-2 type-supporting text-muted";
@@ -111,7 +114,7 @@ const traceChevronClasses = "size-4 shrink-0 text-muted";
 const actionsClasses =
   "flex items-center gap-1 opacity-0 pointer-events-none transition-opacity duration-fast ease-standard group-hover/reply:opacity-100 group-hover/reply:pointer-events-auto group-focus-within/reply:opacity-100 group-focus-within/reply:pointer-events-auto group-data-[actions=open]/reply:opacity-100 group-data-[actions=open]/reply:pointer-events-auto";
 const followUpsClasses = "flex w-full flex-col gap-2";
-const followUpClasses = "w-full !justify-start !border-border";
+const followUpClasses = "w-full";
 const barClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";
 const composerClasses = "col-span-full";
 const startGateCardClasses = "h-[411px]";
@@ -160,7 +163,6 @@ function canContinueStart(
 const headline = "What should we make?";
 const sampleReply =
   "Brand, product, and the sites that explain them. The studio notes cover how a project starts.";
-const wordStaggerSeconds = 0.06;
 type ReplyPart = { kind: "word"; text: string } | { kind: "source"; text: string; href: string };
 const replyParts: ReplyPart[] = [
   { kind: "word", text: "Brand," },
@@ -187,20 +189,19 @@ function thoughtForLabel(seconds: number) {
   const n = Math.max(1, Math.floor(seconds));
   return n === 1 ? "Thought for 1 second" : "Thought for " + n + " seconds";
 }
-const traceBeatSeconds = 0.48;
-const traceSpinSeconds = 0.32;
-const traceHoldSeconds = 2.08;
+// Trace choreography in --motion-beat units: a step every 3 beats, the spinner for 2, a 13-beat hold.
+const traceBeats = { step: 3, spin: 2, hold: 13 };
 const traceSteps = ["Read the brief", "Name the brand", "Check the product site", "Find the studio notes"];
 type Point = { top: number; left: number };
 
-function partDelay(index: number, reduce: boolean, settleSeconds: number) {
+function partDelay(index: number, reduce: boolean, settleSeconds: number, staggerSeconds: number) {
   if (reduce || index <= 0) return 0;
   let time = 0;
   for (let i = 0; i < index; i += 1) {
     const part = replyParts[i];
     const next = replyParts[i + 1];
     const hold = part?.kind === "source" || next?.kind === "source";
-    time += hold ? settleSeconds : wordStaggerSeconds;
+    time += hold ? settleSeconds : staggerSeconds;
   }
   return time;
 }
@@ -247,7 +248,8 @@ function IntakeExchange({
   const [mark, setMark] = useState<"up" | "down" | null>(null);
   const [streamDone, setStreamDone] = useState(reduce);
   const [actionsOpen, setActionsOpen] = useState(false);
-  const settleSeconds = typeof fast.duration === "number" ? fast.duration : 0.175;
+  const settleSeconds = readMotionDurationSeconds("fast");
+  const staggerSeconds = motionStaggerSeconds();
 
   useEffect(() => {
     if (!actionsOpen) return;
@@ -265,10 +267,10 @@ function IntakeExchange({
   useEffect(() => {
     if (streamDone) return;
     const last = replyParts.length - 1;
-    const wait = (partDelay(last, reduce, settleSeconds) + settleSeconds) * 1000;
+    const wait = (partDelay(last, reduce, settleSeconds, staggerSeconds) + settleSeconds) * 1000;
     const timer = window.setTimeout(() => setStreamDone(true), wait);
     return () => window.clearTimeout(timer);
-  }, [reduce, streamDone, settleSeconds]);
+  }, [reduce, streamDone, settleSeconds, staggerSeconds]);
 
   useLayoutEffect(() => {
     onReplyGrown();
@@ -299,7 +301,7 @@ function IntakeExchange({
               part={part}
               index={index}
               reduce={reduce}
-              delay={partDelay(index, reduce, settleSeconds)}
+              delay={partDelay(index, reduce, settleSeconds, staggerSeconds)}
               settle={fast}
               onDone={index === replyParts.length - 1 ? () => setStreamDone(true) : undefined}
             />
@@ -328,7 +330,7 @@ function IntakeExchange({
       {streamDone && latest ? (
         <div className={followUpsClasses}>
           {followUps.map((next) => (
-            <Button key={next} role="outline" size="md" type="button" className={followUpClasses} onClick={() => onFollowUp(next)}>
+            <Button key={next} role="outline" emphasis="quiet" align="start" size="md" type="button" className={followUpClasses} onClick={() => onFollowUp(next)}>
               {next}
             </Button>
           ))}
@@ -340,12 +342,15 @@ function IntakeExchange({
 
 function Exchange({
   prompt,
+  arrived = false,
   latest,
   reduce,
   onFollowUp,
   onReplyGrown,
 }: {
   prompt: string;
+  /** The prompt came with the page (\`initialPrompt\`): it is already there, so it does not fade in. */
+  arrived?: boolean;
   latest: boolean;
   reduce: boolean;
   onFollowUp: (value: string) => void;
@@ -369,8 +374,8 @@ function Exchange({
 
   useEffect(() => {
     if (reduce) return;
-    const beatMs = traceBeatSeconds * 1000;
-    const spinMs = traceSpinSeconds * 1000;
+    const beatMs = motionBeatSeconds(traceBeats.step) * 1000;
+    const spinMs = motionBeatSeconds(traceBeats.spin) * 1000;
     const timers: number[] = [];
     for (let index = 1; index <= traceSteps.length; index += 1) {
       timers.push(window.setTimeout(() => setRevealed(index), index * beatMs));
@@ -379,21 +384,22 @@ function Exchange({
     timers.push(window.setTimeout(() => {
       setTraceOpen(false);
       setReplyReady(true);
-    }, (traceSteps.length * traceBeatSeconds + traceHoldSeconds) * 1000));
+    }, motionBeatSeconds(traceSteps.length * traceBeats.step + traceBeats.hold) * 1000));
     return () => {
       for (const timer of timers) window.clearTimeout(timer);
     };
   }, [reduce]);
 
-  const settleSeconds = typeof fast.duration === "number" ? fast.duration : 0.175;
+  const settleSeconds = readMotionDurationSeconds("fast");
+  const staggerSeconds = motionStaggerSeconds();
 
   useEffect(() => {
     if (!replyReady || streamDone) return;
     const last = replyParts.length - 1;
-    const wait = (partDelay(last, reduce, settleSeconds) + settleSeconds) * 1000;
+    const wait = (partDelay(last, reduce, settleSeconds, staggerSeconds) + settleSeconds) * 1000;
     const timer = window.setTimeout(() => setStreamDone(true), wait);
     return () => window.clearTimeout(timer);
-  }, [replyReady, reduce, streamDone, settleSeconds]);
+  }, [replyReady, reduce, streamDone, settleSeconds, staggerSeconds]);
 
   useEffect(() => {
     if (!actionsOpen) return;
@@ -422,7 +428,7 @@ function Exchange({
     <>
       <motion.p
         className={userClasses}
-        initial={reduce ? false : { opacity: 0 }}
+        initial={reduce || arrived ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={reduce ? { duration: 0 } : fast}
       >
@@ -430,7 +436,7 @@ function Exchange({
       </motion.p>
       {replyReady ? null : (
         <div className={traceClasses} aria-busy="true">
-          <Button layout="row" role="ghost" type="button" className={traceTriggerClasses} aria-expanded={traceOpen} onClick={() => setTraceOpen((current) => !current)}>
+          <Button layout="row" width="hug" role="ghost" type="button" aria-expanded={traceOpen} onClick={() => setTraceOpen((current) => !current)}>
             <Sparkle className={traceIconClasses} strokeWidth={2} aria-hidden />
             <span className={thoughtLabelClasses}>{thoughtForLabel(thoughtSeconds)}</span>
             <ChevronDown className={traceChevronClasses + (traceOpen ? " rotate-180" : "")} strokeWidth={2} aria-hidden />
@@ -441,8 +447,7 @@ function Exchange({
                 <motion.div
                   key={step}
                   className={traceLineClasses}
-                  initial={reduce ? false : { opacity: 0, filter: "blur(4px)" }}
-                  animate={{ opacity: 1, filter: "blur(0px)" }}
+                  {...motionBlurReveal(reduce)}
                   transition={reduce ? { duration: 0 } : fast}
                 >
                   {index < resolved ? (
@@ -476,7 +481,7 @@ function Exchange({
                   part={part}
                   index={index}
                   reduce={reduce}
-                  delay={partDelay(index, reduce, settleSeconds)}
+                  delay={partDelay(index, reduce, settleSeconds, staggerSeconds)}
                   settle={fast}
                   onDone={index === replyParts.length - 1 ? () => setStreamDone(true) : undefined}
                 />
@@ -505,7 +510,7 @@ function Exchange({
           {streamDone && latest ? (
             <div className={followUpsClasses}>
               {followUps.map((next) => (
-                <Button key={next} role="outline" size="md" type="button" className={followUpClasses} onClick={() => onFollowUp(next)}>
+                <Button key={next} role="outline" emphasis="quiet" align="start" size="md" type="button" className={followUpClasses} onClick={() => onFollowUp(next)}>
                   {next}
                 </Button>
               ))}
@@ -657,7 +662,11 @@ function StartGate({
   );
 }
 
-export function AskWhatMatters() {
+/**
+ * \`initialPrompt\` hands off from the marketing composer: read it from the URL (\`/ask?q=…\`)
+ * and the page opens on that first exchange instead of the landing headline.
+ */
+export function AskWhatMatters({ initialPrompt }: { initialPrompt?: string } = {}) {
   const reduce = useReducedMotion() === true;
   const travel = motionTransitionProp("medium");
   const fieldRef = useRef<HTMLTextAreaElement>(null);
@@ -674,7 +683,10 @@ export function AskWhatMatters() {
   const suppressScroll = useRef(false);
   const nextId = useRef(1);
   const [draft, setDraft] = useState("");
-  const [turns, setTurns] = useState<Turn[]>([]);
+  const [turns, setTurns] = useState<Turn[]>(() => {
+    const first = initialPrompt?.trim();
+    return first ? [{ id: 0, kind: "prompt", prompt: first }] : [];
+  });
   const [headlineExit, setHeadlineExit] = useState<Point | null>(null);
   const [composerSpace, setComposerSpace] = useState(0);
   const chatting = turns.length > 0;
@@ -849,6 +861,7 @@ export function AskWhatMatters() {
                     <Exchange
                       key={turn.id}
                       prompt={turn.prompt}
+                      arrived={turn.id === 0}
                       latest={index === turns.length - 1}
                       reduce={reduce}
                       onFollowUp={send}
@@ -929,8 +942,7 @@ function ReplyWord({
   return (
     <motion.span
       className="inline"
-      initial={reduce ? false : { opacity: 0, filter: "blur(4px)" }}
-      animate={{ opacity: 1, filter: "blur(0px)" }}
+      {...motionBlurReveal(reduce)}
       transition={reduce ? { duration: 0 } : { ...settle, delay }}
       onAnimationComplete={onDone}
     >
@@ -966,7 +978,7 @@ function PromptChatIntakeExchange({
   const [mark, setMark] = useState<"up" | "down" | null>(null);
   const [streamDone, setStreamDone] = useState(reduce);
   const [actionsOpen, setActionsOpen] = useState(false);
-  const settleSeconds = typeof fast.duration === "number" ? fast.duration : 0.175;
+  const settleSeconds = readMotionDurationSeconds("fast");
 
   useEffect(() => {
     if (!actionsOpen) return;
@@ -1016,8 +1028,7 @@ function PromptChatIntakeExchange({
             <motion.span
               key={`${part.kind}-${index}`}
               className="inline"
-              initial={reduce ? false : { opacity: 0, filter: "blur(4px)" }}
-              animate={{ opacity: 1, filter: "blur(0px)" }}
+              {...motionBlurReveal(reduce)}
               transition={
                 reduce ? { duration: 0 } : { ...fast, delay: promptChatPartDelay(index, false, settleSeconds) }
               }
@@ -1056,6 +1067,8 @@ function PromptChatIntakeExchange({
             <Button
               key={next}
               role="outline"
+              emphasis="quiet"
+              align="start"
               size="md"
               type="button"
               className={promptChatFollowUpClasses}
@@ -1076,6 +1089,7 @@ function PromptChatIntakeExchange({
  */
 function PromptChatExchange({
   prompt,
+  arrived = false,
   trace,
   latest,
   reduce,
@@ -1083,6 +1097,8 @@ function PromptChatExchange({
   onReplyGrown,
 }: {
   prompt: string;
+  /** The prompt came with the page (`initialPrompt`): it is already there, so it does not fade in. */
+  arrived?: boolean;
   trace: PromptChatTraceKind;
   latest: boolean;
   reduce: boolean;
@@ -1134,7 +1150,7 @@ function PromptChatExchange({
     return () => window.removeEventListener("pointerdown", onPointerDown);
   }, [actionsOpen]);
 
-  const settleSeconds = typeof fast.duration === "number" ? fast.duration : 0.175;
+  const settleSeconds = readMotionDurationSeconds("fast");
 
   useEffect(() => {
     if (!replyReady || streamDone) return;
@@ -1158,7 +1174,7 @@ function PromptChatExchange({
     <>
       <motion.p
         className={promptChatUserClasses}
-        initial={reduce ? false : { opacity: 0 }}
+        initial={reduce || arrived ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={reduce ? { duration: 0 } : fast}
       >
@@ -1191,8 +1207,7 @@ function PromptChatExchange({
                 <motion.span
                   key={`${part.kind}-${index}`}
                   className="inline"
-                  initial={reduce ? false : { opacity: 0, filter: "blur(4px)" }}
-                  animate={{ opacity: 1, filter: "blur(0px)" }}
+                  {...motionBlurReveal(reduce)}
                   transition={
                     reduce ? { duration: 0 } : { ...fast, delay: promptChatPartDelay(index, false, settleSeconds) }
                   }
@@ -1231,6 +1246,8 @@ function PromptChatExchange({
                 <Button
                   key={next}
                   role="outline"
+                  emphasis="quiet"
+                  align="start"
                   size="md"
                   type="button"
                   className={promptChatFollowUpClasses}
@@ -1259,7 +1276,14 @@ function PromptChatExchange({
  * Reduced motion skips the fade and the trace play, and shows the finished reply.
  * Voice and attachments are not part of this version.
  */
-export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKind } = {}) {
+export function AskWhatMatters({
+  trace = "steps",
+  initialPrompt,
+}: {
+  trace?: PromptChatTraceKind;
+  /** Hand-off from the marketing composer: opens on this first exchange instead of the landing. */
+  initialPrompt?: string;
+} = {}) {
   const reduce = useReducedMotion() === true;
   const travel = motionTransitionProp("medium");
   const fieldRef = useRef<HTMLTextAreaElement>(null);
@@ -1276,7 +1300,10 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
   const suppressScroll = useRef(false);
   const nextId = useRef(1);
   const [draft, setDraft] = useState("");
-  const [turns, setTurns] = useState<PromptChatTurn[]>([]);
+  const [turns, setTurns] = useState<PromptChatTurn[]>(() => {
+    const first = initialPrompt?.trim();
+    return first ? [{ id: 0, kind: "prompt", prompt: first }] : [];
+  });
   const [headlineExit, setHeadlineExit] = useState<Point | null>(null);
   const [composerSpace, setComposerSpace] = useState(0);
   const chatting = turns.length > 0;
@@ -1497,6 +1524,7 @@ export function AskWhatMatters({ trace = "steps" }: { trace?: PromptChatTraceKin
                     <PromptChatExchange
                       key={turn.id}
                       prompt={turn.prompt}
+                      arrived={turn.id === 0}
                       trace={trace}
                       latest={index === turns.length - 1}
                       reduce={reduce}

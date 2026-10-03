@@ -5,6 +5,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ConfettiProvider, useConfetti } from "../components/organisms/Confetti/Confetti";
 import { RfpSubmittedPage } from "../sites/WhatMatters/RfpSubmitted/RfpSubmittedExample";
 
+/** Stand-in for the app's request: resolves after a short pause so the submitting state shows. */
+function demoSubmit(): Promise<void> {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, 600);
+  });
+}
+
 /**
  * Browser interaction tests — `npm run test:interactions`.
  * Particles portal to `document.body`. Reduced motion: `fire()` adds nothing.
@@ -117,7 +124,7 @@ export const ConfirmationBurst: Story = {
   name: "confirmation burst",
   render: () => (
     <StrictMode>
-      <RfpSubmittedPage />
+      <RfpSubmittedPage onSubmit={demoSubmit} />
     </StrictMode>
   ),
   play: async ({ canvas }) => {
@@ -149,7 +156,7 @@ export const ConfirmationReducedMotion: Story = {
   render: () => (
     <StrictMode>
       <MotionConfig reducedMotion="always">
-        <RfpSubmittedPage />
+        <RfpSubmittedPage onSubmit={demoSubmit} />
       </MotionConfig>
     </StrictMode>
   ),

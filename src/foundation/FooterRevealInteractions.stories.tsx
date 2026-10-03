@@ -3,6 +3,7 @@ import { expect, waitFor } from "storybook/test";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { FooterReveal } from "../components/organisms/FooterReveal/FooterReveal";
 import { footerRevealWordmarkFillsFrame } from "../components/organisms/FooterReveal/footerRevealWordmark";
+import { footerRevealBrandSample } from "../storybook/footerRevealSample";
 import { footerRevealFieldClasses } from "../components/organisms/FooterReveal/footerRevealStyles";
 
 /**
@@ -122,7 +123,7 @@ export const BrandFooter: Story = {
         <p className="type-body text-fg">Page cover</p>
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
-        <FooterReveal.Brand />
+        <FooterReveal.Brand {...footerRevealBrandSample} />
       </FooterReveal.Footer>
     </FooterReveal>
   ),

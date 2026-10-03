@@ -27,41 +27,28 @@ export interface FooterRevealRuledLink {
   href: string;
 }
 
+/**
+ * Content is the app's: there are no content defaults. `wordmark` is required; every other slot
+ * renders only when its prop is set.
+ */
 export interface FooterRevealRuledProps {
-  /** Small sans line beside the mark. Default: `WhatMatters © 2026`. */
+  /** Display wordmark that fills the footer width, e.g. `WhatMatters`. */
+  wordmark: string;
+  /** Small sans line beside the mark, e.g. `WhatMatters © 2026`. Omit to render none. */
   copyright?: string;
-  /**
-   * Typographic mark beside the copyright.
-   * Default `WM` — there is no separate logo asset.
-   */
+  /** Typographic mark beside the copyright, e.g. `WM` (there is no logo asset). Omit to render none. */
   mark?: string;
-  /** Centered footer nav. Default: Services, Resources, About. */
+  /** Centered footer nav. Omit or pass `[]` to render no nav. */
   links?: readonly FooterRevealRuledLink[];
-  /** Visible email address. Centered in the quiet row. */
+  /** Visible email address, centered in the quiet row. Omit to render none. */
   email?: string;
   /** Defaults to `mailto:` plus `email`. */
   emailHref?: string;
-  /** Display wordmark that fills the footer width. Default: `WhatMatters`. */
-  wordmark?: string;
-  /** Credit line on the end of the quiet row. Default: `Created by WhatMatters 2024–2026`. */
+  /** Credit line on the end of the quiet row. Omit to render none. */
   credit?: string;
   /** Layout only — width or margin. */
   className?: string;
 }
-
-export const footerRevealRuledDefaultLinks: readonly FooterRevealRuledLink[] = [
-  { label: "Services", href: "/services" },
-  { label: "Resources", href: "/resources" },
-  { label: "About", href: "/about" },
-];
-
-export const footerRevealRuledDefaultCopy = {
-  copyright: "WhatMatters © 2026",
-  mark: "WM",
-  email: "randy@whatmatters.so",
-  wordmark: "WhatMatters",
-  credit: "Created by WhatMatters 2024\u20132026",
-} as const;
 
 /** `mailto:` when the caller does not pass an href. */
 export function footerRevealRuledEmailHref(email: string, emailHref?: string): string {
@@ -160,34 +147,36 @@ function FittedLine({
  * fully visible — they do not crop.
  */
 export function FooterRevealRuled({
-  copyright = footerRevealRuledDefaultCopy.copyright,
-  mark = footerRevealRuledDefaultCopy.mark,
-  links = footerRevealRuledDefaultLinks,
-  email = footerRevealRuledDefaultCopy.email,
+  wordmark,
+  copyright,
+  mark,
+  links = [],
+  email,
   emailHref,
-  wordmark = footerRevealRuledDefaultCopy.wordmark,
-  credit = footerRevealRuledDefaultCopy.credit,
+  credit,
   className,
 }: FooterRevealRuledProps) {
-  const emailLink = footerRevealRuledEmailHref(email, emailHref);
+  const emailLink = email ? footerRevealRuledEmailHref(email, emailHref) : undefined;
 
   return (
     <div className={cn(footerRevealRuledRootClasses, className)} data-footer-ruled="root">
-      <nav aria-label="Footer" className={footerRevealRuledLinksClasses} data-footer-ruled="links">
-        <ul className={footerRevealRuledLinkListClasses}>
-          {links.map((link) => (
-            <li key={link.href}>
-              <TextLink
-                href={link.href}
-                external={/^https?:\/\//i.test(link.href)}
-                className={footerRevealRuledNavLinkClasses}
-              >
-                {link.label}
-              </TextLink>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      {links.length > 0 ? (
+        <nav aria-label="Footer" className={footerRevealRuledLinksClasses} data-footer-ruled="links">
+          <ul className={footerRevealRuledLinkListClasses}>
+            {links.map((link) => (
+              <li key={link.href}>
+                <TextLink
+                  href={link.href}
+                  external={/^https?:\/\//i.test(link.href)}
+                  className={footerRevealRuledNavLinkClasses}
+                >
+                  {link.label}
+                </TextLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ) : null}
 
       <FittedLine
         text={wordmark}
@@ -198,22 +187,26 @@ export function FooterRevealRuled({
 
       <div className={footerRevealRuledMetaClasses} data-footer-ruled="meta">
         <div className={footerRevealRuledIdentityClasses} data-footer-ruled="identity">
-          <span className={footerRevealRuledMarkClasses} aria-hidden="true">
-            {mark}
-          </span>
-          <p className={footerRevealRuledCopyrightClasses}>{copyright}</p>
+          {mark ? (
+            <span className={footerRevealRuledMarkClasses} aria-hidden="true">
+              {mark}
+            </span>
+          ) : null}
+          {copyright ? <p className={footerRevealRuledCopyrightClasses}>{copyright}</p> : null}
         </div>
         <div className={footerRevealRuledContactClasses} data-footer-ruled="contact">
-          <a
-            href={emailLink}
-            className={footerRevealRuledEmailClasses}
-            {...footerRevealExternalLinkProps(emailLink)}
-          >
-            {email}
-          </a>
+          {email && emailLink ? (
+            <a
+              href={emailLink}
+              className={footerRevealRuledEmailClasses}
+              {...footerRevealExternalLinkProps(emailLink)}
+            >
+              {email}
+            </a>
+          ) : null}
         </div>
         <div className={footerRevealRuledCreditClasses} data-footer-ruled="credit">
-          <p className={footerRevealRuledCreditCopyClasses}>{credit}</p>
+          {credit ? <p className={footerRevealRuledCreditCopyClasses}>{credit}</p> : null}
         </div>
       </div>
     </div>

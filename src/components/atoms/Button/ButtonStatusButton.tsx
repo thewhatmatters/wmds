@@ -94,6 +94,7 @@ export const ButtonStatusButton = forwardRef<
       initial={false}
       className={cn(
         buttonBaseClasses,
+        "justify-center",
         buttonStatusSizeClasses[size],
         status !== "idle" && buttonStatusIconGapClasses[size],
         buttonPillClass,

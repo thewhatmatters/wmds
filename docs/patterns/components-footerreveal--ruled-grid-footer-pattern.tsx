@@ -7,7 +7,18 @@ import { FooterReveal, TextLink, footerRevealRuledFieldClasses } from "@whatmatt
 export function RuledGridFooter() {
   return (
     <div className={footerRevealRuledFieldClasses}>
-      <FooterReveal.Ruled />
+      <FooterReveal.Ruled
+        wordmark="WhatMatters"
+        mark="WM"
+        copyright="WhatMatters © 2026"
+        links={[
+          { label: "Services", href: "/services" },
+          { label: "Resources", href: "/resources" },
+          { label: "About", href: "/about" },
+        ]}
+        email="randy@whatmatters.so"
+        credit="Created by WhatMatters 2024–2026"
+      />
     </div>
   );
 }

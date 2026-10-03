@@ -1,7 +1,12 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   ASTRYX_EASE_STANDARD,
+  motionBeatSeconds,
+  motionBlurReveal,
+  motionChoreographyFallbacks,
   motionDurationFallbackMs,
+  motionStaggerSeconds,
   parseCubicBezier,
   parseDurationSeconds,
   readMotionDurationSeconds,
@@ -43,5 +48,29 @@ describe("readMotionDurationSeconds", () => {
 describe("readMotionEase", () => {
   it("falls back to Astryx standard bezier without a root element", () => {
     expect(readMotionEase("standard", null)).toEqual(ASTRYX_EASE_STANDARD);
+  });
+});
+
+describe("choreography helpers", () => {
+  it("fall back to the motion.css values without a root", () => {
+    expect(motionStaggerSeconds(null)).toBe(0.06);
+    expect(motionBeatSeconds(1, null)).toBe(0.16);
+    expect(motionBeatSeconds(3, null)).toBe(0.48);
+    expect(motionBeatSeconds(13, null)).toBe(2.08);
+    expect(motionBlurReveal(false, null)).toEqual({
+      initial: { opacity: 0, filter: "blur(4px)" },
+      animate: { opacity: 1, filter: "blur(0px)" },
+    });
+  });
+
+  it("skip the initial frame under reduced motion", () => {
+    expect(motionBlurReveal(true, null).initial).toBe(false);
+  });
+
+  it("keep fallbacks in step with src/theme/motion.css", () => {
+    const css = readFileSync(new URL("../theme/motion.css", import.meta.url), "utf8");
+    expect(css).toContain(`--motion-stagger: ${motionChoreographyFallbacks.staggerMs}ms;`);
+    expect(css).toContain(`--motion-beat: ${motionChoreographyFallbacks.beatMs}ms;`);
+    expect(css).toContain(`--motion-blur-reveal: ${motionChoreographyFallbacks.blurRevealPx}px;`);
   });
 });

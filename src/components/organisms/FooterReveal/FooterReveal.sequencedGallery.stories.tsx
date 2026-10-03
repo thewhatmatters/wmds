@@ -15,6 +15,7 @@ import { scrollHorizontalIntroStatement, scrollHorizontalMarketingItems } from "
 import { SiteNav } from "../SiteNav/SiteNav";
 import { FooterReveal } from "./FooterReveal";
 import { footerRevealFieldClasses, footerRevealRuledFieldClasses } from "./footerRevealStyles";
+import { footerRevealRuledSample } from "../../../storybook/footerRevealSample";
 
 const meta = {
   title: "Components/FooterReveal",
@@ -181,7 +182,18 @@ const marketingHeroRuledCopySource = marketingHeroWithGalleryIntroCopySource
         />
       </FooterReveal.Footer>`,
     `      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
-        <FooterReveal.Ruled />
+        <FooterReveal.Ruled
+          wordmark="WhatMatters"
+          mark="WM"
+          copyright="WhatMatters © 2026"
+          links={[
+            { label: "Services", href: "/services" },
+            { label: "Resources", href: "/resources" },
+            { label: "About", href: "/about" },
+          ]}
+          email="randy@whatmatters.so"
+          credit="Created by WhatMatters 2024–2026"
+        />
       </FooterReveal.Footer>`,
   )
   .replace(
@@ -275,7 +287,7 @@ function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
       </FooterReveal.Content>
       <FooterReveal.Footer className={ruled ? footerRevealRuledFieldClasses : footerRevealFieldClasses}>
         {ruled ? (
-          <FooterReveal.Ruled />
+          <FooterReveal.Ruled {...footerRevealRuledSample} />
         ) : (
           <FooterReveal.Brand
             headline="We Build WhatMatters"

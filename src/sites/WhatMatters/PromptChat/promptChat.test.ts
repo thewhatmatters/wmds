@@ -36,7 +36,6 @@ import {
   promptChatTraceIconClasses,
   promptChatTraceLineClasses,
   promptChatTraceSpinClasses,
-  promptChatTraceTriggerClasses,
   promptChatUserClasses,
 } from "./promptChatStyles";
 import {
@@ -211,7 +210,6 @@ describe("prompt chat pattern", () => {
       promptChatReplyClasses,
       promptChatReplyBlockClasses,
       promptChatTraceClasses,
-      promptChatTraceTriggerClasses,
       promptChatTraceBodyClasses,
       promptChatTraceLineClasses,
       promptChatThoughtLabelClasses,
@@ -288,7 +286,10 @@ describe("prompt chat pattern", () => {
     expect(promptChatComposerClasses).toBe("col-span-full");
     expect(promptChatPatternCopySource).toContain("[--grid-max:40rem]");
     expect(promptChatPatternCopySource).not.toContain("lg:col-start-4");
-    expect(promptChatPatternCopySource).toContain("!border-border");
+    expect(promptChatPatternCopySource).not.toContain("!border-border");
+    expect(promptChatPatternCopySource).not.toContain("!w-auto");
+    expect(promptChatPatternCopySource).toContain('role="outline" emphasis="quiet" align="start"');
+    expect(promptChatPatternCopySource).toContain('layout="row" width="hug"');
     expect(promptChatPatternCopySource).not.toContain("ExampleGridControls");
   });
 

@@ -4,6 +4,7 @@ import { act } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { footerRevealBrandSample } from "../../../storybook/footerRevealSample";
 import { FooterReveal } from "./FooterReveal";
 
 function footerTree() {
@@ -14,7 +15,7 @@ function footerTree() {
     createElement(
       FooterReveal.Footer,
       { className: "bg-brand" },
-      createElement(FooterReveal.Brand, null),
+      createElement(FooterReveal.Brand, footerRevealBrandSample),
     ),
   );
 }
@@ -69,7 +70,7 @@ describe("footer reveal reduced motion SSR", () => {
         createElement(
           FooterReveal.Footer,
           null,
-          createElement(FooterReveal.Brand, { ctaHref: "/contact" }),
+          createElement(FooterReveal.Brand, { ...footerRevealBrandSample, ctaHref: "/contact" }),
         ),
       ),
     );
