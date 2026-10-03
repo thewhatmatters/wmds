@@ -39,6 +39,12 @@ export const OpenSelectAndDismiss: Story = {
     );
   },
   play: async ({ canvas }) => {
+    const waitForActionsToLeave = () =>
+      waitFor(() => {
+        for (const label of ["Camera", "Image", "File", "Edit"]) {
+          expect(canvas.queryByText(label)).not.toBeInTheDocument();
+        }
+      });
     const trigger = canvas.getByRole("button", { name: /open actions/i });
     await userEvent.click(trigger);
 
@@ -50,16 +56,14 @@ export const OpenSelectAndDismiss: Story = {
     await userEvent.click(canvas.getByRole("button", { name: /edit/i }));
     await expect(canvas.getByTestId("fab-selection")).toHaveTextContent("Selected: edit");
 
-    await waitFor(() => {
-      expect(canvas.queryByRole("button", { name: /camera/i })).not.toBeInTheDocument();
-    });
+    await waitForActionsToLeave();
 
     await userEvent.click(canvas.getByRole("button", { name: /open actions/i }));
     await userEvent.keyboard("{Escape}");
 
-    await waitFor(() => {
-      expect(canvas.queryByRole("button", { name: /camera/i })).not.toBeInTheDocument();
-    });
+    // The accessibility check runs when play ends. Exits are staggered, so wait until every
+    // action and its label has left — a label caught mid-fade fails color contrast.
+    await waitForActionsToLeave();
     await expect(canvas.getByRole("button", { name: /open actions/i })).toHaveFocus();
   },
 };
