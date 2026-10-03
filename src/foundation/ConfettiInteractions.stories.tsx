@@ -3,14 +3,7 @@ import { StrictMode } from "react";
 import { expect, waitFor } from "storybook/test";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ConfettiProvider, useConfetti } from "../components/organisms/Confetti/Confetti";
-import { RfpSubmittedPage } from "../sites/WhatMatters/RfpSubmitted/RfpSubmittedExample";
-
-/** Stand-in for the app's request: resolves after a short pause so the submitting state shows. */
-function demoSubmit(): Promise<void> {
-  return new Promise((resolve) => {
-    window.setTimeout(resolve, 600);
-  });
-}
+import { IntakeConfirmation } from "../components/organisms/IntakeConfirmation/IntakeConfirmation";
 
 /**
  * Browser interaction tests — `npm run test:interactions`.
@@ -124,19 +117,13 @@ export const ConfirmationBurst: Story = {
   name: "confirmation burst",
   render: () => (
     <StrictMode>
-      <RfpSubmittedPage onSubmit={demoSubmit} />
+      <ConfettiProvider>
+        <IntakeConfirmation variant="emailed" />
+      </ConfettiProvider>
     </StrictMode>
   ),
   play: async ({ canvas }) => {
-    const button = canvas.getByRole("button", { name: "Submit request" });
-    button.click();
-
-    await waitFor(
-      () => {
-        expect(canvas.getByRole("heading", { name: "Your proposal request is in" })).toBeInTheDocument();
-      },
-      { timeout: 3000 },
-    );
+    expect(canvas.getByRole("heading", { name: "We'll be in touch" })).toBeInTheDocument();
 
     await waitFor(() => {
       expect(bursts().length).toBe(1);
@@ -147,7 +134,6 @@ export const ConfirmationBurst: Story = {
       window.setTimeout(resolve, 200);
     });
     expect(bursts().length).toBe(1);
-    expect(canvas.getByRole("button", { name: "Submit another request" })).toBeInTheDocument();
   },
 };
 
@@ -156,20 +142,14 @@ export const ConfirmationReducedMotion: Story = {
   render: () => (
     <StrictMode>
       <MotionConfig reducedMotion="always">
-        <RfpSubmittedPage onSubmit={demoSubmit} />
+        <ConfettiProvider>
+          <IntakeConfirmation variant="booked" />
+        </ConfettiProvider>
       </MotionConfig>
     </StrictMode>
   ),
   play: async ({ canvas }) => {
-    const button = canvas.getByRole("button", { name: "Submit request" });
-    button.click();
-
-    await waitFor(
-      () => {
-        expect(canvas.getByRole("heading", { name: "Your proposal request is in" })).toBeInTheDocument();
-      },
-      { timeout: 3000 },
-    );
+    expect(canvas.getByRole("heading", { name: "You're booked" })).toBeInTheDocument();
 
     await waitFor(() => {
       expect(document.querySelector("[data-confetti-layer]")).not.toBeNull();

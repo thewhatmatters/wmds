@@ -31,7 +31,7 @@ All paths below are inside `node_modules/@thewhatmatters/wmds/`.
 
    Names under `planned` do not exist yet.
 2. Read the component's entry in `docs/components.md` (and `docs/component-contracts.md` for FooterReveal, HeroTileStack, TextSequence, ScrollHorizontal, RiveHand, PromptBar). It says which props and patterns to use and what not to do.
-3. Page-level flows (Sites) are in `docs/patterns/index.json` under titles starting with `Sites/`. Cross-component guidance is under `Guides/`.
+3. Cross-component guidance (charts, overlays, form controls) is in `docs/patterns/index.json` under titles starting with `Guides/`. Product pages and flows are the app's own code, not WMDS patterns.
 
 ## 3. Write the UI
 

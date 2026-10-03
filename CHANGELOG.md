@@ -7,6 +7,16 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.3.0
+
+Storybook no longer mirrors product sites. The **Sites/** section (WhatMatters and PitchKit pages) is removed, and so are its `sites-…` files in `docs/patterns/`. No component, prop, token, or export changed.
+
+### Consumer actions
+
+1. **Pasted Sites patterns are now the app's own code.** If the app pasted any **Sites/WhatMatters/…** or **Sites/PitchKit/…** pattern (for example the ask page, the Start a project intake, or RFP submitted), keep the file and delete its three header lines (`// @thewhatmatters/wmds@…`, `// Storybook: Sites/…`, `// Show code — …`). Until then, `npx wmds-check` reports `pattern-removed` for that file.
+2. **Skip the 0.2.0 steps that re-copy Sites patterns** if they are still open: the **Sites/** bullets under 0.2.0 step 9, and the re-copy in steps 11, 12, and 13. Make those changes in the app's own files instead: the Button props from step 11, starting the ask page from `q` (step 12), and the RFP `onSubmit` (step 13).
+3. **Components/PromptBar → Pattern — marketing composer:** its Show code comment no longer names a site component; the code is unchanged. Re-copy it, or update the version in its header line.
+
 ## 0.2.0
 
 First release on npm. Earlier builds were installed from git commits and all reported `0.1.0`.

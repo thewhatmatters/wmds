@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.2.0 · Reduced motion
+// @thewhatmatters/wmds@0.3.0 · Reduced motion
 // Storybook: Components/TextSequence → Reduced motion (?path=/story/components-textsequence--reduced-motion)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

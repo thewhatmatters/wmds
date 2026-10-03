@@ -57,8 +57,8 @@ import { PromptBar } from "@thewhatmatters/wmds";
 
 /**
  * Marketing homepage composer, pinned to the bottom of the viewport on the page grid.
- * Sending hands off to the ask page: route to /ask?q=<prompt>, where the ask page passes
- * \`q\` to AskWhatMatters as \`initialPrompt\`.
+ * Sending hands off to the app's ask page: route to /ask?q=<prompt>, and the ask page
+ * starts the conversation with \`q\` as its first prompt.
  * Next.js: onHandOff={(prompt) => router.push(\`/ask?q=\${encodeURIComponent(prompt)}\`)}
  */
 export function MarketingComposer({ onHandOff }: { onHandOff: (prompt: string) => void }) {
@@ -227,7 +227,7 @@ export const PatternMarketingComposer: Story = {
       docs: {
         description: {
           story:
-            "**PromptBar** on the marketing homepage, pinned to the bottom of the viewport on the page grid (`--grid-max: 40rem`, the ask page's column) above the safe area. Sending hands off to the ask page — route to `/ask?q=…` and pass `q` to **AskWhatMatters** as `initialPrompt` (**Sites/WhatMatters/Prompt chat → State — opened from the marketing composer**). The wrapper ignores pointer events so the page under its edges stays clickable; only the bar takes input. It sits under **SiteNav** (`z-50`).",
+            "**PromptBar** on the marketing homepage, pinned to the bottom of the viewport on the page grid (`--grid-max: 40rem`, the ask page's column) above the safe area. Sending hands off to the app's ask page — route to `/ask?q=…`, and the ask page starts the conversation with `q` as its first prompt. The wrapper ignores pointer events so the page under its edges stays clickable; only the bar takes input. It sits under **SiteNav** (`z-50`).",
         },
       },
     },

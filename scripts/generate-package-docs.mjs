@@ -136,7 +136,6 @@ try {
     components: packageManifest.componentExports.map(component).sort((a, b) => a.name.localeCompare(b.name)),
     planned: [...packageManifest.plannedExports].sort(),
     lib: packageManifest.libExports.map(({ name }) => name),
-    sites: [...patternsByTitle.keys()].filter((title) => title.startsWith("Sites/")),
     guides: [...patternsByTitle.keys()].filter((title) => title.startsWith("Guides/")),
   };
   outputs.set(path.join(docsDir, "exports.json"), `${JSON.stringify(exportsManifest, null, 2)}\n`);

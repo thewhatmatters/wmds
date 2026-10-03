@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.2.0 · Pattern — action menu
+// @thewhatmatters/wmds@0.3.0 · Pattern — action menu
 // Storybook: Components/MoreMenu → Pattern — action menu (?path=/story/components-moremenu--action-menu)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

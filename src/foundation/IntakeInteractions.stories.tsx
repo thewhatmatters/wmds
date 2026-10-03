@@ -1,9 +1,11 @@
 import { MotionConfig } from "motion/react";
+import { useState } from "react";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Button } from "../components/atoms/Button/Button";
 import { ConfettiProvider } from "../components/organisms/Confetti/Confetti";
 import { IntakeConfirmation } from "../components/organisms/IntakeConfirmation/IntakeConfirmation";
-import { StartAProject } from "../sites/WhatMatters/Intake/IntakePattern";
+import { IntakeModal } from "../components/organisms/IntakeModal/IntakeModal";
 
 /**
  * Browser interaction tests — `npm run test:interactions`.
@@ -21,6 +23,29 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** The IntakeModal shell from **Components/IntakeModal → Pattern — intake modal**, closed until the trigger is pressed. */
+function IntakeShell() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button role="primary" type="button" onClick={() => setOpen(true)}>
+        Start a project
+      </Button>
+      <IntakeModal
+        open={open}
+        onOpenChange={setOpen}
+        step={1}
+        steps={4}
+        backDisabled
+        onBack={() => undefined}
+        onContinue={() => undefined}
+      >
+        <h2 className="type-heading-1 text-fg tracking-tight">What do you need?</h2>
+      </IntakeModal>
+    </>
+  );
+}
+
 function portal() {
   return within(document.body);
 }
@@ -35,97 +60,32 @@ function pieces(): NodeListOf<Element> {
 
 export const Keyboard: Story = {
   name: "keyboard",
-  render: () => <StartAProject initialOpen={false} />,
+  render: () => <IntakeShell />,
   play: async ({ canvas }) => {
     await userEvent.click(canvas.getByRole("button", { name: "Start a project" }));
 
     const dialog = await waitFor(() => portal().getByRole("dialog"));
     expect(dialog).toHaveAttribute("aria-modal", "true");
     await expect(dialog).toHaveAccessibleName("Start a project");
+    expect(within(dialog).getByRole("progressbar")).toHaveAttribute("aria-valuetext", "Step 1 of 4");
+    expect(within(dialog).getByRole("button", { name: "Back" })).toBeDisabled();
 
     const close = within(dialog).getByRole("button", { name: "Close" });
     await waitFor(() => {
       expect(close).toHaveFocus();
     });
 
-    const other = within(dialog).getByRole("checkbox", { name: "Other" });
-    other.focus();
+    const continueButton = within(dialog).getByRole("button", { name: "Continue" });
+    continueButton.focus();
     await userEvent.tab();
     expect(close).toHaveFocus();
 
     await userEvent.tab({ shift: true });
-    expect(other).toHaveFocus();
+    expect(continueButton).toHaveFocus();
 
     await userEvent.keyboard("{Escape}");
     await waitFor(() => {
       expect(portal().queryByRole("dialog")).not.toBeInTheDocument();
-    });
-  },
-};
-
-export const SelectionAndContinue: Story = {
-  name: "selection and continue",
-  render: () => <StartAProject />,
-  play: async () => {
-    const dialog = await waitFor(() => portal().getByRole("dialog"));
-    const continueButton = within(dialog).getByRole("button", { name: "Continue" });
-    expect(continueButton).toBeDisabled();
-    expect(within(dialog).getByRole("button", { name: "Back" })).toBeDisabled();
-    expect(within(dialog).getByRole("progressbar")).toHaveAttribute("aria-valuetext", "Step 1 of 4");
-
-    const brand = within(dialog).getByRole("checkbox", { name: "Brand identity" });
-    brand.focus();
-    expect(brand).toHaveFocus();
-    await userEvent.click(brand);
-    expect(brand).toBeChecked();
-    expect(continueButton).toBeEnabled();
-
-    await userEvent.click(continueButton);
-    await waitFor(() => {
-      expect(within(dialog).getByRole("progressbar")).toHaveAttribute("aria-valuetext", "Step 2 of 4");
-    });
-    expect(continueButton).toBeDisabled();
-
-    const underTen = within(dialog).getByRole("radio", { name: "<$10k" });
-    underTen.focus();
-    await userEvent.keyboard("{ArrowRight}");
-    const ten = within(dialog).getByRole("radio", { name: "$10–25k" });
-    expect(ten).toBeChecked();
-    expect(continueButton).toBeEnabled();
-
-    const unsure = within(dialog).getByRole("radio", { name: "Not sure yet" });
-    expect(unsure.closest("label")).toHaveAttribute("data-emphasis", "muted");
-
-    await userEvent.click(continueButton);
-    await waitFor(() => {
-      expect(within(dialog).getByRole("heading", { name: "About you" })).toBeInTheDocument();
-    });
-    expect(continueButton).toBeDisabled();
-
-    await userEvent.type(within(dialog).getByRole("textbox", { name: "Name" }), "Jordan Lee");
-    await userEvent.type(within(dialog).getByRole("textbox", { name: "Email" }), "jordan@northwind.com");
-    await userEvent.type(
-      within(dialog).getByRole("textbox", { name: "Project details" }),
-      "A calmer brief.",
-    );
-    expect(within(dialog).getByText("15 / 400")).toBeInTheDocument();
-    expect(continueButton).toBeEnabled();
-
-    await userEvent.click(continueButton);
-    await waitFor(() => {
-      expect(within(dialog).getByRole("heading", { name: "Book a call" })).toBeInTheDocument();
-    });
-    expect(within(dialog).queryByRole("button", { name: "Continue" })).not.toBeInTheDocument();
-    expect(within(dialog).getByRole("button", { name: "Back" })).toBeEnabled();
-    expect(bursts().length).toBe(0);
-
-    await userEvent.click(within(dialog).getByRole("button", { name: "Confirm this time" }));
-    await waitFor(() => {
-      expect(within(dialog).getByRole("heading", { name: "You're booked" })).toBeInTheDocument();
-    });
-    await waitFor(() => {
-      expect(bursts().length).toBe(1);
-      expect(pieces().length).toBeGreaterThan(0);
     });
   },
 };

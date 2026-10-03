@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.2.0 · Pattern — marketing composer
+// @thewhatmatters/wmds@0.3.0 · Pattern — marketing composer
 // Storybook: Components/PromptBar → Pattern — marketing composer (?path=/story/components-promptbar--pattern-marketing-composer)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -7,8 +7,8 @@ import { PromptBar } from "@thewhatmatters/wmds";
 
 /**
  * Marketing homepage composer, pinned to the bottom of the viewport on the page grid.
- * Sending hands off to the ask page: route to /ask?q=<prompt>, where the ask page passes
- * `q` to AskWhatMatters as `initialPrompt`.
+ * Sending hands off to the app's ask page: route to /ask?q=<prompt>, and the ask page
+ * starts the conversation with `q` as its first prompt.
  * Next.js: onHandOff={(prompt) => router.push(`/ask?q=${encodeURIComponent(prompt)}`)}
  */
 export function MarketingComposer({ onHandOff }: { onHandOff: (prompt: string) => void }) {

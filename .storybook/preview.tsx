@@ -34,7 +34,7 @@ function PreviewShell({
     }
   }, [isDark]);
 
-  /** Canvas tab — Sites and Guides pages use `wmdsLayout: "fullscreen"`. */
+  /** Canvas tab — Guides pages and full-page patterns use `wmdsLayout: "fullscreen"`. */
   const storyShellClass = isFullscreen
     ? "flex h-[100svh] min-h-[100svh] w-full flex-col"
     : isPadded
@@ -107,14 +107,14 @@ const preview: Preview = {
     options: {
       /**
        * Sidebar order (ADR-0026, amended 2026-10-03): Getting started → Guides →
-       * Foundations → Components → Sites → Internal. Components → Overview leads its
-       * section; everything else is A–Z by path segment, with WhatMatters first under
-       * Sites. Atomic tiers stay an implementation detail of src/components.
+       * Foundations → Components → Internal. Components → Overview leads its section;
+       * everything else is A–Z by path segment. Atomic tiers stay an implementation
+       * detail of src/components.
        * Self-contained on purpose — Storybook evaluates this function on its own.
        */
       storySort: (a, b) => {
-        const sections = ["Getting started", "Guides", "Foundations", "Components", "Sites", "Internal"];
-        const pinned = { Components: "Overview", Sites: "WhatMatters" };
+        const sections = ["Getting started", "Guides", "Foundations", "Components", "Internal"];
+        const pinned = { Components: "Overview" };
         const aParts = (a.title ?? "").split("/");
         const bParts = (b.title ?? "").split("/");
         const rank = (section) => {
