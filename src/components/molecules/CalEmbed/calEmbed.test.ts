@@ -4,7 +4,7 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Card, type CardProps } from "../Card/Card";
-import { CalEmbed } from "./CalEmbed";
+import { CalEmbed, calEmbedEmptyTitle } from "./CalEmbed";
 
 describe("CalEmbed caption", () => {
   let root: Root | undefined;
@@ -19,7 +19,7 @@ describe("CalEmbed caption", () => {
     container = undefined;
   });
 
-  it("lists token names in the frame caption without a brand hex literal", () => {
+  it("shows a visitor-facing empty state, not developer notes, when no embed is mounted", () => {
     container = document.createElement("div");
     document.body.appendChild(container);
     root = createRoot(container);
@@ -29,12 +29,24 @@ describe("CalEmbed caption", () => {
     });
 
     const text = container.textContent ?? "";
-    expect(text).toContain("--color-brand");
-    expect(text).toContain("--color-background-body");
-    expect(text).toContain("--color-background-surface");
-    expect(text).not.toContain("#011272");
-    expect(container.querySelector("[data-cal-embed]")).not.toBeNull();
+    expect(container.querySelector("[data-cal-embed-empty]")).not.toBeNull();
+    expect(text).toContain(calEmbedEmptyTitle);
+    expect(text).not.toContain("--color-");
+    expect(text).not.toContain("Cal.com");
     expect(container.querySelector("[data-cal-embed] [data-cal-embed-skip]")).not.toBeNull();
+  });
+
+  it("renders the mounted embed instead of the empty state", () => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+
+    act(() => {
+      root?.render(createElement(CalEmbed, null, createElement("div", { "data-testid": "cal" })));
+    });
+
+    expect(container.querySelector("[data-testid=cal]")).not.toBeNull();
+    expect(container.querySelector("[data-cal-embed-empty]")).toBeNull();
   });
 
   it("omits the in-body skip when the Skip slot is used", () => {

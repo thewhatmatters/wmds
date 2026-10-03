@@ -14,7 +14,7 @@ import { ScrollHorizontal } from "../ScrollHorizontal/ScrollHorizontal";
 import { scrollHorizontalMarketingItems } from "../ScrollHorizontal/scrollHorizontalExamples";
 import { SiteNav } from "../SiteNav/SiteNav";
 import { FooterReveal } from "./FooterReveal";
-import { footerRevealRuledDefaultCopy } from "./FooterRevealRuled";
+import { footerRevealRuledSample } from "../../../storybook/footerRevealSample";
 import { footerRevealWordmarkFillsFrame } from "./footerRevealWordmark";
 import { footerRevealFieldClasses, footerRevealRuledFieldClasses } from "./footerRevealStyles";
 
@@ -621,7 +621,18 @@ import { FooterReveal, TextLink, footerRevealRuledFieldClasses } from "@whatmatt
 export function RuledGridFooter() {
   return (
     <div className={footerRevealRuledFieldClasses}>
-      <FooterReveal.Ruled />
+      <FooterReveal.Ruled
+        wordmark="WhatMatters"
+        mark="WM"
+        copyright="WhatMatters © 2026"
+        links={[
+          { label: "Services", href: "/services" },
+          { label: "Resources", href: "/resources" },
+          { label: "About", href: "/about" },
+        ]}
+        email="randy@whatmatters.so"
+        credit="Created by WhatMatters 2024–2026"
+      />
     </div>
   );
 }
@@ -648,7 +659,7 @@ export function FooterRevealRuledNav() {
 function RuledGridFooterSpecimen() {
   return (
     <div className={footerRevealRuledFieldClasses} data-footer-ruled-field="">
-      <FooterReveal.Ruled />
+      <FooterReveal.Ruled {...footerRevealRuledSample} />
     </div>
   );
 }
@@ -698,7 +709,7 @@ function expectNoCrop(root: ParentNode) {
 function expectCreditFits(root: ParentNode) {
   const credit = root.querySelector<HTMLElement>("[data-footer-ruled='credit'] p");
   if (!credit) throw new Error("credit missing");
-  expect(credit.textContent).toBe(footerRevealRuledDefaultCopy.credit);
+  expect(credit.textContent).toBe(footerRevealRuledSample.credit);
   expect(credit.scrollWidth).toBeLessThanOrEqual(credit.clientWidth + 1);
   const box = credit.getBoundingClientRect();
   expect(box.width).toBeGreaterThan(0);
@@ -921,8 +932,8 @@ export const RuledGridFooterPattern: Story = {
     expect(wordmark?.textContent).toBe("WhatMatters");
     expect(wordmark?.getAttribute("aria-hidden")).toBe("true");
     expectNoCrop(canvasElement);
-    expect(canvasElement.textContent).toContain(footerRevealRuledDefaultCopy.copyright);
-    expect(canvasElement.textContent).toContain(footerRevealRuledDefaultCopy.credit);
+    expect(canvasElement.textContent).toContain(footerRevealRuledSample.copyright);
+    expect(canvasElement.textContent).toContain(footerRevealRuledSample.credit);
     expect(canvasElement.textContent).not.toContain("What Matters");
     expectDroppedChrome(canvasElement);
 

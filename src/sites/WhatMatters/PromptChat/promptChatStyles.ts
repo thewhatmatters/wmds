@@ -61,9 +61,6 @@ export const promptChatReplyBlockClasses =
 /** Thinking trace. Collapsed sparkle row by default; steps when expanded. */
 export const promptChatTraceClasses = "flex w-full flex-col items-start gap-2";
 
-/** Collapsed trigger: sparkle, timer label, chevron — one quiet row. */
-export const promptChatTraceTriggerClasses = "!w-auto !gap-1.5";
-
 /** Rows hang off one existing control hairline. Not a new tone. */
 export const promptChatTraceBodyClasses =
   "flex w-full flex-col items-start gap-2 border-l border-border-control py-0.5 pl-3";
@@ -96,11 +93,10 @@ export const promptChatActionsClasses =
 export const promptChatFollowUpsClasses = "flex w-full flex-col gap-2";
 
 /**
- * Layout on the existing outline button. The pill fills the column, the label
- * stays at the start, and the stroke is the quiet divider (`--color-border`),
- * not the outline role’s `border-fg`.
+ * Layout only: the follow-up pill fills the column. The start-aligned label and the quiet
+ * `--color-border` stroke come from **Button** `align="start"` and `emphasis="quiet"`.
  */
-export const promptChatFollowUpClasses = "w-full !justify-start !border-border";
+export const promptChatFollowUpClasses = "w-full";
 
 /** Same narrowed grid as the thread. Stays pinned under the scrolling stage. */
 export const promptChatBarClasses = "grid-page w-full shrink-0 !pt-0 !pb-6";

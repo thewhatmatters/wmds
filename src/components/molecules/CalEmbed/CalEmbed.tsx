@@ -2,13 +2,19 @@ import type { MouseEvent, ReactNode } from "react";
 import { TextLink } from "../../atoms/TextLink/TextLink";
 import { cn } from "../../../lib/cn";
 import { typographyClass } from "../../../lib/typography";
-import { calEmbedClasses, calEmbedFrameClasses } from "./calEmbedStyles";
+import {
+  calEmbedClasses,
+  calEmbedEmptyClasses,
+  calEmbedFrameClasses,
+} from "./calEmbedStyles";
 
 /** Layout-only — width or margin. */
 export type CalEmbedLayoutClassName = string;
 
 export const calEmbedSkipHref = "#email";
 export const calEmbedSkipLabel = "Skip, just email me";
+export const calEmbedEmptyTitle = "Booking isn’t available right now";
+export const calEmbedEmptyDescription = "Skip this step and we’ll follow up by email.";
 
 export interface CalEmbedSkipProps {
   /** Skip destination. Default `#email`. */
@@ -22,10 +28,15 @@ export interface CalEmbedSkipProps {
 
 export interface CalEmbedProps {
   /**
-   * Embed slot. Mount Cal.com here. The frame keeps the theming note
-   * so the placeholder stays readable before the embed script lands.
+   * Embed slot. Mount the Cal.com embed here and theme it with `--color-brand`,
+   * `--color-background-body`, and `--color-background-surface`. With no children the
+   * frame shows the empty state, so visitors never see a blank or developer-facing frame.
    */
   children?: ReactNode;
+  /** Empty-state heading when no embed is mounted. Default `Booking isn’t available right now`. */
+  emptyTitle?: string;
+  /** Empty-state supporting line. Default points visitors at the skip. */
+  emptyDescription?: ReactNode;
   /**
    * Skip slot. Omit to render the default **TextLink** after the frame.
    * Pass `false` or **CalEmbed.Skip** when you place the skip yourself
@@ -40,6 +51,10 @@ export interface CalEmbedProps {
   /** In-flow skip when the in-body skip is shown. */
   onSkip?: () => void;
   className?: CalEmbedLayoutClassName;
+}
+
+function hasEmbed(children: ReactNode): boolean {
+  return children !== undefined && children !== null && children !== false && children !== "";
 }
 
 function handleSkipClick(onSkip: (() => void) | undefined, event: MouseEvent<HTMLAnchorElement>) {
@@ -73,12 +88,14 @@ export function CalEmbedSkip({
 }
 
 /**
- * Placeholder for a Cal.com embed.
+ * Frame for a Cal.com embed, with an empty state when nothing is mounted.
  * Theme the embed with `--color-brand`, `--color-background-body`, and
  * `--color-background-surface` (existing tokens). The skip action is **TextLink**.
  */
 function CalEmbedRoot({
   children,
+  emptyTitle = calEmbedEmptyTitle,
+  emptyDescription = calEmbedEmptyDescription,
   skip,
   skipHref = calEmbedSkipHref,
   skipLabel = calEmbedSkipLabel,
@@ -88,14 +105,14 @@ function CalEmbedRoot({
   return (
     <div className={cn(calEmbedClasses, className)} data-cal-embed="">
       <div className={calEmbedFrameClasses}>
-        <div className="flex flex-col gap-2">
-          <p className={typographyClass("subheading")}>Calendar</p>
-          <p className={typographyClass("caption")}>
-            Cal.com mounts in this frame. Theme it with --color-brand,
-            --color-background-body, and --color-background-surface.
-          </p>
-        </div>
-        {children}
+        {hasEmbed(children) ? (
+          children
+        ) : (
+          <div className={calEmbedEmptyClasses} data-cal-embed-empty="">
+            <p className={typographyClass("subheading")}>{emptyTitle}</p>
+            <p className={cn(typographyClass("caption"), "text-muted")}>{emptyDescription}</p>
+          </div>
+        )}
       </div>
       {skip === undefined ? (
         <CalEmbedSkip skipHref={skipHref} skipLabel={skipLabel} onSkip={onSkip} />

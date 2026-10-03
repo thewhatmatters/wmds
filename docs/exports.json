@@ -81,8 +81,10 @@
         "components-button-button--multi-state-badge",
         "components-button-button--outline-mono",
         "components-button-button--primary-action",
+        "components-button-button--row-hug",
         "components-button-button--row-layout",
         "components-button-button--secondary-action",
+        "components-button-button--suggestion-pills",
         "components-button-button--with-count",
         "components-button-button--with-icon"
       ]
@@ -465,6 +467,7 @@
         "docs": "?path=/docs/components-promptbar--docs"
       },
       "patterns": [
+        "components-promptbar--pattern-marketing-composer",
         "components-promptbar--pattern-prompt-bar"
       ]
     },

@@ -7,6 +7,13 @@ import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCo
 import { ExampleGridControls } from "../../../storybook/ExampleGridControls/ExampleGridControls";
 import { RfpFlow, rfpSubmittedCopySource } from "./RfpSubmittedExample";
 
+/** Stand-in for the app's request: resolves after a short pause so the submitting state shows. */
+function demoSubmit(): Promise<void> {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, 600);
+  });
+}
+
 const meta = {
   title: "Sites/WhatMatters/RFP submitted",
   tags: ["autodocs"],
@@ -68,7 +75,7 @@ function RfpSubmittedCanvas() {
         }
       >
         <GridOverlay visible={gridVisible} onVisibleChange={setGridVisible} keyboardShortcut={false} />
-        <RfpFlow />
+        <RfpFlow onSubmit={demoSubmit} />
         <ExampleGridControls
           gridVisible={gridVisible}
           onGridVisibleChange={setGridVisible}

@@ -11,6 +11,7 @@ import {
   motionTransition,
   motionTransitionProp,
   pressScaleClass,
+  motionChoreography,
   resolveMotionTokenValues,
 } from "../lib/motion";
 
@@ -77,6 +78,10 @@ export const Tokens: Story = {
         <section>
           <h3 className="mb-3 text-sm font-medium text-fg">Press feedback</h3>
           <TokenTable rows={motionFeedback} />
+        </section>
+        <section>
+          <h3 className="mb-3 text-sm font-medium text-fg">Choreography</h3>
+          <TokenTable rows={motionChoreography} />
         </section>
       </div>
     );

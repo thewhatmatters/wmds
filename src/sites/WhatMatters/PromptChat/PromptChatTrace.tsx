@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { cn } from "../../../lib/cn";
-import { motionTransitionProp } from "../../../lib/motion";
+import { motionBlurReveal, motionTransitionProp } from "../../../lib/motion";
 import { Button } from "../../../components/atoms/Button/Button";
 import { TextLink } from "../../../components/atoms/TextLink/TextLink";
 import {
@@ -22,7 +22,6 @@ import {
   promptChatTraceIconClasses,
   promptChatTraceLineClasses,
   promptChatTraceSpinClasses,
-  promptChatTraceTriggerClasses,
 } from "./promptChatStyles";
 import {
   promptChatThoughtForLabel,
@@ -67,9 +66,9 @@ export function PromptChatTrace({
     <div className={promptChatTraceClasses} aria-busy={settled ? undefined : true}>
       <Button
         layout="row"
+        width="hug"
         role="ghost"
         type="button"
-        className={promptChatTraceTriggerClasses}
         aria-expanded={open}
         onClick={onToggle}
       >
@@ -89,8 +88,7 @@ export function PromptChatTrace({
             <motion.div
               key={`${entry.kind}-${index}`}
               className={entry.kind === "prose" ? "type-body text-fg" : promptChatTraceLineClasses}
-              initial={reduce ? false : { opacity: 0, filter: "blur(4px)" }}
-              animate={{ opacity: 1, filter: "blur(0px)" }}
+              {...motionBlurReveal(reduce)}
               transition={reduce ? { duration: 0 } : fast}
             >
               <TraceEntry entry={entry} spinning={entry.kind === "check" && index >= resolved} />

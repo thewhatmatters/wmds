@@ -38,6 +38,7 @@ const riveStub = {
     return [
       "const noop = () => ({});",
       "export const Fit = {}; export const Layout = class {}; export const RuntimeLoader = { setWasmUrl() {} };",
+      "export const Rive = { suppressDeprecationWarnings: [] };",
       "export const useRive = noop; export const useStateMachineInput = () => null;",
       "export const useViewModelInstanceColor = () => ({});",
     ].join("\n");

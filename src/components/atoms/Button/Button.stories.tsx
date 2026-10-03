@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { useState } from "react";
-import { ArrowRight, Pencil, Plus, Trash2 } from "lucide-react";
+import { ArrowRight, ChevronDown, Pencil, Plus, Trash2 } from "lucide-react";
 import { Button, buttonLayouts, buttonRoles, getNextButtonStatus, type ButtonStatus } from "./Button";
 import { typographyClass } from "../../../lib/typography";
 import { storyCopySource, storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
@@ -266,6 +266,80 @@ export function DueDateRow({ onOpenDatePicker }: { onOpenDatePicker: () => void 
         <span className={typographyClass("caption") + " text-muted"}>Assignee</span>
         <span className={typographyClass("caption")}>Alex</span>
       </Button>
+    </div>
+  ),
+};
+
+export const RowHug: Story = {
+  name: "Pattern — row (hug)",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "\`width=\"hug\"\` sizes a ghost row to its content with a tight gap — an inline disclosure trigger such as **Thought for 4s** with a chevron. \`layout=\"row\"\` only; the default \`fill\` spans the container.",
+        },
+      },
+    },
+    `
+import { ChevronDown } from "lucide-react";
+import { Button } from "@whatmatters/wmds";
+
+export function ThoughtToggle({ open, onToggle }: { open: boolean; onToggle: () => void }) {
+  return (
+    <Button role="ghost" layout="row" width="hug" type="button" aria-expanded={open} onClick={onToggle}>
+      <span>Thought for 4s</span>
+      <ChevronDown className="size-4 stroke-current" strokeWidth={2} aria-hidden />
+    </Button>
+  );
+}
+    `,
+  ),
+  render: function RowHugRender() {
+    const [open, setOpen] = useState(false);
+    return (
+      <Button role="ghost" layout="row" width="hug" type="button" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
+        <span>Thought for 4s</span>
+        <ChevronDown className="size-4 stroke-current" strokeWidth={2} aria-hidden />
+      </Button>
+    );
+  },
+};
+
+export const SuggestionPills: Story = {
+  name: "Pattern — suggestion pills",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Full-width follow-up suggestions: \`role=\"outline\"\` with \`emphasis=\"quiet\"\` (the \`border-border\` hairline) and \`align=\"start\"\` (left-aligned label). Width is layout, so \`className=\"w-full\"\` is fine.",
+        },
+      },
+    },
+    `
+import { Button } from "@whatmatters/wmds";
+
+export function FollowUps({ items, onPick }: { items: string[]; onPick: (item: string) => void }) {
+  return (
+    <div className="flex flex-col gap-2">
+      {items.map((item) => (
+        <Button key={item} role="outline" emphasis="quiet" align="start" size="md" type="button" className="w-full" onClick={() => onPick(item)}>
+          {item}
+        </Button>
+      ))}
+    </div>
+  );
+}
+    `,
+  ),
+  render: () => (
+    <div className="flex max-w-md flex-col gap-2">
+      {["What would the first release include?", "How long does a project like this take?", "Can you show similar work?"].map((item) => (
+        <Button key={item} role="outline" emphasis="quiet" align="start" size="md" type="button" className="w-full" onClick={() => undefined}>
+          {item}
+        </Button>
+      ))}
     </div>
   ),
 };

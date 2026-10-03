@@ -75,6 +75,14 @@
       "source": "src/components/atoms/Button/Button.stories.tsx"
     },
     {
+      "id": "components-button-button--row-hug",
+      "title": "Components/Button/Button",
+      "name": "Pattern — row (hug)",
+      "file": "patterns/components-button-button--row-hug.tsx",
+      "storybook": "?path=/story/components-button-button--row-hug",
+      "source": "src/components/atoms/Button/Button.stories.tsx"
+    },
+    {
       "id": "components-button-button--row-layout",
       "title": "Components/Button/Button",
       "name": "Pattern — row",
@@ -88,6 +96,14 @@
       "name": "Pattern — secondary action",
       "file": "patterns/components-button-button--secondary-action.tsx",
       "storybook": "?path=/story/components-button-button--secondary-action",
+      "source": "src/components/atoms/Button/Button.stories.tsx"
+    },
+    {
+      "id": "components-button-button--suggestion-pills",
+      "title": "Components/Button/Button",
+      "name": "Pattern — suggestion pills",
+      "file": "patterns/components-button-button--suggestion-pills.tsx",
+      "storybook": "?path=/story/components-button-button--suggestion-pills",
       "source": "src/components/atoms/Button/Button.stories.tsx"
     },
     {
@@ -505,6 +521,14 @@
       "file": "patterns/components-pillgroup--pill-group-pattern.tsx",
       "storybook": "?path=/story/components-pillgroup--pill-group-pattern",
       "source": "src/components/molecules/PillGroup/PillGroup.stories.tsx"
+    },
+    {
+      "id": "components-promptbar--pattern-marketing-composer",
+      "title": "Components/PromptBar",
+      "name": "Pattern — marketing composer",
+      "file": "patterns/components-promptbar--pattern-marketing-composer.tsx",
+      "storybook": "?path=/story/components-promptbar--pattern-marketing-composer",
+      "source": "src/components/molecules/PromptBar/PromptBar.stories.tsx"
     },
     {
       "id": "components-promptbar--pattern-prompt-bar",

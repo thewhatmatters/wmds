@@ -24,8 +24,14 @@ export {
 export { BadgeIcon } from "./components/atoms/Badge/BadgeIcon";
 export {
   Button,
+  buttonAligns,
+  buttonEmphases,
   buttonLayouts,
   buttonRoles,
+  buttonWidths,
+  type ButtonAlign,
+  type ButtonEmphasis,
+  type ButtonWidth,
   type ButtonLayout,
   type ButtonLayoutClassName,
   type ButtonProps,
@@ -167,6 +173,8 @@ export {
   CalEmbed,
   calEmbedSkipHref,
   calEmbedSkipLabel,
+  calEmbedEmptyDescription,
+  calEmbedEmptyTitle,
   type CalEmbedLayoutClassName,
   type CalEmbedProps,
   type CalEmbedSkipProps,
@@ -522,11 +530,8 @@ export {
 export {
   FooterReveal,
   useFooterRevealProgress,
-  footerRevealDefaultSocialLinks,
   footerRevealFieldClasses,
   footerRevealFieldLinkClasses,
-  footerRevealRuledDefaultCopy,
-  footerRevealRuledDefaultLinks,
   footerRevealRuledEmailHref,
   footerRevealRuledFieldClasses,
   type FooterRevealBrandProps,
@@ -676,8 +681,12 @@ export {
 } from "./lib/gridOverlayUtils";
 export {
   focusRingTransitionClasses,
+  motionBeatSeconds,
+  motionBlurReveal,
+  motionStaggerSeconds,
   motionTransition,
   motionTransitionProp,
+  readMotionDurationSeconds,
   pressScaleClass,
   type MotionDuration,
   type MotionEase,
