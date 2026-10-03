@@ -26,7 +26,7 @@ Ship the intake as exported components. The composed flow is **Patterns/Intake â
 - **SelectableCard** is a checkbox card. The grid is 2 columns, 3 from `lg`. The checked mark is **Badge** `iconOnly`. The `toggle` slot is a hugged **SegmentedControl**.
 - **PillGroup** is a wrapping radio group. Idle pills use existing **Badge** neutral solid and muted surfaces. Selected pills use brand navy. That fill is not a Badge variant. **Not sure yet** uses `emphasis="muted"`.
 - **IntakeForm** composes **Field**, **Input**, and **TextArea**. The character counter is the details description. **TextArea** gains no new prop.
-- **CalEmbed** is a token-themed placeholder. Skip is **TextLink**.
+- **CalEmbed** is a token-themed placeholder. Skip is **TextLink** (`CalEmbed.Skip`). In a **Card** gate the skip lives in **Card.Footer** and the in-body skip is omitted.
 - **IntakeConfirmation** calls `useConfettiOnMount` on mount. Colors are `intakeConfettiColors`, including `--color-brand`. Reduced motion does not burst.
 
 No new variant was added to **Button**, **Badge**, **Field**, **Input**, **TextArea**, or **SegmentedControl**.

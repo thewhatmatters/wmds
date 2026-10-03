@@ -162,8 +162,11 @@ export {
 } from "./components/molecules/Accordion/Accordion";
 export {
   CalEmbed,
+  calEmbedSkipHref,
+  calEmbedSkipLabel,
   type CalEmbedLayoutClassName,
   type CalEmbedProps,
+  type CalEmbedSkipProps,
 } from "./components/molecules/CalEmbed/CalEmbed";
 export {
   Card,

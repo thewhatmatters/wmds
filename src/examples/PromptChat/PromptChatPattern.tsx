@@ -625,7 +625,7 @@ function StartGate({
             <IntakeForm values={about} onChange={onAboutChange} />
           ) : null}
           {phase.kind === "step" && phase.step === 4 ? (
-            <CalEmbed onSkip={onEmailed}>
+            <CalEmbed skip={false}>
               <Button role="primary" type="button" onClick={onBooked}>Confirm this time</Button>
             </CalEmbed>
           ) : null}
@@ -633,6 +633,9 @@ function StartGate({
       </Card.Body>
       {hideFooter ? null : (
         <Card.Footer>
+          {phase.kind === "step" && phase.step === 4 ? (
+            <CalEmbed.Skip onSkip={onEmailed} />
+          ) : null}
           <div className="ml-auto flex items-center gap-2">
             <Button role="secondary" size="md" type="button" onClick={onCancel}>Cancel</Button>
             {hideContinue ? null : (
