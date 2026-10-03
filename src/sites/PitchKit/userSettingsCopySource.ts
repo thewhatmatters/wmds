@@ -25,10 +25,15 @@ import {
   toast,
 } from "@whatmatters/wmds";
 
+const compactNumber = new Intl.NumberFormat("en", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+
 ${creatorIdentityStripCopySource}
 ${ownerAccountChromeCopySource}
 
-export function AccountSettingsOwnerPage({ identity }) {
+export function AccountSettingsOwnerPage({ identity }: { identity: PitchKitCreatorIdentity }) {
   return (
     <main className="${pitchKitPageClasses}">
       <div className="${pitchKitTopbarBandClasses}">

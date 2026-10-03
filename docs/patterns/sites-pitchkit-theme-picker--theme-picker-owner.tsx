@@ -2,7 +2,7 @@
 // Storybook: Sites/PitchKit/Theme picker → Pattern — theme picker (owner) (?path=/story/sites-pitchkit-theme-picker--theme-picker-owner)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import {
   AlertDialog,
   Avatar,
@@ -22,6 +22,8 @@ import {
   cardTitleClasses,
   chartSeriesConfigFromKeys,
   toast,
+  type ChartCartesianPoint,
+  type ChartRankedBarItem,
 } from "@whatmatters/wmds";
 
 const reachConfig = chartSeriesConfigFromKeys([
@@ -37,7 +39,7 @@ const compactNumber = new Intl.NumberFormat("en", {
 const pitchKitThemes = ["light", "dark", "soft"];
 
 
-function copyShareKitUrl(handle) {
+function copyShareKitUrl(handle: string) {
   const path = `/k/${handle}`;
   void navigator.clipboard.writeText(path);
   toast.add({
@@ -47,7 +49,15 @@ function copyShareKitUrl(handle) {
   });
 }
 
-function AccountSettingsDialog({ identity, open, onOpenChange }) {
+function AccountSettingsDialog({
+  identity,
+  open,
+  onOpenChange,
+}: {
+  identity: PitchKitCreatorIdentity;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <Dialog.Content size="md" title="Account settings">
@@ -84,12 +94,12 @@ function AccountSettingsDialog({ identity, open, onOpenChange }) {
   );
 }
 
-function OwnerAccountMenu({ identity }) {
+function OwnerAccountMenu({ identity }: { identity: PitchKitCreatorIdentity }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  function handleAction(actionId) {
+  function handleAction(actionId: string) {
     setMenuOpen(false);
     if (actionId === "settings") {
       setSettingsOpen(true);
@@ -191,7 +201,26 @@ function PitchKitPageFooter() {
 
 
 
-function CreatorIdentityStrip({ identity, nameAs = "h1", showProfessionalChip = false }) {
+export interface PitchKitCreatorIdentity {
+  displayName?: string;
+  /** Without the @ — shown as @handle, shared as /k/[handle]. */
+  handle: string;
+  profilePictureUrl?: string;
+  followersCount?: number;
+  professionalAccount?: "Business" | "Creator";
+  connected?: boolean;
+  lastSyncedLabel?: string;
+}
+
+function CreatorIdentityStrip({
+  identity,
+  nameAs = "h1",
+  showProfessionalChip = false,
+}: {
+  identity: PitchKitCreatorIdentity;
+  nameAs?: "h1" | "p";
+  showProfessionalChip?: boolean;
+}) {
   const NameTag = nameAs;
   const avatarName = identity.displayName ?? identity.handle;
   const handleLabel = `@${identity.handle}`;
@@ -233,13 +262,58 @@ function CreatorIdentityStrip({ identity, nameAs = "h1", showProfessionalChip = 
 }
 
 
-function pitchKitIntroIsEmpty(intro) {
+export interface PitchKitPost {
+  id: string;
+  publishedAt: string;
+  imageUrl: string;
+  imageAlt: string;
+  saves: number;
+  reach: number;
+  likes: number;
+  comments: number;
+}
+
+export interface PitchKitContact {
+  email: string;
+  websiteHref: string;
+  websiteLabel: string;
+  location: string;
+}
+
+/** "insufficient" when the 30-day reach series cannot be plotted. */
+export type PitchKitReachState = "resolved" | "insufficient";
+
+export interface PitchKitPageData {
+  identity: PitchKitCreatorIdentity;
+  intro: string;
+  posts: PitchKitPost[];
+  contact: PitchKitContact;
+  brands: PitchKitPastBrand[];
+  countries: ChartRankedBarItem[];
+  reachData: ChartCartesianPoint[];
+}
+
+interface ShareablePitchKitProps extends PitchKitPageData {
+  reachState?: PitchKitReachState;
+  /** Unsigned visitors who are not the kit owner only. */
+  showCreateBand?: boolean;
+}
+
+function pitchKitIntroIsEmpty(intro: string) {
   return intro.trim().length === 0;
 }
 
-function PublicIntro({ intro }) {
+function PublicIntro({ intro }: { intro: string }) {
   if (pitchKitIntroIsEmpty(intro)) return null;
   return <p className="type-body text-fg text-fg">{intro}</p>;
+}
+
+export interface PitchKitPastBrand {
+  id: string;
+  name: string;
+  /** Curated mark key — missing or unknown keys use a letter Avatar. */
+  logo_key?: string;
+  result_label?: string;
 }
 
 const PITCHKIT_BRAND_RESULT_MAX = 24;
@@ -255,14 +329,14 @@ const pitchKitBrandLogoKeys = [
 
 const pastBrandLogoKeySet = new Set(pitchKitBrandLogoKeys);
 
-function resolvePastBrandLogoKey(logoKey) {
+function resolvePastBrandLogoKey(logoKey: string | null | undefined) {
   if (logoKey == null || logoKey === "" || logoKey === PITCHKIT_BRAND_LOGO_LETTER) {
     return undefined;
   }
   return pastBrandLogoKeySet.has(logoKey) ? logoKey : undefined;
 }
 
-function pastBrandLogoMonogram(logoKey) {
+function pastBrandLogoMonogram(logoKey: string) {
   const parts = logoKey.split("-");
   if (parts.length > 1) {
     return parts.map((part) => part.charAt(0).toUpperCase()).join("").slice(0, 2);
@@ -270,13 +344,13 @@ function pastBrandLogoMonogram(logoKey) {
   return logoKey.slice(0, 1).toUpperCase();
 }
 
-function normalizePastBrandResult(value) {
+function normalizePastBrandResult(value: string | null | undefined) {
   const trimmed = value?.trim() ?? "";
   if (trimmed.length === 0) return undefined;
   return trimmed.slice(0, PITCHKIT_BRAND_RESULT_MAX);
 }
 
-function BrandMark({ name, logoKey }) {
+function BrandMark({ name, logoKey }: { name: string; logoKey?: string }) {
   const resolved = resolvePastBrandLogoKey(logoKey);
   if (resolved == null) {
     return <Avatar name={name} size="sm" />;
@@ -289,13 +363,13 @@ function BrandMark({ name, logoKey }) {
   );
 }
 
-function BrandResultChip({ label }) {
+function BrandResultChip({ label }: { label?: string }) {
   const result = normalizePastBrandResult(label);
   if (result == null) return null;
   return <Chip readOnly size="sm">{result}</Chip>;
 }
 
-function BrandLockup({ brand }) {
+function BrandLockup({ brand }: { brand: PitchKitPastBrand }) {
   return (
     <div className="flex min-w-0 items-center gap-3">
       <BrandMark name={brand.name} logoKey={brand.logo_key} />
@@ -305,7 +379,7 @@ function BrandLockup({ brand }) {
   );
 }
 
-function PastBrandCard({ brand, className }) {
+function PastBrandCard({ brand, className }: { brand: PitchKitPastBrand; className: string }) {
   return (
     <Card variant="outlined" shape="rounded" className={className}>
       <Card.Header start={<BrandLockup brand={brand} />} />
@@ -313,9 +387,9 @@ function PastBrandCard({ brand, className }) {
   );
 }
 
-function PastBrandsRail({ brands }) {
-  const hostRef = useRef(null);
-  const measureRef = useRef(null);
+function PastBrandsRail({ brands }: { brands: readonly PitchKitPastBrand[] }) {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLUListElement>(null);
   const [overflows, setOverflows] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
 
@@ -381,7 +455,7 @@ function PastBrandsRail({ brands }) {
           <div className="group overflow-hidden" aria-hidden>
             <div
               className="marquee-track flex w-max items-center"
-              style={{ "--marquee-duration": `${duration}s` }}
+              style={{ "--marquee-duration": `${duration}s` } as CSSProperties}
             >
               <ul className="flex min-w-0 items-center gap-3">
                 {brands.map((brand) => (
@@ -413,7 +487,7 @@ function PastBrandsRail({ brands }) {
   );
 }
 
-function PublicPastBrands({ brands }) {
+export function PublicPastBrands({ brands }: { brands: readonly PitchKitPastBrand[] }) {
   if (brands.length === 0) return null;
 
   return (
@@ -452,7 +526,13 @@ function PublicCreatePitchkitBand() {
   );
 }
 
-function PublicReachCard({ reachState, reachData }) {
+function PublicReachCard({
+  reachState,
+  reachData,
+}: {
+  reachState: PitchKitReachState;
+  reachData: ChartCartesianPoint[];
+}) {
   return (
     <Card
       variant="outlined"
@@ -506,7 +586,7 @@ function PublicReachCard({ reachState, reachData }) {
   );
 }
 
-function PublicCountries({ countries }) {
+function PublicCountries({ countries }: { countries: ChartRankedBarItem[] }) {
   const topCountries = countries.slice(0, 3);
   if (topCountries.length === 0) return null;
 
@@ -550,7 +630,7 @@ function ShareablePitchKit({
   reachData,
   reachState = "resolved",
   showCreateBand = true,
-}) {
+}: ShareablePitchKitProps) {
   const engagementRate = reachState === "resolved" ? "5.8%" : null;
   const typicalReach = reachState === "resolved" ? "9.3K" : "—";
 
@@ -613,7 +693,7 @@ function ShareablePitchKit({
                     <span key={label} className="flex min-w-0 flex-col gap-1">
                       <span className="type-supporting font-medium uppercase tracking-wider text-muted text-muted">{label}</span>
                       <span className="font-mono text-sm tabular-nums text-fg">
-                        {compactNumber.format(value)}
+                        {compactNumber.format(value as number)}
                       </span>
                     </span>
                   ))}
@@ -659,7 +739,15 @@ function ShareablePitchKit({
 }
 
 
-export function ThemePickerOwnerPage({ identity, intro, posts, contact, brands, countries, reachData }) {
+export function ThemePickerOwnerPage({
+  identity,
+  intro,
+  posts,
+  contact,
+  brands,
+  countries,
+  reachData,
+}: PitchKitPageData) {
   const [draftTheme, setDraftTheme] = useState("light");
   const [savedTheme, setSavedTheme] = useState("light");
   const dirty = draftTheme !== savedTheme;

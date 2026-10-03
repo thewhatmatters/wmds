@@ -21,6 +21,7 @@ export {
   type BadgeSize,
   type BadgeVariant,
 } from "./components/atoms/Badge/Badge";
+export { BadgeIcon } from "./components/atoms/Badge/BadgeIcon";
 export {
   Button,
   buttonLayouts,
@@ -34,6 +35,7 @@ export {
   defaultStatusLabels,
   getNextButtonStatus,
 } from "./components/atoms/Button/Button";
+export { ButtonIcon } from "./components/atoms/Button/ButtonIcon";
 export {
   Checkbox,
   checkboxSizes,
@@ -656,6 +658,13 @@ export {
   backgroundPatterns,
   type BackgroundPatternId,
 } from "./lib/backgroundPatterns";
+export {
+  buttonSizeForCluster,
+  clusterComponentSizeMap,
+  clusterTiers,
+  iconButtonSizeForCluster,
+  type ClusterTier,
+} from "./lib/clusterScale";
 export { cn } from "./lib/cn";
 export { GridOverlay, type GridOverlayProps } from "./lib/GridOverlay";
 export {

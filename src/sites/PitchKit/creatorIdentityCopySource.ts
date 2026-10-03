@@ -24,7 +24,26 @@ import {
 
 /** Shared identity chrome — same strip on public nameplate and owner Settings. */
 export const creatorIdentityStripCopySource = `
-function CreatorIdentityStrip({ identity, nameAs = "h1", showProfessionalChip = false }) {
+export interface PitchKitCreatorIdentity {
+  displayName?: string;
+  /** Without the @ — shown as @handle, shared as /k/[handle]. */
+  handle: string;
+  profilePictureUrl?: string;
+  followersCount?: number;
+  professionalAccount?: "Business" | "Creator";
+  connected?: boolean;
+  lastSyncedLabel?: string;
+}
+
+function CreatorIdentityStrip({
+  identity,
+  nameAs = "h1",
+  showProfessionalChip = false,
+}: {
+  identity: PitchKitCreatorIdentity;
+  nameAs?: "h1" | "p";
+  showProfessionalChip?: boolean;
+}) {
   const NameTag = nameAs;
   const avatarName = identity.displayName ?? identity.handle;
   const handleLabel = \`@\${identity.handle}\`;
@@ -76,7 +95,7 @@ const compactNumber = new Intl.NumberFormat("en", {
 
 ${creatorIdentityStripCopySource}
 
-export function CreatorIdentityPublicPage({ identity }) {
+export function CreatorIdentityPublicPage({ identity }: { identity: PitchKitCreatorIdentity }) {
   return (
     <main className="${pitchKitPageClasses}">
       <div className="${pitchKitTopbarBandClasses}">
@@ -112,7 +131,7 @@ const compactNumber = new Intl.NumberFormat("en", {
 
 ${creatorIdentityStripCopySource}
 
-export function CreatorIdentityOwnerSettingsPage({ identity }) {
+export function CreatorIdentityOwnerSettingsPage({ identity }: { identity: PitchKitCreatorIdentity }) {
   const sharePath = \`/k/\${identity.handle}\`;
 
   function copyShareKitUrl() {

@@ -84,7 +84,7 @@ describe("Pattern — past brands Show code", () => {
     expect(pastBrandsOwnerCopySource).toContain("export function PastBrandsOwnerPage");
     expect(pastBrandsOwnerCopySource).toContain(creatorIdentityStripCopySource.trim());
     expect(pastBrandsOwnerCopySource).toContain("Past brands");
-    expect(pastBrandsOwnerCopySource).toContain("Add brands you've worked with");
+    expect(pastBrandsOwnerCopySource).toContain("Add brands you&apos;ve worked with");
     expect(pastBrandsOwnerCopySource).toContain('label="Brand name"');
     expect(pastBrandsOwnerCopySource).toContain('label="Result"');
     expect(pastBrandsOwnerCopySource).toContain('label="Logo"');
@@ -129,7 +129,7 @@ describe("Pattern — past brands Show code", () => {
     expect(pastBrandsPublicCopySource).toContain("marquee-track");
     expect(pastBrandsPublicCopySource).toContain("BrandResultChip");
     expect(pastBrandsPublicCopySource).toContain("normalizePastBrandResult");
-    expect(pastBrandsPublicCopySource).not.toContain("Add brands you've worked with");
+    expect(pastBrandsPublicCopySource).not.toContain("Add brands you&apos;ve worked with");
     expect(pastBrandsPublicCopySource).not.toContain("<MoreMenu");
     expect(pastBrandsPublicCopySource).not.toContain("<Dialog");
     expect(pastBrandsPublicCopySource).not.toContain("draggable");

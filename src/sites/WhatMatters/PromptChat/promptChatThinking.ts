@@ -7,8 +7,6 @@ export const promptChatTraceKinds = ["steps", "reasoning", "search", "coding"] a
 
 export type PromptChatTraceKind = (typeof promptChatTraceKinds)[number];
 
-export const promptChatThinkingLabel = "Thinking";
-
 /** Collapsed status copy. The live timer fills the seconds; this is the scripted end value. */
 export const promptChatThoughtLabel = "Thought for 4 seconds";
 

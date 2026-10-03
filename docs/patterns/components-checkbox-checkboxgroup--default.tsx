@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { CheckboxGroup } from "@whatmatters/wmds";
 
-function AlertPreferences() {
+export function AlertPreferences() {
   const [values, setValues] = useState(["email"]);
   return (
     <CheckboxGroup

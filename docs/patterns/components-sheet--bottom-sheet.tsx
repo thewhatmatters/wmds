@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Button, Input, Sheet } from "@whatmatters/wmds";
 import { dialogFooterActionsClasses } from "@whatmatters/wmds";
 
-function FilterSheet() {
+export function FilterSheet() {
   const [open, setOpen] = useState(false);
 
   return (

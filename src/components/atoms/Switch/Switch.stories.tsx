@@ -96,7 +96,7 @@ export const Default: Story = {
 import { useState } from "react";
 import { Switch } from "@whatmatters/wmds";
 
-function NotificationsSwitch() {
+export function NotificationsSwitch() {
   const [checked, setChecked] = useState(false);
   return (
     <Switch
@@ -127,7 +127,7 @@ export const SettingsRow: Story = {
 import { useState } from "react";
 import { Switch } from "@whatmatters/wmds";
 
-function WeeklyDigestSwitch() {
+export function WeeklyDigestSwitch() {
   const [checked, setChecked] = useState(true);
   return (
     <Switch

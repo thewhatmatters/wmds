@@ -268,7 +268,7 @@ export const ProjectGalleryPattern: Story = {
 };
 
 const galleryIntroCopySource = `
-import { ScrollHorizontal, TextSequence } from "@whatmatters/wmds";
+import { RiveHand, ScrollHorizontal, TextSequence } from "@whatmatters/wmds";
 
 // Opens the multi-step project form. There is no /start route.
 function openProjectModal() {}

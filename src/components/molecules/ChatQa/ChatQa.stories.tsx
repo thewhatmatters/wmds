@@ -32,7 +32,7 @@ export function IntakeAnswersInThread() {
     <div className="flex w-full max-w-xl flex-col gap-6">
       <ChatQa pairs={pairs} />
       <p className="type-body text-fg">
-        That's the full loop — shipping surface, platforms, and what to optimize for first. Next we would sketch the feature path, then pin the Chrome extension shell so the web cut and the extension stay on one system.
+        That&apos;s the full loop — shipping surface, platforms, and what to optimize for first. Next we would sketch the feature path, then pin the Chrome extension shell so the web cut and the extension stay on one system.
       </p>
     </div>
   );

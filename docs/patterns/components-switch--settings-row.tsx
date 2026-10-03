@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { Switch } from "@whatmatters/wmds";
 
-function WeeklyDigestSwitch() {
+export function WeeklyDigestSwitch() {
   const [checked, setChecked] = useState(true);
   return (
     <Switch

@@ -72,12 +72,9 @@ export const promptChatTraceBodyClasses =
 export const promptChatTraceLineClasses = "flex items-center gap-2 type-supporting text-muted";
 
 /**
- * Working label. Supporting size and `--color-muted` (`--color-text-secondary`) —
- * a passing status, not brand navy and not the reply's body type.
+ * Thought-for label, live timer and settled. Supporting size and `--color-muted`
+ * (`--color-text-secondary`) — a passing status, not brand navy and not the reply's body type.
  */
-export const promptChatThinkingLabelClasses = "type-supporting text-muted";
-
-/** Settled label. Same quiet supporting step as the working label. */
 export const promptChatThoughtLabelClasses = "type-supporting text-muted";
 
 /** Lucide mark on a resolved line. Same muted gray as the status copy. */

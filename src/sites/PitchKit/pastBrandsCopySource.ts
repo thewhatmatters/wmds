@@ -28,6 +28,14 @@ import {
 } from "./pitchKitStyles";
 
 const pastBrandsHelpersCopySource = `
+export interface PitchKitPastBrand {
+  id: string;
+  name: string;
+  /** Curated mark key — missing or unknown keys use a letter Avatar. */
+  logo_key?: string;
+  result_label?: string;
+}
+
 const PITCHKIT_BRAND_RESULT_MAX = 24;
 const PITCHKIT_BRAND_LOGO_LETTER = "letter";
 
@@ -41,14 +49,14 @@ const pitchKitBrandLogoKeys = [
 
 const pastBrandLogoKeySet = new Set(pitchKitBrandLogoKeys);
 
-function resolvePastBrandLogoKey(logoKey) {
+function resolvePastBrandLogoKey(logoKey: string | null | undefined) {
   if (logoKey == null || logoKey === "" || logoKey === PITCHKIT_BRAND_LOGO_LETTER) {
     return undefined;
   }
   return pastBrandLogoKeySet.has(logoKey) ? logoKey : undefined;
 }
 
-function pastBrandLogoMonogram(logoKey) {
+function pastBrandLogoMonogram(logoKey: string) {
   const parts = logoKey.split("-");
   if (parts.length > 1) {
     return parts.map((part) => part.charAt(0).toUpperCase()).join("").slice(0, 2);
@@ -56,13 +64,13 @@ function pastBrandLogoMonogram(logoKey) {
   return logoKey.slice(0, 1).toUpperCase();
 }
 
-function normalizePastBrandResult(value) {
+function normalizePastBrandResult(value: string | null | undefined) {
   const trimmed = value?.trim() ?? "";
   if (trimmed.length === 0) return undefined;
   return trimmed.slice(0, PITCHKIT_BRAND_RESULT_MAX);
 }
 
-function BrandMark({ name, logoKey }) {
+function BrandMark({ name, logoKey }: { name: string; logoKey?: string }) {
   const resolved = resolvePastBrandLogoKey(logoKey);
   if (resolved == null) {
     return <Avatar name={name} size="sm" />;
@@ -75,13 +83,13 @@ function BrandMark({ name, logoKey }) {
   );
 }
 
-function BrandResultChip({ label }) {
+function BrandResultChip({ label }: { label?: string }) {
   const result = normalizePastBrandResult(label);
   if (result == null) return null;
   return <Chip readOnly size="sm">{result}</Chip>;
 }
 
-function BrandLockup({ brand }) {
+function BrandLockup({ brand }: { brand: PitchKitPastBrand }) {
   return (
     <div className="${pitchKitBrandRowStartClasses}">
       <BrandMark name={brand.name} logoKey={brand.logo_key} />
@@ -91,7 +99,7 @@ function BrandLockup({ brand }) {
   );
 }
 
-function PastBrandCard({ brand, className }) {
+function PastBrandCard({ brand, className }: { brand: PitchKitPastBrand; className: string }) {
   return (
     <Card variant="outlined" shape="rounded" className={className}>
       <Card.Header start={<BrandLockup brand={brand} />} />
@@ -99,9 +107,9 @@ function PastBrandCard({ brand, className }) {
   );
 }
 
-function PastBrandsRail({ brands }) {
-  const hostRef = useRef(null);
-  const measureRef = useRef(null);
+function PastBrandsRail({ brands }: { brands: readonly PitchKitPastBrand[] }) {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLUListElement>(null);
   const [overflows, setOverflows] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
 
@@ -167,7 +175,7 @@ function PastBrandsRail({ brands }) {
           <div className="${pitchKitBrandMarqueeViewportClasses}" aria-hidden>
             <div
               className="${pitchKitBrandMarqueeTrackClasses}"
-              style={{ "--marquee-duration": \`\${duration}s\` }}
+              style={{ "--marquee-duration": \`\${duration}s\` } as CSSProperties}
             >
               <ul className="${pitchKitBrandRailRowClasses}">
                 {brands.map((brand) => (
@@ -199,7 +207,7 @@ function PastBrandsRail({ brands }) {
   );
 }
 
-function PublicPastBrands({ brands }) {
+export function PublicPastBrands({ brands }: { brands: readonly PitchKitPastBrand[] }) {
   if (brands.length === 0) return null;
 
   return (
@@ -216,7 +224,7 @@ function PublicPastBrands({ brands }) {
 export const publicPastBrandsCopySource = pastBrandsHelpersCopySource;
 
 export const pastBrandsOwnerCopySource = `
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { ChevronDown, ChevronUp, GripVertical, Pencil, Plus, Trash2 } from "lucide-react";
 import {
   Avatar,
@@ -246,14 +254,14 @@ const PITCHKIT_BRAND_NAME_MAX = 40;
 const PITCHKIT_BRAND_RESULT_HINTS =
   "+12% CTR · 3.2x ROAS · 1.4M views · Sold out in 48h · Series A launch";
 
-function pastBrandLogoKeyLabel(logoKey) {
+function pastBrandLogoKeyLabel(logoKey: string) {
   return logoKey
     .split("-")
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join("-");
 }
 
-function pastBrandResultIssues(value) {
+function pastBrandResultIssues(value: string) {
   if (/[\\n\\r]/.test(value)) return "Keep the result on one line.";
   if (/https?:\\/\\/|www\\./i.test(value)) return "Links are not allowed in a result.";
   if (/(^|[\\s])@[a-z0-9._]+/i.test(value)) return "@handles are not allowed in a result.";
@@ -262,13 +270,19 @@ function pastBrandResultIssues(value) {
   return undefined;
 }
 
-function OwnerPastBrands({ brands, onBrandsChange }) {
+function OwnerPastBrands({
+  brands,
+  onBrandsChange,
+}: {
+  brands: PitchKitPastBrand[];
+  onBrandsChange: (brands: PitchKitPastBrand[]) => void;
+}) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [draftName, setDraftName] = useState("");
   const [draftResult, setDraftResult] = useState("");
   const [draftLogoKey, setDraftLogoKey] = useState(PITCHKIT_BRAND_LOGO_LETTER);
-  const [editingId, setEditingId] = useState(null);
-  const [draggingId, setDraggingId] = useState(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [draggingId, setDraggingId] = useState<string | null>(null);
   const canAdd = brands.length < PITCHKIT_BRANDS_MAX;
   const trimmedDraft = draftName.trim();
   const resultIssue = pastBrandResultIssues(draftResult);
@@ -283,7 +297,7 @@ function OwnerPastBrands({ brands, onBrandsChange }) {
     setDialogOpen(true);
   }
 
-  function openEdit(brand) {
+  function openEdit(brand: PitchKitPastBrand) {
     setEditingId(brand.id);
     setDraftName(brand.name);
     setDraftResult(brand.result_label ?? "");
@@ -325,7 +339,7 @@ function OwnerPastBrands({ brands, onBrandsChange }) {
     closeDialog();
   }
 
-  function moveBrand(id, direction) {
+  function moveBrand(id: string, direction: -1 | 1) {
     const index = brands.findIndex((brand) => brand.id === id);
     const nextIndex = index + direction;
     if (index < 0 || nextIndex < 0 || nextIndex >= brands.length) return;
@@ -335,7 +349,7 @@ function OwnerPastBrands({ brands, onBrandsChange }) {
     onBrandsChange(next);
   }
 
-  function reorderBrand(sourceId, targetId) {
+  function reorderBrand(sourceId: string, targetId: string) {
     if (sourceId === targetId) return;
     const from = brands.findIndex((brand) => brand.id === sourceId);
     const to = brands.findIndex((brand) => brand.id === targetId);
@@ -358,7 +372,7 @@ function OwnerPastBrands({ brands, onBrandsChange }) {
       </div>
       {brands.length === 0 ? (
         <Button role="ghost" onClick={openAdd}>
-          Add brands you've worked with
+          Add brands you&apos;ve worked with
         </Button>
       ) : (
         <div className="${pitchKitBrandListClasses}">
@@ -447,8 +461,11 @@ function OwnerPastBrands({ brands, onBrandsChange }) {
                           onBrandsChange(
                             brands.map((item) => {
                               if (item.id !== brand.id) return item;
-                              const { result_label, ...rest } = item;
-                              return rest;
+                              return {
+                                id: item.id,
+                                name: item.name,
+                                ...(item.logo_key == null ? {} : { logo_key: item.logo_key }),
+                              };
                             }),
                           );
                         }
@@ -520,7 +537,15 @@ function OwnerPastBrands({ brands, onBrandsChange }) {
   );
 }
 
-export function PastBrandsOwnerPage({ identity, brands, onBrandsChange }) {
+export function PastBrandsOwnerPage({
+  identity,
+  brands,
+  onBrandsChange,
+}: {
+  identity: PitchKitCreatorIdentity;
+  brands: PitchKitPastBrand[];
+  onBrandsChange: (brands: PitchKitPastBrand[]) => void;
+}) {
   return (
     <main className="${pitchKitPageClasses}">
       <div className="${pitchKitTopbarBandClasses}">
@@ -557,7 +582,7 @@ export function PastBrandsOwnerPage({ identity, brands, onBrandsChange }) {
 `;
 
 export const pastBrandsPublicCopySource = `
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { Avatar, Card, Chip, cardTitleClasses } from "@whatmatters/wmds";
 
 const compactNumber = new Intl.NumberFormat("en", {
@@ -568,7 +593,13 @@ const compactNumber = new Intl.NumberFormat("en", {
 ${creatorIdentityStripCopySource}
 ${pastBrandsHelpersCopySource}
 
-export function PastBrandsPublicPage({ identity, brands }) {
+export function PastBrandsPublicPage({
+  identity,
+  brands,
+}: {
+  identity: PitchKitCreatorIdentity;
+  brands: readonly PitchKitPastBrand[];
+}) {
   return (
     <main className="${pitchKitPageClasses}">
       <div className="${pitchKitTopbarBandClasses}">

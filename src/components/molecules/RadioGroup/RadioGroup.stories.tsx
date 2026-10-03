@@ -94,7 +94,7 @@ export const Default: Story = {
 import { useState } from "react";
 import { RadioGroup } from "@whatmatters/wmds";
 
-function NotificationPreference() {
+export function NotificationPreference() {
   const [value, setValue] = useState("email");
   return (
     <RadioGroup

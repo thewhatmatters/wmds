@@ -2,7 +2,7 @@
 // Storybook: Components/ScrollHorizontal → Pattern — gallery intro (?path=/story/components-scrollhorizontal--with-intro)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { ScrollHorizontal, TextSequence } from "@whatmatters/wmds";
+import { RiveHand, ScrollHorizontal, TextSequence } from "@whatmatters/wmds";
 
 // Opens the multi-step project form. There is no /start route.
 function openProjectModal() {}

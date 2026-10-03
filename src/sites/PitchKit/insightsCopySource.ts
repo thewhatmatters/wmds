@@ -48,7 +48,7 @@ import {
 } from "./pitchKitStyles";
 
 const insightsPageImports = `
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import {
   AlertDialog,
   Avatar,
@@ -71,6 +71,8 @@ import {
   cardTitleClasses,
   chartSeriesConfigFromKeys,
   toast,
+  type ChartCartesianPoint,
+  type ChartRankedBarItem,
 } from "@whatmatters/wmds";
 import { EyeOff } from "lucide-react";
 
@@ -84,13 +86,15 @@ const compactNumber = new Intl.NumberFormat("en", {
   maximumFractionDigits: 1,
 });
 
-const proofMetricNotices = {
+type PitchKitProofMetric = "reach" | "engagement" | "saves";
+
+const proofMetricNotices: Record<PitchKitProofMetric, string> = {
   reach: "Ranked by Instagram reach.",
   engagement: "Ranked by likes + comments.",
   saves: "Ranked by Instagram saves.",
 };
 
-function proofMetricValue(post, metric) {
+function proofMetricValue(post: PitchKitPost, metric: PitchKitProofMetric) {
   if (metric === "engagement") return post.likes + post.comments;
   return post[metric];
 }
@@ -198,7 +202,7 @@ const insightsRecentProof = `
                             <span key={label} className="${pitchKitPostMetricClasses}">
                               <span className="${pitchKitPostMetricLabelClasses}">{label}</span>
                               <span className="${pitchKitPostMetricValueClasses}">
-                                {compactNumber.format(value)}
+                                {compactNumber.format(value as number)}
                               </span>
                             </span>
                           ))}
@@ -212,29 +216,44 @@ const insightsRecentProof = `
 
 function insightsPageState({
   exportName,
-  extraHelpers = "",
+  audience = false,
   insightsBody,
 }: {
   exportName: string;
-  extraHelpers?: string;
+  /** Graph demographics are charted — adds PitchKitAudience, AudienceSection, and the audience prop. */
+  audience?: boolean;
   insightsBody: string;
 }) {
   return `
 ${insightsPageImports}
-${extraHelpers}
+${audience ? audienceSectionHelper : ""}
 ${ownerAccountChromeCopySource}
 ${ownerPitchKitBodyCopySource}
 
-export function ${exportName}({ reachData, audience, posts, contact, brands, identity, kitPosts, intro, countries }) {
+interface PitchKitInsightsPageProps extends PitchKitPageData {
+${audience ? "  audience: PitchKitAudience;\n" : ""}  /** Selected posts on the PitchKit tab; \`posts\` is the Recent proof set. */
+  kitPosts: PitchKitPost[];
+}
+
+export function ${exportName}({
+  reachData,
+${audience ? "  audience,\n" : ""}  posts,
+  contact,
+  brands,
+  identity,
+  kitPosts,
+  intro,
+  countries,
+}: PitchKitInsightsPageProps) {
   const [view, setView] = useState("insights");
-  const [proofMetric, setProofMetric] = useState("reach");
+  const [proofMetric, setProofMetric] = useState<PitchKitProofMetric>("reach");
   const rankedPosts = [...posts].sort(
     (a, b) =>
       proofMetricValue(b, proofMetric) - proofMetricValue(a, proofMetric),
   );
 
-  function handleProofMetricChange(value) {
-    setProofMetric(value);
+  function handleProofMetricChange(value: string) {
+    setProofMetric(value as PitchKitProofMetric);
   }
 
   return (
@@ -260,7 +279,14 @@ ${insightsBody}
 }
 
 const audienceSectionHelper = `
-function AudienceSection({ title, items }) {
+export interface PitchKitAudience {
+  countries: ChartRankedBarItem[];
+  cities: ChartRankedBarItem[];
+  ages: ChartRankedBarItem[];
+  gender: ChartRankedBarItem[];
+}
+
+function AudienceSection({ title, items }: { title: string; items: ChartRankedBarItem[] }) {
   return (
     <section className="${pitchKitAudienceSectionClasses}">
       <h3 className="${pitchKitSectionEyebrowClasses}">{title}</h3>
@@ -276,7 +302,7 @@ function AudienceSection({ title, items }) {
 
 export const creatorInsightsPageCopySource = insightsPageState({
   exportName: "PitchKitInsightsPage",
-  extraHelpers: audienceSectionHelper,
+  audience: true,
   insightsBody: `
 ${insightsHeader}
               <div className="${pitchKitMetricsStackClasses}">
@@ -338,7 +364,7 @@ ${insightsRecentProof}
 
 export const insufficientReachPageCopySource = insightsPageState({
   exportName: "PitchKitInsightsInsufficientReachPage",
-  extraHelpers: audienceSectionHelper,
+  audience: true,
   insightsBody: `
 ${insightsHeader}
               <div className="${pitchKitMetricsStackClasses}">
@@ -537,7 +563,7 @@ ${insightsRecentProof}
 });
 
 export const creatorInsightsLoadingPageCopySource = `
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import {
   AlertDialog,
   Avatar,
@@ -560,6 +586,8 @@ import {
   cardTitleClasses,
   chartSeriesConfigFromKeys,
   toast,
+  type ChartCartesianPoint,
+  type ChartRankedBarItem,
 } from "@whatmatters/wmds";
 import { EyeOff } from "lucide-react";
 
@@ -584,7 +612,20 @@ const audienceSkeletonSections = [
 ${ownerAccountChromeCopySource}
 ${ownerPitchKitBodyCopySource}
 
-export function PitchKitInsightsLoadingPage({ posts, contact, brands, identity, kitPosts, intro, countries, reachData }) {
+interface PitchKitInsightsLoadingPageProps extends Omit<PitchKitPageData, "posts"> {
+  /** Selected posts on the PitchKit tab. */
+  kitPosts: PitchKitPost[];
+}
+
+export function PitchKitInsightsLoadingPage({
+  contact,
+  brands,
+  identity,
+  kitPosts,
+  intro,
+  countries,
+  reachData,
+}: PitchKitInsightsLoadingPageProps) {
   const [view, setView] = useState("insights");
 
   return (

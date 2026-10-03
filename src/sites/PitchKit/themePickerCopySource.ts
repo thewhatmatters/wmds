@@ -15,7 +15,7 @@ import {
 } from "./pitchKitStyles";
 
 export const themePickerOwnerCopySource = `
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import {
   AlertDialog,
   Avatar,
@@ -35,6 +35,8 @@ import {
   cardTitleClasses,
   chartSeriesConfigFromKeys,
   toast,
+  type ChartCartesianPoint,
+  type ChartRankedBarItem,
 } from "@whatmatters/wmds";
 
 const reachConfig = chartSeriesConfigFromKeys([
@@ -52,7 +54,15 @@ const pitchKitThemes = ["light", "dark", "soft"];
 ${ownerAccountChromeCopySource}
 ${shareablePitchKitBodyCopySource}
 
-export function ThemePickerOwnerPage({ identity, intro, posts, contact, brands, countries, reachData }) {
+export function ThemePickerOwnerPage({
+  identity,
+  intro,
+  posts,
+  contact,
+  brands,
+  countries,
+  reachData,
+}: PitchKitPageData) {
   const [draftTheme, setDraftTheme] = useState("light");
   const [savedTheme, setSavedTheme] = useState("light");
   const dirty = draftTheme !== savedTheme;

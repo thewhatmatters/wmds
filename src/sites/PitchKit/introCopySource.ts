@@ -24,11 +24,11 @@ const compactNumber = new Intl.NumberFormat("en", {
 const PITCHKIT_INTRO_SOFT_LIMIT = 160;
 const PITCHKIT_INTRO_HARD_LIMIT = 280;
 
-function pitchKitIntroIsEmpty(intro) {
+function pitchKitIntroIsEmpty(intro: string) {
   return intro.trim().length === 0;
 }
 
-function pitchKitIntroStatus(intro) {
+function pitchKitIntroStatus(intro: string): "warning" | "error" | undefined {
   const length = intro.length;
   if (length >= PITCHKIT_INTRO_HARD_LIMIT) return "error";
   if (length >= PITCHKIT_INTRO_SOFT_LIMIT) return "warning";
@@ -37,7 +37,13 @@ function pitchKitIntroStatus(intro) {
 
 ${creatorIdentityStripCopySource}
 
-function OwnerIntroEditor({ intro, onIntroChange }) {
+function OwnerIntroEditor({
+  intro,
+  onIntroChange,
+}: {
+  intro: string;
+  onIntroChange: (intro: string) => void;
+}) {
   const [editing, setEditing] = useState(!pitchKitIntroIsEmpty(intro));
 
   if (pitchKitIntroIsEmpty(intro) && !editing) {
@@ -62,7 +68,15 @@ function OwnerIntroEditor({ intro, onIntroChange }) {
   );
 }
 
-export function IntroOwnerPage({ identity, intro, onIntroChange }) {
+export function IntroOwnerPage({
+  identity,
+  intro,
+  onIntroChange,
+}: {
+  identity: PitchKitCreatorIdentity;
+  intro: string;
+  onIntroChange: (intro: string) => void;
+}) {
   return (
     <main className="${pitchKitPageClasses}">
       <div className="${pitchKitTopbarBandClasses}">
@@ -106,13 +120,19 @@ const compactNumber = new Intl.NumberFormat("en", {
   maximumFractionDigits: 1,
 });
 
-function pitchKitIntroIsEmpty(intro) {
+function pitchKitIntroIsEmpty(intro: string) {
   return intro.trim().length === 0;
 }
 
 ${creatorIdentityStripCopySource}
 
-export function IntroPublicPage({ identity, intro }) {
+export function IntroPublicPage({
+  identity,
+  intro,
+}: {
+  identity: PitchKitCreatorIdentity;
+  intro: string;
+}) {
   return (
     <main className="${pitchKitPageClasses}">
       <div className="${pitchKitTopbarBandClasses}">

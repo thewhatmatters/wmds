@@ -48,7 +48,7 @@ A pattern is the approved composition for a task. Copying it is the contract.
 
 1. Open `docs/patterns/<id>.tsx` (the id comes from `exports.json` → `patterns`, or `docs/patterns/index.json`).
 2. Copy the whole file into the app, **including the three header lines** (`// @whatmatters/wmds@<version> · Pattern — …`). Upgrades find pasted patterns by that header. If the file has `"use client"`, it stays below the header comments.
-3. Allowed edits: add `export` / `export default` to the top-level component, rename it, and replace sample copy, data, URLs, and handlers with the app's. Keep the structure, components, props, and classes.
+3. Allowed edits: rename the exported component (or make it the file's default export), replace sample copy, data, URLs, and handlers with the app's, and in Next.js swap a plain `<img>` for `next/image`. Keep the structure, components, props, and classes.
 4. One pattern per file is easiest to re-sync later.
 
 ## 5. Check before finishing

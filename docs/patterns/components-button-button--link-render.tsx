@@ -4,5 +4,11 @@
 
 import { Button } from "@whatmatters/wmds";
 
-<Button role="ghost" size="sm" render={<a href="/docs" />}>Docs</Button>
-<Button size="sm" render={<a href="/signup" />}>Get started</Button>
+export function HeaderLinks() {
+  return (
+    <>
+      <Button role="ghost" size="sm" render={<a href="/docs" />}>Docs</Button>
+      <Button size="sm" render={<a href="/signup" />}>Get started</Button>
+    </>
+  );
+}

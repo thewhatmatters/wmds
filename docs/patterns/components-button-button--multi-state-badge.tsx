@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { Button, getNextButtonStatus, type ButtonStatus } from "@whatmatters/wmds";
 
-function SubmitForm() {
+export function SubmitForm() {
   const [status, setStatus] = useState<ButtonStatus>("idle");
 
   return (
