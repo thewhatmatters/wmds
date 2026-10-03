@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.2.0 · Pattern — gallery intro
+// @thewhatmatters/wmds@0.3.0 · Pattern — gallery intro
 // Storybook: Components/ScrollHorizontal → Pattern — gallery intro (?path=/story/components-scrollhorizontal--with-intro)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

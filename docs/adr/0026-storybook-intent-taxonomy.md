@@ -76,6 +76,14 @@ Sidebar order: **Getting started → Guides → Foundations → Components → S
 - A new family needs at least two exports that an engineer would compare side by side; record it in this list.
 - Story ids changed with the titles, so bookmarks and visual-test baselines keyed on old ids need refreshing.
 
+## Amendment — 2026-10-03: Sites removed
+
+The **Sites** section is removed. Its pages (WhatMatters: Intake, Marketing landing, Prompt chat, RFP submitted; PitchKit) had fallen behind the product apps they copied, so keeping them in WMDS Storybook meant maintaining a second, older copy of each site. Product pages and flows now live only in their apps.
+
+- Sidebar order: **Getting started → Guides → Foundations → Components → Internal**.
+- Components keep their own **Pattern — …** stories; cross-component guidance stays under **Guides**.
+- `src/sites/` and the PitchKit interaction tests are deleted. The Intake and Confetti interaction tests now exercise **IntakeModal** and **IntakeConfirmation** directly.
+
 ## Related
 
 - ADR-0002 — atomic filesystem and import tiers

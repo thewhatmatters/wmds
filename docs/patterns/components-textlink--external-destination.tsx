@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.2.0 · Pattern — external destination
+// @thewhatmatters/wmds@0.3.0 · Pattern — external destination
 // Storybook: Components/TextLink → Pattern — external destination (?path=/story/components-textlink--external-destination)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

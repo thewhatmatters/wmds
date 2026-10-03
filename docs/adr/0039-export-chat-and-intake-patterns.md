@@ -3,6 +3,7 @@
 **Status:** Proposed — awaiting review by Randy. Nothing in this ADR is built yet.
 **Date:** 2026-10-03
 **Amends:** ADR-0004 (Pattern-first — not utility-first), rule 4 “Examples are templates”.
+**Note (2026-10-03):** **Sites/** was removed from Storybook (ADR-0026). The composed chat, intake gate, and RFP pages referenced below now exist only in the WhatMatters site. If this ADR is accepted, the components are extracted from the site's code.
 
 ## Context
 

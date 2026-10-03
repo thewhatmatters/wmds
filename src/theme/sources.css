@@ -3,7 +3,6 @@
  * Add a glob here when a new top-level src/ layer ships utilities.
  */
 @source "../components/**/*.{ts,tsx}";
-@source "../sites/**/*.{ts,tsx}";
 @source "../guides/**/*.{ts,tsx}";
 @source "../storybook/**/*.{ts,tsx,mdx}";
 @source "../lib/**/*.{ts,tsx}";

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.2.0 · Pattern — outlined layout
+// @thewhatmatters/wmds@0.3.0 · Pattern — outlined layout
 // Storybook: Components/Card/Card → Pattern — outlined layout (?path=/story/components-card-card--outlined-layout)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

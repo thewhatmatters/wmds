@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.2.0 · Pattern — selectable cards
+// @thewhatmatters/wmds@0.3.0 · Pattern — selectable cards
 // Storybook: Components/Card/SelectableCard → Pattern — selectable cards (?path=/story/components-card-selectablecard--selectable-cards-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

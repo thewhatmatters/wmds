@@ -28,7 +28,7 @@ Helpers: **`src/lib/storyCopySource.ts`**.
 
 Show code must compile when pasted into a consumer app (Next 16, React 19, strict TypeScript, `eslint-config-next`, zero warnings): complete module with an exported component, typed props for app data and callbacks, no placeholders, no unused code, only exports the package really has. Check: `npm run check:show-code`.
 
-Page-level **Sites** and **Guides** pages — **Show code is the product contract**. The freeze must stay a literal mirror of the live canvas (layout, chrome, spacing, typography). Prefer the same class strings the page `*Styles.ts` applies. Omit **`ExampleGridControls`** and other Storybook-only chrome.
+Page-level **Guides** pages — **Show code is the product contract**. The freeze must stay a literal mirror of the live canvas (layout, chrome, spacing, typography). Prefer the same class strings the page `*Styles.ts` applies. Omit **`ExampleGridControls`** and other Storybook-only chrome.
 
 ## Before merge
 

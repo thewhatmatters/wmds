@@ -27,11 +27,11 @@ Section-scale UI — Dialog, Tab, MoreMenu, etc. Storybook: **`Components/{Name}
 **Planned:**
 **Table**, **Carousel**, and **Pagination** are not built yet — `plannedExports` in `src/package.manifest.ts`. `src/lib/tableLayout/` is the groundwork kept for **Table**.
 
-**Sites** (`src/sites/{Site}/`) and **Guides** (`src/guides/`):
-Pages and flows per product — Storybook **`Sites/{Site}/{Page}`** (WhatMatters, PitchKit). Cross-component guidance — Storybook **`Guides/{Name}`**. Storybook-only compositions; never exported.
+**Guides** (`src/guides/`):
+Cross-component guidance — Storybook **`Guides/{Name}`**. Storybook-only compositions; never exported. Product pages and flows live in each product's app, not here.
 
 **Pattern-first:**
-Components and Storybook Sites patterns are the consumer API — not ad-hoc utility composition. Tailwind powers component internals and page layout only. See **`docs/adr/0004-pattern-first-not-utility-first.md`**.
+Components and their Storybook **Pattern** stories are the consumer API — not ad-hoc utility composition. Tailwind powers component internals and page layout only. See **`docs/adr/0004-pattern-first-not-utility-first.md`**.
 
 **Agents (this repo):**
 Read **`AGENTS.md`** and **`.cursor/rules/`** before authoring. Storybook **Pattern** stories are the contract. Molecules must compose atoms — **`npm run validate:composition`** (mirrored by the hidden **Internal/Audits/Composition** fixture). **`openGaps`** and **`compositionTrackedOpenGaps`** must stay empty.
@@ -52,7 +52,7 @@ lib (motion adapter, table measurer, typography roles, shared helpers)
   ↓
 Atoms → Molecules → Organisms (components — strict import direction)
   ↓
-Sites / Guides (pages, flows, guidance — Storybook only)
+Guides (cross-component guidance — Storybook only)
 ```
 
 See `docs/adr/0001-layer-architecture.md`, `docs/adr/0002-atomic-design.md`, `docs/adr/0003-responsive-mobile-first.md`, `docs/adr/0004-pattern-first-not-utility-first.md`, `docs/adr/0005-list-card-as-molecules.md`, `docs/adr/0006-input-architecture.md`, and `docs/adr/0010-app-grid-spine.md`. **DESIGN.md → Grid** is the agent-facing grid contract.

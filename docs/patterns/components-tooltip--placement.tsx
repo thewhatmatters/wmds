@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.2.0 · Pattern — placement
+// @thewhatmatters/wmds@0.3.0 · Pattern — placement
 // Storybook: Components/Tooltip → Pattern — placement (?path=/story/components-tooltip--placement)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

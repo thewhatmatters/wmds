@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.2.0 · Pattern — horizontal textarea
+// @thewhatmatters/wmds@0.3.0 · Pattern — horizontal textarea
 // Storybook: Components/Field → Pattern — horizontal textarea (?path=/story/components-field--horizontal-text-area)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

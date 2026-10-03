@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -782,18 +782,6 @@
     "pressScaleClass",
     "GridOverlay",
     "GRID_ON_CLASS"
-  ],
-  "sites": [
-    "Sites/PitchKit/Account settings",
-    "Sites/PitchKit/Creator identity",
-    "Sites/PitchKit/Insights and kit",
-    "Sites/PitchKit/Intro",
-    "Sites/PitchKit/Past brands",
-    "Sites/PitchKit/Theme picker",
-    "Sites/WhatMatters/Intake",
-    "Sites/WhatMatters/Marketing landing",
-    "Sites/WhatMatters/Prompt chat",
-    "Sites/WhatMatters/RFP submitted"
   ],
   "guides": [
     "Guides/Chart explorations",

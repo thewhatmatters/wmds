@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.2.0 · Pattern — end sheet
+// @thewhatmatters/wmds@0.3.0 · Pattern — end sheet
 // Storybook: Components/Sheet → Pattern — end sheet (?path=/story/components-sheet--end-sheet)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
