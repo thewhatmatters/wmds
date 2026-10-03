@@ -13,7 +13,7 @@ import {
 } from "./pitchKitStyles";
 
 export const ownerAccountChromeCopySource = `
-function copyShareKitUrl(handle) {
+function copyShareKitUrl(handle: string) {
   const path = \`/k/\${handle}\`;
   void navigator.clipboard.writeText(path);
   toast.add({
@@ -23,7 +23,15 @@ function copyShareKitUrl(handle) {
   });
 }
 
-function AccountSettingsDialog({ identity, open, onOpenChange }) {
+function AccountSettingsDialog({
+  identity,
+  open,
+  onOpenChange,
+}: {
+  identity: PitchKitCreatorIdentity;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <Dialog.Content size="md" title="Account settings">
@@ -60,12 +68,12 @@ function AccountSettingsDialog({ identity, open, onOpenChange }) {
   );
 }
 
-function OwnerAccountMenu({ identity }) {
+function OwnerAccountMenu({ identity }: { identity: PitchKitCreatorIdentity }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  function handleAction(actionId) {
+  function handleAction(actionId: string) {
     setMenuOpen(false);
     if (actionId === "settings") {
       setSettingsOpen(true);

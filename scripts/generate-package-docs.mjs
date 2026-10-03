@@ -94,7 +94,14 @@ try {
       {
         package: pkg.name,
         version: pkg.version,
-        patterns: patterns.map(({ id, title, name, file }) => ({ id, title, name, file, storybook: `?path=/story/${id}` })),
+        patterns: patterns.map(({ id, title, name, file, source }) => ({
+          id,
+          title,
+          name,
+          file,
+          storybook: `?path=/story/${id}`,
+          source,
+        })),
       },
       null,
       2,

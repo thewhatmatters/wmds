@@ -18,8 +18,32 @@ import {
   toast,
 } from "@whatmatters/wmds";
 
+const compactNumber = new Intl.NumberFormat("en", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
 
-function CreatorIdentityStrip({ identity, nameAs = "h1", showProfessionalChip = false }) {
+
+export interface PitchKitCreatorIdentity {
+  displayName?: string;
+  /** Without the @ — shown as @handle, shared as /k/[handle]. */
+  handle: string;
+  profilePictureUrl?: string;
+  followersCount?: number;
+  professionalAccount?: "Business" | "Creator";
+  connected?: boolean;
+  lastSyncedLabel?: string;
+}
+
+function CreatorIdentityStrip({
+  identity,
+  nameAs = "h1",
+  showProfessionalChip = false,
+}: {
+  identity: PitchKitCreatorIdentity;
+  nameAs?: "h1" | "p";
+  showProfessionalChip?: boolean;
+}) {
   const NameTag = nameAs;
   const avatarName = identity.displayName ?? identity.handle;
   const handleLabel = `@${identity.handle}`;
@@ -61,7 +85,7 @@ function CreatorIdentityStrip({ identity, nameAs = "h1", showProfessionalChip = 
 }
 
 
-function copyShareKitUrl(handle) {
+function copyShareKitUrl(handle: string) {
   const path = `/k/${handle}`;
   void navigator.clipboard.writeText(path);
   toast.add({
@@ -71,7 +95,15 @@ function copyShareKitUrl(handle) {
   });
 }
 
-function AccountSettingsDialog({ identity, open, onOpenChange }) {
+function AccountSettingsDialog({
+  identity,
+  open,
+  onOpenChange,
+}: {
+  identity: PitchKitCreatorIdentity;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <Dialog.Content size="md" title="Account settings">
@@ -108,12 +140,12 @@ function AccountSettingsDialog({ identity, open, onOpenChange }) {
   );
 }
 
-function OwnerAccountMenu({ identity }) {
+function OwnerAccountMenu({ identity }: { identity: PitchKitCreatorIdentity }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  function handleAction(actionId) {
+  function handleAction(actionId: string) {
     setMenuOpen(false);
     if (actionId === "settings") {
       setSettingsOpen(true);
@@ -214,7 +246,7 @@ function PitchKitPageFooter() {
 }
 
 
-export function AccountSettingsOwnerPage({ identity }) {
+export function AccountSettingsOwnerPage({ identity }: { identity: PitchKitCreatorIdentity }) {
   return (
     <main className="grid-page min-h-screen bg-body [--grid-column-gap:8px] [--grid-max:1140px] [padding-bottom:44px]">
       <div className="band pb-4">

@@ -5,6 +5,18 @@
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { Button } from "@whatmatters/wmds";
 
-<Button role="primary" icon={<Plus strokeWidth={2} />}>
-  New item
-</Button>
+export function ItemActions() {
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      <Button role="primary" icon={<Plus strokeWidth={2} />}>
+        New item
+      </Button>
+      <Button role="secondary" icon={<Pencil strokeWidth={2} />}>
+        Edit
+      </Button>
+      <Button role="destructive" icon={<Trash2 strokeWidth={2} />}>
+        Delete
+      </Button>
+    </div>
+  );
+}

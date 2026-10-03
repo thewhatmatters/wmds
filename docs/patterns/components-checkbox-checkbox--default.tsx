@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { Checkbox } from "@whatmatters/wmds";
 
-function TermsCheckbox() {
+export function TermsCheckbox() {
   const [checked, setChecked] = useState(false);
   return (
     <Checkbox

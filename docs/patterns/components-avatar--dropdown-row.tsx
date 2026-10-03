@@ -4,7 +4,7 @@
 
 import { Avatar, Dropdown } from "@whatmatters/wmds";
 
-function AssigneeMenu() {
+export function AssigneeMenu() {
   return (
     <Dropdown.Menu role="listbox" aria-label="Assignee">
       <li role="presentation">

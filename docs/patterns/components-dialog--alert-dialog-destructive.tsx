@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { AlertDialog, Button } from "@whatmatters/wmds";
 
-function DeleteProjectAlert() {
+export function DeleteProjectAlert() {
   const [open, setOpen] = useState(false);
 
   return (

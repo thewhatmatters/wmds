@@ -11,6 +11,8 @@ import {
   cardLayoutBodyOccupantPadYClasses,
   cardLayoutBodyOccupantWellClasses,
   cardTitleClasses,
+  type ChartCartesianPoint,
+  type SelectOption,
 } from "@whatmatters/wmds";
 
 const config = chartSeriesConfigFromKeys([
@@ -18,15 +20,25 @@ const config = chartSeriesConfigFromKeys([
   { key: "available", label: "Available units" },
 ]);
 
-<Card shape="rounded" className="max-w-lg">
-  <Card.Header
-    start={<h2 className={cardTitleClasses}>Occupancy history</h2>}
-    end={<Select aria-label="Reporting period" size="sm" options={periodOptions} defaultValue="month" className="w-36" />}
-  />
-  <Card.Body>
-    <div className={`flex flex-col gap-3 ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}>
-      <Chart.Cartesian data={data} config={config} periodKind="month" minHeight={220} />
-      <Chart.Legend config={config} />
-    </div>
-  </Card.Body>
-</Card>
+export function OccupancyHistoryCard({
+  data,
+  periodOptions,
+}: {
+  data: ChartCartesianPoint[];
+  periodOptions: SelectOption[];
+}) {
+  return (
+    <Card shape="rounded" className="max-w-lg">
+      <Card.Header
+        start={<h2 className={cardTitleClasses}>Occupancy history</h2>}
+        end={<Select aria-label="Reporting period" size="sm" options={periodOptions} defaultValue="month" className="w-36" />}
+      />
+      <Card.Body>
+        <div className={`flex flex-col gap-3 ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}>
+          <Chart.Cartesian data={data} config={config} periodKind="month" minHeight={220} />
+          <Chart.Legend config={config} />
+        </div>
+      </Card.Body>
+    </Card>
+  );
+}

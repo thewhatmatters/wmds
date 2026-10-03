@@ -5,26 +5,36 @@
 import { Apple, MapPin, Map as MapIcon } from "lucide-react";
 import { TaskRows } from "@whatmatters/wmds";
 
-<TaskRows variant="list">
-  <TaskRows.Item
-    label="Cone supplier"
-    meta="0.4 mi"
-    icon={<MapPin strokeWidth={2} />}
-    defaultOpen
-    detailsLabel="Open in"
-    detailsLayout="actions"
-  >
-    <TaskRows.Detail
-      variant="button"
-      label="Apple Maps"
-      icon={<Apple strokeWidth={2} />}
-      onPress={() => openAppleMaps()}
-    />
-    <TaskRows.Detail
-      variant="button"
-      label="Google Maps"
-      icon={<MapIcon strokeWidth={2} />}
-      onPress={() => openGoogleMaps()}
-    />
-  </TaskRows.Item>
-</TaskRows>
+export function SupplierDirections({
+  onOpenAppleMaps,
+  onOpenGoogleMaps,
+}: {
+  onOpenAppleMaps: () => void;
+  onOpenGoogleMaps: () => void;
+}) {
+  return (
+    <TaskRows variant="list">
+      <TaskRows.Item
+        label="Cone supplier"
+        meta="0.4 mi"
+        icon={<MapPin strokeWidth={2} />}
+        defaultOpen
+        detailsLabel="Open in"
+        detailsLayout="actions"
+      >
+        <TaskRows.Detail
+          variant="button"
+          label="Apple Maps"
+          icon={<Apple strokeWidth={2} />}
+          onPress={onOpenAppleMaps}
+        />
+        <TaskRows.Detail
+          variant="button"
+          label="Google Maps"
+          icon={<MapIcon strokeWidth={2} />}
+          onPress={onOpenGoogleMaps}
+        />
+      </TaskRows.Item>
+    </TaskRows>
+  );
+}

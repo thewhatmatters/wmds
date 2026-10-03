@@ -147,7 +147,7 @@ export function StartAProject({ initialOpen = true }: { initialOpen?: boolean })
             <div className="flex flex-col gap-3">
               <h2 className="type-heading-1 text-fg tracking-tight">What do you need?</h2>
               <p className="type-body text-fg">
-                Pick everything that fits. We'll shape the work around it.
+                Pick everything that fits. We&apos;ll shape the work around it.
               </p>
             </div>
             <SelectableCard.Group
@@ -180,7 +180,7 @@ export function StartAProject({ initialOpen = true }: { initialOpen?: boolean })
         {phase.kind === "step" && phase.step === 2 ? (
           <>
             <div className="flex flex-col gap-3">
-              <h2 className="type-heading-1 text-fg tracking-tight">What's the budget?</h2>
+              <h2 className="type-heading-1 text-fg tracking-tight">What&apos;s the budget?</h2>
               <p className="type-body text-fg">
                 A range is enough. We can tighten it after the first conversation.
               </p>
@@ -199,7 +199,7 @@ export function StartAProject({ initialOpen = true }: { initialOpen?: boolean })
             <div className="flex flex-col gap-3">
               <h2 className="type-heading-1 text-fg tracking-tight">About you</h2>
               <p className="type-body text-fg">
-                A few sentences is enough. We'll reply to the email you leave here.
+                A few sentences is enough. We&apos;ll reply to the email you leave here.
               </p>
             </div>
             <IntakeForm values={about} onChange={setAbout} />
@@ -210,7 +210,7 @@ export function StartAProject({ initialOpen = true }: { initialOpen?: boolean })
             <div className="flex flex-col gap-3">
               <h2 className="type-heading-1 text-fg tracking-tight">Book a call</h2>
               <p className="type-body text-fg">
-                Pick a time, or skip this and we'll write to you instead.
+                Pick a time, or skip this and we&apos;ll write to you instead.
               </p>
             </div>
             <CalEmbed onSkip={() => setPhase({ kind: "done", variant: "emailed" })}>
@@ -379,7 +379,7 @@ export function StartAProject({ initialOpen = true }: { initialOpen?: boolean })
             <div className="flex flex-col gap-3">
               <h2 className="type-heading-1 text-fg tracking-tight">What do you need?</h2>
               <p className="type-body text-fg">
-                Pick everything that fits. We'll shape the work around it.
+                Pick everything that fits. We&apos;ll shape the work around it.
               </p>
             </div>
             <SelectableCard.Group
@@ -412,7 +412,7 @@ export function StartAProject({ initialOpen = true }: { initialOpen?: boolean })
         {phase.kind === "step" && phase.step === 2 ? (
           <>
             <div className="flex flex-col gap-3">
-              <h2 className="type-heading-1 text-fg tracking-tight">What's the budget?</h2>
+              <h2 className="type-heading-1 text-fg tracking-tight">What&apos;s the budget?</h2>
               <p className="type-body text-fg">
                 A range is enough. We can tighten it after the first conversation.
               </p>
@@ -431,7 +431,7 @@ export function StartAProject({ initialOpen = true }: { initialOpen?: boolean })
             <div className="flex flex-col gap-3">
               <h2 className="type-heading-1 text-fg tracking-tight">About you</h2>
               <p className="type-body text-fg">
-                A few sentences is enough. We'll reply to the email you leave here.
+                A few sentences is enough. We&apos;ll reply to the email you leave here.
               </p>
             </div>
             <IntakeForm values={about} onChange={setAbout} />
@@ -442,7 +442,7 @@ export function StartAProject({ initialOpen = true }: { initialOpen?: boolean })
             <div className="flex flex-col gap-3">
               <h2 className="type-heading-1 text-fg tracking-tight">Book a call</h2>
               <p className="type-body text-fg">
-                Pick a time, or skip this and we'll write to you instead.
+                Pick a time, or skip this and we&apos;ll write to you instead.
               </p>
             </div>
             <CalEmbed onSkip={() => setPhase({ kind: "done", variant: "emailed" })}>

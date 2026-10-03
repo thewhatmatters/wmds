@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { Switch } from "@whatmatters/wmds";
 
-function NotificationsSwitch() {
+export function NotificationsSwitch() {
   const [checked, setChecked] = useState(false);
   return (
     <Switch

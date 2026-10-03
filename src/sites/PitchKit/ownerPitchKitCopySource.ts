@@ -1,6 +1,7 @@
 import { creatorIdentityStripCopySource } from "./creatorIdentityCopySource";
 import { ownerAccountChromeCopySource } from "./ownerChromeCopySource";
 import { publicPastBrandsCopySource } from "./pastBrandsCopySource";
+import { pitchKitKitTypesCopySource } from "./shareablePitchKitCopySource";
 import {
   pitchKitBrandClasses,
   pitchKitCardWellClasses,
@@ -44,18 +45,29 @@ import {
 /** Authenticated kit body — Graph KPIs + hide/restore on selected posts. */
 export const ownerPitchKitBodyCopySource = `
 ${creatorIdentityStripCopySource}
+${pitchKitKitTypesCopySource}
 ${publicPastBrandsCopySource}
 
-function pitchKitIntroIsEmpty(intro) {
+interface OwnerPitchKitProps extends PitchKitPageData {
+  reachState?: PitchKitReachState;
+}
+
+function pitchKitIntroIsEmpty(intro: string) {
   return intro.trim().length === 0;
 }
 
-function PublicIntro({ intro }) {
+function PublicIntro({ intro }: { intro: string }) {
   if (pitchKitIntroIsEmpty(intro)) return null;
   return <p className="${pitchKitIntroClasses}">{intro}</p>;
 }
 
-function OwnerReachCard({ reachState, reachData }) {
+function OwnerReachCard({
+  reachState,
+  reachData,
+}: {
+  reachState: PitchKitReachState;
+  reachData: ChartCartesianPoint[];
+}) {
   return (
     <Card
       variant="outlined"
@@ -109,7 +121,7 @@ function OwnerReachCard({ reachState, reachData }) {
   );
 }
 
-function OwnerCountries({ countries }) {
+function OwnerCountries({ countries }: { countries: ChartRankedBarItem[] }) {
   const topCountries = countries.slice(0, 3);
   if (topCountries.length === 0) return null;
 
@@ -143,14 +155,23 @@ function OwnerCountries({ countries }) {
   );
 }
 
-function OwnerPitchKit({ identity, intro, posts, contact, brands, countries, reachData, reachState = "resolved" }) {
+function OwnerPitchKit({
+  identity,
+  intro,
+  posts,
+  contact,
+  brands,
+  countries,
+  reachData,
+  reachState = "resolved",
+}: OwnerPitchKitProps) {
   const [visiblePosts, setVisiblePosts] = useState(posts);
-  const [postNotice, setPostNotice] = useState(null);
-  const [pendingHidePostId, setPendingHidePostId] = useState(null);
+  const [postNotice, setPostNotice] = useState<string | null>(null);
+  const [pendingHidePostId, setPendingHidePostId] = useState<string | null>(null);
   const engagementRate = reachState === "resolved" ? "5.8%" : null;
   const typicalReach = reachState === "resolved" ? "9.3K" : "—";
 
-  function handlePostAction(postId, actionId) {
+  function handlePostAction(postId: string, actionId: string) {
     if (actionId === "hide") {
       setPendingHidePostId(postId);
     }
@@ -269,7 +290,7 @@ function OwnerPitchKit({ identity, intro, posts, contact, brands, countries, rea
                     <span key={label} className="${pitchKitPostMetricClasses}">
                       <span className="${pitchKitPostMetricLabelClasses}">{label}</span>
                       <span className="${pitchKitPostMetricValueClasses}">
-                        {compactNumber.format(value)}
+                        {compactNumber.format(value as number)}
                       </span>
                     </span>
                   ))}
@@ -325,7 +346,7 @@ function OwnerPitchKit({ identity, intro, posts, contact, brands, countries, rea
 `;
 
 export const ownerPitchKitPageCopySource = `
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import {
   AlertDialog,
   Avatar,
@@ -347,6 +368,8 @@ import {
   cardTitleClasses,
   chartSeriesConfigFromKeys,
   toast,
+  type ChartCartesianPoint,
+  type ChartRankedBarItem,
 } from "@whatmatters/wmds";
 import { EyeOff } from "lucide-react";
 
@@ -363,7 +386,15 @@ const compactNumber = new Intl.NumberFormat("en", {
 ${ownerAccountChromeCopySource}
 ${ownerPitchKitBodyCopySource}
 
-export function OwnerPitchKitPage({ identity, intro, posts, contact, brands, countries, reachData }) {
+export function OwnerPitchKitPage({
+  identity,
+  intro,
+  posts,
+  contact,
+  brands,
+  countries,
+  reachData,
+}: PitchKitPageData) {
   const [view, setView] = useState("pitchkit");
 
   return (

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { IconButton, Tooltip } from "@whatmatters/wmds";
 import { Info } from "lucide-react";
 
-function ControlledTooltip() {
+export function ControlledTooltip() {
   const [open, setOpen] = useState(false);
 
   return (

@@ -101,7 +101,7 @@ import { useState } from "react";
 import { Button, Input, Sheet } from "@whatmatters/wmds";
 import { dialogFooterActionsClasses } from "@whatmatters/wmds";
 
-function FilterSheet() {
+export function FilterSheet() {
   const [open, setOpen] = useState(false);
 
   return (
@@ -177,7 +177,7 @@ export const EndSheet: Story = {
 import { useState } from "react";
 import { Button, Sheet, Switch } from "@whatmatters/wmds";
 
-function SettingsSheet() {
+export function SettingsSheet() {
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState(true);
 

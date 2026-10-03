@@ -644,17 +644,21 @@ export const PostReachDistribution: Story = {
     `
 import { Chart } from "@whatmatters/wmds";
 
-<Chart.DistributionStrip
-  aria-label="Reach distribution for six recent posts"
-  items={posts.map((post, index) => ({
-    id: post.id,
-    label: \`#\${index + 1}\`,
-    value: post.reach,
-  }))}
-  metricLabel="Reach"
-  reference={{ value: 9300, label: "Typical 9.3K" }}
-  minHeight={240}
-/>
+export function PostReachDistribution({ posts }: { posts: { id: string; reach: number }[] }) {
+  return (
+    <Chart.DistributionStrip
+      aria-label="Reach distribution for six recent posts"
+      items={posts.map((post, index) => ({
+        id: post.id,
+        label: \`#\${index + 1}\`,
+        value: post.reach,
+      }))}
+      metricLabel="Reach"
+      reference={{ value: 9300, label: "Typical 9.3K" }}
+      minHeight={240}
+    />
+  );
+}
     `,
   ),
   render: () => (
@@ -681,16 +685,28 @@ export const AudienceActivityHeatmap: Story = {
       },
     },
     `
-import { Chart } from "@whatmatters/wmds";
+import { Chart, type ChartHeatmapAxisItem, type ChartHeatmapCell } from "@whatmatters/wmds";
 
-<Chart.Heatmap
-  aria-label="Illustrative audience activity by day and time"
-  rows={rows}
-  columns={columns}
-  cells={cells}
-  metricLabel="Activity"
-  minHeight={240}
-/>
+export function AudienceActivityHeatmap({
+  rows,
+  columns,
+  cells,
+}: {
+  rows: ChartHeatmapAxisItem[];
+  columns: ChartHeatmapAxisItem[];
+  cells: ChartHeatmapCell[];
+}) {
+  return (
+    <Chart.Heatmap
+      aria-label="Illustrative audience activity by day and time"
+      rows={rows}
+      columns={columns}
+      cells={cells}
+      metricLabel="Activity"
+      minHeight={240}
+    />
+  );
+}
     `,
   ),
   render: () => (
@@ -929,25 +945,46 @@ export const OccupancyHistoryInCard: Story = {
       },
     },
     `
-import { Card, Chart, Select, chartSeriesConfigFromKeys, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantPadYClasses, cardLayoutBodyOccupantWellClasses, cardTitleClasses } from "@whatmatters/wmds";
+import {
+  Card,
+  Chart,
+  Select,
+  chartSeriesConfigFromKeys,
+  cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantPadYClasses,
+  cardLayoutBodyOccupantWellClasses,
+  cardTitleClasses,
+  type ChartCartesianPoint,
+  type SelectOption,
+} from "@whatmatters/wmds";
 
 const config = chartSeriesConfigFromKeys([
   { key: "occupied", label: "Occupied units" },
   { key: "available", label: "Available units" },
 ]);
 
-<Card shape="rounded" bodyTerminal className="max-w-lg">
-  <Card.Header
-    start={<h2 className={cardTitleClasses}>Occupancy history</h2>}
-    end={<Select aria-label="Reporting period" size="sm" options={periodOptions} defaultValue="month" className="w-36" />}
-  />
-  <Card.Body>
-    <div className={\`flex flex-col gap-3 \${cardLayoutBodyOccupantPadYClasses} \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantInsetXClasses}\`}>
-      <Chart.Cartesian data={data} config={config} periodKind="month" minHeight={220} animate="initial" />
-      <Chart.Legend config={config} />
-    </div>
-  </Card.Body>
-</Card>
+export function OccupancyHistoryCard({
+  data,
+  periodOptions,
+}: {
+  data: ChartCartesianPoint[];
+  periodOptions: SelectOption[];
+}) {
+  return (
+    <Card shape="rounded" bodyTerminal className="max-w-lg">
+      <Card.Header
+        start={<h2 className={cardTitleClasses}>Occupancy history</h2>}
+        end={<Select aria-label="Reporting period" size="sm" options={periodOptions} defaultValue="month" className="w-36" />}
+      />
+      <Card.Body>
+        <div className={\`flex flex-col gap-3 \${cardLayoutBodyOccupantPadYClasses} \${cardLayoutBodyOccupantWellClasses} \${cardLayoutBodyOccupantInsetXClasses}\`}>
+          <Chart.Cartesian data={data} config={config} periodKind="month" minHeight={220} animate="initial" />
+          <Chart.Legend config={config} />
+        </div>
+      </Card.Body>
+    </Card>
+  );
+}
     `,
     ),
   },

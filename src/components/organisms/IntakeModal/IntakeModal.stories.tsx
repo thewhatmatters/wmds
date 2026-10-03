@@ -108,7 +108,7 @@ export function StartAProjectShell() {
       >
         <h2 className="type-heading-1 text-fg tracking-tight">What do you need?</h2>
         <p className="type-body text-fg">
-          Pick everything that fits. We'll shape the work around it.
+          Pick everything that fits. We&apos;ll shape the work around it.
         </p>
       </IntakeModal>
     </>

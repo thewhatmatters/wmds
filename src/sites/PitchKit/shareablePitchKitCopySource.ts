@@ -40,14 +40,54 @@ import {
   pitchKitTopbarClasses,
 } from "./pitchKitStyles";
 
+/** Kit data shapes — shared by the public kit body and the owner kit body. */
+export const pitchKitKitTypesCopySource = `
+export interface PitchKitPost {
+  id: string;
+  publishedAt: string;
+  imageUrl: string;
+  imageAlt: string;
+  saves: number;
+  reach: number;
+  likes: number;
+  comments: number;
+}
+
+export interface PitchKitContact {
+  email: string;
+  websiteHref: string;
+  websiteLabel: string;
+  location: string;
+}
+
+/** "insufficient" when the 30-day reach series cannot be plotted. */
+export type PitchKitReachState = "resolved" | "insufficient";
+
+export interface PitchKitPageData {
+  identity: PitchKitCreatorIdentity;
+  intro: string;
+  posts: PitchKitPost[];
+  contact: PitchKitContact;
+  brands: PitchKitPastBrand[];
+  countries: ChartRankedBarItem[];
+  reachData: ChartCartesianPoint[];
+}
+`;
+
 export const shareablePitchKitBodyCopySource = `
 ${creatorIdentityStripCopySource}
+${pitchKitKitTypesCopySource}
+interface ShareablePitchKitProps extends PitchKitPageData {
+  reachState?: PitchKitReachState;
+  /** Unsigned visitors who are not the kit owner only. */
+  showCreateBand?: boolean;
+}
 
-function pitchKitIntroIsEmpty(intro) {
+function pitchKitIntroIsEmpty(intro: string) {
   return intro.trim().length === 0;
 }
 
-function PublicIntro({ intro }) {
+function PublicIntro({ intro }: { intro: string }) {
   if (pitchKitIntroIsEmpty(intro)) return null;
   return <p className="${pitchKitIntroClasses}">{intro}</p>;
 }
@@ -78,7 +118,13 @@ function PublicCreatePitchkitBand() {
   );
 }
 
-function PublicReachCard({ reachState, reachData }) {
+function PublicReachCard({
+  reachState,
+  reachData,
+}: {
+  reachState: PitchKitReachState;
+  reachData: ChartCartesianPoint[];
+}) {
   return (
     <Card
       variant="outlined"
@@ -132,7 +178,7 @@ function PublicReachCard({ reachState, reachData }) {
   );
 }
 
-function PublicCountries({ countries }) {
+function PublicCountries({ countries }: { countries: ChartRankedBarItem[] }) {
   const topCountries = countries.slice(0, 3);
   if (topCountries.length === 0) return null;
 
@@ -176,7 +222,7 @@ function ShareablePitchKit({
   reachData,
   reachState = "resolved",
   showCreateBand = true,
-}) {
+}: ShareablePitchKitProps) {
   const engagementRate = reachState === "resolved" ? "5.8%" : null;
   const typicalReach = reachState === "resolved" ? "9.3K" : "—";
 
@@ -239,7 +285,7 @@ function ShareablePitchKit({
                     <span key={label} className="${pitchKitPostMetricClasses}">
                       <span className="${pitchKitPostMetricLabelClasses}">{label}</span>
                       <span className="${pitchKitPostMetricValueClasses}">
-                        {compactNumber.format(value)}
+                        {compactNumber.format(value as number)}
                       </span>
                     </span>
                   ))}
@@ -286,7 +332,7 @@ function ShareablePitchKit({
 `;
 
 export const shareablePitchKitPageCopySource = `
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import {
   Avatar,
   Badge,
@@ -299,6 +345,8 @@ import {
   cardSubtitleClasses,
   cardTitleClasses,
   chartSeriesConfigFromKeys,
+  type ChartCartesianPoint,
+  type ChartRankedBarItem,
 } from "@whatmatters/wmds";
 
 const reachConfig = chartSeriesConfigFromKeys([
@@ -323,7 +371,7 @@ export function ShareablePitchKitPage({
   reachData,
   reachState = "resolved",
   showCreateBand = true,
-}) {
+}: ShareablePitchKitProps) {
   return (
     <main className="${pitchKitPageClasses}">
       <div className="${pitchKitTopbarBandClasses}">

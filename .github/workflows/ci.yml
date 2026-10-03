@@ -70,3 +70,25 @@ jobs:
 
       - name: Storybook interaction tests
         run: npm run test:interactions
+
+  # Every Pattern's Show code, pasted unchanged into a Next 16 / React 19 / strict TypeScript app with
+  # eslint-config-next (the create-next-app 16 setup), must pass tsc and eslint with zero warnings.
+  show-code:
+    name: Show code in a Next app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          cache: npm
+
+      # Runs `prepare`, which builds dist.
+      - name: Install
+        run: npm ci
+
+      - name: Show code in fixtures/next-consumer
+        run: npm run check:show-code

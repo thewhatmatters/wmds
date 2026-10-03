@@ -58,7 +58,7 @@ type Point = { top: number; left: number };
 export const promptChatPatternCopySource = `
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
 import { Check, ChevronDown, ChevronLeft, ChevronRight, Copy, LoaderCircle, Sparkle, Sparkles, ThumbsDown, ThumbsUp, X } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion, type Transition } from "motion/react";
 import {
   Button,
   CalEmbed,
@@ -73,6 +73,7 @@ import {
   IconButton,
   IntakeConfirmation,
   IntakeForm,
+  intakeAboutEmpty,
   Kbd,
   PillGroup,
   PromptBar,
@@ -80,6 +81,10 @@ import {
   TextLink,
   motionTransitionProp,
   useKbdChoiceKeys,
+  type ChatQaPair,
+  type IntakeAboutValues,
+  intakeDetailsMax,
+  isIntakeAboutValid,
 } from "@whatmatters/wmds";
 
 const pageClasses = "flex h-[100svh] min-h-0 w-full flex-col overflow-hidden bg-body";
@@ -99,7 +104,6 @@ const traceTriggerClasses = "!w-auto !gap-1.5";
 const traceBodyClasses =
   "flex w-full flex-col items-start gap-2 border-l border-border-control py-0.5 pl-3";
 const traceLineClasses = "flex items-center gap-2 type-supporting text-muted";
-const thinkingLabelClasses = "type-supporting text-muted";
 const thoughtLabelClasses = "type-supporting text-muted";
 const traceIconClasses = "size-4 shrink-0 text-muted";
 const traceSpinClasses = "size-4 shrink-0 animate-spin text-muted";
@@ -122,30 +126,34 @@ const startOptions = [
   { value: "website", label: "Website", description: "A site that explains the work and earns the next conversation.", number: 2 },
   { value: "product", label: "Product design", description: "Flows, screens, and the details in between.", number: 3 },
   { value: "system", label: "Design system", description: "Components, tokens, and the rules that keep them honest.", number: 4 },
-];
+] as const;
 const startBudgets = [
   { value: "under-10", label: "<$10k", emphasis: "solid" },
   { value: "10-25", label: "$10–25k", emphasis: "solid" },
   { value: "25-50", label: "$25–50k", emphasis: "solid" },
   { value: "50-plus", label: "$50k+", emphasis: "solid" },
   { value: "unsure", label: "Not sure yet", emphasis: "muted" },
-];
-const startGateCopy = {
+] as const;
+type IntakeStep = 1 | 2 | 3 | 4;
+type IntakePhase =
+  | { kind: "step"; step: IntakeStep }
+  | { kind: "done"; variant: "booked" | "emailed" };
+const startGateCopy: Record<IntakeStep, { title: string; subtitle: string }> = {
   1: { title: "Name the work", subtitle: "What are we making?" },
   2: { title: "What's the budget?", subtitle: "A range is enough. We can tighten it after the first conversation." },
   3: { title: "About you", subtitle: "A few sentences is enough. We'll reply to the email you leave here." },
   4: { title: "Book a call", subtitle: "Pick a time, or skip this and we'll write to you instead." },
 };
-const startGateTitle = startGateCopy[1].title;
-const startGateSubtitle = startGateCopy[1].subtitle;
-const aboutEmpty = { name: "", email: "", company: "", url: "", details: "" };
 
-function canContinueStart(step, needs, budget, about) {
+function canContinueStart(
+  step: IntakeStep,
+  needs: readonly string[],
+  budget: string | null,
+  about: IntakeAboutValues,
+) {
   if (step === 1) return needs.length > 0;
   if (step === 2) return budget != null;
-  if (step === 3) {
-    return about.name.trim().length > 0 && about.email.trim().length > 0 && about.details.trim().length > 0;
-  }
+  if (step === 3) return isIntakeAboutValid(about, intakeDetailsMax);
   return false;
 }
 
@@ -153,7 +161,8 @@ const headline = "What should we make?";
 const sampleReply =
   "Brand, product, and the sites that explain them. The studio notes cover how a project starts.";
 const wordStaggerSeconds = 0.06;
-const replyParts = [
+type ReplyPart = { kind: "word"; text: string } | { kind: "source"; text: string; href: string };
+const replyParts: ReplyPart[] = [
   { kind: "word", text: "Brand," },
   { kind: "word", text: "product," },
   { kind: "word", text: "and" },
@@ -174,41 +183,15 @@ const followUps = [
   "What does a brand engagement include?",
   "How do you start a product design?",
 ];
-const thoughtLabel = "Thought for 4 seconds";
-function thoughtForLabel(seconds) {
+function thoughtForLabel(seconds: number) {
   const n = Math.max(1, Math.floor(seconds));
   return n === 1 ? "Thought for 1 second" : "Thought for " + n + " seconds";
 }
 const traceBeatSeconds = 0.48;
 const traceSpinSeconds = 0.32;
 const traceHoldSeconds = 2.08;
-const traces = {
-  steps: [
-    { kind: "check", text: "Read the brief" },
-    { kind: "check", text: "Name the brand" },
-    { kind: "check", text: "Check the product site" },
-    { kind: "check", text: "Find the studio notes" },
-  ],
-  reasoning: [
-    { kind: "prose", text: "Brand, product, and the site have to say the same thing." },
-    { kind: "prose", text: "The notes are where that line gets written down." },
-  ],
-  search: [
-    { kind: "query", text: "sites that explain the brand" },
-    { kind: "source", text: "Studio notes", href: "/notes" },
-    { kind: "source", text: "Product", href: "/product" },
-    { kind: "source", text: "What we make", href: "/services" },
-  ],
-  coding: [
-    { kind: "file", text: "brief.md" },
-    { kind: "file", text: "homepage.tsx" },
-    { kind: "edit", text: "Set the brand line in brief.md" },
-    { kind: "command", text: "npm run validate:composition" },
-  ],
-};
+const traceSteps = ["Read the brief", "Name the brand", "Check the product site", "Find the studio notes"];
 type Point = { top: number; left: number };
-type ReplyPart = (typeof replyParts)[number];
-type ChatQaPair = { question: string; answer: string };
 
 function partDelay(index: number, reduce: boolean, settleSeconds: number) {
   if (reduce || index <= 0) return 0;
@@ -222,7 +205,12 @@ function partDelay(index: number, reduce: boolean, settleSeconds: number) {
   return time;
 }
 
-function intakeQaPairs(needs, budget, about, outcome) {
+function intakeQaPairs(
+  needs: readonly string[],
+  budget: string | null,
+  about: IntakeAboutValues,
+  outcome: "booked" | "emailed",
+): ChatQaPair[] {
   const needsAnswer = startOptions
     .filter((option) => needs.includes(option.value))
     .map((option) => option.label)
@@ -248,19 +236,26 @@ function IntakeExchange({
   reduce,
   onFollowUp,
   onReplyGrown,
+}: {
+  pairs: readonly ChatQaPair[];
+  latest: boolean;
+  reduce: boolean;
+  onFollowUp: (value: string) => void;
+  onReplyGrown: () => void;
 }) {
   const fast = motionTransitionProp("fast");
-  const [mark, setMark] = useState(null);
+  const [mark, setMark] = useState<"up" | "down" | null>(null);
   const [streamDone, setStreamDone] = useState(reduce);
   const [actionsOpen, setActionsOpen] = useState(false);
   const settleSeconds = typeof fast.duration === "number" ? fast.duration : 0.175;
 
   useEffect(() => {
     if (!actionsOpen) return;
-    const onPointerDown = (event) => {
+    const onPointerDown = (event: PointerEvent) => {
       const target = event.target;
       if (!(target instanceof Node)) return;
-      if (target.closest?.("[data-reply-actions]") != null) return;
+      const block = (target as Element).closest?.("[data-reply-actions]");
+      if (block != null) return;
       setActionsOpen(false);
     };
     window.addEventListener("pointerdown", onPointerDown);
@@ -357,10 +352,9 @@ function Exchange({
   onReplyGrown: () => void;
 }) {
   const fast = motionTransitionProp("fast");
-  const lines = traces.steps;
   const [mark, setMark] = useState<"up" | "down" | null>(null);
-  const [revealed, setRevealed] = useState(reduce ? lines.length : 0);
-  const [resolved, setResolved] = useState(reduce ? lines.length : 0);
+  const [revealed, setRevealed] = useState(reduce ? traceSteps.length : 0);
+  const [resolved, setResolved] = useState(reduce ? traceSteps.length : 0);
   const [traceOpen, setTraceOpen] = useState(false);
   const [replyReady, setReplyReady] = useState(reduce);
   const [streamDone, setStreamDone] = useState(reduce);
@@ -377,19 +371,19 @@ function Exchange({
     if (reduce) return;
     const beatMs = traceBeatSeconds * 1000;
     const spinMs = traceSpinSeconds * 1000;
-    const timers = [];
-    for (let index = 1; index <= lines.length; index += 1) {
+    const timers: number[] = [];
+    for (let index = 1; index <= traceSteps.length; index += 1) {
       timers.push(window.setTimeout(() => setRevealed(index), index * beatMs));
       timers.push(window.setTimeout(() => setResolved(index), index * beatMs + spinMs));
     }
     timers.push(window.setTimeout(() => {
       setTraceOpen(false);
       setReplyReady(true);
-    }, (lines.length * traceBeatSeconds + traceHoldSeconds) * 1000));
+    }, (traceSteps.length * traceBeatSeconds + traceHoldSeconds) * 1000));
     return () => {
       for (const timer of timers) window.clearTimeout(timer);
     };
-  }, [reduce, lines.length]);
+  }, [reduce]);
 
   const settleSeconds = typeof fast.duration === "number" ? fast.duration : 0.175;
 
@@ -403,10 +397,11 @@ function Exchange({
 
   useEffect(() => {
     if (!actionsOpen) return;
-    const onPointerDown = (event) => {
+    const onPointerDown = (event: PointerEvent) => {
       const target = event.target;
       if (!(target instanceof Node)) return;
-      if (target.closest?.("[data-reply-actions]") != null) return;
+      const block = (target as Element).closest?.("[data-reply-actions]");
+      if (block != null) return;
       setActionsOpen(false);
     };
     window.addEventListener("pointerdown", onPointerDown);
@@ -442,9 +437,9 @@ function Exchange({
           </Button>
           {traceOpen ? (
             <div className={traceBodyClasses}>
-              {lines.slice(0, revealed).map((entry, index) => (
+              {traceSteps.slice(0, revealed).map((step, index) => (
                 <motion.div
-                  key={entry.text}
+                  key={step}
                   className={traceLineClasses}
                   initial={reduce ? false : { opacity: 0, filter: "blur(4px)" }}
                   animate={{ opacity: 1, filter: "blur(0px)" }}
@@ -455,7 +450,7 @@ function Exchange({
                   ) : (
                     <LoaderCircle className={traceSpinClasses} strokeWidth={2} aria-hidden />
                   )}
-                  {entry.text}
+                  {step}
                 </motion.div>
               ))}
             </div>
@@ -536,8 +531,22 @@ function StartGate({
   onBooked,
   onEmailed,
   onDone,
+}: {
+  phase: IntakePhase;
+  needs: readonly string[];
+  onNeedsChange: (values: string[]) => void;
+  budget: string | null;
+  onBudgetChange: (value: string) => void;
+  about: IntakeAboutValues;
+  onAboutChange: (values: IntakeAboutValues) => void;
+  onCancel: () => void;
+  onBack: () => void;
+  onNext: () => void;
+  onBooked: () => void;
+  onEmailed: () => void;
+  onDone: () => void;
 }) {
-  const step = phase.kind === "step" ? phase.step : 4;
+  const step: IntakeStep = phase.kind === "step" ? phase.step : 4;
   const copy = startGateCopy[step];
   const atStart = phase.kind !== "step" || phase.step <= 1;
   const hideContinue = phase.kind === "done" || (phase.kind === "step" && phase.step === 4);
@@ -546,7 +555,7 @@ function StartGate({
     phase.kind !== "step" || !canContinueStart(phase.step, needs, budget, about);
   const stepOneOpen = phase.kind === "step" && phase.step === 1;
 
-  function toggleNeed(value, checked) {
+  function toggleNeed(value: string, checked: boolean) {
     if (checked) {
       onNeedsChange([...needs, value]);
       return;
@@ -651,17 +660,17 @@ function StartGate({
 export function AskWhatMatters() {
   const reduce = useReducedMotion() === true;
   const travel = motionTransitionProp("medium");
-  const fieldRef = useRef(null);
-  const headlineRef = useRef(null);
-  const stageRef = useRef(null);
-  const threadRef = useRef(null);
-  const composerRef = useRef(null);
+  const fieldRef = useRef<HTMLTextAreaElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const stageRef = useRef<HTMLElement>(null);
+  const threadRef = useRef<HTMLDivElement>(null);
+  const composerRef = useRef<HTMLDivElement>(null);
   const stickToEnd = useRef(true);
   const [startGateOpen, setStartGateOpen] = useState(false);
-  const [startPhase, setStartPhase] = useState({ kind: "step", step: 1 });
-  const [startNeeds, setStartNeeds] = useState([]);
-  const [startBudget, setStartBudget] = useState(null);
-  const [startAbout, setStartAbout] = useState(aboutEmpty);
+  const [startPhase, setStartPhase] = useState<IntakePhase>({ kind: "step", step: 1 });
+  const [startNeeds, setStartNeeds] = useState<string[]>([]);
+  const [startBudget, setStartBudget] = useState<string | null>(null);
+  const [startAbout, setStartAbout] = useState<IntakeAboutValues>(intakeAboutEmpty);
   const suppressScroll = useRef(false);
   const nextId = useRef(1);
   const [draft, setDraft] = useState("");
@@ -738,14 +747,14 @@ export function AskWhatMatters() {
     setStartPhase({ kind: "step", step: 1 });
     setStartNeeds([]);
     setStartBudget(null);
-    setStartAbout(aboutEmpty);
+    setStartAbout(intakeAboutEmpty);
   }
 
   function openStartGate() {
     setStartPhase({ kind: "step", step: 1 });
     setStartNeeds([]);
     setStartBudget(null);
-    setStartAbout(aboutEmpty);
+    setStartAbout(intakeAboutEmpty);
     setStartGateOpen(true);
   }
 
@@ -866,13 +875,13 @@ export function AskWhatMatters() {
                   onCancel={closeStartGate}
                   onBack={() => {
                     if (startPhase.kind !== "step" || startPhase.step <= 1) return;
-                    setStartPhase({ kind: "step", step: startPhase.step - 1 });
+                    setStartPhase({ kind: "step", step: (startPhase.step - 1) as IntakeStep });
                   }}
                   onNext={() => {
                     if (startPhase.kind !== "step") return;
                     if (!canContinueStart(startPhase.step, startNeeds, startBudget, startAbout)) return;
                     if (startPhase.step >= 4) return;
-                    setStartPhase({ kind: "step", step: startPhase.step + 1 });
+                    setStartPhase({ kind: "step", step: (startPhase.step + 1) as IntakeStep });
                   }}
                   onBooked={() => setStartPhase({ kind: "done", variant: "booked" })}
                   onEmailed={() => setStartPhase({ kind: "done", variant: "emailed" })}
@@ -914,7 +923,7 @@ function ReplyWord({
   index: number;
   reduce: boolean;
   delay: number;
-  settle: { duration?: number; ease?: unknown };
+  settle: Transition;
   onDone?: () => void;
 }) {
   return (

@@ -50,6 +50,10 @@ import {
   Chart,
   PageHeader,
   chartSeriesConfigFromKeys,
+  type ChartDistributionItem,
+  type ChartHeatmapAxisItem,
+  type ChartHeatmapCell,
+  type ChartUnitGridPart,
 } from "@whatmatters/wmds";
 
 const compositionConfig = chartSeriesConfigFromKeys([
@@ -58,7 +62,15 @@ const compositionConfig = chartSeriesConfigFromKeys([
   { key: "unspecified", label: "Not specified" },
 ]);
 
-export function ChartComparison({ composition, postReach, activity }) {
+export function ChartComparison({
+  composition,
+  postReach,
+  activity,
+}: {
+  composition: ChartUnitGridPart[];
+  postReach: ChartDistributionItem[];
+  activity: { rows: ChartHeatmapAxisItem[]; columns: ChartHeatmapAxisItem[]; cells: ChartHeatmapCell[] };
+}) {
   return (
     <main className="grid-page min-h-screen bg-body [--grid-column-gap:8px] [--grid-max:1140px] [padding-bottom:44px]">
       <div className="band pt-8">

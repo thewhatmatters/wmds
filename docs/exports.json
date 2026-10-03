@@ -771,6 +771,8 @@
   ],
   "lib": [
     "cn",
+    "buttonSizeForCluster",
+    "iconButtonSizeForCluster",
     "motionTransition",
     "motionTransitionProp",
     "focusRingTransitionClasses",

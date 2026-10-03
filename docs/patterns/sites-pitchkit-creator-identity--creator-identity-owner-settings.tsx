@@ -11,7 +11,26 @@ const compactNumber = new Intl.NumberFormat("en", {
 });
 
 
-function CreatorIdentityStrip({ identity, nameAs = "h1", showProfessionalChip = false }) {
+export interface PitchKitCreatorIdentity {
+  displayName?: string;
+  /** Without the @ — shown as @handle, shared as /k/[handle]. */
+  handle: string;
+  profilePictureUrl?: string;
+  followersCount?: number;
+  professionalAccount?: "Business" | "Creator";
+  connected?: boolean;
+  lastSyncedLabel?: string;
+}
+
+function CreatorIdentityStrip({
+  identity,
+  nameAs = "h1",
+  showProfessionalChip = false,
+}: {
+  identity: PitchKitCreatorIdentity;
+  nameAs?: "h1" | "p";
+  showProfessionalChip?: boolean;
+}) {
   const NameTag = nameAs;
   const avatarName = identity.displayName ?? identity.handle;
   const handleLabel = `@${identity.handle}`;
@@ -53,7 +72,7 @@ function CreatorIdentityStrip({ identity, nameAs = "h1", showProfessionalChip = 
 }
 
 
-export function CreatorIdentityOwnerSettingsPage({ identity }) {
+export function CreatorIdentityOwnerSettingsPage({ identity }: { identity: PitchKitCreatorIdentity }) {
   const sharePath = `/k/${identity.handle}`;
 
   function copyShareKitUrl() {

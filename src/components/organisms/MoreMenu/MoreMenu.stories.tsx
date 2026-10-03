@@ -99,7 +99,7 @@ export const ActionMenu: Story = {
 import { Download, Share2 } from "lucide-react";
 import { ButtonIcon, MoreMenu } from "@whatmatters/wmds";
 
-function MarketActions() {
+export function MarketActions() {
   return (
     <MoreMenu
       aria-label="More market actions"
@@ -154,7 +154,7 @@ import {
   SegmentedControl,
 } from "@whatmatters/wmds";
 
-function MarketCardHeader() {
+export function MarketCardHeader() {
   const [view, setView] = useState("overview");
 
   return (
@@ -162,7 +162,7 @@ function MarketCardHeader() {
       <Card.Header
         start={
           <>
-            <h2 className={cardTitleClasses}>Texas Farmers' Market at Mueller</h2>
+            <h2 className={cardTitleClasses}>Texas Farmers&apos; Market at Mueller</h2>
             <p className={cardSubtitleClasses}>2006 Philomena St. · Austin, TX</p>
           </>
         }

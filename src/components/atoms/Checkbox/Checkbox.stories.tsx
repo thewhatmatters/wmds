@@ -95,7 +95,7 @@ export const Default: Story = {
 import { useState } from "react";
 import { Checkbox } from "@whatmatters/wmds";
 
-function TermsCheckbox() {
+export function TermsCheckbox() {
   const [checked, setChecked] = useState(false);
   return (
     <Checkbox
@@ -125,7 +125,7 @@ export const WithDescription: Story = {
 import { useState } from "react";
 import { Checkbox } from "@whatmatters/wmds";
 
-function NewsletterCheckbox() {
+export function NewsletterCheckbox() {
   const [checked, setChecked] = useState(false);
   return (
     <Checkbox
