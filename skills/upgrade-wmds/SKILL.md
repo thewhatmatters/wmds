@@ -67,7 +67,7 @@ This rewrites `.claude/skills/*` and `skills-lock.json` at the release tag. Comm
 
 ## 6. Run the app's checks
 
-Run the app's own install, lint, typecheck, unit tests, and build (for example `npm run lint && npx tsc --noEmit && npm run build`). Then open each page that uses a component named in the changelog and check it at mobile, tablet, and desktop widths.
+Run `npx wmds-check` (it reports pasted patterns that still differ from the installed version), then the app's own install, lint, typecheck, unit tests, and build (for example `npm run lint && npx tsc --noEmit && npm run build`). Then open each page that uses a component named in the changelog and check it at mobile, tablet, and desktop widths.
 
 ## 7. Commit
 

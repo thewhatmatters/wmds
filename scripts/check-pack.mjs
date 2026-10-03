@@ -30,6 +30,7 @@ const required = [
   "README.md",
   "CONSUMING.md",
   "CHANGELOG.md",
+  "bin/wmds-check.mjs",
   "public/rive/interactive-icon-set.riv",
   "public/rive/CREDITS.md",
   "docs/README.md",
