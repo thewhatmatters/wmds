@@ -38,7 +38,7 @@ const required = [
   "docs/component-contracts.md",
   "docs/exports.json",
   "docs/patterns/index.json",
-  ...exportTargets.map((target) => target.replace(/^\.\//, "")),
+  ...exportTargets.filter((target) => !target.includes("*")).map((target) => target.replace(/^\.\//, "")),
 ];
 
 const forbidden = [
