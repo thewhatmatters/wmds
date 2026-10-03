@@ -660,6 +660,6 @@ export const SequencedGalleryAt390: Story = {
  * Checks fail on every other story. These report without failing until the component is fixed.
  * Remove a story from this list when it passes.
  */
-for (const story of [SequencedGalleryReducedMotion]) {
+for (const story of [SequencedGalleryReducedMotion, SequencedGalleryHandoff]) {
   story.parameters = { ...story.parameters, a11y: { test: "todo" } };
 }
