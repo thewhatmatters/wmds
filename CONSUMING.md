@@ -133,6 +133,28 @@ npx skills add 'thewhatmatters/wmds#v0.2.0' -s use-wmds -s upgrade-wmds -s repor
 
 The command copies the skills into `.claude/skills/` and records them in `skills-lock.json`; commit both. Add more `-a` agents (for example `-a codex`) to install for them too. The **upgrade-wmds** skill re-runs the command with the new tag.
 
+## Consumer check
+
+The package ships `wmds-check`, an audit to run in the app's CI:
+
+```bash
+npx wmds-check                     # scans src, app, components, pages
+npx wmds-check app components --max-warnings 0
+```
+
+| Rule | Level | Flags |
+|------|-------|-------|
+| `raw-control` | error | `<button>`, `<input>`, `<select>`, `<textarea>` where a WMDS component exists |
+| `important-override` | error | `!` utilities in `className` on a component imported from `@whatmatters/wmds` |
+| `raw-color` | error | hex, `rgb()`, `hsl()`, `oklch()` values in `className` or `style` |
+| `raw-type` | warning | `text-sm`-style sizes or `text-[…]` — use `type-*` utilities |
+| `raw-motion` | warning | `duration-[…]`, `ease-[…]`, `delay-[…]`, numeric Motion durations |
+| `pattern-drift` | warning | a pasted pattern differs from `docs/patterns/<id>.tsx` in the installed version |
+| `pattern-stale` | warning | a pasted pattern's header names an older version |
+| `pattern-removed` | error | a pasted pattern's id no longer ships |
+
+It is a line-based heuristic, not a parser. Silence a deliberate exception on the line or the line above with `// wmds-check-ignore <rule> <reason>`, and report the gap to WMDS. `--json` prints machine-readable output.
+
 ## Wire up styles
 
 ```tsx
