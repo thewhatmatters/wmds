@@ -1,9 +1,9 @@
-// @whatmatters/wmds@0.2.0 · Pattern — past brands (public)
+// @thewhatmatters/wmds@0.2.0 · Pattern — past brands (public)
 // Storybook: Sites/PitchKit/Past brands → Pattern — past brands (public) (?path=/story/sites-pitchkit-past-brands--past-brands-public)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
-import { Avatar, Card, Chip, cardTitleClasses } from "@whatmatters/wmds";
+import { Avatar, Card, Chip, cardTitleClasses } from "@thewhatmatters/wmds";
 
 const compactNumber = new Intl.NumberFormat("en", {
   notation: "compact",

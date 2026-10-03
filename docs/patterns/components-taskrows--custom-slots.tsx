@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — custom leading / trailing
+// @thewhatmatters/wmds@0.2.0 · Pattern — custom leading / trailing
 // Storybook: Components/TaskRows → Pattern — custom leading / trailing (?path=/story/components-taskrows--custom-slots)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Badge, Status, TaskRows } from "@whatmatters/wmds";
+import { Badge, Status, TaskRows } from "@thewhatmatters/wmds";
 
 <TaskRows variant="list">
   <TaskRows.Item

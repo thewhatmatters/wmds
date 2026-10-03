@@ -41,7 +41,7 @@ npm run validate:composition  # molecules/organisms must compose atoms (CI)
 
 ## Status
 
-**Shipped (exported from `@whatmatters/wmds`):**
+**Shipped (exported from `@thewhatmatters/wmds`):**
 
 | Tier | Components |
 |------|------------|

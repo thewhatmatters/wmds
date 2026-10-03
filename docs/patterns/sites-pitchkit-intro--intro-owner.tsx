@@ -1,9 +1,9 @@
-// @whatmatters/wmds@0.2.0 · Pattern — intro (owner)
+// @thewhatmatters/wmds@0.2.0 · Pattern — intro (owner)
 // Storybook: Sites/PitchKit/Intro → Pattern — intro (owner) (?path=/story/sites-pitchkit-intro--intro-owner)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { Avatar, Button, Chip, TextArea } from "@whatmatters/wmds";
+import { Avatar, Button, Chip, TextArea } from "@thewhatmatters/wmds";
 
 const compactNumber = new Intl.NumberFormat("en", {
   notation: "compact",

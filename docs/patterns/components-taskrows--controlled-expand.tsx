@@ -1,9 +1,9 @@
-// @whatmatters/wmds@0.2.0 · Pattern — controlled expand
+// @thewhatmatters/wmds@0.2.0 · Pattern — controlled expand
 // Storybook: Components/TaskRows → Pattern — controlled expand (?path=/story/components-taskrows--controlled-expand)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { Button, TaskRows } from "@whatmatters/wmds";
+import { Button, TaskRows } from "@thewhatmatters/wmds";
 
 export function ReorderPanel() {
   const [open, setOpen] = useState(false);

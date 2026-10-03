@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — dropdown row
+// @thewhatmatters/wmds@0.2.0 · Pattern — dropdown row
 // Storybook: Components/Avatar → Pattern — dropdown row (?path=/story/components-avatar--dropdown-row)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Avatar, Dropdown } from "@whatmatters/wmds";
+import { Avatar, Dropdown } from "@thewhatmatters/wmds";
 
 export function AssigneeMenu() {
   return (

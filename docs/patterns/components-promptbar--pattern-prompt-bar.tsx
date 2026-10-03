@@ -1,9 +1,9 @@
-// @whatmatters/wmds@0.2.0 · Pattern — prompt bar
+// @thewhatmatters/wmds@0.2.0 · Pattern — prompt bar
 // Storybook: Components/PromptBar → Pattern — prompt bar (?path=/story/components-promptbar--pattern-prompt-bar)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { PromptBar } from "@whatmatters/wmds";
+import { PromptBar } from "@thewhatmatters/wmds";
 
 export function AskPrompt() {
   const [draft, setDraft] = useState("");

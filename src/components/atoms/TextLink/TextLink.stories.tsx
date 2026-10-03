@@ -63,7 +63,7 @@ export const InlineProse: Story = {
       },
     },
     `
-import { TextLink } from "@whatmatters/wmds";
+import { TextLink } from "@thewhatmatters/wmds";
 
 <p className="type-body text-fg">
   Read my <TextLink href="/writing">writing</TextLink>, or browse the projects I’ve built.
@@ -90,7 +90,7 @@ export const SupportingCopy: Story = {
       },
     },
     `
-import { TextLink } from "@whatmatters/wmds";
+import { TextLink } from "@thewhatmatters/wmds";
 
 <p className="type-supporting text-muted">
   By continuing, you agree to the <TextLink href="/terms">terms of service</TextLink>.
@@ -120,7 +120,7 @@ export const ExternalDestination: Story = {
       },
     },
     `
-import { TextLink } from "@whatmatters/wmds";
+import { TextLink } from "@thewhatmatters/wmds";
 
 <p className="type-body text-fg">
   View the project on <TextLink href="https://github.com/" external>GitHub</TextLink>.

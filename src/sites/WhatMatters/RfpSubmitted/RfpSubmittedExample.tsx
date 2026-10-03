@@ -313,7 +313,7 @@ import {
   cardTitleClasses,
   cn,
   useConfettiOnMount,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const projectOptions = [
   { value: "product", label: "Product" },

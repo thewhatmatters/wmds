@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — Card header cluster
+// @thewhatmatters/wmds@0.2.0 · Pattern — Card header cluster
 // Storybook: Components/MoreMenu → Pattern — Card header cluster (?path=/story/components-moremenu--in-card-header)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -11,7 +11,7 @@ import {
   cardSubtitleClasses,
   MoreMenu,
   SegmentedControl,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 export function MarketCardHeader() {
   const [view, setView] = useState("overview");

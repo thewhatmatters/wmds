@@ -14,7 +14,7 @@ import {
 
 export const introOwnerCopySource = `
 import { useState } from "react";
-import { Avatar, Button, Chip, TextArea } from "@whatmatters/wmds";
+import { Avatar, Button, Chip, TextArea } from "@thewhatmatters/wmds";
 
 const compactNumber = new Intl.NumberFormat("en", {
   notation: "compact",
@@ -113,7 +113,7 @@ export function IntroOwnerPage({
 `;
 
 export const introPublicCopySource = `
-import { Avatar, Chip } from "@whatmatters/wmds";
+import { Avatar, Chip } from "@thewhatmatters/wmds";
 
 const compactNumber = new Intl.NumberFormat("en", {
   notation: "compact",

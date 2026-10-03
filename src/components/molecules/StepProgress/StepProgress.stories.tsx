@@ -50,7 +50,7 @@ export const StepProgressPattern: Story = {
     </div>
   ),
   parameters: storyCopySource(`
-import { StepProgress } from "@whatmatters/wmds";
+import { StepProgress } from "@thewhatmatters/wmds";
 
 export function IntakeStep() {
   return <StepProgress step={2} steps={4} />;

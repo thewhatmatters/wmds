@@ -98,7 +98,7 @@ const items = [
 export const HorizontalRail: Story = {
   name: "Pattern — horizontal rail",
   parameters: storyCopySource(`
-import { Chip } from "@whatmatters/wmds";
+import { Chip } from "@thewhatmatters/wmds";
 
 const categories = [
   "Strategy",

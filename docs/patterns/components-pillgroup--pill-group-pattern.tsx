@@ -1,9 +1,9 @@
-// @whatmatters/wmds@0.2.0 · Pattern — pill group
+// @thewhatmatters/wmds@0.2.0 · Pattern — pill group
 // Storybook: Components/PillGroup → Pattern — pill group (?path=/story/components-pillgroup--pill-group-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { PillGroup } from "@whatmatters/wmds";
+import { PillGroup } from "@thewhatmatters/wmds";
 
 export function BudgetPills() {
   const [value, setValue] = useState<string | null>(null);

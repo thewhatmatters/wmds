@@ -17,7 +17,7 @@ run("vite build --config vite.lib.config.ts");
 run("npx tsc -p tsconfig.lib.json");
 run("npx @tailwindcss/cli -i ./src/styles/wmds.css -o ./dist/styles.css --minify");
 
-// Theme partials — every file theme.css imports, so `@import "@whatmatters/wmds/theme.css"` resolves in an app.
+// Theme partials — every file theme.css imports, so `@import "@thewhatmatters/wmds/theme.css"` resolves in an app.
 for (const file of readdirSync(themeDir)) {
   if (file.endsWith(".css")) copyFileSync(path.join(themeDir, file), path.join(dist, file));
 }
@@ -71,4 +71,4 @@ writeFileSync(
 
 run("node scripts/validate-manifest.mjs");
 
-console.log("Built @whatmatters/wmds → dist/");
+console.log("Built @thewhatmatters/wmds → dist/");

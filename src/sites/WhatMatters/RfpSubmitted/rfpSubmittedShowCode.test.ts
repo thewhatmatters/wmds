@@ -27,6 +27,6 @@ describe("RFP submitted show code", () => {
     expect(shownPage).toBe(livePage.trim());
     expect(rfpSubmittedCopySource).not.toContain("ExampleGridControls");
     expect(rfpSubmittedCopySource).not.toContain("submitRef");
-    expect(rfpSubmittedCopySource).toContain('from "@whatmatters/wmds"');
+    expect(rfpSubmittedCopySource).toContain('from "@thewhatmatters/wmds"');
   });
 });

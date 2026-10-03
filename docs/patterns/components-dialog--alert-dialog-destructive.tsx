@@ -1,9 +1,9 @@
-// @whatmatters/wmds@0.2.0 · Pattern — alert dialog (destructive)
+// @thewhatmatters/wmds@0.2.0 · Pattern — alert dialog (destructive)
 // Storybook: Components/Dialog → Pattern — alert dialog (destructive) (?path=/story/components-dialog--alert-dialog-destructive)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { AlertDialog, Button } from "@whatmatters/wmds";
+import { AlertDialog, Button } from "@thewhatmatters/wmds";
 
 export function DeleteProjectAlert() {
   const [open, setOpen] = useState(false);

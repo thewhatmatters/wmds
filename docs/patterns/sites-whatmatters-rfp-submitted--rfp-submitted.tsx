@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — RFP submitted
+// @thewhatmatters/wmds@0.2.0 · Pattern — RFP submitted
 // Storybook: Sites/WhatMatters/RFP submitted → Pattern — RFP submitted (?path=/story/sites-whatmatters-rfp-submitted--rfp-submitted)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -18,7 +18,7 @@ import {
   cardTitleClasses,
   cn,
   useConfettiOnMount,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const projectOptions = [
   { value: "product", label: "Product" },

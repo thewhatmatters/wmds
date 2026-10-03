@@ -93,7 +93,7 @@ export const Default: Story = {
   },
   parameters: storyCopySource(`
 import { useState } from "react";
-import { Checkbox } from "@whatmatters/wmds";
+import { Checkbox } from "@thewhatmatters/wmds";
 
 export function TermsCheckbox() {
   const [checked, setChecked] = useState(false);
@@ -123,7 +123,7 @@ export const WithDescription: Story = {
   },
   parameters: storyCopySource(`
 import { useState } from "react";
-import { Checkbox } from "@whatmatters/wmds";
+import { Checkbox } from "@thewhatmatters/wmds";
 
 export function NewsletterCheckbox() {
   const [checked, setChecked] = useState(false);

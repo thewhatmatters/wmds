@@ -47,7 +47,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const skipInFooterSource = `
-import { Button, CalEmbed, Card } from "@whatmatters/wmds";
+import { Button, CalEmbed, Card } from "@thewhatmatters/wmds";
 
 export function BookACall() {
   return (

@@ -1,9 +1,9 @@
-// @whatmatters/wmds@0.2.0 · Pattern — settings row
+// @thewhatmatters/wmds@0.2.0 · Pattern — settings row
 // Storybook: Components/Switch → Pattern — settings row (?path=/story/components-switch--settings-row)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { Switch } from "@whatmatters/wmds";
+import { Switch } from "@thewhatmatters/wmds";
 
 export function WeeklyDigestSwitch() {
   const [checked, setChecked] = useState(true);

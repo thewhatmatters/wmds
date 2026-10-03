@@ -1,9 +1,9 @@
-// @whatmatters/wmds@0.2.0 · Pattern — settings pages
+// @thewhatmatters/wmds@0.2.0 · Pattern — settings pages
 // Storybook: Components/Tab → Pattern — settings pages (?path=/story/components-tab--settings-pages)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { Tab } from "@whatmatters/wmds";
+import { Tab } from "@thewhatmatters/wmds";
 
 export function SettingsTabs() {
   const [page, setPage] = useState("profile");

@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — compact (scrolled)
+// @thewhatmatters/wmds@0.2.0 · Pattern — compact (scrolled)
 // Storybook: Components/SiteNav → Pattern — compact (scrolled) (?path=/story/components-sitenav--compact)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Button, SiteNav } from "@whatmatters/wmds";
+import { Button, SiteNav } from "@thewhatmatters/wmds";
 import { Sparkles } from "lucide-react";
 
 // Controlled state — useful for tests and static specimens. Omit `state` to let scroll drive it.

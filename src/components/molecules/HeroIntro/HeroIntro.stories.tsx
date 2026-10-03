@@ -57,7 +57,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const twoLineCopySource = `
-import { Badge, HeroIntro } from "@whatmatters/wmds";
+import { Badge, HeroIntro } from "@thewhatmatters/wmds";
 
 export function MarketingHeroIntro() {
   return (

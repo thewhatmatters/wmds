@@ -97,7 +97,7 @@ export const ActionMenu: Story = {
   parameters: {
     ...storyCopySource(`
 import { Download, Share2 } from "lucide-react";
-import { ButtonIcon, MoreMenu } from "@whatmatters/wmds";
+import { ButtonIcon, MoreMenu } from "@thewhatmatters/wmds";
 
 export function MarketActions() {
   return (
@@ -152,7 +152,7 @@ import {
   cardSubtitleClasses,
   MoreMenu,
   SegmentedControl,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 export function MarketCardHeader() {
   const [view, setView] = useState("overview");

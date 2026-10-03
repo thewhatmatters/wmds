@@ -99,7 +99,7 @@ const tiles = [
 const projects = scrollHorizontalMarketingItems;
 
 const marketingPageCopySource = `
-import { Button, FooterReveal, SiteNav, footerRevealFieldClasses } from "@whatmatters/wmds";
+import { Button, FooterReveal, SiteNav, footerRevealFieldClasses } from "@thewhatmatters/wmds";
 import { Sparkles } from "lucide-react";
 
 const socialLinks = [
@@ -256,7 +256,7 @@ const marketingHeroCopySource = `
 "use client";
 
 import { Sparkles } from "lucide-react";
-import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, ScrollHorizontal, SiteNav, footerRevealFieldClasses } from "@whatmatters/wmds";
+import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, ScrollHorizontal, SiteNav, footerRevealFieldClasses } from "@thewhatmatters/wmds";
 
 const socialLinks = [
   { label: "Contra", href: "#contra-TODO" },
@@ -616,7 +616,7 @@ export const ExpandFooterHandoffReduced: Story = {
 };
 
 const ruledGridFooterCopySource = `
-import { FooterReveal, TextLink, footerRevealRuledFieldClasses } from "@whatmatters/wmds";
+import { FooterReveal, TextLink, footerRevealRuledFieldClasses } from "@thewhatmatters/wmds";
 
 export function RuledGridFooter() {
   return (

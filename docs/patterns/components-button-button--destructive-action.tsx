@@ -1,7 +1,7 @@
-// @whatmatters/wmds@0.2.0 · Pattern — destructive action
+// @thewhatmatters/wmds@0.2.0 · Pattern — destructive action
 // Storybook: Components/Button/Button → Pattern — destructive action (?path=/story/components-button-button--destructive-action)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Button } from "@whatmatters/wmds";
+import { Button } from "@thewhatmatters/wmds";
 
 <Button role="destructive">Delete account</Button>

@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — matrix heatmap
+// @thewhatmatters/wmds@0.2.0 · Pattern — matrix heatmap
 // Storybook: Components/Chart → Pattern — matrix heatmap (?path=/story/components-chart--audience-activity-heatmap)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Chart, type ChartHeatmapAxisItem, type ChartHeatmapCell } from "@whatmatters/wmds";
+import { Chart, type ChartHeatmapAxisItem, type ChartHeatmapCell } from "@thewhatmatters/wmds";
 
 export function AudienceActivityHeatmap({
   rows,

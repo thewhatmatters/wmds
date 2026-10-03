@@ -1,6 +1,6 @@
 # WMDS docs for apps and agents
 
-These files ship in the npm package at `node_modules/@whatmatters/wmds/docs/`. They match the installed version, so an agent in a consuming app reads them instead of guessing from memory or from a newer Storybook.
+These files ship in the npm package at `node_modules/@thewhatmatters/wmds/docs/`. They match the installed version, so an agent in a consuming app reads them instead of guessing from memory or from a newer Storybook.
 
 | File | What it is |
 |------|------------|
@@ -17,7 +17,7 @@ These files ship in the npm package at `node_modules/@whatmatters/wmds/docs/`. T
 
 1. **Find the component.** Search `exports.json` by name, category, or summary. Planned components are listed under `planned` — they do not exist yet.
 2. **Read its contract** in `components.md` (and `component-contracts.md` for the six long ones).
-3. **Use a pattern when one matches.** Look up the component's `patterns` ids, open `patterns/<id>.tsx`, and copy the file verbatim, header included. The header lets an upgrade find every pasted pattern (`grep -r "@whatmatters/wmds@" src`).
+3. **Use a pattern when one matches.** Look up the component's `patterns` ids, open `patterns/<id>.tsx`, and copy the file verbatim, header included. The header lets an upgrade find every pasted pattern (`grep -r "@thewhatmatters/wmds@" src`).
 4. **Missing something?** Do not hand-roll it in the app. Report the gap to WMDS (see `consumer-agents.md`).
 
 Storybook ids in these files (`?path=/story/<id>`, `?path=/docs/<id>--docs`) append to the WMDS Storybook URL.

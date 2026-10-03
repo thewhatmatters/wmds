@@ -1,9 +1,9 @@
-// @whatmatters/wmds@0.2.0 · Pattern — controlled state
+// @thewhatmatters/wmds@0.2.0 · Pattern — controlled state
 // Storybook: Components/Tooltip → Pattern — controlled state (?path=/story/components-tooltip--controlled)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { IconButton, Tooltip } from "@whatmatters/wmds";
+import { IconButton, Tooltip } from "@thewhatmatters/wmds";
 import { Info } from "lucide-react";
 
 export function ControlledTooltip() {

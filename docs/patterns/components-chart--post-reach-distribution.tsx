@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — distribution strip
+// @thewhatmatters/wmds@0.2.0 · Pattern — distribution strip
 // Storybook: Components/Chart → Pattern — distribution strip (?path=/story/components-chart--post-reach-distribution)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Chart } from "@whatmatters/wmds";
+import { Chart } from "@thewhatmatters/wmds";
 
 export function PostReachDistribution({ posts }: { posts: { id: string; reach: number }[] }) {
   return (

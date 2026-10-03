@@ -1,9 +1,9 @@
-// @whatmatters/wmds@0.2.0 · Pattern — intake modal
+// @thewhatmatters/wmds@0.2.0 · Pattern — intake modal
 // Storybook: Components/IntakeModal → Pattern — intake modal (?path=/story/components-intakemodal--intake-modal-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { Button, IntakeModal } from "@whatmatters/wmds";
+import { Button, IntakeModal } from "@thewhatmatters/wmds";
 
 export function StartAProjectShell() {
   const [open, setOpen] = useState(false);

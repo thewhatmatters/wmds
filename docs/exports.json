@@ -1,17 +1,17 @@
 {
-  "package": "@whatmatters/wmds",
+  "package": "@thewhatmatters/wmds",
   "version": "0.2.0",
-  "import": "import { Button } from \"@whatmatters/wmds\";",
+  "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
-    "@whatmatters/wmds/styles.css",
-    "@whatmatters/wmds/theme.css",
-    "@whatmatters/wmds/colors.css",
-    "@whatmatters/wmds/motion.css",
-    "@whatmatters/wmds/typography.css",
-    "@whatmatters/wmds/stateColors.css",
-    "@whatmatters/wmds/grid.css",
-    "@whatmatters/wmds/shape.css",
-    "@whatmatters/wmds/scrollFade.css"
+    "@thewhatmatters/wmds/styles.css",
+    "@thewhatmatters/wmds/theme.css",
+    "@thewhatmatters/wmds/colors.css",
+    "@thewhatmatters/wmds/motion.css",
+    "@thewhatmatters/wmds/typography.css",
+    "@thewhatmatters/wmds/stateColors.css",
+    "@thewhatmatters/wmds/grid.css",
+    "@thewhatmatters/wmds/shape.css",
+    "@thewhatmatters/wmds/scrollFade.css"
   ],
   "peerDependencies": {
     "@visx/visx": "^4.0.0",

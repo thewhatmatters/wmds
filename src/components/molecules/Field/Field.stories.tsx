@@ -83,7 +83,7 @@ export const HorizontalInput: Story = {
     </Field>
   ),
   parameters: storyCopySource(`
-import { Field, Input } from "@whatmatters/wmds";
+import { Field, Input } from "@thewhatmatters/wmds";
 
 <Field label="ZIP code" description="5-digit US ZIP." orientation="horizontal">
   <Input placeholder="97201" aria-label="ZIP code" />
@@ -103,7 +103,7 @@ export const HorizontalTextArea: Story = {
     </Field>
   ),
   parameters: storyCopySource(`
-import { Field, TextArea } from "@whatmatters/wmds";
+import { Field, TextArea } from "@thewhatmatters/wmds";
 
 <Field label="Notes" description="Visible to admins only." orientation="horizontal">
   <TextArea placeholder="Add context…" aria-label="Notes" rows={3} />
@@ -120,7 +120,7 @@ export const MultiControl: Story = {
     </Field>
   ),
   parameters: storyCopySource(`
-import { Field, Input, Search } from "@whatmatters/wmds";
+import { Field, Input, Search } from "@thewhatmatters/wmds";
 
 <Field label="Location" description="City or ZIP — search updates the map.">
   <Search placeholder="ZIP or city" aria-label="Location" actionLabel="GO" />

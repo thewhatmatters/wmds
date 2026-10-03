@@ -131,7 +131,7 @@ import {
   buttonSizeForCluster,
   PageHeader,
   SegmentedControl,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const tier = "sm";
 
@@ -176,7 +176,7 @@ export const PageSectionHeader: Story = {
   ),
   parameters: storyCopySource(`
 import { Share2 } from "lucide-react";
-import { Button, PageHeader } from "@whatmatters/wmds";
+import { Button, PageHeader } from "@thewhatmatters/wmds";
 
 export function InsightsSectionHeader() {
   return (
@@ -244,7 +244,7 @@ export const ToolbarHeader: Story = {
   parameters: storyCopySource(`
 import { useState } from "react";
 import { Filter } from "lucide-react";
-import { Button, Chip, PageHeader } from "@whatmatters/wmds";
+import { Button, Chip, PageHeader } from "@thewhatmatters/wmds";
 
 export function InsightsToolbar() {
   const [filter, setFilter] = useState<string[]>(["active"]);

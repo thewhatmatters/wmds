@@ -1,6 +1,6 @@
 ---
 name: report-wmds-gap
-description: Use when an app built on @whatmatters/wmds needs something WMDS does not provide — a missing component, prop, variant, size, token, or pattern; a WMDS bug or accessibility problem; or docs that are wrong — and the alternative would be hand-rolling UI, overriding a component's styles (className or `!` utilities), raw values, or restructuring a pasted pattern. Explains what to file, where, and how to open a pull request in thewhatmatters/wmds that follows its AGENTS.md.
+description: Use when an app built on @thewhatmatters/wmds needs something WMDS does not provide — a missing component, prop, variant, size, token, or pattern; a WMDS bug or accessibility problem; or docs that are wrong — and the alternative would be hand-rolling UI, overriding a component's styles (className or `!` utilities), raw values, or restructuring a pasted pattern. Explains what to file, where, and how to open a pull request in thewhatmatters/wmds that follows its AGENTS.md.
 ---
 
 # Report a WMDS gap
@@ -34,7 +34,7 @@ Open it at <https://github.com/thewhatmatters/wmds/issues/new> (or `gh issue cre
 
 ```markdown
 **App / page:** <repo> — <route or file>
-**WMDS version:** <node -p "require('@whatmatters/wmds/package.json').version">
+**WMDS version:** <node -p "require('@thewhatmatters/wmds/package.json').version">
 **Need:** <the prop, variant, component, token, or fix — one sentence>
 **Why the current API does not cover it:** <cite docs/components.md or the pattern id>
 **Workaround in the app today:** <code, or "none — blocked">

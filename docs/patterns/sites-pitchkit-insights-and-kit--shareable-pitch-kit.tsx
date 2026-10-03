@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — shareable PitchKit
+// @thewhatmatters/wmds@0.2.0 · Pattern — shareable PitchKit
 // Storybook: Sites/PitchKit/Insights and kit → Pattern — shareable PitchKit (?path=/story/sites-pitchkit-insights-and-kit--shareable-pitch-kit)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -17,7 +17,7 @@ import {
   chartSeriesConfigFromKeys,
   type ChartCartesianPoint,
   type ChartRankedBarItem,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const reachConfig = chartSeriesConfigFromKeys([
   { key: "typical", label: "Typical reach" },

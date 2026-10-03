@@ -181,7 +181,7 @@ export const MarketingHeader: Story = {
       },
     },
     `
-import { Button, SiteNav } from "@whatmatters/wmds";
+import { Button, SiteNav } from "@thewhatmatters/wmds";
 import { BookOpen, FileText, History, Mic, Sparkles, Target, Video } from "lucide-react";
 
 export function MarketingHeader() {
@@ -241,7 +241,7 @@ export const BrandAndCta: Story = {
   name: "Pattern — brand + CTA",
   args: { placement: "inline", state: "expanded" },
   parameters: storyCopySource(`
-import { Button, SiteNav } from "@whatmatters/wmds";
+import { Button, SiteNav } from "@thewhatmatters/wmds";
 import { Sparkles } from "lucide-react";
 
 export function BrandAndCtaNav() {
@@ -268,7 +268,7 @@ export const CenteredLinks: Story = {
   name: "Pattern — centered links",
   args: { placement: "inline", state: "expanded" },
   parameters: storyCopySource(`
-import { SiteNav } from "@whatmatters/wmds";
+import { SiteNav } from "@thewhatmatters/wmds";
 
 export function CenteredLinksNav() {
   return (
@@ -313,7 +313,7 @@ export const MegaMenu: Story = {
       },
     },
     `
-import { SiteNav } from "@whatmatters/wmds";
+import { SiteNav } from "@thewhatmatters/wmds";
 import { BookOpen, FileText, History, Mic, Target, Video } from "lucide-react";
 
 export function ResourcesMenu() {
@@ -427,7 +427,7 @@ export const Compact: Story = {
       },
     },
     `
-import { Button, SiteNav } from "@whatmatters/wmds";
+import { Button, SiteNav } from "@thewhatmatters/wmds";
 import { Sparkles } from "lucide-react";
 
 // Controlled state — useful for tests and static specimens. Omit \`state\` to let scroll drive it.

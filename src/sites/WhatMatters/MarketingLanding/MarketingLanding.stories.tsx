@@ -162,7 +162,7 @@ export const MarketingLanding: Story = {
       },
     },
     `
-import { Button, SiteNav } from "@whatmatters/wmds";
+import { Button, SiteNav } from "@thewhatmatters/wmds";
 import { BookOpen, FileText, History, Mic, Sparkles, Target, Video } from "lucide-react";
 
 export function MarketingLanding() {

@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — page display controls
+// @thewhatmatters/wmds@0.2.0 · Pattern — page display controls
 // Storybook: Components/DisplayControls → Pattern — page display controls (?path=/story/components-displaycontrols--page-utilities)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -7,7 +7,7 @@ import {
   DisplayControls,
   GridOverlay,
   type DisplayControlThemeMode,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 export function Page() {
   const [gridVisible, setGridVisible] = useState(false);

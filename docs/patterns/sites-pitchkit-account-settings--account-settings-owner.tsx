@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — account settings (owner)
+// @thewhatmatters/wmds@0.2.0 · Pattern — account settings (owner)
 // Storybook: Sites/PitchKit/Account settings → Pattern — account settings (owner) (?path=/story/sites-pitchkit-account-settings--account-settings-owner)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -16,7 +16,7 @@ import {
   Toaster,
   cardTitleClasses,
   toast,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const compactNumber = new Intl.NumberFormat("en", {
   notation: "compact",

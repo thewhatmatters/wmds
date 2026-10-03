@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — project gallery
+// @thewhatmatters/wmds@0.2.0 · Pattern — project gallery
 // Storybook: Components/ScrollHorizontal → Pattern — project gallery (?path=/story/components-scrollhorizontal--project-gallery-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { ScrollHorizontal } from "@whatmatters/wmds";
+import { ScrollHorizontal } from "@thewhatmatters/wmds";
 
 const projects = [
   { id: "project-one", label: "Project One", color: "var(--color-brand)" },

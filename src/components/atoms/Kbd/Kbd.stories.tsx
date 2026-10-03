@@ -66,7 +66,7 @@ export const Shortcut: Story = {
       },
     },
     `
-import { Kbd } from "@whatmatters/wmds";
+import { Kbd } from "@thewhatmatters/wmds";
 
 <span className="inline-flex items-center gap-1">
   <Kbd aria-label="Command">⌘</Kbd>
@@ -96,7 +96,7 @@ export const CommandRow: Story = {
       },
     },
     `
-import { Kbd } from "@whatmatters/wmds";
+import { Kbd } from "@thewhatmatters/wmds";
 
 <div className="flex items-center justify-between gap-6">
   <span>Open command menu</span>
@@ -186,7 +186,7 @@ export const NumberedChoices: Story = {
     },
     `
 import { useState } from "react";
-import { Checkbox, Kbd, useKbdChoiceKeys } from "@whatmatters/wmds";
+import { Checkbox, Kbd, useKbdChoiceKeys } from "@thewhatmatters/wmds";
 
 const choices = [
   { value: "brand", label: "Brand identity", number: "1" },

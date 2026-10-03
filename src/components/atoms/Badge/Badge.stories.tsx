@@ -89,7 +89,7 @@ export const SemanticVariants: Story = {
 };
 
 const withAvatarCopySource = `
-import { Badge } from "@whatmatters/wmds";
+import { Badge } from "@thewhatmatters/wmds";
 
 export function BadgeWithAvatar() {
   return (

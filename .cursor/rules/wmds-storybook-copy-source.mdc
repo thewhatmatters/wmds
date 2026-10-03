@@ -19,7 +19,7 @@ alwaysApply: false
 
 ## Snippet rules (Pattern stories only)
 
-- **Include imports** — `@whatmatters/wmds`, `lucide-react`, `useState` when needed.
+- **Include imports** — `@thewhatmatters/wmds`, `lucide-react`, `useState` when needed.
 - **JSX the app pastes** — inside a component `return`, or a small named wrapper when stateful.
 - **No CSF** — never `name`, `parameters`, `render`, `export const …`.
 - **No demo chrome** — no `max-w-md`, `p-4`, specimen borders in the snippet (keep in `render`).

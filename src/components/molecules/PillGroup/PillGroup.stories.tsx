@@ -66,7 +66,7 @@ export const PillGroupPattern: Story = {
   },
   parameters: storyCopySource(`
 import { useState } from "react";
-import { PillGroup } from "@whatmatters/wmds";
+import { PillGroup } from "@thewhatmatters/wmds";
 
 export function BudgetPills() {
   const [value, setValue] = useState<string | null>(null);

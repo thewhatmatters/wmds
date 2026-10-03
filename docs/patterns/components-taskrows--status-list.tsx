@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — status rows
+// @thewhatmatters/wmds@0.2.0 · Pattern — status rows
 // Storybook: Components/TaskRows → Pattern — status rows (?path=/story/components-taskrows--status-list)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { TaskRows } from "@whatmatters/wmds";
+import { TaskRows } from "@thewhatmatters/wmds";
 
 <TaskRows variant="list">
   <TaskRows.Item label="Verified vendor records" meta="12 suppliers" status="done" defaultOpen>

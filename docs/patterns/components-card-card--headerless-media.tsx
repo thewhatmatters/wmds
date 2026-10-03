@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — headerless media
+// @thewhatmatters/wmds@0.2.0 · Pattern — headerless media
 // Storybook: Components/Card/Card → Pattern — headerless media (?path=/story/components-card-card--headerless-media)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -6,7 +6,7 @@ import {
   Card,
   cardBodyTextClasses,
   cardLayoutBodyOccupantRadiusClasses,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 <Card variant="outlined" shape="rounded">
   <Card.Body>

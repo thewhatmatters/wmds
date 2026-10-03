@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — 100-unit composition
+// @thewhatmatters/wmds@0.2.0 · Pattern — 100-unit composition
 // Storybook: Components/Chart → Pattern — 100-unit composition (?path=/story/components-chart--unit-grid-composition)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Chart, chartSeriesConfigFromKeys } from "@whatmatters/wmds";
+import { Chart, chartSeriesConfigFromKeys } from "@thewhatmatters/wmds";
 
 const config = chartSeriesConfigFromKeys([
   { key: "women", label: "Women" },

@@ -1,9 +1,9 @@
-// @whatmatters/wmds@0.2.0 · Pattern — action details
+// @thewhatmatters/wmds@0.2.0 · Pattern — action details
 // Storybook: Components/TaskRows → Pattern — action details (?path=/story/components-taskrows--action-details)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { Apple, MapPin, Map as MapIcon } from "lucide-react";
-import { TaskRows } from "@whatmatters/wmds";
+import { TaskRows } from "@thewhatmatters/wmds";
 
 export function SupplierDirections({
   onOpenAppleMaps,

@@ -554,7 +554,7 @@ export const RankedAudienceBreakdown: Story = {
       },
     },
     `
-import { Chart } from "@whatmatters/wmds";
+import { Chart } from "@thewhatmatters/wmds";
 
 <Chart.RankedBars
   aria-label="Top audience countries"
@@ -595,7 +595,7 @@ export const UnitGridComposition: Story = {
       },
     },
     `
-import { Chart, chartSeriesConfigFromKeys } from "@whatmatters/wmds";
+import { Chart, chartSeriesConfigFromKeys } from "@thewhatmatters/wmds";
 
 const config = chartSeriesConfigFromKeys([
   { key: "women", label: "Women" },
@@ -642,7 +642,7 @@ export const PostReachDistribution: Story = {
       },
     },
     `
-import { Chart } from "@whatmatters/wmds";
+import { Chart } from "@thewhatmatters/wmds";
 
 export function PostReachDistribution({ posts }: { posts: { id: string; reach: number }[] }) {
   return (
@@ -685,7 +685,7 @@ export const AudienceActivityHeatmap: Story = {
       },
     },
     `
-import { Chart, type ChartHeatmapAxisItem, type ChartHeatmapCell } from "@whatmatters/wmds";
+import { Chart, type ChartHeatmapAxisItem, type ChartHeatmapCell } from "@thewhatmatters/wmds";
 
 export function AudienceActivityHeatmap({
   rows,
@@ -826,7 +826,7 @@ export const CartesianNoDataGaps: Story = {
         },
       },
       `
-import { Chart, chartSeriesConfigFromTone } from "@whatmatters/wmds";
+import { Chart, chartSeriesConfigFromTone } from "@thewhatmatters/wmds";
 
 const config = chartSeriesConfigFromTone("reach", "Reach", "primary");
 
@@ -956,7 +956,7 @@ import {
   cardTitleClasses,
   type ChartCartesianPoint,
   type SelectOption,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const config = chartSeriesConfigFromKeys([
   { key: "occupied", label: "Occupied units" },
@@ -1057,7 +1057,7 @@ export const OccupancyInCard: Story = {
       },
     },
     `
-import { Button, Card, Chart, Select, chartFormatPercent, chartKpiHeroRowClasses, chartKpiHeroValueClasses, chartKpiTrendLabelClasses, chartKpiTrendRowClasses, chartKpiTrendValueClasses, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantPadYClasses, cardLayoutBodyOccupantWellClasses, cardTitleClasses } from "@whatmatters/wmds";
+import { Button, Card, Chart, Select, chartFormatPercent, chartKpiHeroRowClasses, chartKpiHeroValueClasses, chartKpiTrendLabelClasses, chartKpiTrendRowClasses, chartKpiTrendValueClasses, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantPadYClasses, cardLayoutBodyOccupantWellClasses, cardTitleClasses } from "@thewhatmatters/wmds";
 
 const occupied = 144;
 const total = 200;

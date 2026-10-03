@@ -1,9 +1,9 @@
-// @whatmatters/wmds@0.2.0 · Pattern — default
+// @thewhatmatters/wmds@0.2.0 · Pattern — default
 // Storybook: Components/Switch → Pattern — default (?path=/story/components-switch--default)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { Switch } from "@whatmatters/wmds";
+import { Switch } from "@thewhatmatters/wmds";
 
 export function NotificationsSwitch() {
   const [checked, setChecked] = useState(false);

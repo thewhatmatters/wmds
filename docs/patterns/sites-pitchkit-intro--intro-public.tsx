@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — intro (public)
+// @thewhatmatters/wmds@0.2.0 · Pattern — intro (public)
 // Storybook: Sites/PitchKit/Intro → Pattern — intro (public) (?path=/story/sites-pitchkit-intro--intro-public)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Avatar, Chip } from "@whatmatters/wmds";
+import { Avatar, Chip } from "@thewhatmatters/wmds";
 
 const compactNumber = new Intl.NumberFormat("en", {
   notation: "compact",

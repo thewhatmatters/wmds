@@ -1,7 +1,7 @@
 /**
  * WMDS theme — canonical design-system entry.
  * Color: colors.css (Astryx-aligned roles) + stateColors.css (interaction states).
- * Import once: @import "@whatmatters/wmds/theme.css";
+ * Import once: @import "@thewhatmatters/wmds/theme.css";
  */
 @import "tailwindcss";
 @import "./fonts.css";

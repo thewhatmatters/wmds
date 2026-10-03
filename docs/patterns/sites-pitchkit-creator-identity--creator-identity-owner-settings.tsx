@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — creator identity (owner settings)
+// @thewhatmatters/wmds@0.2.0 · Pattern — creator identity (owner settings)
 // Storybook: Sites/PitchKit/Creator identity → Pattern — creator identity (owner settings) (?path=/story/sites-pitchkit-creator-identity--creator-identity-owner-settings)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Avatar, Badge, Button, Card, Chip, PageHeader, TextLink, Toaster, cardTitleClasses, toast } from "@whatmatters/wmds";
+import { Avatar, Badge, Button, Card, Chip, PageHeader, TextLink, Toaster, cardTitleClasses, toast } from "@thewhatmatters/wmds";
 import { Copy } from "lucide-react";
 
 const compactNumber = new Intl.NumberFormat("en", {

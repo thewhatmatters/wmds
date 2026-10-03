@@ -347,7 +347,7 @@ import {
   chartSeriesConfigFromKeys,
   type ChartCartesianPoint,
   type ChartRankedBarItem,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const reachConfig = chartSeriesConfigFromKeys([
   { key: "typical", label: "Typical reach" },

@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — app header
+// @thewhatmatters/wmds@0.2.0 · Pattern — app header
 // Storybook: Components/PageHeader → Pattern — app header (?path=/story/components-pageheader--app-header-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -11,7 +11,7 @@ import {
   buttonSizeForCluster,
   PageHeader,
   SegmentedControl,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const tier = "sm";
 

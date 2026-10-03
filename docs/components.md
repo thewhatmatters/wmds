@@ -1,4 +1,4 @@
-# @whatmatters/wmds — component contracts
+# @thewhatmatters/wmds — component contracts
 
 Version 0.2.0. Generated from the WMDS repository's AGENTS.md (Storybook-first) by `scripts/generate-package-docs.mjs` — do not edit here.
 

@@ -18,7 +18,7 @@ function SampleSequence() {
 }
 
 const sampleCopySource = `
-import { TextSequence } from "@whatmatters/wmds";
+import { TextSequence } from "@thewhatmatters/wmds";
 
 export function HeroLine() {
   return (
@@ -68,7 +68,7 @@ function ShapesGallery() {
 }
 
 const galleryCopySource = `
-import { TextSequence } from "@whatmatters/wmds";
+import { TextSequence } from "@thewhatmatters/wmds";
 
 export function ShapeGallery() {
   return (

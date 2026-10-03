@@ -86,7 +86,7 @@ function CreatorIdentityStrip({
 `;
 
 export const creatorIdentityPublicCopySource = `
-import { Avatar, Chip } from "@whatmatters/wmds";
+import { Avatar, Chip } from "@thewhatmatters/wmds";
 
 const compactNumber = new Intl.NumberFormat("en", {
   notation: "compact",
@@ -121,7 +121,7 @@ export function CreatorIdentityPublicPage({ identity }: { identity: PitchKitCrea
 `;
 
 export const creatorIdentityOwnerCopySource = `
-import { Avatar, Badge, Button, Card, Chip, PageHeader, TextLink, Toaster, cardTitleClasses, toast } from "@whatmatters/wmds";
+import { Avatar, Badge, Button, Card, Chip, PageHeader, TextLink, Toaster, cardTitleClasses, toast } from "@thewhatmatters/wmds";
 import { Copy } from "lucide-react";
 
 const compactNumber = new Intl.NumberFormat("en", {

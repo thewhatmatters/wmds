@@ -132,7 +132,7 @@ function ToastDemo({
 export const StackedNotifications: Story = {
   name: "Pattern — stacked notifications",
   parameters: storyCopySource(`
-import { Button, Toaster, toast } from "@whatmatters/wmds";
+import { Button, Toaster, toast } from "@thewhatmatters/wmds";
 
 export function App() {
   return (

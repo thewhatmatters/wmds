@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — landing to chat
+// @thewhatmatters/wmds@0.2.0 · Pattern — landing to chat
 // Storybook: Sites/WhatMatters/Prompt chat → Pattern — landing to chat (?path=/story/sites-whatmatters-prompt-chat--landing-to-chat)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -35,7 +35,7 @@ import {
   type IntakeAboutValues,
   intakeDetailsMax,
   isIntakeAboutValid,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 const pageClasses = "flex h-[100svh] min-h-0 w-full flex-col overflow-hidden bg-body";
 const columnClasses = "flex min-h-0 w-full flex-1 flex-col overflow-hidden [--grid-max:40rem]";

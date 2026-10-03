@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — booked
+// @thewhatmatters/wmds@0.2.0 · Pattern — booked
 // Storybook: Components/IntakeConfirmation → Pattern — booked (?path=/story/components-intakeconfirmation--booked-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { ConfettiProvider, IntakeConfirmation } from "@whatmatters/wmds";
+import { ConfettiProvider, IntakeConfirmation } from "@thewhatmatters/wmds";
 
 export function Booked() {
   return (

@@ -1,6 +1,6 @@
 ---
 name: use-wmds
-description: Use before writing or changing any UI in an app that depends on @whatmatters/wmds (the WhatMatters Design System) — pages, components, forms, layout, styling. Finds the right WMDS component or Storybook pattern in the installed package's docs, uses props instead of utility classes, keeps className to layout, uses tokens only, and copies a pattern's Show code verbatim with its version header.
+description: Use before writing or changing any UI in an app that depends on @thewhatmatters/wmds (the WhatMatters Design System) — pages, components, forms, layout, styling. Finds the right WMDS component or Storybook pattern in the installed package's docs, uses props instead of utility classes, keeps className to layout, uses tokens only, and copies a pattern's Show code verbatim with its version header.
 ---
 
 # Use WMDS
@@ -10,10 +10,10 @@ WMDS is the app's design system. The installed package carries its own docs, mat
 ## 1. Check the installed version
 
 ```bash
-node -p "require('@whatmatters/wmds/package.json').version"
+node -p "require('@thewhatmatters/wmds/package.json').version"
 ```
 
-All paths below are inside `node_modules/@whatmatters/wmds/`.
+All paths below are inside `node_modules/@thewhatmatters/wmds/`.
 
 ## 2. Find what to use
 
@@ -21,7 +21,7 @@ All paths below are inside `node_modules/@whatmatters/wmds/`.
 
    ```bash
    node -e '
-   const e = require("@whatmatters/wmds/docs/exports.json");
+   const e = require("@thewhatmatters/wmds/docs/exports.json");
    const q = (process.argv[1] || "").toLowerCase();
    for (const c of e.components)
      if (!q || [c.name, c.category, c.summary].join(" ").toLowerCase().includes(q))
@@ -47,7 +47,7 @@ All paths below are inside `node_modules/@whatmatters/wmds/`.
 A pattern is the approved composition for a task. Copying it is the contract.
 
 1. Open `docs/patterns/<id>.tsx` (the id comes from `exports.json` → `patterns`, or `docs/patterns/index.json`).
-2. Copy the whole file into the app, **including the three header lines** (`// @whatmatters/wmds@<version> · Pattern — …`). Upgrades find pasted patterns by that header. If the file has `"use client"`, it stays below the header comments.
+2. Copy the whole file into the app, **including the three header lines** (`// @thewhatmatters/wmds@<version> · Pattern — …`). Upgrades find pasted patterns by that header. If the file has `"use client"`, it stays below the header comments.
 3. Allowed edits: rename the exported component (or make it the file's default export), replace sample copy, data, URLs, and handlers with the app's, and in Next.js swap a plain `<img>` for `next/image`. Keep the structure, components, props, and classes.
 4. One pattern per file is easiest to re-sync later.
 

@@ -1,10 +1,10 @@
-// @whatmatters/wmds@0.2.0 · Pattern — form dialog
+// @thewhatmatters/wmds@0.2.0 · Pattern — form dialog
 // Storybook: Components/Dialog → Pattern — form dialog (?path=/story/components-dialog--form-dialog)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { Button, Dialog, Input } from "@whatmatters/wmds";
-import { dialogFooterActionsClasses } from "@whatmatters/wmds";
+import { Button, Dialog, Input } from "@thewhatmatters/wmds";
+import { dialogFooterActionsClasses } from "@thewhatmatters/wmds";
 
 export function InviteDialog() {
   const [open, setOpen] = useState(false);

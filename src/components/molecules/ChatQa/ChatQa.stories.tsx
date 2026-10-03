@@ -16,7 +16,7 @@ const sampleReply =
   "That's the full loop — shipping surface, platforms, and what to optimize for first. Next we would sketch the feature path, then pin the Chrome extension shell so the web cut and the extension stay on one system.";
 
 const chatQaCopySource = `
-import { ChatQa } from "@whatmatters/wmds";
+import { ChatQa } from "@thewhatmatters/wmds";
 
 const pairs = [
   { question: "What are you shipping next?", answer: "A new feature" },

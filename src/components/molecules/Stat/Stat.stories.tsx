@@ -98,7 +98,7 @@ export const InsightsRow: Story = {
     </div>
   ),
   parameters: storyCopySource(`
-import { Button, PageHeader, Stat } from "@whatmatters/wmds";
+import { Button, PageHeader, Stat } from "@thewhatmatters/wmds";
 import { Share2 } from "lucide-react";
 
 export function InsightsOverview() {

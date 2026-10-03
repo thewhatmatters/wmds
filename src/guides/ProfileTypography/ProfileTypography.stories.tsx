@@ -237,7 +237,7 @@ import {
   GridOverlay,
   TextLink,
   type DisplayControlThemeMode,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 import { ChevronRight, VolumeX } from "lucide-react";
 
 export function ProfilePage({ onOpenRole }: { onOpenRole: (company: string) => void }) {

@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — mega menu
+// @thewhatmatters/wmds@0.2.0 · Pattern — mega menu
 // Storybook: Components/SiteNav → Pattern — mega menu (?path=/story/components-sitenav--mega-menu)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { SiteNav } from "@whatmatters/wmds";
+import { SiteNav } from "@thewhatmatters/wmds";
 import { BookOpen, FileText, History, Mic, Target, Video } from "lucide-react";
 
 export function ResourcesMenu() {

@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — marketing hero ruled grid
+// @thewhatmatters/wmds@0.2.0 · Pattern — marketing hero ruled grid
 // Storybook: Components/FooterReveal → Pattern — marketing hero ruled grid (?path=/story/components-footerreveal--marketing-hero-ruled-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -9,7 +9,7 @@
 // Hand art: CC BY 4.0, Silvia Sguotti and Gabriele Montinaro.
 
 import { Sparkles } from "lucide-react";
-import { Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence, footerRevealRuledFieldClasses } from "@whatmatters/wmds";
+import { Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence, footerRevealRuledFieldClasses } from "@thewhatmatters/wmds";
 
 const tiles = [
   { src: "/hero-tiles/plan.svg", alt: "Weekly plan on a lime tile" },

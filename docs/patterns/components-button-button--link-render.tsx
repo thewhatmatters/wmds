@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — link
+// @thewhatmatters/wmds@0.2.0 · Pattern — link
 // Storybook: Components/Button/Button → Pattern — link (?path=/story/components-button-button--link-render)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Button } from "@whatmatters/wmds";
+import { Button } from "@thewhatmatters/wmds";
 
 export function HeaderLinks() {
   return (

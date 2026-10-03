@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Default
+// @thewhatmatters/wmds@0.2.0 · Default
 // Storybook: Components/TextSequence → Default (?path=/story/components-textsequence--default)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { TextSequence } from "@whatmatters/wmds";
+import { TextSequence } from "@thewhatmatters/wmds";
 
 export function HeroLine() {
   return (

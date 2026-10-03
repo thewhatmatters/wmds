@@ -93,7 +93,7 @@ describe("Pattern — account settings (owner) Show code", () => {
     );
     expect(userSettingsOwnerCopySource).toContain('cancelLabel="Cancel"');
     expect(userSettingsOwnerCopySource).toContain('confirmRole="destructive"');
-    expect(userSettingsOwnerCopySource).toContain("from \"@whatmatters/wmds\"");
+    expect(userSettingsOwnerCopySource).toContain("from \"@thewhatmatters/wmds\"");
 
     const settingsAt = userSettingsOwnerCopySource.indexOf("Account settings");
     const shareAt = userSettingsOwnerCopySource.indexOf("Share kit");

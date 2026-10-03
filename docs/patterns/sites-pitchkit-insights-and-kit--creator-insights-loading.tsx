@@ -1,4 +1,4 @@
-// @whatmatters/wmds@0.2.0 · Pattern — creator Insights (loading)
+// @thewhatmatters/wmds@0.2.0 · Pattern — creator Insights (loading)
 // Storybook: Sites/PitchKit/Insights and kit → Pattern — creator Insights (loading) (?path=/story/sites-pitchkit-insights-and-kit--creator-insights-loading)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -27,7 +27,7 @@ import {
   toast,
   type ChartCartesianPoint,
   type ChartRankedBarItem,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 import { EyeOff } from "lucide-react";
 
 const reachConfig = chartSeriesConfigFromKeys([

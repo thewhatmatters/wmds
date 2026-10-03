@@ -98,8 +98,8 @@ export const BottomSheet: Story = {
   },
   parameters: storyCopySource(`
 import { useState } from "react";
-import { Button, Input, Sheet } from "@whatmatters/wmds";
-import { dialogFooterActionsClasses } from "@whatmatters/wmds";
+import { Button, Input, Sheet } from "@thewhatmatters/wmds";
+import { dialogFooterActionsClasses } from "@thewhatmatters/wmds";
 
 export function FilterSheet() {
   const [open, setOpen] = useState(false);
@@ -175,7 +175,7 @@ export const EndSheet: Story = {
   },
   parameters: storyCopySource(`
 import { useState } from "react";
-import { Button, Sheet, Switch } from "@whatmatters/wmds";
+import { Button, Sheet, Switch } from "@thewhatmatters/wmds";
 
 export function SettingsSheet() {
   const [open, setOpen] = useState(false);

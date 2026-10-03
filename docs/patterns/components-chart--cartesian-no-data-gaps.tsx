@@ -1,8 +1,8 @@
-// @whatmatters/wmds@0.2.0 · Pattern — Cartesian no-data gaps
+// @thewhatmatters/wmds@0.2.0 · Pattern — Cartesian no-data gaps
 // Storybook: Components/Chart → Pattern — Cartesian no-data gaps (?path=/story/components-chart--cartesian-no-data-gaps)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { Chart, chartSeriesConfigFromTone } from "@whatmatters/wmds";
+import { Chart, chartSeriesConfigFromTone } from "@thewhatmatters/wmds";
 
 const config = chartSeriesConfigFromTone("reach", "Reach", "primary");
 

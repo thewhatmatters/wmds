@@ -194,7 +194,7 @@ import {
   cardSubtitleClasses,
   cardTitleClasses,
   dialogFooterActionsClasses,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 export function NotificationPreferencesPage() {
   const [channelsOpen, setChannelsOpen] = useState(false);

@@ -1,6 +1,6 @@
 name: Release
 
-# Publishes @whatmatters/wmds to npm when a version tag is pushed, after every CI check passes.
+# Publishes @thewhatmatters/wmds to npm when a version tag is pushed, after every CI check passes.
 # Authentication is npm trusted publishing (OIDC): no npm token is stored in the repository.
 # npm can only register a trusted publisher for a package that exists, so the first version is
 # published by hand once — see docs/releasing.md → First publish.

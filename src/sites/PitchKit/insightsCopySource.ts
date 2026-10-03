@@ -73,7 +73,7 @@ import {
   toast,
   type ChartCartesianPoint,
   type ChartRankedBarItem,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 import { EyeOff } from "lucide-react";
 
 const reachConfig = chartSeriesConfigFromKeys([
@@ -588,7 +588,7 @@ import {
   toast,
   type ChartCartesianPoint,
   type ChartRankedBarItem,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 import { EyeOff } from "lucide-react";
 
 const reachConfig = chartSeriesConfigFromKeys([

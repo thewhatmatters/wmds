@@ -129,7 +129,7 @@ import {
   cardTitleClasses,
   cn,
   dialogFooterActionsClasses,
-} from "@whatmatters/wmds";
+} from "@thewhatmatters/wmds";
 
 export function MarketDetailRail() {
   const [open, setOpen] = useState(false);

@@ -1,9 +1,9 @@
-// @whatmatters/wmds@0.2.0 · Pattern — vertical
+// @thewhatmatters/wmds@0.2.0 · Pattern — vertical
 // Storybook: Components/Radio/RadioGroup → Pattern — vertical (?path=/story/components-radio-radiogroup--default)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { RadioGroup } from "@whatmatters/wmds";
+import { RadioGroup } from "@thewhatmatters/wmds";
 
 export function NotificationPreference() {
   const [value, setValue] = useState("email");

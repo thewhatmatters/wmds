@@ -92,7 +92,7 @@ export const Default: Story = {
   },
   parameters: storyCopySource(`
 import { useState } from "react";
-import { RadioGroup } from "@whatmatters/wmds";
+import { RadioGroup } from "@thewhatmatters/wmds";
 
 export function NotificationPreference() {
   const [value, setValue] = useState("email");
