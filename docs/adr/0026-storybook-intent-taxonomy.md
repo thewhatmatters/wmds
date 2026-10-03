@@ -1,6 +1,6 @@
 # ADR-0026: Intent-based Storybook catalog taxonomy
 
-**Status:** Accepted
+**Status:** Accepted — amended 2026-10-03 (see **Amendment** below)
 **Date:** 2026-09-10
 
 ## Context
@@ -45,6 +45,36 @@ Interaction fixtures and audits use `Internal/...`, retain the `test` tag, and o
 - A component's Storybook category can differ from its atomic filesystem tier.
 - New components require both an atomic placement and a functional catalog category.
 - Sidebar ordering is centralized in `.storybook/preview.tsx`.
+
+## Amendment — 2026-10-03: A–Z components, Guides, Sites
+
+### Context
+
+The category folders made engineers guess a component's category before they could find it (is **Chip** a form control or feedback? **SegmentedControl**?). **Patterns** held one guidance page and two WhatMatters flows, and **Examples** mixed WhatMatters pages, PitchKit pages, and generic guidance. The structure is now modeled on the Astryx docs: an A–Z component list in the sidebar, categories on an overview page, and guidance separate from product pages.
+
+### Decision
+
+Sidebar order: **Getting started → Guides → Foundations → Components → Sites → Internal**.
+
+- **Getting started** — the former **Start Here** page (`src/storybook/GettingStarted.mdx`).
+- **Guides** — cross-component guidance not tied to one product: **Chart explorations**, **Form controls**, **Overlay flows**, **Profile typography** (`src/guides/`).
+- **Foundations** — unchanged pages, sorted A–Z.
+- **Components** — **Overview** first, then every export A–Z as `Components/{Name}`. Related exports share a family folder, `Components/{Family}/{Name}`:
+  - **Button** — Button, FloatingActionButton, IconButton
+  - **Card** — Card, SelectableCard
+  - **Checkbox** — Checkbox, CheckboxGroup
+  - **Radio** — Radio, RadioGroup
+- **Components → Overview** groups every export by category. Categories live in `src/storybook/componentCatalog.ts`, not in titles: Action, Chat, Container, Content, Data visualization, Feedback & status, Form controls, Layout, Marketing, Navigation, Overlay, Table & list. Planned exports appear with a **Planned** badge.
+- **Sites** — pages and flows per product, `Sites/{Site}/{Page}`, **WhatMatters** first:
+  - **WhatMatters** — Intake, Marketing landing, Prompt chat, RFP submitted (`src/sites/WhatMatters/`)
+  - **PitchKit** — Account settings, Creator identity, Insights and kit, Intro, Past brands, Theme picker (`src/sites/PitchKit/`)
+- **Patterns** and **Examples** are retired as sections. **Pattern — …** stories keep their names and Show code.
+
+### Consequences
+
+- A new component needs a story title (`Components/{Name}` or a family) and a `componentCatalog.ts` entry. `componentCatalog.test.ts` fails when an export has no entry or an entry points at a title with no story.
+- A new family needs at least two exports that an engineer would compare side by side; record it in this list.
+- Story ids changed with the titles, so bookmarks and visual-test baselines keyed on old ids need refreshing.
 
 ## Related
 

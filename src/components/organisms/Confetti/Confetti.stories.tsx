@@ -11,7 +11,7 @@ import {
 } from "./Confetti";
 
 const meta = {
-  title: "Components/Feedback/Confetti",
+  title: "Components/Confetti",
   component: ConfettiProvider,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),
@@ -56,7 +56,7 @@ ConfettiProvider — context + portal
 - One provider per app. After the async action resolves, render the confirmation surface and call \`useConfettiOnMount()\` there — not from the submit click.
 - For a page celebration, pass a top-center viewport \`origin\` and a wide \`spread\` so the burst rains over the page.
 - Default colors are \`confettiDefaultColors\` (chart categorical 1–7). Pass \`colors\` to override. Do not invent a second celebratory palette.
-- Do not build a one-off trigger. See **Examples/RFP submitted → Pattern — RFP submitted**.
+- Do not build a one-off trigger. See **Sites/WhatMatters/RFP submitted → Pattern — RFP submitted**.
         `.trim(),
       },
     },

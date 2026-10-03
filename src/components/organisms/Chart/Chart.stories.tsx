@@ -213,7 +213,7 @@ function useChartCardBodyStateFromArgs(args: { bodyState?: ChartCardBodyState })
 type ChartStoryArgs = ComponentProps<typeof Chart> & { bodyState?: ChartCardBodyState };
 
 const meta = {
-  title: "Components/Data display/Chart",
+  title: "Components/Chart",
   component: Chart,
   tags: ["autodocs"],
   argTypes: {
@@ -273,7 +273,7 @@ Card.Header / Footer usually carry KPI copy; the chart mark sits in **Card.Body*
 - **Do** use \`Chart.UnitGrid\` only for honest part-to-whole composition, \`Chart.DistributionStrip\` for one metric across peers, and \`Chart.Heatmap\` when both axes are categorical.
 - **Do** use \`fill="velocity"\` for occupancy-style capacity bars; \`fill="semantic"\` for RAG utilization meters (red → orange → yellow → green).
 - **Do** use **Chart.Loading** in **Card.Body** while chart data fetches — keep **Card.Header** mounted; swap the well for **Chart.Cartesian** when resolved (default \`animate="initial"\` fades the plot in once).
-- **Do** use **Skeleton** (**Components/Feedback/Skeleton**) for initial page/card skeleton screens — mirror layout, then swap for **Chart.Loading** or live marks.
+- **Do** use **Skeleton** (**Components/Skeleton**) for initial page/card skeleton screens — mirror layout, then swap for **Chart.Loading** or live marks.
 - **Don't** use \`Chart.SegmentedBar\` for per-day or per-week strips — ticks are not calendar buckets.
 - **Do** use **Chart.Cartesian** hairline defaults — 1.5px stroke, light area fill, solid horizontal grid + dashed vertical columns at x-axis ticks; y-axis \`chartFormatAxisValue\` or \`yTickFormat\`; pass \`verticalGrid={false}\` only when columns add noise.
 - **Do** pass \`null\` (not \`0\`) for missing Cartesian points — the series breaks and a hatched **No data** band covers the x-run (**Pattern — Cartesian no-data gaps**, ADR-0027).

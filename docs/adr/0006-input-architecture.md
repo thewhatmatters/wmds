@@ -107,7 +107,7 @@ Named patterns for search UX — not a second input kit:
 
 ### Storybook contract
 
-**Components/Forms/Input** — prescribed patterns (copy one story):
+**Components/Input** — prescribed patterns (copy one story):
 
 1. **Bare** — placeholder only, `aria-label` required
 2. **With label** — label + optional description
@@ -118,11 +118,11 @@ Named patterns for search UX — not a second input kit:
 7. **With icon** — leading Lucide
 8. **Sizes** — sm / md / lg
 
-**Components/Forms/Field** (when shipped):
+**Components/Field** (when shipped):
 
 6. **Horizontal** — `orientation="horizontal"`
 
-**Components/Forms/Search** (when shipped):
+**Components/Search** (when shipped):
 
 7. **Inline + button** — search row
 
@@ -153,4 +153,4 @@ Named patterns for search UX — not a second input kit:
 
 - ADR-0004 — pattern-first
 - ADR-0002 — atoms vs molecules
-- **Components/Forms/Search** — hero search with inset button
+- **Components/Search** — hero search with inset button

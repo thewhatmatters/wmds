@@ -13,7 +13,7 @@ Storybook meta, **Pattern** stories, and agent notes describe **WMDS contracts o
 - Document **props**, **anatomy**, **composition**, and **when to use** each component.
 - Point to **Pattern — …** stories and **Best practices** for consuming apps and agents.
 - Reference **ADRs** and **Foundations** token stories for architecture/token decisions.
-- Use **For agents building UIs** on complex components when composition rules are easy to get wrong (see **Components/Data display/Avatar**).
+- Use **For agents building UIs** on complex components when composition rules are easy to get wrong (see **Components/Avatar**).
 
 ## Don't
 

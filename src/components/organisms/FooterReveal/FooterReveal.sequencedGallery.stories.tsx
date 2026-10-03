@@ -17,7 +17,7 @@ import { FooterReveal } from "./FooterReveal";
 import { footerRevealFieldClasses, footerRevealRuledFieldClasses } from "./footerRevealStyles";
 
 const meta = {
-  title: "Components/Layout/FooterReveal",
+  title: "Components/FooterReveal",
   component: FooterReveal,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

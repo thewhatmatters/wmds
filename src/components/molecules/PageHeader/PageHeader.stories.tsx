@@ -12,7 +12,7 @@ import { PageHeader, pageHeaderVariants } from "./PageHeader";
 const headerClusterTier = "sm" as const;
 
 const meta = {
-  title: "Components/Layout/PageHeader",
+  title: "Components/PageHeader",
   component: PageHeader,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

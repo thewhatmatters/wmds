@@ -8,7 +8,7 @@ import {
 import { Skeleton, skeletonRadii } from "./Skeleton";
 
 const meta = {
-  title: "Components/Feedback/Skeleton",
+  title: "Components/Skeleton",
   component: Skeleton,
   tags: ["autodocs"],
   argTypes: {
@@ -68,7 +68,7 @@ export const OccupancyHistoryCardSkeleton: Story = {
     docs: {
       description: {
         story:
-          "Skeleton screen mirroring **Components/Data display/Chart → Pattern — occupancy history in Card** — use **Controls → Body state → skeleton** on that story, or compose **Skeleton** blocks as shown here.",
+          "Skeleton screen mirroring **Components/Chart → Pattern — occupancy history in Card** — use **Controls → Body state → skeleton** on that story, or compose **Skeleton** blocks as shown here.",
       },
     },
   },

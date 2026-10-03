@@ -122,7 +122,7 @@ Styles live in **`chartStyles.ts`** (`chartTooltip*`, `chartTooltipAnchorAboveCl
 
 Data shape: **`ChartCartesianPoint[]`** — `{ date: Date; [seriesKey: number] }`. Sample builder: **`buildOccupancyAreaSeries()`** in **`chartSampleData.ts`**.
 
-**Card composition (occupancy history):** **`bodyTerminal`** on **Card** (no Footer → 2px shell bottom); occupant = **`cardLayoutBodyOccupantPadYClasses`** + **`cardLayoutBodyOccupantWellClasses`** + **`cardLayoutBodyOccupantInsetXClasses`**. See **Components/Layout/Card** docs (inset well radius = shell 16px − 2px gutter = **14px**).
+**Card composition (occupancy history):** **`bodyTerminal`** on **Card** (no Footer → 2px shell bottom); occupant = **`cardLayoutBodyOccupantPadYClasses`** + **`cardLayoutBodyOccupantWellClasses`** + **`cardLayoutBodyOccupantInsetXClasses`**. See **Components/Card/Card** docs (inset well radius = shell 16px − 2px gutter = **14px**).
 
 **Not wired yet:** **Card.Header** **Select** period state → **`chartBucketPeriodData`** (stories use static 30-day sample).
 

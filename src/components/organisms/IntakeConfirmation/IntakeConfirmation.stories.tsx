@@ -4,7 +4,7 @@ import { ConfettiProvider } from "../Confetti/Confetti";
 import { IntakeConfirmation } from "./IntakeConfirmation";
 
 const meta = {
-  title: "Components/Feedback/IntakeConfirmation",
+  title: "Components/IntakeConfirmation",
   component: IntakeConfirmation,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

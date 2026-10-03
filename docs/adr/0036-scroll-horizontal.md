@@ -38,7 +38,7 @@ The marketing heroes need the last placeholder to become a full-viewport section
 - `expanded` is an optional slot for that section. It is mounted on the motion layer and in the reduced-motion section. CSS hides the one that does not apply (`motion-reduce` and `data-reduce`).
 - Reduced motion keeps the native horizontal scroller, then renders the last tile as a static `h-svh` section with radius 0 and the same `sr-only` label. The heading is visible above that scroller.
 - On the motion shell the heading stays in the tree as the section's accessible name and is `sr-only`. It is not painted at the top of the pinned window.
-- **Components/Layout/HeroTileStack → Pattern — marketing hero** and **Components/Layout/FooterReveal → Pattern — marketing hero** pass `expandLast`. **Pattern — project gallery** does not.
+- **Components/HeroTileStack → Pattern — marketing hero** and **Components/FooterReveal → Pattern — marketing hero** pass `expandLast`. **Pattern — project gallery** does not.
 
 ## Update — gallery intro
 
@@ -111,7 +111,7 @@ The statement `h2` stays `type-display-2` at normal weight and the display-2 lea
 
 ## Consequences
 
-Consuming apps paste **Components/Layout/ScrollHorizontal → Pattern — project gallery**. **Components/Layout/HeroTileStack → Pattern — marketing hero** and **Components/Layout/FooterReveal → Pattern — marketing hero** place the gallery directly under the hero with `expandLast`, then the rest of the page. The five tiles are solid token-color placeholders. **SiteNav** is unchanged. **FooterReveal** still reveals after the cover, including the full-bleed tile. The marketing hero's guide \`grid-page\` uses \`!py-0\` so that tile meets the footer with no page-background strip.
+Consuming apps paste **Components/ScrollHorizontal → Pattern — project gallery**. **Components/HeroTileStack → Pattern — marketing hero** and **Components/FooterReveal → Pattern — marketing hero** place the gallery directly under the hero with `expandLast`, then the rest of the page. The five tiles are solid token-color placeholders. **SiteNav** is unchanged. **FooterReveal** still reveals after the cover, including the full-bleed tile. The marketing hero's guide \`grid-page\` uses \`!py-0\` so that tile meets the footer with no page-background strip.
 
 ## References
 

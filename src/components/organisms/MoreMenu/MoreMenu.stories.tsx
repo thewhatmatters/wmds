@@ -9,7 +9,7 @@ import { iconButtonSizeForCluster } from "../../../lib/clusterScale";
 import { MoreMenu } from "./MoreMenu";
 
 const meta = {
-  title: "Components/Actions/MoreMenu",
+  title: "Components/MoreMenu",
   component: MoreMenu,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

@@ -13,7 +13,7 @@ function RadioGroupSpecimen({ children }: { children: ReactNode }) {
 }
 
 const meta = {
-  title: "Components/Forms/RadioGroup",
+  title: "Components/Radio/RadioGroup",
   component: RadioGroup,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

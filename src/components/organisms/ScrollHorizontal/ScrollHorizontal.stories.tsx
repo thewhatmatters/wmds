@@ -12,7 +12,7 @@ import {
 } from "./scrollHorizontalIntroStatement";
 
 const meta = {
-  title: "Components/Layout/ScrollHorizontal",
+  title: "Components/ScrollHorizontal",
   component: ScrollHorizontal,
   tags: ["autodocs"],
   args: {

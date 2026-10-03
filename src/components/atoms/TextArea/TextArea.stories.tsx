@@ -7,7 +7,7 @@ function TextAreaSpecimen({ children }: { children: ReactNode }) {
 }
 
 const meta = {
-  title: "Components/Forms/TextArea",
+  title: "Components/TextArea",
   component: TextArea,
   tags: ["autodocs"],
   decorators: [

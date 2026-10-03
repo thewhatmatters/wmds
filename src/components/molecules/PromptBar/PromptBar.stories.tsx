@@ -60,7 +60,7 @@ function PromptBarFrame({ children }: { children: ReactNode }) {
 }
 
 const meta = {
-  title: "Components/Forms/PromptBar",
+  title: "Components/PromptBar",
   component: PromptBar,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

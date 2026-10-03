@@ -76,7 +76,7 @@ function OccupancyPeriodSelect({
 }
 
 const meta = {
-  title: "Components/Layout/Card",
+  title: "Components/Card/Card",
   component: Card,
   tags: ["autodocs"],
   argTypes: {
