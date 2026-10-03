@@ -4,10 +4,16 @@ on:
   push:
     branches: [main]
   pull_request:
+  # The release workflow runs every check here before it publishes.
+  workflow_call:
 
 concurrency:
-  group: ci-${{ github.ref }}
+  # When release.yml calls this workflow, github.workflow is "Release", so the group differs from a push run.
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   validate:
@@ -24,6 +30,9 @@ jobs:
 
       - name: Install
         run: npm ci
+
+      - name: Changelog
+        run: npm run check:changelog
 
       - name: Lint
         run: npm run lint
@@ -43,6 +52,14 @@ jobs:
       # Builds dist and checks it against src/package.manifest.ts.
       - name: Package build and manifest
         run: npm run build
+
+      # What `npm publish` would upload: required files present, sources and tests absent.
+      - name: Package contents
+        run: npm run check:pack
+
+      # No registry credentials here; npm checks the package and stops before uploading.
+      - name: Publish dry run
+        run: npm publish --dry-run --ignore-scripts
 
       - name: Install Playwright Chromium
         run: npx playwright install chromium --with-deps

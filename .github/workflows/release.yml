@@ -1,0 +1,65 @@
+name: Release
+
+# Publishes @whatmatters/wmds to npm when a version tag is pushed, after every CI check passes.
+# Authentication is npm trusted publishing (OIDC): no npm token is stored in the repository.
+# npm can only register a trusted publisher for a package that exists, so the first version is
+# published by hand once — see docs/releasing.md → First publish.
+# Run it by hand (Actions → Release → Run workflow) for a dry run that uploads nothing.
+
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  checks:
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    needs: checks
+    runs-on: ubuntu-latest
+    # Named in the npm trusted publisher settings. Add reviewers to it to require an approval.
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      # No dependency cache in the publish job: the published build comes from a clean install.
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      # Trusted publishing needs npm 11.5.1 or later and Node 22.14 or later; Node 22 ships npm 10.
+      - name: Setup npm
+        run: npm install -g npm@11.21.0
+
+      # Runs `prepare`, which builds dist and validates it against src/package.manifest.ts.
+      - name: Install and build
+        run: npm ci
+
+      # On a tag build this also fails unless the tag is v<package.json version>.
+      - name: Version and changelog
+        run: npm run check:changelog
+
+      - name: Package contents
+        run: npm run check:pack
+
+      - name: Publish
+        if: github.event_name == 'push'
+        run: npm publish --ignore-scripts
+
+      - name: Publish dry run
+        if: github.event_name == 'workflow_dispatch'
+        run: npm publish --dry-run --ignore-scripts
