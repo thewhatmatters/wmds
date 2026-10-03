@@ -49,7 +49,7 @@ function CatalogCard({ entry }: { entry: ComponentCatalogEntry }) {
 }
 
 /** Components → Overview: every export grouped by category, linking to its docs page. */
-export function ComponentCatalog() {
+export function ComponentOverview() {
   return (
     <div className="flex flex-col gap-12">
       {componentCategories.map((category) => {
