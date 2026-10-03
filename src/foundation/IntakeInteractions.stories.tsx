@@ -3,7 +3,7 @@ import { expect, userEvent, waitFor, within } from "storybook/test";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ConfettiProvider } from "../components/organisms/Confetti/Confetti";
 import { IntakeConfirmation } from "../components/organisms/IntakeConfirmation/IntakeConfirmation";
-import { StartAProject } from "../examples/Intake/IntakePattern";
+import { StartAProject } from "../sites/WhatMatters/Intake/IntakePattern";
 
 /**
  * Browser interaction tests — `npm run test:interactions`.

@@ -39,7 +39,7 @@ Reclassify only via ADR update — don't bikeshed per PR. **Card** is a molecule
 
 ### Storybook sidebar
 
-Superseded on **2026-09-10** by **ADR-0026**. Storybook now uses an intent-based public taxonomy (`Start Here → Foundations → Components → Patterns → Examples`) while this ADR continues to govern filesystem placement, package tiers, and one-way imports.
+Superseded on **2026-09-10** by **ADR-0026**. Storybook now uses an intent-based public taxonomy (`Start Here → Foundations → Components → Patterns → Examples`; since the 2026-10-03 amendment, `Getting started → Guides → Foundations → Components → Sites`) while this ADR continues to govern filesystem placement, package tiers, and one-way imports.
 
 ### File convention per component
 

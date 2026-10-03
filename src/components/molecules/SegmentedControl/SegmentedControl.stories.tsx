@@ -10,7 +10,7 @@ import {
 } from "./SegmentedControl";
 
 const meta = {
-  title: "Components/Forms/SegmentedControl",
+  title: "Components/SegmentedControl",
   component: SegmentedControl,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

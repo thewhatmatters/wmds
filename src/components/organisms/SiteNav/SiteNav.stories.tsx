@@ -12,7 +12,7 @@ import {
 } from "./siteNavResourcesSpecimen";
 
 const meta = {
-  title: "Components/Navigation/SiteNav",
+  title: "Components/SiteNav",
   component: SiteNav,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

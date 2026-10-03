@@ -38,7 +38,7 @@ const options = [
 ] as const;
 
 const meta = {
-  title: "Components/Forms/SelectableCard",
+  title: "Components/Card/SelectableCard",
   component: SelectableCard,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

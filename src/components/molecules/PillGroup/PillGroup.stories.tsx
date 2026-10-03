@@ -4,7 +4,7 @@ import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySo
 import { PillGroup } from "./PillGroup";
 
 const meta = {
-  title: "Components/Forms/PillGroup",
+  title: "Components/PillGroup",
   component: PillGroup,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

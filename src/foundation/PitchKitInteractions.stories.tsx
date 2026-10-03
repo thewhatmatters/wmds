@@ -3,11 +3,11 @@ import { expect, userEvent, waitFor, within } from "storybook/test";
 import {
   PitchKitInsightsExample,
   PitchKitOwnerExample,
-} from "../examples/PitchKit/PitchKitExample";
-import { PitchKitShareableExample } from "../examples/PitchKit/PitchKitShareable";
-import { PitchKitPastBrandsExample } from "../examples/PitchKit/PitchKitPastBrands";
-import { PitchKitThemePickerOwnerExample } from "../examples/PitchKit/PitchKitThemePicker";
-import { PitchKitUserSettingsOwnerExample } from "../examples/PitchKit/PitchKitUserSettings";
+} from "../sites/PitchKit/PitchKitExample";
+import { PitchKitShareableExample } from "../sites/PitchKit/PitchKitShareable";
+import { PitchKitPastBrandsExample } from "../sites/PitchKit/PitchKitPastBrands";
+import { PitchKitThemePickerOwnerExample } from "../sites/PitchKit/PitchKitThemePicker";
+import { PitchKitUserSettingsOwnerExample } from "../sites/PitchKit/PitchKitUserSettings";
 
 const meta = {
   title: "Internal/Interactions/PitchKit",

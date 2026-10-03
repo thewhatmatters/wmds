@@ -13,7 +13,7 @@ function CheckboxGroupSpecimen({ children }: { children: ReactNode }) {
 }
 
 const meta = {
-  title: "Components/Forms/CheckboxGroup",
+  title: "Components/Checkbox/CheckboxGroup",
   component: CheckboxGroup,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

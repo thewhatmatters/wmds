@@ -3,7 +3,7 @@ import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySo
 import { StepProgress } from "./StepProgress";
 
 const meta = {
-  title: "Components/Feedback/StepProgress",
+  title: "Components/StepProgress",
   component: StepProgress,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

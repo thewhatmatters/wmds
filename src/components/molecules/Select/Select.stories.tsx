@@ -21,7 +21,7 @@ const periodOptions: SelectOption[] = [
 ];
 
 const meta = {
-  title: "Components/Forms/Select",
+  title: "Components/Select",
   component: Select,
   tags: ["autodocs"],
   argTypes: {
@@ -66,7 +66,7 @@ Input-matched **pill trigger** + floating **listbox** panel — rounded menu, in
 
 - **Do** use \`size="sm"\` beside **Chip sm** / **IconButton xs** in Card headers.
 - **Do** pass stable \`value\` strings — \`label\` is trigger copy; \`start\` / \`end\` are menu-only.
-- **Do** read **Components/Overlays/Dropdown** for row anatomy before custom menus.
+- **Do** read **Components/Dropdown** for row anatomy before custom menus.
 - **Don't** restyle the menu with \`className\` — layout width/margin only on the root.
         `.trim(),
       },

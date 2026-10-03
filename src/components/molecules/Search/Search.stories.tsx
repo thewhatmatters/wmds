@@ -3,7 +3,7 @@ import { MapPin } from "lucide-react";
 import { Search, searchSizes } from "./Search";
 
 const meta = {
-  title: "Components/Forms/Search",
+  title: "Components/Search",
   component: Search,
   tags: ["autodocs"],
   argTypes: {

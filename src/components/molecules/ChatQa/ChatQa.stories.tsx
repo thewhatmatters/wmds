@@ -40,7 +40,7 @@ export function IntakeAnswersInThread() {
 `.trim();
 
 const meta = {
-  title: "Components/Data display/ChatQa",
+  title: "Components/ChatQa",
   component: ChatQa,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

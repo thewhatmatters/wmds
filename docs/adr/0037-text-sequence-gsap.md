@@ -26,7 +26,7 @@ The owner approved GSAP for this sequence only. GSAP and its plugins, including 
 
 ### Marketing hero
 
-**Components/Layout/HeroTileStack → Pattern — marketing hero text sequence** is a variant. **Pattern — marketing hero** uses the same **HeroIntro** `h1` without the sequence.
+**Components/HeroTileStack → Pattern — marketing hero text sequence** is a variant. **Pattern — marketing hero** uses the same **HeroIntro** `h1` without the sequence.
 
 **HeroIntro** is the page `h1`. There is no display-1 **We Are WhatMatters** headline. `step="display"` is `type-display-2` at normal weight and display-2 leading, the same size and line-height as **ScrollHorizontal.Intro**, full width of the page grid. Copy is one sentence: “An Austin, TX studio specializing in brand and product design.” It is one TextSequence and starts immediately. “Austin,” and “TX” stay one phrase (non-breaking space inside `whitespace-nowrap`) and still count as two words. The hero `h1` uses `text-wrap: balance`. The section is `shrink-0` and `justify-center-safe` so a tall intro grows downward from below the nav. A rock **RiveHand** with `inline` sits immediately after “TX”, inside that nowrap phrase, and pops on the beat after TX (`(3 - 0.5) × 0.07s`). The drawn hand is about 1.15em, centered on the line, and the slot is zero height. `aria-hidden`. `entrance="none"`. The heading has no circle or pill. `emphasis="none"` keeps every word regular. The heading `aria-label` is that sentence. The default **Pattern — marketing hero** stays on `step="large"` (`type-display-2`, columns 4–9, wrapping lead) with the inline **Badge**.
 

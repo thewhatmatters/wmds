@@ -29,7 +29,7 @@ Badge may import **Avatar** for this slot only. That is the exception to ADR-000
 
 ### Decorative marketing use
 
-The one sanctioned decorative use of Badge is inline emphasis in **Components/Layout/HeroTileStack → Pattern — marketing hero**. The badge is not clickable. The sentence still reads in order. The hero marks the word `online` with the globe placeholder in `public/hero-badges/`. Product images replace that file.
+The one sanctioned decorative use of Badge is inline emphasis in **Components/HeroTileStack → Pattern — marketing hero**. The badge is not clickable. The sentence still reads in order. The hero marks the word `online` with the globe placeholder in `public/hero-badges/`. Product images replace that file.
 
 ## Update — hero line is type-display-2
 
@@ -55,4 +55,4 @@ The marketing hero intro is `type-display-2`. Badge `md` (24px) stays the inline
 - ADR-0002 — atomic tiers (atom import rule, and this exception)
 - ADR-0017 — Avatar
 - ADR-0032 — HeroTileStack marketing hero
-- Components/Feedback/Badge → **Pattern — with avatar**
+- Components/Badge → **Pattern — with avatar**

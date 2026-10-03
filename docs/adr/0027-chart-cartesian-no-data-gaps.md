@@ -44,7 +44,7 @@ Exported for apps that choose empty vs gaps before mount:
 
 ### Documentation
 
-**Components/Data display/Chart → Pattern — Cartesian no-data gaps** is the copy contract (Show code). Insights PitchKit empty remains a separate State story.
+**Components/Chart → Pattern — Cartesian no-data gaps** is the copy contract (Show code). Insights PitchKit empty remains a separate State story.
 
 ## Non-goals (v1)
 
@@ -63,4 +63,4 @@ Exported for apps that choose empty vs gaps before mount:
 - ADR-0012 — visx Chart organism
 - ADR-0015 — Cartesian area, tooltip, legend
 - `src/components/organisms/Chart/chartCartesianGaps.ts`
-- **Components/Data display/Chart → Pattern — Cartesian no-data gaps**
+- **Components/Chart → Pattern — Cartesian no-data gaps**

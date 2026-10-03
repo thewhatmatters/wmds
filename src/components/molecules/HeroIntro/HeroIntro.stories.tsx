@@ -6,7 +6,7 @@ import { HeroIntro } from "./HeroIntro";
 const lead = "We're a design and product studio based in Austin, Texas.";
 
 const meta = {
-  title: "Components/Layout/HeroIntro",
+  title: "Components/HeroIntro",
   component: HeroIntro,
   tags: ["autodocs"],
   args: {
@@ -27,7 +27,7 @@ Both steps are an \`h1\` on \`type-display-2\` at normal weight, the same font-s
 
 \`lead\` wraps when the measure is shorter than the line, including from \`md\`. Children always start on the next line. Both lines stay centered, with \`text-wrap: balance\`, so a wrapped line is not a single word. Keep “Austin, Texas” together with a non-breaking space.
 
-Paste it inside **Components/Layout/HeroTileStack → Pattern — marketing hero**.
+Paste it inside **Components/HeroTileStack → Pattern — marketing hero**.
 
 ## Anatomy
 

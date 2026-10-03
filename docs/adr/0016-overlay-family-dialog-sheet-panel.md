@@ -53,7 +53,7 @@ Shared internals live in **`src/lib/dialogOverlay.ts`** (focus trap, scroll lock
 
 ### Examples
 
-**`Examples/Overlay flows`** — notification preferences Card composing **Dialog** (channel picker), **AlertDialog** (disable critical alerts), **Sheet** (market filters). Copy this for real settings surfaces.
+**`Guides/Overlay flows`** — notification preferences Card composing **Dialog** (channel picker), **AlertDialog** (disable critical alerts), **Sheet** (market filters). Copy this for real settings surfaces.
 
 ### Interaction tests
 

@@ -60,7 +60,7 @@ The link stack, fitted wordmark, and quiet row are one block. **`footerRevealRul
 
 ## Consequences
 
-Consuming apps paste **Components/Layout/FooterReveal → Pattern — marketing page**. Place **SiteNav** and `grid-page` (or the marketing hero) in **Content**. Pass **`footerRevealFieldClasses`** on **Footer** and compose **FooterReveal.Brand** for the brand plane. **Pattern — marketing hero** puts the hero above that footer.
+Consuming apps paste **Components/FooterReveal → Pattern — marketing page**. Place **SiteNav** and `grid-page` (or the marketing hero) in **Content**. Pass **`footerRevealFieldClasses`** on **Footer** and compose **FooterReveal.Brand** for the brand plane. **Pattern — marketing hero** puts the hero above that footer.
 
 ## References
 

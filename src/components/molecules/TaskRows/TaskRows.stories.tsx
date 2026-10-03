@@ -50,7 +50,7 @@ function AnatomySpecTable({
 }
 
 const meta = {
-  title: "Components/Data display/TaskRows",
+  title: "Components/TaskRows",
   component: TaskRows,
   tags: ["autodocs"],
   argTypes: {

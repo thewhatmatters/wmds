@@ -7,7 +7,7 @@ import { Stat, statSizes } from "./Stat";
 import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySource";
 
 const meta = {
-  title: "Components/Data display/Stat",
+  title: "Components/Stat",
   component: Stat,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

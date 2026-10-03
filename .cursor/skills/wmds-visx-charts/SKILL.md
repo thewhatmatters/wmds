@@ -16,7 +16,7 @@ description: >-
 |-------|--------|
 | Marks, scales, axes math | **visx v4** (`@visx/*`) — peer dep, not bundled |
 | Colors, grid, margins, variants | **`src/lib/chartTheme.ts`** + `src/theme/colors.css` |
-| Shell, tooltip, legend, patterns | **WMDS Chart organism** + **Components/Data display/Chart** in Storybook |
+| Shell, tooltip, legend, patterns | **WMDS Chart organism** + **Components/Chart** in Storybook |
 | Motion | **`motionTransition()` / `motionTransitionProp()`** — not visx animation |
 
 See **ADR-0012**, **AGENTS.md** (Chart bullet), **`.cursor/rules/wmds-pattern-first.mdc`**.
