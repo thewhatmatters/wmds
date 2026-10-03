@@ -26,6 +26,7 @@ WhatMatters needs **designed, named patterns** with narrow extension points — 
 2. **Props over classes** — consumers configure via typed props (`Button` `role`, `layout`, `status`, `count`, `icon`; `IconButton` `icon`, `aria-label`, `fab`, `loading`; `Input` `label`, `status`, `message`, `loading`, `icon`, `size`; `Chip` `size`, `value`, `onRemove`, `icon`, `count`, `readOnly` + `ChipFilterGroup`; `Badge` `variant`, `count`, `icon`; `Status` `variant`, `tone`, `label`, `besideLabel`, `pulsing`, `active`, `step`; `TaskRows` + `TaskRows.Detail` patterns). No generic slots. See **ADR-0006** for inputs.
 3. **New visuals need a pattern** — a new look (e.g. a seventh button variant) requires a component/API change and Storybook spec, not local Tailwind in an app repo.
 4. **Examples are templates** — `src/examples/` shows how to compose organisms for real flows; copy the pattern, don’t re-style with utilities.
+   *Proposed amendment (ADR-0039, under review):* a pattern that carries behavior — state machines, timers, measurement, scroll management, choreography — ships as a component with content as props instead of paste-only Show code.
 
 ### Tailwind’s role (internal)
 
