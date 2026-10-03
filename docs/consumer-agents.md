@@ -28,6 +28,7 @@ Rules:
 4. **Patterns are copied verbatim.** When a pattern matches, copy `docs/patterns/<id>.tsx` whole, keeping its header line that names the pattern and version. Change content and data, not structure or styling.
 5. **Pages start on `grid-page`** and place content with `band` and column spans.
 6. **Gaps go to WMDS, not into the app.** If a component, prop, variant, or token is missing, stop and report it to the WMDS repository (**report-wmds-gap**) instead of adding a one-off in the app.
-7. **Upgrading:** `npm install @whatmatters/wmds@<version>`, then do every **Consumer actions** step between the old and new version and re-copy the patterns it names (**upgrade-wmds**).
+7. **Check before you finish:** `npx wmds-check` flags raw controls, `!` overrides on WMDS components, raw color, type, and motion values, and pasted patterns that drifted from the installed version. Add it to CI.
+8. **Upgrading:** `npm install @whatmatters/wmds@<version>`, then do every **Consumer actions** step between the old and new version and re-copy the patterns it names (**upgrade-wmds**).
 
 ---

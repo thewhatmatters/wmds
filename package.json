@@ -15,8 +15,12 @@
   "publishConfig": {
     "access": "public"
   },
+  "bin": {
+    "wmds-check": "bin/wmds-check.mjs"
+  },
   "files": [
     "dist",
+    "bin",
     "docs/README.md",
     "docs/consumer-agents.md",
     "docs/components.md",

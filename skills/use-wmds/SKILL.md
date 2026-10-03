@@ -53,6 +53,8 @@ A pattern is the approved composition for a task. Copying it is the contract.
 
 ## 5. Check before finishing
 
+Run `npx wmds-check` (ships with the package). It flags the items below; fix every error, and every warning you introduced.
+
 - No raw `<button>`, `<input>`, `<select>`, `<textarea>`, or `<dialog>` where a WMDS component exists.
 - No `!` overrides or style props on WMDS components; no hex/rgb colors, `text-[…]`, `text-sm`-style sizes, or `duration-[…]`.
 - Pasted patterns still carry their header and match `docs/patterns/<id>.tsx` apart from the allowed edits.
