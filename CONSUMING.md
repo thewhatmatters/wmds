@@ -115,6 +115,24 @@ npm install @whatmatters/wmds@^0.2.0
 
 **Faster loop (symlink).** `npm install ../wmds` links the checkout instead, and the app sees each `npm run build` without reinstalling. The linked package resolves `react` from the checkout's own `node_modules`, which gives the app two copies of React (invalid hook call). Only use it when the bundler dedupes React — Vite: `resolve: { dedupe: ["react", "react-dom"] }`. In Next.js prefer the tarball; if you do link, the checkout must sit inside `turbopack.root`.
 
+## Agent skills and docs
+
+The package ships docs for coding agents in `node_modules/@whatmatters/wmds/docs/` (start at `docs/README.md`). Paste the block from `docs/consumer-agents.md` into the app's `AGENTS.md` or `CLAUDE.md`.
+
+Three agent skills live in this repository under `skills/`. Install them with the [`skills` CLI](https://github.com/vercel-labs/skills), pinned to the release tag that matches the installed package:
+
+```bash
+npx skills add 'thewhatmatters/wmds#v0.2.0' -s use-wmds -s upgrade-wmds -s report-wmds-gap -a claude-code -y
+```
+
+| Skill | When the agent uses it |
+|-------|------------------------|
+| `use-wmds` | Before writing or changing UI: find the component or pattern, props not utilities, `className` for layout only, tokens only, copy Show code verbatim with its version header |
+| `upgrade-wmds` | When bumping `@whatmatters/wmds`: install, apply every Consumer actions step, re-sync pasted patterns, refresh the skills, run checks |
+| `report-wmds-gap` | When WMDS is missing something: what to file, where, and how to open a WMDS pull request that follows `AGENTS.md` |
+
+The command copies the skills into `.claude/skills/` and records them in `skills-lock.json`; commit both. Add more `-a` agents (for example `-a codex`) to install for them too. The **upgrade-wmds** skill re-runs the command with the new tag.
+
 ## Wire up styles
 
 ```tsx

@@ -43,6 +43,8 @@
     "./grid.css": "./dist/grid.css",
     "./shape.css": "./dist/shape.css",
     "./scrollFade.css": "./dist/scrollFade.css",
+    "./docs/*": "./docs/*",
+    "./CHANGELOG.md": "./CHANGELOG.md",
     "./package.json": "./package.json"
   },
   "sideEffects": [
