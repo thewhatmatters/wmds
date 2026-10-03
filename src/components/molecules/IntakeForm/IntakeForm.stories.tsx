@@ -4,7 +4,7 @@ import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySo
 import { IntakeForm, intakeAboutEmpty, type IntakeAboutValues } from "./IntakeForm";
 
 const meta = {
-  title: "Components/Forms/IntakeForm",
+  title: "Components/IntakeForm",
   component: IntakeForm,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

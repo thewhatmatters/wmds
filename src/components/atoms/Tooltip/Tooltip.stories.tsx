@@ -8,7 +8,7 @@ import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCo
 import { Tooltip, tooltipAlignments, tooltipSides } from "./Tooltip";
 
 const meta = {
-  title: "Components/Feedback/Tooltip",
+  title: "Components/Tooltip",
   component: Tooltip,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

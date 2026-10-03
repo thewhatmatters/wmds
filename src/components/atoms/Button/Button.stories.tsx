@@ -7,7 +7,7 @@ import { typographyClass } from "../../../lib/typography";
 import { storyCopySource, storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 
 const meta = {
-  title: "Components/Actions/Button",
+  title: "Components/Button/Button",
   component: Button,
   tags: ["autodocs"],
   argTypes: {

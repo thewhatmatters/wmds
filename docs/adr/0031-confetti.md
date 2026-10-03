@@ -23,7 +23,7 @@ Ship **ConfettiProvider**, **useConfetti**, and **useConfettiOnMount** as an org
 - **`prefers-reduced-motion: reduce`**, and `MotionConfig` `reducedMotion="always"`, make `fire()` do nothing. No particles and no fade. `reducedMotion="never"` does not override the OS preference.
 - Default colors are **`confettiDefaultColors`**: `var(--color-chart-categorical-1)` through **7**. Those tokens already exist in light and dark and are a distinct multi-hue set. Status colors (success, warning, info, error) would read as system state. No new color role.
 - `"use client"` on the module, and the library bundle banner, so a Next App Router Server Component tree can import it.
-- No **ConfettiButton**. **Button** already owns press feedback, including the status morph. Do not fire from the submit click. After the async action resolves, render the confirmation surface and call `useConfettiOnMount()` there. The RFP flow is **Examples/RFP submitted → Pattern — RFP submitted**.
+- No **ConfettiButton**. **Button** already owns press feedback, including the status morph. Do not fire from the submit click. After the async action resolves, render the confirmation surface and call `useConfettiOnMount()` there. The RFP flow is **Sites/WhatMatters/RFP submitted → Pattern — RFP submitted**.
 
 The keyframe generator takes an injectable `random` so a seeded source is deterministic. That option is not part of the public `fire()` options.
 
@@ -36,7 +36,7 @@ The keyframe generator takes an injectable `random` so a seeded source is determ
 
 ## Consequences
 
-Consuming apps mount **ConfettiProvider** at the root. After the async action resolves, render the confirmation or success surface and call `useConfettiOnMount()` there — not from the submit click. Copy **Examples/RFP submitted → Pattern — RFP submitted**.
+Consuming apps mount **ConfettiProvider** at the root. After the async action resolves, render the confirmation or success surface and call `useConfettiOnMount()` there — not from the submit click. Copy **Sites/WhatMatters/RFP submitted → Pattern — RFP submitted**.
 
 ## References
 

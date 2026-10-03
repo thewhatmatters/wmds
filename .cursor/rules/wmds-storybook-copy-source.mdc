@@ -26,7 +26,7 @@ alwaysApply: false
 
 Helpers: **`src/lib/storyCopySource.ts`**.
 
-Page-level **Examples** — **Show code is the product contract**. The freeze must stay a literal mirror of the live canvas (layout, chrome, spacing, typography). Prefer the same class strings the Example `*Styles.ts` applies. Omit **`ExampleGridControls`** and other Storybook-only chrome.
+Page-level **Sites** and **Guides** pages — **Show code is the product contract**. The freeze must stay a literal mirror of the live canvas (layout, chrome, spacing, typography). Prefer the same class strings the page `*Styles.ts` applies. Omit **`ExampleGridControls`** and other Storybook-only chrome.
 
 ## Before merge
 

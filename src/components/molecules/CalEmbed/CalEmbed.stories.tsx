@@ -5,7 +5,7 @@ import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySo
 import { CalEmbed } from "./CalEmbed";
 
 const meta = {
-  title: "Components/Forms/CalEmbed",
+  title: "Components/CalEmbed",
   component: CalEmbed,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

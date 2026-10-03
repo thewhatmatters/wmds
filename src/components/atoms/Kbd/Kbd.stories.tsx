@@ -8,7 +8,7 @@ import { Kbd, kbdSizes } from "./Kbd";
 import { useKbdChoiceKeys } from "./useKbdChoiceKeys";
 
 const meta = {
-  title: "Components/Data display/Kbd",
+  title: "Components/Kbd",
   component: Kbd,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

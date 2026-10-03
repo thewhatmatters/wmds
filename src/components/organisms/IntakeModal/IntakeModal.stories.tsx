@@ -5,7 +5,7 @@ import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySo
 import { IntakeModal } from "./IntakeModal";
 
 const meta = {
-  title: "Components/Overlays/IntakeModal",
+  title: "Components/IntakeModal",
   component: IntakeModal,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

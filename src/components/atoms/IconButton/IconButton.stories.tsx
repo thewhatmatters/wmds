@@ -5,7 +5,7 @@ import { IconButton, buttonRoles } from "./IconButton";
 import { iconButtonToolbarGroupClasses } from "./iconButtonStyles";
 
 const meta = {
-  title: "Components/Actions/IconButton",
+  title: "Components/Button/IconButton",
   component: IconButton,
   tags: ["autodocs"],
   argTypes: {

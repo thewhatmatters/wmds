@@ -20,7 +20,7 @@ Ship **HeroIntro** as a molecule under **Components/Layout**:
 - `className` is layout only.
 - Show code passes `lead` and children. It does not contain a break.
 
-**Components/Layout/HeroTileStack → Pattern — marketing hero** and **Components/Layout/FooterReveal → Pattern — marketing hero** compose **HeroIntro**. The inline **Badge** on `online` stays in the children (ADR-0033).
+**Components/HeroTileStack → Pattern — marketing hero** and **Components/FooterReveal → Pattern — marketing hero** compose **HeroIntro**. The inline **Badge** on `online` stays in the children (ADR-0033).
 
 ## Non-goals
 

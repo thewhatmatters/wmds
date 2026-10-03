@@ -9,17 +9,17 @@ Start a project needs one full-screen flow: what you need, budget, about you, th
 
 ## Decision
 
-Ship the intake as exported components. The composed flow is **Patterns/Intake → Pattern — start a project**. Show code is the paste.
+Ship the intake as exported components. The composed flow is **Sites/WhatMatters/Intake → Pattern — start a project**. Show code is the paste.
 
 | Piece | Tier | Catalog |
 |-------|------|---------|
-| **IntakeModal** | Organism | Components/Overlays/IntakeModal |
-| **StepProgress** | Molecule | Components/Feedback/StepProgress |
-| **SelectableCard** | Molecule | Components/Forms/SelectableCard |
-| **PillGroup** | Molecule | Components/Forms/PillGroup |
-| **IntakeForm** | Molecule | Components/Forms/IntakeForm |
-| **CalEmbed** | Molecule | Components/Forms/CalEmbed |
-| **IntakeConfirmation** | Organism | Components/Feedback/IntakeConfirmation |
+| **IntakeModal** | Organism | Components/IntakeModal |
+| **StepProgress** | Molecule | Components/StepProgress |
+| **SelectableCard** | Molecule | Components/Card/SelectableCard |
+| **PillGroup** | Molecule | Components/PillGroup |
+| **IntakeForm** | Molecule | Components/IntakeForm |
+| **CalEmbed** | Molecule | Components/CalEmbed |
+| **IntakeConfirmation** | Organism | Components/IntakeConfirmation |
 
 - **IntakeModal** portals to `document.body`. It uses the shared focus trap and scroll lock. Escape closes. `aria-modal="true"`. The header is the typographic **WM** mark and the **WhatMatters** wordmark. There is no separate logo asset. Close is **IconButton**. The footer is **Button** `secondary` and `primary`, pinned while the step body scrolls. `hideContinue` omits Continue. `hideFooter` centers the body.
 - **StepProgress** is a muted **Badge** pill plus N segments. Filled segments use `--color-brand` (#011272).

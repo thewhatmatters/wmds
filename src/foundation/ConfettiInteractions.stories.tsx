@@ -3,7 +3,7 @@ import { StrictMode } from "react";
 import { expect, waitFor } from "storybook/test";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ConfettiProvider, useConfetti } from "../components/organisms/Confetti/Confetti";
-import { RfpSubmittedPage } from "../examples/RfpSubmitted/RfpSubmittedExample";
+import { RfpSubmittedPage } from "../sites/WhatMatters/RfpSubmitted/RfpSubmittedExample";
 
 /**
  * Browser interaction tests — `npm run test:interactions`.

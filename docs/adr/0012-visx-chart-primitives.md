@@ -26,7 +26,7 @@ Earlier scaffolding referenced Recharts and `chartTheme.ts` prop helpers. Rechar
 ### WMDS owns
 
 - **`src/lib/chartTheme.ts`** — semantic token maps (`--color-*`), margins, area presets, dot-grid — library-agnostic SVG/chart chrome.
-- **Chart organism** (`src/components/organisms/Chart`; **Components/Data display/Chart** in Storybook) — responsive shell, WMDS tooltip/legend, and catalog patterns.
+- **Chart organism** (`src/components/organisms/Chart`; **Components/Chart** in Storybook) — responsive shell, WMDS tooltip/legend, and catalog patterns.
 - **Foundations → Charts** — token specimens when Chart ships.
 
 ### WMDS does not ship

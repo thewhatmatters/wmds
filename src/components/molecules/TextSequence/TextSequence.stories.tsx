@@ -163,7 +163,7 @@ function expectInsideViewport(root: ParentNode) {
 }
 
 const meta = {
-  title: "Components/Layout/TextSequence",
+  title: "Components/TextSequence",
   component: TextSequence,
   tags: ["autodocs"],
   args: {

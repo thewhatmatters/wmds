@@ -12,7 +12,7 @@ import { scrollHorizontalIntroStatement, scrollHorizontalMarketingItems } from "
 import { SiteNav } from "../SiteNav/SiteNav";
 
 const meta = {
-  title: "Components/Layout/HeroTileStack",
+  title: "Components/HeroTileStack",
   component: HeroTileStack,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

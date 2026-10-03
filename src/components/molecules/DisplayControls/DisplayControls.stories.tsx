@@ -9,7 +9,7 @@ import {
 } from "./DisplayControls";
 
 const meta = {
-  title: "Components/Layout/DisplayControls",
+  title: "Components/DisplayControls",
   component: DisplayControls,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

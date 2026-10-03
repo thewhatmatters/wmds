@@ -13,7 +13,7 @@ function FieldSpecimen({ children }: { children: ReactNode }) {
 }
 
 const meta = {
-  title: "Components/Forms/Field",
+  title: "Components/Field",
   component: Field,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

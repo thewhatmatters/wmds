@@ -4,7 +4,7 @@ import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
 import { Dropdown } from "./Dropdown";
 
 const meta = {
-  title: "Components/Overlays/Dropdown",
+  title: "Components/Dropdown",
   component: Dropdown.Menu,
   tags: ["autodocs"],
   parameters: {

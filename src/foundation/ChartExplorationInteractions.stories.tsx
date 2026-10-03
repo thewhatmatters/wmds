@@ -8,7 +8,7 @@ import {
   creatorComposition,
   creatorCompositionConfig,
   recentPostReach,
-} from "../examples/ChartExplorations/chartExplorationsData";
+} from "../guides/ChartExplorations/chartExplorationsData";
 
 const meta = {
   title: "Internal/Interactions/Chart exploration",

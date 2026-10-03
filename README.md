@@ -1,6 +1,6 @@
 # WMDS — WhatMatters Design System
 
-Tailwind v4 theme + **pattern-first** Storybook catalog. **Storybook is canonical** — prescribed components and Examples, not utility-class soup.
+Tailwind v4 theme + **pattern-first** Storybook catalog. **Storybook is canonical** — prescribed components and Sites patterns, not utility-class soup.
 
 ## Stack
 
@@ -52,11 +52,11 @@ npm run validate:composition  # molecules/organisms must compose atoms (CI)
 
 The list is `src/package.manifest.ts`. `npm run build` fails when it and `src/index.ts` disagree.
 
-**Storybook-only:** **Examples/** tier — page-level compositions for copy-paste; not package exports.
+**Storybook-only:** **Sites/** (pages and flows per product — WhatMatters, PitchKit) and **Guides/** (cross-component guidance) — page-level compositions for copy-paste; not package exports.
 
 **Motion:** CSS tokens for simple transitions; [`motion/react`](https://motion.dev/docs/react) for gestures, layout, and enter/exit. Helpers in **`src/lib/motion.ts`** (reads Theme CSS vars).
 
-**Architecture:** Theme → lib → Atoms → Molecules → Organisms → Examples. **Pattern-first** for consumers ([ADR-0004](docs/adr/0004-pattern-first-not-utility-first.md)). **Mobile-first** on all tiers ([ADR-0003](docs/adr/0003-responsive-mobile-first.md)). See ADR-0001, ADR-0002.
+**Architecture:** Theme → lib → Atoms → Molecules → Organisms → Sites / Guides. **Pattern-first** for consumers ([ADR-0004](docs/adr/0004-pattern-first-not-utility-first.md)). **Mobile-first** on all tiers ([ADR-0003](docs/adr/0003-responsive-mobile-first.md)). See ADR-0001, ADR-0002.
 
 ## Paper
 

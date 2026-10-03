@@ -32,7 +32,7 @@ const heroTiles: HeroTileStackTile[] = [
 const projects = scrollHorizontalMarketingItems;
 
 const meta = {
-  title: "Components/Layout/HeroTileStack",
+  title: "Components/HeroTileStack",
   component: HeroTileStack,
   tags: ["autodocs"],
   args: {

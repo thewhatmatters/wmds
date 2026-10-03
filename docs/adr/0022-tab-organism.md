@@ -62,4 +62,4 @@ Ship **Tab** as an organism under `src/components/organisms/Tab/`.
 ## References
 
 - ADR-0019 (NavList)
-- **Components/Navigation/Tab → Pattern — responsive overflow**
+- **Components/Tab → Pattern — responsive overflow**

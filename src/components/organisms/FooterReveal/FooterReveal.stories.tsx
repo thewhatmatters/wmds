@@ -19,7 +19,7 @@ import { footerRevealWordmarkFillsFrame } from "./footerRevealWordmark";
 import { footerRevealFieldClasses, footerRevealRuledFieldClasses } from "./footerRevealStyles";
 
 const meta = {
-  title: "Components/Layout/FooterReveal",
+  title: "Components/FooterReveal",
   component: FooterReveal,
   tags: ["autodocs"],
   ...storyMetaDocsDefaults(),

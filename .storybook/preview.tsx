@@ -34,7 +34,7 @@ function PreviewShell({
     }
   }, [isDark]);
 
-  /** Canvas tab — Examples use `wmdsLayout: "fullscreen"`. */
+  /** Canvas tab — Sites and Guides pages use `wmdsLayout: "fullscreen"`. */
   const storyShellClass = isFullscreen
     ? "flex h-[100svh] min-h-[100svh] w-full flex-col"
     : isPadded
@@ -106,58 +106,34 @@ const preview: Preview = {
   parameters: {
     options: {
       /**
-       * Public navigation is organized by use intent. Atomic tiers remain an
-       * implementation detail of src/components and packageManifest.
+       * Sidebar order (ADR-0026, amended 2026-10-03): Getting started → Guides →
+       * Foundations → Components → Sites → Internal. Components → Overview leads its
+       * section; everything else is A–Z by path segment, with WhatMatters first under
+       * Sites. Atomic tiers stay an implementation detail of src/components.
+       * Self-contained on purpose — Storybook evaluates this function on its own.
        */
       storySort: (a, b) => {
-        const sections = ["Start Here", "Foundations", "Components", "Patterns", "Examples", "Internal"];
-        const foundations = [
-          "Grid",
-          "Colors",
-          "Typography",
-          "Spacing",
-          "Shape",
-          "Shadows",
-          "Motion",
-          "Icons",
-          "Charts",
-          "Cluster",
-          "Scroll fade",
-          "Background patterns",
-        ];
-        const componentCategories = [
-          "Actions",
-          "Forms",
-          "Navigation",
-          "Feedback",
-          "Overlays",
-          "Data display",
-          "Layout",
-        ];
-        const rank = (title, list) => {
-          const index = list.indexOf(title);
-          return index === -1 ? list.length : index;
+        const sections = ["Getting started", "Guides", "Foundations", "Components", "Sites", "Internal"];
+        const pinned = { Components: "Overview", Sites: "WhatMatters" };
+        const aParts = (a.title ?? "").split("/");
+        const bParts = (b.title ?? "").split("/");
+        const rank = (section) => {
+          const index = sections.indexOf(section);
+          return index === -1 ? sections.length : index;
         };
-        const aTitle = a.title ?? "";
-        const bTitle = b.title ?? "";
-        const aTier = aTitle.split("/")[0] ?? "";
-        const bTier = bTitle.split("/")[0] ?? "";
-        const tierDelta = rank(aTier, sections) - rank(bTier, sections);
-        if (tierDelta !== 0) return tierDelta;
-        if (aTier === "Foundations") {
-          const aName = aTitle.split("/")[1] ?? "";
-          const bName = bTitle.split("/")[1] ?? "";
-          const foundationDelta = rank(aName, foundations) - rank(bName, foundations);
-          if (foundationDelta !== 0) return foundationDelta;
+        const sectionDelta = rank(aParts[0]) - rank(bParts[0]);
+        if (sectionDelta !== 0) return sectionDelta;
+        const first = pinned[aParts[0]];
+        if (first && aParts[1] !== bParts[1]) {
+          if (aParts[1] === first) return -1;
+          if (bParts[1] === first) return 1;
         }
-        if (aTier === "Components") {
-          const aCategory = aTitle.split("/")[1] ?? "";
-          const bCategory = bTitle.split("/")[1] ?? "";
-          const categoryDelta =
-            rank(aCategory, componentCategories) - rank(bCategory, componentCategories);
-          if (categoryDelta !== 0) return categoryDelta;
+        const depth = Math.max(aParts.length, bParts.length);
+        for (let i = 1; i < depth; i += 1) {
+          const delta = (aParts[i] ?? "").localeCompare(bParts[i] ?? "", undefined, { numeric: true, sensitivity: "base" });
+          if (delta !== 0) return delta;
         }
-        return aTitle.localeCompare(bTitle, undefined, { numeric: true });
+        return 0;
       },
     },
     /**

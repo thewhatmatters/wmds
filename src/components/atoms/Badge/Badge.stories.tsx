@@ -5,7 +5,7 @@ import { Button } from "../Button/Button";
 import { Badge, badgeVariants, type BadgeVariant } from "./Badge";
 
 const meta = {
-  title: "Components/Feedback/Badge",
+  title: "Components/Badge",
   component: Badge,
   tags: ["autodocs"],
   argTypes: {
@@ -50,7 +50,7 @@ Solid semantic fills for status and category labels. **Variants:** \`neutral\` (
 - **Don't** badge every healthy row — if all items show green "Active", none stand out.
 - **Don't** use badges for metadata (dates, durations) — use supporting text.
 - **Don't** make badges clickable — use Button or Link for actions.
-- **Don't** use badges as decoration. The one sanctioned decorative use is inline emphasis in a marketing hero — **Components/Layout/HeroTileStack → Pattern — marketing hero**.
+- **Don't** use badges as decoration. The one sanctioned decorative use is inline emphasis in a marketing hero — **Components/HeroTileStack → Pattern — marketing hero**.
         `.trim(),
       },
     },
@@ -291,7 +291,7 @@ export const InlineInProse: Story = {
     docs: {
       description: {
         story:
-          "Status words inside a sentence. Badges stay non-interactive so the line still reads in order. Decorative inline badges are only for the marketing hero — **Components/Layout/HeroTileStack → Pattern — marketing hero**.",
+          "Status words inside a sentence. Badges stay non-interactive so the line still reads in order. Decorative inline badges are only for the marketing hero — **Components/HeroTileStack → Pattern — marketing hero**.",
       },
     },
   },
