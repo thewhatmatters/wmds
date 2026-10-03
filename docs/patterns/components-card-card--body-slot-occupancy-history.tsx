@@ -1,0 +1,32 @@
+// @whatmatters/wmds@0.2.0 · Example — body slot (occupancy history)
+// Storybook: Components/Card/Card → Example — body slot (occupancy history) (?path=/story/components-card-card--body-slot-occupancy-history)
+// Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
+
+import {
+  Card,
+  Chart,
+  Select,
+  chartSeriesConfigFromKeys,
+  cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantPadYClasses,
+  cardLayoutBodyOccupantWellClasses,
+  cardTitleClasses,
+} from "@whatmatters/wmds";
+
+const config = chartSeriesConfigFromKeys([
+  { key: "occupied", label: "Occupied units" },
+  { key: "available", label: "Available units" },
+]);
+
+<Card shape="rounded" className="max-w-lg">
+  <Card.Header
+    start={<h2 className={cardTitleClasses}>Occupancy history</h2>}
+    end={<Select aria-label="Reporting period" size="sm" options={periodOptions} defaultValue="month" className="w-36" />}
+  />
+  <Card.Body>
+    <div className={`flex flex-col gap-3 ${cardLayoutBodyOccupantPadYClasses} ${cardLayoutBodyOccupantWellClasses} ${cardLayoutBodyOccupantInsetXClasses}`}>
+      <Chart.Cartesian data={data} config={config} periodKind="month" minHeight={220} />
+      <Chart.Legend config={config} />
+    </div>
+  </Card.Body>
+</Card>

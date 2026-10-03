@@ -1,0 +1,860 @@
+{
+  "package": "@whatmatters/wmds",
+  "version": "0.2.0",
+  "patterns": [
+    {
+      "id": "components-avatar--dropdown-row",
+      "title": "Components/Avatar",
+      "name": "Pattern — dropdown row",
+      "file": "patterns/components-avatar--dropdown-row.tsx",
+      "storybook": "?path=/story/components-avatar--dropdown-row"
+    },
+    {
+      "id": "components-badge--with-avatar",
+      "title": "Components/Badge",
+      "name": "Pattern — with avatar",
+      "file": "patterns/components-badge--with-avatar.tsx",
+      "storybook": "?path=/story/components-badge--with-avatar"
+    },
+    {
+      "id": "components-button-button--destructive-action",
+      "title": "Components/Button/Button",
+      "name": "Pattern — destructive action",
+      "file": "patterns/components-button-button--destructive-action.tsx",
+      "storybook": "?path=/story/components-button-button--destructive-action"
+    },
+    {
+      "id": "components-button-button--ghost-action",
+      "title": "Components/Button/Button",
+      "name": "Pattern — ghost action",
+      "file": "patterns/components-button-button--ghost-action.tsx",
+      "storybook": "?path=/story/components-button-button--ghost-action"
+    },
+    {
+      "id": "components-button-button--inverse-action",
+      "title": "Components/Button/Button",
+      "name": "Pattern — inverse action",
+      "file": "patterns/components-button-button--inverse-action.tsx",
+      "storybook": "?path=/story/components-button-button--inverse-action"
+    },
+    {
+      "id": "components-button-button--link-render",
+      "title": "Components/Button/Button",
+      "name": "Pattern — link",
+      "file": "patterns/components-button-button--link-render.tsx",
+      "storybook": "?path=/story/components-button-button--link-render"
+    },
+    {
+      "id": "components-button-button--multi-state-badge",
+      "title": "Components/Button/Button",
+      "name": "Pattern — submit / async",
+      "file": "patterns/components-button-button--multi-state-badge.tsx",
+      "storybook": "?path=/story/components-button-button--multi-state-badge"
+    },
+    {
+      "id": "components-button-button--outline-mono",
+      "title": "Components/Button/Button",
+      "name": "Pattern — outline mono",
+      "file": "patterns/components-button-button--outline-mono.tsx",
+      "storybook": "?path=/story/components-button-button--outline-mono"
+    },
+    {
+      "id": "components-button-button--primary-action",
+      "title": "Components/Button/Button",
+      "name": "Pattern — primary action",
+      "file": "patterns/components-button-button--primary-action.tsx",
+      "storybook": "?path=/story/components-button-button--primary-action"
+    },
+    {
+      "id": "components-button-button--row-layout",
+      "title": "Components/Button/Button",
+      "name": "Pattern — row",
+      "file": "patterns/components-button-button--row-layout.tsx",
+      "storybook": "?path=/story/components-button-button--row-layout"
+    },
+    {
+      "id": "components-button-button--secondary-action",
+      "title": "Components/Button/Button",
+      "name": "Pattern — secondary action",
+      "file": "patterns/components-button-button--secondary-action.tsx",
+      "storybook": "?path=/story/components-button-button--secondary-action"
+    },
+    {
+      "id": "components-button-button--with-count",
+      "title": "Components/Button/Button",
+      "name": "Pattern — with count",
+      "file": "patterns/components-button-button--with-count.tsx",
+      "storybook": "?path=/story/components-button-button--with-count"
+    },
+    {
+      "id": "components-button-button--with-icon",
+      "title": "Components/Button/Button",
+      "name": "Pattern — with icon",
+      "file": "patterns/components-button-button--with-icon.tsx",
+      "storybook": "?path=/story/components-button-button--with-icon"
+    },
+    {
+      "id": "components-button-floatingactionbutton--vertical-actions",
+      "title": "Components/Button/FloatingActionButton",
+      "name": "Pattern — vertical actions",
+      "file": "patterns/components-button-floatingactionbutton--vertical-actions.tsx",
+      "storybook": "?path=/story/components-button-floatingactionbutton--vertical-actions"
+    },
+    {
+      "id": "components-calembed--pattern-skip-in-footer",
+      "title": "Components/CalEmbed",
+      "name": "Pattern — skip in footer",
+      "file": "patterns/components-calembed--pattern-skip-in-footer.tsx",
+      "storybook": "?path=/story/components-calembed--pattern-skip-in-footer"
+    },
+    {
+      "id": "components-card-card--body-slot-occupancy-history",
+      "title": "Components/Card/Card",
+      "name": "Example — body slot (occupancy history)",
+      "file": "patterns/components-card-card--body-slot-occupancy-history.tsx",
+      "storybook": "?path=/story/components-card-card--body-slot-occupancy-history"
+    },
+    {
+      "id": "components-card-card--headerless-media",
+      "title": "Components/Card/Card",
+      "name": "Pattern — headerless media",
+      "file": "patterns/components-card-card--headerless-media.tsx",
+      "storybook": "?path=/story/components-card-card--headerless-media"
+    },
+    {
+      "id": "components-card-card--outlined-layout",
+      "title": "Components/Card/Card",
+      "name": "Pattern — outlined layout",
+      "file": "patterns/components-card-card--outlined-layout.tsx",
+      "storybook": "?path=/story/components-card-card--outlined-layout"
+    },
+    {
+      "id": "components-card-card--pinned-height",
+      "title": "Components/Card/Card",
+      "name": "Pattern — pinned height",
+      "file": "patterns/components-card-card--pinned-height.tsx",
+      "storybook": "?path=/story/components-card-card--pinned-height"
+    },
+    {
+      "id": "components-card-selectablecard--selectable-cards-pattern",
+      "title": "Components/Card/SelectableCard",
+      "name": "Pattern — selectable cards",
+      "file": "patterns/components-card-selectablecard--selectable-cards-pattern.tsx",
+      "storybook": "?path=/story/components-card-selectablecard--selectable-cards-pattern"
+    },
+    {
+      "id": "components-chart--audience-activity-heatmap",
+      "title": "Components/Chart",
+      "name": "Pattern — matrix heatmap",
+      "file": "patterns/components-chart--audience-activity-heatmap.tsx",
+      "storybook": "?path=/story/components-chart--audience-activity-heatmap"
+    },
+    {
+      "id": "components-chart--cartesian-no-data-gaps",
+      "title": "Components/Chart",
+      "name": "Pattern — Cartesian no-data gaps",
+      "file": "patterns/components-chart--cartesian-no-data-gaps.tsx",
+      "storybook": "?path=/story/components-chart--cartesian-no-data-gaps"
+    },
+    {
+      "id": "components-chart--occupancy-history-in-card",
+      "title": "Components/Chart",
+      "name": "Pattern — occupancy history in Card",
+      "file": "patterns/components-chart--occupancy-history-in-card.tsx",
+      "storybook": "?path=/story/components-chart--occupancy-history-in-card"
+    },
+    {
+      "id": "components-chart--occupancy-in-card",
+      "title": "Components/Chart",
+      "name": "Pattern — occupancy KPI in Card",
+      "file": "patterns/components-chart--occupancy-in-card.tsx",
+      "storybook": "?path=/story/components-chart--occupancy-in-card"
+    },
+    {
+      "id": "components-chart--post-reach-distribution",
+      "title": "Components/Chart",
+      "name": "Pattern — distribution strip",
+      "file": "patterns/components-chart--post-reach-distribution.tsx",
+      "storybook": "?path=/story/components-chart--post-reach-distribution"
+    },
+    {
+      "id": "components-chart--ranked-audience-breakdown",
+      "title": "Components/Chart",
+      "name": "Pattern — ranked audience breakdown",
+      "file": "patterns/components-chart--ranked-audience-breakdown.tsx",
+      "storybook": "?path=/story/components-chart--ranked-audience-breakdown"
+    },
+    {
+      "id": "components-chart--unit-grid-composition",
+      "title": "Components/Chart",
+      "name": "Pattern — 100-unit composition",
+      "file": "patterns/components-chart--unit-grid-composition.tsx",
+      "storybook": "?path=/story/components-chart--unit-grid-composition"
+    },
+    {
+      "id": "components-chatqa--pattern-qa-with-reply",
+      "title": "Components/ChatQa",
+      "name": "Pattern — Q&A with reply",
+      "file": "patterns/components-chatqa--pattern-qa-with-reply.tsx",
+      "storybook": "?path=/story/components-chatqa--pattern-qa-with-reply"
+    },
+    {
+      "id": "components-checkbox-checkbox--default",
+      "title": "Components/Checkbox/Checkbox",
+      "name": "Pattern — default",
+      "file": "patterns/components-checkbox-checkbox--default.tsx",
+      "storybook": "?path=/story/components-checkbox-checkbox--default"
+    },
+    {
+      "id": "components-checkbox-checkbox--with-description",
+      "title": "Components/Checkbox/Checkbox",
+      "name": "Pattern — with description",
+      "file": "patterns/components-checkbox-checkbox--with-description.tsx",
+      "storybook": "?path=/story/components-checkbox-checkbox--with-description"
+    },
+    {
+      "id": "components-checkbox-checkboxgroup--default",
+      "title": "Components/Checkbox/CheckboxGroup",
+      "name": "Pattern — default",
+      "file": "patterns/components-checkbox-checkboxgroup--default.tsx",
+      "storybook": "?path=/story/components-checkbox-checkboxgroup--default"
+    },
+    {
+      "id": "components-dialog--alert-dialog-destructive",
+      "title": "Components/Dialog",
+      "name": "Pattern — alert dialog (destructive)",
+      "file": "patterns/components-dialog--alert-dialog-destructive.tsx",
+      "storybook": "?path=/story/components-dialog--alert-dialog-destructive"
+    },
+    {
+      "id": "components-dialog--default-dialog",
+      "title": "Components/Dialog",
+      "name": "Pattern — dialog",
+      "file": "patterns/components-dialog--default-dialog.tsx",
+      "storybook": "?path=/story/components-dialog--default-dialog"
+    },
+    {
+      "id": "components-dialog--form-dialog",
+      "title": "Components/Dialog",
+      "name": "Pattern — form dialog",
+      "file": "patterns/components-dialog--form-dialog.tsx",
+      "storybook": "?path=/story/components-dialog--form-dialog"
+    },
+    {
+      "id": "components-displaycontrols--page-utilities",
+      "title": "Components/DisplayControls",
+      "name": "Pattern — page display controls",
+      "file": "patterns/components-displaycontrols--page-utilities.tsx",
+      "storybook": "?path=/story/components-displaycontrols--page-utilities"
+    },
+    {
+      "id": "components-field--horizontal-input",
+      "title": "Components/Field",
+      "name": "Pattern — horizontal input",
+      "file": "patterns/components-field--horizontal-input.tsx",
+      "storybook": "?path=/story/components-field--horizontal-input"
+    },
+    {
+      "id": "components-field--horizontal-text-area",
+      "title": "Components/Field",
+      "name": "Pattern — horizontal textarea",
+      "file": "patterns/components-field--horizontal-text-area.tsx",
+      "storybook": "?path=/story/components-field--horizontal-text-area"
+    },
+    {
+      "id": "components-field--multi-control",
+      "title": "Components/Field",
+      "name": "Pattern — multi-control",
+      "file": "patterns/components-field--multi-control.tsx",
+      "storybook": "?path=/story/components-field--multi-control"
+    },
+    {
+      "id": "components-footerreveal--marketing-hero-pattern",
+      "title": "Components/FooterReveal",
+      "name": "Pattern — marketing hero",
+      "file": "patterns/components-footerreveal--marketing-hero-pattern.tsx",
+      "storybook": "?path=/story/components-footerreveal--marketing-hero-pattern"
+    },
+    {
+      "id": "components-footerreveal--marketing-hero-ruled-pattern",
+      "title": "Components/FooterReveal",
+      "name": "Pattern — marketing hero ruled grid",
+      "file": "patterns/components-footerreveal--marketing-hero-ruled-pattern.tsx",
+      "storybook": "?path=/story/components-footerreveal--marketing-hero-ruled-pattern"
+    },
+    {
+      "id": "components-footerreveal--marketing-hero-with-gallery-intro",
+      "title": "Components/FooterReveal",
+      "name": "Marketing hero with gallery intro",
+      "file": "patterns/components-footerreveal--marketing-hero-with-gallery-intro.tsx",
+      "storybook": "?path=/story/components-footerreveal--marketing-hero-with-gallery-intro"
+    },
+    {
+      "id": "components-footerreveal--marketing-page-pattern",
+      "title": "Components/FooterReveal",
+      "name": "Pattern — marketing page",
+      "file": "patterns/components-footerreveal--marketing-page-pattern.tsx",
+      "storybook": "?path=/story/components-footerreveal--marketing-page-pattern"
+    },
+    {
+      "id": "components-footerreveal--ruled-grid-footer-pattern",
+      "title": "Components/FooterReveal",
+      "name": "Pattern — ruled grid footer",
+      "file": "patterns/components-footerreveal--ruled-grid-footer-pattern.tsx",
+      "storybook": "?path=/story/components-footerreveal--ruled-grid-footer-pattern"
+    },
+    {
+      "id": "components-footerreveal--sequenced-marketing-hero",
+      "title": "Components/FooterReveal",
+      "name": "Pattern — marketing hero with sequenced gallery",
+      "file": "patterns/components-footerreveal--sequenced-marketing-hero.tsx",
+      "storybook": "?path=/story/components-footerreveal--sequenced-marketing-hero"
+    },
+    {
+      "id": "components-herointro--two-line-intro",
+      "title": "Components/HeroIntro",
+      "name": "Pattern — two-line intro",
+      "file": "patterns/components-herointro--two-line-intro.tsx",
+      "storybook": "?path=/story/components-herointro--two-line-intro"
+    },
+    {
+      "id": "components-herotilestack--marketing-hero-pattern",
+      "title": "Components/HeroTileStack",
+      "name": "Pattern — marketing hero",
+      "file": "patterns/components-herotilestack--marketing-hero-pattern.tsx",
+      "storybook": "?path=/story/components-herotilestack--marketing-hero-pattern"
+    },
+    {
+      "id": "components-herotilestack--marketing-hero-text-sequence",
+      "title": "Components/HeroTileStack",
+      "name": "Pattern — marketing hero text sequence",
+      "file": "patterns/components-herotilestack--marketing-hero-text-sequence.tsx",
+      "storybook": "?path=/story/components-herotilestack--marketing-hero-text-sequence"
+    },
+    {
+      "id": "components-herotilestack--marketing-hero-with-gallery-intro",
+      "title": "Components/HeroTileStack",
+      "name": "Marketing hero with gallery intro",
+      "file": "patterns/components-herotilestack--marketing-hero-with-gallery-intro.tsx",
+      "storybook": "?path=/story/components-herotilestack--marketing-hero-with-gallery-intro"
+    },
+    {
+      "id": "components-intakeconfirmation--booked-pattern",
+      "title": "Components/IntakeConfirmation",
+      "name": "Pattern — booked",
+      "file": "patterns/components-intakeconfirmation--booked-pattern.tsx",
+      "storybook": "?path=/story/components-intakeconfirmation--booked-pattern"
+    },
+    {
+      "id": "components-intakeconfirmation--emailed-pattern",
+      "title": "Components/IntakeConfirmation",
+      "name": "Pattern — emailed",
+      "file": "patterns/components-intakeconfirmation--emailed-pattern.tsx",
+      "storybook": "?path=/story/components-intakeconfirmation--emailed-pattern"
+    },
+    {
+      "id": "components-intakeform--about-you-pattern",
+      "title": "Components/IntakeForm",
+      "name": "Pattern — about you",
+      "file": "patterns/components-intakeform--about-you-pattern.tsx",
+      "storybook": "?path=/story/components-intakeform--about-you-pattern"
+    },
+    {
+      "id": "components-intakemodal--intake-modal-pattern",
+      "title": "Components/IntakeModal",
+      "name": "Pattern — intake modal",
+      "file": "patterns/components-intakemodal--intake-modal-pattern.tsx",
+      "storybook": "?path=/story/components-intakemodal--intake-modal-pattern"
+    },
+    {
+      "id": "components-kbd--command-row",
+      "title": "Components/Kbd",
+      "name": "Pattern — command row",
+      "file": "patterns/components-kbd--command-row.tsx",
+      "storybook": "?path=/story/components-kbd--command-row"
+    },
+    {
+      "id": "components-kbd--numbered-choices",
+      "title": "Components/Kbd",
+      "name": "Pattern — numbered choice keys",
+      "file": "patterns/components-kbd--numbered-choices.tsx",
+      "storybook": "?path=/story/components-kbd--numbered-choices"
+    },
+    {
+      "id": "components-kbd--shortcut",
+      "title": "Components/Kbd",
+      "name": "Pattern — keyboard shortcut",
+      "file": "patterns/components-kbd--shortcut.tsx",
+      "storybook": "?path=/story/components-kbd--shortcut"
+    },
+    {
+      "id": "components-moremenu--action-menu",
+      "title": "Components/MoreMenu",
+      "name": "Pattern — action menu",
+      "file": "patterns/components-moremenu--action-menu.tsx",
+      "storybook": "?path=/story/components-moremenu--action-menu"
+    },
+    {
+      "id": "components-moremenu--in-card-header",
+      "title": "Components/MoreMenu",
+      "name": "Pattern — Card header cluster",
+      "file": "patterns/components-moremenu--in-card-header.tsx",
+      "storybook": "?path=/story/components-moremenu--in-card-header"
+    },
+    {
+      "id": "components-navlist--side-nav-settings",
+      "title": "Components/NavList",
+      "name": "Pattern — side nav (settings)",
+      "file": "patterns/components-navlist--side-nav-settings.tsx",
+      "storybook": "?path=/story/components-navlist--side-nav-settings"
+    },
+    {
+      "id": "components-pageheader--app-header-pattern",
+      "title": "Components/PageHeader",
+      "name": "Pattern — app header",
+      "file": "patterns/components-pageheader--app-header-pattern.tsx",
+      "storybook": "?path=/story/components-pageheader--app-header-pattern"
+    },
+    {
+      "id": "components-pageheader--page-section-header",
+      "title": "Components/PageHeader",
+      "name": "Pattern — page header",
+      "file": "patterns/components-pageheader--page-section-header.tsx",
+      "storybook": "?path=/story/components-pageheader--page-section-header"
+    },
+    {
+      "id": "components-pageheader--toolbar-header",
+      "title": "Components/PageHeader",
+      "name": "Pattern — toolbar header",
+      "file": "patterns/components-pageheader--toolbar-header.tsx",
+      "storybook": "?path=/story/components-pageheader--toolbar-header"
+    },
+    {
+      "id": "components-panel--end-detail-rail",
+      "title": "Components/Panel",
+      "name": "Pattern — end detail rail",
+      "file": "patterns/components-panel--end-detail-rail.tsx",
+      "storybook": "?path=/story/components-panel--end-detail-rail"
+    },
+    {
+      "id": "components-pillgroup--pill-group-pattern",
+      "title": "Components/PillGroup",
+      "name": "Pattern — pill group",
+      "file": "patterns/components-pillgroup--pill-group-pattern.tsx",
+      "storybook": "?path=/story/components-pillgroup--pill-group-pattern"
+    },
+    {
+      "id": "components-promptbar--pattern-prompt-bar",
+      "title": "Components/PromptBar",
+      "name": "Pattern — prompt bar",
+      "file": "patterns/components-promptbar--pattern-prompt-bar.tsx",
+      "storybook": "?path=/story/components-promptbar--pattern-prompt-bar"
+    },
+    {
+      "id": "components-radio-radiogroup--default",
+      "title": "Components/Radio/RadioGroup",
+      "name": "Pattern — vertical",
+      "file": "patterns/components-radio-radiogroup--default.tsx",
+      "storybook": "?path=/story/components-radio-radiogroup--default"
+    },
+    {
+      "id": "components-scrollhorizontal--project-gallery-pattern",
+      "title": "Components/ScrollHorizontal",
+      "name": "Pattern — project gallery",
+      "file": "patterns/components-scrollhorizontal--project-gallery-pattern.tsx",
+      "storybook": "?path=/story/components-scrollhorizontal--project-gallery-pattern"
+    },
+    {
+      "id": "components-scrollhorizontal--with-intro",
+      "title": "Components/ScrollHorizontal",
+      "name": "Pattern — gallery intro",
+      "file": "patterns/components-scrollhorizontal--with-intro.tsx",
+      "storybook": "?path=/story/components-scrollhorizontal--with-intro"
+    },
+    {
+      "id": "components-sheet--bottom-sheet",
+      "title": "Components/Sheet",
+      "name": "Pattern — bottom sheet",
+      "file": "patterns/components-sheet--bottom-sheet.tsx",
+      "storybook": "?path=/story/components-sheet--bottom-sheet"
+    },
+    {
+      "id": "components-sheet--end-sheet",
+      "title": "Components/Sheet",
+      "name": "Pattern — end sheet",
+      "file": "patterns/components-sheet--end-sheet.tsx",
+      "storybook": "?path=/story/components-sheet--end-sheet"
+    },
+    {
+      "id": "components-sitenav--brand-and-cta",
+      "title": "Components/SiteNav",
+      "name": "Pattern — brand + CTA",
+      "file": "patterns/components-sitenav--brand-and-cta.tsx",
+      "storybook": "?path=/story/components-sitenav--brand-and-cta"
+    },
+    {
+      "id": "components-sitenav--centered-links",
+      "title": "Components/SiteNav",
+      "name": "Pattern — centered links",
+      "file": "patterns/components-sitenav--centered-links.tsx",
+      "storybook": "?path=/story/components-sitenav--centered-links"
+    },
+    {
+      "id": "components-sitenav--compact",
+      "title": "Components/SiteNav",
+      "name": "Pattern — compact (scrolled)",
+      "file": "patterns/components-sitenav--compact.tsx",
+      "storybook": "?path=/story/components-sitenav--compact"
+    },
+    {
+      "id": "components-sitenav--marketing-header",
+      "title": "Components/SiteNav",
+      "name": "Pattern — marketing header",
+      "file": "patterns/components-sitenav--marketing-header.tsx",
+      "storybook": "?path=/story/components-sitenav--marketing-header"
+    },
+    {
+      "id": "components-sitenav--mega-menu",
+      "title": "Components/SiteNav",
+      "name": "Pattern — mega menu",
+      "file": "patterns/components-sitenav--mega-menu.tsx",
+      "storybook": "?path=/story/components-sitenav--mega-menu"
+    },
+    {
+      "id": "components-stat--insights-row",
+      "title": "Components/Stat",
+      "name": "Pattern — insights row",
+      "file": "patterns/components-stat--insights-row.tsx",
+      "storybook": "?path=/story/components-stat--insights-row"
+    },
+    {
+      "id": "components-stepprogress--step-progress-pattern",
+      "title": "Components/StepProgress",
+      "name": "Pattern — step progress",
+      "file": "patterns/components-stepprogress--step-progress-pattern.tsx",
+      "storybook": "?path=/story/components-stepprogress--step-progress-pattern"
+    },
+    {
+      "id": "components-switch--default",
+      "title": "Components/Switch",
+      "name": "Pattern — default",
+      "file": "patterns/components-switch--default.tsx",
+      "storybook": "?path=/story/components-switch--default"
+    },
+    {
+      "id": "components-switch--settings-row",
+      "title": "Components/Switch",
+      "name": "Pattern — settings row",
+      "file": "patterns/components-switch--settings-row.tsx",
+      "storybook": "?path=/story/components-switch--settings-row"
+    },
+    {
+      "id": "components-tab--settings-pages",
+      "title": "Components/Tab",
+      "name": "Pattern — settings pages",
+      "file": "patterns/components-tab--settings-pages.tsx",
+      "storybook": "?path=/story/components-tab--settings-pages"
+    },
+    {
+      "id": "components-taskrows--action-details",
+      "title": "Components/TaskRows",
+      "name": "Pattern — action details",
+      "file": "patterns/components-taskrows--action-details.tsx",
+      "storybook": "?path=/story/components-taskrows--action-details"
+    },
+    {
+      "id": "components-taskrows--capsules",
+      "title": "Components/TaskRows",
+      "name": "Pattern — capsules",
+      "file": "patterns/components-taskrows--capsules.tsx",
+      "storybook": "?path=/story/components-taskrows--capsules"
+    },
+    {
+      "id": "components-taskrows--card-with-status-rows",
+      "title": "Components/TaskRows",
+      "name": "Pattern — card + status rows",
+      "file": "patterns/components-taskrows--card-with-status-rows.tsx",
+      "storybook": "?path=/story/components-taskrows--card-with-status-rows"
+    },
+    {
+      "id": "components-taskrows--controlled-expand",
+      "title": "Components/TaskRows",
+      "name": "Pattern — controlled expand",
+      "file": "patterns/components-taskrows--controlled-expand.tsx",
+      "storybook": "?path=/story/components-taskrows--controlled-expand"
+    },
+    {
+      "id": "components-taskrows--custom-slots",
+      "title": "Components/TaskRows",
+      "name": "Pattern — custom leading / trailing",
+      "file": "patterns/components-taskrows--custom-slots.tsx",
+      "storybook": "?path=/story/components-taskrows--custom-slots"
+    },
+    {
+      "id": "components-taskrows--status-list",
+      "title": "Components/TaskRows",
+      "name": "Pattern — status rows",
+      "file": "patterns/components-taskrows--status-list.tsx",
+      "storybook": "?path=/story/components-taskrows--status-list"
+    },
+    {
+      "id": "components-taskrows--tag-chips",
+      "title": "Components/TaskRows",
+      "name": "Pattern — tag chips",
+      "file": "patterns/components-taskrows--tag-chips.tsx",
+      "storybook": "?path=/story/components-taskrows--tag-chips"
+    },
+    {
+      "id": "components-textlink--external-destination",
+      "title": "Components/TextLink",
+      "name": "Pattern — external destination",
+      "file": "patterns/components-textlink--external-destination.tsx",
+      "storybook": "?path=/story/components-textlink--external-destination"
+    },
+    {
+      "id": "components-textlink--inline-prose",
+      "title": "Components/TextLink",
+      "name": "Pattern — inline prose link",
+      "file": "patterns/components-textlink--inline-prose.tsx",
+      "storybook": "?path=/story/components-textlink--inline-prose"
+    },
+    {
+      "id": "components-textlink--supporting-copy",
+      "title": "Components/TextLink",
+      "name": "Pattern — supporting copy link",
+      "file": "patterns/components-textlink--supporting-copy.tsx",
+      "storybook": "?path=/story/components-textlink--supporting-copy"
+    },
+    {
+      "id": "components-textsequence--default",
+      "title": "Components/TextSequence",
+      "name": "Default",
+      "file": "patterns/components-textsequence--default.tsx",
+      "storybook": "?path=/story/components-textsequence--default"
+    },
+    {
+      "id": "components-textsequence--reduced-motion",
+      "title": "Components/TextSequence",
+      "name": "Reduced motion",
+      "file": "patterns/components-textsequence--reduced-motion.tsx",
+      "storybook": "?path=/story/components-textsequence--reduced-motion"
+    },
+    {
+      "id": "components-textsequence--shapes",
+      "title": "Components/TextSequence",
+      "name": "Shapes",
+      "file": "patterns/components-textsequence--shapes.tsx",
+      "storybook": "?path=/story/components-textsequence--shapes"
+    },
+    {
+      "id": "components-toast--stacked-notifications",
+      "title": "Components/Toast",
+      "name": "Pattern — stacked notifications",
+      "file": "patterns/components-toast--stacked-notifications.tsx",
+      "storybook": "?path=/story/components-toast--stacked-notifications"
+    },
+    {
+      "id": "components-tooltip--controlled",
+      "title": "Components/Tooltip",
+      "name": "Pattern — controlled state",
+      "file": "patterns/components-tooltip--controlled.tsx",
+      "storybook": "?path=/story/components-tooltip--controlled"
+    },
+    {
+      "id": "components-tooltip--disabled-control",
+      "title": "Components/Tooltip",
+      "name": "Pattern — disabled control",
+      "file": "patterns/components-tooltip--disabled-control.tsx",
+      "storybook": "?path=/story/components-tooltip--disabled-control"
+    },
+    {
+      "id": "components-tooltip--icon-action",
+      "title": "Components/Tooltip",
+      "name": "Pattern — icon-only action",
+      "file": "patterns/components-tooltip--icon-action.tsx",
+      "storybook": "?path=/story/components-tooltip--icon-action"
+    },
+    {
+      "id": "components-tooltip--keyboard-shortcut",
+      "title": "Components/Tooltip",
+      "name": "Pattern — keyboard shortcut",
+      "file": "patterns/components-tooltip--keyboard-shortcut.tsx",
+      "storybook": "?path=/story/components-tooltip--keyboard-shortcut"
+    },
+    {
+      "id": "components-tooltip--placement",
+      "title": "Components/Tooltip",
+      "name": "Pattern — placement",
+      "file": "patterns/components-tooltip--placement.tsx",
+      "storybook": "?path=/story/components-tooltip--placement"
+    },
+    {
+      "id": "foundations-scroll-fade--horizontal-rail",
+      "title": "Foundations/Scroll fade",
+      "name": "Pattern — horizontal rail",
+      "file": "patterns/foundations-scroll-fade--horizontal-rail.tsx",
+      "storybook": "?path=/story/foundations-scroll-fade--horizontal-rail"
+    },
+    {
+      "id": "foundations-scroll-fade--overflowing-list",
+      "title": "Foundations/Scroll fade",
+      "name": "Pattern — overflowing list",
+      "file": "patterns/foundations-scroll-fade--overflowing-list.tsx",
+      "storybook": "?path=/story/foundations-scroll-fade--overflowing-list"
+    },
+    {
+      "id": "guides-chart-explorations--comparison-gallery",
+      "title": "Guides/Chart explorations",
+      "name": "Pattern — chart comparison gallery",
+      "file": "patterns/guides-chart-explorations--comparison-gallery.tsx",
+      "storybook": "?path=/story/guides-chart-explorations--comparison-gallery"
+    },
+    {
+      "id": "guides-overlay-flows--notification-preferences",
+      "title": "Guides/Overlay flows",
+      "name": "Pattern — notification preferences",
+      "file": "patterns/guides-overlay-flows--notification-preferences.tsx",
+      "storybook": "?path=/story/guides-overlay-flows--notification-preferences"
+    },
+    {
+      "id": "guides-profile-typography--editorial-profile",
+      "title": "Guides/Profile typography",
+      "name": "Pattern — editorial profile",
+      "file": "patterns/guides-profile-typography--editorial-profile.tsx",
+      "storybook": "?path=/story/guides-profile-typography--editorial-profile"
+    },
+    {
+      "id": "sites-pitchkit-account-settings--account-settings-owner",
+      "title": "Sites/PitchKit/Account settings",
+      "name": "Pattern — account settings (owner)",
+      "file": "patterns/sites-pitchkit-account-settings--account-settings-owner.tsx",
+      "storybook": "?path=/story/sites-pitchkit-account-settings--account-settings-owner"
+    },
+    {
+      "id": "sites-pitchkit-creator-identity--creator-identity-owner-settings",
+      "title": "Sites/PitchKit/Creator identity",
+      "name": "Pattern — creator identity (owner settings)",
+      "file": "patterns/sites-pitchkit-creator-identity--creator-identity-owner-settings.tsx",
+      "storybook": "?path=/story/sites-pitchkit-creator-identity--creator-identity-owner-settings"
+    },
+    {
+      "id": "sites-pitchkit-creator-identity--creator-identity-public",
+      "title": "Sites/PitchKit/Creator identity",
+      "name": "Pattern — creator identity (public)",
+      "file": "patterns/sites-pitchkit-creator-identity--creator-identity-public.tsx",
+      "storybook": "?path=/story/sites-pitchkit-creator-identity--creator-identity-public"
+    },
+    {
+      "id": "sites-pitchkit-insights-and-kit--creator-insights",
+      "title": "Sites/PitchKit/Insights and kit",
+      "name": "Pattern — creator Insights",
+      "file": "patterns/sites-pitchkit-insights-and-kit--creator-insights.tsx",
+      "storybook": "?path=/story/sites-pitchkit-insights-and-kit--creator-insights"
+    },
+    {
+      "id": "sites-pitchkit-insights-and-kit--creator-insights-loading",
+      "title": "Sites/PitchKit/Insights and kit",
+      "name": "Pattern — creator Insights (loading)",
+      "file": "patterns/sites-pitchkit-insights-and-kit--creator-insights-loading.tsx",
+      "storybook": "?path=/story/sites-pitchkit-insights-and-kit--creator-insights-loading"
+    },
+    {
+      "id": "sites-pitchkit-insights-and-kit--insufficient-audience-data",
+      "title": "Sites/PitchKit/Insights and kit",
+      "name": "State — insufficient audience data",
+      "file": "patterns/sites-pitchkit-insights-and-kit--insufficient-audience-data.tsx",
+      "storybook": "?path=/story/sites-pitchkit-insights-and-kit--insufficient-audience-data"
+    },
+    {
+      "id": "sites-pitchkit-insights-and-kit--insufficient-reach-and-audience-data",
+      "title": "Sites/PitchKit/Insights and kit",
+      "name": "State — insufficient reach and audience data",
+      "file": "patterns/sites-pitchkit-insights-and-kit--insufficient-reach-and-audience-data.tsx",
+      "storybook": "?path=/story/sites-pitchkit-insights-and-kit--insufficient-reach-and-audience-data"
+    },
+    {
+      "id": "sites-pitchkit-insights-and-kit--insufficient-reach-data",
+      "title": "Sites/PitchKit/Insights and kit",
+      "name": "State — insufficient reach data",
+      "file": "patterns/sites-pitchkit-insights-and-kit--insufficient-reach-data.tsx",
+      "storybook": "?path=/story/sites-pitchkit-insights-and-kit--insufficient-reach-data"
+    },
+    {
+      "id": "sites-pitchkit-insights-and-kit--owner-pitch-kit",
+      "title": "Sites/PitchKit/Insights and kit",
+      "name": "Pattern — owner PitchKit",
+      "file": "patterns/sites-pitchkit-insights-and-kit--owner-pitch-kit.tsx",
+      "storybook": "?path=/story/sites-pitchkit-insights-and-kit--owner-pitch-kit"
+    },
+    {
+      "id": "sites-pitchkit-insights-and-kit--shareable-pitch-kit",
+      "title": "Sites/PitchKit/Insights and kit",
+      "name": "Pattern — shareable PitchKit",
+      "file": "patterns/sites-pitchkit-insights-and-kit--shareable-pitch-kit.tsx",
+      "storybook": "?path=/story/sites-pitchkit-insights-and-kit--shareable-pitch-kit"
+    },
+    {
+      "id": "sites-pitchkit-intro--intro-owner",
+      "title": "Sites/PitchKit/Intro",
+      "name": "Pattern — intro (owner)",
+      "file": "patterns/sites-pitchkit-intro--intro-owner.tsx",
+      "storybook": "?path=/story/sites-pitchkit-intro--intro-owner"
+    },
+    {
+      "id": "sites-pitchkit-intro--intro-public",
+      "title": "Sites/PitchKit/Intro",
+      "name": "Pattern — intro (public)",
+      "file": "patterns/sites-pitchkit-intro--intro-public.tsx",
+      "storybook": "?path=/story/sites-pitchkit-intro--intro-public"
+    },
+    {
+      "id": "sites-pitchkit-past-brands--past-brands-owner",
+      "title": "Sites/PitchKit/Past brands",
+      "name": "Pattern — past brands (owner)",
+      "file": "patterns/sites-pitchkit-past-brands--past-brands-owner.tsx",
+      "storybook": "?path=/story/sites-pitchkit-past-brands--past-brands-owner"
+    },
+    {
+      "id": "sites-pitchkit-past-brands--past-brands-public",
+      "title": "Sites/PitchKit/Past brands",
+      "name": "Pattern — past brands (public)",
+      "file": "patterns/sites-pitchkit-past-brands--past-brands-public.tsx",
+      "storybook": "?path=/story/sites-pitchkit-past-brands--past-brands-public"
+    },
+    {
+      "id": "sites-pitchkit-theme-picker--theme-picker-owner",
+      "title": "Sites/PitchKit/Theme picker",
+      "name": "Pattern — theme picker (owner)",
+      "file": "patterns/sites-pitchkit-theme-picker--theme-picker-owner.tsx",
+      "storybook": "?path=/story/sites-pitchkit-theme-picker--theme-picker-owner"
+    },
+    {
+      "id": "sites-whatmatters-intake--start-a-project-pattern",
+      "title": "Sites/WhatMatters/Intake",
+      "name": "Pattern — start a project",
+      "file": "patterns/sites-whatmatters-intake--start-a-project-pattern.tsx",
+      "storybook": "?path=/story/sites-whatmatters-intake--start-a-project-pattern"
+    },
+    {
+      "id": "sites-whatmatters-marketing-landing--marketing-landing",
+      "title": "Sites/WhatMatters/Marketing landing",
+      "name": "Pattern — marketing landing",
+      "file": "patterns/sites-whatmatters-marketing-landing--marketing-landing.tsx",
+      "storybook": "?path=/story/sites-whatmatters-marketing-landing--marketing-landing"
+    },
+    {
+      "id": "sites-whatmatters-prompt-chat--landing-to-chat",
+      "title": "Sites/WhatMatters/Prompt chat",
+      "name": "Pattern — landing to chat",
+      "file": "patterns/sites-whatmatters-prompt-chat--landing-to-chat.tsx",
+      "storybook": "?path=/story/sites-whatmatters-prompt-chat--landing-to-chat"
+    },
+    {
+      "id": "sites-whatmatters-rfp-submitted--rfp-submitted",
+      "title": "Sites/WhatMatters/RFP submitted",
+      "name": "Pattern — RFP submitted",
+      "file": "patterns/sites-whatmatters-rfp-submitted--rfp-submitted.tsx",
+      "storybook": "?path=/story/sites-whatmatters-rfp-submitted--rfp-submitted"
+    }
+  ]
+}

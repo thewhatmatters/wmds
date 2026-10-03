@@ -32,6 +32,12 @@ const required = [
   "CHANGELOG.md",
   "public/rive/interactive-icon-set.riv",
   "public/rive/CREDITS.md",
+  "docs/README.md",
+  "docs/consumer-agents.md",
+  "docs/components.md",
+  "docs/component-contracts.md",
+  "docs/exports.json",
+  "docs/patterns/index.json",
   ...exportTargets.map((target) => target.replace(/^\.\//, "")),
 ];
 
@@ -45,11 +51,14 @@ const forbidden = [
   [/(^|\/)\.env/, "env files"],
   [/rive\.wasm$/, "the Rive runtime (apps copy it from @rive-app/canvas)"],
   [/^docs\/(adr|audits)\//, "decision records"],
+  [/^docs\/(releasing\.md|grid-probe\.json)$/, "maintainer docs"],
 ];
 
 const problems = [];
 for (const file of required) if (!files.has(file)) problems.push(`missing ${file}`);
 if (![...files].some((file) => /^dist\/files\/.+\.woff2$/.test(file))) problems.push("missing fonts in dist/files");
+const patternIndex = JSON.parse(readFileSync("docs/patterns/index.json", "utf8"));
+for (const { file } of patternIndex.patterns) if (!files.has(`docs/${file}`)) problems.push(`missing pattern docs/${file}`);
 for (const file of files) {
   for (const [pattern, label] of forbidden) if (pattern.test(file)) problems.push(`must not ship ${label}: ${file}`);
 }
