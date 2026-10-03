@@ -26,7 +26,7 @@ Components use `Components/{category}/{Name}`:
 - **Navigation:** NavList, SiteNav, Tab, TextLink; future Pagination (NavRail removed — ADR-0020 superseded)
 - **Feedback:** Badge, Confetti, Skeleton, Status, Toast, Tooltip
 - **Overlays:** Dialog, Dropdown, Panel, Sheet
-- **Data display:** Avatar, Chart, Kbd, Stat, TaskRows; future Carousel and Table
+- **Data display:** Avatar, Chart, ChatQa, Kbd, Stat, TaskRows; future Carousel and Table
 - **Layout:** Accordion, Card, DisplayControls, HeroIntro, HeroTileStack, PageHeader, ScrollHorizontal
 
 Interaction fixtures and audits use `Internal/...`, retain the `test` tag, and opt out of normal browsing and generated docs with `!dev` and `!autodocs`.

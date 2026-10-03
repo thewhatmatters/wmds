@@ -53,9 +53,11 @@ import {
   promptChatTraces,
 } from "./promptChatThinking";
 import {
+  promptChatIntakeQaPairs,
   promptChatStartGateTitle,
   promptChatStartOptions,
 } from "./PromptChatStartGate";
+import { intakeAboutEmpty } from "../../components/molecules/IntakeForm/IntakeForm";
 
 /** Steps duration (~4s) plus a buffer so the reply has started. */
 const stepsReadyMs = Math.ceil(promptChatTraceDurationSeconds(promptChatTraces.steps.length) * 1000) + 400;
@@ -267,6 +269,9 @@ describe("prompt chat pattern", () => {
     expect(promptChatPatternCopySource).toContain("IntakeForm");
     expect(promptChatPatternCopySource).toContain("CalEmbed");
     expect(promptChatPatternCopySource).toContain("IntakeConfirmation");
+    expect(promptChatPatternCopySource).toContain("ChatQa");
+    expect(promptChatPatternCopySource).toContain("kind: \"intake\"");
+    expect(promptChatPatternCopySource).toContain("finishStartGate");
     expect(promptChatPatternCopySource).toContain("ConfettiProvider");
     expect(promptChatPatternCopySource).toContain(promptChatStartGateTitle);
     expect(promptChatPatternCopySource).toContain("What are we making?");
@@ -781,7 +786,53 @@ describe("prompt chat start project gate", () => {
           (button) => button.textContent === "Next",
         ),
       ).toBe(false);
+
+      const skip = Array.from(view.container.querySelectorAll("a")).find(
+        (node) => node.textContent === "Skip, just email me",
+      );
+      if (skip == null) throw new Error("CalEmbed skip link missing");
+      act(() => {
+        skip.click();
+      });
+
+      expect(view.container.textContent).toContain("We'll be in touch");
+      const done = Array.from(view.container.querySelectorAll("button")).find(
+        (button) => button.textContent === "Done",
+      );
+      if (done == null) throw new Error("Done missing on confirmation");
+      act(() => {
+        done.click();
+      });
+
+      const qa = view.container.querySelector('[aria-label="Collected answers"]');
+      expect(qa).not.toBeNull();
+      expect(qa?.className).toContain("bg-surface");
+      expect(qa?.className).toContain("border-border");
+      expect(view.container.textContent).toContain("What are we making?");
+      expect(view.container.textContent).toContain("Brand identity");
+      expect(view.container.textContent).toContain("$10–25k");
+      expect(view.container.textContent).toContain("Randy");
+      expect(view.container.textContent).toContain("Email me");
+      expect(view.container.querySelector("textarea")).not.toBeNull();
+      expect(view.container.textContent).not.toContain(promptChatStartGateTitle);
     },
-    12_000,
+    15_000,
   );
+});
+
+describe("prompt chat intake Q&A pairs", () => {
+  it("formats gate answers as ChatQa strings", () => {
+    const pairs = promptChatIntakeQaPairs({
+      needs: ["brand", "website"],
+      budget: "10-25",
+      about: { ...intakeAboutEmpty, name: "Randy", company: "WhatMatters" },
+      outcome: "emailed",
+    });
+    expect(pairs).toEqual([
+      { question: "What are we making?", answer: "Brand identity, Website" },
+      { question: "What's the budget?", answer: "$10–25k" },
+      { question: "About you", answer: "Randy, WhatMatters" },
+      { question: "How should we follow up?", answer: "Email me" },
+    ]);
+  });
 });

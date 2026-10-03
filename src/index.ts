@@ -189,6 +189,12 @@ export {
   type CardVariant,
 } from "./components/molecules/Card/Card";
 export {
+  ChatQa,
+  type ChatQaLayoutClassName,
+  type ChatQaPair,
+  type ChatQaProps,
+} from "./components/molecules/ChatQa/ChatQa";
+export {
   CheckboxGroup,
   checkboxGroupOrientations,
   type CheckboxGroupItemProps,
