@@ -2,6 +2,7 @@ import {
   forwardRef,
   useState,
   type KeyboardEvent,
+  type ReactNode,
   type TextareaHTMLAttributes,
 } from "react";
 import { ArrowRight } from "lucide-react";
@@ -13,7 +14,10 @@ import {
   promptBarSendClasses,
   promptBarSendMutedClasses,
   promptBarSendReadyClasses,
+  promptBarEndSlotClasses,
   promptBarShellClasses,
+  promptBarShellStartPadClasses,
+  promptBarStartSlotClasses,
 } from "./promptBarStyles";
 
 /** Layout-only — width, margin, flex placement. Not for colors. */
@@ -44,6 +48,16 @@ export interface PromptBarProps
   /** Accessible name for the send control. Default: "Send". */
   sendLabel?: string;
   disabled?: boolean;
+  /**
+   * Leading slot inside the pill — a brand mark or **Avatar** `sm` (2.25rem). Decorative or
+   * labeled by the caller; not a control.
+   */
+  start?: ReactNode;
+  /**
+   * Extra inset controls before send — for example a mic **IconButton** `sm` `role="secondary"`.
+   * The caller owns the handler and accessible name.
+   */
+  end?: ReactNode;
   className?: PromptBarLayoutClassName;
 }
 
@@ -67,6 +81,8 @@ export const PromptBar = forwardRef<HTMLTextAreaElement, PromptBarProps>(functio
     "aria-label": ariaLabel = "Ask anything",
     sendLabel = "Send",
     disabled = false,
+    start,
+    end,
     className,
     onKeyDown,
     ...fieldProps
@@ -102,7 +118,14 @@ export const PromptBar = forwardRef<HTMLTextAreaElement, PromptBarProps>(functio
   }
 
   return (
-    <div className={cn(promptBarShellClasses, className)}>
+    <div
+      className={cn(
+        promptBarShellClasses,
+        start != null ? promptBarShellStartPadClasses.slot : promptBarShellStartPadClasses.field,
+        className,
+      )}
+    >
+      {start != null ? <div className={promptBarStartSlotClasses}>{start}</div> : null}
       <TextArea
         {...fieldProps}
         ref={ref}
@@ -119,6 +142,7 @@ export const PromptBar = forwardRef<HTMLTextAreaElement, PromptBarProps>(functio
         }}
         onKeyDown={handleKeyDown}
       />
+      {end != null ? <div className={promptBarEndSlotClasses}>{end}</div> : null}
       <IconButton
         type="button"
         role="primary"
