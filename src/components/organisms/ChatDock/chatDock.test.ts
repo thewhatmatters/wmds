@@ -6,6 +6,7 @@ import {
   ChatDock,
   chatDockOpenHeight,
   chatDockPillSuggestions,
+  chatDockReplyRow,
   chatDockShowsFollowUps,
   chatDockShowsSuggestionRows,
   type ChatDockMessage,
@@ -55,6 +56,38 @@ describe("chatDockShowsFollowUps", () => {
     expect(chatDockShowsFollowUps({ followUps, messages: replied, thinking: false, sentAfterId: "a" })).toBe(false);
     const next: ChatDockMessage[] = [...replied, { id: "q2", role: "user", content: "More" }, { id: "a2", role: "assistant", content: "Sure." }];
     expect(chatDockShowsFollowUps({ followUps, messages: next, thinking: false, sentAfterId: "a" })).toBe(true);
+  });
+});
+
+describe("chatDockReplyRow", () => {
+  const reply: ChatDockMessage = { id: "a", role: "assistant", content: "Sure." };
+
+  it("is absent for the visitor's turns and for replies with nothing to show", () => {
+    expect(chatDockReplyRow({ message: { id: "q", role: "user", content: "Hi", copyText: "Hi" }, isLatest: false, thinking: false, takesVotes: true })).toBeNull();
+    expect(chatDockReplyRow({ message: reply, isLatest: true, thinking: false, takesVotes: false })).toBeNull();
+  });
+
+  it("shows each part on its own", () => {
+    expect(chatDockReplyRow({ message: { ...reply, copyText: "Sure." }, isLatest: true, thinking: false, takesVotes: false })).toEqual({
+      copy: true,
+      vote: false,
+      meta: false,
+      ready: true,
+    });
+    expect(
+      chatDockReplyRow({ message: { ...reply, meta: { label: "Match 99%" } }, isLatest: false, thinking: false, takesVotes: false }),
+    ).toEqual({ copy: false, vote: false, meta: true, ready: true });
+    expect(chatDockReplyRow({ message: reply, isLatest: false, thinking: false, takesVotes: true })).toEqual({
+      copy: false,
+      vote: true,
+      meta: false,
+      ready: true,
+    });
+  });
+
+  it("waits while the latest reply is still arriving", () => {
+    expect(chatDockReplyRow({ message: reply, isLatest: true, thinking: true, takesVotes: true })?.ready).toBe(false);
+    expect(chatDockReplyRow({ message: reply, isLatest: false, thinking: true, takesVotes: true })?.ready).toBe(true);
   });
 });
 

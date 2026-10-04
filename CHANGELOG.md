@@ -9,19 +9,26 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 ## 0.4.1
 
-**ChatDock:** follow-ups in the open window, the visitor's messages on a brand tint, and a new open and close transition.
+**ChatDock:** follow-ups in the open window, actions and a match score under each reply, the visitor's messages on a brand tint, and a new open and close transition.
 
 - **`followUps`** — predefined next questions for the latest reply, the same items as `suggestions`. They show under the reply (`followUpsPlacement="inline"`, the default; `"composer"` pins them as pills above the composer), hide while `thinking`, and disappear the moment the visitor sends. Choosing one calls `onSuggestionSelect`, then `onSend` with its `prompt`. A follow-up's `icon` is not shown: inline rows all lead with a corner-down-right arrow, and pills above the composer are text only. **Components/ChatDock → Pattern — chat dock** now keeps the follow-up state: `ask` may resolve with `string | { reply, followUps? }`.
+- **Reply row** — under each finished reply: **Copy** (the message's `copyText`), thumbs up and down (shown when `onMessageFeedback` is passed; the current vote is the message's `feedback`, `"up" | "down" | null`, and pressing the active thumb clears it), and a short muted note (`meta: { label, description? }`, for example "Match 99%", with `description` read to screen readers). Each part shows on its own. Where the pointer can hover, the row shows while the reply is hovered or holds focus; on touch screens it is always shown. It keeps its place either way, so the thread never moves, and it stays empty while the latest reply is still arriving (`thinking`). Buttons are 44px on phones. New labels `copy`, `copied`, `helpful`, `notHelpful`; new types `ChatDockFeedback` and `ChatDockMessageMeta`.
+- **IconButton `pressed`** — the toggle pattern: sets `aria-pressed` and, while on, shows the pressed fill and a filled glyph.
 - **Open and close.** The resting bar and the window are one object: one composer serves both states and stays on screen every frame. From `md` the window is an opaque card that grows up and out of the bar from its bottom edge; the mark moves to the header, the composer keeps its width and rises only by the disclaimer line, and the header, conversation, and rows fade in after it. Closing fades them and folds the window back into the bar, and the hover pills return once it has folded. On phones the window rises from the bottom edge to full screen and falls back. Escape while opening, or a click while closing, reverses from where it is. Reduced motion crossfades the window in place.
 - **PromptBar:** the `start` slot takes its content's width (an **Avatar** `size="md"` is unchanged), so a caller can fold the mark away.
 - The visitor's messages sit on a light navy tint, so they read apart from the replies. New color token `--color-brand-tint` (`bg-brand-tint`): 10% navy in light, a lifted navy in dark.
 
 ### Consumer actions
 
-1. **WhatMatters site: re-copy Components/ChatDock → Pattern — chat dock** (`node_modules/@thewhatmatters/wmds/docs/patterns/components-chatdock--pattern-chat-dock.tsx`) over `components/ask-whatmatters.tsx`, and re-apply only your content, data, and handlers. The pattern now holds the follow-up state.
-2. **Return follow-ups from `ask`** after the replies that should have them: resolve with `{ reply, followUps: [...] }` (one to three items, each `{ id, label, prompt? }` — leave out `icon`, it is not shown; an item without a `prompt`, such as `{ id: "start", label: "Start a project" }`, opens the intake through `onStartProject`). Replies without follow-ups can keep resolving with the reply string.
-3. **The open and close transition:** nothing to do. It comes with the upgrade; **Pattern — chat dock**'s props are unchanged by it.
-4. Other apps: none. The tint comes with the upgrade.
+1. **WhatMatters site: re-copy Components/ChatDock → Pattern — chat dock** (`node_modules/@thewhatmatters/wmds/docs/patterns/components-chatdock--pattern-chat-dock.tsx`) over `components/ask-whatmatters.tsx`, and re-apply only your content, data, and handlers. The pattern now holds the follow-up state and each reply's vote.
+2. **Return follow-ups, the score, and the copy text from `ask`** for the replies that have them: resolve with `{ reply, followUps?, meta?, copyText? }`.
+   - `followUps`: one to three items, each `{ id, label, prompt? }`. Leave out `icon`; it is not shown. An item without a `prompt`, such as `{ id: "start", label: "Start a project" }`, opens the intake through `onStartProject`.
+   - `meta`: the score, for example `{ label: "Match 99%", description: "How sure the assistant is that it matched your question." }`. Your app computes it; leave it out when there is none.
+   - `copyText`: what **Copy** puts on the clipboard. The pattern uses the reply text when you leave it out.
+   - Replies with none of these can keep resolving with the reply string.
+3. **Handle `onFeedback`** where you mount `AskWhatMatters`: `onFeedback={(reply, value) => …}`. `value` is `"up"`, `"down"`, or `null` when the visitor clears their vote; store it against `reply.id`. The prop is required, so TypeScript flags the mount until you add it.
+4. **The open and close transition:** nothing to do. It comes with the upgrade.
+5. Other apps: none. The tint comes with the upgrade, and **IconButton**'s `pressed` is optional.
 
 ## 0.4.0
 

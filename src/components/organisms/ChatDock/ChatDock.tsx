@@ -19,11 +19,12 @@ import {
   type Transition,
   type Variants,
 } from "motion/react";
-import { CornerDownRight } from "lucide-react";
+import { Check, Copy, CornerDownRight, ThumbsDown, ThumbsUp } from "lucide-react";
 import { cn } from "../../../lib/cn";
 import { motionBeatSeconds, motionStaggerSeconds, motionTransitionProp } from "../../../lib/motion";
 import { Button } from "../../atoms/Button/Button";
 import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
+import { IconButton } from "../../atoms/IconButton/IconButton";
 import { Status } from "../../atoms/Status/Status";
 import { PromptBar } from "../../molecules/PromptBar/PromptBar";
 import { OverlayPanelHeader } from "../Dialog/OverlayPanelHeader";
@@ -41,6 +42,11 @@ import {
   chatDockMarkClasses,
   chatDockPillClasses,
   chatDockPillsClasses,
+  chatDockReplyActionsClasses,
+  chatDockReplyActionsPendingClasses,
+  chatDockReplyButtonsClasses,
+  chatDockReplyClasses,
+  chatDockReplyMetaClasses,
   chatDockRootClasses,
   chatDockRootRaisedClasses,
   chatDockSuggestionLabelClasses,
@@ -72,11 +78,28 @@ export interface ChatDockSuggestion {
   prompt?: string;
 }
 
+/** The visitor's vote on a reply. `null` is no vote. */
+export type ChatDockFeedback = "up" | "down" | null;
+
+/** A short note under a reply — for example how sure the assistant was of its match. */
+export interface ChatDockMessageMeta {
+  /** The note itself, short — for example "Match 99%". */
+  label: string;
+  /** What the note means, for screen readers — for example "How sure the assistant is that it matched your question." */
+  description?: string;
+}
+
 export interface ChatDockMessage {
   id: string;
   role: "user" | "assistant";
   /** Text, or Markdown the app has already rendered. ChatDock does not parse Markdown. */
   content: ReactNode;
+  /** Replies only: the text **Copy** writes to the clipboard. Shows Copy under the reply. */
+  copyText?: string;
+  /** Replies only: a short muted note under the reply, such as the match score. */
+  meta?: ChatDockMessageMeta;
+  /** Replies only: the visitor's vote. The thumbs show when `onMessageFeedback` is passed. */
+  feedback?: ChatDockFeedback;
 }
 
 export interface ChatDockLabels {
@@ -94,6 +117,14 @@ export interface ChatDockLabels {
   field: string;
   /** Send control. Default: "Send". */
   send: string;
+  /** Copy under a reply. Default: "Copy reply". */
+  copy: string;
+  /** Copy, once the reply is on the clipboard; also announced. Default: "Copied". */
+  copied: string;
+  /** Thumbs up under a reply. Default: "Mark this reply helpful". */
+  helpful: string;
+  /** Thumbs down under a reply. Default: "Mark this reply not helpful". */
+  notHelpful: string;
 }
 
 export const chatDockDefaultLabels: ChatDockLabels = {
@@ -104,6 +135,10 @@ export const chatDockDefaultLabels: ChatDockLabels = {
   followUps: "Suggested follow-ups",
   field: "Ask anything",
   send: "Send",
+  copy: "Copy reply",
+  copied: "Copied",
+  helpful: "Mark this reply helpful",
+  notHelpful: "Mark this reply not helpful",
 };
 
 export const chatDockFollowUpsPlacements = ["inline", "composer"] as const;
@@ -146,6 +181,11 @@ export interface ChatDockProps {
   followUps?: ChatDockSuggestion[];
   /** Where follow-ups sit. Default: `inline`. */
   followUpsPlacement?: ChatDockFollowUpsPlacement;
+  /**
+   * The visitor voted on a reply, or cleared their vote (`null`). Pass it to show thumbs up and down
+   * under every finished reply; the app stores the vote and passes it back as the message's `feedback`.
+   */
+  onMessageFeedback?: (message: ChatDockMessage, value: ChatDockFeedback) => void;
   /** Controlled open state. */
   open?: boolean;
   defaultOpen?: boolean;
@@ -191,6 +231,39 @@ export function chatDockShowsFollowUps({
   const last = messages[messages.length - 1];
   return followUps.length > 0 && !thinking && last?.role === "assistant" && last.id !== sentAfterId;
 }
+
+/** What shows under a reply. `ready` is false while the reply is still arriving. */
+export interface ChatDockReplyRow {
+  copy: boolean;
+  vote: boolean;
+  meta: boolean;
+  ready: boolean;
+}
+
+/**
+ * The row under a reply: Copy with `copyText`, the score with `meta`, and the thumbs when the app
+ * takes votes. `null` for the visitor's turns and for replies with none of these. The latest reply
+ * is still arriving while `thinking` is on, so its row keeps its place but shows nothing yet.
+ */
+export function chatDockReplyRow({
+  message,
+  isLatest,
+  thinking,
+  takesVotes,
+}: {
+  message: ChatDockMessage;
+  isLatest: boolean;
+  thinking: boolean;
+  takesVotes: boolean;
+}): ChatDockReplyRow | null {
+  if (message.role !== "assistant") return null;
+  const row = { copy: message.copyText != null, vote: takesVotes, meta: message.meta != null };
+  if (!row.copy && !row.vote && !row.meta) return null;
+  return { ...row, ready: !(isLatest && thinking) };
+}
+
+/** How long Copy shows that it worked. */
+const copiedHoldMs = 2000;
 
 /** Within this distance of the end, new content keeps the thread pinned to the latest message. */
 const stickToEndThresholdPx = 48;
@@ -253,6 +326,7 @@ export function ChatDock({
   onSuggestionSelect,
   followUps = [],
   followUpsPlacement = "inline",
+  onMessageFeedback,
   open: openProp,
   defaultOpen = false,
   onOpenChange,
@@ -277,6 +351,8 @@ export function ChatDock({
   const [draft, setDraft] = useState("");
   /** Last message id when the visitor last sent — hides that reply's follow-ups at once. */
   const [sentAfterId, setSentAfterId] = useState<string | null>(null);
+  /** The reply whose Copy just worked; `at` restarts the hold when it is copied again. */
+  const [copied, setCopied] = useState<{ id: string; at: number } | null>(null);
   /** The window has finished folding away and is hidden. Reopening shows it again at once. */
   const [folded, setFolded] = useState(!open);
   if (open && folded) setFolded(false);
@@ -314,6 +390,22 @@ export function ChatDock({
     onSuggestionSelect?.(suggestion);
     if (suggestion.prompt != null) send(suggestion.prompt);
   }
+
+  function copyReply(message: ChatDockMessage) {
+    const text = message.copyText;
+    const clipboard = typeof navigator === "undefined" ? undefined : navigator.clipboard;
+    if (text == null || clipboard == null) return;
+    clipboard.writeText(text).then(
+      () => setCopied({ id: message.id, at: Date.now() }),
+      () => undefined,
+    );
+  }
+
+  useEffect(() => {
+    if (copied == null) return;
+    const timer = window.setTimeout(() => setCopied(null), copiedHoldMs);
+    return () => window.clearTimeout(timer);
+  }, [copied]);
 
   /** Follow-ups keep focus in the composer: the press does not take focus, and a keyboard choice hands it back. */
   function selectFollowUp(suggestion: ChatDockSuggestion) {
@@ -468,6 +560,57 @@ export function ChatDock({
     visible: { opacity: 1, y: 0, transition: fast },
   };
   const keepComposerFocus = (event: { preventDefault: () => void }) => event.preventDefault();
+  // 44px targets on phones, the 36px cluster height from md.
+  const replyButtonSize = growLayout ? "sm" : "md";
+
+  function renderReplyRow(message: ChatDockMessage, row: ChatDockReplyRow) {
+    const isCopied = copied?.id === message.id;
+    const vote = message.feedback ?? null;
+    const castVote = (value: "up" | "down") => onMessageFeedback?.(message, vote === value ? null : value);
+    return (
+      <div
+        className={cn(chatDockReplyActionsClasses, row.ready ? undefined : chatDockReplyActionsPendingClasses)}
+        data-reply-actions={row.ready ? "ready" : "pending"}
+      >
+        {row.copy || row.vote ? (
+          <div className={chatDockReplyButtonsClasses}>
+            {row.copy ? (
+              <IconButton
+                size={replyButtonSize}
+                icon={isCopied ? <Check /> : <Copy />}
+                aria-label={isCopied ? labels.copied : labels.copy}
+                onClick={() => copyReply(message)}
+              />
+            ) : null}
+            {row.vote ? (
+              <>
+                <IconButton
+                  size={replyButtonSize}
+                  icon={<ThumbsUp />}
+                  aria-label={labels.helpful}
+                  pressed={vote === "up"}
+                  onClick={() => castVote("up")}
+                />
+                <IconButton
+                  size={replyButtonSize}
+                  icon={<ThumbsDown />}
+                  aria-label={labels.notHelpful}
+                  pressed={vote === "down"}
+                  onClick={() => castVote("down")}
+                />
+              </>
+            ) : null}
+          </div>
+        ) : null}
+        {message.meta != null ? (
+          <p className={chatDockReplyMetaClasses}>
+            {message.meta.label}
+            {message.meta.description != null ? <span className="sr-only">. {message.meta.description}</span> : null}
+          </p>
+        ) : null}
+      </div>
+    );
+  }
 
   return (
     <div
@@ -563,20 +706,39 @@ export function ChatDock({
                   {greeting != null ? <div className={chatDockAssistantMessageClasses}>{greeting}</div> : null}
                   {/* Turns already in the thread when the window opens do not animate; new ones slide in. */}
                   <AnimatePresence initial={false}>
-                    {messages.map((message) => (
-                      <motion.div
-                        key={message.id}
-                        data-role={message.role}
-                        className={
-                          message.role === "user" ? chatDockUserMessageClasses : chatDockAssistantMessageClasses
-                        }
-                        initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={fast}
-                      >
-                        {message.content}
-                      </motion.div>
-                    ))}
+                    {messages.map((message, index) => {
+                      const row = chatDockReplyRow({
+                        message,
+                        isLatest: index === messages.length - 1,
+                        thinking,
+                        takesVotes: onMessageFeedback != null,
+                      });
+                      return (
+                        <motion.div
+                          key={message.id}
+                          data-role={message.role}
+                          className={
+                            message.role === "user"
+                              ? chatDockUserMessageClasses
+                              : row != null
+                                ? chatDockReplyClasses
+                                : chatDockAssistantMessageClasses
+                          }
+                          initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={fast}
+                        >
+                          {row == null ? (
+                            message.content
+                          ) : (
+                            <>
+                              <div className={chatDockAssistantMessageClasses}>{message.content}</div>
+                              {renderReplyRow(message, row)}
+                            </>
+                          )}
+                        </motion.div>
+                      );
+                    })}
                     {showFollowUps && followUpsPlacement === "inline" ? (
                       <motion.div
                         key="follow-ups"
@@ -680,6 +842,10 @@ export function ChatDock({
                 </AnimatePresence>
               </div>
             </motion.div>
+
+            <span className="sr-only" role="status">
+              {copied != null ? labels.copied : ""}
+            </span>
 
             <div className={chatDockComposerClasses}>
               <div ref={barRef}>

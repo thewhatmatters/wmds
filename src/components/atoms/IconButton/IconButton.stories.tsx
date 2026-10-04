@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { Pencil, Plus, Settings, Trash2, Wrench, X } from "lucide-react";
+import { Pencil, Plus, Settings, ThumbsDown, ThumbsUp, Trash2, Wrench, X } from "lucide-react";
 import { IconButton, buttonRoles } from "./IconButton";
 import { iconButtonToolbarGroupClasses } from "./iconButtonStyles";
 
@@ -32,7 +32,7 @@ const meta = {
         component: `
 ## Usage
 
-**Four prescribed patterns** — icon only, no visible text. If the action is not obvious from the icon, use **Button** with a label instead.
+**Prescribed patterns** — icon only, no visible text. If the action is not obvious from the icon, use **Button** with a label instead.
 
 | Pattern | Props |
 |---------|--------|
@@ -40,6 +40,7 @@ const meta = {
 | **FAB** | \`fab\` + \`aria-label\` |
 | **With tooltip** | \`title\` (defaults to \`aria-label\`) |
 | **Async** | \`loading\` + \`aria-label\` |
+| **Toggle** | \`pressed\` + \`aria-label\` — on/off state such as a vote; the pressed fill and a filled glyph while on |
 | **Inset dismiss** | \`inset\` + \`size="sm" \\| "md" \\| "lg"\` — removable Chip trailing × |
 
 Circular icon-only hit target; \`md\` = cluster lg (44×44px, ADR-0003). \`xs\` / \`sm\` / \`md\` map to cluster sm / md / lg — see **Foundations → Cluster** (ADR-0011).
@@ -49,6 +50,7 @@ Circular icon-only hit target; \`md\` = cluster lg (44×44px, ADR-0003). \`xs\` 
 - **Do** make \`aria-label\` specific — "Delete conversation", not just "Delete".
 - **Do** set \`title\` when the icon alone is ambiguous for sighted users.
 - **Do** use \`ghost\` in dense toolbars.
+- **Do** keep a toggle's \`aria-label\` the same when it is pressed — \`aria-pressed\` carries the state.
 - **Don't** use IconButton when the action needs visible text — use \`Button\`.
         `.trim(),
       },
@@ -137,6 +139,39 @@ export const WithTooltip: Story = {
     "aria-label": "Configure workspace",
     title: "Configure workspace",
     role: "secondary",
+  },
+};
+
+export const Toggle: Story = {
+  name: "Pattern — toggle",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`pressed` makes a toggle: it sets `aria-pressed` and, while on, shows the pressed fill and fills the glyph — pick a glyph that reads filled, such as a thumb, star, or bookmark. Here two votes where only one can be on, and pressing the active one clears it. The label stays the same in both states.",
+      },
+    },
+  },
+  render: function ToggleRender() {
+    const [vote, setVote] = useState<"up" | "down" | null>("up");
+    return (
+      <div className="flex items-center gap-1">
+        <IconButton
+          size="sm"
+          icon={<ThumbsUp />}
+          aria-label="Mark this reply helpful"
+          pressed={vote === "up"}
+          onClick={() => setVote((current) => (current === "up" ? null : "up"))}
+        />
+        <IconButton
+          size="sm"
+          icon={<ThumbsDown />}
+          aria-label="Mark this reply not helpful"
+          pressed={vote === "down"}
+          onClick={() => setVote((current) => (current === "down" ? null : "down"))}
+        />
+      </div>
+    );
   },
 };
 

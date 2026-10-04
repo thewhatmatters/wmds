@@ -118,7 +118,8 @@ export const compositionShellExceptions: CompositionShellException[] = [
   {
     file: "components/organisms/ChatDock/ChatDock.tsx",
     ruleId: "lucide-import",
-    reason: "ChatDock owns the inline follow-up glyph (Lucide CornerDownRight) passed to ButtonIcon.",
+    reason:
+      "ChatDock owns the inline follow-up glyph (Lucide CornerDownRight) passed to ButtonIcon, and the reply row glyphs (Copy, Check, ThumbsUp, ThumbsDown) passed to IconButton.",
   },
   {
     file: "components/organisms/Dialog/OverlayPanelHeader.tsx",
