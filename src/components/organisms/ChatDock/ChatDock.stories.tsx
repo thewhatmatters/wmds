@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ArrowRight, CalendarClock, DollarSign } from "lucide-react";
+import { ArrowRight, CalendarClock, DollarSign, Workflow } from "lucide-react";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { storybookViewports } from "../../../lib/viewports";
 import { Avatar } from "../../atoms/Avatar/Avatar";
@@ -8,6 +8,11 @@ import { ChatDock, type ChatDockMessage, type ChatDockSuggestion } from "./ChatD
 
 const reviewViewports = {
   ...storybookViewports,
+  review1280: {
+    name: "Review 1280",
+    styles: { width: "1280px", height: "800px" },
+    type: "desktop" as const,
+  },
   review1440: {
     name: "Review 1440",
     styles: { width: "1440px", height: "900px" },
@@ -41,9 +46,12 @@ const suggestions: ChatDockSuggestion[] = [
   { id: "start", label: "Start a project", icon: <ArrowRight /> },
 ];
 
+/** What \`ask\` resolves with: the reply, or the reply and the follow-ups to offer under it. */
+export type AskWhatMattersResult = string | { reply: string; followUps?: ChatDockSuggestion[] };
+
 export interface AskWhatMattersProps {
-  /** The app's assistant request. Resolves with the reply. */
-  ask: (prompt: string, history: ChatDockMessage[]) => Promise<string>;
+  /** The app's assistant request. Resolves with the reply, and with follow-ups for it when there are any. */
+  ask: (prompt: string, history: ChatDockMessage[]) => Promise<AskWhatMattersResult>;
   /** Opens the Start a project intake. */
   onStartProject: () => void;
 }
@@ -51,15 +59,19 @@ export interface AskWhatMattersProps {
 export function AskWhatMatters({ ask, onStartProject }: AskWhatMattersProps) {
   const [messages, setMessages] = useState<ChatDockMessage[]>([]);
   const [thinking, setThinking] = useState(false);
+  const [followUps, setFollowUps] = useState<ChatDockSuggestion[]>([]);
 
   async function handleSend(prompt: string) {
     const question: ChatDockMessage = { id: crypto.randomUUID(), role: "user", content: prompt };
     const history = [...messages, question];
     setMessages(history);
+    setFollowUps([]);
     setThinking(true);
     try {
-      const reply = await ask(prompt, history);
+      const result = await ask(prompt, history);
+      const reply = typeof result === "string" ? result : result.reply;
       setMessages((current) => [...current, { id: crypto.randomUUID(), role: "assistant", content: reply }]);
+      setFollowUps(typeof result === "string" ? [] : (result.followUps ?? []));
     } finally {
       setThinking(false);
     }
@@ -74,6 +86,7 @@ export function AskWhatMatters({ ask, onStartProject }: AskWhatMattersProps) {
       messages={messages}
       thinking={thinking}
       suggestions={suggestions}
+      followUps={followUps}
       onSend={(prompt) => {
         void handleSend(prompt);
       }}
@@ -103,9 +116,12 @@ const suggestions: ChatDockSuggestion[] = [
   { id: "start", label: "Start a project", icon: <ArrowRight /> },
 ];
 
+/** What `ask` resolves with: the reply, or the reply and the follow-ups to offer under it. */
+type AskWhatMattersResult = string | { reply: string; followUps?: ChatDockSuggestion[] };
+
 interface AskWhatMattersProps {
-  /** The app's assistant request. Resolves with the reply. */
-  ask: (prompt: string, history: ChatDockMessage[]) => Promise<string>;
+  /** The app's assistant request. Resolves with the reply, and with follow-ups for it when there are any. */
+  ask: (prompt: string, history: ChatDockMessage[]) => Promise<AskWhatMattersResult>;
   /** Opens the Start a project intake. */
   onStartProject: () => void;
 }
@@ -113,15 +129,19 @@ interface AskWhatMattersProps {
 function AskWhatMatters({ ask, onStartProject }: AskWhatMattersProps) {
   const [messages, setMessages] = useState<ChatDockMessage[]>([]);
   const [thinking, setThinking] = useState(false);
+  const [followUps, setFollowUps] = useState<ChatDockSuggestion[]>([]);
 
   async function handleSend(prompt: string) {
     const question: ChatDockMessage = { id: crypto.randomUUID(), role: "user", content: prompt };
     const history = [...messages, question];
     setMessages(history);
+    setFollowUps([]);
     setThinking(true);
     try {
-      const reply = await ask(prompt, history);
+      const result = await ask(prompt, history);
+      const reply = typeof result === "string" ? result : result.reply;
       setMessages((current) => [...current, { id: crypto.randomUUID(), role: "assistant", content: reply }]);
+      setFollowUps(typeof result === "string" ? [] : (result.followUps ?? []));
     } finally {
       setThinking(false);
     }
@@ -136,6 +156,7 @@ function AskWhatMatters({ ask, onStartProject }: AskWhatMattersProps) {
       messages={messages}
       thinking={thinking}
       suggestions={suggestions}
+      followUps={followUps}
       onSend={(prompt) => {
         void handleSend(prompt);
       }}
@@ -148,15 +169,46 @@ function AskWhatMatters({ ask, onStartProject }: AskWhatMattersProps) {
   );
 }
 
-/** Storybook stand-in for the app's request: a short pause, then a canned reply. */
-function demoAsk(prompt: string): Promise<string> {
-  const reply = prompt.toLowerCase().includes("cost")
-    ? "Most projects start at a fixed scope. Tell us what you need and we'll send a range within a day."
-    : prompt.toLowerCase().includes("long")
-      ? "A focused brand or product sprint takes four to six weeks. Larger builds run in phases."
-      : "Good question. Share a little about the project and we'll point you to the right next step.";
+const followUpCost: ChatDockSuggestion = {
+  id: "cost",
+  label: "How much does a project cost?",
+  prompt: "How much does a project cost?",
+  icon: <DollarSign />,
+};
+const followUpProcess: ChatDockSuggestion = {
+  id: "process",
+  label: "How does a project work?",
+  prompt: "How does a project work?",
+  icon: <Workflow />,
+};
+const followUpStart: ChatDockSuggestion = { id: "start", label: "Start a project", icon: <ArrowRight /> };
+
+const makeReply =
+  "Brand identity, web experiences, mobile apps, social media, content and copy, and AI assistants. Then launch, growth, and care once it ships.";
+
+/**
+ * Storybook stand-in for the app's request: a short pause, then a canned reply. Some replies bring
+ * follow-ups and some do not — the app decides.
+ */
+function demoAsk(prompt: string): Promise<AskWhatMattersResult> {
+  const text = prompt.toLowerCase();
+  const result: AskWhatMattersResult = text.includes("make")
+    ? { reply: makeReply, followUps: [followUpCost, followUpProcess, followUpStart] }
+    : text.includes("cost")
+      ? {
+          reply: "Most projects start at a fixed scope. Tell us what you need and we'll send a range within a day.",
+          followUps: [followUpProcess, followUpStart],
+        }
+      : text.includes("work")
+        ? {
+            reply: "A short discovery call, a written plan, then weekly reviews until launch.",
+            followUps: [followUpStart],
+          }
+        : text.includes("long")
+          ? "A focused brand or product sprint takes four to six weeks. Larger builds run in phases."
+          : "Good question. Share a little about the project and we'll point you to the right next step.";
   return new Promise((resolve) => {
-    window.setTimeout(() => resolve(reply), 1200);
+    window.setTimeout(() => resolve(result), 1200);
   });
 }
 
@@ -223,7 +275,9 @@ The window is not modal: the page behind it stays usable. On phones it fills the
 | \`messages\` | \`{ id, role: "user" \\| "assistant", content }[]\`, oldest first. \`content\` is text or Markdown the app already rendered |
 | \`thinking\` | Shows the thinking row after the last message |
 | \`suggestions\` | \`{ id, label, icon?, prompt? }[]\`. With \`prompt\`: a pill at rest and a row in the window, and choosing it sends the prompt. Without: a row only, and \`onSuggestionSelect\` runs (for example **Start a project**) |
-| \`onSend\` | Receives the typed message or a suggestion's prompt |
+| \`followUps\` | The same items as \`suggestions\`, for the latest reply only. Shown while the last message is an assistant reply and \`thinking\` is off; gone the moment the visitor sends. The app decides which replies get them |
+| \`followUpsPlacement\` | \`inline\` (default): rows in the conversation, under the reply. \`composer\`: pills pinned above the composer |
+| \`onSend\` | Receives the typed message, a suggestion's prompt, or a follow-up's prompt |
 | \`open\` / \`onOpenChange\` | Optional control of the window |
 | \`placement\` | \`fixed\` (default) pins it to the viewport; \`inline\` keeps it in flow for previews |
 
@@ -236,7 +290,9 @@ ChatDock — fixed to the bottom, page grid at --grid-max 40rem, under SiteNav
 └── open — Card layout shell on the surface (full screen below md)
     ├── header — mark · title · subtitle | IconButton close (shared overlay header)
     ├── conversation — greeting, replies as text, visitor turns on the brand tint, thinking row (Status dot); scrolls, stays at the end
+    │   └── follow-ups (inline) — Button ghost rows under the latest reply, 44px on phones
     ├── suggestion rows — Button ghost row + icon, until the first message
+    ├── follow-ups (composer) — Button secondary pills, wrap
     ├── PromptBar
     └── disclaimer — caption, muted
 \`\`\`
@@ -244,6 +300,8 @@ ChatDock — fixed to the bottom, page grid at --grid-max 40rem, under SiteNav
 ## Best practices
 - **Do** keep pill suggestions to two or three short questions. Put actions such as **Start a project** in the list only (no \`prompt\`).
 - **Do** stream replies by updating the last assistant message's \`content\`; the thread stays pinned to the end while the reader is there.
+- **Do** pass \`followUps\` only after replies that have an obvious next question — one to three, short labels, Lucide icons — and clear them when the visitor sends. Copy the follow-up state from **Pattern — chat dock**.
+- **Do** keep follow-ups \`inline\`. They read as part of the answer and cost the conversation no height on a phone. Use \`composer\` only where the thread is long and the follow-ups must stay beside the field.
 - **Don't** make suggestions the only way to ask: touch devices never see the pills, only the rows in the window.
 - **Don't** add a second send arrow or an expand button to the header. Send is the composer's arrow. Voice is not part of this version.
 - **Don't** mount a second dock on a page, or restyle **SiteNav** to make room for it.
@@ -386,4 +444,99 @@ export const At390: Story = {
       />
     </div>
   ),
+};
+
+const followUpConversation: ChatDockMessage[] = [
+  { id: "q1", role: "user", content: "What do you make?" },
+  { id: "a1", role: "assistant", content: makeReply },
+];
+
+const followUpItems = [followUpCost, followUpProcess, followUpStart];
+
+function FollowUpsSpecimen({ followUpsPlacement }: { followUpsPlacement: "inline" | "composer" }) {
+  return (
+    <div className="min-h-screen bg-body">
+      <ChatDock
+        defaultOpen
+        title="WhatMatters"
+        subtitle="Ask anything"
+        mark={mark}
+        greeting={greeting}
+        messages={followUpConversation}
+        suggestions={suggestions}
+        followUps={followUpItems}
+        followUpsPlacement={followUpsPlacement}
+        onSend={() => undefined}
+        placeholder="Ask anything about WhatMatters"
+        disclaimer="Answers may be incomplete · AI assistant by WhatMatters"
+      />
+    </div>
+  );
+}
+
+export const FollowUpsInline: Story = {
+  name: "Follow-ups — inline",
+  globals: {
+    viewport: { value: "review1280", isRotated: false },
+  },
+  parameters: {
+    docs: {
+      story: { inline: false, height: "800px" },
+      description: {
+        story:
+          "Default. Three follow-ups as rows directly under the reply they belong to. They read as part of the answer and take no fixed height; they scroll with the thread, which stays pinned to the end.",
+      },
+    },
+  },
+  render: () => <FollowUpsSpecimen followUpsPlacement="inline" />,
+};
+
+export const FollowUpsAboveComposer: Story = {
+  name: "Follow-ups — above the composer",
+  globals: {
+    viewport: { value: "review1280", isRotated: false },
+  },
+  parameters: {
+    docs: {
+      story: { inline: false, height: "800px" },
+      description: {
+        story:
+          "`followUpsPlacement=\"composer\"`. The same three follow-ups as pills pinned between the conversation and the composer. At this width two fit on a line.",
+      },
+    },
+  },
+  render: () => <FollowUpsSpecimen followUpsPlacement="composer" />,
+};
+
+export const FollowUpsInlineAt390: Story = {
+  name: "Follow-ups — inline at 390",
+  globals: {
+    viewport: { value: "review390", isRotated: false },
+  },
+  parameters: {
+    docs: {
+      story: { inline: false, height: "844px" },
+      description: {
+        story: "Inline at 390. Each row is a 44px target and a long label stays on one line.",
+      },
+    },
+  },
+  render: () => <FollowUpsSpecimen followUpsPlacement="inline" />,
+};
+
+export const FollowUpsAboveComposerAt390: Story = {
+  name: "Follow-ups — above the composer at 390",
+  globals: {
+    viewport: { value: "review390", isRotated: false },
+  },
+  parameters: {
+    docs: {
+      story: { inline: false, height: "844px" },
+      description: {
+        story:
+          "Above the composer at 390. Each pill takes its own line, so three follow-ups take about 150px from the conversation, and more once the keyboard is open.",
+      },
+    },
+  },
+  render: () => <FollowUpsSpecimen followUpsPlacement="composer" />,
 };

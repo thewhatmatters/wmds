@@ -450,7 +450,9 @@ export {
 export {
   ChatDock,
   chatDockDefaultLabels,
+  chatDockFollowUpsPlacements,
   chatDockPlacements,
+  type ChatDockFollowUpsPlacement,
   type ChatDockLabels,
   type ChatDockLayoutClassName,
   type ChatDockMessage,

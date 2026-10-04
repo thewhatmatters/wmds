@@ -5,7 +5,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   ChatDock,
   chatDockPillSuggestions,
+  chatDockShowsFollowUps,
   chatDockShowsSuggestionRows,
+  type ChatDockMessage,
   type ChatDockSuggestion,
 } from "./ChatDock";
 
@@ -26,6 +28,32 @@ describe("chatDockShowsSuggestionRows", () => {
     expect(chatDockShowsSuggestionRows(suggestions, [])).toBe(true);
     expect(chatDockShowsSuggestionRows(suggestions, [{ id: "1", role: "user", content: "Hi" }])).toBe(false);
     expect(chatDockShowsSuggestionRows([], [])).toBe(false);
+  });
+});
+
+describe("chatDockShowsFollowUps", () => {
+  const followUps = suggestions.slice(0, 1);
+  const replied: ChatDockMessage[] = [
+    { id: "q", role: "user", content: "What do you make?" },
+    { id: "a", role: "assistant", content: "Brands, sites, and apps." },
+  ];
+
+  it("shows under the latest reply", () => {
+    expect(chatDockShowsFollowUps({ followUps, messages: replied, thinking: false, sentAfterId: null })).toBe(true);
+  });
+
+  it("hides while a reply is pending, when the list is empty, and before any reply", () => {
+    expect(chatDockShowsFollowUps({ followUps, messages: replied, thinking: true, sentAfterId: null })).toBe(false);
+    expect(chatDockShowsFollowUps({ followUps: [], messages: replied, thinking: false, sentAfterId: null })).toBe(false);
+    expect(chatDockShowsFollowUps({ followUps, messages: replied.slice(0, 1), thinking: false, sentAfterId: null })).toBe(
+      false,
+    );
+  });
+
+  it("hides as soon as the visitor sends after that reply", () => {
+    expect(chatDockShowsFollowUps({ followUps, messages: replied, thinking: false, sentAfterId: "a" })).toBe(false);
+    const next: ChatDockMessage[] = [...replied, { id: "q2", role: "user", content: "More" }, { id: "a2", role: "assistant", content: "Sure." }];
+    expect(chatDockShowsFollowUps({ followUps, messages: next, thinking: false, sentAfterId: "a" })).toBe(true);
   });
 });
 

@@ -9,11 +9,16 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 ## 0.4.1
 
-**ChatDock:** the visitor's messages sit on a light navy tint, so they read apart from the assistant's replies. New color token `--color-brand-tint` (`bg-brand-tint`): 10% navy in light, a lifted navy in dark.
+**ChatDock:** follow-ups in the open window, and the visitor's messages on a brand tint.
+
+- **`followUps`** — predefined next questions for the latest reply, the same items as `suggestions`. They show under the reply (`followUpsPlacement="inline"`, the default; `"composer"` pins them as pills above the composer), hide while `thinking`, and disappear the moment the visitor sends. Choosing one calls `onSuggestionSelect`, then `onSend` with its `prompt`. **Components/ChatDock → Pattern — chat dock** now keeps the follow-up state: `ask` may resolve with `string | { reply, followUps? }`.
+- The visitor's messages sit on a light navy tint, so they read apart from the replies. New color token `--color-brand-tint` (`bg-brand-tint`): 10% navy in light, a lifted navy in dark.
 
 ### Consumer actions
 
-None. The new look comes with the upgrade.
+1. **WhatMatters site: re-copy Components/ChatDock → Pattern — chat dock** (`node_modules/@thewhatmatters/wmds/docs/patterns/components-chatdock--pattern-chat-dock.tsx`) over `components/ask-whatmatters.tsx`, and re-apply only your content, data, and handlers. The pattern now holds the follow-up state.
+2. **Return follow-ups from `ask`** after the replies that should have them: resolve with `{ reply, followUps: [...] }` (one to three items, each `{ id, label, icon?, prompt? }`; an item without a `prompt`, such as `{ id: "start", label: "Start a project" }`, opens the intake through `onStartProject`). Replies without follow-ups can keep resolving with the reply string.
+3. Other apps: none. The tint comes with the upgrade.
 
 ## 0.4.0
 

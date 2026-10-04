@@ -22,9 +22,12 @@ const suggestions: ChatDockSuggestion[] = [
   { id: "start", label: "Start a project", icon: <ArrowRight /> },
 ];
 
+/** What `ask` resolves with: the reply, or the reply and the follow-ups to offer under it. */
+export type AskWhatMattersResult = string | { reply: string; followUps?: ChatDockSuggestion[] };
+
 export interface AskWhatMattersProps {
-  /** The app's assistant request. Resolves with the reply. */
-  ask: (prompt: string, history: ChatDockMessage[]) => Promise<string>;
+  /** The app's assistant request. Resolves with the reply, and with follow-ups for it when there are any. */
+  ask: (prompt: string, history: ChatDockMessage[]) => Promise<AskWhatMattersResult>;
   /** Opens the Start a project intake. */
   onStartProject: () => void;
 }
@@ -32,15 +35,19 @@ export interface AskWhatMattersProps {
 export function AskWhatMatters({ ask, onStartProject }: AskWhatMattersProps) {
   const [messages, setMessages] = useState<ChatDockMessage[]>([]);
   const [thinking, setThinking] = useState(false);
+  const [followUps, setFollowUps] = useState<ChatDockSuggestion[]>([]);
 
   async function handleSend(prompt: string) {
     const question: ChatDockMessage = { id: crypto.randomUUID(), role: "user", content: prompt };
     const history = [...messages, question];
     setMessages(history);
+    setFollowUps([]);
     setThinking(true);
     try {
-      const reply = await ask(prompt, history);
+      const result = await ask(prompt, history);
+      const reply = typeof result === "string" ? result : result.reply;
       setMessages((current) => [...current, { id: crypto.randomUUID(), role: "assistant", content: reply }]);
+      setFollowUps(typeof result === "string" ? [] : (result.followUps ?? []));
     } finally {
       setThinking(false);
     }
@@ -55,6 +62,7 @@ export function AskWhatMatters({ ask, onStartProject }: AskWhatMattersProps) {
       messages={messages}
       thinking={thinking}
       suggestions={suggestions}
+      followUps={followUps}
       onSend={(prompt) => {
         void handleSend(prompt);
       }}
