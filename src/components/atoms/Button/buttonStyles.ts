@@ -36,7 +36,7 @@ export const buttonEmphases = ["strong", "quiet"] as const;
 export type ButtonEmphasis = (typeof buttonEmphases)[number];
 
 export const buttonBaseClasses =
-  "inline-flex cursor-pointer items-center font-sans font-medium tracking-normal " +
+  "inline-flex cursor-pointer items-center font-sans font-medium normal-case tracking-normal " +
   "transition-[color,transform,box-shadow,border-color,outline-color,background-color] " +
   motionTransition("fast") +
   " " +
@@ -78,6 +78,9 @@ export const buttonAlignClasses: Record<ButtonAlign, string> = {
  */
 export const buttonMonoLabelClasses =
   "!font-mono !text-[length:var(--font-size-sm)] !font-normal !uppercase !leading-none !tracking-[0.14em]";
+
+/** Trailing new-tab glyph on an `external` link button — the icon **TextLink** `external` shows. */
+export const buttonExternalIconClasses = "-ml-0.5 size-[0.85em] shrink-0 stroke-current";
 
 /** Trailing accent square for a Lucide glyph (`endIcon`). */
 export const buttonEndIconSquareClasses =

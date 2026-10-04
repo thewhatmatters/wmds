@@ -120,7 +120,7 @@ export const PostIndex: Story = {
     <IndexList
       {...args}
       aria-label="Posts"
-      captions={{ meta: "/ Date", title: "/ Name" }}
+      captions={{ meta: "Date", title: "Name" }}
       empty={<p className="type-body text-muted">No posts yet.</p>}
     >
       {samplePosts.map((post) => (
@@ -161,7 +161,7 @@ export function PostIndex({ posts }: { posts: IndexPost[] }) {
   return (
     <IndexList
       aria-label="Posts"
-      captions={{ meta: "/ Date", title: "/ Name" }}
+      captions={{ meta: "Date", title: "Name" }}
       empty={<p className="type-body text-muted">No posts yet.</p>}
     >
       {posts.map((post) => (
@@ -183,7 +183,7 @@ export function PostIndex({ posts }: { posts: IndexPost[] }) {
 export const WithoutPreviews: Story = {
   name: "Reference — links only",
   render: () => (
-    <IndexList aria-label="Posts" captions={{ meta: "/ Date", title: "/ Name" }}>
+    <IndexList aria-label="Posts" captions={{ meta: "Date", title: "Name" }}>
       {samplePosts.map((post) => (
         <IndexList.Item
           key={post.slug}
@@ -199,7 +199,7 @@ export const WithoutPreviews: Story = {
 export const OpenPreview: Story = {
   name: "Reference — open preview",
   render: () => (
-    <IndexList aria-label="Posts" captions={{ meta: "/ Date", title: "/ Name" }}>
+    <IndexList aria-label="Posts" captions={{ meta: "Date", title: "Name" }}>
       {samplePosts.slice(0, 2).map((post, index) => (
         <IndexList.Item
           key={post.slug}
@@ -243,7 +243,7 @@ export const Empty: Story = {
   render: () => (
     <IndexList
       aria-label="Posts"
-      captions={{ meta: "/ Date", title: "/ Name" }}
+      captions={{ meta: "Date", title: "Name" }}
       empty={<p className="type-body text-muted">No posts match these filters.</p>}
     />
   ),

@@ -1,4 +1,5 @@
 import { useRender } from "@base-ui/react/use-render";
+import { SquareArrowOutUpRight } from "lucide-react";
 import {
   forwardRef,
   type ButtonHTMLAttributes,
@@ -14,6 +15,7 @@ import {
   buttonAlignClasses,
   buttonBaseClasses,
   buttonEndIconSquareClasses,
+  buttonExternalIconClasses,
   buttonOutlineQuietClasses,
   buttonRowWidthClasses,
   buttonMonoLabelClasses,
@@ -35,7 +37,7 @@ import {
 export type { ButtonAlign, ButtonEmphasis, ButtonLayout, ButtonRole, ButtonSize, ButtonWidth } from "./buttonStyles";
 export { buttonAligns, buttonEmphases, buttonLayouts, buttonRoles, buttonWidths } from "./buttonStyles";
 export type { ButtonStatus } from "./buttonStatusStyles";
-export { defaultStatusLabels, getNextButtonStatus } from "./buttonStatusStyles";
+export { buttonStatusHoldMs, defaultStatusLabels, getNextButtonStatus } from "./buttonStatusStyles";
 
 /** Layout-only — not for colors, borders, or typography overrides. */
 export type ButtonLayoutClassName = string;
@@ -72,13 +74,14 @@ export interface ButtonProps
   /**
    * Async / submit morph — whole pill animates idle → loading → success → error.
    * [Motion multi-state badge](https://motion.dev/examples/react-multi-state-badge).
-   * Mutually exclusive with `icon` and `count`.
+   * With `icon`, the status glyphs morph out of the icon (a copy button's Copy glyph turns into the
+   * check). Mutually exclusive with `count`, `endIcon`, `mono`, and `render`.
    */
   status?: ButtonStatus;
   statusLabels?: Partial<Record<ButtonStatus, string>>;
   /** When true, error state is non-interactive. Default: clickable for retry. */
   disableOnError?: boolean;
-  /** Leading Lucide icon — `import { … } from "lucide-react"`. Not combinable with `status`. */
+  /** Leading Lucide icon — `import { … } from "lucide-react"`. With `status`, it morphs into the status glyph. */
   icon?: ReactElement;
   /** Trailing numeric count (inbox / notifications). Not combinable with `status`. */
   count?: number;
@@ -100,6 +103,13 @@ export interface ButtonProps
    * `disabled` maps to `aria-disabled` on non-button elements.
    */
   render?: ReactElement;
+  /**
+   * With `render={<a href />}` to another site: opens it in a new tab (`target="_blank"`, a safe
+   * `rel`), tells screen readers so, and shows the trailing external icon **TextLink** uses.
+   */
+  external?: boolean;
+  /** `external` only — `false` drops the trailing icon; the spoken "opens in a new tab" stays. */
+  externalIcon?: boolean;
   /** Layout-only: width, margin, flex placement. */
   className?: ButtonLayoutClassName;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -114,9 +124,26 @@ export interface ButtonProps
 function assertActionPattern(
   props: Pick<
     ButtonProps,
-    "status" | "icon" | "count" | "layout" | "render" | "endIcon" | "mono" | "width" | "align" | "emphasis" | "role"
+    | "status"
+    | "icon"
+    | "count"
+    | "layout"
+    | "render"
+    | "endIcon"
+    | "mono"
+    | "width"
+    | "align"
+    | "emphasis"
+    | "role"
+    | "external"
   >,
 ) {
+  if (props.external && (props.render == null || props.layout !== "pill")) {
+    console.warn('[WMDS Button] `external` needs `render={<a href />}` on a pill button.');
+  }
+  if (props.external && props.endIcon != null) {
+    console.warn("[WMDS Button] `external` is mutually exclusive with `endIcon`.");
+  }
   if (props.width != null && props.layout !== "row") {
     console.warn('[WMDS Button] `width` applies to `layout="row"` only.');
   }
@@ -137,10 +164,8 @@ function assertActionPattern(
   }
 
   if (props.status != null) {
-    if (props.icon != null || props.count != null || props.endIcon != null || props.mono) {
-      console.warn(
-        "[WMDS Button] `status` is mutually exclusive with `icon`, `count`, `endIcon`, and `mono`.",
-      );
+    if (props.count != null || props.endIcon != null || props.mono) {
+      console.warn("[WMDS Button] `status` is mutually exclusive with `count`, `endIcon`, and `mono`.");
     }
   }
 
@@ -201,6 +226,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     endIcon,
     selected = false,
     render,
+    external = false,
+    externalIcon = true,
     className,
     onClick,
     "aria-label": ariaLabel,
@@ -211,7 +238,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     form,
     ...buttonProps
   }, ref) {
-  assertActionPattern({ status, icon, count, layout, render, endIcon, mono, width, align, emphasis, role });
+  assertActionPattern({ status, icon, count, layout, render, endIcon, mono, width, align, emphasis, role, external });
 
   if (status != null) {
     return (
@@ -222,6 +249,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         role={role}
         size={size}
         statusLabels={statusLabels}
+        icon={icon}
         disableOnError={disableOnError}
         disabled={disabled}
         className={className}
@@ -298,9 +326,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     );
   }
 
+  const opensNewTab = external && render != null;
+
   return (
     <ButtonPill
       {...buttonProps}
+      {...(opensNewTab ? { target: "_blank", rel: "noopener noreferrer" } : null)}
       ref={ref}
       render={render}
       type={type}
@@ -327,9 +358,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       data-emphasis={role === "outline" ? (emphasis ?? "strong") : undefined}
       data-mono={mono ? "" : undefined}
       data-end-icon={endIcon ? "" : undefined}
+      data-external={opensNewTab ? "" : undefined}
     >
       {icon ? <ButtonIcon size={size}>{icon}</ButtonIcon> : null}
-      <span className={mono ? buttonMonoLabelClasses : undefined}>{children}</span>
+      <span className={mono ? buttonMonoLabelClasses : undefined}>
+        {children}
+        {opensNewTab ? <span className="sr-only"> (opens in a new tab)</span> : null}
+      </span>
+      {opensNewTab && externalIcon ? (
+        <SquareArrowOutUpRight className={buttonExternalIconClasses} strokeWidth={2} aria-hidden />
+      ) : null}
       {endIcon ? (
         <span className={buttonEndIconSquareClasses}>
           <ButtonIcon size="xs">{endIcon}</ButtonIcon>

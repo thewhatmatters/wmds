@@ -19,6 +19,14 @@
       "source": "src/components/atoms/Avatar/Avatar.stories.tsx"
     },
     {
+      "id": "components-badge--outline-tags",
+      "title": "Components/Badge",
+      "name": "Pattern — outline tags",
+      "file": "patterns/components-badge--outline-tags.tsx",
+      "storybook": "?path=/story/components-badge--outline-tags",
+      "source": "src/components/atoms/Badge/Badge.stories.tsx"
+    },
+    {
       "id": "components-badge--with-avatar",
       "title": "Components/Badge",
       "name": "Pattern — with avatar",
@@ -27,11 +35,27 @@
       "source": "src/components/atoms/Badge/Badge.stories.tsx"
     },
     {
+      "id": "components-button-button--copy-button",
+      "title": "Components/Button/Button",
+      "name": "Pattern — copy button",
+      "file": "patterns/components-button-button--copy-button.tsx",
+      "storybook": "?path=/story/components-button-button--copy-button",
+      "source": "src/components/atoms/Button/Button.stories.tsx"
+    },
+    {
       "id": "components-button-button--destructive-action",
       "title": "Components/Button/Button",
       "name": "Pattern — destructive action",
       "file": "patterns/components-button-button--destructive-action.tsx",
       "storybook": "?path=/story/components-button-button--destructive-action",
+      "source": "src/components/atoms/Button/Button.stories.tsx"
+    },
+    {
+      "id": "components-button-button--external-link",
+      "title": "Components/Button/Button",
+      "name": "Pattern — external link",
+      "file": "patterns/components-button-button--external-link.tsx",
+      "storybook": "?path=/story/components-button-button--external-link",
       "source": "src/components/atoms/Button/Button.stories.tsx"
     },
     {
@@ -307,6 +331,22 @@
       "source": "src/components/molecules/CheckboxGroup/CheckboxGroup.stories.tsx"
     },
     {
+      "id": "components-descriptionlist--details",
+      "title": "Components/DescriptionList",
+      "name": "Pattern — details",
+      "file": "patterns/components-descriptionlist--details.tsx",
+      "storybook": "?path=/story/components-descriptionlist--details",
+      "source": "src/components/molecules/DescriptionList/DescriptionList.stories.tsx"
+    },
+    {
+      "id": "components-descriptionlist--post-metadata",
+      "title": "Components/DescriptionList",
+      "name": "Pattern — post metadata",
+      "file": "patterns/components-descriptionlist--post-metadata.tsx",
+      "storybook": "?path=/story/components-descriptionlist--post-metadata",
+      "source": "src/components/molecules/DescriptionList/DescriptionList.stories.tsx"
+    },
+    {
       "id": "components-dialog--alert-dialog-destructive",
       "title": "Components/Dialog",
       "name": "Pattern — alert dialog (destructive)",
@@ -579,6 +619,14 @@
       "source": "src/components/molecules/PromptBar/PromptBar.stories.tsx"
     },
     {
+      "id": "components-prose--article-body",
+      "title": "Components/Prose",
+      "name": "Pattern — article body",
+      "file": "patterns/components-prose--article-body.tsx",
+      "storybook": "?path=/story/components-prose--article-body",
+      "source": "src/components/atoms/Prose/Prose.stories.tsx"
+    },
+    {
       "id": "components-radio-radiogroup--default",
       "title": "Components/Radio/RadioGroup",
       "name": "Pattern — vertical",
@@ -601,6 +649,22 @@
       "file": "patterns/components-scrollhorizontal--with-intro.tsx",
       "storybook": "?path=/story/components-scrollhorizontal--with-intro",
       "source": "src/components/organisms/ScrollHorizontal/ScrollHorizontal.stories.tsx"
+    },
+    {
+      "id": "components-sectioncaption--column-caption",
+      "title": "Components/SectionCaption",
+      "name": "Pattern — column caption",
+      "file": "patterns/components-sectioncaption--column-caption.tsx",
+      "storybook": "?path=/story/components-sectioncaption--column-caption",
+      "source": "src/components/atoms/SectionCaption/SectionCaption.stories.tsx"
+    },
+    {
+      "id": "components-sectioncaption--with-action",
+      "title": "Components/SectionCaption",
+      "name": "Pattern — caption with an action",
+      "file": "patterns/components-sectioncaption--with-action.tsx",
+      "storybook": "?path=/story/components-sectioncaption--with-action",
+      "source": "src/components/atoms/SectionCaption/SectionCaption.stories.tsx"
     },
     {
       "id": "components-sheet--bottom-sheet",
@@ -897,6 +961,14 @@
       "file": "patterns/guides-overlay-flows--notification-preferences.tsx",
       "storybook": "?path=/story/guides-overlay-flows--notification-preferences",
       "source": "src/guides/OverlayFlows/OverlayFlows.stories.tsx"
+    },
+    {
+      "id": "guides-post-page--post-page",
+      "title": "Guides/Post page",
+      "name": "Pattern — post page",
+      "file": "patterns/guides-post-page--post-page.tsx",
+      "storybook": "?path=/story/guides-post-page--post-page",
+      "source": "src/guides/PostPage/PostPage.stories.tsx"
     },
     {
       "id": "guides-profile-typography--editorial-profile",

@@ -19,7 +19,7 @@ export function PostIndex({ posts }: { posts: IndexPost[] }) {
   return (
     <IndexList
       aria-label="Posts"
-      captions={{ meta: "/ Date", title: "/ Name" }}
+      captions={{ meta: "Date", title: "Name" }}
       empty={<p className="type-body text-muted">No posts yet.</p>}
     >
       {posts.map((post) => (

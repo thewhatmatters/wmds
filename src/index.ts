@@ -38,6 +38,7 @@ export {
   type ButtonRole,
   type ButtonSize,
   type ButtonStatus,
+  buttonStatusHoldMs,
   defaultStatusLabels,
   getNextButtonStatus,
 } from "./components/atoms/Button/Button";
@@ -78,6 +79,17 @@ export {
   type UseKbdChoiceKeysOptions,
 } from "./components/atoms/Kbd/useKbdChoiceKeys";
 export {
+  Prose,
+  proseElements,
+  proseMeasures,
+  proseSizes,
+  type ProseElement,
+  type ProseLayoutClassName,
+  type ProseMeasure,
+  type ProseProps,
+  type ProseSize,
+} from "./components/atoms/Prose/Prose";
+export {
   Radio,
   radioSizes,
   type RadioLayoutClassName,
@@ -95,6 +107,13 @@ export {
   type RiveHandName,
   type RiveHandProps,
 } from "./components/atoms/RiveHand/RiveHand";
+export {
+  SectionCaption,
+  sectionCaptionElements,
+  type SectionCaptionElement,
+  type SectionCaptionLayoutClassName,
+  type SectionCaptionProps,
+} from "./components/atoms/SectionCaption/SectionCaption";
 export {
   Switch,
   switchLayouts,
@@ -218,6 +237,18 @@ export {
   type CheckboxGroupOrientation,
   type CheckboxGroupProps,
 } from "./components/molecules/CheckboxGroup/CheckboxGroup";
+export {
+  DescriptionList,
+  descriptionListLayouts,
+  descriptionListRules,
+  descriptionListVariants,
+  type DescriptionListItemProps,
+  type DescriptionListLayout,
+  type DescriptionListLayoutClassName,
+  type DescriptionListProps,
+  type DescriptionListRule,
+  type DescriptionListVariant,
+} from "./components/molecules/DescriptionList/DescriptionList";
 export {
   DisplayControls,
   displayControlThemeModes,

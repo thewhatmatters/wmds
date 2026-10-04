@@ -43,7 +43,7 @@ export {
 export type IndexListLayoutClassName = string;
 
 export interface IndexListCaptions {
-  /** Over the meta column, for example "Date". */
+  /** Over the meta column, in sentence case — for example "Date". The "/" marker comes with it. */
   meta: ReactNode;
   /** Over the titles, for example "Name". */
   title: ReactNode;
@@ -117,8 +117,8 @@ function IndexListRoot({
       <div className={cn(indexListRootClasses, className)} data-size={size}>
         {hasRows && captions != null ? (
           <div className={indexListCaptionsClasses} aria-hidden="true" data-index-list-captions="">
-            <span>{captions.meta}</span>
-            <span className="@lg:col-start-2">{captions.title}</span>
+            <span>/ {captions.meta}</span>
+            <span className="@lg:col-start-2">/ {captions.title}</span>
           </div>
         ) : null}
         {hasRows ? (

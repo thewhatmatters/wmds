@@ -4,7 +4,7 @@
 
 import { useId, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
-import { Accordion, Button, CheckboxGroup, IndexList, Sheet } from "@thewhatmatters/wmds";
+import { Accordion, Button, CheckboxGroup, IndexList, SectionCaption, Sheet } from "@thewhatmatters/wmds";
 
 export interface FilterGroupDef {
   id: string;
@@ -120,27 +120,23 @@ export function FilteredIndex({
         </p>
 
         <aside aria-labelledby={filtersHeadingId} className="hidden md:col-span-3 md:block">
-          <div className="flex items-center justify-between gap-3 border-b border-border pb-3">
-            <h2 id={filtersHeadingId} className="type-eyebrow text-muted">
-              <span aria-hidden="true">/ </span>Filters
-            </h2>
-            <Button
-              role="ghost"
-              size="xs"
-              className="-my-1.5"
-              disabled={activeCount === 0}
-              onClick={() => setSelection({})}
-            >
-              Clear all
-            </Button>
-          </div>
+          <SectionCaption
+            id={filtersHeadingId}
+            end={
+              <Button role="ghost" size="xs" disabled={activeCount === 0} onClick={() => setSelection({})}>
+                Clear all
+              </Button>
+            }
+          >
+            Filters
+          </SectionCaption>
           <FilterGroups groups={groups} posts={posts} selection={selection} onGroupChange={setGroup} />
         </aside>
 
         <div className="col-span-full md:col-span-5 lg:col-span-9">
           <IndexList
             aria-label="Posts"
-            captions={{ meta: "/ Date", title: "/ Name" }}
+            captions={{ meta: "Date", title: "Name" }}
             empty={<p className="type-body text-muted">No posts match these filters.</p>}
           >
             {shown.map((post) => (

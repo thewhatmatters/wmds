@@ -11,7 +11,9 @@ const meta = {
   argTypes: {
     variant: { control: "select", options: [...badgeVariants] },
     size: { control: "select", options: ["sm", "md"] },
-    emphasis: { control: "select", options: ["solid", "muted"] },
+    emphasis: { control: "select", options: ["solid", "muted", "outline"] },
+    mono: { control: "boolean" },
+    render: { control: false },
     count: { control: "number" },
     icon: { control: false },
     avatar: { control: false },
@@ -35,6 +37,8 @@ const meta = {
 |---------|--------|
 | **Status label** | \`variant\` + label |
 | **Muted label** | \`emphasis="muted"\` + \`variant\` + label |
+| **Outline tag** | \`emphasis="outline"\` + \`mono\` — hairline, transparent fill, mono caps (authors, categories) |
+| **Tag link** | \`render={<a href />}\` — a tag that navigates (a category to the filtered list) |
 | **Count** | \`count\` + \`variant\` |
 | **With icon** | \`icon\` (Lucide) + \`variant\` + label |
 | **With avatar** | \`avatar={{ src, alt }}\` + \`variant\` + label — round **Avatar**, sized to the badge |
@@ -49,7 +53,7 @@ Solid semantic fills for status and category labels. **Variants:** \`neutral\` (
 - **Do** pair **Status** \`variant="dot"\` beside a label in list rows — not inside Badge.
 - **Don't** badge every healthy row — if all items show green "Active", none stand out.
 - **Don't** use badges for metadata (dates, durations) — use supporting text.
-- **Don't** make badges clickable — use Button or Link for actions.
+- **Don't** make badges clickable for actions — use **Button**. A tag that navigates (a category, an author) composes onto a link with \`render={<a href />}\`.
 - **Don't** use badges as decoration. The one sanctioned decorative use is inline emphasis in a marketing hero — **Components/HeroTileStack → Pattern — marketing hero**.
         `.trim(),
       },
@@ -192,6 +196,56 @@ export const MutedEmphasis: Story = {
         In review
       </Badge>
     </div>
+  ),
+};
+
+export const OutlineTags: Story = {
+  name: "Pattern — outline tags",
+  render: () => (
+    <div className="flex flex-wrap items-center gap-2">
+      <Badge emphasis="outline" mono>
+        Randy Lee
+      </Badge>
+      <Badge emphasis="outline" mono render={<a href="#guides" />}>
+        Guides
+      </Badge>
+      <Badge emphasis="outline" mono render={<a href="#design-systems" />}>
+        Design systems
+      </Badge>
+    </div>
+  ),
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Hairline outline tags in mono caps. The author is a label; each category is a link to the filtered list — hover underlines it, and the focus ring and a 44px-tall hit area come with `render`.",
+        },
+      },
+    },
+    `
+import { Badge } from "@thewhatmatters/wmds";
+
+export interface PostTag {
+  label: string;
+  href: string;
+}
+
+export function PostTags({ author, categories }: { author: string; categories: PostTag[] }) {
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <Badge emphasis="outline" mono>
+        {author}
+      </Badge>
+      {categories.map((category) => (
+        <Badge key={category.href} emphasis="outline" mono render={<a href={category.href} />}>
+          {category.label}
+        </Badge>
+      ))}
+    </div>
+  );
+}
+`,
   ),
 };
 

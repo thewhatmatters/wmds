@@ -13,8 +13,10 @@ const atoms = [
   "IconButton",
   "Input",
   "Kbd",
+  "Prose",
   "Radio",
   "RiveHand",
+  "SectionCaption",
   "Skeleton",
   "Status",
   "Switch",
@@ -23,7 +25,7 @@ const atoms = [
   "Tooltip",
 ] as const;
 
-const molecules = ["Accordion", "CalEmbed", "Card", "ChatQa", "CheckboxGroup", "Chip", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "HeroIntro", "IndexList", "IntakeForm", "NavList", "PageHeader", "PillGroup", "PromptBar", "RadioGroup", "Search", "Select", "SelectableCard", "SegmentedControl", "Stat", "StepProgress", "TaskRows", "TextSequence"] as const;
+const molecules = ["Accordion", "CalEmbed", "Card", "ChatQa", "CheckboxGroup", "Chip", "DescriptionList", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "HeroIntro", "IndexList", "IntakeForm", "NavList", "PageHeader", "PillGroup", "PromptBar", "RadioGroup", "Search", "Select", "SelectableCard", "SegmentedControl", "Stat", "StepProgress", "TaskRows", "TextSequence"] as const;
 
 const organisms = ["Chart", "ChatDock", "Confetti", "Dialog", "FooterReveal", "HeroTileStack", "IntakeConfirmation", "IntakeModal", "MoreMenu", "Panel", "ScrollHorizontal", "Sheet", "SiteNav", "Tab", "Toast"] as const;
 
@@ -103,6 +105,7 @@ export const packageManifest = {
     "scroll-fade-y",
     "scroll-fade-x",
     "type-eyebrow",
+    "type-reading",
   ] as const,
 } as const;
 

@@ -5,6 +5,7 @@
 import { useEffect, useId, useState, type CSSProperties } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { Button } from "../../components/atoms/Button/Button";
+import { SectionCaption } from "../../components/atoms/SectionCaption/SectionCaption";
 import { Accordion } from "../../components/molecules/Accordion/Accordion";
 import { CheckboxGroup } from "../../components/molecules/CheckboxGroup/CheckboxGroup";
 import type { DisplayControlThemeMode } from "../../components/molecules/DisplayControls/DisplayControls";
@@ -129,27 +130,23 @@ export function FilteredIndex({
         </p>
 
         <aside aria-labelledby={filtersHeadingId} className="hidden md:col-span-3 md:block">
-          <div className="flex items-center justify-between gap-3 border-b border-border pb-3">
-            <h2 id={filtersHeadingId} className="type-eyebrow text-muted">
-              <span aria-hidden="true">/ </span>Filters
-            </h2>
-            <Button
-              role="ghost"
-              size="xs"
-              className="-my-1.5"
-              disabled={activeCount === 0}
-              onClick={() => setSelection({})}
-            >
-              Clear all
-            </Button>
-          </div>
+          <SectionCaption
+            id={filtersHeadingId}
+            end={
+              <Button role="ghost" size="xs" disabled={activeCount === 0} onClick={() => setSelection({})}>
+                Clear all
+              </Button>
+            }
+          >
+            Filters
+          </SectionCaption>
           <FilterGroups groups={groups} posts={posts} selection={selection} onGroupChange={setGroup} />
         </aside>
 
         <div className="col-span-full md:col-span-5 lg:col-span-9">
           <IndexList
             aria-label="Posts"
-            captions={{ meta: "/ Date", title: "/ Name" }}
+            captions={{ meta: "Date", title: "Name" }}
             empty={<p className="type-body text-muted">No posts match these filters.</p>}
           >
             {shown.map((post) => (

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { CircleHelp, Settings2 } from "lucide-react";
 import { Button } from "../../atoms/Button/Button";
 import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
+import { SectionCaption } from "../../atoms/SectionCaption/SectionCaption";
 import { CheckboxGroup } from "../CheckboxGroup/CheckboxGroup";
 import { storyCopySource } from "../../../lib/storyCopySource";
 import { typographyClass } from "../../../lib/typography";
@@ -92,7 +93,7 @@ export const Flush: Story = {
     const [years, setYears] = useState<string[]>([]);
     return (
       <div className="flex w-64 flex-col">
-        <h2 className="type-eyebrow border-b border-border pb-3 text-muted">Filters</h2>
+        <SectionCaption>Filters</SectionCaption>
         <Accordion variant="plain" flush>
           <Accordion.Item label="Topic" defaultOpen>
             <CheckboxGroup label="Topic" labelHidden size="sm" values={topics} onValuesChange={setTopics}>
@@ -111,14 +112,14 @@ export const Flush: Story = {
   },
   parameters: storyCopySource(`
 import { useState } from "react";
-import { Accordion, CheckboxGroup } from "@thewhatmatters/wmds";
+import { Accordion, CheckboxGroup, SectionCaption } from "@thewhatmatters/wmds";
 
 export function TopicFilter() {
   const [topics, setTopics] = useState<string[]>([]);
   const [years, setYears] = useState<string[]>([]);
   return (
     <div className="flex w-64 flex-col">
-      <h2 className="type-eyebrow border-b border-border pb-3 text-muted">Filters</h2>
+      <SectionCaption>Filters</SectionCaption>
       <Accordion variant="plain" flush>
         <Accordion.Item label="Topic" defaultOpen>
           <CheckboxGroup label="Topic" labelHidden size="sm" values={topics} onValuesChange={setTopics}>
