@@ -11,7 +11,12 @@ import {
 } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { cn } from "../../../lib/cn";
-import { motionBeatSeconds, motionTransitionProp, readMotionDurationSeconds } from "../../../lib/motion";
+import {
+  motionBeatSeconds,
+  motionStaggerSeconds,
+  motionTransitionProp,
+  readMotionDurationSeconds,
+} from "../../../lib/motion";
 import { Button } from "../../atoms/Button/Button";
 import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
 import { Status } from "../../atoms/Status/Status";
@@ -22,6 +27,9 @@ import {
   chatDockComposerClasses,
   chatDockDisclaimerClasses,
   chatDockDockClasses,
+  chatDockFollowUpRowClasses,
+  chatDockFollowUpsComposerClasses,
+  chatDockFollowUpsInlineClasses,
   chatDockGridClasses,
   chatDockPillClasses,
   chatDockPillsClasses,
@@ -70,6 +78,8 @@ export interface ChatDockLabels {
   conversation: string;
   /** Accessible name for the suggestion groups. Default: "Suggested questions". */
   suggestions: string;
+  /** Accessible name for the follow-ups under the latest reply. Default: "Suggested follow-ups". */
+  followUps: string;
   /** Accessible name for the field. Default: "Ask anything". */
   field: string;
   /** Send control. Default: "Send". */
@@ -81,9 +91,18 @@ export const chatDockDefaultLabels: ChatDockLabels = {
   thinking: "Thinking…",
   conversation: "Conversation",
   suggestions: "Suggested questions",
+  followUps: "Suggested follow-ups",
   field: "Ask anything",
   send: "Send",
 };
+
+export const chatDockFollowUpsPlacements = ["inline", "composer"] as const;
+
+/**
+ * `inline` — rows in the conversation, directly under the reply they belong to.
+ * `composer` — pills pinned between the conversation and the composer.
+ */
+export type ChatDockFollowUpsPlacement = (typeof chatDockFollowUpsPlacements)[number];
 
 export interface ChatDockProps {
   /** Window title — usually the product or brand name. */
@@ -105,8 +124,17 @@ export interface ChatDockProps {
   suggestions?: ChatDockSuggestion[];
   /** Receives the visitor's message — typed, or a suggestion's `prompt`. */
   onSend: (prompt: string) => void;
-  /** Every suggestion choice, including actions without a `prompt`. */
+  /** Every suggestion and follow-up choice, including actions without a `prompt`. */
   onSuggestionSelect?: (suggestion: ChatDockSuggestion) => void;
+  /**
+   * Follow-ups for the latest reply — one to three short items with Lucide icons, the same shape
+   * and handlers as `suggestions`. They show while the last message is an assistant reply and
+   * `thinking` is off, and disappear the moment the visitor sends. The app decides which replies
+   * get follow-ups and replaces or clears them with each reply.
+   */
+  followUps?: ChatDockSuggestion[];
+  /** Where follow-ups sit. Default: `inline`. */
+  followUpsPlacement?: ChatDockFollowUpsPlacement;
   /** Controlled open state. */
   open?: boolean;
   defaultOpen?: boolean;
@@ -132,6 +160,25 @@ export function chatDockShowsSuggestionRows(
   messages: readonly ChatDockMessage[],
 ): boolean {
   return suggestions.length > 0 && messages.length === 0;
+}
+
+/**
+ * Follow-ups belong to the latest reply: it is the last message, no reply is pending, and the
+ * visitor has not sent anything since it arrived (`sentAfterId` is the last message id at send).
+ */
+export function chatDockShowsFollowUps({
+  followUps,
+  messages,
+  thinking,
+  sentAfterId,
+}: {
+  followUps: readonly ChatDockSuggestion[];
+  messages: readonly ChatDockMessage[];
+  thinking: boolean;
+  sentAfterId: string | null;
+}): boolean {
+  const last = messages[messages.length - 1];
+  return followUps.length > 0 && !thinking && last?.role === "assistant" && last.id !== sentAfterId;
 }
 
 /** Within this distance of the end, new content keeps the thread pinned to the latest message. */
@@ -162,6 +209,8 @@ export function ChatDock({
   suggestions = [],
   onSend,
   onSuggestionSelect,
+  followUps = [],
+  followUpsPlacement = "inline",
   open: openProp,
   defaultOpen = false,
   onOpenChange,
@@ -180,6 +229,8 @@ export function ChatDock({
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
   const open = isControlled ? openProp : uncontrolledOpen;
   const [draft, setDraft] = useState("");
+  /** Last message id when the visitor last sent — hides that reply's follow-ups at once. */
+  const [sentAfterId, setSentAfterId] = useState<string | null>(null);
 
   const restFieldRef = useRef<HTMLTextAreaElement>(null);
   const windowFieldRef = useRef<HTMLTextAreaElement>(null);
@@ -203,12 +254,19 @@ export function ChatDock({
     setOpen(true);
     stickToEndRef.current = true;
     setDraft("");
+    setSentAfterId(messages[messages.length - 1]?.id ?? null);
     onSend(text);
   }
 
   function selectSuggestion(suggestion: ChatDockSuggestion) {
     onSuggestionSelect?.(suggestion);
     if (suggestion.prompt != null) send(suggestion.prompt);
+  }
+
+  /** Follow-ups keep focus in the composer: the press does not take focus, and a keyboard choice hands it back. */
+  function selectFollowUp(suggestion: ChatDockSuggestion) {
+    selectSuggestion(suggestion);
+    windowFieldRef.current?.focus();
   }
 
   useEffect(() => {
@@ -239,6 +297,7 @@ export function ChatDock({
 
   const pills = chatDockPillSuggestions(suggestions);
   const showRows = chatDockShowsSuggestionRows(suggestions, messages);
+  const showFollowUps = chatDockShowsFollowUps({ followUps, messages, thinking, sentAfterId });
   const windowTransition = motionTransitionProp("medium");
   const fastTransition = motionTransitionProp("fast");
   const windowMotion = reduceMotion
@@ -262,6 +321,18 @@ export function ChatDock({
           animate: { opacity: 1, y: 0 },
           transition: { ...fastTransition, delay: motionBeatSeconds(1) },
         };
+  // Follow-ups rise in one stagger apart when a reply brings them; they leave at once on send.
+  const followUpGroupMotion = {
+    initial: reduceMotion ? false : ("hidden" as const),
+    animate: "visible" as const,
+    exit: { opacity: 0, transition: { duration: 0 } },
+    variants: { hidden: {}, visible: { transition: { staggerChildren: motionStaggerSeconds() } } },
+  };
+  const followUpItemVariants = {
+    hidden: { opacity: 0, y: 6 },
+    visible: { opacity: 1, y: 0, transition: fastTransition },
+  };
+  const keepComposerFocus = (event: { preventDefault: () => void }) => event.preventDefault();
   // While the window folds away, the resting bar waits, then fades in where the fold ends.
   const restEnterDelay = reduceMotion ? 0 : readMotionDurationSeconds("medium") * 0.6;
 
@@ -327,6 +398,37 @@ export function ChatDock({
                         {message.content}
                       </motion.div>
                     ))}
+                    {showFollowUps && followUpsPlacement === "inline" ? (
+                      <motion.div
+                        key="follow-ups"
+                        role="group"
+                        aria-label={labels.followUps}
+                        data-follow-ups="inline"
+                        className={chatDockFollowUpsInlineClasses}
+                        {...followUpGroupMotion}
+                      >
+                        {followUps.map((suggestion) => (
+                          <motion.div
+                            key={suggestion.id}
+                            className={chatDockFollowUpRowClasses}
+                            variants={followUpItemVariants}
+                          >
+                            <Button
+                              type="button"
+                              role="ghost"
+                              layout="row"
+                              onMouseDown={keepComposerFocus}
+                              onClick={() => selectFollowUp(suggestion)}
+                            >
+                              <span className={chatDockSuggestionRowContentClasses}>
+                                {suggestion.icon != null ? <ButtonIcon size="md">{suggestion.icon}</ButtonIcon> : null}
+                                <span className={chatDockSuggestionLabelClasses}>{suggestion.label}</span>
+                              </span>
+                            </Button>
+                          </motion.div>
+                        ))}
+                      </motion.div>
+                    ) : null}
                     {thinking ? (
                       <motion.div
                         key="thinking"
@@ -366,6 +468,34 @@ export function ChatDock({
                     ))}
                   </motion.div>
                 ) : null}
+
+                <AnimatePresence initial={false}>
+                  {showFollowUps && followUpsPlacement === "composer" ? (
+                    <motion.div
+                      key="follow-ups"
+                      role="group"
+                      aria-label={labels.followUps}
+                      data-follow-ups="composer"
+                      className={chatDockFollowUpsComposerClasses}
+                      {...followUpGroupMotion}
+                    >
+                      {followUps.map((suggestion) => (
+                        <motion.span key={suggestion.id} className="inline-flex" variants={followUpItemVariants}>
+                          <Button
+                            type="button"
+                            role="secondary"
+                            size="md"
+                            icon={suggestion.icon}
+                            onMouseDown={keepComposerFocus}
+                            onClick={() => selectFollowUp(suggestion)}
+                          >
+                            {suggestion.label}
+                          </Button>
+                        </motion.span>
+                      ))}
+                    </motion.div>
+                  ) : null}
+                </AnimatePresence>
 
                 <div className={chatDockComposerClasses}>
                   <PromptBar

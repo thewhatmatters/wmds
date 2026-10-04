@@ -116,6 +116,18 @@ export const chatDockSuggestionRowContentClasses = cn(
 
 export const chatDockSuggestionLabelClasses = "min-w-0 truncate";
 
+/** Follow-ups under the latest reply — the same rows as the window's suggestions, pulled up to the reply. */
+export const chatDockFollowUpsInlineClasses = "-mt-2 flex flex-col";
+
+/**
+ * One inline follow-up. The wrapper sets the hit area — 44px on phones, the 36px cluster height from
+ * `md` — and the **Button** row stretches to fill it.
+ */
+export const chatDockFollowUpRowClasses = "flex min-h-11 md:min-h-9";
+
+/** Follow-ups pinned between the conversation and the composer — **Button** `secondary` pills that wrap. */
+export const chatDockFollowUpsComposerClasses = cn(cardLayoutSectionInsetXClasses, "flex shrink-0 flex-wrap gap-2");
+
 export const chatDockComposerClasses = cn(cardLayoutSectionInsetXClasses, "shrink-0");
 
 export const chatDockDisclaimerClasses = cn(

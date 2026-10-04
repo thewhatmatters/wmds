@@ -6,7 +6,7 @@ These files ship in the npm package at `node_modules/@thewhatmatters/wmds/docs/`
 |------|------------|
 | `exports.json` | Every export with its tier, category, one-line summary, Storybook page, and the ids of its patterns. Also the CSS entries, peer dependencies, planned components, and lib helpers. |
 | `components.md` | The component and token contracts: props, patterns, composition rules, and what not to do. |
-| `component-contracts.md` | Long-form contracts for FooterReveal, HeroTileStack, TextSequence, ScrollHorizontal, RiveHand, and PromptBar. |
+| `component-contracts.md` | Long-form contracts for FooterReveal, HeroTileStack, TextSequence, ScrollHorizontal, RiveHand, PromptBar, and ChatDock. |
 | `patterns/index.json` | One row per pattern: id, Storybook title, pattern name, file. |
 | `patterns/<id>.tsx` | A pattern's Show code, exactly as Storybook shows it, with a header naming the pattern and the package version. |
 | `consumer-agents.md` | A block to paste into a consuming repo's `AGENTS.md` / `CLAUDE.md`. |

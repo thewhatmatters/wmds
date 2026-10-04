@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ArrowRight, DollarSign } from "lucide-react";
+import { ArrowRight, DollarSign, Workflow } from "lucide-react";
 import { Avatar } from "../components/atoms/Avatar/Avatar";
 import {
   ChatDock,
@@ -155,5 +155,106 @@ export const ActionSuggestion: Story = {
     expect(onSuggestionSelect).toHaveBeenCalledWith(expect.objectContaining({ id: "start" }));
     expect(onSend).not.toHaveBeenCalled();
     await waitForWindowSettled(dialog);
+  },
+};
+
+const followUpItems: ChatDockSuggestion[] = [
+  { id: "cost", label: "How much does a project cost?", prompt: "How much does a project cost?", icon: <DollarSign /> },
+  { id: "process", label: "How does a project work?", prompt: "How does a project work?", icon: <Workflow /> },
+  { id: "start", label: "Start a project", icon: <ArrowRight /> },
+];
+
+const replied: ChatDockMessage[] = [
+  { id: "q", role: "user", content: "What do you make?" },
+  { id: "a", role: "assistant", content: "Brands, sites, and apps." },
+];
+
+/**
+ * A reply with three follow-ups. The harness neither appends the visitor's message nor clears
+ * the follow-ups on send, so a test can see ChatDock hide them by itself at once.
+ */
+function FollowUpDock({
+  followUpsPlacement,
+  thinking = false,
+}: {
+  followUpsPlacement: "inline" | "composer";
+  thinking?: boolean;
+}) {
+  return (
+    <ChatDock
+      placement="inline"
+      defaultOpen
+      title="WhatMatters"
+      subtitle="Ask anything"
+      mark={<Avatar name="WhatMatters" size="md" />}
+      greeting="Hi, ask me anything."
+      messages={replied}
+      thinking={thinking}
+      followUps={followUpItems}
+      followUpsPlacement={followUpsPlacement}
+      onSend={onSend}
+      onSuggestionSelect={onSuggestionSelect}
+    />
+  );
+}
+
+export const FollowUpsInline: Story = {
+  name: "follow-ups under the reply send their prompt",
+  render: () => <FollowUpDock followUpsPlacement="inline" />,
+  play: async ({ canvas }) => {
+    onSend.mockClear();
+    onSuggestionSelect.mockClear();
+
+    const dialog = canvas.getByRole("dialog", { name: "WhatMatters" });
+    const log = within(dialog).getByRole("log", { name: "Conversation" });
+    const group = within(log).getByRole("group", { name: "Suggested follow-ups" });
+    expect(within(group).getAllByRole("button").map((button) => button.textContent)).toEqual([
+      "How much does a project cost?",
+      "How does a project work?",
+      "Start a project",
+    ]);
+
+    const field = within(dialog).getByRole("textbox", { name: "Ask anything" });
+    await userEvent.click(field);
+    await userEvent.click(within(group).getByRole("button", { name: "How much does a project cost?" }));
+
+    expect(onSuggestionSelect).toHaveBeenCalledWith(expect.objectContaining({ id: "cost" }));
+    expect(onSend).toHaveBeenCalledWith("How much does a project cost?");
+    expect(onSuggestionSelect.mock.invocationCallOrder[0]).toBeLessThan(onSend.mock.invocationCallOrder[0]);
+    await waitFor(() => {
+      expect(within(dialog).queryByRole("group", { name: "Suggested follow-ups" })).toBeNull();
+    });
+    expect(field).toHaveFocus();
+  },
+};
+
+export const FollowUpsAboveComposer: Story = {
+  name: "follow-ups above the composer, action only selects",
+  render: () => <FollowUpDock followUpsPlacement="composer" />,
+  play: async ({ canvas }) => {
+    onSend.mockClear();
+    onSuggestionSelect.mockClear();
+
+    const dialog = canvas.getByRole("dialog", { name: "WhatMatters" });
+    const group = within(dialog).getByRole("group", { name: "Suggested follow-ups" });
+    expect(within(dialog).getByRole("log", { name: "Conversation" }).contains(group)).toBe(false);
+    const field = within(dialog).getByRole("textbox", { name: "Ask anything" });
+    expect(group.compareDocumentPosition(field) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+
+    await userEvent.click(within(group).getByRole("button", { name: "Start a project" }));
+    expect(onSuggestionSelect).toHaveBeenCalledWith(expect.objectContaining({ id: "start" }));
+    expect(onSend).not.toHaveBeenCalled();
+    expect(within(dialog).getByRole("group", { name: "Suggested follow-ups" })).toBeInTheDocument();
+    expect(field).toHaveFocus();
+  },
+};
+
+export const FollowUpsWhileThinking: Story = {
+  name: "no follow-ups beside a pending reply",
+  render: () => <FollowUpDock followUpsPlacement="inline" thinking />,
+  play: async ({ canvas }) => {
+    const dialog = canvas.getByRole("dialog", { name: "WhatMatters" });
+    expect(within(dialog).getByText("Thinking…")).toBeInTheDocument();
+    expect(within(dialog).queryByRole("group", { name: "Suggested follow-ups" })).toBeNull();
   },
 };

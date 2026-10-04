@@ -55,6 +55,21 @@ One organism replaces the ask page and the marketing composer.
 - The full-page chat. It already left WMDS with **Sites/** (ADR-0026); the site retires its `/ask` page.
 - `ChatThread`, `ChatPage`, `StartProjectGate`, and `MarketingComposer` from the first draft are not built.
 
+### Amendment — 2026-10-04: follow-ups
+
+The site wants a few predefined next questions after some replies. Before this, the window showed suggestion rows only until the first message, so the app had nowhere to put them except inside `messages[].content` — inventing a chat pattern in the site.
+
+- **`followUps?: ChatDockSuggestion[]`** — the same items and handlers as `suggestions`, for the latest reply only. Hidden while `thinking`, when empty, and the moment the visitor sends (ChatDock hides them itself, before the app clears them). Choosing one calls `onSuggestionSelect`, then `onSend` with its `prompt`. Focus stays in the composer. The app decides which replies get follow-ups; **Pattern — chat dock** keeps the state: `ask` resolves with `string | { reply, followUps? }`, the pattern sets them on reply and clears them on send.
+- **Placement: inline by default.** Two placements were built and compared with three follow-ups at 1280 and 390 (**Components/ChatDock → Follow-ups — …** stories):
+
+  | Width | `inline` (rows under the reply) | `composer` (pills above the composer) |
+  |-------|-------------------------------|---------------------------------------|
+  | 1280 | 108px, in the thread | 96px pinned (two lines); the conversation loses 108px |
+  | 390 | 132px (three 44px rows), in the thread | 148px pinned (three lines); the conversation loses 160px, before the keyboard opens |
+
+  Inline reads as part of the answer, keeps a long label on one line, and costs no fixed height; because follow-ups belong only to the latest reply and the thread stays pinned to the end, scrolling with the thread is not a cost in practice. `followUpsPlacement="composer"` stays available for a long thread where the follow-ups must stay beside the field.
+- Additive: the resting pills, the rows before the first message, and `suggestions` are unchanged.
+
 ## Consequences
 
 - The site deletes `components/ask-what-matters.tsx`, its `/ask` route, and the pasted marketing composer, and mounts one **ChatDock** from **Pattern — chat dock**.
