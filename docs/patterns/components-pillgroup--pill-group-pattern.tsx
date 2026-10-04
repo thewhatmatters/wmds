@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.3.0 · Pattern — pill group
+// @thewhatmatters/wmds@0.4.0 · Pattern — pill group
 // Storybook: Components/PillGroup → Pattern — pill group (?path=/story/components-pillgroup--pill-group-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

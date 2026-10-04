@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "patterns": [
     {
       "id": "components-avatar--dropdown-row",
@@ -233,6 +233,14 @@
       "file": "patterns/components-chart--unit-grid-composition.tsx",
       "storybook": "?path=/story/components-chart--unit-grid-composition",
       "source": "src/components/organisms/Chart/Chart.stories.tsx"
+    },
+    {
+      "id": "components-chatdock--pattern-chat-dock",
+      "title": "Components/ChatDock",
+      "name": "Pattern — chat dock",
+      "file": "patterns/components-chatdock--pattern-chat-dock.tsx",
+      "storybook": "?path=/story/components-chatdock--pattern-chat-dock",
+      "source": "src/components/organisms/ChatDock/ChatDock.stories.tsx"
     },
     {
       "id": "components-chatqa--pattern-qa-with-reply",
@@ -521,14 +529,6 @@
       "file": "patterns/components-pillgroup--pill-group-pattern.tsx",
       "storybook": "?path=/story/components-pillgroup--pill-group-pattern",
       "source": "src/components/molecules/PillGroup/PillGroup.stories.tsx"
-    },
-    {
-      "id": "components-promptbar--pattern-marketing-composer",
-      "title": "Components/PromptBar",
-      "name": "Pattern — marketing composer",
-      "file": "patterns/components-promptbar--pattern-marketing-composer.tsx",
-      "storybook": "?path=/story/components-promptbar--pattern-marketing-composer",
-      "source": "src/components/molecules/PromptBar/PromptBar.stories.tsx"
     },
     {
       "id": "components-promptbar--pattern-prompt-bar",

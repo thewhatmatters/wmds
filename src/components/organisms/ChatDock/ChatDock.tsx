@@ -4,13 +4,14 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type CSSProperties,
   type KeyboardEvent,
   type ReactElement,
   type ReactNode,
 } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { cn } from "../../../lib/cn";
-import { motionTransitionProp } from "../../../lib/motion";
+import { motionBeatSeconds, motionTransitionProp, readMotionDurationSeconds } from "../../../lib/motion";
 import { Button } from "../../atoms/Button/Button";
 import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
 import { Status } from "../../atoms/Status/Status";
@@ -22,6 +23,7 @@ import {
   chatDockDisclaimerClasses,
   chatDockDockClasses,
   chatDockGridClasses,
+  chatDockPillClasses,
   chatDockPillsClasses,
   chatDockRootClasses,
   chatDockSuggestionLabelClasses,
@@ -136,6 +138,15 @@ export function chatDockShowsSuggestionRows(
 const stickToEndThresholdPx = 48;
 
 /**
+ * Window reveal. Closed, the clip is the resting composer's strip at the bottom of the window
+ * (full width, 3.25rem tall, pill radius); open, it is the whole card at the shell radius. Both
+ * strings share one shape so Motion can interpolate them. The clip is cleared once open so the
+ * card's shadow is not cut off.
+ */
+export const chatDockClosedClip = "inset(calc(100% - 3.25rem) 0rem 0rem 0rem round 1.625rem)";
+export const chatDockOpenClip = "inset(calc(0% - 0rem) 0rem 0rem 0rem round 1rem)";
+
+/**
  * Pinned prompt that opens into a chat window. At rest it is a **PromptBar** with the brand
  * mark; hovering shows suggestion pills above it. Focusing or typing opens a non-modal window
  * in its place — header, conversation, suggestion rows, composer, and an optional disclaimer.
@@ -177,6 +188,8 @@ export function ChatDock({
   /** Set while focus returns to the resting bar after closing, so that focus does not reopen. */
   const returningFocusRef = useRef(false);
   const wasOpenRef = useRef(open);
+  /** True while the window is still the one rendered open at mount — its content does not animate in. */
+  const openAtMountRef = useRef(open);
 
   function setOpen(next: boolean) {
     if (next === open) return;
@@ -202,6 +215,7 @@ export function ChatDock({
     if (open && !wasOpenRef.current) {
       windowFieldRef.current?.focus();
     } else if (!open && wasOpenRef.current) {
+      openAtMountRef.current = false;
       returningFocusRef.current = true;
       restFieldRef.current?.focus();
       returningFocusRef.current = false;
@@ -226,7 +240,30 @@ export function ChatDock({
   const pills = chatDockPillSuggestions(suggestions);
   const showRows = chatDockShowsSuggestionRows(suggestions, messages);
   const windowTransition = motionTransitionProp("medium");
-  const windowOffset = reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.98 };
+  const fastTransition = motionTransitionProp("fast");
+  const windowMotion = reduceMotion
+    ? {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        exit: { opacity: 0 },
+      }
+    : {
+        // Grows up out of the resting composer, and folds back into it on close.
+        initial: { clipPath: chatDockClosedClip, opacity: 0.6 },
+        animate: { clipPath: chatDockOpenClip, opacity: 1, transitionEnd: { clipPath: "none" } },
+        exit: { clipPath: [chatDockOpenClip, chatDockClosedClip], opacity: [1, 0.6] },
+      };
+  // Window content settles in one beat after the reveal starts (not when it mounts already open).
+  const contentMotion =
+    reduceMotion || openAtMountRef.current
+      ? {}
+      : {
+          initial: { opacity: 0, y: 8 },
+          animate: { opacity: 1, y: 0 },
+          transition: { ...fastTransition, delay: motionBeatSeconds(1) },
+        };
+  // While the window folds away, the resting bar waits, then fades in where the fold ends.
+  const restEnterDelay = reduceMotion ? 0 : readMotionDurationSeconds("medium") * 0.6;
 
   return (
     <div className={cn(chatDockRootClasses[placement], className)} data-open={open ? "" : undefined}>
@@ -241,10 +278,9 @@ export function ChatDock({
                 aria-labelledby={titleId}
                 aria-describedby={subtitle != null ? subtitleId : undefined}
                 className={chatDockWindowClasses[placement]}
-                style={{ transformOrigin: "50% 100%" }}
-                initial={windowOffset}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={windowOffset}
+                initial={windowMotion.initial}
+                animate={windowMotion.animate}
+                exit={windowMotion.exit}
                 transition={windowTransition}
                 onKeyDown={handleWindowKeyDown}
               >
@@ -270,28 +306,50 @@ export function ChatDock({
                       thread.scrollHeight - thread.scrollTop - thread.clientHeight <= stickToEndThresholdPx;
                   }}
                 >
-                  {greeting != null ? <div className={chatDockAssistantMessageClasses}>{greeting}</div> : null}
-                  {messages.map((message) => (
-                    <div
-                      key={message.id}
-                      data-role={message.role}
-                      className={
-                        message.role === "user" ? chatDockUserMessageClasses : chatDockAssistantMessageClasses
-                      }
-                    >
-                      {message.content}
-                    </div>
-                  ))}
-                  {thinking ? (
-                    <div className={chatDockThinkingClasses}>
-                      <Status variant="dot" tone="neutral" pulsing besideLabel />
-                      <span>{labels.thinking}</span>
-                    </div>
+                  {greeting != null ? (
+                    <motion.div className={chatDockAssistantMessageClasses} {...contentMotion}>
+                      {greeting}
+                    </motion.div>
                   ) : null}
+                  {/* Turns already in the thread when the window opens do not animate; new ones slide in. */}
+                  <AnimatePresence initial={false}>
+                    {messages.map((message) => (
+                      <motion.div
+                        key={message.id}
+                        data-role={message.role}
+                        className={
+                          message.role === "user" ? chatDockUserMessageClasses : chatDockAssistantMessageClasses
+                        }
+                        initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={fastTransition}
+                      >
+                        {message.content}
+                      </motion.div>
+                    ))}
+                    {thinking ? (
+                      <motion.div
+                        key="thinking"
+                        className={chatDockThinkingClasses}
+                        initial={reduceMotion ? false : { opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { duration: 0 } }}
+                        transition={fastTransition}
+                      >
+                        <Status variant="dot" tone="neutral" pulsing besideLabel />
+                        <span>{labels.thinking}</span>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
                 </div>
 
                 {showRows ? (
-                  <div className={chatDockSuggestionListClasses} role="group" aria-label={labels.suggestions}>
+                  <motion.div
+                    className={chatDockSuggestionListClasses}
+                    role="group"
+                    aria-label={labels.suggestions}
+                    {...contentMotion}
+                  >
                     {suggestions.map((suggestion) => (
                       <Button
                         key={suggestion.id}
@@ -306,7 +364,7 @@ export function ChatDock({
                         </span>
                       </Button>
                     ))}
-                  </div>
+                  </motion.div>
                 ) : null}
 
                 <div className={chatDockComposerClasses}>
@@ -328,23 +386,28 @@ export function ChatDock({
                 key="rest"
                 className={chatDockDockClasses}
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={windowTransition}
+                animate={{ opacity: 1, transition: { ...fastTransition, delay: restEnterDelay } }}
+                // Gone at once on open: the window's reveal starts from this bar's place.
+                exit={{ opacity: 0, transition: { duration: 0 } }}
               >
                 {pills.length > 0 ? (
                   <div className={chatDockPillsClasses} role="group" aria-label={labels.suggestions}>
-                    {pills.map((suggestion) => (
-                      <Button
+                    {pills.map((suggestion, index) => (
+                      <span
                         key={suggestion.id}
-                        type="button"
-                        role="secondary"
-                        size="md"
-                        icon={suggestion.icon}
-                        onClick={() => selectSuggestion(suggestion)}
+                        className={chatDockPillClasses}
+                        style={{ "--chat-dock-pill-index": index } as CSSProperties}
                       >
-                        {suggestion.label}
-                      </Button>
+                        <Button
+                          type="button"
+                          role="secondary"
+                          size="md"
+                          icon={suggestion.icon}
+                          onClick={() => selectSuggestion(suggestion)}
+                        >
+                          {suggestion.label}
+                        </Button>
+                      </span>
                     ))}
                   </div>
                 ) : null}

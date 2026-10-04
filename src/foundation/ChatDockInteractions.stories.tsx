@@ -61,10 +61,16 @@ function windowQuery(canvasElement: HTMLElement) {
   return canvasElement.querySelector<HTMLElement>("[role='dialog']");
 }
 
-/** The window fades in on the medium tier; let it finish so contrast is measured at full opacity. */
+/**
+ * The window reveals on the medium tier and its content and new turns fade in on the fast tier;
+ * let every layer finish so contrast is measured at full opacity.
+ */
 async function waitForWindowSettled(dialog: HTMLElement) {
   await waitFor(() => {
     expect(getComputedStyle(dialog).opacity).toBe("1");
+    for (const layer of dialog.querySelectorAll<HTMLElement>("[style*='opacity']")) {
+      expect(getComputedStyle(layer).opacity).toBe("1");
+    }
   });
 }
 

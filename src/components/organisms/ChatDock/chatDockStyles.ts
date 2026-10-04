@@ -40,10 +40,20 @@ export const chatDockDockClasses = "group pointer-events-auto relative col-span-
  */
 export const chatDockPillsClasses = cn(
   "absolute inset-x-0 bottom-full flex flex-wrap justify-center gap-2 pb-3",
-  "invisible translate-y-1 opacity-0",
-  "group-hover:visible group-hover:translate-y-0 group-hover:opacity-100",
+  "invisible group-hover:visible transition-[visibility]",
+  motionTransition("fast"),
+);
+
+/**
+ * One pill. Each rises in one `--motion-stagger` after the one before it (index from
+ * `--chat-dock-pill-index`); all leave together.
+ */
+export const chatDockPillClasses = cn(
+  "inline-flex translate-y-2 opacity-0",
+  "group-hover:translate-y-0 group-hover:opacity-100",
+  "group-hover:[transition-delay:calc(var(--motion-stagger)*var(--chat-dock-pill-index,0))]",
   "motion-reduce:translate-y-0",
-  "transition-[opacity,transform,visibility]",
+  "transition-[opacity,transform]",
   motionTransition("fast"),
 );
 

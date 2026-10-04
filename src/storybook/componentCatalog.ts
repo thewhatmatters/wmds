@@ -46,6 +46,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "MoreMenu", category: "Action", title: "Components/MoreMenu", description: "Kebab trigger with a right-aligned action menu for Card headers." },
 
   // Chat
+  { name: "ChatDock", category: "Chat", title: "Components/ChatDock", description: "Pinned prompt with suggested questions that opens into a chat window." },
   { name: "ChatQa", category: "Chat", title: "Components/ChatQa", description: "Question-and-answer thread rows." },
   { name: "PromptBar", category: "Chat", title: "Components/PromptBar", description: "Wide prompt pill that grows to three lines with an inset send button." },
 

@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { storybookViewports } from "../../../lib/viewports";
+import { Avatar } from "../../atoms/Avatar/Avatar";
 import { PromptBar } from "./PromptBar";
 
 const reviewViewports = {
@@ -51,90 +52,6 @@ function AskPrompt() {
   );
 }
 
-const marketingComposerCopySource = `
-import { useState } from "react";
-import { PromptBar } from "@thewhatmatters/wmds";
-
-/**
- * Marketing homepage composer, pinned to the bottom of the viewport on the page grid.
- * Sending hands off to the app's ask page: route to /ask?q=<prompt>, and the ask page
- * starts the conversation with \`q\` as its first prompt.
- * Next.js: onHandOff={(prompt) => router.push(\`/ask?q=\${encodeURIComponent(prompt)}\`)}
- */
-export function MarketingComposer({ onHandOff }: { onHandOff: (prompt: string) => void }) {
-  const [draft, setDraft] = useState("");
-
-  return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 pb-[max(1rem,env(safe-area-inset-bottom))]">
-      <div className="grid-page [--grid-max:40rem]">
-        <div className="band">
-          <div className="pointer-events-auto col-span-full">
-            <PromptBar
-              value={draft}
-              onValueChange={setDraft}
-              onSend={(value) => {
-                const prompt = value.trim();
-                if (prompt.length === 0) return;
-                setDraft("");
-                onHandOff(prompt);
-              }}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-`.trim();
-
-function MarketingComposer({ onHandOff }: { onHandOff: (prompt: string) => void }) {
-  const [draft, setDraft] = useState("");
-
-  return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 pb-[max(1rem,env(safe-area-inset-bottom))]">
-      <div className="grid-page [--grid-max:40rem]">
-        <div className="band">
-          <div className="pointer-events-auto col-span-full">
-            <PromptBar
-              value={draft}
-              onValueChange={setDraft}
-              onSend={(value) => {
-                const prompt = value.trim();
-                if (prompt.length === 0) return;
-                setDraft("");
-                onHandOff(prompt);
-              }}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function MarketingComposerSpecimen() {
-  const [handOff, setHandOff] = useState<string | null>(null);
-
-  return (
-    <div className="min-h-[200vh] bg-body">
-      <main className="grid-page pt-24">
-        <div className="band">
-          <div className="col-span-full flex flex-col gap-4 lg:col-span-8">
-            <h1 className="type-display-2 text-fg">We build what matters.</h1>
-            <p className="type-large text-muted">
-              Scroll the page: the composer stays pinned to the bottom of the viewport.
-            </p>
-            <p className="type-body text-muted" aria-live="polite" data-testid="handoff">
-              {handOff ? `Hands off to /ask?q=${encodeURIComponent(handOff)}` : "Send a prompt to see the hand-off URL."}
-            </p>
-          </div>
-        </div>
-      </main>
-      <MarketingComposer onHandOff={setHandOff} />
-    </div>
-  );
-}
-
 function PromptBarFrame({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-full min-h-full w-full flex-1 items-center justify-center bg-body px-4">
@@ -158,7 +75,7 @@ const meta = {
         component: `
 ## Usage
 
-Wide prompt pill for a line under a headline. One field, one send control. **Pattern — prompt bar** is the composer alone. On the marketing homepage, copy **Pattern — marketing composer**: the bar pinned to the bottom of the viewport, handing off to the ask page.
+Wide prompt pill for a line under a headline. One field, one send control. **Pattern — prompt bar** is the composer alone. The site assistant pinned to the bottom of the page is **ChatDock**, which composes this bar — copy **Components/ChatDock → Pattern — chat dock**.
 
 Voice and attachments are not part of this version.
 
@@ -167,6 +84,8 @@ Voice and attachments are not part of this version.
 | **Field** | \`TextArea inline\` — one line when empty, grows through 3 lines, then scrolls |
 | **Send** | \`IconButton\` \`sm\` — Lucide **ArrowRight**, inset with even padding. Muted while empty |
 | **Fill** | \`--color-brand\` / \`--color-on-brand\` (\`#011272\`) when there is text |
+| **\`start\`** | Optional leading slot — a brand mark, **Avatar** \`size="md"\` (2.25rem, the send circle's size) |
+| **\`end\`** | Optional slot before send for another inset **IconButton** \`sm\`. The caller owns its handler and name |
 
 Enter sends. Shift+Enter inserts a newline. Placeholder is **Ask anything…**.
 
@@ -174,7 +93,9 @@ Enter sends. Shift+Enter inserts a newline. Placeholder is **Ask anything…**.
 
 \`\`\`
 PromptBar — pill shell, bg-surface, one border
+├── start (optional) — mark, 2.25rem
 ├── TextArea inline — 1 line empty, max 3, then scroll
+├── end (optional) — extra inset controls
 └── IconButton sm — ArrowRight, even inset
     muted until the draft has text
     brand navy when it can send
@@ -219,23 +140,6 @@ export const PatternPromptBar: Story = {
   ),
 };
 
-export const PatternMarketingComposer: Story = {
-  name: "Pattern — marketing composer",
-  parameters: withStoryCopySource(
-    {
-      wmdsLayout: "fullscreen",
-      docs: {
-        description: {
-          story:
-            "**PromptBar** on the marketing homepage, pinned to the bottom of the viewport on the page grid (`--grid-max: 40rem`, the ask page's column) above the safe area. Sending hands off to the app's ask page — route to `/ask?q=…`, and the ask page starts the conversation with `q` as its first prompt. The wrapper ignores pointer events so the page under its edges stays clickable; only the bar takes input. It sits under **SiteNav** (`z-50`).",
-        },
-      },
-    },
-    marketingComposerCopySource,
-  ),
-  render: () => <MarketingComposerSpecimen />,
-};
-
 export const At390: Story = {
   name: "At 390",
   globals: {
@@ -272,6 +176,26 @@ export const WithText: Story = {
   render: () => (
     <PromptBarFrame>
       <PromptBar defaultValue={"How should we name the work we are starting?\nWhat should the first screen say when someone arrives?\nKeep the third line inside the pill, then scroll."} />
+    </PromptBarFrame>
+  ),
+};
+
+export const WithMark: Story = {
+  name: "With mark",
+  globals: {
+    viewport: { value: "review1440", isRotated: false },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`start` holds the brand mark — **Avatar** `size=\"md\"`, the send circle's size, with the same inset. **ChatDock** uses this bar at rest.",
+      },
+    },
+  },
+  render: () => (
+    <PromptBarFrame>
+      <PromptBar start={<Avatar name="WhatMatters" size="md" />} placeholder="Ask anything about WhatMatters" />
     </PromptBarFrame>
   ),
 };
