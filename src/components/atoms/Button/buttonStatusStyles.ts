@@ -7,6 +7,12 @@ export type ButtonStatus = "idle" | "loading" | "success" | "error";
 
 export const buttonStatusCycle: ButtonStatus[] = ["idle", "loading", "success", "error"];
 
+/**
+ * How long a confirmation (`success`, or `error` after a quick action such as a copy) holds before
+ * the button returns to `idle`, in milliseconds.
+ */
+export const buttonStatusHoldMs = 2000;
+
 export const defaultStatusLabels: Record<ButtonStatus, string> = {
   idle: "Start",
   loading: "Processing",

@@ -2,6 +2,7 @@ import {
   forwardRef,
   type ButtonHTMLAttributes,
   type ComponentProps,
+  type ReactElement,
   type ReactNode,
 } from "react";
 import { motion } from "motion/react";
@@ -34,6 +35,8 @@ export interface ButtonStatusButtonProps
   role?: ButtonRole;
   size?: ButtonSize;
   statusLabels?: Partial<Record<ButtonStatus, string>>;
+  /** Leading icon while idle; the status glyphs morph out of it. */
+  icon?: ReactElement;
   disableOnError?: boolean;
   disabled?: boolean;
   className?: string;
@@ -56,6 +59,7 @@ export const ButtonStatusButton = forwardRef<
     role = "primary",
     size = "md",
     statusLabels,
+    icon,
     disableOnError = false,
     disabled,
     className,
@@ -96,7 +100,7 @@ export const ButtonStatusButton = forwardRef<
         buttonBaseClasses,
         "justify-center",
         buttonStatusSizeClasses[size],
-        status !== "idle" && buttonStatusIconGapClasses[size],
+        (status !== "idle" || icon != null) && buttonStatusIconGapClasses[size],
         buttonPillClass,
         getStatusShellClass(status, role),
         "overflow-hidden",
@@ -109,7 +113,7 @@ export const ButtonStatusButton = forwardRef<
       name={name}
       form={form}
     >
-      <ButtonStatusIcon status={status} size={size} />
+      <ButtonStatusIcon status={status} size={size} icon={icon} />
       <ButtonStatusLabel label={label} />
     </motion.button>
   );

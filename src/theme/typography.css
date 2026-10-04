@@ -111,6 +111,14 @@
   --text-code-leading: 1.4286;
 
   /**
+   * WMDS extension — long-form reading text (**Prose** `size="lg"`): 17px at a 28px line. Article
+   * bodies at the 40rem reading measure; UI copy stays on `type-body`.
+   */
+  --text-reading-size: var(--font-size-lg);
+  --text-reading-weight: var(--font-weight-normal);
+  --text-reading-leading: 1.6471;
+
+  /**
    * WMDS extension — small uppercase mono caption for editorial labels: column captions over index
    * rows and filter panel titles ("/ Date", "/ Filters"). Write the text in sentence case; the
    * utility sets the capitals.
@@ -224,6 +232,13 @@
   font-size: var(--text-code-size);
   font-weight: var(--text-code-weight);
   line-height: var(--text-code-leading);
+}
+
+@utility type-reading {
+  font-family: var(--font-family-body);
+  font-size: var(--text-reading-size);
+  font-weight: var(--text-reading-weight);
+  line-height: var(--text-reading-leading);
 }
 
 @utility type-eyebrow {

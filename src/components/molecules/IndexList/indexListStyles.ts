@@ -23,7 +23,7 @@ export const indexListRootClasses = "@container flex w-full min-w-0 flex-col";
 
 /** Column captions — hidden below 32rem, where the rows are one column. */
 export const indexListCaptionsClasses = cn(
-  "@max-lg:hidden border-b border-border pb-3 text-muted",
+  "@max-lg:hidden border-b border-border-emphasized pb-3 text-muted",
   indexListTracksClasses,
   typographyClass("eyebrow"),
 );

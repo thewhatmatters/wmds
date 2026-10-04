@@ -16,7 +16,8 @@ export type TypographyRole =
   | "ui-label"
   | "caption"
   | "overline"
-  | "eyebrow";
+  | "eyebrow"
+  | "reading";
 
 /** Astryx semantic type names (Foundation reference). */
 export type AstryxTypeScale =
@@ -35,7 +36,8 @@ export type AstryxTypeScale =
   | "supporting"
   | "code"
   | "control"
-  | "eyebrow";
+  | "eyebrow"
+  | "reading";
 
 export type TypographyTracking = "tight" | "normal" | "wider";
 
@@ -211,7 +213,19 @@ export const typographyStyles: TypographyStyle[] = [
     tracking: "wider",
     trackingClass: "type-eyebrow (0.05em)",
     sample: "Filters",
-    usedIn: ["IndexList captions", "Filter panel title"],
+    usedIn: ["IndexList captions", "Filter panel title", "SectionCaption"],
+  },
+  {
+    role: "reading",
+    label: "Reading",
+    description:
+      "Long-form article text — 17px regular at a 28px line (WMDS extension). Prose size lg, at the 40rem reading measure; UI copy stays body",
+    astryxType: "reading",
+    className: "type-reading text-fg",
+    tracking: "normal",
+    trackingClass: "tracking-normal",
+    sample: "Two weeks, one decision a day: the questions we ask before a sprint starts.",
+    usedIn: ["Prose", "Post page lead"],
   },
 ];
 
@@ -238,6 +252,7 @@ export const astryxTypeScale: Array<{
   { type: "code", utility: "type-code", size: "0.875rem", weight: "400", leading: "1.43" },
   { type: "control", utility: "type-control", size: "0.875rem", weight: "500", leading: "1" },
   { type: "eyebrow", utility: "type-eyebrow", size: "0.75rem mono, uppercase", weight: "400", leading: "1.33" },
+  { type: "reading", utility: "type-reading", size: "1.0625rem", weight: "400", leading: "1.65" },
 ];
 
 export const fontFamilies = [

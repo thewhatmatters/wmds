@@ -59,6 +59,8 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   // Content
   { name: "Avatar", category: "Content", title: "Components/Avatar", description: "Circular identity with initials fallback and an optional presence dot." },
   { name: "Kbd", category: "Content", title: "Components/Kbd", description: "One physical keycap; compose several for a shortcut." },
+  { name: "Prose", category: "Content", title: "Components/Prose", description: "Long-form article text set from plain HTML, with a reading measure." },
+  { name: "SectionCaption", category: "Content", title: "Components/SectionCaption", description: "Small uppercase mono caption over a page column, on a rule, with an optional action." },
 
   // Data visualization
   { name: "Chart", category: "Data visualization", title: "Components/Chart", description: "visx-based charts: capacity bars, ranked bars, unit grids, heatmaps, and time series." },
@@ -118,6 +120,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "Tooltip", category: "Overlay", title: "Components/Tooltip", description: "Short supplemental label on hover and focus." },
 
   // Table & list
+  { name: "DescriptionList", category: "Table & list", title: "Components/DescriptionList", description: "Name-and-value rows (dl, dt, dd) with a solid or dotted rule; values take text, tags, or actions." },
   { name: "IndexList", category: "Table & list", title: "Components/IndexList", description: "Editorial index rows: a meta column, a large linked title, and an optional preview, under shared column captions." },
   { name: "Table", category: "Table & list", planned: true, description: "Not built yet." },
   { name: "TaskRows", category: "Table & list", title: "Components/TaskRows", description: "Expandable task rows with status, meta, and detail rails." },

@@ -1,8 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
-import { useState } from "react";
-import { ArrowRight, ChevronDown, Pencil, Plus, Trash2 } from "lucide-react";
-import { Button, buttonLayouts, buttonRoles, getNextButtonStatus, type ButtonStatus } from "./Button";
+import { useEffect, useState } from "react";
+import { ArrowRight, ChevronDown, Copy, Pencil, Plus, Trash2 } from "lucide-react";
+import {
+  Button,
+  buttonLayouts,
+  buttonRoles,
+  buttonStatusHoldMs,
+  getNextButtonStatus,
+  type ButtonStatus,
+} from "./Button";
 import { typographyClass } from "../../../lib/typography";
 import { storyCopySource, storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 
@@ -45,14 +52,17 @@ const meta = {
 | **Outline mono** | \`role="outline"\` + \`mono\` + \`endIcon\` — hairline pill, mono uppercase label, accent arrow square |
 | **With count** | \`count\` + \`role\` (inbox / notifications) |
 | **Submit / async** | \`status\` + optional \`statusLabels\` |
+| **Copy** | \`icon\` + \`status\` — the icon morphs into the check; hold with \`buttonStatusHoldMs\` |
 | **Link** | \`render={<a href />}\` — Button chrome on a real anchor (nav links, header CTAs) |
+| **External link** | \`render={<a href />}\` + \`external\` — new tab, safe \`rel\`, spoken "opens in a new tab", trailing icon |
 
 Pill-shaped by default (\`layout="pill"\`). **Row layout** is flat full-width — for TaskRows detail lines and settings rows. **Roles:** \`primary\` (main CTA), \`secondary\`, \`ghost\`, \`destructive\`, \`inverse\` (surface fill and brand text, for a brand-blue field), \`outline\` (hairline border, transparent fill). \`mono\` sets a mono uppercase label. \`endIcon\` adds a trailing accent square. No semantic color variants — success/error live on \`status\` morph only.
 
 ## Best practices
 
-- **Do** copy a named story below — don't mix \`status\` with \`icon\` or \`count\`.
-- **Do** use \`status\` for form submit and async feedback.
+- **Do** copy a named story below — don't mix \`status\` with \`count\`, \`endIcon\`, or \`mono\`.
+- **Do** use \`status\` for form submit and async feedback; with \`icon\`, the status glyph morphs out of the icon. \`status\` sits on the pill's live region, so its labels are announced.
+- **Do** set \`external\` on a link to another site — never hand-write \`target\`, \`rel\`, or "(opens in a new tab)".
 - **Do** use \`count\` only for numeric notification badges on nav actions.
 - **Don't** pass arbitrary nodes — no slots, no \`className\` for colors.
 - **Don't** invent new button looks in app code — extend WMDS via ADR.
@@ -229,6 +239,145 @@ export function HeaderLinks() {
         Coming soon
       </Button>
     </div>
+  ),
+};
+
+export const CopyButton: Story = {
+  name: "Pattern — copy button",
+  render: function CopyButtonRender() {
+    const [status, setStatus] = useState<ButtonStatus>("idle");
+
+    useEffect(() => {
+      if (status !== "success" && status !== "error") return;
+      const timer = window.setTimeout(() => setStatus("idle"), buttonStatusHoldMs);
+      return () => window.clearTimeout(timer);
+    }, [status]);
+
+    async function copy() {
+      try {
+        await navigator.clipboard.writeText("# How we scope a brand sprint");
+        setStatus("success");
+      } catch {
+        setStatus("error");
+      }
+    }
+
+    return (
+      <Button
+        role="secondary"
+        size="sm"
+        icon={<Copy />}
+        status={status}
+        statusLabels={{ success: "Copied", error: "Couldn't copy" }}
+        onClick={copy}
+      >
+        Copy for LLM
+      </Button>
+    );
+  },
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Copies text and confirms it. The Copy glyph morphs into the check and the label into \"Copied\"; a refused clipboard shows \"Couldn't copy\". Either holds for `buttonStatusHoldMs` (2s), then the button returns. The labels sit in the button's live region, so screen readers hear the result.",
+        },
+      },
+    },
+    `
+import { useEffect, useState } from "react";
+import { Copy } from "lucide-react";
+import { Button, buttonStatusHoldMs, type ButtonStatus } from "@thewhatmatters/wmds";
+
+export function CopyButton({ text, label }: { text: string; label: string }) {
+  const [status, setStatus] = useState<ButtonStatus>("idle");
+
+  useEffect(() => {
+    if (status !== "success" && status !== "error") return;
+    const timer = window.setTimeout(() => setStatus("idle"), buttonStatusHoldMs);
+    return () => window.clearTimeout(timer);
+  }, [status]);
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(text);
+      setStatus("success");
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  return (
+    <Button
+      role="secondary"
+      size="sm"
+      icon={<Copy />}
+      status={status}
+      statusLabels={{ success: "Copied", error: "Couldn't copy" }}
+      onClick={copy}
+    >
+      {label}
+    </Button>
+  );
+}
+`,
+  ),
+};
+
+export const ExternalLink: Story = {
+  name: "Pattern — external link",
+  render: () => (
+    <div className="flex flex-wrap items-center gap-2">
+      <Button role="secondary" size="sm" external render={<a href="https://x.com/intent/post?url=https%3A%2F%2Fwhatmatters.so" />}>
+        Twitter/X
+      </Button>
+      <Button
+        role="secondary"
+        size="sm"
+        external
+        render={<a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fwhatmatters.so" />}
+      >
+        LinkedIn
+      </Button>
+    </div>
+  ),
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "A pill link to another site. `external` opens it in a new tab with a safe `rel`, adds the spoken \"(opens in a new tab)\", and shows the trailing icon **TextLink** uses (`externalIcon={false}` drops the icon).",
+        },
+      },
+    },
+    `
+import { Button } from "@thewhatmatters/wmds";
+
+export function ShareLinks({ url, title }: { url: string; title: string }) {
+  const encodedUrl = encodeURIComponent(url);
+  const encodedTitle = encodeURIComponent(title);
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <Button
+        role="secondary"
+        size="sm"
+        external
+        render={<a href={"https://x.com/intent/post?url=" + encodedUrl + "&text=" + encodedTitle} />}
+      >
+        Twitter/X
+      </Button>
+      <Button
+        role="secondary"
+        size="sm"
+        external
+        render={<a href={"https://www.linkedin.com/sharing/share-offsite/?url=" + encodedUrl} />}
+      >
+        LinkedIn
+      </Button>
+    </div>
+  );
+}
+`,
   ),
 };
 

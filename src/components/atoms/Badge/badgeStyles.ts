@@ -1,5 +1,6 @@
 import type { SemanticVariant } from "../../../lib/semanticVariants";
 import { cn } from "../../../lib/cn";
+import { motionTransition } from "../../../lib/motion";
 
 export const badgeVariants = ["neutral", "info", "success", "warning", "destructive"] as const;
 
@@ -7,13 +8,13 @@ export type BadgeVariant = (typeof badgeVariants)[number];
 
 export type BadgeSize = "sm" | "md";
 
-export const badgeEmphases = ["solid", "muted"] as const;
+export const badgeEmphases = ["solid", "muted", "outline"] as const;
 
 export type BadgeEmphasis = (typeof badgeEmphases)[number];
 
 /** Shared shell — Astryx-style compact pill labels. */
 export const badgeBaseClasses =
-  "inline-flex shrink-0 items-center justify-center font-sans font-medium tracking-normal";
+  "inline-flex shrink-0 items-center justify-center font-sans font-medium normal-case tracking-normal";
 
 /**
  * Solid semantic fills — matches [Astryx Badge](https://astryx.atmeta.com/components/Badge) status row.
@@ -36,9 +37,37 @@ export const badgeMutedClasses: Record<BadgeVariant, string> = {
   destructive: "bg-error-muted text-error",
 };
 
+/** Hairline outline, transparent fill — author and category tags. */
+export const badgeOutlineClasses: Record<BadgeVariant, string> = {
+  neutral: "border border-border-emphasized bg-transparent text-fg",
+  info: "border border-info bg-transparent text-info",
+  success: "border border-success bg-transparent text-success",
+  warning: "border border-warning bg-transparent text-warning",
+  destructive: "border border-error bg-transparent text-error",
+};
+
 export function badgeSurfaceClasses(variant: BadgeVariant, emphasis: BadgeEmphasis): string {
+  if (emphasis === "outline") return badgeOutlineClasses[variant];
   return emphasis === "muted" ? badgeMutedClasses[variant] : badgeSolidClasses[variant];
 }
+
+/** Mono uppercase label — the same face, size, and tracking as **Button** `mono`. `!` beats the sans medium shell. */
+export const badgeMonoClasses =
+  "!font-mono !text-[length:var(--font-size-sm)] !font-normal !uppercase !tracking-[0.14em]";
+
+/**
+ * A badge composed onto a link (`render`): an underline on hover, the hairline darkens on an
+ * outline badge, the focus ring, and a 44px-tall hit area around the 20–24px pill.
+ */
+export const badgeInteractiveClasses = cn(
+  "relative cursor-pointer decoration-1 underline-offset-2 hover:underline",
+  "after:absolute after:inset-x-0 after:top-1/2 after:h-11 after:-translate-y-1/2 after:content-['']",
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body",
+  "transition-[border-color,text-decoration-color]",
+  motionTransition("fast"),
+);
+
+export const badgeInteractiveOutlineClasses = "hover:border-fg";
 
 /** Label sizing — text-only and icon patterns share the same padding shell. */
 export const badgeLabelSizeClasses: Record<BadgeSize, string> = {

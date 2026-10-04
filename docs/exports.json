@@ -63,6 +63,7 @@
         "docs": "?path=/docs/components-badge--docs"
       },
       "patterns": [
+        "components-badge--outline-tags",
         "components-badge--with-avatar"
       ]
     },
@@ -76,7 +77,9 @@
         "docs": "?path=/docs/components-button-button--docs"
       },
       "patterns": [
+        "components-button-button--copy-button",
         "components-button-button--destructive-action",
+        "components-button-button--external-link",
         "components-button-button--ghost-action",
         "components-button-button--inverse-action",
         "components-button-button--link-render",
@@ -216,6 +219,20 @@
         "docs": "?path=/docs/components-confetti--docs"
       },
       "patterns": []
+    },
+    {
+      "name": "DescriptionList",
+      "tier": "molecule",
+      "category": "Table & list",
+      "summary": "Name-and-value rows (dl, dt, dd) with a solid or dotted rule; values take text, tags, or actions.",
+      "storybook": {
+        "title": "Components/DescriptionList",
+        "docs": "?path=/docs/components-descriptionlist--docs"
+      },
+      "patterns": [
+        "components-descriptionlist--details",
+        "components-descriptionlist--post-metadata"
+      ]
     },
     {
       "name": "Dialog",
@@ -502,6 +519,19 @@
       ]
     },
     {
+      "name": "Prose",
+      "tier": "atom",
+      "category": "Content",
+      "summary": "Long-form article text set from plain HTML, with a reading measure.",
+      "storybook": {
+        "title": "Components/Prose",
+        "docs": "?path=/docs/components-prose--docs"
+      },
+      "patterns": [
+        "components-prose--article-body"
+      ]
+    },
+    {
       "name": "Radio",
       "tier": "atom",
       "category": "Form controls",
@@ -564,6 +594,20 @@
         "docs": "?path=/docs/components-search--docs"
       },
       "patterns": []
+    },
+    {
+      "name": "SectionCaption",
+      "tier": "atom",
+      "category": "Content",
+      "summary": "Small uppercase mono caption over a page column, on a rule, with an optional action.",
+      "storybook": {
+        "title": "Components/SectionCaption",
+        "docs": "?path=/docs/components-sectioncaption--docs"
+      },
+      "patterns": [
+        "components-sectioncaption--column-caption",
+        "components-sectioncaption--with-action"
+      ]
     },
     {
       "name": "SegmentedControl",
@@ -818,6 +862,7 @@
     "Guides/Chart explorations",
     "Guides/Filter panel",
     "Guides/Overlay flows",
+    "Guides/Post page",
     "Guides/Profile typography"
   ]
 }

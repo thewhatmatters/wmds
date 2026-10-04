@@ -17,10 +17,10 @@ A filtered index page — a side panel of checkbox filters beside an **IndexList
 
 | Part | Component | Why |
 |------|-----------|-----|
-| Panel title | \`type-eyebrow\` heading | Small uppercase mono caption, level with the list's column captions |
+| Panel title | **SectionCaption** with Clear all in \`end\` | Small uppercase mono caption on a rule, level with the list's column captions |
 | Groups | **Accordion** \`variant="plain"\` \`flush\` | Each group collapses; a closed group leaves the tab order |
 | Options | **CheckboxGroup** + **CheckboxGroup.Item** \`count\` | Multi-select with a muted result count per option, read as "Guides (2 posts)" |
-| Clear all | **Button** \`role="ghost"\` \`size="xs"\` | Disabled until a filter is on |
+| Clear all | **Button** \`role="ghost"\` \`size="xs"\` in the caption's \`end\` | Disabled until a filter is on |
 | Results | **IndexList** with \`empty\` | Dated rows; the empty slot covers a filter with no matches |
 | Phones | **Button** \`count\` → **Sheet** (bottom) | The same groups in a drawer, with Clear all and Show N posts |
 
@@ -32,7 +32,7 @@ main.grid-page
     ├── header (col-span-full) — h1 with the shown count · Filters button (below md)
     ├── p[role=status].sr-only — "3 posts" after each change
     ├── aside (md:col-span-3, hidden below md)
-    │   ├── h2.type-eyebrow "/ Filters" · Clear all
+    │   ├── SectionCaption "Filters" (h2) · end: Clear all
     │   └── Accordion plain flush → Accordion.Item per group → CheckboxGroup (labelHidden, sm)
     ├── div (md:col-span-5 lg:col-span-9) → IndexList (captions, empty)
     └── Sheet → Sheet.Content "Filters" → the same groups; footer Clear all · Show N posts
@@ -71,7 +71,7 @@ export const FilteredIndex: Story = {
     `
 import { useId, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
-import { Accordion, Button, CheckboxGroup, IndexList, Sheet } from "@thewhatmatters/wmds";
+import { Accordion, Button, CheckboxGroup, IndexList, SectionCaption, Sheet } from "@thewhatmatters/wmds";
 
 export interface FilterGroupDef {
   id: string;
@@ -187,27 +187,23 @@ export function FilteredIndex({
         </p>
 
         <aside aria-labelledby={filtersHeadingId} className="hidden md:col-span-3 md:block">
-          <div className="flex items-center justify-between gap-3 border-b border-border pb-3">
-            <h2 id={filtersHeadingId} className="type-eyebrow text-muted">
-              <span aria-hidden="true">/ </span>Filters
-            </h2>
-            <Button
-              role="ghost"
-              size="xs"
-              className="-my-1.5"
-              disabled={activeCount === 0}
-              onClick={() => setSelection({})}
-            >
-              Clear all
-            </Button>
-          </div>
+          <SectionCaption
+            id={filtersHeadingId}
+            end={
+              <Button role="ghost" size="xs" disabled={activeCount === 0} onClick={() => setSelection({})}>
+                Clear all
+              </Button>
+            }
+          >
+            Filters
+          </SectionCaption>
           <FilterGroups groups={groups} posts={posts} selection={selection} onGroupChange={setGroup} />
         </aside>
 
         <div className="col-span-full md:col-span-5 lg:col-span-9">
           <IndexList
             aria-label="Posts"
-            captions={{ meta: "/ Date", title: "/ Name" }}
+            captions={{ meta: "Date", title: "Name" }}
             empty={<p className="type-body text-muted">No posts match these filters.</p>}
           >
             {shown.map((post) => (

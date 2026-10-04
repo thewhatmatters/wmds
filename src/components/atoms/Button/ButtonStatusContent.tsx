@@ -1,3 +1,4 @@
+import type { ReactElement } from "react";
 import { Check, Loader2, X } from "lucide-react";
 import { AnimatePresence, motion, useTime, useTransform } from "motion/react";
 import { cn } from "../../../lib/cn";
@@ -46,8 +47,20 @@ function StatusIconGlyph({
   return <X className={iconClass} strokeWidth={2.5} aria-hidden />;
 }
 
-export function ButtonStatusIcon({ status, size }: { status: ButtonStatus; size: ButtonSize }) {
-  if (status === "idle") {
+/**
+ * The status glyph. With `icon`, idle shows that icon and each status morphs out of it — a copy
+ * button's Copy glyph turns into the check.
+ */
+export function ButtonStatusIcon({
+  status,
+  size,
+  icon,
+}: {
+  status: ButtonStatus;
+  size: ButtonSize;
+  icon?: ReactElement;
+}) {
+  if (status === "idle" && icon == null) {
     return null;
   }
 
@@ -64,7 +77,18 @@ export function ButtonStatusIcon({ status, size }: { status: ButtonStatus; size:
         transition={statusIconSpring}
         aria-hidden
       >
-        <StatusIconGlyph status={status} size={size} />
+        {status === "idle" ? (
+          <span
+            className={cn(
+              "inline-flex shrink-0 [&>svg]:size-full [&>svg]:shrink-0 [&>svg]:stroke-current",
+              buttonIconSizeClasses[size],
+            )}
+          >
+            {icon}
+          </span>
+        ) : (
+          <StatusIconGlyph status={status} size={size} />
+        )}
       </motion.span>
     </AnimatePresence>
   );

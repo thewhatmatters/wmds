@@ -3,14 +3,14 @@
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 import { useState } from "react";
-import { Accordion, CheckboxGroup } from "@thewhatmatters/wmds";
+import { Accordion, CheckboxGroup, SectionCaption } from "@thewhatmatters/wmds";
 
 export function TopicFilter() {
   const [topics, setTopics] = useState<string[]>([]);
   const [years, setYears] = useState<string[]>([]);
   return (
     <div className="flex w-64 flex-col">
-      <h2 className="type-eyebrow border-b border-border pb-3 text-muted">Filters</h2>
+      <SectionCaption>Filters</SectionCaption>
       <Accordion variant="plain" flush>
         <Accordion.Item label="Topic" defaultOpen>
           <CheckboxGroup label="Topic" labelHidden size="sm" values={topics} onValuesChange={setTopics}>
