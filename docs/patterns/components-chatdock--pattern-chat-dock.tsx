@@ -4,7 +4,14 @@
 
 import { useState } from "react";
 import { ArrowRight, CalendarClock, DollarSign } from "lucide-react";
-import { Avatar, ChatDock, type ChatDockMessage, type ChatDockSuggestion } from "@thewhatmatters/wmds";
+import {
+  Avatar,
+  ChatDock,
+  type ChatDockFeedback,
+  type ChatDockMessage,
+  type ChatDockMessageMeta,
+  type ChatDockSuggestion,
+} from "@thewhatmatters/wmds";
 
 const suggestions: ChatDockSuggestion[] = [
   {
@@ -22,17 +29,21 @@ const suggestions: ChatDockSuggestion[] = [
   { id: "start", label: "Start a project", icon: <ArrowRight /> },
 ];
 
-/** What `ask` resolves with: the reply, or the reply and the follow-ups to offer under it. */
-export type AskWhatMattersResult = string | { reply: string; followUps?: ChatDockSuggestion[] };
+/** What `ask` resolves with: the reply, or the reply with its follow-ups, its score, and the text Copy copies. */
+export type AskWhatMattersResult =
+  | string
+  | { reply: string; followUps?: ChatDockSuggestion[]; meta?: ChatDockMessageMeta; copyText?: string };
 
 export interface AskWhatMattersProps {
-  /** The app's assistant request. Resolves with the reply, and with follow-ups for it when there are any. */
+  /** The app's assistant request. Resolves with the reply, and with its follow-ups, score, and copy text when there are any. */
   ask: (prompt: string, history: ChatDockMessage[]) => Promise<AskWhatMattersResult>;
+  /** The visitor voted on a reply, or cleared their vote (`null`). */
+  onFeedback: (reply: ChatDockMessage, value: ChatDockFeedback) => void;
   /** Opens the Start a project intake. */
   onStartProject: () => void;
 }
 
-export function AskWhatMatters({ ask, onStartProject }: AskWhatMattersProps) {
+export function AskWhatMatters({ ask, onFeedback, onStartProject }: AskWhatMattersProps) {
   const [messages, setMessages] = useState<ChatDockMessage[]>([]);
   const [thinking, setThinking] = useState(false);
   const [followUps, setFollowUps] = useState<ChatDockSuggestion[]>([]);
@@ -45,12 +56,28 @@ export function AskWhatMatters({ ask, onStartProject }: AskWhatMattersProps) {
     setThinking(true);
     try {
       const result = await ask(prompt, history);
-      const reply = typeof result === "string" ? result : result.reply;
-      setMessages((current) => [...current, { id: crypto.randomUUID(), role: "assistant", content: reply }]);
-      setFollowUps(typeof result === "string" ? [] : (result.followUps ?? []));
+      const answer: Exclude<AskWhatMattersResult, string> = typeof result === "string" ? { reply: result } : result;
+      setMessages((current) => [
+        ...current,
+        {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: answer.reply,
+          copyText: answer.copyText ?? answer.reply,
+          meta: answer.meta,
+        },
+      ]);
+      setFollowUps(answer.followUps ?? []);
     } finally {
       setThinking(false);
     }
+  }
+
+  function handleFeedback(reply: ChatDockMessage, value: ChatDockFeedback) {
+    setMessages((current) =>
+      current.map((message) => (message.id === reply.id ? { ...message, feedback: value } : message)),
+    );
+    onFeedback(reply, value);
   }
 
   return (
@@ -69,6 +96,7 @@ export function AskWhatMatters({ ask, onStartProject }: AskWhatMattersProps) {
       onSuggestionSelect={(suggestion) => {
         if (suggestion.id === "start") onStartProject();
       }}
+      onMessageFeedback={handleFeedback}
       placeholder="Ask anything about WhatMatters"
       disclaimer="Answers may be incomplete · AI assistant by WhatMatters"
     />

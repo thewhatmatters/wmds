@@ -85,6 +85,30 @@ export const chatDockThreadClasses = cn(
 /** Assistant text — the greeting and replies. */
 export const chatDockAssistantMessageClasses = cn(typographyClass("body"), "text-fg");
 
+/** A reply with a row under it — the hover and focus group for that row. */
+export const chatDockReplyClasses = "group/reply flex flex-col gap-1";
+
+/**
+ * Actions and score under a finished reply. The row always takes its height, so it never moves the
+ * thread. Where the pointer can hover it shows while the reply is hovered or holds focus; on touch it
+ * is always shown.
+ */
+export const chatDockReplyActionsClasses = cn(
+  "flex min-h-11 items-center gap-1 md:min-h-9",
+  "[@media(hover:hover)]:group-[:not(:hover,:focus-within)]/reply:opacity-0",
+  "transition-[opacity,visibility]",
+  motionTransition("fast"),
+);
+
+/** While the reply is still arriving the row keeps its place but shows nothing. */
+export const chatDockReplyActionsPendingClasses = "invisible opacity-0";
+
+/** The buttons, pulled out so the first glyph lines up with the reply text (44px circles, 36px from `md`), leaving room for the focus ring. */
+export const chatDockReplyButtonsClasses = "-ms-3 flex items-center gap-1 md:-ms-2.5";
+
+/** The score — muted caption text, not a control. */
+export const chatDockReplyMetaClasses = cn(typographyClass("caption"), "text-muted tabular-nums");
+
 /** Visitor turn — right-aligned on the brand tint, at the card body radius, so it reads apart from replies. */
 export const chatDockUserMessageClasses = cn(
   typographyClass("body"),

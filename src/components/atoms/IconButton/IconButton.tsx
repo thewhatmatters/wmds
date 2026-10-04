@@ -16,6 +16,7 @@ import {
   iconButtonInsetFocusClasses,
   iconButtonInsetHitClasses,
   iconButtonInsetIconSizeClasses,
+  iconButtonPressedClasses,
   iconButtonShapeClass,
 } from "./iconButtonStyles";
 
@@ -48,6 +49,11 @@ export interface IconButtonProps
   fab?: boolean;
   /** Shows spinner instead of icon — async feedback. */
   loading?: boolean;
+  /**
+   * Toggle pattern — the on/off state of a toggle such as a vote. Sets `aria-pressed`, and the
+   * selected fill while `true`. Omit for a plain action. Not with `fab` or `inset`.
+   */
+  pressed?: boolean;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
   /**
@@ -69,13 +75,16 @@ export interface IconButtonProps
 }
 
 function assertIconButtonPattern(
-  props: Pick<IconButtonProps, "fab" | "role" | "render" | "inset">,
+  props: Pick<IconButtonProps, "fab" | "role" | "render" | "inset" | "pressed">,
 ) {
   if (props.fab && props.role != null && props.role !== "primary") {
     console.warn("[WMDS IconButton] `fab` uses primary role — omit `role` or set `primary`.");
   }
   if (props.render != null && (props.fab || props.inset)) {
     console.warn("[WMDS IconButton] `render` is not supported with `fab` or `inset`.");
+  }
+  if (props.pressed !== undefined && (props.fab || props.inset)) {
+    console.warn("[WMDS IconButton] `pressed` (toggle) is not supported with `fab` or `inset`.");
   }
 }
 
@@ -93,6 +102,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
     title,
     fab = false,
     loading = false,
+    pressed,
     disabled,
     type = "button",
     render,
@@ -110,7 +120,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
   },
   ref,
 ) {
-  assertIconButtonPattern({ fab, role: roleProp, render, inset });
+  assertIconButtonPattern({ fab, role: roleProp, render, inset, pressed });
 
   const role = fab ? "primary" : (roleProp ?? "ghost");
   const isDisabled = disabled || loading;
@@ -123,7 +133,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
   const classNameMerged = cn(
     buttonBaseClasses,
     "justify-center",
-    buttonRoleClasses[role],
+    pressed === true ? iconButtonPressedClasses : buttonRoleClasses[role],
     hitClass,
     iconButtonShapeClass,
     inset && iconButtonInsetFocusClasses,
@@ -160,6 +170,8 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
           "aria-haspopup": ariaHasPopup,
           "aria-expanded": ariaExpanded,
           "aria-controls": ariaControls,
+          "aria-pressed": pressed ?? buttonProps["aria-pressed"],
+          "data-pressed": pressed === true ? "" : undefined,
           "aria-busy": loading || undefined,
           "aria-disabled": isDisabled ? true : undefined,
           "data-disabled": isDisabled ? "" : undefined,
@@ -188,6 +200,8 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
           "aria-haspopup": ariaHasPopup,
           "aria-expanded": ariaExpanded,
           "aria-controls": ariaControls,
+          "aria-pressed": pressed ?? buttonProps["aria-pressed"],
+          "data-pressed": pressed === true ? "" : undefined,
           title: tooltip === "" ? undefined : tooltip,
           onClick,
           onKeyDown,

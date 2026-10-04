@@ -71,6 +71,18 @@ The site wants a few predefined next questions after some replies. Before this, 
 - Additive: the resting pills, the rows before the first message, and `suggestions` are unchanged.
 - **No per-item icons.** Each follow-up drawing its own icon read as a second set of suggestions. Inline rows all lead with the same Lucide **CornerDownRight** (a reply to the answer above); pills above the composer are text only. A follow-up's `icon` is ignored.
 
+### Amendment — 2026-10-04: reply actions and a score
+
+The old full-page chat (the 0.2.0 Sites pattern, gone since 0.3.0) had Copy, thumbs up, and thumbs down under each reply; ChatDock had nowhere for them, so the site would have put buttons inside `messages[].content`. The site also wants to show how sure the assistant was of its match.
+
+- **On a reply message:** `copyText?` shows Copy (ChatDock writes the clipboard and confirms), `meta?: { label, description? }` shows a short muted note such as "Match 99%" (`description` is read to screen readers), `feedback?: "up" | "down" | null` is the current vote. **On ChatDock:** `onMessageFeedback?(message, value)` shows the thumbs; pressing the active one sends `null`. Labels `copy`, `copied`, `helpful`, `notHelpful`.
+- **WMDS owns the row** (where it sits, when it shows, how it looks). **The app owns** the score's text, what Copy copies, and what happens to a vote.
+- **Shown** under finished replies only: not on the greeting or the visitor's turns, and not while the latest reply is still arriving (`thinking`). Where the pointer can hover, on hover or focus within the reply. **On touch screens the row is always shown under every finished reply.** The proposal offered "always on the latest reply" or "tap to reveal"; the first leaves older replies with no way to copy or vote on touch, and the second hides the actions behind a gesture nobody knows. Always showing costs a 44px row under each reply on a phone, which the short dock thread can afford.
+- **The row always keeps its height**, so hover, focus, and a reply finishing never move the thread.
+- **IconButton gains `pressed`** (the toggle pattern) for the thumbs: `aria-pressed`, the pressed fill, and a filled glyph. The selected fill used elsewhere (`bg-secondary`) matches the dark surface, so it could not show a vote there.
+- **Pattern — chat dock** holds the votes and hands each one to a required `onFeedback`; `ask` resolves with `string | { reply, followUps?, meta?, copyText? }`, and `copyText` defaults to the reply text.
+- Additive: messages without these fields, and docks without `onMessageFeedback`, render as before.
+
 ### Amendment — 2026-10-04: one composer, open and close
 
 The first build swapped two elements: the resting bar left and a clipped window with its own composer appeared, so the composer vanished and reappeared somewhere else, and the clip cut off the card's shadow.

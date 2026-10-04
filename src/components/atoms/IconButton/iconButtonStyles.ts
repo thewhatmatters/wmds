@@ -8,6 +8,13 @@ export const iconButtonExpandedStyle = {
   backgroundColor: "color-mix(in srgb, currentColor 5%, transparent)",
 } satisfies CSSProperties;
 
+/**
+ * Toggle pattern, pressed — the pressed overlay (it reads on any surface, in both themes) and a
+ * filled glyph, in place of the role's fill. Unpressed toggles keep their role.
+ */
+export const iconButtonPressedClasses =
+  "bg-ghost-active text-fg hover:bg-ghost-active active:bg-ghost-active [&_svg]:fill-current";
+
 /** FAB pattern — raised elevation on primary fill. */
 export const iconButtonFabClasses = "shadow-soft-card";
 

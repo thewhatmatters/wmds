@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MotionConfig } from "motion/react";
-import { expect, fn, userEvent, waitFor, within } from "storybook/test";
+import { expect, fn, spyOn, userEvent, waitFor, within } from "storybook/test";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ArrowRight, DollarSign } from "lucide-react";
 import { Avatar } from "../components/atoms/Avatar/Avatar";
@@ -428,5 +428,140 @@ export const FollowUpsWhileThinking: Story = {
     const dialog = canvas.getByRole("dialog", { name: "WhatMatters" });
     expect(within(dialog).getByText("Thinking…")).toBeInTheDocument();
     expect(within(dialog).queryByRole("group", { name: "Suggested follow-ups" })).toBeNull();
+  },
+};
+
+const onMessageFeedback = fn();
+
+const answered: ChatDockMessage[] = [
+  { id: "q", role: "user", content: "What do you make?" },
+  {
+    id: "a",
+    role: "assistant",
+    content: "Brands, sites, and apps.",
+    copyText: "Brands, sites, and apps.",
+    meta: { label: "Match 99%", description: "How sure the assistant is that it matched your question." },
+  },
+];
+
+/** Holds votes like the pattern does. `thinking` marks the last reply as still arriving. */
+function ReplyDock({ messages: initial = answered, thinking = false }: { messages?: ChatDockMessage[]; thinking?: boolean }) {
+  const [messages, setMessages] = useState(initial);
+  return (
+    <ChatDock
+      placement="inline"
+      defaultOpen
+      title="WhatMatters"
+      subtitle="Ask anything"
+      mark={<Avatar name="WhatMatters" size="md" />}
+      greeting="Hi, ask me anything."
+      messages={messages}
+      thinking={thinking}
+      onSend={onSend}
+      onMessageFeedback={(reply, value) => {
+        onMessageFeedback(reply.id, value);
+        setMessages((current) => current.map((message) => (message.id === reply.id ? { ...message, feedback: value } : message)));
+      }}
+    />
+  );
+}
+
+function replyRow(canvasElement: HTMLElement): HTMLElement {
+  const row = canvasElement.querySelector<HTMLElement>("[data-role='assistant'] [data-reply-actions]");
+  if (row == null) throw new Error("Reply row is missing");
+  return row;
+}
+
+export const ReplyActionsCopyAndVote: Story = {
+  name: "reply row copies the reply and toggles one vote",
+  render: () => <ReplyDock />,
+  play: async ({ canvas, canvasElement }) => {
+    onMessageFeedback.mockClear();
+    const writeText = spyOn(navigator.clipboard, "writeText").mockResolvedValue(undefined);
+    try {
+      const dialog = canvas.getByRole("dialog", { name: "WhatMatters" });
+      const copy = within(dialog).getByRole("button", { name: "Copy reply" });
+      await userEvent.click(copy);
+      expect(writeText).toHaveBeenCalledWith("Brands, sites, and apps.");
+      await waitFor(() => {
+        expect(within(dialog).getByRole("button", { name: "Copied" })).toBe(copy);
+        expect(within(dialog).getByRole("status")).toHaveTextContent("Copied");
+      });
+
+      const helpful = within(dialog).getByRole("button", { name: "Mark this reply helpful" });
+      const notHelpful = within(dialog).getByRole("button", { name: "Mark this reply not helpful" });
+      expect(helpful).toHaveAttribute("aria-pressed", "false");
+      await userEvent.click(helpful);
+      expect(onMessageFeedback).toHaveBeenLastCalledWith("a", "up");
+      expect(helpful).toHaveAttribute("aria-pressed", "true");
+      await userEvent.click(notHelpful);
+      expect(onMessageFeedback).toHaveBeenLastCalledWith("a", "down");
+      expect(helpful).toHaveAttribute("aria-pressed", "false");
+      expect(notHelpful).toHaveAttribute("aria-pressed", "true");
+      // Pressing the active thumb clears the vote.
+      await userEvent.click(notHelpful);
+      expect(onMessageFeedback).toHaveBeenLastCalledWith("a", null);
+      expect(notHelpful).toHaveAttribute("aria-pressed", "false");
+
+      // The score is text with its description for screen readers, not a control.
+      const row = replyRow(canvasElement);
+      expect(row).toHaveTextContent("Match 99%. How sure the assistant is that it matched your question.");
+      expect(within(row).getAllByRole("button")).toHaveLength(3);
+      await waitForWindowSettled(canvasElement);
+    } finally {
+      writeText.mockRestore();
+    }
+  },
+};
+
+export const ReplyActionsReveal: Story = {
+  name: "reply row keeps its place and shows on focus",
+  render: () => <ReplyDock />,
+  play: async ({ canvasElement }) => {
+    await waitForWindowSettled(canvasElement);
+    const row = replyRow(canvasElement);
+    const height = row.getBoundingClientRect().height;
+    expect(height).toBeGreaterThanOrEqual(36);
+    // A desktop pointer can hover, so the row waits for hover or focus — and still takes its space.
+    if (window.matchMedia("(hover: hover)").matches) {
+      await waitFor(() => {
+        expect(getComputedStyle(row).opacity).toBe("0");
+      });
+    }
+    within(row).getByRole("button", { name: "Copy reply" }).focus();
+    await waitFor(() => {
+      expect(getComputedStyle(row).opacity).toBe("1");
+    });
+    expect(row.getBoundingClientRect().height).toBe(height);
+  },
+};
+
+export const ReplyActionsPending: Story = {
+  name: "no reply row while the reply is still arriving",
+  render: () => <ReplyDock thinking />,
+  play: async ({ canvas, canvasElement }) => {
+    const row = replyRow(canvasElement);
+    expect(row).toHaveAttribute("data-reply-actions", "pending");
+    expect(getComputedStyle(row).visibility).toBe("hidden");
+    expect(row.getBoundingClientRect().height).toBeGreaterThan(0);
+    expect(canvas.queryByRole("button", { name: "Copy reply" })).toBeNull();
+  },
+};
+
+export const ReplyActionsAbsent: Story = {
+  name: "no reply row without copy text, score, or votes",
+  render: () => (
+    <ChatDock
+      placement="inline"
+      defaultOpen
+      title="WhatMatters"
+      greeting="Hi, ask me anything."
+      messages={replied}
+      onSend={onSend}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    expect(canvasElement.querySelector("[data-reply-actions]")).toBeNull();
+    expect(canvasElement.querySelector("[data-role='assistant']")).toHaveTextContent("Brands, sites, and apps.");
   },
 };
