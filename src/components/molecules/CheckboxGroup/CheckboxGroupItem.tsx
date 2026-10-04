@@ -7,6 +7,10 @@ export interface CheckboxGroupItemProps {
   value: string;
   label: string;
   description?: string;
+  /** Trailing count — how many results the option matches. See **Checkbox** `count`. */
+  count?: number;
+  /** What screen readers hear for `count`, for example "2 posts". Default: the number. */
+  countLabel?: string;
   disabled?: boolean;
   className?: CheckboxLayoutClassName;
 }
@@ -16,6 +20,8 @@ export function CheckboxGroupItem({
   value,
   label,
   description,
+  count,
+  countLabel,
   disabled,
   className,
 }: CheckboxGroupItemProps) {
@@ -47,6 +53,8 @@ export function CheckboxGroupItem({
     <Checkbox
       label={label}
       description={description}
+      count={count}
+      countLabel={countLabel}
       size={size}
       checked={checked}
       disabled={groupDisabled || disabled}

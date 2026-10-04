@@ -113,8 +113,10 @@ export {
 } from "./components/atoms/TextArea/TextArea";
 export {
   TextLink,
+  textLinkVariants,
   type TextLinkLayoutClassName,
   type TextLinkProps,
+  type TextLinkVariant,
 } from "./components/atoms/TextLink/TextLink";
 export {
   Tooltip,
@@ -254,6 +256,17 @@ export {
   type HeroIntroProps,
   type HeroIntroStep,
 } from "./components/molecules/HeroIntro/HeroIntro";
+export {
+  IndexList,
+  indexListSizes,
+  indexListTitleElements,
+  type IndexListCaptions,
+  type IndexListItemProps,
+  type IndexListLayoutClassName,
+  type IndexListProps,
+  type IndexListSize,
+  type IndexListTitleElement,
+} from "./components/molecules/IndexList/IndexList";
 export {
   IntakeForm,
   intakeAboutEmpty,

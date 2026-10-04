@@ -24,6 +24,8 @@ const meta = {
     status: { control: "select", options: [undefined, ...inputStatuses] },
     label: { control: "text" },
     description: { control: "text" },
+    count: { control: "number" },
+    countLabel: { control: "text" },
     message: { control: "text" },
     labelHidden: { control: "boolean" },
     indeterminate: { control: "boolean" },
@@ -53,6 +55,7 @@ Boolean toggle — box + label row; optional description and status message belo
 |---------|--------|
 | **Default** | \`label\` + controlled/uncontrolled \`checked\` |
 | **With description** | \`description\` — caption under label |
+| **Count** | \`count\` — muted number at the row's end (filters); \`countLabel\` sets what screen readers hear |
 | **Indeterminate** | \`indeterminate\` — mixed / select-all parent |
 | **Hidden label** | \`labelHidden\` — icon-only or table row (label stays for SR) |
 | **Validation** | \`status\` + \`message\` — flat band below row |
@@ -62,11 +65,13 @@ Boolean toggle — box + label row; optional description and status message belo
 
 - **Box** — \`rounded\` / \`rounded-md\`; \`border-emphasized\` → \`bg-primary\` when checked
 - **Label column** — \`ui-label\` + optional \`caption\` description
+- **Count** — optional muted \`caption\` number at the row's end; read after the label as "Guides (2)"
 - **Hit target** — whole row is clickable; focus ring on box
 
 ## Best practices
 
 - **Do** keep \`label\` text meaningful — use \`labelHidden\` only when context is obvious.
+- **Do** pass \`count\` for result counts — never write the number into \`label\`.
 - **Do** use \`status\` + \`message\` for validation — not label asterisks.
 - **Do** pair with **Field** / **CheckboxGroup** for grouped options.
 - **Don't** restyle the box with \`className\` — layout width only on the row.
@@ -131,6 +136,39 @@ export function NewsletterCheckbox() {
     <Checkbox
       label="Subscribe to newsletter"
       description="Receive weekly updates about new features and announcements."
+      checked={checked}
+      onChange={(event) => setChecked(event.target.checked)}
+    />
+  );
+}
+`),
+};
+
+export const WithCount: Story = {
+  name: "Pattern — with count",
+  render: function CountCheckbox() {
+    const [checked, setChecked] = useState(false);
+    return (
+      <Checkbox
+        label="Guides"
+        count={2}
+        countLabel="2 posts"
+        checked={checked}
+        onChange={(event) => setChecked(event.target.checked)}
+      />
+    );
+  },
+  parameters: storyCopySource(`
+import { useState } from "react";
+import { Checkbox } from "@thewhatmatters/wmds";
+
+export function GuidesFilter() {
+  const [checked, setChecked] = useState(false);
+  return (
+    <Checkbox
+      label="Guides"
+      count={2}
+      countLabel="2 posts"
       checked={checked}
       onChange={(event) => setChecked(event.target.checked)}
     />

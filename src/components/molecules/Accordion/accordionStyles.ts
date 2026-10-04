@@ -27,6 +27,9 @@ export const accordionItemListClasses =
 export const accordionItemPlainClasses =
   "overflow-hidden border-b border-border last:border-b-0 " + motionTransition("fast");
 
+/** Plain + `flush` — no clip, so the trigger's hover band can reach past the row's edges. */
+export const accordionItemFlushClasses = "border-b border-border last:border-b-0";
+
 /** Hairline + elevation via `shadow-raised` only — do not add `border`. */
 export const accordionItemCapsuleClasses =
   "overflow-hidden bg-surface shadow-raised transition-[border-radius,background-color] " +
@@ -52,6 +55,13 @@ export const accordionTriggerListClasses =
 
 export const accordionTriggerCapsuleClasses =
   "flex h-11 w-full items-center gap-2.5 text-left " + accordionCapsuleInsetXClasses;
+
+/**
+ * Plain + `flush` — the label lines up with the text around the accordion. The trigger reaches 8px
+ * past each edge so its rounded hover band and inset focus ring clear the label.
+ */
+export const accordionTriggerFlushClasses =
+  "-mx-2 flex h-11 w-[calc(100%+1rem)] items-center gap-2.5 rounded-lg px-2 text-left";
 
 /** @deprecated Use `accordionTriggerListClasses` or `accordionTriggerCapsuleClasses`. */
 export const accordionTriggerBaseClasses = accordionTriggerListClasses;
@@ -88,6 +98,9 @@ export const accordionPanelContentListClasses =
 
 export const accordionPanelContentCapsuleClasses =
   "type-body text-muted tracking-normal pb-2.5 pt-0 " + accordionCapsuleInsetXClasses;
+
+/** Plain + `flush` — panel content on the label's edge. */
+export const accordionPanelContentFlushClasses = "type-body text-muted tracking-normal pb-4 pt-0";
 
 /** @deprecated Use `accordionPanelContentListClasses` or `accordionPanelContentCapsuleClasses`. */
 export const accordionPanelContentClasses = accordionPanelContentListClasses;

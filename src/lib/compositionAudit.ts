@@ -96,6 +96,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "SegmentedControl owns the connected segment radio shell — not an action Button.",
   },
   {
+    file: "components/molecules/IndexList/IndexList.tsx",
+    ruleId: "lucide-import",
+    reason: "IndexList owns the preview disclosure chevron (Lucide ChevronDown) passed to IconButton.",
+  },
+  {
     file: "components/molecules/PromptBar/PromptBar.tsx",
     ruleId: "lucide-import",
     reason: "PromptBar owns the send glyph (Lucide ArrowRight) passed to IconButton.",

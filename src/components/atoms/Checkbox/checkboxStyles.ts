@@ -61,6 +61,15 @@ export const checkboxLabelClasses = typographyClass("ui-label");
 /** Tighter than global `type-supporting` leading — checkbox description only. */
 export const checkboxDescriptionClasses = cn(typographyClass("caption"), "leading-snug");
 
+/** Trailing option count — muted caption at the row's end, like **NavList** item counts. */
+export const checkboxCountClasses = cn("ml-auto shrink-0 tabular-nums", typographyClass("caption"));
+
+/** With a count, the description layout stretches so the count reaches the row's end. */
+export const checkboxCountStretchClasses = "flex-1";
+
+/** Title line beside a count in the description layout. */
+export const checkboxCountTitleLineClasses = "flex min-w-0 items-baseline gap-2";
+
 /** Label + description column beside the box — tight title/subtitle rhythm. */
 export const checkboxTextColumnClasses = "flex min-w-0 flex-col gap-px";
 

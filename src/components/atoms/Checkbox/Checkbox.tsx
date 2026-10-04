@@ -12,6 +12,9 @@ import { InputStatusBanner } from "../inputShared/InputStatusBanner";
 import {
   checkboxBoxClassesFor,
   checkboxCheckIconSizeClasses,
+  checkboxCountClasses,
+  checkboxCountStretchClasses,
+  checkboxCountTitleLineClasses,
   checkboxDescriptionClasses,
   checkboxDescriptionRowClasses,
   checkboxHiddenInputClasses,
@@ -45,6 +48,13 @@ export interface CheckboxProps
   labelHidden?: boolean;
   /** Neutral helper below the label. */
   description?: string;
+  /**
+   * Trailing count — for example how many posts a filter option matches. Muted, at the row's end.
+   * Screen readers hear it after the label in parentheses: "Guides (2)".
+   */
+  count?: number;
+  /** What screen readers hear for `count`, for example "2 posts". Default: the number. */
+  countLabel?: string;
   /** Mixed selection — sets native `indeterminate` on the input. */
   indeterminate?: boolean;
   /** Validation status — tints box border; pair with `message`. */
@@ -78,6 +88,8 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
     label,
     labelHidden = false,
     description,
+    count,
+    countLabel,
     indeterminate = false,
     status,
     message,
@@ -142,6 +154,15 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
   );
 
   const hasDescription = description != null && !labelHidden;
+  const hasCount = count != null;
+  const countText = count?.toLocaleString("en-US");
+  // The visible number is decorative; the label carries the spoken count in parentheses.
+  const spokenCount = hasCount ? <span className="sr-only">{` (${countLabel ?? countText})`}</span> : null;
+  const visibleCount = hasCount ? (
+    <span className={checkboxCountClasses} aria-hidden>
+      {countText}
+    </span>
+  ) : null;
 
   const renderControl = (hitTargetClassName?: string) => (
     <span
@@ -210,13 +231,26 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
       {labelHidden ? (
         <>
           {renderControl()}
-          <span className="sr-only">{label}</span>
+          <span className="sr-only">
+            {label}
+            {spokenCount}
+          </span>
         </>
       ) : hasDescription ? (
-        <span className={checkboxDescriptionRowClasses[size]}>
+        <span className={cn(checkboxDescriptionRowClasses[size], hasCount && checkboxCountStretchClasses)}>
           {renderControl(checkboxHitTargetDescriptionAlignClasses[size])}
-          <span className={checkboxTextColumnClasses}>
-            <span className={checkboxLabelClassesFor(isDisabled, true)}>{label}</span>
+          <span className={cn(checkboxTextColumnClasses, hasCount && checkboxCountStretchClasses)}>
+            {hasCount ? (
+              <span className={checkboxCountTitleLineClasses}>
+                <span className={checkboxLabelClassesFor(isDisabled, true)}>
+                  {label}
+                  {spokenCount}
+                </span>
+                {visibleCount}
+              </span>
+            ) : (
+              <span className={checkboxLabelClassesFor(isDisabled, true)}>{label}</span>
+            )}
             <span id={descriptionId} className={checkboxDescriptionClasses}>
               {description}
             </span>
@@ -225,7 +259,11 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
       ) : (
         <>
           {renderControl()}
-          <span className={checkboxLabelClassesFor(isDisabled)}>{label}</span>
+          <span className={checkboxLabelClassesFor(isDisabled)}>
+            {label}
+            {spokenCount}
+          </span>
+          {visibleCount}
         </>
       )}
     </label>

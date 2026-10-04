@@ -18,12 +18,14 @@ import {
   accordionItemCapsuleClasses,
   accordionItemCapsuleClosedClasses,
   accordionItemCapsuleOpenClasses,
+  accordionItemFlushClasses,
   accordionItemListClasses,
   accordionItemPlainClasses,
   accordionLabelPlainClasses,
   accordionLabelRowClasses,
   accordionLeadingSlotClasses,
   accordionPanelContentCapsuleClasses,
+  accordionPanelContentFlushClasses,
   accordionPanelContentListClasses,
   accordionPanelInnerClasses,
   accordionRootCapsuleClasses,
@@ -32,6 +34,7 @@ import {
   accordionRootPlainClasses,
   accordionTrailingClusterClasses,
   accordionTriggerCapsuleClasses,
+  accordionTriggerFlushClasses,
   accordionTriggerInteractiveClasses,
   accordionTriggerListClasses,
   type AccordionVariant,
@@ -45,10 +48,12 @@ export type AccordionLayoutClassName = string;
 
 interface AccordionContextValue {
   variant: AccordionVariant;
+  flush: boolean;
 }
 
 const AccordionContext = createContext<AccordionContextValue>({
   variant: "plain",
+  flush: false,
 });
 
 export interface AccordionProps extends HTMLAttributes<HTMLDivElement> {
@@ -57,6 +62,11 @@ export interface AccordionProps extends HTMLAttributes<HTMLDivElement> {
   variant?: AccordionVariant;
   /** List only — drop standalone shell (radius, fill, shadow) inside **Card.Body**. */
   inset?: boolean;
+  /**
+   * Plain only — no horizontal inset, so labels and panels line up with the text around the
+   * accordion (a filter side panel). The hover band reaches 8px past each edge.
+   */
+  flush?: boolean;
   className?: AccordionLayoutClassName;
 }
 
@@ -80,11 +90,13 @@ export interface AccordionItemProps {
 function AccordionRoot({
   variant = "plain",
   inset = false,
+  flush: flushProp = false,
   className,
   children,
   ...props
 }: AccordionProps) {
-  const contextValue = useMemo(() => ({ variant }), [variant]);
+  const flush = flushProp && variant === "plain";
+  const contextValue = useMemo(() => ({ variant, flush }), [variant, flush]);
 
   const rootClasses = (() => {
     if (variant === "list") {
@@ -98,14 +110,23 @@ function AccordionRoot({
 
   return (
     <AccordionContext.Provider value={contextValue}>
-      <div className={cn(rootClasses, className)} data-variant={variant} data-inset={inset ? "true" : undefined} {...props}>
+      <div
+        className={cn(rootClasses, className)}
+        data-variant={variant}
+        data-inset={inset ? "true" : undefined}
+        data-flush={flush ? "true" : undefined}
+        {...props}
+      >
         {children}
       </div>
     </AccordionContext.Provider>
   );
 }
 
-function accordionItemShellClasses(variant: AccordionVariant, open: boolean): string {
+function accordionItemShellClasses(variant: AccordionVariant, open: boolean, flush: boolean): string {
+  if (flush) {
+    return accordionItemFlushClasses;
+  }
   if (variant === "list") {
     return accordionItemListClasses;
   }
@@ -128,7 +149,7 @@ function AccordionItem({
   onOpenChange,
   className,
 }: AccordionItemProps) {
-  const { variant } = useContext(AccordionContext);
+  const { variant, flush } = useContext(AccordionContext);
   const panelId = useId();
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const isControlled = openProp !== undefined;
@@ -147,10 +168,17 @@ function AccordionItem({
 
   const labelClasses = variant === "plain" ? accordionLabelPlainClasses : accordionLabelRowClasses;
 
-  const triggerClasses = variant === "capsule" ? accordionTriggerCapsuleClasses : accordionTriggerListClasses;
+  const triggerClasses = flush
+    ? accordionTriggerFlushClasses
+    : variant === "capsule"
+      ? accordionTriggerCapsuleClasses
+      : accordionTriggerListClasses;
 
-  const panelContentClasses =
-    variant === "capsule" ? accordionPanelContentCapsuleClasses : accordionPanelContentListClasses;
+  const panelContentClasses = flush
+    ? accordionPanelContentFlushClasses
+    : variant === "capsule"
+      ? accordionPanelContentCapsuleClasses
+      : accordionPanelContentListClasses;
 
   const trigger = (
     <>
@@ -172,7 +200,7 @@ function AccordionItem({
   );
 
   return (
-    <div className={cn(accordionItemShellClasses(variant, open), className)}>
+    <div className={cn(accordionItemShellClasses(variant, open, flush), className)}>
       {expandable ? (
         <button
           type="button"

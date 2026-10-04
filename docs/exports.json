@@ -36,7 +36,9 @@
         "title": "Components/Accordion",
         "docs": "?path=/docs/components-accordion--docs"
       },
-      "patterns": []
+      "patterns": [
+        "components-accordion--flush"
+      ]
     },
     {
       "name": "Avatar",
@@ -175,6 +177,7 @@
       },
       "patterns": [
         "components-checkbox-checkbox--default",
+        "components-checkbox-checkbox--with-count",
         "components-checkbox-checkbox--with-description"
       ]
     },
@@ -188,7 +191,8 @@
         "docs": "?path=/docs/components-checkbox-checkboxgroup--docs"
       },
       "patterns": [
-        "components-checkbox-checkboxgroup--default"
+        "components-checkbox-checkboxgroup--default",
+        "components-checkbox-checkboxgroup--option-counts"
       ]
     },
     {
@@ -336,6 +340,19 @@
         "docs": "?path=/docs/components-button-iconbutton--docs"
       },
       "patterns": []
+    },
+    {
+      "name": "IndexList",
+      "tier": "molecule",
+      "category": "Table & list",
+      "summary": "Editorial index rows: a meta column, a large linked title, and an optional preview, under shared column captions.",
+      "storybook": {
+        "title": "Components/IndexList",
+        "docs": "?path=/docs/components-indexlist--docs"
+      },
+      "patterns": [
+        "components-indexlist--post-index"
+      ]
     },
     {
       "name": "Input",
@@ -731,6 +748,7 @@
       "patterns": [
         "components-textlink--external-destination",
         "components-textlink--inline-prose",
+        "components-textlink--quiet-title",
         "components-textlink--supporting-copy"
       ]
     },
@@ -798,6 +816,7 @@
   ],
   "guides": [
     "Guides/Chart explorations",
+    "Guides/Filter panel",
     "Guides/Overlay flows",
     "Guides/Profile typography"
   ]

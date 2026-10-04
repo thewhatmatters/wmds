@@ -3,6 +3,8 @@ import { useState } from "react";
 import { CircleHelp, Settings2 } from "lucide-react";
 import { Button } from "../../atoms/Button/Button";
 import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
+import { CheckboxGroup } from "../CheckboxGroup/CheckboxGroup";
+import { storyCopySource } from "../../../lib/storyCopySource";
 import { typographyClass } from "../../../lib/typography";
 import { Accordion, accordionVariants } from "./Accordion";
 
@@ -32,6 +34,7 @@ Generic expand/collapse rows — **leading**, **label**, **trailing**, built-in 
 | **Contained list** | \`variant="list"\` — panel shell with dividers |
 | **Capsules** | \`variant="capsule"\` — separated rounded rows |
 | **Controlled** | \`open\` + \`onOpenChange\` on **Accordion.Item** |
+| **Flush** | \`variant="plain"\` + \`flush\` — no inset; labels line up with surrounding text (filter side panel) |
 
 ## Anatomy
 
@@ -42,12 +45,15 @@ Accordion
     ├── label — \`body\` (plain) or \`ui-label\` (list / capsule)
     ├── trailing? — \`caption\` for meta; chevron is outside trailing
     ├── chevron (built-in when children present)
-    └── panel — body scale + \`text-muted\` + inset (\`px-4\` list/plain, \`px-2.5\` capsule)
+    └── panel — body scale + \`text-muted\` + inset (\`px-4\` list/plain, \`px-2.5\` capsule, none flush)
 \`\`\`
+
+A closed panel turns \`visibility: hidden\` once its fold ends, so Tab skips its controls and screen readers skip its content.
 
 ## Best practices
 
 - **Do** omit \`children\` for static header rows — no chevron, no disclosure button.
+- **Do** use \`flush\` where the rows sit under a heading or caption in a column — the hover band reaches 8px past each edge.
 - **Do** use \`leading\` / \`trailing\` for atoms — not hand-rolled affordances.
 - **Do** compose **TaskRows** when you need status rings, meta, and detail rails — not raw Accordion.
 - **Don't** nest interactive controls that steal clicks from the row trigger without stopping propagation.
@@ -77,6 +83,59 @@ export const FaqPlain: Story = {
       </Accordion.Item>
     </Accordion>
   ),
+};
+
+export const Flush: Story = {
+  name: "Pattern — flush",
+  render: function FlushAccordion() {
+    const [topics, setTopics] = useState<string[]>([]);
+    const [years, setYears] = useState<string[]>([]);
+    return (
+      <div className="flex w-64 flex-col">
+        <h2 className="type-eyebrow border-b border-border pb-3 text-muted">Filters</h2>
+        <Accordion variant="plain" flush>
+          <Accordion.Item label="Topic" defaultOpen>
+            <CheckboxGroup label="Topic" labelHidden size="sm" values={topics} onValuesChange={setTopics}>
+              <CheckboxGroup.Item value="guides" label="Guides" count={2} />
+              <CheckboxGroup.Item value="notes" label="Notes" count={1} />
+            </CheckboxGroup>
+          </Accordion.Item>
+          <Accordion.Item label="Year">
+            <CheckboxGroup label="Year" labelHidden size="sm" values={years} onValuesChange={setYears}>
+              <CheckboxGroup.Item value="2026" label="2026" count={3} />
+            </CheckboxGroup>
+          </Accordion.Item>
+        </Accordion>
+      </div>
+    );
+  },
+  parameters: storyCopySource(`
+import { useState } from "react";
+import { Accordion, CheckboxGroup } from "@thewhatmatters/wmds";
+
+export function TopicFilter() {
+  const [topics, setTopics] = useState<string[]>([]);
+  const [years, setYears] = useState<string[]>([]);
+  return (
+    <div className="flex w-64 flex-col">
+      <h2 className="type-eyebrow border-b border-border pb-3 text-muted">Filters</h2>
+      <Accordion variant="plain" flush>
+        <Accordion.Item label="Topic" defaultOpen>
+          <CheckboxGroup label="Topic" labelHidden size="sm" values={topics} onValuesChange={setTopics}>
+            <CheckboxGroup.Item value="guides" label="Guides" count={2} />
+            <CheckboxGroup.Item value="notes" label="Notes" count={1} />
+          </CheckboxGroup>
+        </Accordion.Item>
+        <Accordion.Item label="Year">
+          <CheckboxGroup label="Year" labelHidden size="sm" values={years} onValuesChange={setYears}>
+            <CheckboxGroup.Item value="2026" label="2026" count={3} />
+          </CheckboxGroup>
+        </Accordion.Item>
+      </Accordion>
+    </div>
+  );
+}
+`),
 };
 
 export const WithLeadingIcon: Story = {

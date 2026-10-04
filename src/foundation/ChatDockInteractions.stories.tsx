@@ -335,6 +335,61 @@ export const ActionSuggestion: Story = {
   },
 };
 
+/** The rows leave once the first message exists: focus goes to the composer, so Escape still closes. */
+async function expectRowHandsFocusToComposer(canvasElement: HTMLElement, dialog: HTMLElement) {
+  const field = within(dialog).getByRole("textbox", { name: "Ask anything" });
+  await waitFor(() => {
+    expect(within(dialog).queryByRole("group", { name: "Suggested questions" })).toBeNull();
+  });
+  expect(field).toHaveFocus();
+  await waitForWindowSettled(canvasElement);
+  expect(field).toHaveFocus();
+
+  await userEvent.keyboard("{Escape}");
+  await waitFor(() => {
+    expect(windowQuery(canvasElement)).toBeNull();
+  });
+  await waitFor(() => {
+    expect(windowCard(canvasElement).hidden).toBe(true);
+  });
+  // Back on the resting bar, without reopening.
+  expect(field).toHaveFocus();
+  expect(windowQuery(canvasElement)).toBeNull();
+}
+
+export const SuggestionRowClickFocus: Story = {
+  name: "a suggestion row chosen by click hands focus to the composer",
+  render: () => <Dock />,
+  play: async ({ canvas, canvasElement }) => {
+    onSend.mockClear();
+    await userEvent.click(canvas.getByRole("textbox", { name: "Ask anything" }));
+    const dialog = await waitFor(() => canvas.getByRole("dialog", { name: "WhatMatters" }));
+    await waitForWindowSettled(canvasElement);
+
+    await userEvent.click(within(dialog).getByRole("button", { name: "How much does it cost?" }));
+    expect(onSend).toHaveBeenCalledWith("How much does it cost?");
+    await expectRowHandsFocusToComposer(canvasElement, dialog);
+  },
+};
+
+export const SuggestionRowKeyboardFocus: Story = {
+  name: "a suggestion row chosen with Enter hands focus to the composer",
+  render: () => <Dock />,
+  play: async ({ canvas, canvasElement }) => {
+    onSend.mockClear();
+    await userEvent.click(canvas.getByRole("textbox", { name: "Ask anything" }));
+    const dialog = await waitFor(() => canvas.getByRole("dialog", { name: "WhatMatters" }));
+    await waitForWindowSettled(canvasElement);
+
+    const row = within(dialog).getByRole("button", { name: "How much does it cost?" });
+    row.focus();
+    expect(row).toHaveFocus();
+    await userEvent.keyboard("{Enter}");
+    expect(onSend).toHaveBeenCalledWith("How much does it cost?");
+    await expectRowHandsFocusToComposer(canvasElement, dialog);
+  },
+};
+
 const followUpItems: ChatDockSuggestion[] = [
   { id: "cost", label: "How much does a project cost?", prompt: "How much does a project cost?" },
   { id: "process", label: "How does a project work?", prompt: "How does a project work?" },
