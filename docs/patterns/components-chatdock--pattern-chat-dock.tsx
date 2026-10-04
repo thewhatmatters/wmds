@@ -2,15 +2,17 @@
 // Storybook: Components/ChatDock → Pattern — chat dock (?path=/story/components-chatdock--pattern-chat-dock)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { ArrowRight, CalendarClock, DollarSign } from "lucide-react";
 import {
   Avatar,
   ChatDock,
+  ChatQa,
   type ChatDockFeedback,
   type ChatDockMessage,
   type ChatDockMessageMeta,
   type ChatDockSuggestion,
+  type ChatQaPair,
 } from "@thewhatmatters/wmds";
 
 const suggestions: ChatDockSuggestion[] = [
@@ -29,21 +31,52 @@ const suggestions: ChatDockSuggestion[] = [
   { id: "start", label: "Start a project", icon: <ArrowRight /> },
 ];
 
-/** What `ask` resolves with: the reply, or the reply with its follow-ups, its score, and the text Copy copies. */
+/** What the assistant knows when it opens Start a project — services and budget, or nothing yet. */
+export interface StartProjectRequest {
+  services?: string[];
+  budget?: string;
+}
+
+/**
+ * What `ask` resolves with: the reply, or the reply with its follow-ups, its score, the text Copy
+ * copies, and a Start a project request when the assistant opens the gate.
+ */
 export type AskWhatMattersResult =
   | string
-  | { reply: string; followUps?: ChatDockSuggestion[]; meta?: ChatDockMessageMeta; copyText?: string };
+  | {
+      reply: string;
+      followUps?: ChatDockSuggestion[];
+      meta?: ChatDockMessageMeta;
+      copyText?: string;
+      startProject?: StartProjectRequest;
+    };
+
+/** What the Start a project gate gets: the request, and how to close or complete it. */
+export interface StartProjectGateSlot {
+  request: StartProjectRequest;
+  close: () => void;
+  complete: (answers: ChatQaPair[], confirmation: string) => void;
+}
 
 export interface AskWhatMattersProps {
-  /** The app's assistant request. Resolves with the reply, and with its follow-ups, score, and copy text when there are any. */
+  /** The app's assistant request. Resolves with the reply, and with its follow-ups, score, copy text, or a Start a project request. */
   ask: (prompt: string, history: ChatDockMessage[]) => Promise<AskWhatMattersResult>;
   /** The visitor voted on a reply, or cleared their vote (`null`). */
   onFeedback: (reply: ChatDockMessage, value: ChatDockFeedback) => void;
-  /** Opens the Start a project intake. */
-  onStartProject: () => void;
+  /** Start a project is open while this is set: what the assistant already knows, or `{}`. A site button can set it too. */
+  startProject: StartProjectRequest | null;
+  onStartProjectChange: (request: StartProjectRequest | null) => void;
+  /** The gate — return **Pattern — start a project gate** with the slot spread onto it. */
+  renderStartProject: (slot: StartProjectGateSlot) => ReactNode;
 }
 
-export function AskWhatMatters({ ask, onFeedback, onStartProject }: AskWhatMattersProps) {
+export function AskWhatMatters({
+  ask,
+  onFeedback,
+  startProject,
+  onStartProjectChange,
+  renderStartProject,
+}: AskWhatMattersProps) {
   const [messages, setMessages] = useState<ChatDockMessage[]>([]);
   const [thinking, setThinking] = useState(false);
   const [followUps, setFollowUps] = useState<ChatDockSuggestion[]>([]);
@@ -65,9 +98,11 @@ export function AskWhatMatters({ ask, onFeedback, onStartProject }: AskWhatMatte
           content: answer.reply,
           copyText: answer.copyText ?? answer.reply,
           meta: answer.meta,
+          feedback: null,
         },
       ]);
       setFollowUps(answer.followUps ?? []);
+      if (answer.startProject != null) onStartProjectChange(answer.startProject);
     } finally {
       setThinking(false);
     }
@@ -78,6 +113,16 @@ export function AskWhatMatters({ ask, onFeedback, onStartProject }: AskWhatMatte
       current.map((message) => (message.id === reply.id ? { ...message, feedback: value } : message)),
     );
     onFeedback(reply, value);
+  }
+
+  function completeStartProject(answers: ChatQaPair[], confirmation: string) {
+    setMessages((current) => [
+      ...current,
+      { id: crypto.randomUUID(), role: "assistant", content: <ChatQa pairs={answers} aria-label="Your project" /> },
+      { id: crypto.randomUUID(), role: "assistant", content: confirmation },
+    ]);
+    setFollowUps([]);
+    onStartProjectChange(null);
   }
 
   return (
@@ -94,9 +139,18 @@ export function AskWhatMatters({ ask, onFeedback, onStartProject }: AskWhatMatte
         void handleSend(prompt);
       }}
       onSuggestionSelect={(suggestion) => {
-        if (suggestion.id === "start") onStartProject();
+        if (suggestion.id === "start") onStartProjectChange({});
       }}
       onMessageFeedback={handleFeedback}
+      gate={
+        startProject == null
+          ? undefined
+          : renderStartProject({
+              request: startProject,
+              close: () => onStartProjectChange(null),
+              complete: completeStartProject,
+            })
+      }
       placeholder="Ask anything about WhatMatters"
       disclaimer="Answers may be incomplete · AI assistant by WhatMatters"
     />

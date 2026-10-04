@@ -449,11 +449,15 @@ export {
 } from "./components/organisms/Chart/Chart";
 export {
   ChatDock,
+  ChatDockGate,
   chatDockDefaultLabels,
   chatDockFollowUpsPlacements,
+  chatDockGateDefaultLabels,
   chatDockPlacements,
   type ChatDockFeedback,
   type ChatDockFollowUpsPlacement,
+  type ChatDockGateLabels,
+  type ChatDockGateProps,
   type ChatDockLabels,
   type ChatDockLayoutClassName,
   type ChatDockMessage,

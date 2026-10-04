@@ -42,7 +42,7 @@ Kbd (\`kbd\`)
 - **Do** keep labels short: \`K\`, \`⌘\`, \`Enter\`, \`Esc\`, digits, or arrow symbols.
 - **Do** add \`aria-label\` when a symbol needs a spoken expansion.
 - **Do** compose separate **Kbd** elements for each physical key.
-- **Do** use **\`useKbdChoiceKeys\`** when digit keys should select numbered choices; keep **Kbd** as the visible keycap only.
+- **Do** use **\`useKbdChoiceKeys\`** when digit keys should select numbered choices; keep **Kbd** as the visible keycap only. Pass \`scope\` (a ref) when the choices live in one part of the page, such as a gate in the chat window, so digits act only while focus is inside it.
 - **Don't** make **Kbd** itself interactive; place it beside the command or choice it documents.
 - **Don't** use it for status, tags, or counts—use **Badge**.
         `.trim(),

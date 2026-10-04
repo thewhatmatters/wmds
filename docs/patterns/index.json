@@ -243,6 +243,14 @@
       "source": "src/components/organisms/ChatDock/ChatDock.stories.tsx"
     },
     {
+      "id": "components-chatdock--pattern-start-project-gate",
+      "title": "Components/ChatDock",
+      "name": "Pattern — start a project gate",
+      "file": "patterns/components-chatdock--pattern-start-project-gate.tsx",
+      "storybook": "?path=/story/components-chatdock--pattern-start-project-gate",
+      "source": "src/components/organisms/ChatDock/ChatDock.stories.tsx"
+    },
+    {
       "id": "components-chatqa--pattern-qa-with-reply",
       "title": "Components/ChatQa",
       "name": "Pattern — Q&A with reply",

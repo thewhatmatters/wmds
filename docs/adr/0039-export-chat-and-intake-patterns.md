@@ -31,7 +31,7 @@ One organism replaces the ask page and the marketing composer.
 - **Send is the composer's arrow.** The header has close only — no second send or expand arrow.
 - **No voice.** **PromptBar** gains an `end` slot so a mic can be added later without a redesign.
 - **The app owns the conversation.** `messages` (`{ id, role, content }`), `thinking`, `onSend`. `content` is text or Markdown the app has already rendered; WMDS does not parse Markdown yet.
-- **Actions are suggestions without a prompt.** **Start a project** calls `onSuggestionSelect`, and the app opens **IntakeModal**. The in-chat Start Project gate stays out of WMDS.
+- **Actions are suggestions without a prompt.** **Start a project** calls `onSuggestionSelect`, and the app opens **IntakeModal**. The in-chat Start Project gate stays out of WMDS. *(Reversed 2026-10-04: see the gate amendment below.)*
 - **English defaults** for every label (`labels` overrides them). **No analytics hooks** — tracking goes through the app's handlers.
 
 ```tsx
@@ -94,6 +94,20 @@ The first build swapped two elements: the resting bar left and a clipped window 
 - **Interruptible.** Escape while opening, or a click in the composer while closing, animates back from where it is.
 - **Reduced motion** crossfades the window in place at full size. Nothing slides (Motion makes size and position changes instant under reduced motion), so the mark and the disclaimer line switch at once and the composer steps up by that line.
 - Props are unchanged.
+
+### Amendment — 2026-10-04: a Start a project gate in the composer's place
+
+The site has to run Start a project inside the chat, as the old full-page chat did, not as a dialog over it. ChatDock drew its own composer with nothing able to replace it, so the site opened a `Dialog`. This reverses the decision above that "the in-chat Start Project gate stays out of WMDS".
+
+- **`gate?: ReactNode`.** While it is set and the window is open, it takes the composer's place; the suggestion rows, follow-ups, and disclaimer step aside; the conversation stays above. Setting it opens the window — closed or mid-conversation — and moves focus to the gate; clearing it brings the composer back with focus.
+- **Where it sits, its size, and how it enters and leaves are WMDS's.** The composer and the gate share one cell and crossfade while the area eases between their heights. Both stay mounted while the gate is set, so closing the window keeps the gate and its progress for when it reopens. The gate hugs each step up to a cap — the window less its header, 7rem of conversation, and the space under it, never below 12rem — then its body scrolls.
+- **Escape is the gate's.** **ChatDock.Gate** closes on Escape; ChatDock does not fold the window from under a gate. A second Escape, back at the composer, closes the window. The window's close still folds it.
+- **The shell ships as a component, ChatDock.Gate**, not only as pattern Show code (the proposal had it as a pattern). It carries behavior — step motion, the body easing to each step's height, Escape, focus kept in the gate between steps — which this ADR keeps out of pasted code. The steps' content, validation, and what is sent stay the app's, in **Pattern — start a project gate**.
+- **How it opens is the app's.** **Pattern — chat dock** holds `startProject` / `onStartProjectChange`: the Start a project suggestion, a site button, and an `ask` result with `startProject: { services?, budget? }` (opening it filled in) all set it; `renderStartProject` returns the gate. Finishing hands the conversation the answers as **ChatQa** and a confirmation line, and fires confetti.
+- **Number keys:** **useKbdChoiceKeys** takes a `scope`, so digits act only while focus is in the gate, and no longer skip a focused checkbox or radio.
+- **Phones:** the full-screen window and the composer or gate follow the visual viewport, so a keyboard does not cover them. Untested on a physical device at the time of writing.
+- **Thumbs are per reply.** They show on replies that carry `feedback` (`null` before a vote), so a form's summary takes no vote. This narrows the reply-row amendment above, before its release.
+- **The conversation takes focus** (`tabIndex=0` on the log), so a keyboard can scroll it when nothing inside is focusable — with a gate up it is often short.
 
 ## Consequences
 

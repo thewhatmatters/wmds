@@ -147,7 +147,8 @@
         "docs": "?path=/docs/components-chatdock--docs"
       },
       "patterns": [
-        "components-chatdock--pattern-chat-dock"
+        "components-chatdock--pattern-chat-dock",
+        "components-chatdock--pattern-start-project-gate"
       ]
     },
     {

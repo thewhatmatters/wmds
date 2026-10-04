@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { MotionConfig } from "motion/react";
 import { expect, fn, spyOn, userEvent, waitFor, within } from "storybook/test";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ArrowRight, DollarSign } from "lucide-react";
 import { Avatar } from "../components/atoms/Avatar/Avatar";
+import { Button } from "../components/atoms/Button/Button";
+import { Checkbox } from "../components/atoms/Checkbox/Checkbox";
+import { useKbdChoiceKeys } from "../components/atoms/Kbd/useKbdChoiceKeys";
 import {
   ChatDock,
   type ChatDockMessage,
@@ -92,6 +95,8 @@ async function waitForWindowSettled(canvasElement: HTMLElement) {
       expect(getComputedStyle(card).opacity).toBe("1");
       const dock = card.parentElement ?? card;
       for (const layer of dock.querySelectorAll<HTMLElement>("[style*='opacity']:not([aria-hidden='true'])")) {
+        // Layers that have faded out and been hidden (the composer behind a gate) are not on screen.
+        if (layer.closest("[hidden]") != null) continue;
         expect(getComputedStyle(layer).opacity).toBe("1");
       }
     },
@@ -441,6 +446,7 @@ const answered: ChatDockMessage[] = [
     content: "Brands, sites, and apps.",
     copyText: "Brands, sites, and apps.",
     meta: { label: "Match 99%", description: "How sure the assistant is that it matched your question." },
+    feedback: null,
   },
 ];
 
@@ -563,5 +569,236 @@ export const ReplyActionsAbsent: Story = {
   play: async ({ canvasElement }) => {
     expect(canvasElement.querySelector("[data-reply-actions]")).toBeNull();
     expect(canvasElement.querySelector("[data-role='assistant']")).toHaveTextContent("Brands, sites, and apps.");
+  },
+};
+
+const gateOptions = [
+  "Brand identity",
+  "Web experiences",
+  "Mobile apps",
+  "Social media",
+  "Content and copy",
+  "AI assistants",
+  "Launch and growth",
+  "Care and support",
+  "Something else",
+];
+
+const gateConversation: ChatDockMessage[] = [
+  { id: "q", role: "user", content: "I need a new brand." },
+  { id: "a", role: "assistant", content: "Happy to help. Start a project and we'll take it from there." },
+];
+
+/** A two-step gate: numbered options (digits while focus is in the gate), then a thank-you. */
+function TestGate({ onClose }: { onClose: () => void }) {
+  const gateRef = useRef<HTMLDivElement>(null);
+  const [step, setStep] = useState(1);
+  const [chosen, setChosen] = useState<string[]>([]);
+  const toggle = (option: string) =>
+    setChosen((current) => (current.includes(option) ? current.filter((item) => item !== option) : [...current, option]));
+  useKbdChoiceKeys({
+    enabled: step === 1,
+    scope: gateRef,
+    choices: Object.fromEntries(gateOptions.map((option, index) => [String(index + 1), () => toggle(option)])),
+  });
+  return (
+    <ChatDock.Gate
+      ref={gateRef}
+      title={step === 1 ? "Pick services" : "Say hello"}
+      subtitle="Choose all that apply."
+      step={step}
+      stepCount={2}
+      onPrevious={() => setStep(1)}
+      onNext={step === 1 ? () => setStep(2) : undefined}
+      canContinue={chosen.length > 0}
+      onClose={onClose}
+    >
+      {step === 1 ? (
+        <div role="group" aria-label="Services" className="flex flex-col">
+          {gateOptions.map((option) => (
+            <div key={option} className="flex items-center py-3">
+              <Checkbox size="md" label={option} checked={chosen.includes(option)} onChange={() => toggle(option)} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>Thanks — that's everything.</p>
+      )}
+    </ChatDock.Gate>
+  );
+}
+
+/** A dock whose gate a page button opens, the way a site's Start a project button does. */
+function GateDock() {
+  const [gateOpen, setGateOpen] = useState(false);
+  return (
+    <div>
+      <Button role="primary" type="button" onClick={() => setGateOpen(true)}>
+        Open the gate
+      </Button>
+      <ChatDock
+        placement="inline"
+        title="WhatMatters"
+        subtitle="Ask anything"
+        mark={<Avatar name="WhatMatters" size="md" />}
+        greeting="Hi, ask me anything."
+        messages={gateConversation}
+        suggestions={suggestions}
+        onSend={onSend}
+        disclaimer="Answers may be incomplete"
+        gate={gateOpen ? <TestGate onClose={() => setGateOpen(false)} /> : undefined}
+      />
+    </div>
+  );
+}
+
+function gateRoot(canvasElement: HTMLElement): HTMLElement | null {
+  return canvasElement.querySelector<HTMLElement>("[data-chat-dock-gate-focus]");
+}
+
+async function openGate(canvas: ReturnType<typeof within>, canvasElement: HTMLElement) {
+  await userEvent.click(canvas.getByRole("button", { name: "Open the gate" }));
+  await waitFor(
+    () => {
+      const gate = gateRoot(canvasElement);
+      expect(gate).not.toBeNull();
+      expect(gate).toHaveFocus();
+    },
+    { timeout: 3000 },
+  );
+  return gateRoot(canvasElement) as HTMLElement;
+}
+
+export const GateTakesTheComposersPlace: Story = {
+  name: "a gate opens the window in the composer's place and takes focus",
+  render: () => <GateDock />,
+  play: async ({ canvas, canvasElement }) => {
+    expect(windowQuery(canvasElement)).toBeNull();
+    const gate = await openGate(canvas, canvasElement);
+    const dialog = canvas.getByRole("dialog", { name: "WhatMatters" });
+    expect(within(dialog).getByRole("group", { name: "Pick services" })).toBe(gate);
+    // The composer, the suggestion rows, and the disclaimer step aside; the conversation stays.
+    await waitFor(
+      () => {
+        expect(within(dialog).queryByRole("textbox", { name: "Ask anything" })).toBeNull();
+      },
+      { timeout: 3000 },
+    );
+    expect(within(dialog).queryByRole("group", { name: "Suggested questions" })).toBeNull();
+    expect(dialog).not.toHaveTextContent("Answers may be incomplete");
+    expect(within(dialog).getByRole("log", { name: "Conversation" })).toHaveTextContent("Start a project");
+
+    // It hugs its step up to the cap; past the cap its body scrolls, and the reply above stays in view.
+    await waitForWindowSettled(canvasElement);
+    await waitFor(
+      () => {
+        const cap = Number.parseFloat(getComputedStyle(gate).getPropertyValue("--chat-dock-gate-max"));
+        expect(gate.getBoundingClientRect().height).toBeLessThanOrEqual(cap + 1);
+        const body = gate.querySelector<HTMLElement>(".overflow-y-auto");
+        if (body == null) throw new Error("Gate body is missing");
+        expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+        const reply = within(dialog).getByText("Happy to help. Start a project and we'll take it from there.");
+        const log = within(dialog).getByRole("log", { name: "Conversation" });
+        expect(reply.getBoundingClientRect().bottom).toBeLessThanOrEqual(gate.getBoundingClientRect().top);
+        expect(reply.getBoundingClientRect().bottom).toBeGreaterThan(log.getBoundingClientRect().top);
+      },
+      { timeout: 3000 },
+    );
+  },
+};
+
+export const GateKeysAndSteps: Story = {
+  name: "gate: number keys while focus is in it, and the step controls",
+  render: () => <GateDock />,
+  play: async ({ canvas, canvasElement }) => {
+    const gate = await openGate(canvas, canvasElement);
+    const first = within(gate).getByRole("checkbox", { name: "Brand identity" });
+    const second = within(gate).getByRole("checkbox", { name: "Web experiences" });
+    const third = within(gate).getByRole("checkbox", { name: "Mobile apps" });
+    expect(within(gate).getByText("1 of 2")).toBeInTheDocument();
+    const next = within(gate).getByRole("button", { name: "Next" });
+    expect(next).toBeDisabled();
+
+    await userEvent.keyboard("1");
+    expect(first).toBeChecked();
+    await userEvent.keyboard("1");
+    expect(first).not.toBeChecked();
+    await userEvent.keyboard("2");
+    expect(second).toBeChecked();
+    // A focused checkbox still takes digits.
+    second.focus();
+    await userEvent.keyboard("1");
+    expect(first).toBeChecked();
+    // Outside the gate, digits are left alone.
+    canvas.getByRole("button", { name: "Open the gate" }).focus();
+    await userEvent.keyboard("3");
+    expect(third).not.toBeChecked();
+
+    expect(next).toBeEnabled();
+    await userEvent.click(within(gate).getByRole("button", { name: "Next step" }));
+    await waitFor(() => {
+      expect(within(gate).getByText("2 of 2")).toBeInTheDocument();
+      expect(within(gate).getByText("Thanks — that's everything.")).toBeInTheDocument();
+    });
+    expect(within(gate).getByRole("button", { name: "Next step" })).toBeDisabled();
+    expect(within(gate).queryByRole("button", { name: "Next" })).toBeNull();
+    await userEvent.click(within(gate).getByRole("button", { name: "Previous step" }));
+    await waitFor(() => {
+      expect(within(gate).getByRole("checkbox", { name: "Brand identity" })).toBeInTheDocument();
+    });
+    expect(within(gate).getByRole("button", { name: "Previous step" })).toBeDisabled();
+    await waitForWindowSettled(canvasElement);
+  },
+};
+
+export const GateEscape: Story = {
+  name: "gate: Escape closes the gate, then a second Escape closes the window",
+  render: () => <GateDock />,
+  play: async ({ canvas, canvasElement }) => {
+    await openGate(canvas, canvasElement);
+    await userEvent.keyboard("{Escape}");
+    const dialog = canvas.getByRole("dialog", { name: "WhatMatters" });
+    const field = await waitFor(() => within(dialog).getByRole("textbox", { name: "Ask anything" }), { timeout: 3000 });
+    await waitFor(() => {
+      expect(gateRoot(canvasElement)).toBeNull();
+      expect(field).toHaveFocus();
+    });
+    expect(windowQuery(canvasElement)).not.toBeNull();
+
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => {
+      expect(windowQuery(canvasElement)).toBeNull();
+      expect(windowCard(canvasElement).hidden).toBe(true);
+    });
+  },
+};
+
+export const GateWindowClose: Story = {
+  name: "gate: closing the window keeps the gate for when it reopens",
+  render: () => <GateDock />,
+  play: async ({ canvas, canvasElement }) => {
+    const gate = await openGate(canvas, canvasElement);
+    await userEvent.click(within(gate).getByRole("checkbox", { name: "Social media" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Close chat" }));
+    await waitFor(
+      () => {
+        expect(windowQuery(canvasElement)).toBeNull();
+        expect(windowCard(canvasElement).hidden).toBe(true);
+      },
+      { timeout: 3000 },
+    );
+    // At rest the composer is the bar again; opening the window brings the gate back.
+    const bar = canvas.getByRole("textbox", { name: "Ask anything" });
+    await userEvent.click(bar);
+    await waitFor(
+      () => {
+        const back = gateRoot(canvasElement);
+        expect(back).not.toBeNull();
+        expect(back).toHaveFocus();
+      },
+      { timeout: 3000 },
+    );
+    expect(within(gateRoot(canvasElement) as HTMLElement).getByRole("checkbox", { name: "Social media" })).toBeChecked();
+    await waitForWindowSettled(canvasElement);
   },
 };
