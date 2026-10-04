@@ -1,13 +1,7 @@
 import { cn } from "../../../lib/cn";
 import { motionTransition } from "../../../lib/motion";
 import { typographyClass } from "../../../lib/typography";
-import {
-  cardBaseClasses,
-  cardLayoutSectionInsetXClasses,
-  cardLayoutShellClasses,
-  cardLayoutShellShapeClasses,
-  cardLayoutShellTopClasses,
-} from "../../molecules/Card/cardStyles";
+import { cardLayoutSectionInsetXClasses } from "../../molecules/Card/cardStyles";
 
 export const chatDockPlacements = ["fixed", "inline"] as const;
 
@@ -19,18 +13,25 @@ export type ChatDockPlacement = (typeof chatDockPlacements)[number];
 
 /**
  * Pinned root. The wrapper ignores pointer events so the page under its edges stays
- * clickable; only the dock takes input. Sits under **SiteNav** (`z-50`).
+ * clickable; only the dock takes input. Sits under **SiteNav** (`z-50`). An inline specimen
+ * reserves the open window's height, so the window grows up inside it.
  */
 export const chatDockRootClasses: Record<ChatDockPlacement, string> = {
   fixed: "pointer-events-none fixed inset-x-0 bottom-0 z-40 pb-[max(1rem,env(safe-area-inset-bottom))]",
-  inline: "relative w-full",
+  inline: "relative flex min-h-[32rem] w-full flex-col justify-end",
 };
+
+/** While the window is on screen, phones lift the dock above **SiteNav**: the window fills the screen. */
+export const chatDockRootRaisedClasses = "max-md:z-[60]";
 
 /** The dock's column — the page grid narrowed to the composer width. */
 export const chatDockGridClasses = "grid-page [--grid-max:40rem]";
 
-/** Hover group: the composer plus the suggestion pills above it. */
-export const chatDockDockClasses = "group pointer-events-auto relative col-span-full";
+/** The dock: suggestion pills, the window behind the composer, and the composer. */
+export const chatDockDockClasses = "pointer-events-auto relative col-span-full";
+
+/** Hover group for the pills — only while the window is fully folded away. */
+export const chatDockDockHoverClasses = "group";
 
 /**
  * Suggestion pills above the resting composer. Hidden until the dock is hovered; Tailwind's
@@ -57,30 +58,23 @@ export const chatDockPillClasses = cn(
   motionTransition("fast"),
 );
 
+const chatDockWindowSurfaceClasses = "overflow-hidden bg-surface font-sans text-fg shadow-soft-card";
+
 /**
- * Chat window — the Card layout shell on the elevated surface. Phones get the whole viewport
- * (above **SiteNav**); from `md` it sits where the composer was, at a fixed height so arriving
- * messages scroll inside instead of growing the window.
+ * Chat window — an opaque card behind the composer. From `md` (and inline) it sits on the
+ * composer's bottom edge and grows up and out of it: ChatDock animates its height, side insets, and
+ * radius. On phones it fills the screen and rises from the bottom edge.
  */
 export const chatDockWindowClasses: Record<ChatDockPlacement, string> = {
-  fixed: cn(
-    cardBaseClasses,
-    cardLayoutShellClasses,
-    cardLayoutShellTopClasses(),
-    "pointer-events-auto col-span-full bg-surface shadow-soft-card",
-    "fixed inset-0 z-[60] rounded-none",
-    "md:relative md:inset-auto md:z-auto md:h-[min(40rem,calc(100svh-7rem))]",
-    /* Literal so Tailwind's scanner sees it — the same radius as cardLayoutShellShapeClasses.rounded. */
-    "md:rounded-[var(--radius-card-shell)]",
-  ),
-  inline: cn(
-    cardBaseClasses,
-    cardLayoutShellClasses,
-    cardLayoutShellTopClasses(),
-    cardLayoutShellShapeClasses.rounded,
-    "col-span-full h-[32rem] bg-surface shadow-soft-card",
-  ),
+  fixed: cn(chatDockWindowSurfaceClasses, "fixed inset-0 rounded-none md:absolute md:top-auto"),
+  inline: cn(chatDockWindowSurfaceClasses, "absolute inset-x-0 bottom-0"),
 };
+
+/**
+ * Window content — the Card layout shell rhythm. The bottom padding leaves room for the composer
+ * and the line under it, which sit on top of the window (`--chat-dock-composer`, measured).
+ */
+export const chatDockWindowContentClasses = "flex h-full flex-col gap-3 pt-4 pb-[calc(var(--chat-dock-composer,3.25rem)+0.75rem)]";
 
 /** Scrolling conversation — greeting, turns, and the thinking row. */
 export const chatDockThreadClasses = cn(
@@ -128,10 +122,23 @@ export const chatDockFollowUpRowClasses = "flex min-h-11 md:min-h-9";
 /** Follow-ups pinned between the conversation and the composer — **Button** `secondary` pills that wrap. */
 export const chatDockFollowUpsComposerClasses = cn(cardLayoutSectionInsetXClasses, "flex shrink-0 flex-wrap gap-2");
 
-export const chatDockComposerClasses = cn(cardLayoutSectionInsetXClasses, "shrink-0");
+/** The composer — on top of the window, in the same place whether the window is open or not. */
+export const chatDockComposerClasses = "relative";
 
-export const chatDockDisclaimerClasses = cn(
-  typographyClass("caption"),
-  cardLayoutSectionInsetXClasses,
-  "shrink-0 pb-3 text-center text-muted",
-);
+/**
+ * The brand mark at the start of the resting composer. It folds to nothing while the window is open
+ * (the header shows the mark), so the field starts where a composer without a mark starts.
+ */
+export const chatDockMarkClasses = "flex h-9 items-center overflow-hidden";
+
+/** The line under the open composer. Below `md` the fixed root's bottom padding follows it. */
+export const chatDockDisclaimerClasses: Record<ChatDockPlacement, string> = {
+  fixed: cn(typographyClass("caption"), "pt-2 text-center text-muted md:pb-3"),
+  inline: cn(typographyClass("caption"), "pt-2 pb-3 text-center text-muted"),
+};
+
+/** Without a disclaimer, the window keeps the same 16px under the composer as beside it. */
+export const chatDockComposerFootSpacerClasses: Record<ChatDockPlacement, string> = {
+  fixed: "md:h-4",
+  inline: "h-4",
+};

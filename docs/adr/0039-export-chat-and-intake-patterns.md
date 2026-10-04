@@ -69,6 +69,19 @@ The site wants a few predefined next questions after some replies. Before this, 
 
   Inline reads as part of the answer, keeps a long label on one line, and costs no fixed height; because follow-ups belong only to the latest reply and the thread stays pinned to the end, scrolling with the thread is not a cost in practice. `followUpsPlacement="composer"` stays available for a long thread where the follow-ups must stay beside the field.
 - Additive: the resting pills, the rows before the first message, and `suggestions` are unchanged.
+- **No per-item icons.** Each follow-up drawing its own icon read as a second set of suggestions. Inline rows all lead with the same Lucide **CornerDownRight** (a reply to the answer above); pills above the composer are text only. A follow-up's `icon` is ignored.
+
+### Amendment — 2026-10-04: one composer, open and close
+
+The first build swapped two elements: the resting bar left and a clipped window with its own composer appeared, so the composer vanished and reappeared somewhere else, and the clip cut off the card's shadow.
+
+- **One composer in both states.** The **PromptBar** stays mounted and on screen every frame. The window is an opaque card behind it, always mounted, hidden once it has folded away.
+- **From `md` the window grows out of the bar.** Its bottom edge stays on the bar's bottom edge; height, side insets (0 → 16px wider than the bar on each side), and radius (pill → shell) animate on the medium tier. The composer keeps its width and rises only by the disclaimer line that opens under it. The mark folds out of the composer; the header carries it.
+- **Below `md` the window rises from the bottom edge** to full screen and falls back.
+- **Choreography.** Opening: the window moves first, then the header, conversation, and rows fade in one `--motion-stagger` apart, a `--motion-beat` in. Closing: they fade first, and the window folds a stagger later. Hover pills leave as the window opens and return only after it has folded.
+- **Interruptible.** Escape while opening, or a click in the composer while closing, animates back from where it is.
+- **Reduced motion** crossfades the window in place at full size. Nothing slides (Motion makes size and position changes instant under reduced motion), so the mark and the disclaimer line switch at once and the composer steps up by that line.
+- Props are unchanged.
 
 ## Consequences
 

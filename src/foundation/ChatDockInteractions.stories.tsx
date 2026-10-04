@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { MotionConfig } from "motion/react";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ArrowRight, DollarSign, Workflow } from "lucide-react";
+import { ArrowRight, DollarSign } from "lucide-react";
 import { Avatar } from "../components/atoms/Avatar/Avatar";
 import {
   ChatDock,
@@ -61,16 +62,57 @@ function windowQuery(canvasElement: HTMLElement) {
   return canvasElement.querySelector<HTMLElement>("[role='dialog']");
 }
 
+/** The window card behind the composer — always mounted, `hidden` once it has folded away. */
+function windowCard(canvasElement: HTMLElement): HTMLElement {
+  const card = canvasElement.querySelector<HTMLElement>("[data-chat-dock-window]");
+  if (card == null) throw new Error("ChatDock window is missing");
+  return card;
+}
+
+/** The composer pill — the field's shell. */
+function composerShell(canvasElement: HTMLElement): HTMLElement {
+  const shell = canvasElement.querySelector("textarea")?.parentElement;
+  if (shell == null) throw new Error("ChatDock composer is missing");
+  return shell;
+}
+
+/** Inline specimens open to 32rem. */
+const inlineOpenHeight = 512;
+
 /**
- * The window reveals on the medium tier and its content and new turns fade in on the fast tier;
- * let every layer finish so contrast is measured at full opacity.
+ * The window opens on the medium tier and its content fades in on the fast tier; let every visible
+ * layer finish so contrast is measured at full opacity.
  */
-async function waitForWindowSettled(dialog: HTMLElement) {
-  await waitFor(() => {
-    expect(getComputedStyle(dialog).opacity).toBe("1");
-    for (const layer of dialog.querySelectorAll<HTMLElement>("[style*='opacity']")) {
-      expect(getComputedStyle(layer).opacity).toBe("1");
-    }
+async function waitForWindowSettled(canvasElement: HTMLElement) {
+  await waitFor(
+    () => {
+      const card = windowCard(canvasElement);
+      expect(card.hidden).toBe(false);
+      expect(card.getBoundingClientRect().height).toBeCloseTo(inlineOpenHeight, 0);
+      expect(getComputedStyle(card).opacity).toBe("1");
+      const dock = card.parentElement ?? card;
+      for (const layer of dock.querySelectorAll<HTMLElement>("[style*='opacity']:not([aria-hidden='true'])")) {
+        expect(getComputedStyle(layer).opacity).toBe("1");
+      }
+    },
+    { timeout: 4000 },
+  );
+}
+
+/** Stretches the medium and fast tiers so a test can act while the window is still moving. */
+function slowMotion(): () => void {
+  const root = document.documentElement;
+  root.style.setProperty("--duration-medium", "2000ms");
+  root.style.setProperty("--duration-fast", "800ms");
+  return () => {
+    root.style.removeProperty("--duration-medium");
+    root.style.removeProperty("--duration-fast");
+  };
+}
+
+async function nextFrame() {
+  await new Promise((resolve) => {
+    requestAnimationFrame(() => requestAnimationFrame(resolve));
   });
 }
 
@@ -79,6 +121,8 @@ export const OpenAndClose: Story = {
   render: () => <Dock />,
   play: async ({ canvas, canvasElement }) => {
     expect(windowQuery(canvasElement)).toBeNull();
+    expect(windowCard(canvasElement).hidden).toBe(true);
+    const restBar = composerShell(canvasElement).getBoundingClientRect();
 
     await userEvent.click(canvas.getByRole("textbox", { name: "Ask anything" }));
     const dialog = await waitFor(() => canvas.getByRole("dialog", { name: "WhatMatters" }));
@@ -88,15 +132,33 @@ export const OpenAndClose: Story = {
       expect(field).toHaveFocus();
     });
     expect(within(dialog).getByRole("group", { name: "Suggested questions" })).toBeInTheDocument();
+    await waitForWindowSettled(canvasElement);
+
+    // One composer: it keeps its width and place, rising only by the line under it, and the window
+    // grows up from the resting bar's bottom edge.
+    expect(canvasElement.querySelectorAll("textarea")).toHaveLength(1);
+    const openBar = composerShell(canvasElement).getBoundingClientRect();
+    expect(openBar.left).toBeCloseTo(restBar.left, 0);
+    expect(openBar.width).toBeCloseTo(restBar.width, 0);
+    expect(openBar.bottom).toBeLessThan(restBar.bottom);
+    const card = windowCard(canvasElement).getBoundingClientRect();
+    expect(card.bottom).toBeCloseTo(restBar.bottom, 0);
+    expect(card.left).toBeLessThan(openBar.left);
+    expect(card.right).toBeGreaterThan(openBar.right);
 
     await userEvent.keyboard("{Escape}");
     await waitFor(() => {
       expect(windowQuery(canvasElement)).toBeNull();
     });
     const restField = canvas.getByRole("textbox", { name: "Ask anything" });
+    expect(restField).toBe(field);
     await waitFor(() => {
       expect(restField).toHaveFocus();
     });
+    await waitFor(() => {
+      expect(windowCard(canvasElement).hidden).toBe(true);
+    });
+    expect(composerShell(canvasElement).getBoundingClientRect().bottom).toBeCloseTo(restBar.bottom, 0);
     // Returning focus does not reopen the window.
     await new Promise((resolve) => {
       window.setTimeout(resolve, 150);
@@ -109,6 +171,116 @@ export const OpenAndClose: Story = {
     await waitFor(() => {
       expect(windowQuery(canvasElement)).toBeNull();
     });
+    await waitFor(() => {
+      expect(restField).toHaveFocus();
+      expect(windowCard(canvasElement).hidden).toBe(true);
+    });
+  },
+};
+
+export const InterruptOpening: Story = {
+  name: "Escape while opening folds back from where it is",
+  render: () => <Dock />,
+  play: async ({ canvas, canvasElement }) => {
+    const restore = slowMotion();
+    try {
+      const field = canvas.getByRole("textbox", { name: "Ask anything" });
+      const card = windowCard(canvasElement);
+      await userEvent.click(field);
+      await waitFor(() => {
+        expect(card.getBoundingClientRect().height).toBeGreaterThan(120);
+      });
+      const midOpen = card.getBoundingClientRect().height;
+      expect(midOpen).toBeLessThan(inlineOpenHeight - 40);
+
+      await userEvent.keyboard("{Escape}");
+      expect(windowQuery(canvasElement)).toBeNull();
+      // It shrinks from where it was; it does not finish opening first.
+      await waitFor(() => {
+        expect(card.getBoundingClientRect().height).toBeLessThan(midOpen - 20);
+      });
+      expect(card.hidden).toBe(false);
+      await waitFor(
+        () => {
+          expect(card.hidden).toBe(true);
+        },
+        { timeout: 5000 },
+      );
+      expect(field).toHaveFocus();
+    } finally {
+      restore();
+    }
+  },
+};
+
+export const InterruptClosing: Story = {
+  name: "a click while closing opens it again from where it is",
+  render: () => <Dock />,
+  play: async ({ canvas, canvasElement }) => {
+    const field = canvas.getByRole("textbox", { name: "Ask anything" });
+    const card = windowCard(canvasElement);
+    await userEvent.click(field);
+    await waitForWindowSettled(canvasElement);
+
+    const restore = slowMotion();
+    try {
+      await userEvent.keyboard("{Escape}");
+      await waitFor(() => {
+        expect(card.getBoundingClientRect().height).toBeLessThan(inlineOpenHeight - 60);
+      });
+      const midClose = card.getBoundingClientRect().height;
+      expect(card.hidden).toBe(false);
+
+      await userEvent.click(field);
+      expect(canvas.getByRole("dialog", { name: "WhatMatters" })).toBeInTheDocument();
+      await waitFor(() => {
+        expect(card.getBoundingClientRect().height).toBeGreaterThan(midClose + 20);
+      });
+      expect(card.hidden).toBe(false);
+    } finally {
+      restore();
+    }
+    await waitForWindowSettled(canvasElement);
+    expect(field).toHaveFocus();
+  },
+};
+
+export const ReducedMotion: Story = {
+  name: "reduced motion crossfades the window in place",
+  render: () => (
+    <MotionConfig reducedMotion="always">
+      <Dock />
+    </MotionConfig>
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    const restore = slowMotion();
+    try {
+      const card = windowCard(canvasElement);
+      await userEvent.click(canvas.getByRole("textbox", { name: "Ask anything" }));
+      await nextFrame();
+      // Full size at once, fading in rather than growing.
+      expect(card.hidden).toBe(false);
+      expect(card.getBoundingClientRect().height).toBeCloseTo(inlineOpenHeight, 0);
+      expect(Number(getComputedStyle(card).opacity)).toBeLessThan(1);
+      await waitFor(
+        () => {
+          expect(getComputedStyle(card).opacity).toBe("1");
+        },
+        { timeout: 3000 },
+      );
+
+      await userEvent.keyboard("{Escape}");
+      await nextFrame();
+      expect(card.getBoundingClientRect().height).toBeCloseTo(inlineOpenHeight, 0);
+      await waitFor(
+        () => {
+          expect(card.hidden).toBe(true);
+        },
+        { timeout: 3000 },
+      );
+    } finally {
+      restore();
+    }
   },
 };
 
@@ -138,14 +310,14 @@ export const SendAndSuggestions: Story = {
     await userEvent.type(field, "Do you do product work?{Enter}");
     expect(onSend).toHaveBeenLastCalledWith("Do you do product work?");
     expect(field).toHaveValue("");
-    await waitForWindowSettled(dialog);
+    await waitForWindowSettled(canvasElement);
   },
 };
 
 export const ActionSuggestion: Story = {
   name: "an action suggestion does not send",
   render: () => <Dock />,
-  play: async ({ canvas }) => {
+  play: async ({ canvas, canvasElement }) => {
     onSend.mockClear();
     onSuggestionSelect.mockClear();
 
@@ -154,14 +326,14 @@ export const ActionSuggestion: Story = {
     await userEvent.click(within(dialog).getByRole("button", { name: "Start a project" }));
     expect(onSuggestionSelect).toHaveBeenCalledWith(expect.objectContaining({ id: "start" }));
     expect(onSend).not.toHaveBeenCalled();
-    await waitForWindowSettled(dialog);
+    await waitForWindowSettled(canvasElement);
   },
 };
 
 const followUpItems: ChatDockSuggestion[] = [
-  { id: "cost", label: "How much does a project cost?", prompt: "How much does a project cost?", icon: <DollarSign /> },
-  { id: "process", label: "How does a project work?", prompt: "How does a project work?", icon: <Workflow /> },
-  { id: "start", label: "Start a project", icon: <ArrowRight /> },
+  { id: "cost", label: "How much does a project cost?", prompt: "How much does a project cost?" },
+  { id: "process", label: "How does a project work?", prompt: "How does a project work?" },
+  { id: "start", label: "Start a project" },
 ];
 
 const replied: ChatDockMessage[] = [
