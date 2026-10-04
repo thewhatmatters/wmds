@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, waitFor } from "storybook/test";
 import {
   focusRingTransitionClasses,
   motionFeedback,
@@ -205,6 +206,13 @@ export const EnterExit: Story = {
         </AnimatePresence>
       </div>
     );
+  },
+  play: async ({ canvasElement }) => {
+    // The panel enters on the medium tier; check contrast once it has finished.
+    await waitFor(() => {
+      const panel = canvasElement.querySelector<HTMLElement>("[class*='shadow-raised']");
+      expect(panel == null ? null : getComputedStyle(panel).opacity).toBe("1");
+    });
   },
 };
 

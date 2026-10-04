@@ -4,6 +4,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   ChatDock,
+  chatDockGateMaxHeight,
   chatDockOpenHeight,
   chatDockPillSuggestions,
   chatDockReplyRow,
@@ -12,6 +13,7 @@ import {
   type ChatDockMessage,
   type ChatDockSuggestion,
 } from "./ChatDock";
+import { chatDockVisibleArea } from "./chatDockViewport";
 
 const suggestions: ChatDockSuggestion[] = [
   { id: "cost", label: "How much does it cost?", prompt: "How much does it cost?" },
@@ -77,7 +79,7 @@ describe("chatDockReplyRow", () => {
     expect(
       chatDockReplyRow({ message: { ...reply, meta: { label: "Match 99%" } }, isLatest: false, thinking: false, takesVotes: false }),
     ).toEqual({ copy: false, vote: false, meta: true, ready: true });
-    expect(chatDockReplyRow({ message: reply, isLatest: false, thinking: false, takesVotes: true })).toEqual({
+    expect(chatDockReplyRow({ message: { ...reply, feedback: null }, isLatest: false, thinking: false, takesVotes: true })).toEqual({
       copy: false,
       vote: true,
       meta: false,
@@ -85,9 +87,34 @@ describe("chatDockReplyRow", () => {
     });
   });
 
+  it("shows the thumbs only on replies that carry feedback", () => {
+    expect(chatDockReplyRow({ message: reply, isLatest: false, thinking: false, takesVotes: true })).toBeNull();
+    expect(chatDockReplyRow({ message: { ...reply, feedback: "up" }, isLatest: false, thinking: false, takesVotes: false })).toBeNull();
+  });
+
   it("waits while the latest reply is still arriving", () => {
-    expect(chatDockReplyRow({ message: reply, isLatest: true, thinking: true, takesVotes: true })?.ready).toBe(false);
-    expect(chatDockReplyRow({ message: reply, isLatest: false, thinking: true, takesVotes: true })?.ready).toBe(true);
+    const votable = { ...reply, feedback: null };
+    expect(chatDockReplyRow({ message: votable, isLatest: true, thinking: true, takesVotes: true })?.ready).toBe(false);
+    expect(chatDockReplyRow({ message: votable, isLatest: false, thinking: true, takesVotes: true })?.ready).toBe(true);
+  });
+});
+
+describe("chatDockGateMaxHeight", () => {
+  it("leaves the header, 7rem of conversation, and the space under the gate", () => {
+    // 640 − (16 + 64 + 12 + 112 + 12 + 16) = 408
+    expect(chatDockGateMaxHeight({ windowHeight: 640, headerHeight: 64, bottomInset: 16, remPx: 16 })).toBe(408);
+  });
+
+  it("never drops below 12rem, even with a keyboard up", () => {
+    expect(chatDockGateMaxHeight({ windowHeight: 300, headerHeight: 64, bottomInset: 40, remPx: 16 })).toBe(192);
+  });
+});
+
+describe("chatDockVisibleArea", () => {
+  it("is the part a keyboard leaves visible", () => {
+    expect(chatDockVisibleArea(844, { height: 500, offsetTop: 0 })).toEqual({ top: 0, bottom: 344 });
+    expect(chatDockVisibleArea(844, { height: 500, offsetTop: 120 })).toEqual({ top: 120, bottom: 224 });
+    expect(chatDockVisibleArea(844, null)).toEqual({ top: 0, bottom: 0 });
   });
 });
 

@@ -17,7 +17,8 @@ export type ChatDockPlacement = (typeof chatDockPlacements)[number];
  * reserves the open window's height, so the window grows up inside it.
  */
 export const chatDockRootClasses: Record<ChatDockPlacement, string> = {
-  fixed: "pointer-events-none fixed inset-x-0 bottom-0 z-40 pb-[max(1rem,env(safe-area-inset-bottom))]",
+  fixed:
+    "pointer-events-none fixed inset-x-0 bottom-[var(--chat-dock-vv-bottom,0px)] z-40 pb-[max(1rem,env(safe-area-inset-bottom))]",
   inline: "relative flex min-h-[32rem] w-full flex-col justify-end",
 };
 
@@ -63,10 +64,15 @@ const chatDockWindowSurfaceClasses = "overflow-hidden bg-surface font-sans text-
 /**
  * Chat window — an opaque card behind the composer. From `md` (and inline) it sits on the
  * composer's bottom edge and grows up and out of it: ChatDock animates its height, side insets, and
- * radius. On phones it fills the screen and rises from the bottom edge.
+ * radius. On phones it fills the screen — the part a keyboard leaves visible
+ * (`--chat-dock-vv-top` / `--chat-dock-vv-bottom`) — and rises from the bottom edge.
  */
 export const chatDockWindowClasses: Record<ChatDockPlacement, string> = {
-  fixed: cn(chatDockWindowSurfaceClasses, "fixed inset-0 rounded-none md:absolute md:top-auto"),
+  fixed: cn(
+    chatDockWindowSurfaceClasses,
+    "fixed inset-x-0 top-[var(--chat-dock-vv-top,0px)] bottom-[var(--chat-dock-vv-bottom,0px)] rounded-none",
+    "md:absolute md:top-auto md:bottom-0",
+  ),
   inline: cn(chatDockWindowSurfaceClasses, "absolute inset-x-0 bottom-0"),
 };
 
@@ -76,10 +82,14 @@ export const chatDockWindowClasses: Record<ChatDockPlacement, string> = {
  */
 export const chatDockWindowContentClasses = "flex h-full flex-col gap-3 pt-4 pb-[calc(var(--chat-dock-composer,3.25rem)+0.75rem)]";
 
-/** Scrolling conversation — greeting, turns, and the thinking row. */
+/**
+ * Scrolling conversation — greeting, turns, and the thinking row. It takes focus so a keyboard can
+ * scroll it when nothing inside does; the ring sits inside its edge.
+ */
 export const chatDockThreadClasses = cn(
   cardLayoutSectionInsetXClasses,
   "flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain pb-2",
+  "outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus-ring",
 );
 
 /** Assistant text — the greeting and replies. */
@@ -148,6 +158,12 @@ export const chatDockFollowUpsComposerClasses = cn(cardLayoutSectionInsetXClasse
 
 /** The composer — on top of the window, in the same place whether the window is open or not. */
 export const chatDockComposerClasses = "relative";
+
+/** One cell for the composer and a gate, so they crossfade in place instead of stacking. */
+export const chatDockComposerAreaClasses = "grid";
+
+/** The composer or the gate, in the shared cell, both from the top. */
+export const chatDockComposerLayerClasses = "col-start-1 row-start-1 self-start";
 
 /**
  * The brand mark at the start of the resting composer. It folds to nothing while the window is open

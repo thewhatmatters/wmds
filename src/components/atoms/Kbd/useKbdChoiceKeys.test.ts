@@ -1,9 +1,9 @@
 /** @vitest-environment happy-dom */
-import { createElement, useState } from "react";
+import { createElement, useRef, useState } from "react";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { useKbdChoiceKeys } from "./useKbdChoiceKeys";
+import { kbdChoiceKeysTypingTarget, useKbdChoiceKeys } from "./useKbdChoiceKeys";
 
 function Harness({
   enabled = true,
@@ -36,6 +36,34 @@ function FieldHarness({ onChoice }: { onChoice: (key: string) => void }) {
     onChange: (event: { target: { value: string } }) => setValue(event.target.value),
   });
 }
+
+function ScopedHarness({ onChoice }: { onChoice: (key: string) => void }) {
+  const scope = useRef<HTMLDivElement>(null);
+  useKbdChoiceKeys({ scope, choices: { "1": () => onChoice("1") } });
+  return createElement(
+    "div",
+    null,
+    createElement("button", { id: "outside", type: "button" }, "Outside"),
+    createElement(
+      "div",
+      { ref: scope },
+      createElement("input", { id: "choice", type: "checkbox" }),
+      createElement("input", { id: "text", type: "text" }),
+    ),
+  );
+}
+
+describe("kbdChoiceKeysTypingTarget", () => {
+  it("treats text entry as typing and choice inputs as not", () => {
+    const make = (type: string) => Object.assign(document.createElement("input"), { type });
+    expect(kbdChoiceKeysTypingTarget(make("text"))).toBe(true);
+    expect(kbdChoiceKeysTypingTarget(make("email"))).toBe(true);
+    expect(kbdChoiceKeysTypingTarget(document.createElement("textarea"))).toBe(true);
+    expect(kbdChoiceKeysTypingTarget(make("checkbox"))).toBe(false);
+    expect(kbdChoiceKeysTypingTarget(make("radio"))).toBe(false);
+    expect(kbdChoiceKeysTypingTarget(document.createElement("button"))).toBe(false);
+  });
+});
 
 describe("useKbdChoiceKeys", () => {
   let root: Root | undefined;
@@ -104,5 +132,34 @@ describe("useKbdChoiceKeys", () => {
     });
 
     expect(onChoice).not.toHaveBeenCalled();
+  });
+
+  it("with a scope, acts only while focus is inside it — a focused checkbox included", () => {
+    const onChoice = vi.fn();
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+    act(() => {
+      root?.render(createElement(ScopedHarness, { onChoice }));
+    });
+    const press = (id: string) => {
+      const element = container?.querySelector<HTMLElement>(`#${id}`);
+      if (element == null) throw new Error(`Missing #${id}`);
+      element.focus();
+      element.dispatchEvent(new KeyboardEvent("keydown", { key: "1", bubbles: true, cancelable: true }));
+    };
+
+    act(() => {
+      press("outside");
+    });
+    expect(onChoice).not.toHaveBeenCalled();
+    act(() => {
+      press("choice");
+    });
+    expect(onChoice).toHaveBeenCalledTimes(1);
+    act(() => {
+      press("text");
+    });
+    expect(onChoice).toHaveBeenCalledTimes(1);
   });
 });
