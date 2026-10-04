@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.0 · Pattern — page header
+// @thewhatmatters/wmds@0.4.1 · Pattern — page header
 // Storybook: Components/PageHeader → Pattern — page header (?path=/story/components-pageheader--page-section-header)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -91,10 +91,10 @@ export const chatDockThreadClasses = cn(
 /** Assistant text — the greeting and replies. */
 export const chatDockAssistantMessageClasses = cn(typographyClass("body"), "text-fg");
 
-/** Visitor turn — right-aligned on the muted fill, at the card body radius. */
+/** Visitor turn — right-aligned on the brand tint, at the card body radius, so it reads apart from replies. */
 export const chatDockUserMessageClasses = cn(
   typographyClass("body"),
-  "ml-auto max-w-[85%] rounded-[var(--radius-card-body)] bg-muted-surface px-3.5 py-2 text-fg",
+  "ml-auto max-w-[85%] rounded-[var(--radius-card-body)] bg-brand-tint px-3.5 py-2 text-fg",
 );
 
 export const chatDockThinkingClasses = cn(

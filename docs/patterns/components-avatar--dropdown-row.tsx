@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.0 · Pattern — dropdown row
+// @thewhatmatters/wmds@0.4.1 · Pattern — dropdown row
 // Storybook: Components/Avatar → Pattern — dropdown row (?path=/story/components-avatar--dropdown-row)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

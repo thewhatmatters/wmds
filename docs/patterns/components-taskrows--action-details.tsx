@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.0 · Pattern — action details
+// @thewhatmatters/wmds@0.4.1 · Pattern — action details
 // Storybook: Components/TaskRows → Pattern — action details (?path=/story/components-taskrows--action-details)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
