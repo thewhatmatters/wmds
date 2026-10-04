@@ -9,16 +9,19 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 ## 0.4.1
 
-**ChatDock:** follow-ups in the open window, and the visitor's messages on a brand tint.
+**ChatDock:** follow-ups in the open window, the visitor's messages on a brand tint, and a new open and close transition.
 
-- **`followUps`** — predefined next questions for the latest reply, the same items as `suggestions`. They show under the reply (`followUpsPlacement="inline"`, the default; `"composer"` pins them as pills above the composer), hide while `thinking`, and disappear the moment the visitor sends. Choosing one calls `onSuggestionSelect`, then `onSend` with its `prompt`. **Components/ChatDock → Pattern — chat dock** now keeps the follow-up state: `ask` may resolve with `string | { reply, followUps? }`.
+- **`followUps`** — predefined next questions for the latest reply, the same items as `suggestions`. They show under the reply (`followUpsPlacement="inline"`, the default; `"composer"` pins them as pills above the composer), hide while `thinking`, and disappear the moment the visitor sends. Choosing one calls `onSuggestionSelect`, then `onSend` with its `prompt`. A follow-up's `icon` is not shown: inline rows all lead with a corner-down-right arrow, and pills above the composer are text only. **Components/ChatDock → Pattern — chat dock** now keeps the follow-up state: `ask` may resolve with `string | { reply, followUps? }`.
+- **Open and close.** The resting bar and the window are one object: one composer serves both states and stays on screen every frame. From `md` the window is an opaque card that grows up and out of the bar from its bottom edge; the mark moves to the header, the composer keeps its width and rises only by the disclaimer line, and the header, conversation, and rows fade in after it. Closing fades them and folds the window back into the bar, and the hover pills return once it has folded. On phones the window rises from the bottom edge to full screen and falls back. Escape while opening, or a click while closing, reverses from where it is. Reduced motion crossfades the window in place.
+- **PromptBar:** the `start` slot takes its content's width (an **Avatar** `size="md"` is unchanged), so a caller can fold the mark away.
 - The visitor's messages sit on a light navy tint, so they read apart from the replies. New color token `--color-brand-tint` (`bg-brand-tint`): 10% navy in light, a lifted navy in dark.
 
 ### Consumer actions
 
 1. **WhatMatters site: re-copy Components/ChatDock → Pattern — chat dock** (`node_modules/@thewhatmatters/wmds/docs/patterns/components-chatdock--pattern-chat-dock.tsx`) over `components/ask-whatmatters.tsx`, and re-apply only your content, data, and handlers. The pattern now holds the follow-up state.
-2. **Return follow-ups from `ask`** after the replies that should have them: resolve with `{ reply, followUps: [...] }` (one to three items, each `{ id, label, icon?, prompt? }`; an item without a `prompt`, such as `{ id: "start", label: "Start a project" }`, opens the intake through `onStartProject`). Replies without follow-ups can keep resolving with the reply string.
-3. Other apps: none. The tint comes with the upgrade.
+2. **Return follow-ups from `ask`** after the replies that should have them: resolve with `{ reply, followUps: [...] }` (one to three items, each `{ id, label, prompt? }` — leave out `icon`, it is not shown; an item without a `prompt`, such as `{ id: "start", label: "Start a project" }`, opens the intake through `onStartProject`). Replies without follow-ups can keep resolving with the reply string.
+3. **The open and close transition:** nothing to do. It comes with the upgrade; **Pattern — chat dock**'s props are unchanged by it.
+4. Other apps: none. The tint comes with the upgrade.
 
 ## 0.4.0
 

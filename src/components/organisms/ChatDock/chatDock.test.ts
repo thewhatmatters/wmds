@@ -4,6 +4,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   ChatDock,
+  chatDockOpenHeight,
   chatDockPillSuggestions,
   chatDockShowsFollowUps,
   chatDockShowsSuggestionRows,
@@ -57,6 +58,18 @@ describe("chatDockShowsFollowUps", () => {
   });
 });
 
+describe("chatDockOpenHeight", () => {
+  it("is 40rem, or the viewport less 7rem when that is shorter", () => {
+    expect(chatDockOpenHeight("fixed", 900, 16)).toBe(640);
+    expect(chatDockOpenHeight("fixed", 700, 16)).toBe(588);
+    expect(chatDockOpenHeight("fixed", 80, 16)).toBe(0);
+  });
+
+  it("is 32rem for inline specimens", () => {
+    expect(chatDockOpenHeight("inline", 300, 16)).toBe(512);
+  });
+});
+
 describe("ChatDock", () => {
   let root: Root | undefined;
   let container: HTMLDivElement | undefined;
@@ -103,6 +116,25 @@ describe("ChatDock", () => {
     expect(dialog).not.toBeNull();
     expect(onOpenChange).toHaveBeenCalledWith(true);
     expect(document.activeElement).toBe(dialog?.querySelector("textarea"));
+    // One composer serves both states.
+    expect(view.querySelectorAll("textarea")).toHaveLength(1);
+    expect(dialog?.querySelector("textarea")).toBe(restField);
+    expect(view.querySelector<HTMLElement>("[data-chat-dock-window]")?.hidden).toBe(false);
+  });
+
+  it("closes with Escape and keeps focus in the composer without reopening", () => {
+    const onOpenChange = vi.fn();
+    const view = mount({ defaultOpen: true, onOpenChange });
+    const field = view.querySelector("textarea");
+    act(() => {
+      field?.focus();
+    });
+    act(() => {
+      field?.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    });
+    expect(view.querySelector("[role='dialog']")).toBeNull();
+    expect(onOpenChange).toHaveBeenLastCalledWith(false);
+    expect(document.activeElement).toBe(field);
   });
 
   it("starts open with defaultOpen and lists every suggestion as a row", () => {

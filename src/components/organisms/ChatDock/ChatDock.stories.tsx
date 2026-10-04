@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { MotionConfig } from "motion/react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ArrowRight, CalendarClock, DollarSign, Workflow } from "lucide-react";
+import { ArrowRight, CalendarClock, DollarSign } from "lucide-react";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { storybookViewports } from "../../../lib/viewports";
 import { Avatar } from "../../atoms/Avatar/Avatar";
@@ -169,19 +170,18 @@ function AskWhatMatters({ ask, onStartProject }: AskWhatMattersProps) {
   );
 }
 
+/** Follow-ups carry no icon: inline rows all lead with the same arrow, and pills above the composer are text only. */
 const followUpCost: ChatDockSuggestion = {
   id: "cost",
   label: "How much does a project cost?",
   prompt: "How much does a project cost?",
-  icon: <DollarSign />,
 };
 const followUpProcess: ChatDockSuggestion = {
   id: "process",
   label: "How does a project work?",
   prompt: "How does a project work?",
-  icon: <Workflow />,
 };
-const followUpStart: ChatDockSuggestion = { id: "start", label: "Start a project", icon: <ArrowRight /> };
+const followUpStart: ChatDockSuggestion = { id: "start", label: "Start a project" };
 
 const makeReply =
   "Brand identity, web experiences, mobile apps, social media, content and copy, and AI assistants. Then launch, growth, and care once it ships.";
@@ -264,9 +264,9 @@ const meta = {
       description: {
         component: `
 ## Usage
-The site's assistant, pinned to the bottom of the page. At rest it is a **PromptBar** with the brand mark. Hovering the bar shows suggested questions as pills above it. Clicking or typing into it opens the chat window in its place: the conversation, the suggestions as rows, the composer, and an optional disclaimer. Escape or **Close chat** returns to the resting bar.
+The site's assistant, pinned to the bottom of the page. At rest it is a **PromptBar** with the brand mark. Hovering the bar shows suggested questions as pills above it. Clicking or typing into it opens the chat window around the same composer: the window grows up and out of the bar, the mark moves to the header, and the composer keeps its width, rising only by the disclaimer line under it. Escape or **Close chat** folds the window back into the bar. Either can interrupt the other midway.
 
-The window is not modal: the page behind it stays usable. On phones it fills the screen. The app owns the conversation: it passes \`messages\`, sets \`thinking\` while a reply is on its way, and appends the reply. Copy **Pattern — chat dock**.
+The window is not modal: the page behind it stays usable. On phones it fills the screen, rising from the bottom edge. With reduced motion the window crossfades in place. The app owns the conversation: it passes \`messages\`, sets \`thinking\` while a reply is on its way, and appends the reply. Copy **Pattern — chat dock**.
 
 | Prop | Contract |
 |------|----------|
@@ -275,7 +275,7 @@ The window is not modal: the page behind it stays usable. On phones it fills the
 | \`messages\` | \`{ id, role: "user" \\| "assistant", content }[]\`, oldest first. \`content\` is text or Markdown the app already rendered |
 | \`thinking\` | Shows the thinking row after the last message |
 | \`suggestions\` | \`{ id, label, icon?, prompt? }[]\`. With \`prompt\`: a pill at rest and a row in the window, and choosing it sends the prompt. Without: a row only, and \`onSuggestionSelect\` runs (for example **Start a project**) |
-| \`followUps\` | The same items as \`suggestions\`, for the latest reply only. Shown while the last message is an assistant reply and \`thinking\` is off; gone the moment the visitor sends. The app decides which replies get them |
+| \`followUps\` | The same items as \`suggestions\`, for the latest reply only; their \`icon\` is not shown. Shown while the last message is an assistant reply and \`thinking\` is off; gone the moment the visitor sends. The app decides which replies get them |
 | \`followUpsPlacement\` | \`inline\` (default): rows in the conversation, under the reply. \`composer\`: pills pinned above the composer |
 | \`onSend\` | Receives the typed message, a suggestion's prompt, or a follow-up's prompt |
 | \`open\` / \`onOpenChange\` | Optional control of the window |
@@ -284,23 +284,22 @@ The window is not modal: the page behind it stays usable. On phones it fills the
 ## Anatomy
 \`\`\`
 ChatDock — fixed to the bottom, page grid at --grid-max 40rem, under SiteNav
-├── at rest
-│   ├── suggestion pills — Button secondary md + icon, shown on hover only
-│   └── PromptBar — start: mark · field · send
-└── open — Card layout shell on the surface (full screen below md)
-    ├── header — mark · title · subtitle | IconButton close (shared overlay header)
-    ├── conversation — greeting, replies as text, visitor turns on the brand tint, thinking row (Status dot); scrolls, stays at the end
-    │   └── follow-ups (inline) — Button ghost rows under the latest reply, 44px on phones
-    ├── suggestion rows — Button ghost row + icon, until the first message
-    ├── follow-ups (composer) — Button secondary pills, wrap
-    ├── PromptBar
-    └── disclaimer — caption, muted
+├── suggestion pills — Button secondary md + icon, on hover while the window is closed
+├── window — opaque card on the surface behind the composer; grows from the bar (full screen below md, rising from the bottom edge)
+│   ├── header — mark · title · subtitle | IconButton close (shared overlay header)
+│   ├── conversation — greeting, replies as text, visitor turns on the brand tint, thinking row (Status dot); scrolls, stays at the end
+│   │   └── follow-ups (inline) — Button ghost rows under the latest reply, each led by the corner-down-right arrow, 44px on phones
+│   ├── suggestion rows — Button ghost row + icon, until the first message
+│   └── follow-ups (composer) — Button secondary pills, text only, wrap
+└── composer — one PromptBar in both states
+    ├── start: mark — folds away while the window is open
+    └── disclaimer — caption, muted, opens under the composer
 \`\`\`
 
 ## Best practices
 - **Do** keep pill suggestions to two or three short questions. Put actions such as **Start a project** in the list only (no \`prompt\`).
 - **Do** stream replies by updating the last assistant message's \`content\`; the thread stays pinned to the end while the reader is there.
-- **Do** pass \`followUps\` only after replies that have an obvious next question — one to three, short labels, Lucide icons — and clear them when the visitor sends. Copy the follow-up state from **Pattern — chat dock**.
+- **Do** pass \`followUps\` only after replies that have an obvious next question — one to three, short labels — and clear them when the visitor sends. Leave out \`icon\`: every inline row leads with the same corner-down-right arrow, and pills above the composer are text only. Copy the follow-up state from **Pattern — chat dock**.
 - **Do** keep follow-ups \`inline\`. They read as part of the answer and cost the conversation no height on a phone. Use \`composer\` only where the thread is long and the follow-ups must stay beside the field.
 - **Don't** make suggestions the only way to ask: touch devices never see the pills, only the rows in the window.
 - **Don't** add a second send arrow or an expand button to the header. Send is the composer's arrow. Voice is not part of this version.
@@ -396,12 +395,12 @@ export const AtRest: Story = {
   parameters: {
     docs: {
       description: {
-        story: "The resting bar. Hover it to show the suggestion pills above it.",
+        story: "The resting bar. Hover it to show the suggestion pills above it; click into it to open the window. An inline specimen keeps the open window's height free above the bar.",
       },
     },
   },
   render: () => (
-    <div className="bg-body pb-8 pt-28">
+    <div className="bg-body py-8">
       <ChatDock
         placement="inline"
         title="WhatMatters"
@@ -413,6 +412,35 @@ export const AtRest: Story = {
         placeholder="Ask anything about WhatMatters"
       />
     </div>
+  ),
+};
+
+export const ReducedMotion: Story = {
+  name: "Reduced motion",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "With reduced motion the window does not grow or rise: it crossfades in place at full size. Nothing slides: the mark and the disclaimer line under the composer switch at once, so the composer steps up by that line. Click into the bar to open it.",
+      },
+    },
+  },
+  render: () => (
+    <MotionConfig reducedMotion="always">
+      <div className="bg-body py-8">
+        <ChatDock
+          placement="inline"
+          title="WhatMatters"
+          subtitle="Ask anything"
+          mark={mark}
+          greeting={greeting}
+          suggestions={suggestions}
+          onSend={() => undefined}
+          placeholder="Ask anything about WhatMatters"
+          disclaimer="Answers may be incomplete · AI assistant by WhatMatters"
+        />
+      </div>
+    </MotionConfig>
   ),
 };
 

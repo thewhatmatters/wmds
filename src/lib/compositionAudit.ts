@@ -116,6 +116,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "MoreMenu owns the built-in kebab trigger glyph (IconButton shell).",
   },
   {
+    file: "components/organisms/ChatDock/ChatDock.tsx",
+    ruleId: "lucide-import",
+    reason: "ChatDock owns the inline follow-up glyph (Lucide CornerDownRight) passed to ButtonIcon.",
+  },
+  {
     file: "components/organisms/Dialog/OverlayPanelHeader.tsx",
     ruleId: "lucide-import",
     reason: "OverlayPanelHeader owns the built-in dismiss glyph (IconButton close).",

@@ -22,9 +22,10 @@ export const promptBarShellStartPadClasses = {
 
 /**
  * Leading slot — a brand mark or avatar at the send circle's size (2.25rem), pinned to the
- * last line like the send control.
+ * last line like the send control. Its width is the content's, so a caller can fold the mark
+ * away: at zero width the field starts 1.25rem in, the same as without a slot.
  */
-export const promptBarStartSlotClasses = "mr-1 flex size-9 shrink-0 items-center justify-center";
+export const promptBarStartSlotClasses = "mr-1 flex h-9 shrink-0 items-center justify-center";
 
 /** Trailing slot — extra inset controls (for example a mic **IconButton** `sm`) before send. */
 export const promptBarEndSlotClasses = "flex shrink-0 items-end gap-2";
