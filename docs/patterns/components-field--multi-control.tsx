@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.0 · Pattern — multi-control
+// @thewhatmatters/wmds@0.4.1 · Pattern — multi-control
 // Storybook: Components/Field → Pattern — multi-control (?path=/story/components-field--multi-control)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

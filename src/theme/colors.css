@@ -96,6 +96,11 @@
   --color-on-brand: #ffffff;
   --color-brand-outline: var(--color-brand);
   --color-brand-soft: color-mix(in srgb, var(--color-on-brand) 40%, var(--color-brand));
+  /*
+   * Brand tint — the visitor's turns in ChatDock. 10% navy over the surface (about #e3e5ee):
+   * reads as brand, not as a neutral well, and dark text keeps full contrast (about 14:1).
+   */
+  --color-brand-tint: color-mix(in srgb, var(--color-brand) 10%, transparent);
 
   /* Derived from --color-primary — 62% clears WCAG 3:1 on white and #f8f8f8 */
   --color-focus-ring: color-mix(in srgb, var(--color-primary) 62%, transparent);
@@ -205,6 +210,8 @@
   --color-on-brand: #ffffff;
   --color-brand-outline: color-mix(in srgb, var(--color-brand) 45%, white);
   --color-brand-soft: color-mix(in srgb, var(--color-on-brand) 40%, var(--color-brand));
+  /* The navy disappears on dark surfaces, so the tint lifts it: 28% of the outline mix (about #3d3f49 on #1b1b1b). */
+  --color-brand-tint: color-mix(in srgb, var(--color-brand-outline) 28%, transparent);
 
   /*
    * Derived from --color-primary: lift the brand toward white so the ring stays

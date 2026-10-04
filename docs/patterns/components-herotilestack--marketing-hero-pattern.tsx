@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.0 · Pattern — marketing hero
+// @thewhatmatters/wmds@0.4.1 · Pattern — marketing hero
 // Storybook: Components/HeroTileStack → Pattern — marketing hero (?path=/story/components-herotilestack--marketing-hero-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

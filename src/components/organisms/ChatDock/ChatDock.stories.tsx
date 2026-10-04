@@ -235,7 +235,7 @@ ChatDock — fixed to the bottom, page grid at --grid-max 40rem, under SiteNav
 │   └── PromptBar — start: mark · field · send
 └── open — Card layout shell on the surface (full screen below md)
     ├── header — mark · title · subtitle | IconButton close (shared overlay header)
-    ├── conversation — greeting, turns, thinking row (Status dot); scrolls, stays at the end
+    ├── conversation — greeting, replies as text, visitor turns on the brand tint, thinking row (Status dot); scrolls, stays at the end
     ├── suggestion rows — Button ghost row + icon, until the first message
     ├── PromptBar
     └── disclaimer — caption, muted
