@@ -478,6 +478,15 @@ function ChatDockRoot({
     fieldRef.current?.focus();
   }
 
+  /**
+   * A row that sends leaves with the rest of the rows once the first message exists, so focus moves
+   * to the composer instead of falling to the page — Escape still closes the window from there.
+   */
+  function selectSuggestionRow(suggestion: ChatDockSuggestion) {
+    selectSuggestion(suggestion);
+    if (suggestion.prompt != null) fieldRef.current?.focus();
+  }
+
   // One composer serves both states: opening keeps (or brings) focus in it, and closing hands focus
   // back to it from inside the window without reopening.
   useEffect(() => {
@@ -936,7 +945,8 @@ function ChatDockRoot({
                         type="button"
                         role="ghost"
                         layout="row"
-                        onClick={() => selectSuggestion(suggestion)}
+                        onMouseDown={suggestion.prompt != null ? keepComposerFocus : undefined}
+                        onClick={() => selectSuggestionRow(suggestion)}
                       >
                         <span className={chatDockSuggestionRowContentClasses}>
                           {suggestion.icon != null ? <ButtonIcon size="md">{suggestion.icon}</ButtonIcon> : null}

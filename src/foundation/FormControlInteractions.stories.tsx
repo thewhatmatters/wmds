@@ -65,6 +65,39 @@ export const CheckboxToggle: Story = {
   },
 };
 
+export const CheckboxCount: Story = {
+  name: "Checkbox — count is read after the label",
+  render: function CheckboxCountExample() {
+    const [values, setValues] = useState<string[]>([]);
+    return (
+      <div className="flex w-64 flex-col gap-6">
+        <CheckboxGroup label="Topic" size="sm" values={values} onValuesChange={setValues}>
+          <CheckboxGroup.Item value="guides" label="Guides" count={2} />
+          <CheckboxGroup.Item value="notes" label="Notes" count={1} countLabel="1 post" />
+        </CheckboxGroup>
+        <Checkbox label="Archive" description="Older posts." count={1200} />
+      </div>
+    );
+  },
+  play: async ({ canvas }) => {
+    const guides = canvas.getByRole("checkbox", { name: "Guides (2)" });
+    const notes = canvas.getByRole("checkbox", { name: "Notes (1 post)" });
+    await userEvent.click(guides);
+    await expect(guides).toBeChecked();
+    await expect(notes).not.toBeChecked();
+
+    // The visible count sits at the row's end, after the label.
+    const row = guides.closest("label");
+    if (row == null) throw new Error("Checkbox row is missing");
+    const count = [...row.querySelectorAll<HTMLElement>("[aria-hidden]")].find((node) => node.textContent === "2");
+    if (count == null) throw new Error("Visible count is missing");
+    await expect(count.getBoundingClientRect().right).toBeCloseTo(row.getBoundingClientRect().right, 0);
+
+    const archive = canvas.getByRole("checkbox", { name: /^Archive \(1,200\)/ });
+    await expect(archive).toHaveAccessibleDescription("Older posts.");
+  },
+};
+
 export const RadioGroupSelection: Story = {
   name: "RadioGroup — single select",
   render: function RadioGroupSelectionExample() {

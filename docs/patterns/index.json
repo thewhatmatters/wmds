@@ -3,6 +3,14 @@
   "version": "0.4.1",
   "patterns": [
     {
+      "id": "components-accordion--flush",
+      "title": "Components/Accordion",
+      "name": "Pattern — flush",
+      "file": "patterns/components-accordion--flush.tsx",
+      "storybook": "?path=/story/components-accordion--flush",
+      "source": "src/components/molecules/Accordion/Accordion.stories.tsx"
+    },
+    {
       "id": "components-avatar--dropdown-row",
       "title": "Components/Avatar",
       "name": "Pattern — dropdown row",
@@ -267,6 +275,14 @@
       "source": "src/components/atoms/Checkbox/Checkbox.stories.tsx"
     },
     {
+      "id": "components-checkbox-checkbox--with-count",
+      "title": "Components/Checkbox/Checkbox",
+      "name": "Pattern — with count",
+      "file": "patterns/components-checkbox-checkbox--with-count.tsx",
+      "storybook": "?path=/story/components-checkbox-checkbox--with-count",
+      "source": "src/components/atoms/Checkbox/Checkbox.stories.tsx"
+    },
+    {
       "id": "components-checkbox-checkbox--with-description",
       "title": "Components/Checkbox/Checkbox",
       "name": "Pattern — with description",
@@ -280,6 +296,14 @@
       "name": "Pattern — default",
       "file": "patterns/components-checkbox-checkboxgroup--default.tsx",
       "storybook": "?path=/story/components-checkbox-checkboxgroup--default",
+      "source": "src/components/molecules/CheckboxGroup/CheckboxGroup.stories.tsx"
+    },
+    {
+      "id": "components-checkbox-checkboxgroup--option-counts",
+      "title": "Components/Checkbox/CheckboxGroup",
+      "name": "Pattern — option counts",
+      "file": "patterns/components-checkbox-checkboxgroup--option-counts.tsx",
+      "storybook": "?path=/story/components-checkbox-checkboxgroup--option-counts",
       "source": "src/components/molecules/CheckboxGroup/CheckboxGroup.stories.tsx"
     },
     {
@@ -417,6 +441,14 @@
       "file": "patterns/components-herotilestack--marketing-hero-with-gallery-intro.tsx",
       "storybook": "?path=/story/components-herotilestack--marketing-hero-with-gallery-intro",
       "source": "src/components/organisms/HeroTileStack/HeroTileStack.galleryIntro.stories.tsx"
+    },
+    {
+      "id": "components-indexlist--post-index",
+      "title": "Components/IndexList",
+      "name": "Pattern — post index",
+      "file": "patterns/components-indexlist--post-index.tsx",
+      "storybook": "?path=/story/components-indexlist--post-index",
+      "source": "src/components/molecules/IndexList/IndexList.stories.tsx"
     },
     {
       "id": "components-intakeconfirmation--booked-pattern",
@@ -739,6 +771,14 @@
       "source": "src/components/atoms/TextLink/TextLink.stories.tsx"
     },
     {
+      "id": "components-textlink--quiet-title",
+      "title": "Components/TextLink",
+      "name": "Pattern — quiet title link",
+      "file": "patterns/components-textlink--quiet-title.tsx",
+      "storybook": "?path=/story/components-textlink--quiet-title",
+      "source": "src/components/atoms/TextLink/TextLink.stories.tsx"
+    },
+    {
       "id": "components-textlink--supporting-copy",
       "title": "Components/TextLink",
       "name": "Pattern — supporting copy link",
@@ -841,6 +881,14 @@
       "file": "patterns/guides-chart-explorations--comparison-gallery.tsx",
       "storybook": "?path=/story/guides-chart-explorations--comparison-gallery",
       "source": "src/guides/ChartExplorations/ChartExplorations.stories.tsx"
+    },
+    {
+      "id": "guides-filter-panel--filtered-index",
+      "title": "Guides/Filter panel",
+      "name": "Pattern — filtered index",
+      "file": "patterns/guides-filter-panel--filtered-index.tsx",
+      "storybook": "?path=/story/guides-filter-panel--filtered-index",
+      "source": "src/guides/FilterPanel/FilterPanel.stories.tsx"
     },
     {
       "id": "guides-overlay-flows--notification-preferences",

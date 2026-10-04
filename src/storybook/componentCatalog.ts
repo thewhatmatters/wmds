@@ -118,6 +118,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "Tooltip", category: "Overlay", title: "Components/Tooltip", description: "Short supplemental label on hover and focus." },
 
   // Table & list
+  { name: "IndexList", category: "Table & list", title: "Components/IndexList", description: "Editorial index rows: a meta column, a large linked title, and an optional preview, under shared column captions." },
   { name: "Table", category: "Table & list", planned: true, description: "Not built yet." },
   { name: "TaskRows", category: "Table & list", title: "Components/TaskRows", description: "Expandable task rows with status, meta, and detail rails." },
 ];

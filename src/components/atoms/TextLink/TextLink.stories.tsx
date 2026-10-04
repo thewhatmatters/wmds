@@ -16,6 +16,8 @@ const meta = {
 
 Use **TextLink** for inline navigation inside prose. Its solid underline keeps links visible without overpowering the surrounding copy; hover strengthens the underline and keyboard focus adds the WMDS focus ring.
 
+Set \`variant="quiet"\` for headline-size text and list titles: no underline at rest, an underline scaled to the text on hover and keyboard focus, and the same focus ring. A quiet link inherits the surrounding size and weight, so the heading around it owns the type step.
+
 Set \`external\` when the destination opens in a new tab. WMDS appends Lucide **SquareArrowOutUpRight**, adds spoken new-tab context, and supplies a safe \`rel\`.
 
 ## Anatomy
@@ -29,6 +31,7 @@ TextLink (\`a\`)
 
 - **Do** write destination-oriented labels that make sense in context.
 - **Do** use **TextLink** inside body copy and supporting text.
+- **Do** use \`variant="quiet"\` for a linked title inside a heading — never inside running prose, where links must stay underlined.
 - **Do** use \`external\` only when a new tab is genuinely useful.
 - **Don't** use it for actions—use **Button**.
 - **Don't** override its color or underline treatment with \`className\`.
@@ -36,9 +39,13 @@ TextLink (\`a\`)
       },
     },
   },
+  argTypes: {
+    variant: { control: "inline-radio", options: ["prose", "quiet"] },
+  },
   args: {
     href: "#writing",
     children: "writing",
+    variant: "prose",
     external: false,
   },
 } satisfies Meta<typeof TextLink>;
@@ -125,6 +132,40 @@ import { TextLink } from "@thewhatmatters/wmds";
 <p className="type-body text-fg">
   View the project on <TextLink href="https://github.com/" external>GitHub</TextLink>.
 </p>
+`,
+  ),
+};
+
+export const QuietTitle: Story = {
+  name: "Pattern — quiet title link",
+  render: () => (
+    <h2 className="type-display-3 text-fg">
+      <TextLink variant="quiet" href="#post">
+        How we scope a brand sprint
+      </TextLink>
+    </h2>
+  ),
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "A linked title at display size. Hover or Tab to it: the underline appears at the text's scale and the focus ring stays. The heading sets the type step; the link inherits it.",
+        },
+      },
+    },
+    `
+import { TextLink } from "@thewhatmatters/wmds";
+
+export function PostTitle({ title, href }: { title: string; href: string }) {
+  return (
+    <h2 className="type-display-3 text-fg">
+      <TextLink variant="quiet" href={href}>
+        {title}
+      </TextLink>
+    </h2>
+  );
+}
 `,
   ),
 };

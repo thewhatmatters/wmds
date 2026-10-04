@@ -56,12 +56,13 @@ Multi-select option list — group label, shared validation, and optional \`valu
 | **Vertical list** | \`orientation="vertical"\` (default) |
 | **Horizontal row** | \`orientation="horizontal"\` — compact filters |
 | **Managed selection** | \`values\` + \`onValuesChange\` + **CheckboxGroup.Item** |
+| **Option counts** | \`count\` on **CheckboxGroup.Item** — filter results per option |
 | **Validation** | \`status\` + \`message\` on the group |
 
 ## Anatomy
 
 - **Fieldset** — group \`label\` as \`legend\`
-- **CheckboxGroup.Item** — composes **Checkbox** atom; toggles value in group array
+- **CheckboxGroup.Item** — composes **Checkbox** atom; toggles value in group array; optional \`count\`
 
 ## Best practices
 
@@ -110,6 +111,35 @@ export function AlertPreferences() {
       <CheckboxGroup.Item value="email" label="Email alerts" />
       <CheckboxGroup.Item value="push" label="Push notifications" />
       <CheckboxGroup.Item value="weekly" label="Weekly summary" />
+    </CheckboxGroup>
+  );
+}
+`),
+};
+
+export const OptionCounts: Story = {
+  name: "Pattern — option counts",
+  render: function OptionCountsCheckboxGroup() {
+    const [values, setValues] = useState<string[]>([]);
+    return (
+      <CheckboxGroup label="Topic" size="sm" values={values} onValuesChange={setValues}>
+        <CheckboxGroup.Item value="guides" label="Guides" count={2} countLabel="2 posts" />
+        <CheckboxGroup.Item value="notes" label="Notes" count={1} countLabel="1 post" />
+        <CheckboxGroup.Item value="news" label="News" count={1} countLabel="1 post" />
+      </CheckboxGroup>
+    );
+  },
+  parameters: storyCopySource(`
+import { useState } from "react";
+import { CheckboxGroup } from "@thewhatmatters/wmds";
+
+export function TopicFilter() {
+  const [values, setValues] = useState<string[]>([]);
+  return (
+    <CheckboxGroup label="Topic" size="sm" values={values} onValuesChange={setValues}>
+      <CheckboxGroup.Item value="guides" label="Guides" count={2} countLabel="2 posts" />
+      <CheckboxGroup.Item value="notes" label="Notes" count={1} countLabel="1 post" />
+      <CheckboxGroup.Item value="news" label="News" count={1} countLabel="1 post" />
     </CheckboxGroup>
   );
 }

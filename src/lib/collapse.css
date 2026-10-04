@@ -1,20 +1,28 @@
 /** Shared height-collapse motion — List panels, Table filter rows. */
 .motion-collapse {
   display: grid;
+  /*
+   * visibility interpolates as "visible" for the whole transition, so a closing panel stays drawn
+   * while it folds and turns hidden once the fold ends; an opening panel is visible at once. Hidden,
+   * its controls leave the tab order and the accessibility tree.
+   */
   transition:
     grid-template-rows var(--duration-medium) var(--ease-standard),
-    opacity var(--duration-medium) var(--ease-standard);
+    opacity var(--duration-medium) var(--ease-standard),
+    visibility var(--duration-medium) var(--ease-standard);
 }
 
 .motion-collapse[data-visible="true"] {
   grid-template-rows: 1fr;
   opacity: 1;
+  visibility: visible;
 }
 
 .motion-collapse[data-visible="false"] {
   grid-template-rows: 0fr;
   opacity: 0;
   pointer-events: none;
+  visibility: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {

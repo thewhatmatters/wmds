@@ -15,7 +15,8 @@ export type TypographyRole =
   | "body"
   | "ui-label"
   | "caption"
-  | "overline";
+  | "overline"
+  | "eyebrow";
 
 /** Astryx semantic type names (Foundation reference). */
 export type AstryxTypeScale =
@@ -33,7 +34,8 @@ export type AstryxTypeScale =
   | "label"
   | "supporting"
   | "code"
-  | "control";
+  | "control"
+  | "eyebrow";
 
 export type TypographyTracking = "tight" | "normal" | "wider";
 
@@ -74,7 +76,7 @@ export const trackingRules: Array<{
   {
     tracking: "wider",
     utility: "tracking-wider",
-    rule: "Uppercase overlines / eyebrows only — never on mixed-case text",
+    rule: "Uppercase overlines only — never on mixed-case text (type-eyebrow carries its own tracking)",
   },
 ];
 
@@ -191,13 +193,25 @@ export const typographyStyles: TypographyStyle[] = [
   {
     role: "overline",
     label: "Overline",
-    description: "Section eyebrows — supporting + uppercase (WMDS extension)",
+    description: "Section labels in app UI — supporting sans + uppercase (WMDS extension). For editorial captions use eyebrow",
     astryxType: "supporting",
     className: "type-supporting font-medium uppercase tracking-wider text-muted",
     tracking: "wider",
     trackingClass: "tracking-wider",
     sample: "Other options",
     usedIn: ["Card section labels"],
+  },
+  {
+    role: "eyebrow",
+    label: "Eyebrow",
+    description:
+      "Editorial captions — small uppercase mono (WMDS extension). Column captions over index rows and filter panel titles; overline stays the sans label inside app UI",
+    astryxType: "eyebrow",
+    className: "type-eyebrow text-muted",
+    tracking: "wider",
+    trackingClass: "type-eyebrow (0.05em)",
+    sample: "Filters",
+    usedIn: ["IndexList captions", "Filter panel title"],
   },
 ];
 
@@ -223,6 +237,7 @@ export const astryxTypeScale: Array<{
   { type: "supporting", utility: "type-supporting", size: "0.75rem", weight: "400", leading: "1.67" },
   { type: "code", utility: "type-code", size: "0.875rem", weight: "400", leading: "1.43" },
   { type: "control", utility: "type-control", size: "0.875rem", weight: "500", leading: "1" },
+  { type: "eyebrow", utility: "type-eyebrow", size: "0.75rem mono, uppercase", weight: "400", leading: "1.33" },
 ];
 
 export const fontFamilies = [

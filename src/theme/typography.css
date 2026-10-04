@@ -110,6 +110,16 @@
   --text-code-weight: var(--font-weight-normal);
   --text-code-leading: 1.4286;
 
+  /**
+   * WMDS extension — small uppercase mono caption for editorial labels: column captions over index
+   * rows and filter panel titles ("/ Date", "/ Filters"). Write the text in sentence case; the
+   * utility sets the capitals.
+   */
+  --text-eyebrow-size: var(--font-size-sm);
+  --text-eyebrow-weight: var(--font-weight-normal);
+  --text-eyebrow-leading: 1.3333;
+  --text-eyebrow-tracking: 0.05em;
+
   /** WMDS extension — fixed-height control shells (Button, Chip, Input). Phase 4 migrates atoms here. */
   --text-control-size: var(--font-size-base);
   --text-control-weight: var(--font-weight-medium);
@@ -214,6 +224,15 @@
   font-size: var(--text-code-size);
   font-weight: var(--text-code-weight);
   line-height: var(--text-code-leading);
+}
+
+@utility type-eyebrow {
+  font-family: var(--font-family-code);
+  font-size: var(--text-eyebrow-size);
+  font-weight: var(--text-eyebrow-weight);
+  line-height: var(--text-eyebrow-leading);
+  letter-spacing: var(--text-eyebrow-tracking);
+  text-transform: uppercase;
 }
 
 @utility type-control {
