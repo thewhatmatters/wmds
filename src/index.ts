@@ -448,6 +448,17 @@ export {
   type ChartUnitGridProps,
 } from "./components/organisms/Chart/Chart";
 export {
+  ChatDock,
+  chatDockDefaultLabels,
+  chatDockPlacements,
+  type ChatDockLabels,
+  type ChatDockLayoutClassName,
+  type ChatDockMessage,
+  type ChatDockPlacement,
+  type ChatDockProps,
+  type ChatDockSuggestion,
+} from "./components/organisms/ChatDock/ChatDock";
+export {
   ConfettiProvider,
   confettiDefaultColors,
   confettiDefaults,

@@ -25,7 +25,7 @@ const atoms = [
 
 const molecules = ["Accordion", "CalEmbed", "Card", "ChatQa", "CheckboxGroup", "Chip", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "HeroIntro", "IntakeForm", "NavList", "PageHeader", "PillGroup", "PromptBar", "RadioGroup", "Search", "Select", "SelectableCard", "SegmentedControl", "Stat", "StepProgress", "TaskRows", "TextSequence"] as const;
 
-const organisms = ["Chart", "Confetti", "Dialog", "FooterReveal", "HeroTileStack", "IntakeConfirmation", "IntakeModal", "MoreMenu", "Panel", "ScrollHorizontal", "Sheet", "SiteNav", "Tab", "Toast"] as const;
+const organisms = ["Chart", "ChatDock", "Confetti", "Dialog", "FooterReveal", "HeroTileStack", "IntakeConfirmation", "IntakeModal", "MoreMenu", "Panel", "ScrollHorizontal", "Sheet", "SiteNav", "Tab", "Toast"] as const;
 
 /** In the catalog before the atomic rebuild and not rebuilt yet. Move a name into its tier when it ships. */
 const planned = ["Carousel", "Pagination", "Table"] as const;

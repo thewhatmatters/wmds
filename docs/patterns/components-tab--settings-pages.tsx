@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.3.0 · Pattern — settings pages
+// @thewhatmatters/wmds@0.4.0 · Pattern — settings pages
 // Storybook: Components/Tab → Pattern — settings pages (?path=/story/components-tab--settings-pages)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

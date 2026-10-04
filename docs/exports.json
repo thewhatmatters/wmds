@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -135,6 +135,19 @@
         "components-chart--post-reach-distribution",
         "components-chart--ranked-audience-breakdown",
         "components-chart--unit-grid-composition"
+      ]
+    },
+    {
+      "name": "ChatDock",
+      "tier": "organism",
+      "category": "Chat",
+      "summary": "Pinned prompt with suggested questions that opens into a chat window.",
+      "storybook": {
+        "title": "Components/ChatDock",
+        "docs": "?path=/docs/components-chatdock--docs"
+      },
+      "patterns": [
+        "components-chatdock--pattern-chat-dock"
       ]
     },
     {
@@ -467,7 +480,6 @@
         "docs": "?path=/docs/components-promptbar--docs"
       },
       "patterns": [
-        "components-promptbar--pattern-marketing-composer",
         "components-promptbar--pattern-prompt-bar"
       ]
     },

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.3.0 · Pattern — compact (scrolled)
+// @thewhatmatters/wmds@0.4.0 · Pattern — compact (scrolled)
 // Storybook: Components/SiteNav → Pattern — compact (scrolled) (?path=/story/components-sitenav--compact)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

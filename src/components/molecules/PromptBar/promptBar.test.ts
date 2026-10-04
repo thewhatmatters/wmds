@@ -108,4 +108,31 @@ describe("PromptBar", () => {
 
     expect(onSend).not.toHaveBeenCalled();
   });
+
+  it("renders the start slot before the field and the end slot before send", () => {
+    const view = mount({
+      value: "",
+      onValueChange: () => {},
+      start: createElement("span", { "data-testid": "mark" }, "WM"),
+      end: createElement("button", { type: "button", "aria-label": "Voice" }),
+    });
+    root = view.root;
+    container = view.container;
+
+    const shell = view.container.firstElementChild;
+    const order = [...(shell?.children ?? [])].map((child) =>
+      child.querySelector("[data-testid='mark']") ? "start" : child.tagName === "TEXTAREA" || child.querySelector("textarea") ? "field" : child.querySelector("[aria-label='Voice']") ? "end" : child.getAttribute("aria-label"),
+    );
+    expect(order).toEqual(["start", "field", "end", "Send"]);
+    expect(shell?.className).toContain("pl-2");
+    expect(shell?.className).not.toContain("pl-5");
+  });
+
+  it("keeps the text inset when there is no start slot", () => {
+    const view = mount({ value: "", onValueChange: () => {} });
+    root = view.root;
+    container = view.container;
+
+    expect(view.container.firstElementChild?.className).toContain("pl-5");
+  });
 });

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.3.0 · Pattern — Q&A with reply
+// @thewhatmatters/wmds@0.4.0 · Pattern — Q&A with reply
 // Storybook: Components/ChatQa → Pattern — Q&A with reply (?path=/story/components-chatqa--pattern-qa-with-reply)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

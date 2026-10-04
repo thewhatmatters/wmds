@@ -7,6 +7,25 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.0
+
+**ChatDock** is the site assistant: a pinned composer that shows suggested questions on hover and opens into a chat window, instead of a separate ask page. **PromptBar** gains `start` and `end` slots. **Components/PromptBar → Pattern — marketing composer** is removed. See **ADR-0039**.
+
+### Consumer actions
+
+1. **Replace the marketing composer and the ask page with ChatDock** (the WhatMatters site). Paste **Components/ChatDock → Pattern — chat dock** (`node_modules/@thewhatmatters/wmds/docs/patterns/components-chatdock--pattern-chat-dock.tsx`), pass your assistant request as `ask` and open **IntakeModal** from `onStartProject`, and mount it once in the marketing layout. Then delete the pasted **Pattern — marketing composer** (`npx wmds-check` reports it as `pattern-removed`), the ask page component (`components/ask-what-matters.tsx`), and its `/ask` route. Redirect `/ask` to the homepage if it has inbound links.
+2. **Reply content is yours to render.** `messages[].content` takes text or Markdown your app has already rendered; WMDS does not parse Markdown.
+3. **No other changes.** **PromptBar**'s new `start` and `end` props are optional; existing bars render as before.
+
+### Added
+
+- **ChatDock** (`ChatDock`, `chatDockDefaultLabels`, `chatDockPlacements`, and the `ChatDock*` types).
+- **PromptBar** `start` (brand mark) and `end` (extra inset controls before send).
+
+### Removed
+
+- **Components/PromptBar → Pattern — marketing composer**.
+
 ## 0.3.0
 
 Storybook no longer mirrors product sites. The **Sites/** section (WhatMatters and PitchKit pages) is removed, and so are its `sites-…` files in `docs/patterns/`. No component, prop, token, or export changed.

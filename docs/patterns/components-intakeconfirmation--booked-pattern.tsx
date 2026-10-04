@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.3.0 · Pattern — booked
+// @thewhatmatters/wmds@0.4.0 · Pattern — booked
 // Storybook: Components/IntakeConfirmation → Pattern — booked (?path=/story/components-intakeconfirmation--booked-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
