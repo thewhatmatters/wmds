@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.2 · Pattern — capsules
+// @thewhatmatters/wmds@0.4.3 · Pattern — capsules
 // Storybook: Components/TaskRows → Pattern — capsules (?path=/story/components-taskrows--capsules)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

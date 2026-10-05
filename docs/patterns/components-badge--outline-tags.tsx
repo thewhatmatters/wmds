@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.2 · Pattern — outline tags
+// @thewhatmatters/wmds@0.4.3 · Pattern — outline tags
 // Storybook: Components/Badge → Pattern — outline tags (?path=/story/components-badge--outline-tags)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

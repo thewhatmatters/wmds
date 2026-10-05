@@ -79,6 +79,15 @@ export function Bad() {
     expect(check(files, ["--max-warnings", "0"]).status).toBe(1);
   });
 
+  it("does not read a character reference as a color", () => {
+    const result = check({
+      "quote.tsx": `export function Quote() {
+  return <p className="type-body" title="We&#039;ll write back">We&#039;ll write back &#x27;soon&#x27;</p>;
+}`,
+    });
+    expect(result.findings).toEqual([]);
+  });
+
   it("honors wmds-check-ignore comments", () => {
     const result = check({
       "ignored.tsx": `export function Upload() {
@@ -87,5 +96,73 @@ export function Bad() {
 }`,
     });
     expect(result.findings).toEqual([]);
+  });
+
+  describe("pasted patterns", () => {
+    const id = "components-demo--pattern-card";
+    const header = `// @thewhatmatters/wmds@9.9.9 · Storybook: Components/Demo → Pattern — card
+// Storybook: http://localhost:6006/?path=/story/${id}
+// Show code — paste into your app`;
+    const shipped = `${header}
+import { Button, Card } from "@thewhatmatters/wmds";
+
+const services = [
+  { value: "brand", label: "Brand identity" },
+  { value: "web", label: "Web experiences" },
+];
+
+const rowClasses = "flex items-center gap-3 border-b border-border py-3";
+
+/** A card of services. */
+export function ServicesCard({ onPick }: { onPick: (value: string) => void }) {
+  return (
+    <Card className="w-full">
+      <h2 className="type-subheading text-fg">What we make</h2>
+      {services.map((service) => (
+        <div key={service.value} className={rowClasses}>
+          <Button role="secondary" onClick={() => onPick(service.value)}>
+            {service.label}
+          </Button>
+        </div>
+      ))}
+    </Card>
+  );
+}
+`;
+
+    function installPackage() {
+      const root = path.join(app, "node_modules", "@thewhatmatters", "wmds");
+      mkdirSync(path.join(root, "docs", "patterns"), { recursive: true });
+      writeFileSync(path.join(root, "package.json"), '{ "name": "@thewhatmatters/wmds", "version": "9.9.9" }');
+      writeFileSync(path.join(root, "docs", "patterns", `${id}.tsx`), shipped);
+    }
+
+    afterAll(() => rmSync(path.join(app, "node_modules"), { recursive: true, force: true }));
+
+    it("passes a pattern pasted with its own content, data, and handlers", () => {
+      installPackage();
+      const pasted = shipped
+        .replace('{ value: "web", label: "Web experiences" },', '{ value: "web", label: "Websites" },\n  { value: "apps", label: "Apps" },')
+        .replace("What we make", "What we&apos;re making")
+        .replace("onPick(service.value)", "onPick(service.value.toUpperCase())")
+        .replace("export function ServicesCard", "export function SiteServices")
+        .replace("/** A card of services. */", "/** Our services, on the homepage. */");
+      const result = check({ "services.tsx": pasted }, ["--max-warnings", "0"]);
+      expect(result.findings).toEqual([]);
+      expect(result.status).toBe(0);
+    });
+
+    it("flags changed classes, class constants, and markup as drift", () => {
+      installPackage();
+      const classes = check({ "services.tsx": shipped.replace('className="w-full"', 'className="w-full bg-brand"') });
+      expect(classes.rules).toEqual(["pattern-drift"]);
+      const constant = check({ "services.tsx": shipped.replace("gap-3 border-b", "gap-6 border-b") });
+      expect(constant.rules).toEqual(["pattern-drift"]);
+      const markup = check({
+        "services.tsx": shipped.replace("</h2>", "</h2>\n      <p>Pick one.</p>"),
+      });
+      expect(markup.rules).toEqual(["pattern-drift"]);
+      expect(markup.findings[0]).toMatchObject({ severity: "warn" });
+    });
   });
 });

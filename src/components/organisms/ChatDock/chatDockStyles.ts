@@ -25,6 +25,12 @@ export const chatDockRootClasses: Record<ChatDockPlacement, string> = {
 /** While the window is on screen, phones lift the dock above **SiteNav**: the window fills the screen. */
 export const chatDockRootRaisedClasses = "max-md:z-[60]";
 
+/** While a gate fills the window, the dock and its scrim sit above **SiteNav** on every screen. */
+export const chatDockRootModalClasses = "z-[60]";
+
+/** The scrim behind a gate — the `--color-overlay` token over the whole page. A click on it folds the window. */
+export const chatDockScrimClasses = "pointer-events-auto fixed inset-0 bg-overlay";
+
 /** The dock's column — the page grid narrowed to the composer width. */
 export const chatDockGridClasses = "grid-page [--grid-max:40rem]";
 
@@ -159,11 +165,16 @@ export const chatDockFollowUpsComposerClasses = cn(cardLayoutSectionInsetXClasse
 /** The composer — on top of the window, in the same place whether the window is open or not. */
 export const chatDockComposerClasses = "relative";
 
-/** One cell for the composer and a gate, so they crossfade in place instead of stacking. */
-export const chatDockComposerAreaClasses = "grid";
+/** The conversation or the composer once it has faded out behind a gate: kept in place, out of reach. */
+export const chatDockComposerHiddenClasses = "invisible";
 
-/** The composer or the gate, in the shared cell, both from the top. */
-export const chatDockComposerLayerClasses = "col-start-1 row-start-1 self-start";
+/**
+ * The gate's layer — the whole window. On phones the footer clears the home indicator.
+ */
+export const chatDockGateLayerClasses: Record<ChatDockPlacement, string> = {
+  fixed: "absolute inset-0 flex flex-col max-md:pb-[env(safe-area-inset-bottom,0px)]",
+  inline: "absolute inset-0 flex flex-col",
+};
 
 /**
  * The brand mark at the start of the resting composer. It folds to nothing while the window is open

@@ -4,7 +4,6 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   ChatDock,
-  chatDockGateMaxHeight,
   chatDockOpenHeight,
   chatDockPillSuggestions,
   chatDockReplyRow,
@@ -96,17 +95,6 @@ describe("chatDockReplyRow", () => {
     const votable = { ...reply, feedback: null };
     expect(chatDockReplyRow({ message: votable, isLatest: true, thinking: true, takesVotes: true })?.ready).toBe(false);
     expect(chatDockReplyRow({ message: votable, isLatest: false, thinking: true, takesVotes: true })?.ready).toBe(true);
-  });
-});
-
-describe("chatDockGateMaxHeight", () => {
-  it("leaves the header, 7rem of conversation, and the space under the gate", () => {
-    // 640 − (16 + 64 + 12 + 112 + 12 + 16) = 408
-    expect(chatDockGateMaxHeight({ windowHeight: 640, headerHeight: 64, bottomInset: 16, remPx: 16 })).toBe(408);
-  });
-
-  it("never drops below 12rem, even with a keyboard up", () => {
-    expect(chatDockGateMaxHeight({ windowHeight: 300, headerHeight: 64, bottomInset: 40, remPx: 16 })).toBe(192);
   });
 });
 

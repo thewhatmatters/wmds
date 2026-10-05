@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.2 · Pattern — form dialog
+// @thewhatmatters/wmds@0.4.3 · Pattern — form dialog
 // Storybook: Components/Dialog → Pattern — form dialog (?path=/story/components-dialog--form-dialog)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

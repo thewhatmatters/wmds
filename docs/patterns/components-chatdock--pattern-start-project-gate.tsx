@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.2 · Pattern — start a project gate
+// @thewhatmatters/wmds@0.4.3 · Pattern — start a project gate
 // Storybook: Components/ChatDock → Pattern — start a project gate (?path=/story/components-chatdock--pattern-start-project-gate)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -54,12 +54,12 @@ export interface StartProjectIntake {
 export interface StartProjectGateProps {
   /** What the assistant already picked up from the conversation, or `{}`. */
   request: { services?: string[]; budget?: string };
-  /** Closes the gate — Cancel, Close, or Escape. */
+  /** Leaves the gate — its Cancel. The gate's close and Escape fold the window and keep the gate, with its progress. */
   close: () => void;
   /** Ends the gate; the conversation shows the answers and the confirmation. */
   complete: (answers: ChatQaPair[], confirmation: string) => void;
-  /** Sends the intake. */
-  onSubmit: (intake: StartProjectIntake) => void;
+  /** Sends the intake. Resolve once it is sent; reject to keep the answers and offer Try again. */
+  onSubmit: (intake: StartProjectIntake) => Promise<void>;
   /** The booking calendar. Call `booked` once the visitor confirms a time. Leave it out to show the empty state. */
   renderCalendar?: (booked: () => void) => ReactNode;
 }
@@ -72,6 +72,9 @@ export function StartProjectGate({ request, close, complete, onSubmit, renderCal
   const [chosen, setChosen] = useState<string[]>(request.services ?? []);
   const [budget, setBudget] = useState<string | null>(request.budget ?? null);
   const [about, setAbout] = useState<IntakeAboutValues>(intakeAboutEmpty);
+  const [sending, setSending] = useState(false);
+  /** How the visitor chose to follow up when the send failed — Try again sends that again. */
+  const [failed, setFailed] = useState<"call" | "email" | null>(null);
 
   function toggleService(value: string) {
     setChosen((current) =>
@@ -94,10 +97,21 @@ export function StartProjectGate({ request, close, complete, onSubmit, renderCal
   const canContinue =
     step === 1 ? chosen.length > 0 : step === 2 ? budget != null : step === 3 ? isIntakeAboutValid(about) : true;
 
-  function finish(followUp: "call" | "email") {
-    onSubmit({ services: chosen, budget, about, followUp });
-    // The burst starts at the control the visitor used — the booking or the skip.
+  async function finish(followUp: "call" | "email") {
+    if (sending) return;
+    // The burst starts at the control the visitor used — the booking, the skip, or Try again.
     const used = document.activeElement;
+    setSending(true);
+    setFailed(null);
+    try {
+      await onSubmit({ services: chosen, budget, about, followUp });
+    } catch {
+      // Every answer stays; the gate shows the error and Try again.
+      setFailed(followUp);
+      return;
+    } finally {
+      setSending(false);
+    }
     fire(used instanceof HTMLElement ? { origin: used } : undefined);
     const firstName = about.name.trim().split(" ")[0];
     const email = about.email.trim();
@@ -121,6 +135,7 @@ export function StartProjectGate({ request, close, complete, onSubmit, renderCal
   }
 
   const copy = steps[step - 1];
+  const lastStep = step === steps.length;
 
   return (
     <ChatDock.Gate
@@ -129,11 +144,33 @@ export function StartProjectGate({ request, close, complete, onSubmit, renderCal
       subtitle={copy.subtitle}
       step={step}
       stepCount={steps.length}
-      onPrevious={() => setStep((current) => Math.max(1, current - 1))}
-      onNext={step < steps.length ? () => setStep((current) => current + 1) : undefined}
+      onPrevious={() => {
+        setFailed(null);
+        setStep((current) => Math.max(1, current - 1));
+      }}
+      onNext={
+        !lastStep
+          ? () => setStep((current) => current + 1)
+          : failed != null
+            ? () => {
+                void finish(failed);
+              }
+            : undefined
+      }
+      continueLabel={lastStep && failed != null ? "Try again" : undefined}
       canContinue={canContinue}
+      pending={sending}
+      error={lastStep && failed != null ? "We couldn't send your answers. Check your connection and try again." : undefined}
       onClose={close}
-      footerStart={step === 4 ? <CalEmbed.Skip onSkip={() => finish("email")} /> : undefined}
+      footerStart={
+        lastStep ? (
+          <CalEmbed.Skip
+            onSkip={() => {
+              void finish("email");
+            }}
+          />
+        ) : undefined
+      }
     >
       {step === 1 ? (
         <div className="flex w-full flex-col" role="group" aria-label="Services">
@@ -174,7 +211,13 @@ export function StartProjectGate({ request, close, complete, onSubmit, renderCal
         </div>
       ) : null}
       {step === 3 ? <IntakeForm values={about} onChange={setAbout} /> : null}
-      {step === 4 ? <CalEmbed skip={false}>{renderCalendar?.(() => finish("call"))}</CalEmbed> : null}
+      {lastStep ? (
+        <CalEmbed skip={false}>
+          {renderCalendar?.(() => {
+            void finish("call");
+          })}
+        </CalEmbed>
+      ) : null}
     </ChatDock.Gate>
   );
 }

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.2 · Pattern — end detail rail
+// @thewhatmatters/wmds@0.4.3 · Pattern — end detail rail
 // Storybook: Components/Panel → Pattern — end detail rail (?path=/story/components-panel--end-detail-rail)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

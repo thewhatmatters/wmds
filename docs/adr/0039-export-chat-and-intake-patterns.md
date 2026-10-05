@@ -124,3 +124,14 @@ The site has to run Start a project inside the chat, as the old full-page chat d
 - ADR-0016 — overlays (the shared overlay header)
 - ADR-0026 — Storybook catalog (Sites removed)
 - ADR-0038 — intake modal (Start a project)
+
+### Amendment — 2026-10-05: the gate takes over the window
+
+On the site the gate read as a card inside the chat: two headers and two closes, "Ask anything" over a form where nothing could be asked, the last reply alone above a gap, and a cap that kept that reply in view at the form's expense (at 900px tall, step 1 showed 5 of 7 services and scrolled). The intent of Start a project is focus. This reverses "the conversation stays above" from the amendment above.
+
+- **While `gate` is set, the window is the form.** The gate fills the window: one header (the step's title and subtitle, previous, "2 of 4", next, close), the step in a body that takes the height left and scrolls, and the footer (start slot, Cancel, primary) on the window's bottom edge. No inner card: **ChatDock.Gate** is a flush, ghost **Card**; the window owns the surface. The window's header, the conversation, the composer, the suggestion rows, the follow-ups, and the disclaimer fade out and wait behind it, mounted, so finishing or cancelling brings the conversation back as it was, with the answers and the confirmation the pattern adds. The cap (`--chat-dock-gate-max`) is gone.
+- **The one close folds the window and keeps the gate.** The gate's header close, Escape, and a click on the scrim all fold the window; the gate stays with its progress and is there when the visitor reopens the chat. Cancel is the one way to leave the form. Rationale: the header's close does what the window's close does everywhere, and none of the quick ways out throws away typed answers.
+- **The fixed window is modal while the gate is up.** A scrim (`--color-overlay`) covers the page and **SiteNav**, everything outside the dock is `inert`, the page does not scroll, and Tab cycles inside the window (`aria-modal="true"`). Inline previews are not modal. Rationale: the form is a commitment the visitor chose; the page behind would only compete with it, and a live page behind a form with no scrim reads as a bug.
+- **Sending is part of the gate.** **ChatDock.Gate** takes `pending` ("Sending…", controls off, `aria-busy`) and `error` (announced, over the footer); the header's next is off on the last step, so the footer's primary can be "Send" or "Try again". **Pattern — start a project gate**'s `onSubmit` returns a promise: the conversation thanks the visitor only once it resolves; a rejection keeps every answer and offers Try again.
+- **Hydration.** ChatDock reads reduced motion through `useSyncExternalStore` with a server value of off, so the closed window's inline style is the same on the server and in the hydration render.
+

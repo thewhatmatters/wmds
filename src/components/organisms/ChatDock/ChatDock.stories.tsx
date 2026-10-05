@@ -1,6 +1,7 @@
 import { useId, useRef, useState, type ReactNode } from "react";
 import { MotionConfig } from "motion/react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { waitFor } from "storybook/test";
 import { ArrowRight, CalendarClock, DollarSign } from "lucide-react";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { storybookViewports } from "../../../lib/viewports";
@@ -256,12 +257,12 @@ export interface StartProjectIntake {
 export interface StartProjectGateProps {
   /** What the assistant already picked up from the conversation, or \`{}\`. */
   request: { services?: string[]; budget?: string };
-  /** Closes the gate — Cancel, Close, or Escape. */
+  /** Leaves the gate — its Cancel. The gate's close and Escape fold the window and keep the gate, with its progress. */
   close: () => void;
   /** Ends the gate; the conversation shows the answers and the confirmation. */
   complete: (answers: ChatQaPair[], confirmation: string) => void;
-  /** Sends the intake. */
-  onSubmit: (intake: StartProjectIntake) => void;
+  /** Sends the intake. Resolve once it is sent; reject to keep the answers and offer Try again. */
+  onSubmit: (intake: StartProjectIntake) => Promise<void>;
   /** The booking calendar. Call \`booked\` once the visitor confirms a time. Leave it out to show the empty state. */
   renderCalendar?: (booked: () => void) => ReactNode;
 }
@@ -274,6 +275,9 @@ export function StartProjectGate({ request, close, complete, onSubmit, renderCal
   const [chosen, setChosen] = useState<string[]>(request.services ?? []);
   const [budget, setBudget] = useState<string | null>(request.budget ?? null);
   const [about, setAbout] = useState<IntakeAboutValues>(intakeAboutEmpty);
+  const [sending, setSending] = useState(false);
+  /** How the visitor chose to follow up when the send failed — Try again sends that again. */
+  const [failed, setFailed] = useState<"call" | "email" | null>(null);
 
   function toggleService(value: string) {
     setChosen((current) =>
@@ -296,10 +300,21 @@ export function StartProjectGate({ request, close, complete, onSubmit, renderCal
   const canContinue =
     step === 1 ? chosen.length > 0 : step === 2 ? budget != null : step === 3 ? isIntakeAboutValid(about) : true;
 
-  function finish(followUp: "call" | "email") {
-    onSubmit({ services: chosen, budget, about, followUp });
-    // The burst starts at the control the visitor used — the booking or the skip.
+  async function finish(followUp: "call" | "email") {
+    if (sending) return;
+    // The burst starts at the control the visitor used — the booking, the skip, or Try again.
     const used = document.activeElement;
+    setSending(true);
+    setFailed(null);
+    try {
+      await onSubmit({ services: chosen, budget, about, followUp });
+    } catch {
+      // Every answer stays; the gate shows the error and Try again.
+      setFailed(followUp);
+      return;
+    } finally {
+      setSending(false);
+    }
     fire(used instanceof HTMLElement ? { origin: used } : undefined);
     const firstName = about.name.trim().split(" ")[0];
     const email = about.email.trim();
@@ -323,6 +338,7 @@ export function StartProjectGate({ request, close, complete, onSubmit, renderCal
   }
 
   const copy = steps[step - 1];
+  const lastStep = step === steps.length;
 
   return (
     <ChatDock.Gate
@@ -331,11 +347,33 @@ export function StartProjectGate({ request, close, complete, onSubmit, renderCal
       subtitle={copy.subtitle}
       step={step}
       stepCount={steps.length}
-      onPrevious={() => setStep((current) => Math.max(1, current - 1))}
-      onNext={step < steps.length ? () => setStep((current) => current + 1) : undefined}
+      onPrevious={() => {
+        setFailed(null);
+        setStep((current) => Math.max(1, current - 1));
+      }}
+      onNext={
+        !lastStep
+          ? () => setStep((current) => current + 1)
+          : failed != null
+            ? () => {
+                void finish(failed);
+              }
+            : undefined
+      }
+      continueLabel={lastStep && failed != null ? "Try again" : undefined}
       canContinue={canContinue}
+      pending={sending}
+      error={lastStep && failed != null ? "We couldn't send your answers. Check your connection and try again." : undefined}
       onClose={close}
-      footerStart={step === 4 ? <CalEmbed.Skip onSkip={() => finish("email")} /> : undefined}
+      footerStart={
+        lastStep ? (
+          <CalEmbed.Skip
+            onSkip={() => {
+              void finish("email");
+            }}
+          />
+        ) : undefined
+      }
     >
       {step === 1 ? (
         <div className="flex w-full flex-col" role="group" aria-label="Services">
@@ -376,7 +414,13 @@ export function StartProjectGate({ request, close, complete, onSubmit, renderCal
         </div>
       ) : null}
       {step === 3 ? <IntakeForm values={about} onChange={setAbout} /> : null}
-      {step === 4 ? <CalEmbed skip={false}>{renderCalendar?.(() => finish("call"))}</CalEmbed> : null}
+      {lastStep ? (
+        <CalEmbed skip={false}>
+          {renderCalendar?.(() => {
+            void finish("call");
+          })}
+        </CalEmbed>
+      ) : null}
     </ChatDock.Gate>
   );
 }
@@ -560,12 +604,12 @@ interface StartProjectIntake {
 interface StartProjectGateProps {
   /** What the assistant already picked up from the conversation, or `{}`. */
   request: { services?: string[]; budget?: string };
-  /** Closes the gate — Cancel, Close, or Escape. */
+  /** Leaves the gate — its Cancel. The gate's close and Escape fold the window and keep the gate, with its progress. */
   close: () => void;
   /** Ends the gate; the conversation shows the answers and the confirmation. */
   complete: (answers: ChatQaPair[], confirmation: string) => void;
-  /** Sends the intake. */
-  onSubmit: (intake: StartProjectIntake) => void;
+  /** Sends the intake. Resolve once it is sent; reject to keep the answers and offer Try again. */
+  onSubmit: (intake: StartProjectIntake) => Promise<void>;
   /** The booking calendar. Call `booked` once the visitor confirms a time. Leave it out to show the empty state. */
   renderCalendar?: (booked: () => void) => ReactNode;
   /** Storybook-only: opens on a later step, for the step stories. Not in the Show code. */
@@ -580,6 +624,9 @@ function StartProjectGate({ request, close, complete, onSubmit, renderCalendar, 
   const [chosen, setChosen] = useState<string[]>(request.services ?? []);
   const [budget, setBudget] = useState<string | null>(request.budget ?? null);
   const [about, setAbout] = useState<IntakeAboutValues>(intakeAboutEmpty);
+  const [sending, setSending] = useState(false);
+  /** How the visitor chose to follow up when the send failed — Try again sends that again. */
+  const [failed, setFailed] = useState<"call" | "email" | null>(null);
 
   function toggleService(value: string) {
     setChosen((current) =>
@@ -602,10 +649,21 @@ function StartProjectGate({ request, close, complete, onSubmit, renderCalendar, 
   const canContinue =
     step === 1 ? chosen.length > 0 : step === 2 ? budget != null : step === 3 ? isIntakeAboutValid(about) : true;
 
-  function finish(followUp: "call" | "email") {
-    onSubmit({ services: chosen, budget, about, followUp });
-    // The burst starts at the control the visitor used — the booking or the skip.
+  async function finish(followUp: "call" | "email") {
+    if (sending) return;
+    // The burst starts at the control the visitor used — the booking, the skip, or Try again.
     const used = document.activeElement;
+    setSending(true);
+    setFailed(null);
+    try {
+      await onSubmit({ services: chosen, budget, about, followUp });
+    } catch {
+      // Every answer stays; the gate shows the error and Try again.
+      setFailed(followUp);
+      return;
+    } finally {
+      setSending(false);
+    }
     fire(used instanceof HTMLElement ? { origin: used } : undefined);
     const firstName = about.name.trim().split(" ")[0];
     const email = about.email.trim();
@@ -629,6 +687,7 @@ function StartProjectGate({ request, close, complete, onSubmit, renderCalendar, 
   }
 
   const copy = steps[step - 1];
+  const lastStep = step === steps.length;
 
   return (
     <ChatDock.Gate
@@ -637,11 +696,33 @@ function StartProjectGate({ request, close, complete, onSubmit, renderCalendar, 
       subtitle={copy.subtitle}
       step={step}
       stepCount={steps.length}
-      onPrevious={() => setStep((current) => Math.max(1, current - 1))}
-      onNext={step < steps.length ? () => setStep((current) => current + 1) : undefined}
+      onPrevious={() => {
+        setFailed(null);
+        setStep((current) => Math.max(1, current - 1));
+      }}
+      onNext={
+        !lastStep
+          ? () => setStep((current) => current + 1)
+          : failed != null
+            ? () => {
+                void finish(failed);
+              }
+            : undefined
+      }
+      continueLabel={lastStep && failed != null ? "Try again" : undefined}
       canContinue={canContinue}
+      pending={sending}
+      error={lastStep && failed != null ? "We couldn't send your answers. Check your connection and try again." : undefined}
       onClose={close}
-      footerStart={step === 4 ? <CalEmbed.Skip onSkip={() => finish("email")} /> : undefined}
+      footerStart={
+        lastStep ? (
+          <CalEmbed.Skip
+            onSkip={() => {
+              void finish("email");
+            }}
+          />
+        ) : undefined
+      }
     >
       {step === 1 ? (
         <div className="flex w-full flex-col" role="group" aria-label="Services">
@@ -682,7 +763,13 @@ function StartProjectGate({ request, close, complete, onSubmit, renderCalendar, 
         </div>
       ) : null}
       {step === 3 ? <IntakeForm values={about} onChange={setAbout} /> : null}
-      {step === 4 ? <CalEmbed skip={false}>{renderCalendar?.(() => finish("call"))}</CalEmbed> : null}
+      {lastStep ? (
+        <CalEmbed skip={false}>
+          {renderCalendar?.(() => {
+            void finish("call");
+          })}
+        </CalEmbed>
+      ) : null}
     </ChatDock.Gate>
   );
 }
@@ -754,6 +841,20 @@ function demoCalendar(booked: () => void): ReactNode {
   );
 }
 
+/** Storybook stand-in for the app's intake request: a short pause, then it is sent. */
+function demoSend(): Promise<void> {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, 600);
+  });
+}
+
+/** Storybook stand-in for an intake request that fails — the network is down. */
+function demoSendFails(): Promise<void> {
+  return new Promise((_resolve, reject) => {
+    window.setTimeout(() => reject(new Error("Network error")), 600);
+  });
+}
+
 /** Page behind the dock — Storybook-only, so the pinned composer has something to sit over. */
 function ChatDockPage({ initialStartProject = null }: { initialStartProject?: StartProjectRequest | null }) {
   const [startProject, setStartProject] = useState<StartProjectRequest | null>(initialStartProject);
@@ -792,7 +893,14 @@ function ChatDockPage({ initialStartProject = null }: { initialStartProject?: St
           startProject={startProject}
           onStartProjectChange={setStartProject}
           renderStartProject={(slot) => (
-            <StartProjectGate {...slot} onSubmit={setSent} renderCalendar={demoCalendar} />
+            <StartProjectGate
+              {...slot}
+              onSubmit={async (intake) => {
+                await demoSend();
+                setSent(intake);
+              }}
+              renderCalendar={demoCalendar}
+            />
           )}
         />
       </div>
@@ -829,9 +937,9 @@ const meta = {
 ## Usage
 The site's assistant, pinned to the bottom of the page. At rest it is a **PromptBar** with the brand mark. Hovering the bar shows suggested questions as pills above it. Clicking or typing into it opens the chat window around the same composer: the window grows up and out of the bar, the mark moves to the header, and the composer keeps its width, rising only by the disclaimer line under it. Escape or **Close chat** folds the window back into the bar. Either can interrupt the other midway.
 
-The window is not modal: the page behind it stays usable. On phones it fills the screen, rising from the bottom edge, and stays in the part a keyboard leaves visible. With reduced motion the window crossfades in place. The app owns the conversation: it passes \`messages\`, sets \`thinking\` while a reply is on its way, and appends the reply. Copy **Pattern — chat dock**.
+The window is not modal: the page behind it stays usable (except while a gate fills it). On phones it fills the screen, rising from the bottom edge, and stays in the part a keyboard leaves visible. With reduced motion the window crossfades in place. The app owns the conversation: it passes \`messages\`, sets \`thinking\` while a reply is on its way, and appends the reply. Copy **Pattern — chat dock**.
 
-A \`gate\` puts a multi-step form — **ChatDock.Gate**, for Start a project — in the composer's place, with the conversation above it. Copy **Pattern — start a project gate**.
+A \`gate\` hands the window to a multi-step form — **ChatDock.Gate**, for Start a project. While it is up the window is the form: one header with the step's title, the step, and its footer on the window's bottom edge; the conversation and the composer wait behind it, and the window is modal. Copy **Pattern — start a project gate**.
 
 | Prop | Contract |
 |------|----------|
@@ -844,7 +952,7 @@ A \`gate\` puts a multi-step form — **ChatDock.Gate**, for Start a project —
 | \`followUpsPlacement\` | \`inline\` (default): rows in the conversation, under the reply. \`composer\`: pills pinned above the composer |
 | \`onSend\` | Receives the typed message, a suggestion's prompt, or a follow-up's prompt |
 | \`onMessageFeedback\` | Shows the thumbs under finished replies that carry \`feedback\` and receives each vote (\`null\` clears it). The app passes the vote back as the reply's \`feedback\` |
-| \`gate\` | A form in the composer's place — **ChatDock.Gate** with its steps. Setting it opens the window and moves focus in; the composer, suggestion rows, follow-ups, and disclaimer step aside; clearing it brings the composer back with focus. Escape is the gate's (**ChatDock.Gate** closes on it); the window's close folds the window and keeps the gate, with its progress, for when it reopens |
+| \`gate\` | A form that takes over the window — **ChatDock.Gate** with its steps. Setting it opens the window and moves focus in; the window's header, the conversation, the composer, the rows, and the disclaimer give way to it, and the fixed window turns modal (scrim, page inert, Tab kept inside). The gate's close, Escape, and a click on the scrim fold the window and keep the gate, with its progress, for when it reopens; the gate's Cancel clears it, and the conversation and composer come back with focus |
 | \`open\` / \`onOpenChange\` | Optional control of the window |
 | \`placement\` | \`fixed\` (default) pins it to the viewport; \`inline\` keeps it in flow for previews |
 
@@ -859,9 +967,9 @@ ChatDock — fixed to the bottom, page grid at --grid-max 40rem, under SiteNav
 │   │   └── follow-ups (inline) — Button ghost rows under the latest reply, each led by the corner-down-right arrow, 44px on phones
 │   ├── suggestion rows — Button ghost row + icon, until the first message
 │   └── follow-ups (composer) — Button secondary pills, text only, wrap
-└── composer — one PromptBar in both states, or the gate in its place
+└── composer — one PromptBar in both states; hidden while a gate is up
     ├── start: mark — folds away while the window is open
-    ├── gate — ChatDock.Gate: Card · header (title, subtitle | previous · "2 of 4" · next · close) · scrolling step body · footer (start slot | Cancel · Next); capped so the latest reply stays in view
+    ├── (while a gate is up the window is the form — ChatDock.Gate: header (title, subtitle | previous · "2 of 4" · next · close) · scrolling step body · pending or error line · footer (start slot | Cancel · Next) on the window's bottom edge; scrim behind the fixed window)
     └── disclaimer — caption, muted, opens under the composer
 \`\`\`
 
@@ -873,7 +981,8 @@ ChatDock — fixed to the bottom, page grid at --grid-max 40rem, under SiteNav
 - **Do** pass \`meta\` only for a score the app stands behind: a short \`label\` ("Match 99%") and a \`description\` that says what it measures. It is read to screen readers after the label.
 - **Do** keep votes in the app and pass each one back as the reply's \`feedback\`. **Pattern — chat dock** holds them and hands each vote to \`onFeedback\`.
 - **Don't** put buttons or scores inside a reply's \`content\` — use \`copyText\`, \`meta\`, and \`onMessageFeedback\`.
-- **Do** run Start a project as a \`gate\`, not a dialog over the chat: the visitor keeps the conversation in view. Copy **Pattern — start a project gate** and return it from **Pattern — chat dock**'s \`renderStartProject\`.
+- **Do** run Start a project as a \`gate\`, not a dialog over the chat: the form takes over the window, and its answers and the confirmation land in the conversation when it finishes. Copy **Pattern — start a project gate** and return it from **Pattern — chat dock**'s \`renderStartProject\`.
+- **Do** return the send's promise from the gate's \`onSubmit\` and reject when it fails: the gate keeps every answer, shows the error, and offers Try again. Don't thank the visitor before the send resolves.
 - **Don't** put a form inside a message's \`content\`. When a gate finishes, add its answers as a message (**ChatQa**) and a confirmation line, as the patterns do.
 - **Don't** make suggestions the only way to ask: touch devices never see the pills, only the rows in the window.
 - **Don't** add a second send arrow or an expand button to the header. Send is the composer's arrow. Voice is not part of this version.
@@ -1287,7 +1396,14 @@ const gateConversation: ChatDockMessage[] = [
  * A dock with Start a project open on `step`, the way the site wires **Pattern — start a project
  * gate** through **Pattern — chat dock**. Storybook-only.
  */
-function GateSpecimen({ step }: { step: number }) {
+function GateSpecimen({
+  step,
+  send = demoSend,
+}: {
+  step: number;
+  /** The app's intake request. Default: sent after a short pause. */
+  send?: () => Promise<void>;
+}) {
   const [messages, setMessages] = useState(gateConversation);
   const [gateOpen, setGateOpen] = useState(true);
 
@@ -1322,7 +1438,7 @@ function GateSpecimen({ step }: { step: number }) {
                   ]);
                   setGateOpen(false);
                 }}
-                onSubmit={() => undefined}
+                onSubmit={send}
                 renderCalendar={demoCalendar}
               />
             ) : undefined
@@ -1346,7 +1462,7 @@ export const PatternStartProjectGate: Story = {
         story: { inline: false, height: "800px" },
         description: {
           story:
-            "Start a project as a gate in the composer's place: **ChatDock.Gate** holds the four steps — name the work, budget, about you, book a call. The conversation stays above it. Number keys pick the numbered options while focus is in the gate. Escape, Close, or Cancel brings the composer back. Booking or skipping fires confetti and puts the answers and a confirmation in the conversation. Pass it through **Pattern — chat dock**'s `renderStartProject`; the services, budgets, copy, and calendar are yours to replace.",
+            "Start a project takes over the chat window: **ChatDock.Gate** holds the four steps — name the work, budget, about you, book a call — under one header, with the footer on the window's bottom edge, and the window is modal while it is up. Number keys pick the numbered options while focus is in the gate. Close or Escape folds the window and keeps the answers for when it reopens; Cancel returns to the conversation. Booking or skipping sends the intake (`onSubmit` returns a promise): \"Sending…\" shows meanwhile, and once it resolves confetti fires and the answers and a confirmation land in the conversation. If it rejects, the answers stay and the gate offers Try again. Pass it through **Pattern — chat dock**'s `renderStartProject`; the services, budgets, copy, and calendar are yours to replace.",
         },
       },
     },
@@ -1364,8 +1480,8 @@ function gateStepStory(step: number, viewport: "review1280" | "review390"): Pick
         description: {
           story:
             viewport === "review1280"
-              ? "Step " + step + " of **Pattern — start a project gate**, capped so the last lines of the reply above stay in view."
-              : "Step " + step + " at 390: the window fills the screen and the gate's controls are 44px.",
+              ? "Step " + step + " of **Pattern — start a project gate**. The form fills the window under one header, its footer on the window's bottom edge; the page behind is dimmed."
+              : "Step " + step + " at 390: the form fills the screen under one header, and its controls are 44px.",
         },
       },
     },
@@ -1415,6 +1531,48 @@ export const GateStep4At390: Story = {
   name: "Start a project — 4. Book a call at 390",
   globals: at390,
   ...gateStepStory(4, "review390"),
+};
+export const GateSendFailedAt1280: Story = {
+  name: "Start a project — send failed at 1280",
+  globals: at1280,
+  parameters: {
+    docs: {
+      story: { inline: false, height: "800px" },
+      description: {
+        story:
+          "The intake request rejects. The gate keeps every answer, says the send failed, and offers Try again in the footer; nothing lands in the conversation. Here the visitor chose to skip the call.",
+      },
+    },
+  },
+  render: () => <GateSpecimen step={4} send={demoSendFails} />,
+  play: async ({ canvasElement }) => {
+    const skip = await waitFor(() => {
+      const link = Array.from(canvasElement.querySelectorAll<HTMLAnchorElement>("a")).find(
+        (anchor) => anchor.textContent === "Skip, just email me",
+      );
+      if (link == null) throw new Error("Skip is missing");
+      return link;
+    });
+    skip.click();
+    await waitFor(
+      () => {
+        if (canvasElement.querySelector("[role='alert']") == null) throw new Error("No error yet");
+      },
+      { timeout: 3000 },
+    );
+  },
+};
+export const GateSendFailedAt390: Story = {
+  name: "Start a project — send failed at 390",
+  globals: at390,
+  parameters: {
+    docs: {
+      story: { inline: false, height: "844px" },
+      description: { story: "The failed send at 390: the error and Try again sit over the footer." },
+    },
+  },
+  render: () => <GateSpecimen step={4} send={demoSendFails} />,
+  play: GateSendFailedAt1280.play,
 };
 export const GateStep1At1280Dark: Story = {
   name: "Start a project — 1. Name the work at 1280, dark",

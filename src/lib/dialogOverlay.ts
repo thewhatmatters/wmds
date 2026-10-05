@@ -1,6 +1,15 @@
 const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+/** Rendered, not `visibility: hidden`, and not inside an `inert` subtree. */
+function isTabbable(node: HTMLElement): boolean {
+  if (node.closest("[inert]") != null) return false;
+  if (typeof node.checkVisibility === "function") {
+    return node.checkVisibility({ visibilityProperty: true });
+  }
+  return node.offsetParent !== null && getComputedStyle(node).visibility !== "hidden";
+}
+
 /** Tab cycle within a modal surface — returns cleanup. */
 export function trapFocus(container: HTMLElement): () => void {
   function handleKeyDown(event: KeyboardEvent) {
@@ -10,7 +19,7 @@ export function trapFocus(container: HTMLElement): () => void {
 
     const focusable = Array.from(
       container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
-    ).filter((node) => node.offsetParent !== null || node === document.activeElement);
+    ).filter((node) => isTabbable(node) || node === document.activeElement);
 
     if (focusable.length === 0) {
       event.preventDefault();
@@ -71,4 +80,26 @@ export function focusInitialElement(
 
   const focusable = container.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
   focusable?.focus();
+}
+
+/**
+ * Make everything outside `element` inert — every sibling of it and of each ancestor up to `<body>`.
+ * Elements that were inert already are left alone. Returns cleanup.
+ */
+export function inertOutside(element: HTMLElement): () => void {
+  const changed: HTMLElement[] = [];
+  let node: HTMLElement = element;
+  while (node.parentElement != null && node !== document.body) {
+    const parent = node.parentElement;
+    for (const sibling of Array.from(parent.children)) {
+      if (sibling === node || !(sibling instanceof HTMLElement) || sibling.inert) continue;
+      if (sibling instanceof HTMLScriptElement || sibling instanceof HTMLStyleElement) continue;
+      sibling.inert = true;
+      changed.push(sibling);
+    }
+    node = parent;
+  }
+  return () => {
+    for (const sibling of changed) sibling.inert = false;
+  };
 }

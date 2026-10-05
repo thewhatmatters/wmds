@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.2 · Pattern — command row
+// @thewhatmatters/wmds@0.4.3 · Pattern — command row
 // Storybook: Components/Kbd → Pattern — command row (?path=/story/components-kbd--command-row)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -1,6 +1,12 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, userEvent, waitFor, within } from "storybook/test";
-import { FilteredIndex, sampleGroups, samplePosts } from "../guides/FilterPanel/FilterPanelExample";
+import { expect, fn, userEvent, waitFor, within } from "storybook/test";
+import {
+  FilteredIndex,
+  sampleGroups,
+  samplePosts,
+  type FilterSelection,
+} from "../guides/FilterPanel/FilterPanelExample";
 
 /**
  * Browser interaction tests for **Guides/Filter panel → Pattern — filtered index** — run via
@@ -88,21 +94,86 @@ export const SheetFiltersOnPhones: Story = {
     filters.click();
     const sheet = await waitFor(() => within(document.body).getByRole("dialog", { name: "Filters" }));
 
-    await userEvent.click(within(sheet).getByRole("checkbox", { name: "Notes (1 post)" }));
-    expect(within(sheet).getByRole("checkbox", { name: "Notes (1 post)" })).toBeChecked();
-    expect(within(canvasElement).getByRole("status")).toHaveTextContent("1 post");
+    // A post can carry several topics: the brief is in Guides and in Notes.
+    await userEvent.click(within(sheet).getByRole("checkbox", { name: "Notes (2 posts)" }));
+    expect(within(sheet).getByRole("checkbox", { name: "Notes (2 posts)" })).toBeChecked();
+    expect(within(canvasElement).getByRole("status")).toHaveTextContent("2 posts");
     // The page's Filters button shows how many filters are on.
     expect(filters).toHaveTextContent("1");
 
-    await userEvent.click(within(sheet).getByRole("button", { name: "Show 1 post" }));
+    await userEvent.click(within(sheet).getByRole("button", { name: "Show 2 posts" }));
     await waitFor(() => {
       expect(within(document.body).queryByRole("dialog", { name: "Filters" })).toBeNull();
     });
-    expect(postTitles(canvasElement)).toEqual(["A design system that ships with the site"]);
+    expect(postTitles(canvasElement)).toEqual([
+      "A design system that ships with the site",
+      "Writing briefs people finish reading",
+    ]);
 
     // The side panel holds the same selection.
     const panel = canvasElement.querySelector<HTMLElement>("aside");
     if (panel == null) throw new Error("Filter panel is missing");
-    expect(within(panel).getByRole("checkbox", { name: "Notes (1 post)", hidden: true })).toBeChecked();
+    expect(within(panel).getByRole("checkbox", { name: "Notes (2 posts)", hidden: true })).toBeChecked();
+  },
+};
+
+export const StartingSelection: Story = {
+  name: "a starting selection opens the page filtered",
+  render: () => (
+    <FilteredIndex title="Blog" posts={samplePosts} groups={sampleGroups} defaultSelection={{ topic: ["notes"] }} />
+  ),
+  play: async ({ canvasElement }) => {
+    const panel = canvasElement.querySelector<HTMLElement>("aside");
+    if (panel == null) throw new Error("Filter panel is missing");
+    expect(within(canvasElement).getByRole("status")).toHaveTextContent("2 posts");
+    expect(within(panel).getByRole("checkbox", { name: "Notes (2 posts)", hidden: true })).toBeChecked();
+    expect(postTitles(canvasElement)).toEqual([
+      "A design system that ships with the site",
+      "Writing briefs people finish reading",
+    ]);
+    // It is only where the page starts: Clear all still clears it.
+    within(panel).getByRole("button", { name: "Clear all", hidden: true }).click();
+    await waitFor(() => {
+      expect(within(canvasElement).getByRole("status")).toHaveTextContent("4 posts");
+    });
+  },
+};
+
+const onSelectionChange = fn();
+
+/** The app holds the filters — as a page would in its URL. */
+function ControlledIndex() {
+  const [selection, setSelection] = useState<FilterSelection>({ topic: ["guides"] });
+  return (
+    <FilteredIndex
+      title="Blog"
+      posts={samplePosts}
+      groups={sampleGroups}
+      selection={selection}
+      onSelectionChange={(next) => {
+        onSelectionChange(next);
+        setSelection(next);
+      }}
+    />
+  );
+}
+
+export const ControlledSelection: Story = {
+  name: "a controlled selection reports every change",
+  render: () => <ControlledIndex />,
+  play: async ({ canvasElement }) => {
+    onSelectionChange.mockClear();
+    const panel = canvasElement.querySelector<HTMLElement>("aside");
+    if (panel == null) throw new Error("Filter panel is missing");
+    expect(within(canvasElement).getByRole("status")).toHaveTextContent("2 posts");
+    within(panel).getByRole("checkbox", { name: "2025 (1 post)", hidden: true }).click();
+    await waitFor(() => {
+      expect(onSelectionChange).toHaveBeenLastCalledWith({ topic: ["guides"], year: ["2025"] });
+    });
+    within(panel).getByRole("button", { name: "Clear all", hidden: true }).click();
+    await waitFor(() => {
+      expect(onSelectionChange).toHaveBeenLastCalledWith({});
+      expect(within(canvasElement).getByRole("status")).toHaveTextContent("4 posts");
+    });
   },
 };
