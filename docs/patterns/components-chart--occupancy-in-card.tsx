@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.1 · Pattern — occupancy KPI in Card
+// @thewhatmatters/wmds@0.4.2 · Pattern — occupancy KPI in Card
 // Storybook: Components/Chart → Pattern — occupancy KPI in Card (?path=/story/components-chart--occupancy-in-card)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

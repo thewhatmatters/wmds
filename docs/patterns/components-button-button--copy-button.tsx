@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.1 · Pattern — copy button
+// @thewhatmatters/wmds@0.4.2 · Pattern — copy button
 // Storybook: Components/Button/Button → Pattern — copy button (?path=/story/components-button-button--copy-button)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -56,6 +56,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "Accordion owns the full-width disclosure trigger — not an action Button.",
   },
   {
+    file: "components/molecules/Breadcrumb/Breadcrumb.tsx",
+    ruleId: "lucide-import",
+    reason: "Breadcrumb owns its chevron separator (ButtonIcon) and the collapsed-path ellipsis passed to IconButton.",
+  },
+  {
     file: "components/molecules/Chip/Chip.tsx",
     ruleId: "lucide-import",
     reason: "Lucide glyph passed to IconButton inset for removable dismiss.",

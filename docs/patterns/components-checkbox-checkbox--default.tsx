@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.1 · Pattern — default
+// @thewhatmatters/wmds@0.4.2 · Pattern — default
 // Storybook: Components/Checkbox/Checkbox → Pattern — default (?path=/story/components-checkbox-checkbox--default)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

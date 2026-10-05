@@ -104,6 +104,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "TextSequence", category: "Marketing", title: "Components/TextSequence", description: "Masked word-by-word reveal for headlines." },
 
   // Navigation
+  { name: "Breadcrumb", category: "Navigation", title: "Components/Breadcrumb", description: "The path to the current page; a long path folds its middle into a menu of links." },
   { name: "NavList", category: "Navigation", title: "Components/NavList", description: "Sectioned secondary navigation with inset pill rows." },
   { name: "Pagination", category: "Navigation", planned: true, description: "Not built yet." },
   { name: "SiteNav", category: "Navigation", title: "Components/SiteNav", description: "Marketing site header that collapses to a pinned pill, with mega menus." },

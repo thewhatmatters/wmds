@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.1 · Pattern — option counts
+// @thewhatmatters/wmds@0.4.2 · Pattern — option counts
 // Storybook: Components/Checkbox/CheckboxGroup → Pattern — option counts (?path=/story/components-checkbox-checkboxgroup--option-counts)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -17,6 +17,7 @@ A blog post page — a display title, a metadata panel, and the article. Copy **
 
 | Part | Component | Why |
 |------|-----------|-----|
+| Path | **Breadcrumb** \`variant="mono"\` \`separator="slash"\` | Home, Blog, a category, the post — in the captions' eyebrow caps |
 | Title and lead | \`h1\` on \`type-display-2\`, lead on \`type-reading\` | The page's one heading; the lead at reading size, in the measure |
 | Column captions | **SectionCaption** | "/ Metadata" names the panel (\`h2\`); "/ Article" only labels its column (\`as="p"\`) |
 | Metadata | **DescriptionList** \`variant="mono"\` \`rule="dotted"\` | Name-and-value rows read as pairs; dotted rules sit quieter than the captions' |
@@ -31,7 +32,7 @@ A blog post page — a display title, a metadata panel, and the article. Copy **
 \`\`\`
 main.grid-page
 └── article.band
-    ├── header (col-span-full, lg:col-span-10) — h1 · lead
+    ├── header (col-span-full, lg:col-span-10) — Breadcrumb · h1 · lead
     ├── aside (col-span-full, lg:col-span-4, lg:sticky) — SectionCaption "Metadata" · DescriptionList
     │   └── Date · Author · Reading time · Categories · Agents (stacked) · Share (stacked)
     └── div (col-span-full, lg:col-span-8) — SectionCaption "Article" (p) · Prose
@@ -72,11 +73,13 @@ import { useEffect, useId, useState, type ReactNode } from "react";
 import { Copy, FileText } from "lucide-react";
 import {
   Badge,
+  Breadcrumb,
   Button,
   DescriptionList,
   Prose,
   SectionCaption,
   buttonStatusHoldMs,
+  type BreadcrumbItemDef,
   type ButtonStatus,
 } from "@thewhatmatters/wmds";
 
@@ -86,6 +89,8 @@ export interface PostCategory {
 }
 
 export interface PostPageData {
+  /** The path to this post, ending with it — for example Home, Blog, Guides, this post. */
+  breadcrumb: BreadcrumbItemDef[];
   title: string;
   description: string;
   /** ISO date, for the time element. */
@@ -146,6 +151,7 @@ export function PostPage({ post, children }: { post: PostPageData; children: Rea
     <main className="grid-page bg-body">
       <article className="band py-6 sm:py-10 lg:py-14">
         <header className="col-span-full mb-4 flex flex-col gap-3 sm:mb-8 lg:col-span-10">
+          <Breadcrumb items={post.breadcrumb} variant="mono" separator="slash" className="mb-3" />
           <h1 className="type-display-2 text-balance text-fg">{post.title}</h1>
           <p className="type-reading max-w-[40rem] text-muted">{post.description}</p>
         </header>

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.1 · Pattern — article body
+// @thewhatmatters/wmds@0.4.2 · Pattern — article body
 // Storybook: Components/Prose → Pattern — article body (?path=/story/components-prose--article-body)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

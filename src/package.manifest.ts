@@ -25,7 +25,7 @@ const atoms = [
   "Tooltip",
 ] as const;
 
-const molecules = ["Accordion", "CalEmbed", "Card", "ChatQa", "CheckboxGroup", "Chip", "DescriptionList", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "HeroIntro", "IndexList", "IntakeForm", "NavList", "PageHeader", "PillGroup", "PromptBar", "RadioGroup", "Search", "Select", "SelectableCard", "SegmentedControl", "Stat", "StepProgress", "TaskRows", "TextSequence"] as const;
+const molecules = ["Accordion", "Breadcrumb", "CalEmbed", "Card", "ChatQa", "CheckboxGroup", "Chip", "DescriptionList", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "HeroIntro", "IndexList", "IntakeForm", "NavList", "PageHeader", "PillGroup", "PromptBar", "RadioGroup", "Search", "Select", "SelectableCard", "SegmentedControl", "Stat", "StepProgress", "TaskRows", "TextSequence"] as const;
 
 const organisms = ["Chart", "ChatDock", "Confetti", "Dialog", "FooterReveal", "HeroTileStack", "IntakeConfirmation", "IntakeModal", "MoreMenu", "Panel", "ScrollHorizontal", "Sheet", "SiteNav", "Tab", "Toast"] as const;
 

@@ -1,4 +1,5 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { useRender } from "@base-ui/react/use-render";
+import type { ButtonHTMLAttributes, ReactElement, ReactNode } from "react";
 import { Check } from "lucide-react";
 import { cn } from "../../../lib/cn";
 import {
@@ -29,6 +30,11 @@ export interface DropdownItemProps
   active?: boolean;
   /** When false, label stays full width — **Select** listbox. Default true for action menus. */
   truncate?: boolean;
+  /**
+   * Compose the row onto another element (Base UI `render`) — `render={<a href="/docs" />}` for a
+   * menu of links, such as **Breadcrumb**'s collapsed pages. `disabled` maps to `aria-disabled`.
+   */
+  render?: ReactElement;
   className?: DropdownItemLayoutClassName;
 }
 
@@ -45,6 +51,7 @@ export function DropdownItem({
   disabled,
   className,
   type = "button",
+  render,
   ...props
 }: DropdownItemProps) {
   const trailing = selected ? (
@@ -55,19 +62,15 @@ export function DropdownItem({
     <span className={dropdownItemEndClasses}>{end}</span>
   ) : null;
 
-  return (
-    <button
-      {...props}
-      type={type}
-      disabled={disabled}
-      className={cn(
-        dropdownItemButtonClasses,
-        selected && "hover:bg-transparent focus-visible:bg-transparent",
-        active && !selected && dropdownItemActiveClasses,
-        disabled && dropdownItemDisabledClasses,
-        className,
-      )}
-    >
+  const rowClassName = cn(
+    dropdownItemButtonClasses,
+    selected && "hover:bg-transparent focus-visible:bg-transparent",
+    active && !selected && dropdownItemActiveClasses,
+    disabled && dropdownItemDisabledClasses,
+    className,
+  );
+  const content = (
+    <>
       {start != null ? (
         <span className={dropdownItemStartClasses} aria-hidden>
           {start}
@@ -79,6 +82,35 @@ export function DropdownItem({
         {children}
       </span>
       {trailing}
-    </button>
+    </>
   );
+
+  return (
+    <DropdownItemShell
+      {...props}
+      render={render}
+      type={type}
+      disabled={disabled}
+      className={rowClassName}
+    >
+      {content}
+    </DropdownItemShell>
+  );
+}
+
+interface DropdownItemShellProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
+  render?: ReactElement;
+  className: string;
+  children: ReactNode;
+}
+
+/** A `<button>` by default, or the row composed onto `render` — a link in a menu of links. */
+function DropdownItemShell({ render, type, disabled, ...props }: DropdownItemShellProps) {
+  return useRender({
+    render,
+    defaultTagName: "button",
+    props: render
+      ? { ...props, "aria-disabled": disabled ? true : undefined }
+      : { ...props, type, disabled },
+  });
 }

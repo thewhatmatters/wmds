@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -65,6 +65,22 @@
       "patterns": [
         "components-badge--outline-tags",
         "components-badge--with-avatar"
+      ]
+    },
+    {
+      "name": "Breadcrumb",
+      "tier": "molecule",
+      "category": "Navigation",
+      "summary": "The path to the current page; a long path folds its middle into a menu of links.",
+      "storybook": {
+        "title": "Components/Breadcrumb",
+        "docs": "?path=/docs/components-breadcrumb--docs"
+      },
+      "patterns": [
+        "components-breadcrumb--editorial",
+        "components-breadcrumb--long-path",
+        "components-breadcrumb--path",
+        "components-breadcrumb--router-links"
       ]
     },
     {

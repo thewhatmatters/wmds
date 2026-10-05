@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.1 · Pattern — keyboard shortcut
+// @thewhatmatters/wmds@0.4.2 · Pattern — keyboard shortcut
 // Storybook: Components/Tooltip → Pattern — keyboard shortcut (?path=/story/components-tooltip--keyboard-shortcut)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

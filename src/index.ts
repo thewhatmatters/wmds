@@ -191,6 +191,20 @@ export {
   type AccordionVariant,
 } from "./components/molecules/Accordion/Accordion";
 export {
+  Breadcrumb,
+  breadcrumbDefaultLabels,
+  breadcrumbSeparators,
+  breadcrumbSlots,
+  breadcrumbVariants,
+  type BreadcrumbItemDef,
+  type BreadcrumbLabels,
+  type BreadcrumbLayoutClassName,
+  type BreadcrumbLinkItem,
+  type BreadcrumbProps,
+  type BreadcrumbSeparator,
+  type BreadcrumbVariant,
+} from "./components/molecules/Breadcrumb/Breadcrumb";
+export {
   CalEmbed,
   calEmbedSkipHref,
   calEmbedSkipLabel,
