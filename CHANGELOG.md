@@ -7,6 +7,20 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.2
+
+**Breadcrumb** — the path to the current page, after the shadcn/ui breadcrumb: links from the root, a separator between them, the current page last, and a long path folded into a "…" menu of links. See **ADR-0042**.
+
+- **Breadcrumb** (new) — pass `items` (`{ label, href }`; the last item, without `href`, is the current page). Above `maxItems` (default 4) the first item and the last two stay and the middle folds into a "…" control; it opens a menu of the hidden links, with focus on the first, arrow keys between them, and Escape back to the control. Long labels truncate. `separator`: `chevron` (default) or `slash`. `variant`: `sans` (default) or `mono` (eyebrow caps). `renderLink` routes every link through your router (`(item) => <Link href={item.href} />`). New **Pattern — path**, **Pattern — long path**, **Pattern — router links**, and **Pattern — editorial**.
+- **Dropdown.Item** `render` — compose a row onto another element, such as `render={<a href />}` for a menu of links.
+- **Guides/Post page → Pattern — post page** — a mono, slash-separated **Breadcrumb** above the title. `PostPageData` gains `breadcrumb`.
+
+### Consumer actions
+
+1. **WhatMatters site, post page: re-copy Guides/Post page → Pattern — post page** (`node_modules/@thewhatmatters/wmds/docs/patterns/guides-post-page--post-page.tsx`) and re-apply only your content, data, and handlers. Pass `breadcrumb` in `PostPageData`, ending with the post — for example `[{ label: "Home", href: "/" }, { label: "Blog", href: "/blog" }, { label: post.title }]`, with the post's category between Blog and the title if you link categories. To route crumbs through Next, pass `renderLink={(item) => <Link href={item.href} />}` on the pattern's **Breadcrumb**.
+2. **WhatMatters site, other deep pages** (a resource category, a case study): add `<Breadcrumb items={…} />` above the page title — `variant="mono" separator="slash"` on editorial pages, to match the post page.
+3. Other apps: none. **Breadcrumb** and **Dropdown.Item** `render` are new and optional.
+
 ## 0.4.1
 
 **ChatDock:** follow-ups in the open window, actions and a match score under each reply, a Start a project gate in the composer's place, the visitor's messages on a brand tint, and a new open and close transition.

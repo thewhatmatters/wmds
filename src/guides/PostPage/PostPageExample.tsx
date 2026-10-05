@@ -8,6 +8,7 @@ import { Badge } from "../../components/atoms/Badge/Badge";
 import { Button, buttonStatusHoldMs, type ButtonStatus } from "../../components/atoms/Button/Button";
 import { Prose } from "../../components/atoms/Prose/Prose";
 import { SectionCaption } from "../../components/atoms/SectionCaption/SectionCaption";
+import { Breadcrumb, type BreadcrumbItemDef } from "../../components/molecules/Breadcrumb/Breadcrumb";
 import { DescriptionList } from "../../components/molecules/DescriptionList/DescriptionList";
 import type { DisplayControlThemeMode } from "../../components/molecules/DisplayControls/DisplayControls";
 import { GridOverlay } from "../../lib/GridOverlay";
@@ -21,6 +22,8 @@ export interface PostCategory {
 }
 
 export interface PostPageData {
+  /** The path to this post, ending with it — for example Home, Blog, Guides, this post. */
+  breadcrumb: BreadcrumbItemDef[];
   title: string;
   description: string;
   /** ISO date, for the time element. */
@@ -81,6 +84,7 @@ export function PostPage({ post, children }: { post: PostPageData; children: Rea
     <main className="grid-page bg-body">
       <article className="band py-6 sm:py-10 lg:py-14">
         <header className="col-span-full mb-4 flex flex-col gap-3 sm:mb-8 lg:col-span-10">
+          <Breadcrumb items={post.breadcrumb} variant="mono" separator="slash" className="mb-3" />
           <h1 className="type-display-2 text-balance text-fg">{post.title}</h1>
           <p className="type-reading max-w-[40rem] text-muted">{post.description}</p>
         </header>
@@ -146,6 +150,12 @@ export function PostPage({ post, children }: { post: PostPageData; children: Rea
 // ── Sample data and the Storybook-only grid inspector ─────────────────────────────────────
 
 export const samplePost: PostPageData = {
+  breadcrumb: [
+    { label: "Home", href: "#home" },
+    { label: "Blog", href: "#blog" },
+    { label: "Guides", href: "#guides" },
+    { label: "How we scope a brand sprint" },
+  ],
   title: "How we scope a brand sprint",
   description: "Two weeks, one decision a day: the questions we ask before a sprint starts and what we hand over at the end.",
   date: "2026-09-14",

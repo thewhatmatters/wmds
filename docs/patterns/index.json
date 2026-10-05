@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -33,6 +33,38 @@
       "file": "patterns/components-badge--with-avatar.tsx",
       "storybook": "?path=/story/components-badge--with-avatar",
       "source": "src/components/atoms/Badge/Badge.stories.tsx"
+    },
+    {
+      "id": "components-breadcrumb--editorial",
+      "title": "Components/Breadcrumb",
+      "name": "Pattern — editorial",
+      "file": "patterns/components-breadcrumb--editorial.tsx",
+      "storybook": "?path=/story/components-breadcrumb--editorial",
+      "source": "src/components/molecules/Breadcrumb/Breadcrumb.stories.tsx"
+    },
+    {
+      "id": "components-breadcrumb--long-path",
+      "title": "Components/Breadcrumb",
+      "name": "Pattern — long path",
+      "file": "patterns/components-breadcrumb--long-path.tsx",
+      "storybook": "?path=/story/components-breadcrumb--long-path",
+      "source": "src/components/molecules/Breadcrumb/Breadcrumb.stories.tsx"
+    },
+    {
+      "id": "components-breadcrumb--path",
+      "title": "Components/Breadcrumb",
+      "name": "Pattern — path",
+      "file": "patterns/components-breadcrumb--path.tsx",
+      "storybook": "?path=/story/components-breadcrumb--path",
+      "source": "src/components/molecules/Breadcrumb/Breadcrumb.stories.tsx"
+    },
+    {
+      "id": "components-breadcrumb--router-links",
+      "title": "Components/Breadcrumb",
+      "name": "Pattern — router links",
+      "file": "patterns/components-breadcrumb--router-links.tsx",
+      "storybook": "?path=/story/components-breadcrumb--router-links",
+      "source": "src/components/molecules/Breadcrumb/Breadcrumb.stories.tsx"
     },
     {
       "id": "components-button-button--copy-button",

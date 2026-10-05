@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.1 · Pattern — post page
+// @thewhatmatters/wmds@0.4.2 · Pattern — post page
 // Storybook: Guides/Post page → Pattern — post page (?path=/story/guides-post-page--post-page)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -6,11 +6,13 @@ import { useEffect, useId, useState, type ReactNode } from "react";
 import { Copy, FileText } from "lucide-react";
 import {
   Badge,
+  Breadcrumb,
   Button,
   DescriptionList,
   Prose,
   SectionCaption,
   buttonStatusHoldMs,
+  type BreadcrumbItemDef,
   type ButtonStatus,
 } from "@thewhatmatters/wmds";
 
@@ -20,6 +22,8 @@ export interface PostCategory {
 }
 
 export interface PostPageData {
+  /** The path to this post, ending with it — for example Home, Blog, Guides, this post. */
+  breadcrumb: BreadcrumbItemDef[];
   title: string;
   description: string;
   /** ISO date, for the time element. */
@@ -80,6 +84,7 @@ export function PostPage({ post, children }: { post: PostPageData; children: Rea
     <main className="grid-page bg-body">
       <article className="band py-6 sm:py-10 lg:py-14">
         <header className="col-span-full mb-4 flex flex-col gap-3 sm:mb-8 lg:col-span-10">
+          <Breadcrumb items={post.breadcrumb} variant="mono" separator="slash" className="mb-3" />
           <h1 className="type-display-2 text-balance text-fg">{post.title}</h1>
           <p className="type-reading max-w-[40rem] text-muted">{post.description}</p>
         </header>

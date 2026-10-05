@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.1 · Pattern — marketing page
+// @thewhatmatters/wmds@0.4.2 · Pattern — marketing page
 // Storybook: Components/FooterReveal → Pattern — marketing page (?path=/story/components-footerreveal--marketing-page-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.1 · Pattern — mega menu
+// @thewhatmatters/wmds@0.4.2 · Pattern — mega menu
 // Storybook: Components/SiteNav → Pattern — mega menu (?path=/story/components-sitenav--mega-menu)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

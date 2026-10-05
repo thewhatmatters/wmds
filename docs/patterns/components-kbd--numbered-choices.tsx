@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.1 · Pattern — numbered choice keys
+// @thewhatmatters/wmds@0.4.2 · Pattern — numbered choice keys
 // Storybook: Components/Kbd → Pattern — numbered choice keys (?path=/story/components-kbd--numbered-choices)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
