@@ -145,3 +145,7 @@ Seen live, the takeover above was the wrong direction: the intake form should be
 - **Phones keep the conversation.** The full-screen window does not collapse the conversation to the latest message: the thread already scrolls, collapsing would add a mode and hide context, and each step is brought into view anyway.
 - **Kept from the takeover:** closing the window keeps the gate and its progress; `pending` and `error`; `onSubmit` as a promise with Try again; the hydration fix. `labels.close` on **ChatDock.Gate** is unused and deprecated.
 
+### Amendment — 2026-10-05 (0.4.5): the gate is set into the conversation
+
+The flat gate under a hairline read as more chat text. **ChatDock.Gate** is now a well set into the conversation: a hairline border at the card body radius, the page floor inside, and a new token, `--shadow-inset-well` (`shadow-inset-well`), a shade under its top edge. Inset, not raised, so it reads as embedded rather than as the 0.4.2 card on a card: no drop shadow, no second surface colour above the window's. Its vertical padding is 12px, so at 1280×900 step 1 still shows all seven services with the reply above it. **Pattern — start a project gate** uses **IntakeForm**'s short form (see the ADR-0038 amendment).
+

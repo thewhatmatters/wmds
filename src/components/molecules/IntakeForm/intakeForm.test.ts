@@ -133,4 +133,39 @@ describe("IntakeForm blur errors", () => {
     expect(container.textContent).not.toContain("Please enter a valid URL.");
     expect(container.querySelector('input[aria-label="Link"]')?.getAttribute("aria-invalid")).toBeNull();
   });
+
+  it("leaves out company and link, closing up, and keeps their values", () => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+    const values = { ...intakeAboutEmpty, company: "Northwind", url: "https://northwind.example" };
+    const changes: (typeof values)[] = [];
+
+    act(() => {
+      root?.render(
+        createElement(IntakeForm, {
+          values,
+          onChange: (next: typeof values) => changes.push(next),
+          company: false,
+          link: false,
+        }),
+      );
+    });
+
+    expect(container.querySelector('input[aria-label="Company"]')).toBeNull();
+    expect(container.querySelector('input[aria-label="Link"]')).toBeNull();
+    const fields = container.querySelectorAll("input, textarea");
+    expect([...fields].map((field) => field.getAttribute("aria-label"))).toEqual(["Name", "Email", "Project details"]);
+    // Three rows, no empty slots between them.
+    expect(container.firstElementChild?.children).toHaveLength(3);
+
+    const name = container.querySelector('input[aria-label="Name"]');
+    if (!(name instanceof HTMLInputElement)) throw new Error("Name is missing");
+    act(() => {
+      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
+      setter?.call(name, "Ada");
+      name.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    expect(changes.at(-1)).toMatchObject({ name: "Ada", company: "Northwind", url: "https://northwind.example" });
+  });
 });

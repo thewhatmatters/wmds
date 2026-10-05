@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -422,7 +422,8 @@
         "docs": "?path=/docs/components-intakeform--docs"
       },
       "patterns": [
-        "components-intakeform--about-you-pattern"
+        "components-intakeform--about-you-pattern",
+        "components-intakeform--short-form-pattern"
       ]
     },
     {

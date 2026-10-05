@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.4 · Pattern — ranked audience breakdown
+// @thewhatmatters/wmds@0.4.5 · Pattern — ranked audience breakdown
 // Storybook: Components/Chart → Pattern — ranked audience breakdown (?path=/story/components-chart--ranked-audience-breakdown)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

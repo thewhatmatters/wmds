@@ -97,7 +97,8 @@ export interface ChatDockGateProps {
 
 /**
  * A multi-step form in the conversation — pass it as **ChatDock**'s `gate`. It sits under the latest
- * message, flat on the window surface under a hairline: the step's title and subtitle with previous,
+ * message, set into the conversation as a well (hairline border, page floor, inset shade — embedded,
+ * not raised): the step's title and subtitle with previous,
  * progress, and next; the step; Cancel and the primary action under a second hairline. It has no close
  * of its own and never scrolls on its own — the window grows to fit it, and past that the conversation
  * scrolls.

@@ -414,7 +414,8 @@ export function StartProjectGate({ request, close, complete, onSubmit, renderCal
           ))}
         </div>
       ) : null}
-      {step === 3 ? <IntakeForm values={about} onChange={setAbout} /> : null}
+      {/* The short form: in the chat, a company or a link goes in the project details. */}
+      {step === 3 ? <IntakeForm values={about} onChange={setAbout} company={false} link={false} /> : null}
       {lastStep ? (
         <CalEmbed skip={false}>
           {renderCalendar?.(() => {
@@ -764,7 +765,8 @@ function StartProjectGate({ request, close, complete, onSubmit, renderCalendar, 
           ))}
         </div>
       ) : null}
-      {step === 3 ? <IntakeForm values={about} onChange={setAbout} /> : null}
+      {/* The short form: in the chat, a company or a link goes in the project details. */}
+      {step === 3 ? <IntakeForm values={about} onChange={setAbout} company={false} link={false} /> : null}
       {lastStep ? (
         <CalEmbed skip={false}>
           {renderCalendar?.(() => {
@@ -971,7 +973,7 @@ ChatDock — fixed to the bottom, page grid at --grid-max 40rem, under SiteNav
 │   └── follow-ups (composer) — Button secondary pills, text only, wrap
 └── composer — one PromptBar in both states; off while a gate is up
     ├── start: mark — folds away while the window is open
-│   │   └── gate — ChatDock.Gate under the latest message: hairline · step title, subtitle | previous · "2 of 4" · next · step · hairline · pending or error line · footer (start slot | Cancel · Next)
+│   │   └── gate — ChatDock.Gate under the latest message: a well (hairline border, page floor, inset shade) · step title, subtitle | previous · "2 of 4" · next · step · hairline · pending or error line · footer (start slot | Cancel · Next)
     └── disclaimer — caption, muted, opens under the composer
 \`\`\`
 
@@ -1468,7 +1470,7 @@ export const PatternStartProjectGate: Story = {
         story: { inline: false, height: "800px" },
         description: {
           story:
-            "Start a project in the conversation: **ChatDock.Gate** holds the four steps — name the work, budget, about you, book a call — under the latest reply, set off by a hairline. The window keeps its header (its subtitle becomes \"Start a project\") and grows to fit the step; the composer stays in place, off. Number keys pick the numbered options while focus is in the gate. The window's close or Escape folds it and keeps the answers for when it reopens; Cancel leaves the form and the composer comes back. Booking or skipping sends the intake (`onSubmit` returns a promise): \"Sending…\" shows meanwhile, and once it resolves confetti fires and the answers and a confirmation take the form's place. If it rejects, the answers stay and the gate offers Try again. Pass it through **Pattern — chat dock**'s `renderStartProject`; the services, budgets, copy, and calendar are yours to replace.",
+            "Start a project in the conversation: **ChatDock.Gate** holds the four steps — name the work, budget, about you, book a call — under the latest reply, set into the conversation as a bordered well. The window keeps its header (its subtitle becomes \"Start a project\") and grows to fit the step; the composer stays in place, off. Number keys pick the numbered options while focus is in the gate. The window's close or Escape folds it and keeps the answers for when it reopens; Cancel leaves the form and the composer comes back. Step 3 is the short form — name, email, and project details (`company={false}` `link={false}` on **IntakeForm**); drop those two props to ask for a company and a link. Booking or skipping sends the intake (`onSubmit` returns a promise): \"Sending…\" shows meanwhile, and once it resolves confetti fires and the answers and a confirmation take the form's place. If it rejects, the answers stay and the gate offers Try again. Pass it through **Pattern — chat dock**'s `renderStartProject`; the services, budgets, copy, and calendar are yours to replace.",
         },
       },
     },
@@ -1486,8 +1488,10 @@ function gateStepStory(step: number, viewport: "review1280" | "review390"): Pick
         description: {
           story:
             viewport === "review1280"
-              ? "Step " + step + " of **Pattern — start a project gate**, under the reply it answers. The window grows to fit the step, so it shows whole; the composer stays in place, off."
-              : "Step " + step + " at 390: the conversation stays above the form and scrolls with it; each step is brought into view. Controls are 44px.",
+              ? "Step " + step + " of **Pattern — start a project gate**, set into the conversation under the reply it answers. The window grows to fit the step, so it shows whole; the composer stays in place, off." +
+                (step === 3 ? " This is the short form: name, email, and project details." : "")
+              : "Step " + step + " at 390: the conversation stays above the form and scrolls with it; each step is brought into view. Controls are 44px." +
+                (step === 3 ? " The short form keeps the step to three fields." : ""),
         },
       },
     },

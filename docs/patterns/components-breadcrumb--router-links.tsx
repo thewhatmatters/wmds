@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.4 · Pattern — router links
+// @thewhatmatters/wmds@0.4.5 · Pattern — router links
 // Storybook: Components/Breadcrumb → Pattern — router links (?path=/story/components-breadcrumb--router-links)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
