@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.5 · Marketing hero with gallery intro
+// @thewhatmatters/wmds@0.4.6 · Marketing hero with gallery intro
 // Storybook: Components/FooterReveal → Marketing hero with gallery intro (?path=/story/components-footerreveal--marketing-hero-with-gallery-intro)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

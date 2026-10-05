@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.5 · Pattern — outline mono
+// @thewhatmatters/wmds@0.4.6 · Pattern — outline mono
 // Storybook: Components/Button/Button → Pattern — outline mono (?path=/story/components-button-button--outline-mono)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

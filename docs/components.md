@@ -1,6 +1,6 @@
 # @thewhatmatters/wmds — component contracts
 
-Version 0.4.5. Generated from the WMDS repository's AGENTS.md (Storybook-first) by `scripts/generate-package-docs.mjs` — do not edit here.
+Version 0.4.6. Generated from the WMDS repository's AGENTS.md (Storybook-first) by `scripts/generate-package-docs.mjs` — do not edit here.
 
 Storybook paths such as **Components/Button/Button → Pattern — …** name a story; its Show code is in `patterns/` (see `patterns/index.json`). Longer contracts for FooterReveal, HeroTileStack, TextSequence, ScrollHorizontal, RiveHand, and PromptBar are in `component-contracts.md`. ADR numbers refer to decision records in the WMDS repository.
 

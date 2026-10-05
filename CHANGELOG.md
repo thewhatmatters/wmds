@@ -7,6 +7,16 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.6
+
+**TextArea shows one focus ring.** A focused **TextArea** drew two: the ring on its shell, and the browser's own outline on the field inside it.
+
+- **TextArea** — the field inside the shell drops its outline, so the shell's ring is the only focus indicator. This was visible on every **TextArea** without a status message, including Project details in **IntakeForm** and the Start a project gate. **PromptBar** and a **TextArea** with a `message` were already correct.
+
+### Consumer actions
+
+None. If an app added its own outline reset for this, remove it.
+
 ## 0.4.5
 
 **The Start a project form is shorter and set into the conversation.** **IntakeForm** can leave out its optional fields, **Pattern — start a project gate** uses the short form, and **ChatDock.Gate** reads as embedded in the chat. See the amendments to **ADR-0038** and **ADR-0039**.

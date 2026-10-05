@@ -177,6 +177,13 @@ export function textareaStatusBannerClassesFor(
 export const textareaBaseClasses = cn(inputBaseClasses, "block leading-normal");
 
 /**
+ * Field inside the bordered shell — the shell owns border, fill, and the
+ * `focus-within` ring, so the field drops its own outline and ring.
+ */
+export const textareaShellFieldClasses =
+  "w-full border-0 bg-transparent shadow-none focus-visible:outline-none focus-visible:ring-0";
+
+/**
  * Inside **PromptBar** — the parent pill owns border, radius, and focus ring.
  * No element shell, no min-height, no resize grip.
  */

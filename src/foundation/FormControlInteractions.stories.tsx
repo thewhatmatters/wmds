@@ -1,8 +1,9 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, userEvent } from "storybook/test";
+import { expect, userEvent, waitFor } from "storybook/test";
 import { Checkbox } from "../components/atoms/Checkbox/Checkbox";
 import { Switch } from "../components/atoms/Switch/Switch";
+import { TextArea } from "../components/atoms/TextArea/TextArea";
 import { CheckboxGroup } from "../components/molecules/CheckboxGroup/CheckboxGroup";
 import { RadioGroup } from "../components/molecules/RadioGroup/RadioGroup";
 import { SegmentedControl } from "../components/molecules/SegmentedControl/SegmentedControl";
@@ -172,5 +173,21 @@ export const SegmentedControlSwitch: Story = {
 
     await expect(pill).toBeChecked();
     await expect(rounded).not.toBeChecked();
+  },
+};
+
+export const TextAreaSoloFocusRing: Story = {
+  name: "TextArea — solo focus ring",
+  render: () => <TextArea label="Project details" placeholder="Tell us about the project" />,
+  play: async ({ canvas }) => {
+    const field = canvas.getByRole("textbox", { name: /project details/i });
+    const shell = field.parentElement as HTMLElement;
+
+    await userEvent.tab();
+    await expect(field).toHaveFocus();
+
+    // The shell's ring is the only focus indicator — no browser outline on the field inside it.
+    await expect(getComputedStyle(field).outlineStyle).toBe("none");
+    await waitFor(() => expect(getComputedStyle(shell).boxShadow).not.toBe("none"));
   },
 };
