@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.3 · Pattern — with icon
+// @thewhatmatters/wmds@0.4.4 · Pattern — with icon
 // Storybook: Components/Button/Button → Pattern — with icon (?path=/story/components-button-button--with-icon)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

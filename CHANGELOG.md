@@ -7,6 +7,30 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.4
+
+**ChatDock: the Start a project form sits in the conversation.** Having seen 0.4.3 live, the form goes back inside the chat window instead of replacing it — as a component in the conversation, without the 0.4.2 problems (no card inside a card, one header and one close, no gap above the form, no cap that clips the step). See the second 2026-10-05 amendment to **ADR-0039**.
+
+- **ChatDock `gate`** — the form is the last item in the conversation, under the latest message, where a reply would go. The window keeps its header and its close. The composer stays in place but is off, with the placeholder "Finish or cancel the form to keep chatting" (new label `gatePlaceholder`); suggestion rows, follow-ups, and the rows under replies (Copy, thumbs, score) step aside until the form goes. The disclaimer stays.
+- **The window stays non-modal.** No scrim; the page behind stays usable, and focus is not held in the window.
+- **The step is never clipped.** The form never scrolls on its own. From `md` the window grows to fit the conversation and the form — up to the viewport less 7rem — and eases back after; at 1280×900, step 1 shows all seven services with the reply above it. Past that the conversation scrolls, and each step is brought into view: the whole form when it fits, else its top.
+- **`gateSubtitle`** (new) — the window's subtitle while a gate is up, for example "Start a project". Without it the subtitle is hidden while the gate is up.
+- **ChatDock.Gate** — flat on the window surface under a hairline, and as wide as the conversation's turns. Its header is the step's title (now an `h3`), subtitle, previous, "2 of 4", and next; it has **no close of its own** — the window's close and Escape fold the window and keep the form, and Cancel leaves it. `pending` and `error` are unchanged. `labels.close` is unused and deprecated.
+- **Unchanged from 0.4.3:** closing the window keeps the form and its answers, and reopening brings it back at the same step; `onSubmit` returns a promise, with "Sending…", the error, and Try again; the Toaster and reduced-motion hydration fixes, the post page and filtered index options, and the `wmds-check` changes.
+- **Components/ChatDock → Pattern — chat dock** passes `gateSubtitle="Start a project"`. **Pattern — start a project gate**: only its `close` description changed. New stories: **Start a project — after a long conversation** at 1280 and 390; the step stories now show the reply above the form.
+- **Fix:** the conversation stays at its end while the window changes size, so the confirmation a finished form leaves is in view.
+
+### Consumer actions
+
+1. **WhatMatters site: re-copy Components/ChatDock → Pattern — chat dock** (`node_modules/@thewhatmatters/wmds/docs/patterns/components-chatdock--pattern-chat-dock.tsx`) over your ask component, and re-apply only your content, data, and handlers. It adds `gateSubtitle="Start a project"` to **ChatDock**. If you'd rather not re-copy, add that one prop by hand.
+2. **WhatMatters site: re-copy Components/ChatDock → Pattern — start a project gate** (`node_modules/@thewhatmatters/wmds/docs/patterns/components-chatdock--pattern-start-project-gate.tsx`) over `components/start-project-gate.tsx` and re-apply only your services, budgets, step copy, and calendar. Only a comment changed, so `npx wmds-check` reports nothing either way; re-copy to keep the header at 0.4.4.
+3. **The form in the conversation: nothing else to do.** It comes with the upgrade, and your `onSubmit`, `renderCalendar`, and the 0.4.3 wiring stay as they are. Check your tests:
+   - The page is no longer blocked while the form is up: a test that closed the window before clicking the page no longer needs to.
+   - The form has no close: a test that pressed the gate's close should press the window's (**Close chat**) or Escape — both still keep the form — or **Cancel** to leave it.
+   - The composer is disabled while the form is up, not hidden: a test that expected no textbox should expect a disabled one.
+   - The step's title is an `h3`.
+4. Other apps: step 3 only, if they render a ChatDock `gate`. `gateSubtitle` is optional.
+
 ## 0.4.3
 
 **ChatDock: the gate takes over the window.** Start a project no longer sits as a card inside the chat. While a `gate` is up the window is the form: one header, the step, and the footer on the window's bottom edge, and the window is modal. Also: two hydration fixes, a promise-based send for the gate pattern, options for the post page and filtered index patterns, and fewer false positives in `wmds-check`. See the amendments to **ADR-0039**, **ADR-0040**, and **ADR-0041**.

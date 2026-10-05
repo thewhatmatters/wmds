@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.3 · Pattern — chat dock
+// @thewhatmatters/wmds@0.4.4 · Pattern — chat dock
 // Storybook: Components/ChatDock → Pattern — chat dock (?path=/story/components-chatdock--pattern-chat-dock)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -66,7 +66,7 @@ export interface AskWhatMattersProps {
   /** Start a project is open while this is set: what the assistant already knows, or `{}`. A site button can set it too. */
   startProject: StartProjectRequest | null;
   onStartProjectChange: (request: StartProjectRequest | null) => void;
-  /** The gate — return **Pattern — start a project gate** with the slot spread onto it. */
+  /** The gate — return **Pattern — start a project gate** with the slot spread onto it. It sits in the conversation, under the latest message. */
   renderStartProject: (slot: StartProjectGateSlot) => ReactNode;
 }
 
@@ -129,6 +129,7 @@ export function AskWhatMatters({
     <ChatDock
       title="WhatMatters"
       subtitle="Ask anything"
+      gateSubtitle="Start a project"
       mark={<Avatar name="WhatMatters" size="md" />}
       greeting="Hi, I'm the WhatMatters assistant. Ask about our work, our process, pricing, or how to start a project."
       messages={messages}

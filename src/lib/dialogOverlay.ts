@@ -81,25 +81,3 @@ export function focusInitialElement(
   const focusable = container.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
   focusable?.focus();
 }
-
-/**
- * Make everything outside `element` inert — every sibling of it and of each ancestor up to `<body>`.
- * Elements that were inert already are left alone. Returns cleanup.
- */
-export function inertOutside(element: HTMLElement): () => void {
-  const changed: HTMLElement[] = [];
-  let node: HTMLElement = element;
-  while (node.parentElement != null && node !== document.body) {
-    const parent = node.parentElement;
-    for (const sibling of Array.from(parent.children)) {
-      if (sibling === node || !(sibling instanceof HTMLElement) || sibling.inert) continue;
-      if (sibling instanceof HTMLScriptElement || sibling instanceof HTMLStyleElement) continue;
-      sibling.inert = true;
-      changed.push(sibling);
-    }
-    node = parent;
-  }
-  return () => {
-    for (const sibling of changed) sibling.inert = false;
-  };
-}

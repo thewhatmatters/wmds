@@ -695,6 +695,7 @@ function GateDock() {
         placement="inline"
         title="WhatMatters"
         subtitle="Ask anything"
+        gateSubtitle="Start a project"
         mark={<Avatar name="WhatMatters" size="md" />}
         greeting="Hi, ask me anything."
         messages={gateConversation}
@@ -724,8 +725,8 @@ async function openGate(canvas: ReturnType<typeof within>, canvasElement: HTMLEl
   return gateRoot(canvasElement) as HTMLElement;
 }
 
-export const GateTakesOverTheWindow: Story = {
-  name: "a gate takes over the window: one header, the form to the bottom edge",
+export const GateInTheConversation: Story = {
+  name: "a gate sits in the conversation under the latest message; the composer is off",
   render: () => <GateDock />,
   play: async ({ canvas, canvasElement }) => {
     expect(windowQuery(canvasElement)).toBeNull();
@@ -734,36 +735,32 @@ export const GateTakesOverTheWindow: Story = {
     expect(within(dialog).getByRole("group", { name: "Pick services" })).toBe(gate);
     await waitForWindowSettled(canvasElement);
 
-    // The window's header, the conversation, the composer, the rows, and the disclaimer give way.
-    await waitFor(
-      () => {
-        expect(within(dialog).queryByRole("textbox", { name: "Ask anything" })).toBeNull();
-        expect(within(dialog).queryByRole("log", { name: "Conversation" })).toBeNull();
-      },
-      { timeout: 3000 },
-    );
-    expect(within(dialog).getByText("Happy to help. Start a project and we'll take it from there.")).not.toBeVisible();
-    expect(within(dialog).queryByRole("heading", { name: "WhatMatters" })).toBeNull();
-    expect(within(dialog).queryByRole("group", { name: "Suggested questions" })).toBeNull();
-    expect(within(dialog).queryByText("Answers may be incomplete")).toBeNull();
-    // One header: the step's title, and one close.
-    expect(within(dialog).getAllByRole("heading")).toHaveLength(1);
-    expect(within(dialog).getByRole("heading", { name: "Pick services" })).toBeVisible();
+    // The window keeps its header and its one close; its subtitle names the form.
+    expect(within(dialog).getByRole("heading", { level: 2, name: "WhatMatters" })).toBeVisible();
+    expect(dialog).toHaveAccessibleDescription("Start a project");
     expect(within(dialog).getAllByRole("button", { name: "Close chat" })).toHaveLength(1);
-    // Inline previews are not modal.
+    expect(within(gate).queryByRole("button", { name: /close/i })).toBeNull();
+    expect(within(gate).getByRole("heading", { level: 3, name: "Pick services" })).toBeVisible();
+
+    // The gate is part of the conversation, right after the latest message.
+    const log = within(dialog).getByRole("log", { name: "Conversation" });
+    expect(log.contains(gate)).toBe(true);
+    const reply = within(log).getByText("Happy to help. Start a project and we'll take it from there.");
+    expect(reply).toBeVisible();
+    const gap = gate.getBoundingClientRect().top - reply.getBoundingClientRect().bottom;
+    expect(gap).toBeGreaterThanOrEqual(0);
+    expect(gap).toBeLessThanOrEqual(24);
+
+    // The composer stays in place, off; the suggestion rows step aside; the disclaimer stays.
+    const field = within(dialog).getByRole("textbox", { name: "Ask anything" });
+    expect(field).toBeDisabled();
+    expect(field).toHaveAttribute("placeholder", "Finish or cancel the form to keep chatting");
+    expect(within(dialog).queryByRole("group", { name: "Suggested questions" })).toBeNull();
+    expect(within(dialog).getByText("Answers may be incomplete")).toBeVisible();
     expect(dialog).toHaveAttribute("aria-modal", "false");
 
-    // The gate fills the window; the body scrolls and the footer sits on the window's bottom edge.
-    const card = windowCard(canvasElement).getBoundingClientRect();
-    const box = gate.getBoundingClientRect();
-    expect(box.top).toBeCloseTo(card.top, 0);
-    expect(box.bottom).toBeCloseTo(card.bottom, 0);
-    const body = gate.querySelector<HTMLElement>("[data-chat-dock-gate-body]");
-    if (body == null) throw new Error("Gate body is missing");
-    expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
-    const cancel = within(gate).getByRole("button", { name: "Cancel" }).getBoundingClientRect();
-    expect(card.bottom - cancel.bottom).toBeGreaterThan(0);
-    expect(card.bottom - cancel.bottom).toBeLessThanOrEqual(24);
+    // The form never scrolls on its own: the conversation does.
+    expect(gate.scrollHeight).toBeLessThanOrEqual(gate.clientHeight + 1);
   },
 };
 
@@ -821,9 +818,10 @@ async function reopenToGate(canvas: ReturnType<typeof within>, canvasElement: HT
     },
     { timeout: 3000 },
   );
-  // At rest the composer is the bar again, with focus.
+  // At rest the composer is the bar again, on and with focus.
   const bar = canvas.getByRole("textbox", { name: "Ask anything" });
   await waitFor(() => {
+    expect(bar).toBeEnabled();
     expect(bar).toHaveFocus();
   });
   await userEvent.click(bar);
@@ -839,7 +837,7 @@ async function reopenToGate(canvas: ReturnType<typeof within>, canvasElement: HT
 }
 
 export const GateEscape: Story = {
-  name: "gate: Escape folds the window and keeps the gate; Cancel returns to the conversation",
+  name: "gate: Escape folds the window and keeps the gate; Cancel brings the composer back",
   render: () => <GateDock />,
   play: async ({ canvas, canvasElement }) => {
     const gate = await openGate(canvas, canvasElement);
@@ -847,44 +845,49 @@ export const GateEscape: Story = {
     await userEvent.keyboard("{Escape}");
     await reopenToGate(canvas, canvasElement);
 
-    // Cancel leaves the gate: the conversation and the composer come back, with focus in the composer.
+    // Cancel leaves the gate: the composer is on again, with focus, and the conversation is as it was.
     await userEvent.click(within(gateRoot(canvasElement) as HTMLElement).getByRole("button", { name: "Cancel" }));
     const dialog = canvas.getByRole("dialog", { name: "WhatMatters" });
-    const field = await waitFor(() => within(dialog).getByRole("textbox", { name: "Ask anything" }), { timeout: 3000 });
+    const field = within(dialog).getByRole("textbox", { name: "Ask anything" });
     await waitFor(() => {
       expect(gateRoot(canvasElement)).toBeNull();
+      expect(field).toBeEnabled();
       expect(field).toHaveFocus();
     });
     expect(within(dialog).getByRole("log", { name: "Conversation" })).toHaveTextContent("Start a project");
-    expect(within(dialog).getByText("Answers may be incomplete")).toBeInTheDocument();
+    expect(dialog).toHaveAccessibleDescription("Ask anything");
     await waitForWindowSettled(canvasElement);
-    expect(within(dialog).getByRole("heading", { name: "WhatMatters" })).toBeVisible();
   },
 };
 
 export const GateWindowClose: Story = {
-  name: "gate: its close folds the window and keeps the gate for when it reopens",
+  name: "gate: the window's close folds it and keeps the gate for when it reopens",
   render: () => <GateDock />,
   play: async ({ canvas, canvasElement }) => {
     const gate = await openGate(canvas, canvasElement);
     await userEvent.click(within(gate).getByRole("checkbox", { name: "Social media" }));
-    await userEvent.click(within(gate).getByRole("button", { name: "Close chat" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Close chat" }));
     await reopenToGate(canvas, canvasElement);
     await waitForWindowSettled(canvasElement);
   },
 };
 
-/** The fixed dock, as on a page: a gate makes the window modal. */
-function ModalGateDock() {
+/** The fixed dock, as on a page, with a page control beside it. */
+function PageGateDock() {
   const [gateOpen, setGateOpen] = useState(false);
+  const [pressed, setPressed] = useState(0);
   return (
     <div>
       <Button role="primary" type="button" onClick={() => setGateOpen(true)}>
         Open the gate
       </Button>
+      <Button role="secondary" type="button" onClick={() => setPressed((count) => count + 1)}>
+        {"Page action " + pressed}
+      </Button>
       <ChatDock
         title="WhatMatters"
         subtitle="Ask anything"
+        gateSubtitle="Start a project"
         mark={<Avatar name="WhatMatters" size="md" />}
         greeting="Hi, ask me anything."
         messages={gateConversation}
@@ -896,40 +899,32 @@ function ModalGateDock() {
   );
 }
 
-export const GateModal: Story = {
-  name: "gate: the fixed window is modal while the gate is up",
-  render: () => <ModalGateDock />,
+export const GatePageStaysUsable: Story = {
+  name: "gate: the window stays non-modal and the page behind stays usable",
+  render: () => <PageGateDock />,
   play: async ({ canvas, canvasElement }) => {
-    const pageButton = canvas.getByRole("button", { name: "Open the gate" });
-    const gate = await openGate(canvas, canvasElement);
+    await openGate(canvas, canvasElement);
     const dialog = canvas.getByRole("dialog", { name: "WhatMatters" });
-    expect(dialog).toHaveAttribute("aria-modal", "true");
-    const scrim = canvasElement.ownerDocument.querySelector<HTMLElement>("[data-chat-dock-scrim]");
-    expect(scrim).not.toBeNull();
-    // The page behind is inert and does not scroll.
-    expect(pageButton.closest("[inert]")).not.toBeNull();
-    expect(document.body.style.overflow).toBe("hidden");
-
-    // Tab stays inside: from the last control it wraps to the first.
-    const controls = Array.from(gate.querySelectorAll<HTMLElement>("button:not([disabled]), input:not([disabled])"));
-    const last = controls[controls.length - 1];
-    last.focus();
-    await userEvent.tab();
-    expect(dialog.contains(document.activeElement)).toBe(true);
-    expect(document.activeElement).not.toBe(last);
-
-    // A click on the scrim folds the window, keeps the gate, and gives the page back.
-    await userEvent.click(scrim as HTMLElement);
+    expect(dialog).toHaveAttribute("aria-modal", "false");
+    const pageAction = canvas.getByRole("button", { name: "Page action 0" });
+    expect(pageAction.closest("[inert]")).toBeNull();
+    expect(document.body.style.overflow).toBe("");
+    pageAction.click();
+    await waitFor(() => {
+      expect(canvas.getByRole("button", { name: "Page action 1" })).toBeInTheDocument();
+    });
+    // The gate is still there.
+    expect(gateRoot(canvasElement)).not.toBeNull();
+    // Let the window settle — the composer's mark has folded away — before the accessibility scan.
     await waitFor(
       () => {
-        expect(windowQuery(canvasElement)).toBeNull();
-        expect(canvasElement.ownerDocument.querySelector("[data-chat-dock-scrim]")).toBeNull();
+        for (const layer of dialog.querySelectorAll<HTMLElement>("[style*='opacity']")) {
+          expect(["0", "1"]).toContain(getComputedStyle(layer).opacity);
+        }
+        expect(getComputedStyle(windowCard(canvasElement)).opacity).toBe("1");
       },
-      { timeout: 3000 },
+      { timeout: 4000 },
     );
-    expect(pageButton.closest("[inert]")).toBeNull();
-    expect(document.body.style.overflow).toBe("");
-    expect(gateRoot(canvasElement)).not.toBeNull();
   },
 };
 

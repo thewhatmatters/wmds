@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.3 · Pattern — chart comparison gallery
+// @thewhatmatters/wmds@0.4.4 · Pattern — chart comparison gallery
 // Storybook: Guides/Chart explorations → Pattern — chart comparison gallery (?path=/story/guides-chart-explorations--comparison-gallery)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -15,12 +15,12 @@ import {
   AnimatePresence,
   MotionConfigContext,
   motion,
+  type TargetAndTransition,
   type Transition,
   type Variants,
 } from "motion/react";
 import { Check, Copy, CornerDownRight, ThumbsDown, ThumbsUp } from "lucide-react";
 import { cn } from "../../../lib/cn";
-import { inertOutside, lockBodyScroll, trapFocus } from "../../../lib/dialogOverlay";
 import {
   motionBeatSeconds,
   motionStaggerSeconds,
@@ -44,14 +44,13 @@ import {
   chatDockAssistantMessageClasses,
   chatDockComposerClasses,
   chatDockComposerFootSpacerClasses,
-  chatDockComposerHiddenClasses,
   chatDockDisclaimerClasses,
   chatDockDockClasses,
   chatDockDockHoverClasses,
   chatDockFollowUpRowClasses,
   chatDockFollowUpsComposerClasses,
   chatDockFollowUpsInlineClasses,
-  chatDockGateLayerClasses,
+  chatDockGateSlotClasses,
   chatDockGridClasses,
   chatDockMarkClasses,
   chatDockPillClasses,
@@ -62,14 +61,13 @@ import {
   chatDockReplyClasses,
   chatDockReplyMetaClasses,
   chatDockRootClasses,
-  chatDockRootModalClasses,
   chatDockRootRaisedClasses,
-  chatDockScrimClasses,
   chatDockSuggestionLabelClasses,
   chatDockSuggestionListClasses,
   chatDockSuggestionRowContentClasses,
   chatDockThinkingClasses,
   chatDockThreadClasses,
+  chatDockThreadContentClasses,
   chatDockUserMessageClasses,
   chatDockWindowClasses,
   chatDockWindowContentClasses,
@@ -151,6 +149,8 @@ export interface ChatDockLabels {
   helpful: string;
   /** Thumbs down under a reply. Default: "Mark this reply not helpful". */
   notHelpful: string;
+  /** The field's placeholder while a `gate` is up and the composer is off. Default: "Finish or cancel the form to keep chatting". */
+  gatePlaceholder: string;
 }
 
 export const chatDockDefaultLabels: ChatDockLabels = {
@@ -165,6 +165,7 @@ export const chatDockDefaultLabels: ChatDockLabels = {
   copied: "Copied",
   helpful: "Mark this reply helpful",
   notHelpful: "Mark this reply not helpful",
+  gatePlaceholder: "Finish or cancel the form to keep chatting",
 };
 
 export const chatDockFollowUpsPlacements = ["inline", "composer"] as const;
@@ -213,15 +214,20 @@ export interface ChatDockProps {
    */
   onMessageFeedback?: (message: ChatDockMessage, value: ChatDockFeedback) => void;
   /**
-   * A form that takes over the window — usually **ChatDock.Gate** with the steps of Start a project.
-   * While it is set and the window is open, the window is the form: its header, the conversation,
-   * the composer, the suggestion rows, the follow-ups, and the disclaimer give way to the gate, which
-   * fills the window. The fixed window is modal meanwhile (scrim, page inert, focus kept inside).
-   * Setting it opens the window and moves focus into it; clearing it brings the conversation and the
-   * composer back, with focus in the composer. The gate's close, Escape, and the scrim fold the window
-   * and keep the gate, with its progress, for when it reopens; the gate's Cancel clears it.
+   * A form in the conversation — usually **ChatDock.Gate** with the steps of Start a project. While
+   * it is set it sits under the latest message, where a reply would, and the window keeps its
+   * header: the composer stays in place but is off, and the suggestion rows and follow-ups step aside.
+   * Setting it opens the window and moves focus into it; clearing it brings the composer back with
+   * focus. The window grows to fit the form, up to the viewport, and the conversation scrolls past
+   * that. Closing the window keeps the gate, with its progress, for when it reopens. The window stays
+   * non-modal.
    */
   gate?: ReactNode;
+  /**
+   * The window's subtitle while `gate` is set — the form's name, for example "Start a project".
+   * Without it the subtitle is hidden while the gate is up.
+   */
+  gateSubtitle?: string;
   /** Controlled open state. */
   open?: boolean;
   defaultOpen?: boolean;
@@ -326,6 +332,30 @@ export function chatDockOpenHeight(placement: ChatDockPlacement, viewportHeight:
 }
 
 /**
+ * The window's height while a gate is up, in px: tall enough for the conversation and the form
+ * (`needed`), never below its usual height (`normal`), and never past `max` (the viewport less 7rem).
+ */
+export function chatDockGateWindowHeight({ normal, needed, max }: { normal: number; needed: number; max: number }): number {
+  return Math.round(Math.max(normal, Math.min(max, needed)));
+}
+
+/** How long a request to bring the gate into view keeps applying while the window settles. */
+const gateRevealMs = 900;
+
+/**
+ * Brings a gate into view in the conversation: the whole form when it fits, with the conversation
+ * above it; otherwise the top of the form, so its title shows and the rest scrolls up under it.
+ */
+function chatDockRevealGate(thread: HTMLElement | null, slot: HTMLElement | null) {
+  if (thread == null || slot == null) return;
+  if (slot.offsetHeight <= thread.clientHeight) {
+    thread.scrollTop = thread.scrollHeight;
+  } else {
+    thread.scrollTop += slot.getBoundingClientRect().top - thread.getBoundingClientRect().top;
+  }
+}
+
+/**
  * How the window moves. `grow` (from `md`, and inline): it sits on the composer's bottom edge and
  * grows up and out of it. `rise`: on phones it fills the screen and rises from the bottom edge.
  */
@@ -335,8 +365,7 @@ export type ChatDockWindowMotion = "grow" | "rise";
  * Pinned prompt that opens into a chat window. At rest it is a **PromptBar** with the brand
  * mark; hovering shows suggestion pills above it. Focusing or typing opens a non-modal window
  * around the same composer — header, conversation, suggestion rows, and an optional disclaimer.
- * Escape or Close folds it back into the bar. The page behind stays usable, except while a `gate`
- * fills the window.
+ * Escape or Close folds it back into the bar. The page behind stays usable.
  */
 function ChatDockRoot({
   title,
@@ -352,6 +381,7 @@ function ChatDockRoot({
   followUpsPlacement = "inline",
   onMessageFeedback,
   gate,
+  gateSubtitle,
   open: openProp,
   defaultOpen = false,
   onOpenChange,
@@ -383,26 +413,25 @@ function ChatDockRoot({
   if (open && folded) setFolded(false);
   const windowHidden = !open && folded;
   const hasGate = gate != null;
-  /** The gate fills the window while the window is open. */
+  /** The gate is in the conversation while the window is open; the composer is off meanwhile. */
   const showGate = hasGate && open;
-  /** The fixed window is modal while the gate fills it. */
-  const modal = placement === "fixed" && showGate;
-  // The conversation and the composer stay mounted behind a gate (so they come back as they were);
-  // each is hidden once it has faded out.
-  const [chatFaded, setChatFaded] = useState(hasGate);
-  if (!hasGate && chatFaded) setChatFaded(false);
-  const [composerFaded, setComposerFaded] = useState(showGate);
-  if (!showGate && composerFaded) setComposerFaded(false);
+  /** The window's height while the gate is up (fixed, from `md`): grown to fit the form. */
+  const [gateWindowHeight, setGateWindowHeight] = useState<number | null>(null);
   // Phones: keep the window and composer inside the part of the screen a keyboard leaves visible.
   const visible = useChatDockVisibleArea(placement === "fixed" && !growLayout && !windowHidden);
 
-  const rootRef = useRef<HTMLDivElement>(null);
   const dockRef = useRef<HTMLDivElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
   const footRef = useRef<HTMLDivElement>(null);
   const gateSlotRef = useRef<HTMLDivElement>(null);
+  const windowContentRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const threadContentRef = useRef<HTMLDivElement>(null);
+  /** Until when a request to bring the gate into view keeps applying. */
+  const revealUntilRef = useRef(0);
   const hadGateRef = useRef(hasGate);
+  const hadGateForScrollRef = useRef(hasGate);
   const shownGateRef = useRef(showGate);
   const fieldRef = useRef<HTMLTextAreaElement>(null);
   const threadRef = useRef<HTMLDivElement>(null);
@@ -509,22 +538,36 @@ function ChatDockRoot({
     shownGateRef.current = showGate;
   }, [showGate, open]);
 
-  // While the gate fills the fixed window, the window is modal: the page behind is inert and does not
-  // scroll, and Tab stays inside the dock.
+  /**
+   * What the gate gets from the window: a request to bring it into view, which keeps applying while
+   * the window settles (it may be growing). Stable, so the gate's effects run on its own changes only.
+   */
+  const [gateWindow] = useState<ChatDockGateContextValue>(() => ({
+    revealGate: () => {
+      revealUntilRef.current = performance.now() + gateRevealMs;
+      chatDockRevealGate(threadRef.current, gateSlotRef.current);
+    },
+  }));
+
+  // Opening the window onto a gate brings the gate into view.
   useEffect(() => {
-    if (!modal) return;
-    const root = rootRef.current;
-    const dock = dockRef.current;
-    if (root == null || dock == null) return;
-    const releaseInert = inertOutside(root);
-    const unlockScroll = lockBodyScroll();
-    const releaseTrap = trapFocus(dock);
+    if (showGate) gateWindow.revealGate();
+  }, [showGate, gateWindow]);
+
+  // While the window settles, a resize of the conversation or the gate re-applies the reveal.
+  useLayoutEffect(() => {
+    const thread = threadRef.current;
+    const content = threadContentRef.current;
+    if (!showGate || thread == null || content == null || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => {
+      if (performance.now() <= revealUntilRef.current) chatDockRevealGate(thread, gateSlotRef.current);
+    });
+    observer.observe(thread);
+    observer.observe(content);
     return () => {
-      releaseTrap();
-      unlockScroll();
-      releaseInert();
+      observer.disconnect();
     };
-  }, [modal]);
+  }, [showGate]);
 
   // The window's content stops above the composer and the line under it, which sit on top of it.
   // Where the window fills the screen, that also includes the space between the dock and the bottom edge.
@@ -553,13 +596,72 @@ function ChatDockRoot({
     };
   }, [hasDisclaimer, windowMotion, viewportHeight, visible.top, visible.bottom]);
 
-  // Keep the newest turn in view while the reader is at the end of the thread.
+  // From md the fixed window grows to fit the conversation and a gate, up to the viewport less 7rem,
+  // so a step shows whole; past that the conversation scrolls. It never drops below its usual height.
+  const growsForGate = showGate && placement === "fixed" && windowMotion === "grow";
+  useLayoutEffect(() => {
+    const content = windowContentRef.current;
+    const header = headerRef.current;
+    const threadContent = threadContentRef.current;
+    const thread = threadRef.current;
+    if (!growsForGate || content == null || header == null || threadContent == null || thread == null) {
+      setGateWindowHeight(null);
+      return;
+    }
+    const measure = () => {
+      const style = getComputedStyle(content);
+      const threadStyle = getComputedStyle(thread);
+      const chrome =
+        Number.parseFloat(style.paddingTop) +
+        Number.parseFloat(style.paddingBottom) +
+        header.offsetHeight +
+        Number.parseFloat(style.rowGap || "0");
+      const needed =
+        chrome +
+        threadContent.offsetHeight +
+        Number.parseFloat(threadStyle.paddingTop) +
+        Number.parseFloat(threadStyle.paddingBottom);
+      setGateWindowHeight(
+        chatDockGateWindowHeight({
+          normal: chatDockOpenHeight(placement, window.innerHeight, remPx),
+          needed,
+          max: Math.max(0, window.innerHeight - 7 * remPx),
+        }),
+      );
+    };
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(measure);
+    observer.observe(threadContent);
+    observer.observe(header);
+    return () => {
+      observer.disconnect();
+    };
+  }, [growsForGate, placement, remPx, viewportHeight]);
+
+  // Keep the newest turn in view while the reader is at the end of the thread. While a gate is up it
+  // places itself (see chatDockRevealGate); when it goes, the answers it leaves are the newest turn.
   useLayoutEffect(() => {
     const thread = threadRef.current;
-    if (thread != null && stickToEndRef.current) {
+    if (hadGateForScrollRef.current && !hasGate) stickToEndRef.current = true;
+    hadGateForScrollRef.current = hasGate;
+    if (thread != null && stickToEndRef.current && !hasGate) {
       thread.scrollTop = thread.scrollHeight;
     }
   });
+
+  // The thread changes size as the window opens, grows for a gate, or shrinks back; the end stays in view.
+  useLayoutEffect(() => {
+    const thread = threadRef.current;
+    if (thread == null || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => {
+      if (!hadGateForScrollRef.current && stickToEndRef.current) thread.scrollTop = thread.scrollHeight;
+    });
+    observer.observe(thread);
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   function handleDockKeyDown(event: KeyboardEvent<HTMLElement>) {
     // Escape folds the window — with a gate up too, which stays for when the window reopens.
@@ -568,7 +670,7 @@ function ChatDockRoot({
     setOpen(false);
   }
 
-  const gateWindow: ChatDockGateContextValue = { closeWindow: () => setOpen(false), closeLabel: labels.close };
+  const headerSubtitle = hasGate ? gateSubtitle : subtitle;
 
   const pills = chatDockPillSuggestions(suggestions);
   const showRows = !hasGate && chatDockShowsSuggestionRows(suggestions, messages);
@@ -590,12 +692,13 @@ function ChatDockRoot({
   const barHeight = 3.25 * remPx;
   const closedShape = { height: barHeight, left: 0, right: 0, borderRadius: barHeight / 2 };
   const openShape = {
-    height: chatDockOpenHeight(placement, viewportHeight, remPx),
+    height: growsForGate && gateWindowHeight != null ? gateWindowHeight : chatDockOpenHeight(placement, viewportHeight, remPx),
     left: -remPx,
     right: -remPx,
     borderRadius: remPx,
   };
-  const windowVariants: Variants = reduceMotion
+  // Targets, not variant labels, so the open window follows a change of height (a gate, the viewport).
+  const windowTargets: Record<"open" | "closed", TargetAndTransition> = reduceMotion
     ? {
         // A plain crossfade in place.
         open: { ...(windowMotion === "grow" ? openShape : { y: 0 }), opacity: 1, transition: reducedTransition },
@@ -715,11 +818,9 @@ function ChatDockRoot({
 
   return (
     <div
-      ref={rootRef}
       className={cn(
         chatDockRootClasses[placement],
         placement === "fixed" && !windowHidden ? chatDockRootRaisedClasses : undefined,
-        modal ? chatDockRootModalClasses : undefined,
         className,
       )}
       data-open={open ? "" : undefined}
@@ -733,30 +834,15 @@ function ChatDockRoot({
           : undefined
       }
     >
-      {/* While the gate fills the fixed window, a scrim covers the page; a click on it folds the window. */}
-      <AnimatePresence initial={false}>
-        {modal ? (
-          <motion.div
-            key="scrim"
-            className={chatDockScrimClasses}
-            aria-hidden="true"
-            data-chat-dock-scrim=""
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: reduceMotion ? fast : medium }}
-            exit={{ opacity: 0, transition: reduceMotion ? fast : medium }}
-            onClick={() => setOpen(false)}
-          />
-        ) : null}
-      </AnimatePresence>
       <div className={chatDockGridClasses}>
         <div className="band">
           <div
             ref={dockRef}
             className={cn(chatDockDockClasses, windowHidden ? chatDockDockHoverClasses : undefined)}
             role={open ? "dialog" : undefined}
-            aria-modal={open ? (modal ? "true" : "false") : undefined}
+            aria-modal={open ? "false" : undefined}
             aria-labelledby={open ? titleId : undefined}
-            aria-describedby={open && subtitle != null ? subtitleId : undefined}
+            aria-describedby={open && headerSubtitle != null ? subtitleId : undefined}
             onKeyDown={handleDockKeyDown}
           >
             <AnimatePresence initial={false}>
@@ -796,32 +882,19 @@ function ChatDockRoot({
               className={chatDockWindowClasses[placement]}
               data-chat-dock-window={state}
               hidden={windowHidden}
-              variants={windowVariants}
               initial={false}
-              animate={state}
-              onAnimationComplete={(definition) => {
-                if (definition === "closed" && !openRef.current) setFolded(true);
+              animate={windowTargets[state]}
+              onAnimationComplete={() => {
+                if (!openRef.current) setFolded(true);
               }}
             >
-              {/* The conversation's layer. Behind a gate it fades out, then hides; it comes back as it was. */}
-              <motion.div
-                className={cn(chatDockWindowContentClasses, chatFaded ? chatDockComposerHiddenClasses : undefined)}
-                initial={false}
-                animate={
-                  hasGate
-                    ? { opacity: 0, transition: open ? fast : instant }
-                    : { opacity: 1, transition: open && !reduceMotion ? { ...fast, delay: beat } : open ? fast : instant }
-                }
-                onAnimationComplete={() => {
-                  if (hasGate) setChatFaded(true);
-                }}
-              >
-                <motion.div className="shrink-0" custom={0} {...sectionMotion}>
+              <div ref={windowContentRef} className={chatDockWindowContentClasses}>
+                <motion.div ref={headerRef} className="shrink-0" custom={0} {...sectionMotion}>
                   <OverlayPanelHeader
                     titleId={titleId}
                     descriptionId={subtitleId}
                     title={title}
-                    description={subtitle}
+                    description={headerSubtitle}
                     headerStart={mark}
                     closeLabel={labels.close}
                     onClose={() => setOpen(false)}
@@ -843,16 +916,21 @@ function ChatDockRoot({
                       thread.scrollHeight - thread.scrollTop - thread.clientHeight <= stickToEndThresholdPx;
                   }}
                 >
+                  <div ref={threadContentRef} className={chatDockThreadContentClasses}>
                   {greeting != null ? <div className={chatDockAssistantMessageClasses}>{greeting}</div> : null}
                   {/* Turns already in the thread when the window opens do not animate; new ones slide in. */}
                   <AnimatePresence initial={false}>
                     {messages.map((message, index) => {
-                      const row = chatDockReplyRow({
-                        message,
-                        isLatest: index === messages.length - 1,
-                        thinking,
-                        takesVotes: onMessageFeedback != null,
-                      });
+                      // While a gate is up the reply rows step aside with the follow-ups, so the
+                      // replies above the form read as plain text and the form gets their room.
+                      const row = hasGate
+                        ? null
+                        : chatDockReplyRow({
+                            message,
+                            isLatest: index === messages.length - 1,
+                            thinking,
+                            takesVotes: onMessageFeedback != null,
+                          });
                       return (
                         <motion.div
                           key={message.id}
@@ -926,7 +1004,25 @@ function ChatDockRoot({
                         <span>{labels.thinking}</span>
                       </motion.div>
                     ) : null}
+                    {/* A gate sits under the latest message, where a reply would. Its own changes are not
+                        announced as new turns; the gate announces its progress itself. */}
+                    {hasGate ? (
+                      <motion.div
+                        key="gate"
+                        ref={gateSlotRef}
+                        className={chatDockGateSlotClasses}
+                        data-chat-dock-gate=""
+                        aria-live="off"
+                        initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, transition: instant }}
+                        transition={fast}
+                      >
+                        <ChatDockGateContext.Provider value={gateWindow}>{gate}</ChatDockGateContext.Provider>
+                      </motion.div>
+                    ) : null}
                   </AnimatePresence>
+                  </div>
                 </motion.div>
 
                 {showRows ? (
@@ -981,81 +1077,47 @@ function ChatDockRoot({
                     </motion.div>
                   ) : null}
                 </AnimatePresence>
-              </motion.div>
-
-              {/* The gate fills the window: one header, the step, and the footer on the window's bottom edge. */}
-              <AnimatePresence initial={false}>
-                {hasGate ? (
-                  <motion.div
-                    key="gate"
-                    ref={gateSlotRef}
-                    className={chatDockGateLayerClasses[placement]}
-                    data-chat-dock-gate=""
-                    initial={{ opacity: 0 }}
-                    animate={
-                      open
-                        ? { opacity: 1, transition: reduceMotion ? fast : { ...fast, delay: beat } }
-                        : { opacity: 0, transition: fast }
-                    }
-                    exit={{ opacity: 0, transition: fast }}
-                  >
-                    <ChatDockGateContext.Provider value={gateWindow}>{gate}</ChatDockGateContext.Provider>
-                  </motion.div>
-                ) : null}
-              </AnimatePresence>
+              </div>
             </motion.div>
 
             <span className="sr-only" role="status">
               {copied != null ? labels.copied : ""}
             </span>
 
-            <div className={cn(chatDockComposerClasses, showGate ? "pointer-events-none" : undefined)}>
-              {/* The composer. Behind a gate it fades out, then hides, keeping its place for when it returns. */}
+            <div className={chatDockComposerClasses}>
+              {/* One composer in both states. While a gate is up it stays in place, off. */}
               <div ref={barRef}>
-                <motion.div
-                  className={composerFaded ? chatDockComposerHiddenClasses : undefined}
-                  aria-hidden={showGate ? true : undefined}
-                  initial={false}
-                  animate={
-                    showGate
-                      ? { opacity: 0, transition: fast }
-                      : { opacity: 1, transition: open && !reduceMotion ? { ...fast, delay: beat } : fast }
-                  }
-                  onAnimationComplete={() => {
-                    if (showGate) setComposerFaded(true);
+                <PromptBar
+                  ref={fieldRef}
+                  value={draft}
+                  onValueChange={(next) => {
+                    setDraft(next);
+                    setOpen(true);
                   }}
-                >
-                  <PromptBar
-                    ref={fieldRef}
-                    value={draft}
-                    onValueChange={(next) => {
-                      setDraft(next);
-                      setOpen(true);
-                    }}
-                    onSend={send}
-                    onFocus={() => {
-                      if (!returningFocusRef.current) setOpen(true);
-                    }}
-                    // After Escape the field keeps focus, so a click must open the window too.
-                    onClick={() => setOpen(true)}
-                    start={
-                      mark != null ? (
-                        <motion.span
-                          className={chatDockMarkClasses}
-                          aria-hidden={open ? true : undefined}
-                          variants={markVariants}
-                          initial={false}
-                          animate={state}
-                        >
-                          {mark}
-                        </motion.span>
-                      ) : undefined
-                    }
-                    placeholder={placeholder}
-                    aria-label={labels.field}
-                    sendLabel={labels.send}
-                  />
-                </motion.div>
+                  onSend={send}
+                  onFocus={() => {
+                    if (!returningFocusRef.current) setOpen(true);
+                  }}
+                  // After Escape the field keeps focus, so a click must open the window too.
+                  onClick={() => setOpen(true)}
+                  disabled={showGate}
+                  start={
+                    mark != null ? (
+                      <motion.span
+                        className={chatDockMarkClasses}
+                        aria-hidden={open ? true : undefined}
+                        variants={markVariants}
+                        initial={false}
+                        animate={state}
+                      >
+                        {mark}
+                      </motion.span>
+                    ) : undefined
+                  }
+                  placeholder={showGate ? labels.gatePlaceholder : placeholder}
+                  aria-label={labels.field}
+                  sendLabel={labels.send}
+                />
               </div>
               <motion.div
                 className="overflow-hidden"
@@ -1065,7 +1127,7 @@ function ChatDockRoot({
                 animate={state}
               >
                 <div ref={footRef}>
-                  {disclaimer != null && !showGate ? (
+                  {disclaimer != null ? (
                     <p className={chatDockDisclaimerClasses[placement]}>{disclaimer}</p>
                   ) : (
                     <div className={chatDockComposerFootSpacerClasses[placement]} />

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.3 · Pattern — inverse action
+// @thewhatmatters/wmds@0.4.4 · Pattern — inverse action
 // Storybook: Components/Button/Button → Pattern — inverse action (?path=/story/components-button-button--inverse-action)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

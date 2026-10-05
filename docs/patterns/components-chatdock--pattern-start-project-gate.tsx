@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.3 · Pattern — start a project gate
+// @thewhatmatters/wmds@0.4.4 · Pattern — start a project gate
 // Storybook: Components/ChatDock → Pattern — start a project gate (?path=/story/components-chatdock--pattern-start-project-gate)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -54,7 +54,7 @@ export interface StartProjectIntake {
 export interface StartProjectGateProps {
   /** What the assistant already picked up from the conversation, or `{}`. */
   request: { services?: string[]; budget?: string };
-  /** Leaves the gate — its Cancel. The gate's close and Escape fold the window and keep the gate, with its progress. */
+  /** Leaves the gate — its Cancel. Closing the window (its close or Escape) keeps the gate, with its progress. */
   close: () => void;
   /** Ends the gate; the conversation shows the answers and the confirmation. */
   complete: (answers: ChatQaPair[], confirmation: string) => void;

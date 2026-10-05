@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.3 · Pattern — 100-unit composition
+// @thewhatmatters/wmds@0.4.4 · Pattern — 100-unit composition
 // Storybook: Components/Chart → Pattern — 100-unit composition (?path=/story/components-chart--unit-grid-composition)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
