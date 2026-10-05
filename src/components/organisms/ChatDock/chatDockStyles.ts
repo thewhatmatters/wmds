@@ -25,11 +25,6 @@ export const chatDockRootClasses: Record<ChatDockPlacement, string> = {
 /** While the window is on screen, phones lift the dock above **SiteNav**: the window fills the screen. */
 export const chatDockRootRaisedClasses = "max-md:z-[60]";
 
-/** While a gate fills the window, the dock and its scrim sit above **SiteNav** on every screen. */
-export const chatDockRootModalClasses = "z-[60]";
-
-/** The scrim behind a gate — the `--color-overlay` token over the whole page. A click on it folds the window. */
-export const chatDockScrimClasses = "pointer-events-auto fixed inset-0 bg-overlay";
 
 /** The dock's column — the page grid narrowed to the composer width. */
 export const chatDockGridClasses = "grid-page [--grid-max:40rem]";
@@ -89,14 +84,20 @@ export const chatDockWindowClasses: Record<ChatDockPlacement, string> = {
 export const chatDockWindowContentClasses = "flex h-full flex-col gap-3 pt-4 pb-[calc(var(--chat-dock-composer,3.25rem)+0.75rem)]";
 
 /**
- * Scrolling conversation — greeting, turns, and the thinking row. It takes focus so a keyboard can
- * scroll it when nothing inside does; the ring sits inside its edge.
+ * Scrolling conversation — greeting, turns, the thinking row, and a gate. It takes focus so a
+ * keyboard can scroll it when nothing inside does; the ring sits inside its edge.
  */
 export const chatDockThreadClasses = cn(
   cardLayoutSectionInsetXClasses,
-  "flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain pb-2",
+  "min-h-0 flex-1 overflow-y-auto overscroll-contain pb-2",
   "outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus-ring",
 );
+
+/** The conversation's turns, one gap apart. Measured so the window can grow to fit a gate. */
+export const chatDockThreadContentClasses = "flex flex-col gap-4";
+
+/** A gate's place in the conversation — under the latest message, as wide as the turns. */
+export const chatDockGateSlotClasses = "flex flex-col";
 
 /** Assistant text — the greeting and replies. */
 export const chatDockAssistantMessageClasses = cn(typographyClass("body"), "text-fg");
@@ -165,16 +166,6 @@ export const chatDockFollowUpsComposerClasses = cn(cardLayoutSectionInsetXClasse
 /** The composer — on top of the window, in the same place whether the window is open or not. */
 export const chatDockComposerClasses = "relative";
 
-/** The conversation or the composer once it has faded out behind a gate: kept in place, out of reach. */
-export const chatDockComposerHiddenClasses = "invisible";
-
-/**
- * The gate's layer — the whole window. On phones the footer clears the home indicator.
- */
-export const chatDockGateLayerClasses: Record<ChatDockPlacement, string> = {
-  fixed: "absolute inset-0 flex flex-col max-md:pb-[env(safe-area-inset-bottom,0px)]",
-  inline: "absolute inset-0 flex flex-col",
-};
 
 /**
  * The brand mark at the start of the resting composer. It folds to nothing while the window is open

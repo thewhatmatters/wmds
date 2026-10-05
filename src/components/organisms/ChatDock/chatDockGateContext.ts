@@ -1,16 +1,17 @@
 import { createContext, useContext } from "react";
 
-/** What **ChatDock** hands the gate in its window. */
+/** What **ChatDock** hands the gate in its conversation. */
 export interface ChatDockGateContextValue {
-  /** Folds the window. The gate stays, with its progress, for when the window reopens. */
-  closeWindow: () => void;
-  /** Name of the gate's header close — **ChatDock**'s `labels.close`. */
-  closeLabel: string;
+  /**
+   * Brings the gate into view in the conversation — the whole form when it fits, otherwise its top.
+   * The gate asks on mount and on each step.
+   */
+  revealGate: () => void;
 }
 
 export const ChatDockGateContext = createContext<ChatDockGateContextValue | null>(null);
 
-/** The window the gate fills, or `null` outside **ChatDock**. */
+/** The conversation the gate sits in, or `null` outside **ChatDock**. */
 export function useChatDockGateWindow(): ChatDockGateContextValue | null {
   return useContext(ChatDockGateContext);
 }

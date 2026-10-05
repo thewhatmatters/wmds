@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.3 · Pattern — distribution strip
+// @thewhatmatters/wmds@0.4.4 · Pattern — distribution strip
 // Storybook: Components/Chart → Pattern — distribution strip (?path=/story/components-chart--post-reach-distribution)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

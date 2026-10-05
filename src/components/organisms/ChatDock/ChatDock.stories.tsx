@@ -112,7 +112,7 @@ export interface AskWhatMattersProps {
   /** Start a project is open while this is set: what the assistant already knows, or \`{}\`. A site button can set it too. */
   startProject: StartProjectRequest | null;
   onStartProjectChange: (request: StartProjectRequest | null) => void;
-  /** The gate — return **Pattern — start a project gate** with the slot spread onto it. */
+  /** The gate — return **Pattern — start a project gate** with the slot spread onto it. It sits in the conversation, under the latest message. */
   renderStartProject: (slot: StartProjectGateSlot) => ReactNode;
 }
 
@@ -175,6 +175,7 @@ export function AskWhatMatters({
     <ChatDock
       title="WhatMatters"
       subtitle="Ask anything"
+      gateSubtitle="Start a project"
       mark={<Avatar name="WhatMatters" size="md" />}
       greeting="Hi, I'm the WhatMatters assistant. Ask about our work, our process, pricing, or how to start a project."
       messages={messages}
@@ -257,7 +258,7 @@ export interface StartProjectIntake {
 export interface StartProjectGateProps {
   /** What the assistant already picked up from the conversation, or \`{}\`. */
   request: { services?: string[]; budget?: string };
-  /** Leaves the gate — its Cancel. The gate's close and Escape fold the window and keep the gate, with its progress. */
+  /** Leaves the gate — its Cancel. Closing the window (its close or Escape) keeps the gate, with its progress. */
   close: () => void;
   /** Ends the gate; the conversation shows the answers and the confirmation. */
   complete: (answers: ChatQaPair[], confirmation: string) => void;
@@ -477,7 +478,7 @@ interface AskWhatMattersProps {
   /** Start a project is open while this is set: what the assistant already knows, or `{}`. A site button can set it too. */
   startProject: StartProjectRequest | null;
   onStartProjectChange: (request: StartProjectRequest | null) => void;
-  /** The gate — return **Pattern — start a project gate** with the slot spread onto it. */
+  /** The gate — return **Pattern — start a project gate** with the slot spread onto it. It sits in the conversation, under the latest message. */
   renderStartProject: (slot: StartProjectGateSlot) => ReactNode;
 }
 
@@ -540,6 +541,7 @@ function AskWhatMatters({
     <ChatDock
       title="WhatMatters"
       subtitle="Ask anything"
+      gateSubtitle="Start a project"
       mark={<Avatar name="WhatMatters" size="md" />}
       greeting="Hi, I'm the WhatMatters assistant. Ask about our work, our process, pricing, or how to start a project."
       messages={messages}
@@ -604,7 +606,7 @@ interface StartProjectIntake {
 interface StartProjectGateProps {
   /** What the assistant already picked up from the conversation, or `{}`. */
   request: { services?: string[]; budget?: string };
-  /** Leaves the gate — its Cancel. The gate's close and Escape fold the window and keep the gate, with its progress. */
+  /** Leaves the gate — its Cancel. Closing the window (its close or Escape) keeps the gate, with its progress. */
   close: () => void;
   /** Ends the gate; the conversation shows the answers and the confirmation. */
   complete: (answers: ChatQaPair[], confirmation: string) => void;
@@ -937,13 +939,13 @@ const meta = {
 ## Usage
 The site's assistant, pinned to the bottom of the page. At rest it is a **PromptBar** with the brand mark. Hovering the bar shows suggested questions as pills above it. Clicking or typing into it opens the chat window around the same composer: the window grows up and out of the bar, the mark moves to the header, and the composer keeps its width, rising only by the disclaimer line under it. Escape or **Close chat** folds the window back into the bar. Either can interrupt the other midway.
 
-The window is not modal: the page behind it stays usable (except while a gate fills it). On phones it fills the screen, rising from the bottom edge, and stays in the part a keyboard leaves visible. With reduced motion the window crossfades in place. The app owns the conversation: it passes \`messages\`, sets \`thinking\` while a reply is on its way, and appends the reply. Copy **Pattern — chat dock**.
+The window is not modal: the page behind it stays usable. On phones it fills the screen, rising from the bottom edge, and stays in the part a keyboard leaves visible. With reduced motion the window crossfades in place. The app owns the conversation: it passes \`messages\`, sets \`thinking\` while a reply is on its way, and appends the reply. Copy **Pattern — chat dock**.
 
-A \`gate\` hands the window to a multi-step form — **ChatDock.Gate**, for Start a project. While it is up the window is the form: one header with the step's title, the step, and its footer on the window's bottom edge; the conversation and the composer wait behind it, and the window is modal. Copy **Pattern — start a project gate**.
+A \`gate\` puts a multi-step form — **ChatDock.Gate**, for Start a project — in the conversation, under the latest message, where a reply would go. The window keeps its header and its close; the composer stays in place but is off until the form finishes or is cancelled. The window grows to fit the form, up to the viewport, and past that the conversation scrolls. Copy **Pattern — start a project gate**.
 
 | Prop | Contract |
 |------|----------|
-| \`title\`, \`subtitle\`, \`mark\` | Window header. \`mark\` is an **Avatar** \`size="md"\`; it also starts the resting bar |
+| \`title\`, \`subtitle\`, \`mark\` | Window header. \`mark\` is an **Avatar** \`size="md"\`; it also starts the resting bar. \`gateSubtitle\` replaces the subtitle while a gate is up (for example "Start a project"); without it the subtitle is hidden then |
 | \`greeting\` | First assistant message, always at the top |
 | \`messages\` | \`{ id, role: "user" \\| "assistant", content }[]\`, oldest first. \`content\` is text or Markdown the app already rendered. Replies can add \`copyText\` (shows **Copy**), \`meta\` (\`{ label, description? }\`, a muted note such as the match score), and \`feedback\` (\`"up" \\| "down" \\| null\`, the visitor's vote; \`null\` until they vote, left out on replies that take no vote) |
 | \`thinking\` | Shows the thinking row after the last message |
@@ -952,7 +954,7 @@ A \`gate\` hands the window to a multi-step form — **ChatDock.Gate**, for Star
 | \`followUpsPlacement\` | \`inline\` (default): rows in the conversation, under the reply. \`composer\`: pills pinned above the composer |
 | \`onSend\` | Receives the typed message, a suggestion's prompt, or a follow-up's prompt |
 | \`onMessageFeedback\` | Shows the thumbs under finished replies that carry \`feedback\` and receives each vote (\`null\` clears it). The app passes the vote back as the reply's \`feedback\` |
-| \`gate\` | A form that takes over the window — **ChatDock.Gate** with its steps. Setting it opens the window and moves focus in; the window's header, the conversation, the composer, the rows, and the disclaimer give way to it, and the fixed window turns modal (scrim, page inert, Tab kept inside). The gate's close, Escape, and a click on the scrim fold the window and keep the gate, with its progress, for when it reopens; the gate's Cancel clears it, and the conversation and composer come back with focus |
+| \`gate\` | A form in the conversation — **ChatDock.Gate** with its steps, under the latest message. Setting it opens the window and moves focus in; the composer stays in place but is off (its placeholder says why), and the suggestion rows and follow-ups step aside. The window grows to fit the form, up to the viewport less 7rem; past that the conversation scrolls, and each step is brought into view. The window's close and Escape fold it and keep the gate, with its progress, for when it reopens; the gate's Cancel clears it and the composer comes back with focus. The window stays non-modal |
 | \`open\` / \`onOpenChange\` | Optional control of the window |
 | \`placement\` | \`fixed\` (default) pins it to the viewport; \`inline\` keeps it in flow for previews |
 
@@ -967,9 +969,9 @@ ChatDock — fixed to the bottom, page grid at --grid-max 40rem, under SiteNav
 │   │   └── follow-ups (inline) — Button ghost rows under the latest reply, each led by the corner-down-right arrow, 44px on phones
 │   ├── suggestion rows — Button ghost row + icon, until the first message
 │   └── follow-ups (composer) — Button secondary pills, text only, wrap
-└── composer — one PromptBar in both states; hidden while a gate is up
+└── composer — one PromptBar in both states; off while a gate is up
     ├── start: mark — folds away while the window is open
-    ├── (while a gate is up the window is the form — ChatDock.Gate: header (title, subtitle | previous · "2 of 4" · next · close) · scrolling step body · pending or error line · footer (start slot | Cancel · Next) on the window's bottom edge; scrim behind the fixed window)
+│   │   └── gate — ChatDock.Gate under the latest message: hairline · step title, subtitle | previous · "2 of 4" · next · step · hairline · pending or error line · footer (start slot | Cancel · Next)
     └── disclaimer — caption, muted, opens under the composer
 \`\`\`
 
@@ -981,7 +983,7 @@ ChatDock — fixed to the bottom, page grid at --grid-max 40rem, under SiteNav
 - **Do** pass \`meta\` only for a score the app stands behind: a short \`label\` ("Match 99%") and a \`description\` that says what it measures. It is read to screen readers after the label.
 - **Do** keep votes in the app and pass each one back as the reply's \`feedback\`. **Pattern — chat dock** holds them and hands each vote to \`onFeedback\`.
 - **Don't** put buttons or scores inside a reply's \`content\` — use \`copyText\`, \`meta\`, and \`onMessageFeedback\`.
-- **Do** run Start a project as a \`gate\`, not a dialog over the chat: the form takes over the window, and its answers and the confirmation land in the conversation when it finishes. Copy **Pattern — start a project gate** and return it from **Pattern — chat dock**'s \`renderStartProject\`.
+- **Do** run Start a project as a \`gate\`, not a dialog over the chat: the form sits in the conversation, and its answers and the confirmation take its place when it finishes. Pass \`gateSubtitle\` with the form's name. Copy **Pattern — start a project gate** and return it from **Pattern — chat dock**'s \`renderStartProject\`.
 - **Do** return the send's promise from the gate's \`onSubmit\` and reject when it fails: the gate keeps every answer, shows the error, and offers Try again. Don't thank the visitor before the send resolves.
 - **Don't** put a form inside a message's \`content\`. When a gate finishes, add its answers as a message (**ChatQa**) and a confirmation line, as the patterns do.
 - **Don't** make suggestions the only way to ask: touch devices never see the pills, only the rows in the window.
@@ -1399,12 +1401,15 @@ const gateConversation: ChatDockMessage[] = [
 function GateSpecimen({
   step,
   send = demoSend,
+  conversation = gateConversation,
 }: {
   step: number;
   /** The app's intake request. Default: sent after a short pause. */
   send?: () => Promise<void>;
+  /** The conversation above the form. Default: one question and the reply that opened the form. */
+  conversation?: ChatDockMessage[];
 }) {
-  const [messages, setMessages] = useState(gateConversation);
+  const [messages, setMessages] = useState(conversation);
   const [gateOpen, setGateOpen] = useState(true);
 
   return (
@@ -1414,6 +1419,7 @@ function GateSpecimen({
           defaultOpen
           title="WhatMatters"
           subtitle="Ask anything"
+          gateSubtitle="Start a project"
           mark={mark}
           greeting={greeting}
           messages={messages}
@@ -1462,7 +1468,7 @@ export const PatternStartProjectGate: Story = {
         story: { inline: false, height: "800px" },
         description: {
           story:
-            "Start a project takes over the chat window: **ChatDock.Gate** holds the four steps — name the work, budget, about you, book a call — under one header, with the footer on the window's bottom edge, and the window is modal while it is up. Number keys pick the numbered options while focus is in the gate. Close or Escape folds the window and keeps the answers for when it reopens; Cancel returns to the conversation. Booking or skipping sends the intake (`onSubmit` returns a promise): \"Sending…\" shows meanwhile, and once it resolves confetti fires and the answers and a confirmation land in the conversation. If it rejects, the answers stay and the gate offers Try again. Pass it through **Pattern — chat dock**'s `renderStartProject`; the services, budgets, copy, and calendar are yours to replace.",
+            "Start a project in the conversation: **ChatDock.Gate** holds the four steps — name the work, budget, about you, book a call — under the latest reply, set off by a hairline. The window keeps its header (its subtitle becomes \"Start a project\") and grows to fit the step; the composer stays in place, off. Number keys pick the numbered options while focus is in the gate. The window's close or Escape folds it and keeps the answers for when it reopens; Cancel leaves the form and the composer comes back. Booking or skipping sends the intake (`onSubmit` returns a promise): \"Sending…\" shows meanwhile, and once it resolves confetti fires and the answers and a confirmation take the form's place. If it rejects, the answers stay and the gate offers Try again. Pass it through **Pattern — chat dock**'s `renderStartProject`; the services, budgets, copy, and calendar are yours to replace.",
         },
       },
     },
@@ -1480,8 +1486,8 @@ function gateStepStory(step: number, viewport: "review1280" | "review390"): Pick
         description: {
           story:
             viewport === "review1280"
-              ? "Step " + step + " of **Pattern — start a project gate**. The form fills the window under one header, its footer on the window's bottom edge; the page behind is dimmed."
-              : "Step " + step + " at 390: the form fills the screen under one header, and its controls are 44px.",
+              ? "Step " + step + " of **Pattern — start a project gate**, under the reply it answers. The window grows to fit the step, so it shows whole; the composer stays in place, off."
+              : "Step " + step + " at 390: the conversation stays above the form and scrolls with it; each step is brought into view. Controls are 44px.",
         },
       },
     },
@@ -1531,6 +1537,48 @@ export const GateStep4At390: Story = {
   name: "Start a project — 4. Book a call at 390",
   globals: at390,
   ...gateStepStory(4, "review390"),
+};
+const longReplyCost = "Most projects start at a fixed scope. Tell us what you need and we'll send a range within a day.";
+const longReplyTime = "A focused brand or product sprint takes four to six weeks. Larger builds run in phases.";
+
+/** A longer conversation before Start a project — the thread scrolls above the form. */
+const longGateConversation: ChatDockMessage[] = [
+  { id: "l1", role: "user", content: "What do you make?" },
+  { id: "l2", role: "assistant", content: makeReply, copyText: makeReply, meta: matchScore(99), feedback: "up" },
+  { id: "l3", role: "user", content: "How much does a project cost?" },
+  { id: "l4", role: "assistant", content: longReplyCost, copyText: longReplyCost, meta: matchScore(97), feedback: null },
+  { id: "l5", role: "user", content: "And how long does it take?" },
+  { id: "l6", role: "assistant", content: longReplyTime, copyText: longReplyTime, meta: matchScore(91), feedback: null },
+  ...gateConversation,
+];
+
+export const GateLongConversationAt1280: Story = {
+  name: "Start a project — after a long conversation at 1280",
+  globals: at1280,
+  parameters: {
+    docs: {
+      story: { inline: false, height: "800px" },
+      description: {
+        story:
+          "Three exchanges before the visitor asks for a new brand. The window has grown as far as the viewport allows; the form sits under the reply that opened it, whole, and the earlier turns scroll above it.",
+      },
+    },
+  },
+  render: () => <GateSpecimen step={1} conversation={longGateConversation} />,
+};
+export const GateLongConversationAt390: Story = {
+  name: "Start a project — after a long conversation at 390",
+  globals: at390,
+  parameters: {
+    docs: {
+      story: { inline: false, height: "844px" },
+      description: {
+        story:
+          "The same conversation at 390. The window fills the screen; the step is brought into view with the reply above it, and the earlier turns scroll.",
+      },
+    },
+  },
+  render: () => <GateSpecimen step={1} conversation={longGateConversation} />,
 };
 export const GateSendFailedAt1280: Story = {
   name: "Start a project — send failed at 1280",

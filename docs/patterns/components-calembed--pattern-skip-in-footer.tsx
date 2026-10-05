@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.3 · Pattern — skip in footer
+// @thewhatmatters/wmds@0.4.4 · Pattern — skip in footer
 // Storybook: Components/CalEmbed → Pattern — skip in footer (?path=/story/components-calembed--pattern-skip-in-footer)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
