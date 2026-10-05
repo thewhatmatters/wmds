@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.2 · Pattern — post page
+// @thewhatmatters/wmds@0.4.3 · Pattern — post page
 // Storybook: Guides/Post page → Pattern — post page (?path=/story/guides-post-page--post-page)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -74,8 +74,34 @@ function CopyButton({ text, label }: { text: string; label: string }) {
   );
 }
 
+/** Where the metadata panel sits from lg: before the article (start) or after it (end). */
+export type PostMetadataSide = "start" | "end";
+
+/** How many of the page's 12 columns the panel takes from lg; the article takes the rest. */
+export type PostMetadataColumns = 3 | 4;
+
+const metadataColumnClasses: Record<PostMetadataColumns, string> = {
+  3: "lg:col-span-3",
+  4: "lg:col-span-4",
+};
+
+const articleColumnClasses: Record<PostMetadataColumns, string> = {
+  3: "lg:col-span-9",
+  4: "lg:col-span-8",
+};
+
+export interface PostPageProps {
+  post: PostPageData;
+  /** The post's rendered markdown. */
+  children: ReactNode;
+  /** Where the panel sits from lg. Below lg it stacks above the article either way. Default: "start". */
+  metadataSide?: PostMetadataSide;
+  /** The panel's width from lg, in columns. Default: 4. */
+  metadataColumns?: PostMetadataColumns;
+}
+
 /** A blog post: the title, a metadata panel, and the article, which is the rendered markdown. */
-export function PostPage({ post, children }: { post: PostPageData; children: ReactNode }) {
+export function PostPage({ post, children, metadataSide = "start", metadataColumns = 4 }: PostPageProps) {
   const metadataHeadingId = useId();
   const encodedUrl = encodeURIComponent(post.url);
   const encodedTitle = encodeURIComponent(post.title);
@@ -91,7 +117,11 @@ export function PostPage({ post, children }: { post: PostPageData; children: Rea
 
         <aside
           aria-labelledby={metadataHeadingId}
-          className="col-span-full lg:sticky lg:top-[calc(var(--site-nav-height)+1rem)] lg:col-span-4"
+          className={
+            "col-span-full lg:sticky lg:top-[calc(var(--site-nav-height)+1rem)] " +
+            metadataColumnClasses[metadataColumns] +
+            (metadataSide === "end" ? " lg:order-last" : "")
+          }
         >
           <SectionCaption id={metadataHeadingId}>Metadata</SectionCaption>
           <DescriptionList variant="mono" rule="dotted">
@@ -138,7 +168,7 @@ export function PostPage({ post, children }: { post: PostPageData; children: Rea
           </DescriptionList>
         </aside>
 
-        <div className="col-span-full mt-6 lg:col-span-8 lg:mt-0">
+        <div className={"col-span-full mt-6 lg:mt-0 " + articleColumnClasses[metadataColumns]}>
           <SectionCaption as="p">Article</SectionCaption>
           <Prose className="mt-6">{children}</Prose>
         </div>

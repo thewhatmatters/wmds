@@ -95,8 +95,8 @@ async function waitForWindowSettled(canvasElement: HTMLElement) {
       expect(getComputedStyle(card).opacity).toBe("1");
       const dock = card.parentElement ?? card;
       for (const layer of dock.querySelectorAll<HTMLElement>("[style*='opacity']:not([aria-hidden='true'])")) {
-        // Layers that have faded out and been hidden (the composer behind a gate) are not on screen.
-        if (layer.closest("[hidden]") != null) continue;
+        // Layers that have faded out and been hidden (the conversation behind a gate) are not on screen.
+        if (layer.closest("[hidden]") != null || getComputedStyle(layer).visibility === "hidden") continue;
         expect(getComputedStyle(layer).opacity).toBe("1");
       }
     },
@@ -724,41 +724,46 @@ async function openGate(canvas: ReturnType<typeof within>, canvasElement: HTMLEl
   return gateRoot(canvasElement) as HTMLElement;
 }
 
-export const GateTakesTheComposersPlace: Story = {
-  name: "a gate opens the window in the composer's place and takes focus",
+export const GateTakesOverTheWindow: Story = {
+  name: "a gate takes over the window: one header, the form to the bottom edge",
   render: () => <GateDock />,
   play: async ({ canvas, canvasElement }) => {
     expect(windowQuery(canvasElement)).toBeNull();
     const gate = await openGate(canvas, canvasElement);
     const dialog = canvas.getByRole("dialog", { name: "WhatMatters" });
     expect(within(dialog).getByRole("group", { name: "Pick services" })).toBe(gate);
-    // The composer, the suggestion rows, and the disclaimer step aside; the conversation stays.
+    await waitForWindowSettled(canvasElement);
+
+    // The window's header, the conversation, the composer, the rows, and the disclaimer give way.
     await waitFor(
       () => {
         expect(within(dialog).queryByRole("textbox", { name: "Ask anything" })).toBeNull();
+        expect(within(dialog).queryByRole("log", { name: "Conversation" })).toBeNull();
       },
       { timeout: 3000 },
     );
+    expect(within(dialog).getByText("Happy to help. Start a project and we'll take it from there.")).not.toBeVisible();
+    expect(within(dialog).queryByRole("heading", { name: "WhatMatters" })).toBeNull();
     expect(within(dialog).queryByRole("group", { name: "Suggested questions" })).toBeNull();
-    expect(dialog).not.toHaveTextContent("Answers may be incomplete");
-    expect(within(dialog).getByRole("log", { name: "Conversation" })).toHaveTextContent("Start a project");
+    expect(within(dialog).queryByText("Answers may be incomplete")).toBeNull();
+    // One header: the step's title, and one close.
+    expect(within(dialog).getAllByRole("heading")).toHaveLength(1);
+    expect(within(dialog).getByRole("heading", { name: "Pick services" })).toBeVisible();
+    expect(within(dialog).getAllByRole("button", { name: "Close chat" })).toHaveLength(1);
+    // Inline previews are not modal.
+    expect(dialog).toHaveAttribute("aria-modal", "false");
 
-    // It hugs its step up to the cap; past the cap its body scrolls, and the reply above stays in view.
-    await waitForWindowSettled(canvasElement);
-    await waitFor(
-      () => {
-        const cap = Number.parseFloat(getComputedStyle(gate).getPropertyValue("--chat-dock-gate-max"));
-        expect(gate.getBoundingClientRect().height).toBeLessThanOrEqual(cap + 1);
-        const body = gate.querySelector<HTMLElement>(".overflow-y-auto");
-        if (body == null) throw new Error("Gate body is missing");
-        expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
-        const reply = within(dialog).getByText("Happy to help. Start a project and we'll take it from there.");
-        const log = within(dialog).getByRole("log", { name: "Conversation" });
-        expect(reply.getBoundingClientRect().bottom).toBeLessThanOrEqual(gate.getBoundingClientRect().top);
-        expect(reply.getBoundingClientRect().bottom).toBeGreaterThan(log.getBoundingClientRect().top);
-      },
-      { timeout: 3000 },
-    );
+    // The gate fills the window; the body scrolls and the footer sits on the window's bottom edge.
+    const card = windowCard(canvasElement).getBoundingClientRect();
+    const box = gate.getBoundingClientRect();
+    expect(box.top).toBeCloseTo(card.top, 0);
+    expect(box.bottom).toBeCloseTo(card.bottom, 0);
+    const body = gate.querySelector<HTMLElement>("[data-chat-dock-gate-body]");
+    if (body == null) throw new Error("Gate body is missing");
+    expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+    const cancel = within(gate).getByRole("button", { name: "Cancel" }).getBoundingClientRect();
+    expect(card.bottom - cancel.bottom).toBeGreaterThan(0);
+    expect(card.bottom - cancel.bottom).toBeLessThanOrEqual(24);
   },
 };
 
@@ -795,6 +800,7 @@ export const GateKeysAndSteps: Story = {
       expect(within(gate).getByText("2 of 2")).toBeInTheDocument();
       expect(within(gate).getByText("Thanks — that's everything.")).toBeInTheDocument();
     });
+    // The last step: the header's next is off, and without onNext there is no primary action.
     expect(within(gate).getByRole("button", { name: "Next step" })).toBeDisabled();
     expect(within(gate).queryByRole("button", { name: "Next" })).toBeNull();
     await userEvent.click(within(gate).getByRole("button", { name: "Previous step" }));
@@ -806,54 +812,226 @@ export const GateKeysAndSteps: Story = {
   },
 };
 
+/** Folds the window, then opens it again from the bar: the gate is back, with its progress, and has focus. */
+async function reopenToGate(canvas: ReturnType<typeof within>, canvasElement: HTMLElement) {
+  await waitFor(
+    () => {
+      expect(windowQuery(canvasElement)).toBeNull();
+      expect(windowCard(canvasElement).hidden).toBe(true);
+    },
+    { timeout: 3000 },
+  );
+  // At rest the composer is the bar again, with focus.
+  const bar = canvas.getByRole("textbox", { name: "Ask anything" });
+  await waitFor(() => {
+    expect(bar).toHaveFocus();
+  });
+  await userEvent.click(bar);
+  await waitFor(
+    () => {
+      const back = gateRoot(canvasElement);
+      expect(back).not.toBeNull();
+      expect(back).toHaveFocus();
+    },
+    { timeout: 3000 },
+  );
+  expect(within(gateRoot(canvasElement) as HTMLElement).getByRole("checkbox", { name: "Social media" })).toBeChecked();
+}
+
 export const GateEscape: Story = {
-  name: "gate: Escape closes the gate, then a second Escape closes the window",
+  name: "gate: Escape folds the window and keeps the gate; Cancel returns to the conversation",
   render: () => <GateDock />,
   play: async ({ canvas, canvasElement }) => {
-    await openGate(canvas, canvasElement);
+    const gate = await openGate(canvas, canvasElement);
+    await userEvent.click(within(gate).getByRole("checkbox", { name: "Social media" }));
     await userEvent.keyboard("{Escape}");
+    await reopenToGate(canvas, canvasElement);
+
+    // Cancel leaves the gate: the conversation and the composer come back, with focus in the composer.
+    await userEvent.click(within(gateRoot(canvasElement) as HTMLElement).getByRole("button", { name: "Cancel" }));
     const dialog = canvas.getByRole("dialog", { name: "WhatMatters" });
     const field = await waitFor(() => within(dialog).getByRole("textbox", { name: "Ask anything" }), { timeout: 3000 });
     await waitFor(() => {
       expect(gateRoot(canvasElement)).toBeNull();
       expect(field).toHaveFocus();
     });
-    expect(windowQuery(canvasElement)).not.toBeNull();
-
-    await userEvent.keyboard("{Escape}");
-    await waitFor(() => {
-      expect(windowQuery(canvasElement)).toBeNull();
-      expect(windowCard(canvasElement).hidden).toBe(true);
-    });
+    expect(within(dialog).getByRole("log", { name: "Conversation" })).toHaveTextContent("Start a project");
+    expect(within(dialog).getByText("Answers may be incomplete")).toBeInTheDocument();
+    await waitForWindowSettled(canvasElement);
+    expect(within(dialog).getByRole("heading", { name: "WhatMatters" })).toBeVisible();
   },
 };
 
 export const GateWindowClose: Story = {
-  name: "gate: closing the window keeps the gate for when it reopens",
+  name: "gate: its close folds the window and keeps the gate for when it reopens",
   render: () => <GateDock />,
   play: async ({ canvas, canvasElement }) => {
     const gate = await openGate(canvas, canvasElement);
     await userEvent.click(within(gate).getByRole("checkbox", { name: "Social media" }));
-    await userEvent.click(canvas.getByRole("button", { name: "Close chat" }));
+    await userEvent.click(within(gate).getByRole("button", { name: "Close chat" }));
+    await reopenToGate(canvas, canvasElement);
+    await waitForWindowSettled(canvasElement);
+  },
+};
+
+/** The fixed dock, as on a page: a gate makes the window modal. */
+function ModalGateDock() {
+  const [gateOpen, setGateOpen] = useState(false);
+  return (
+    <div>
+      <Button role="primary" type="button" onClick={() => setGateOpen(true)}>
+        Open the gate
+      </Button>
+      <ChatDock
+        title="WhatMatters"
+        subtitle="Ask anything"
+        mark={<Avatar name="WhatMatters" size="md" />}
+        greeting="Hi, ask me anything."
+        messages={gateConversation}
+        suggestions={suggestions}
+        onSend={onSend}
+        gate={gateOpen ? <TestGate onClose={() => setGateOpen(false)} /> : undefined}
+      />
+    </div>
+  );
+}
+
+export const GateModal: Story = {
+  name: "gate: the fixed window is modal while the gate is up",
+  render: () => <ModalGateDock />,
+  play: async ({ canvas, canvasElement }) => {
+    const pageButton = canvas.getByRole("button", { name: "Open the gate" });
+    const gate = await openGate(canvas, canvasElement);
+    const dialog = canvas.getByRole("dialog", { name: "WhatMatters" });
+    expect(dialog).toHaveAttribute("aria-modal", "true");
+    const scrim = canvasElement.ownerDocument.querySelector<HTMLElement>("[data-chat-dock-scrim]");
+    expect(scrim).not.toBeNull();
+    // The page behind is inert and does not scroll.
+    expect(pageButton.closest("[inert]")).not.toBeNull();
+    expect(document.body.style.overflow).toBe("hidden");
+
+    // Tab stays inside: from the last control it wraps to the first.
+    const controls = Array.from(gate.querySelectorAll<HTMLElement>("button:not([disabled]), input:not([disabled])"));
+    const last = controls[controls.length - 1];
+    last.focus();
+    await userEvent.tab();
+    expect(dialog.contains(document.activeElement)).toBe(true);
+    expect(document.activeElement).not.toBe(last);
+
+    // A click on the scrim folds the window, keeps the gate, and gives the page back.
+    await userEvent.click(scrim as HTMLElement);
     await waitFor(
       () => {
         expect(windowQuery(canvasElement)).toBeNull();
-        expect(windowCard(canvasElement).hidden).toBe(true);
+        expect(canvasElement.ownerDocument.querySelector("[data-chat-dock-scrim]")).toBeNull();
       },
       { timeout: 3000 },
     );
-    // At rest the composer is the bar again; opening the window brings the gate back.
-    const bar = canvas.getByRole("textbox", { name: "Ask anything" });
-    await userEvent.click(bar);
-    await waitFor(
+    expect(pageButton.closest("[inert]")).toBeNull();
+    expect(document.body.style.overflow).toBe("");
+    expect(gateRoot(canvasElement)).not.toBeNull();
+  },
+};
+
+/** A one-step gate whose send the test settles: pending, then a failure, then a retry that works. */
+function SubmitGateDock({ send, onDone }: { send: () => Promise<void>; onDone: () => void }) {
+  const [gateOpen, setGateOpen] = useState(true);
+  const [pending, setPending] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  async function submit() {
+    setPending(true);
+    setFailed(false);
+    try {
+      await send();
+    } catch {
+      setFailed(true);
+      return;
+    } finally {
+      setPending(false);
+    }
+    onDone();
+    setGateOpen(false);
+  }
+
+  return (
+    <ChatDock
+      placement="inline"
+      defaultOpen
+      title="WhatMatters"
+      greeting="Hi, ask me anything."
+      onSend={onSend}
+      gate={
+        gateOpen ? (
+          <ChatDock.Gate
+            title="Send it"
+            step={1}
+            stepCount={1}
+            onPrevious={() => undefined}
+            onNext={() => {
+              void submit();
+            }}
+            continueLabel={failed ? "Try again" : "Send"}
+            pending={pending}
+            error={failed ? "We couldn't send your answers." : undefined}
+            onClose={() => setGateOpen(false)}
+          >
+            <p>Ready to send.</p>
+          </ChatDock.Gate>
+        ) : undefined
+      }
+    />
+  );
+}
+
+const sendResults: Array<{ resolve: () => void; reject: () => void }> = [];
+const onSubmitDone = fn();
+
+function controlledSend(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    sendResults.push({ resolve, reject: () => reject(new Error("Network error")) });
+  });
+}
+
+export const GatePendingAndError: Story = {
+  name: "gate: a pending send, a failure that keeps the gate, and a retry",
+  render: () => <SubmitGateDock send={controlledSend} onDone={onSubmitDone} />,
+  play: async ({ canvasElement }) => {
+    sendResults.length = 0;
+    onSubmitDone.mockClear();
+    const gate = await waitFor(
       () => {
-        const back = gateRoot(canvasElement);
-        expect(back).not.toBeNull();
-        expect(back).toHaveFocus();
+        const root = gateRoot(canvasElement);
+        if (root == null) throw new Error("Gate is missing");
+        return root;
       },
       { timeout: 3000 },
     );
-    expect(within(gateRoot(canvasElement) as HTMLElement).getByRole("checkbox", { name: "Social media" })).toBeChecked();
+    await waitForWindowSettled(canvasElement);
+    await userEvent.click(within(gate).getByRole("button", { name: "Send" }));
+
+    // Pending: announced, the gate busy, its controls off.
+    expect(within(gate).getByRole("status")).toHaveTextContent("Sending…");
+    expect(gate).toHaveAttribute("aria-busy", "true");
+    expect(within(gate).getByRole("button", { name: "Cancel" })).toBeDisabled();
+    expect(within(gate).getByRole("button", { name: "Send" })).toBeDisabled();
+
+    // It fails: the gate stays, says so, and offers Try again.
+    sendResults[0]?.reject();
+    const alert = await waitFor(() => within(gate).getByRole("alert"));
+    expect(alert).toHaveTextContent("We couldn't send your answers.");
+    expect(gate).not.toHaveAttribute("aria-busy");
+    expect(within(gate).getByRole("status")).toHaveTextContent("");
+    expect(onSubmitDone).not.toHaveBeenCalled();
+
+    // Try again works: the gate leaves.
+    await userEvent.click(within(gate).getByRole("button", { name: "Try again" }));
+    expect(within(gate).queryByRole("alert")).toBeNull();
+    sendResults[1]?.resolve();
+    await waitFor(() => {
+      expect(onSubmitDone).toHaveBeenCalledTimes(1);
+      expect(gateRoot(canvasElement)).toBeNull();
+    });
     await waitForWindowSettled(canvasElement);
   },
 };

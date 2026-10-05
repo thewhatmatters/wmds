@@ -13,7 +13,9 @@
  *   raw-color         error  hex / rgb / hsl colors in className or style
  *   raw-type          warn   text-xs…text-9xl or text-[…] sizes — use type-* utilities
  *   raw-motion        warn   duration-[…] / ease-[…] / delay-[…] utilities, or numeric Motion durations
- *   pattern-drift     warn   a pasted pattern differs from docs/patterns/<id>.tsx in the installed package
+ *   pattern-drift     warn   a pasted pattern's markup or classes differ from docs/patterns/<id>.tsx in the
+ *                             installed package (its elements, className / style values, *Classes constants);
+ *                             content, data, handlers, and exports may change
  *   pattern-stale     warn   a pasted pattern's header names an older package version
  *   pattern-removed   error  a pasted pattern's id no longer ships
  *
@@ -77,12 +79,100 @@ const rawControls = [
   ["textarea", "TextArea / PromptBar"],
 ];
 
-const strip = (source) =>
-  source
-    .split("\n")
-    .filter((line) => !/^\/\/ (@thewhatmatters\/wmds@|Storybook:|Show code)/.test(line))
-    .join("\n")
-    .trim();
+// Hex colors, not character references such as &#039; or &#x27;.
+const colorValue = /(?<![&\w])#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(|oklch\(/;
+const colorMatch = /(?<![&\w])#[0-9a-fA-F]{3,8}|rgba?\(.*?\)|hsla?\(.*?\)|oklch\(.*?\)/;
+
+/** The index past the end of the string literal that opens at `start` (quote or backtick). */
+const skipString = (code, start) => {
+  const quote = code[start];
+  for (let index = start + 1; index < code.length; index++) {
+    const char = code[index];
+    if (char === "\\") {
+      index++;
+    } else if (quote === "`" && char === "$" && code[index + 1] === "{") {
+      index = skipBalanced(code, index + 1) - 1;
+    } else if (char === quote) {
+      return index + 1;
+    }
+  }
+  return code.length;
+};
+
+/** The index past the bracket that closes the one at `start`, skipping strings. */
+const skipBalanced = (code, start) => {
+  let depth = 0;
+  for (let index = start; index < code.length; index++) {
+    const char = code[index];
+    if (char === '"' || char === "'" || char === "`") {
+      index = skipString(code, index) - 1;
+    } else if ("{([".includes(char)) {
+      depth++;
+    } else if ("})]".includes(char)) {
+      depth--;
+      if (depth === 0) return index + 1;
+    }
+  }
+  return code.length;
+};
+
+/** One attribute value from `start`: a quoted string or a {…} expression. */
+const readValue = (code, start) => {
+  const char = code[start];
+  if (char === '"' || char === "'") return code.slice(start, skipString(code, start));
+  if (char === "{") return code.slice(start, skipBalanced(code, start));
+  return "";
+};
+
+/** A declaration's value from `start` to the semicolon that ends it. */
+const readDeclaration = (code, start) => {
+  let depth = 0;
+  for (let index = start; index < code.length; index++) {
+    const char = code[index];
+    if (char === '"' || char === "'" || char === "`") index = skipString(code, index) - 1;
+    else if ("{([".includes(char)) depth++;
+    else if ("})]".includes(char)) depth--;
+    else if (char === ";" && depth === 0) return code.slice(start, index);
+  }
+  return code.slice(start);
+};
+
+const squash = (text) => text.replace(/\s+/g, " ").trim();
+
+/**
+ * What a pasted pattern must keep: its JSX elements in order, every className and style value, and
+ * every *Classes constant. Text, data, handler bodies, and names an app exports are content — they
+ * can change without drift.
+ */
+const patternStructure = (source) => {
+  const code = source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:"'`\\])\/\/.*$/gm, "$1");
+  const parts = [];
+  const tokens = /(?<![\w.$)\]])<([A-Za-z][\w.]*)|\b(className|style)=|\bconst\s+(\w*Classes)\b[^=]*=\s*/g;
+  for (const match of code.matchAll(tokens)) {
+    const end = match.index + match[0].length;
+    if (match[1]) parts.push(`<${match[1]}>`);
+    else if (match[2]) parts.push(`${match[2]}=${squash(readValue(code, end))}`);
+    else parts.push(`${match[3]} = ${squash(readDeclaration(code, end))}`);
+  }
+  return parts;
+};
+
+/** The first place two structures part, for the finding's message — clipped around where they differ. */
+const firstDifference = (shipped, pasted) => {
+  const length = Math.max(shipped.length, pasted.length);
+  for (let index = 0; index < length; index++) {
+    const want = shipped[index];
+    const have = pasted[index];
+    if (want === have) continue;
+    let common = 0;
+    while (want != null && have != null && common < want.length && want[common] === have[common]) common++;
+    const from = Math.max(0, common - 24);
+    const clip = (text) =>
+      text == null ? "nothing" : `${from > 0 ? "…" : ""}${text.slice(from, from + 64)}${text.length > from + 64 ? "…" : ""}`;
+    return `${clip(have)} where the pattern has ${clip(want)}`;
+  }
+  return "";
+};
 
 for (const file of files) {
   const source = readFileSync(file, "utf8");
@@ -120,7 +210,7 @@ for (const file of files) {
     }
 
     if (/(className|class|style)=/.test(line) || /(color|background|border|fill|stroke)\s*:/.test(line)) {
-      if (/#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(|oklch\(/.test(line) && !/var\(--/.test(line.match(/#[0-9a-fA-F]{3,8}|rgba?\(.*?\)|hsla?\(.*?\)|oklch\(.*?\)/)?.[0] ?? "") && !ignored(lines, index, "raw-color")) {
+      if (colorValue.test(line) && !/var\(--/.test(line.match(colorMatch)?.[0] ?? "") && !ignored(lines, index, "raw-color")) {
         report(file, n, "raw-color", "error", "raw color value — use a semantic color utility or token");
       }
     }
@@ -150,8 +240,16 @@ for (const file of files) {
       if (header[1] !== packageVersion) {
         report(file, 1, "pattern-stale", "warn", `pasted from ${header[1]}, installed ${packageVersion} — re-copy if CHANGELOG names it`);
       }
-      if (strip(readFileSync(shipped, "utf8")) !== strip(source)) {
-        report(file, 1, "pattern-drift", "warn", `differs from docs/patterns/${id}.tsx — allowed edits are content, data, handlers, exports`);
+      const shippedStructure = patternStructure(readFileSync(shipped, "utf8"));
+      const pastedStructure = patternStructure(source);
+      if (shippedStructure.join("\n") !== pastedStructure.join("\n")) {
+        report(
+          file,
+          1,
+          "pattern-drift",
+          "warn",
+          `markup or classes differ from docs/patterns/${id}.tsx (${firstDifference(shippedStructure, pastedStructure)}) — allowed edits are content, data, handlers, exports`,
+        );
       }
     }
   }

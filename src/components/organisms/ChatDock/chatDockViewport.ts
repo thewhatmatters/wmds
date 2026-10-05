@@ -59,3 +59,26 @@ export function useChatDockVisibleArea(active: boolean): ChatDockVisibleArea {
   const [top, bottom] = key.split(":").map(Number);
   return { top: top ?? 0, bottom: bottom ?? 0 };
 }
+
+const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
+
+function subscribeReducedMotion(onChange: () => void): () => void {
+  if (typeof window.matchMedia !== "function") return () => undefined;
+  const query = window.matchMedia(reducedMotionQuery);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+function readReducedMotion(): boolean {
+  return typeof window.matchMedia === "function" && window.matchMedia(reducedMotionQuery).matches;
+}
+
+/**
+ * Reduced motion, from the reader's setting or `MotionConfig reducedMotion="always"`. The server and
+ * the hydration render read the setting as off, so the closed window's inline style matches the
+ * server's; it switches right after. Closed, the window is hidden, so the switch never shows.
+ */
+export function useChatDockReducedMotion(config: string | undefined): boolean {
+  const prefers = useSyncExternalStore(subscribeReducedMotion, readReducedMotion, () => false);
+  return config === "always" || (config !== "never" && prefers);
+}

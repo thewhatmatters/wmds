@@ -35,3 +35,8 @@ The app deletes its hand-built `<dl>`, its copy button's swap and announcement, 
 ## References
 
 - ADR-0004, ADR-0009, ADR-0026, ADR-0033, ADR-0040
+
+### Amendment — 2026-10-05: where the metadata panel sits
+
+The site put the panel after the article at 3 columns by editing the pattern's classes, which `wmds-check` reports as drift. **Pattern — post page** takes `metadataSide` (`start`, default, or `end` — `lg:order-last`) and `metadataColumns` (`4`, default, or `3`; the article takes the rest). Below `lg` the panel stacks above the article either way, and it stays first in reading and tab order.
+

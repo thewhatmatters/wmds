@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.2 · Pattern — custom leading / trailing
+// @thewhatmatters/wmds@0.4.3 · Pattern — custom leading / trailing
 // Storybook: Components/TaskRows → Pattern — custom leading / trailing (?path=/story/components-taskrows--custom-slots)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

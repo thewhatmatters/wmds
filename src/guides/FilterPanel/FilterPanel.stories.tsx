@@ -15,6 +15,8 @@ const meta = {
 
 A filtered index page — a side panel of checkbox filters beside an **IndexList**. Copy **Pattern — filtered index** for a blog, case studies, or resources: pass the posts and the filter groups; the page filters, counts, and clears.
 
+A post can carry one option or several per group (\`facets: { topic: ["guides", "brand"] }\`). Within a group the options on are alternatives — a post shows when it has any of them; across groups they combine. The page can open filtered (\`defaultSelection\`, for example from \`/blog?topic=guides\`), or the app can hold the selection (\`selection\` + \`onSelectionChange\`, for example in the URL).
+
 | Part | Component | Why |
 |------|-----------|-----|
 | Panel title | **SectionCaption** with Clear all in \`end\` | Small uppercase mono caption on a rule, level with the list's column captions |
@@ -46,7 +48,8 @@ The panel's rule sits level with the list's caption rule. \`flush\` drops the ac
 - **Do** keep the shown count in a visually hidden status line so a filter change is announced.
 - **Do** keep the groups open by default; collapse is for long panels.
 - **Don't** write the count into the option label ("Guides (2)") — use \`count\`.
-- **Don't** filter by navigation — this is local state; put it in the URL only when filtered views need links.
+- **Do** open the page filtered when a link asks for it: a category tag linking to \`/blog?topic=guides\` passes \`defaultSelection={{ topic: ["guides"] }}\`.
+- **Do** hold the selection in the URL (\`selection\` + \`onSelectionChange\`) only when filtered views need their own links; otherwise leave it to the pattern.
         `.trim(),
       },
     },
@@ -88,20 +91,27 @@ export interface FilteredPost {
   /** The date as readers see it, for example "Sep 14, 2026". */
   dateLabel: string;
   description: string;
-  /** The post's option in each filter group, by group id — for example { topic: "guides" }. */
-  facets: Record<string, string>;
+  /** The post's options in each filter group, by group id — one or several, for example { topic: ["guides", "brand"] }. */
+  facets: Record<string, string | string[]>;
 }
 
-type Selection = Record<string, string[]>;
+/** The options on in each group, by group id — for example { topic: ["guides"] }. */
+export type FilterSelection = Record<string, string[]>;
 
 function postsLabel(count: number) {
   return count === 1 ? "1 post" : \`\${count} posts\`;
 }
 
-function matches(post: FilteredPost, groups: FilterGroupDef[], selection: Selection) {
+function facetValues(post: FilteredPost, groupId: string): string[] {
+  const value = post.facets[groupId];
+  return value == null ? [] : Array.isArray(value) ? value : [value];
+}
+
+/** A post shows when, in every group with options on, it has at least one of them. */
+function matches(post: FilteredPost, groups: FilterGroupDef[], selection: FilterSelection) {
   return groups.every((group) => {
     const values = selection[group.id] ?? [];
-    return values.length === 0 || values.includes(post.facets[group.id] ?? "");
+    return values.length === 0 || facetValues(post, group.id).some((value) => values.includes(value));
   });
 }
 
@@ -113,7 +123,7 @@ function FilterGroups({
 }: {
   groups: FilterGroupDef[];
   posts: FilteredPost[];
-  selection: Selection;
+  selection: FilterSelection;
   onGroupChange: (groupId: string, values: string[]) => void;
 }) {
   return (
@@ -128,7 +138,7 @@ function FilterGroups({
             onValuesChange={(values) => onGroupChange(group.id, values)}
           >
             {group.options.map((option) => {
-              const count = posts.filter((post) => post.facets[group.id] === option.value).length;
+              const count = posts.filter((post) => facetValues(post, group.id).includes(option.value)).length;
               return (
                 <CheckboxGroup.Item
                   key={option.value}
@@ -146,23 +156,40 @@ function FilterGroups({
   );
 }
 
+export interface FilteredIndexProps {
+  title: string;
+  posts: FilteredPost[];
+  groups: FilterGroupDef[];
+  /** The filters on when the page opens — for example { topic: ["guides"] } from /blog?topic=guides. */
+  defaultSelection?: FilterSelection;
+  /** The filters on, when the app holds them — for example in the URL. Pass with onSelectionChange. */
+  selection?: FilterSelection;
+  /** Every change: an option on or off, or Clear all. */
+  onSelectionChange?: (selection: FilterSelection) => void;
+}
+
 export function FilteredIndex({
   title,
   posts,
   groups,
-}: {
-  title: string;
-  posts: FilteredPost[];
-  groups: FilterGroupDef[];
-}) {
+  defaultSelection,
+  selection: selectionProp,
+  onSelectionChange,
+}: FilteredIndexProps) {
   const filtersHeadingId = useId();
-  const [selection, setSelection] = useState<Selection>({});
+  const [ownSelection, setOwnSelection] = useState<FilterSelection>(defaultSelection ?? {});
+  const selection = selectionProp ?? ownSelection;
   const [sheetOpen, setSheetOpen] = useState(false);
   const activeCount = Object.values(selection).reduce((total, values) => total + values.length, 0);
   const shown = posts.filter((post) => matches(post, groups, selection));
 
+  function changeSelection(next: FilterSelection) {
+    if (selectionProp == null) setOwnSelection(next);
+    onSelectionChange?.(next);
+  }
+
   function setGroup(groupId: string, values: string[]) {
-    setSelection((current) => ({ ...current, [groupId]: values }));
+    changeSelection({ ...selection, [groupId]: values });
   }
 
   return (
@@ -190,7 +217,7 @@ export function FilteredIndex({
           <SectionCaption
             id={filtersHeadingId}
             end={
-              <Button role="ghost" size="xs" disabled={activeCount === 0} onClick={() => setSelection({})}>
+              <Button role="ghost" size="xs" disabled={activeCount === 0} onClick={() => changeSelection({})}>
                 Clear all
               </Button>
             }
@@ -224,7 +251,7 @@ export function FilteredIndex({
           title="Filters"
           footer={
             <div className="flex items-center justify-end gap-2">
-              <Button role="secondary" size="sm" disabled={activeCount === 0} onClick={() => setSelection({})}>
+              <Button role="secondary" size="sm" disabled={activeCount === 0} onClick={() => changeSelection({})}>
                 Clear all
               </Button>
               <Button role="primary" size="sm" onClick={() => setSheetOpen(false)}>
@@ -241,4 +268,17 @@ export function FilteredIndex({
 }
 `,
   ),
+};
+
+export const StartingSelection: Story = {
+  name: "Starting selection",
+  render: () => <FilterPanelPage defaultSelection={{ topic: ["notes"] }} />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`defaultSelection={{ topic: [\"notes\"] }}` — the page opens on Notes, as from a category tag linking to `/blog?topic=notes`. The brief carries two topics, Guides and Notes, so it shows under either.",
+      },
+    },
+  },
 };

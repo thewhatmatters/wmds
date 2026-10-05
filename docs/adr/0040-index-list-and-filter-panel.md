@@ -36,3 +36,8 @@ The blog index replaces its hand-placed grid, caption classes, and count-in-labe
 ## References
 
 - ADR-0004, ADR-0006, ADR-0009, ADR-0026, ADR-0039
+
+### Amendment — 2026-10-05: several options per post, and a starting selection
+
+The site's posts carry several topics, and its category tags link to `/blog?topic=<id>`. **Pattern — filtered index** now takes `facets: Record<string, string | string[]>` — within a group the options on are alternatives (a post shows when it has any of them), across groups they combine, and each option counts every post that has it — and `defaultSelection` (the filters on when the page opens) or `selection` + `onSelectionChange` (the app holds them, for example in the URL). `FilterSelection` and `FilteredIndexProps` are exported from the pattern.
+

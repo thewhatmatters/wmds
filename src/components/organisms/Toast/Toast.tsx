@@ -188,6 +188,22 @@ function ToastItem({
   );
 }
 
+function subscribeToNothing(): () => void {
+  return () => undefined;
+}
+
+/**
+ * `false` on the server and in the hydration render, `true` after. The portal waits for it, so the
+ * server's empty markup and the first browser render match.
+ */
+function useHydrated(): boolean {
+  return useSyncExternalStore(
+    subscribeToNothing,
+    () => true,
+    () => false,
+  );
+}
+
 export function Toaster({
   position = "bottom-right",
   maxVisible = 5,
@@ -199,8 +215,10 @@ export function Toaster({
     getToastSnapshot,
     getServerToastSnapshot,
   );
+  const hydrated = useHydrated();
 
-  if (typeof document === "undefined") return null;
+  // The server renders nothing; so does the hydration render. The portal mounts right after.
+  if (!hydrated) return null;
 
   const visible = records.slice(-Math.max(1, maxVisible));
   const ordered = [...visible].reverse();

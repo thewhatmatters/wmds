@@ -33,10 +33,12 @@ A blog post page — a display title, a metadata panel, and the article. Copy **
 main.grid-page
 └── article.band
     ├── header (col-span-full, lg:col-span-10) — Breadcrumb · h1 · lead
-    ├── aside (col-span-full, lg:col-span-4, lg:sticky) — SectionCaption "Metadata" · DescriptionList
+    ├── aside (col-span-full, lg:col-span-4 or 3, lg:sticky; lg:order-last with metadataSide="end") — SectionCaption "Metadata" · DescriptionList
     │   └── Date · Author · Reading time · Categories · Agents (stacked) · Share (stacked)
-    └── div (col-span-full, lg:col-span-8) — SectionCaption "Article" (p) · Prose
+    └── div (col-span-full, lg:col-span-8 or 9) — SectionCaption "Article" (p) · Prose
 \`\`\`
+
+**Where the panel sits.** From \`lg\` it takes 4 of the 12 columns before the article (default). \`metadataSide="end"\` puts it after the article, and \`metadataColumns={3}\` narrows it to 3 columns, giving the article 9. Below \`lg\` it stacks above the article either way, and it comes before the article in reading and tab order.
 
 **The panel sticks from \`lg\`.** Beside the article it stays in view under the pinned **SiteNav** (\`top: calc(var(--site-nav-height) + 1rem)\`), so the share and copy actions are there wherever the reader stops. It is short enough never to need its own scroll. Below \`lg\` it stacks above the article and scrolls with the page.
 
@@ -141,8 +143,34 @@ function CopyButton({ text, label }: { text: string; label: string }) {
   );
 }
 
+/** Where the metadata panel sits from lg: before the article (start) or after it (end). */
+export type PostMetadataSide = "start" | "end";
+
+/** How many of the page's 12 columns the panel takes from lg; the article takes the rest. */
+export type PostMetadataColumns = 3 | 4;
+
+const metadataColumnClasses: Record<PostMetadataColumns, string> = {
+  3: "lg:col-span-3",
+  4: "lg:col-span-4",
+};
+
+const articleColumnClasses: Record<PostMetadataColumns, string> = {
+  3: "lg:col-span-9",
+  4: "lg:col-span-8",
+};
+
+export interface PostPageProps {
+  post: PostPageData;
+  /** The post's rendered markdown. */
+  children: ReactNode;
+  /** Where the panel sits from lg. Below lg it stacks above the article either way. Default: "start". */
+  metadataSide?: PostMetadataSide;
+  /** The panel's width from lg, in columns. Default: 4. */
+  metadataColumns?: PostMetadataColumns;
+}
+
 /** A blog post: the title, a metadata panel, and the article, which is the rendered markdown. */
-export function PostPage({ post, children }: { post: PostPageData; children: ReactNode }) {
+export function PostPage({ post, children, metadataSide = "start", metadataColumns = 4 }: PostPageProps) {
   const metadataHeadingId = useId();
   const encodedUrl = encodeURIComponent(post.url);
   const encodedTitle = encodeURIComponent(post.title);
@@ -158,7 +186,11 @@ export function PostPage({ post, children }: { post: PostPageData; children: Rea
 
         <aside
           aria-labelledby={metadataHeadingId}
-          className="col-span-full lg:sticky lg:top-[calc(var(--site-nav-height)+1rem)] lg:col-span-4"
+          className={
+            "col-span-full lg:sticky lg:top-[calc(var(--site-nav-height)+1rem)] " +
+            metadataColumnClasses[metadataColumns] +
+            (metadataSide === "end" ? " lg:order-last" : "")
+          }
         >
           <SectionCaption id={metadataHeadingId}>Metadata</SectionCaption>
           <DescriptionList variant="mono" rule="dotted">
@@ -205,7 +237,7 @@ export function PostPage({ post, children }: { post: PostPageData; children: Rea
           </DescriptionList>
         </aside>
 
-        <div className="col-span-full mt-6 lg:col-span-8 lg:mt-0">
+        <div className={"col-span-full mt-6 lg:mt-0 " + articleColumnClasses[metadataColumns]}>
           <SectionCaption as="p">Article</SectionCaption>
           <Prose className="mt-6">{children}</Prose>
         </div>
@@ -215,4 +247,17 @@ export function PostPage({ post, children }: { post: PostPageData; children: Rea
 }
 `,
   ),
+};
+
+export const MetadataEnd: Story = {
+  name: "Metadata on the right",
+  render: () => <PostPageGuide metadataSide="end" metadataColumns={3} />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`metadataSide=\"end\"` with `metadataColumns={3}`: from lg the panel takes the last 3 columns, after the article, and the article takes 9. Below lg it stacks above the article, as in the default.",
+      },
+    },
+  },
 };
