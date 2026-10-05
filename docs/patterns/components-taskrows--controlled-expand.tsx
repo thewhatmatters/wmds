@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.5 · Pattern — controlled expand
+// @thewhatmatters/wmds@0.4.6 · Pattern — controlled expand
 // Storybook: Components/TaskRows → Pattern — controlled expand (?path=/story/components-taskrows--controlled-expand)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

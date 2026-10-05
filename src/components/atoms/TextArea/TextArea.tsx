@@ -19,6 +19,7 @@ import {
   textareaFixedPaddingClasses,
   textareaMinHeightClasses,
   textareaResizeClasses,
+  textareaShellFieldClasses,
   textareaSoloShellClassesFor,
   textareaStatusBannerClassesFor,
   textareaTrailingInsetClasses,
@@ -147,7 +148,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
         textareaBaseClasses,
         textareaFixedPaddingClasses[size],
         textareaMinHeightClasses[size],
-        "w-full border-0 bg-transparent shadow-none",
+        textareaShellFieldClasses,
         showTrailingStatusIcon && inputStatusGapClasses[size],
         hasMessage && cn(inputAttachedFieldClasses, inputAttachedInputClasses, "rounded-none"),
       )}
