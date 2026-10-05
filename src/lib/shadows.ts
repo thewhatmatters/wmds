@@ -52,6 +52,14 @@ export const shadowPrimitives: ShadowToken[] = [
     usedIn: ["Button success variant"],
     paperPattern: "box-shadow: inset 0 1px 0 rgb(255 255 255 / 14%)",
   },
+  {
+    token: "--shadow-inset-well",
+    value: "inset 0 1px 3px rgb(26 26 24 / 7%)",
+    role: "Recessed well — content set into a surface, shaded under its top edge (dark: rgb(0 0 0 / 32%))",
+    tailwind: "shadow-inset-well",
+    usedIn: ["ChatDock.Gate in the conversation"],
+    paperPattern: "box-shadow: inset 0 1px 3px rgb(26 26 24 / 7%)",
+  },
 ];
 
 export const shadowElevations: ShadowToken[] = [

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.4 · Pattern — occupancy history in Card
+// @thewhatmatters/wmds@0.4.5 · Pattern — occupancy history in Card
 // Storybook: Components/Chart → Pattern — occupancy history in Card (?path=/story/components-chart--occupancy-history-in-card)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

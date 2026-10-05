@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.4 · Pattern — start a project gate
+// @thewhatmatters/wmds@0.4.5 · Pattern — start a project gate
 // Storybook: Components/ChatDock → Pattern — start a project gate (?path=/story/components-chatdock--pattern-start-project-gate)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -210,7 +210,8 @@ export function StartProjectGate({ request, close, complete, onSubmit, renderCal
           ))}
         </div>
       ) : null}
-      {step === 3 ? <IntakeForm values={about} onChange={setAbout} /> : null}
+      {/* The short form: in the chat, a company or a link goes in the project details. */}
+      {step === 3 ? <IntakeForm values={about} onChange={setAbout} company={false} link={false} /> : null}
       {lastStep ? (
         <CalEmbed skip={false}>
           {renderCalendar?.(() => {

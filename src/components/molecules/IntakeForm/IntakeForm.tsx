@@ -32,6 +32,17 @@ export interface IntakeFormProps {
   onChange: (values: IntakeAboutValues) => void;
   /** Character ceiling for project details. Default 400. */
   detailsMax?: number;
+  /**
+   * Shows the optional Company field. Default `true`. Left out, the form closes up and
+   * `values.company` keeps its value (empty), so `isIntakeAboutValid` and the app's submit code are
+   * unchanged.
+   */
+  company?: boolean;
+  /**
+   * Shows the optional Link field. Default `true`. Left out, the form closes up and `values.url`
+   * keeps its value (empty, which is valid).
+   */
+  link?: boolean;
   className?: IntakeFormLayoutClassName;
 }
 
@@ -98,12 +109,15 @@ function intakeFieldError(
 /**
  * About-you step — **Field** rows for name, email, company, link, and project details.
  * Required fields show **Input** / **TextArea** `status` + `message` on blur when invalid.
- * Company and link stay optional. The details description is the character counter.
+ * Company and link stay optional; `company={false}` and `link={false}` leave them out (the short
+ * form: name, email, details). The details description is the character counter.
  */
 export function IntakeForm({
   values,
   onChange,
   detailsMax = intakeDetailsMax,
+  company = true,
+  link = true,
   className,
 }: IntakeFormProps) {
   const [touched, setTouched] = useState<Partial<Record<IntakeTouchedField, boolean>>>({});
@@ -149,28 +163,32 @@ export function IntakeForm({
           onChange={(event) => onChange({ ...values, email: event.target.value })}
         />
       </Field>
-      <Field label="Company" description="Optional">
-        <Input
-          aria-label="Company"
-          autoComplete="organization"
-          value={values.company}
-          onChange={(event) => onChange({ ...values, company: event.target.value })}
-        />
-      </Field>
-      <Field label="Link" description="Optional">
-        <Input
-          aria-label="Link"
-          type="url"
-          inputMode="url"
-          autoComplete="url"
-          placeholder="https://"
-          value={values.url}
-          status={urlError != null ? "error" : undefined}
-          message={urlError}
-          onBlur={() => markTouched("url")}
-          onChange={(event) => onChange({ ...values, url: event.target.value })}
-        />
-      </Field>
+      {company ? (
+        <Field label="Company" description="Optional">
+          <Input
+            aria-label="Company"
+            autoComplete="organization"
+            value={values.company}
+            onChange={(event) => onChange({ ...values, company: event.target.value })}
+          />
+        </Field>
+      ) : null}
+      {link ? (
+        <Field label="Link" description="Optional">
+          <Input
+            aria-label="Link"
+            type="url"
+            inputMode="url"
+            autoComplete="url"
+            placeholder="https://"
+            value={values.url}
+            status={urlError != null ? "error" : undefined}
+            message={urlError}
+            onBlur={() => markTouched("url")}
+            onChange={(event) => onChange({ ...values, url: event.target.value })}
+          />
+        </Field>
+      ) : null}
       <Field
         label="Project details"
         description={detailsError == null ? `${values.details.length} / ${detailsMax}` : undefined}

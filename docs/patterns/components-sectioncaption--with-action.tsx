@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.4 · Pattern — caption with an action
+// @thewhatmatters/wmds@0.4.5 · Pattern — caption with an action
 // Storybook: Components/SectionCaption → Pattern — caption with an action (?path=/story/components-sectioncaption--with-action)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

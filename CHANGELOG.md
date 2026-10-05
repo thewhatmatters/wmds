@@ -7,6 +7,21 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.5
+
+**The Start a project form is shorter and set into the conversation.** **IntakeForm** can leave out its optional fields, **Pattern — start a project gate** uses the short form, and **ChatDock.Gate** reads as embedded in the chat. See the amendments to **ADR-0038** and **ADR-0039**.
+
+- **IntakeForm** `company` and `link` (new, both default `true`) — `false` leaves the field out; the form closes up with no gap. A left-out field keeps its value in `IntakeAboutValues` (empty), so `isIntakeAboutValid` and the app's submit code don't change. New **Components/IntakeForm → Pattern — short form**.
+- **Components/ChatDock → Pattern — start a project gate** — step 3 is the short form: name, email, and project details (`company={false}` `link={false}`), two rows shorter. Drop those two props to ask for a company and a link again.
+- **ChatDock.Gate** — set into the conversation as a well: a hairline border at the card body radius, the page floor inside, and an inset shade under its top edge. Before, it was flat under a hairline. At 1280×900, step 1 still shows all seven services with the reply above it.
+- **`--shadow-inset-well`** (new token, `shadow-inset-well`) — a well set into a surface: an inset shade under its top edge (light and dark values). **Foundations → Shadows** lists it.
+
+### Consumer actions
+
+1. **WhatMatters site: re-copy Components/ChatDock → Pattern — start a project gate** (`node_modules/@thewhatmatters/wmds/docs/patterns/components-chatdock--pattern-start-project-gate.tsx`) over `components/start-project-gate.tsx` and re-apply only your services, budgets, step copy, and calendar. The change is step 3: `<IntakeForm values={about} onChange={setAbout} company={false} link={false} />`. If you'd rather not re-copy, add those two props by hand. Your `onSubmit` and its server code need no change: `company` and `url` arrive empty.
+2. **The gate's new look: nothing to do.** It comes with the upgrade.
+3. Other apps: none. `company`, `link`, and `shadow-inset-well` are new and optional.
+
 ## 0.4.4
 
 **ChatDock: the Start a project form sits in the conversation.** Having seen 0.4.3 live, the form goes back inside the chat window instead of replacing it — as a component in the conversation, without the 0.4.2 problems (no card inside a card, one header and one close, no gap above the form, no cap that clips the step). See the second 2026-10-05 amendment to **ADR-0039**.

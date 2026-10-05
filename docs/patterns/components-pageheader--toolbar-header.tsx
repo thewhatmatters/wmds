@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.4 · Pattern — toolbar header
+// @thewhatmatters/wmds@0.4.5 · Pattern — toolbar header
 // Storybook: Components/PageHeader → Pattern — toolbar header (?path=/story/components-pageheader--toolbar-header)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

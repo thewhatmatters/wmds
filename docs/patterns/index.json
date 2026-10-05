@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -544,6 +544,14 @@
       "name": "Pattern — about you",
       "file": "patterns/components-intakeform--about-you-pattern.tsx",
       "storybook": "?path=/story/components-intakeform--about-you-pattern",
+      "source": "src/components/molecules/IntakeForm/IntakeForm.stories.tsx"
+    },
+    {
+      "id": "components-intakeform--short-form-pattern",
+      "title": "Components/IntakeForm",
+      "name": "Pattern — short form",
+      "file": "patterns/components-intakeform--short-form-pattern.tsx",
+      "storybook": "?path=/story/components-intakeform--short-form-pattern",
       "source": "src/components/molecules/IntakeForm/IntakeForm.stories.tsx"
     },
     {

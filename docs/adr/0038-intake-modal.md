@@ -38,3 +38,8 @@ Consuming apps copy **Pattern — start a project**. They mount **ConfettiProvid
 ## References
 
 - ADR-0002, ADR-0004, ADR-0016, ADR-0026, ADR-0031
+
+### Amendment — 2026-10-05: IntakeForm without the optional fields
+
+The WhatMatters site wants step 3 of Start a project shorter: visitors who have a company or a link put them in Project details anyway. **IntakeForm** takes `company` and `link` (both default `true`); `false` leaves the field out and the form closes up. A left-out field keeps its value in `IntakeAboutValues` (empty), so `isIntakeAboutValid` and an app's submit code don't change — booleans rather than a `fields` list, so name, email, and details can't be left out by mistake. **Pattern — start a project gate** uses the short form by default: in the chat window every row counts. **Components/IntakeForm → Pattern — short form** shows it on its own.
+

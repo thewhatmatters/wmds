@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.4 · Pattern — status rows
+// @thewhatmatters/wmds@0.4.5 · Pattern — status rows
 // Storybook: Components/TaskRows → Pattern — status rows (?path=/story/components-taskrows--status-list)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

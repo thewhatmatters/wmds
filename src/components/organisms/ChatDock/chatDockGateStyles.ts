@@ -2,10 +2,14 @@ import { cn } from "../../../lib/cn";
 import { typographyClass } from "../../../lib/typography";
 
 /**
- * The gate — flat on the window surface, set off from the message above by a hairline, and as wide as
- * the conversation's turns. Focusable: ChatDock moves focus here.
+ * The gate — a well set into the conversation: a hairline border at the card body radius, the page
+ * floor inside, and an inset shade under its top edge, so it reads as embedded rather than raised. As
+ * wide as the conversation's turns. Focusable: ChatDock moves focus here; the ring sits inside.
  */
-export const chatDockGateClasses = "flex flex-col gap-3 border-t border-border pt-4 outline-none";
+export const chatDockGateClasses = cn(
+  "flex flex-col gap-3 rounded-[var(--radius-card-body)] border border-border bg-body px-4 py-3 shadow-inset-well",
+  "outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus-ring",
+);
 
 /** The step's title and subtitle, with previous, progress, and next at the end. */
 export const chatDockGateHeaderClasses = "flex items-start justify-between gap-3";
