@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -241,6 +241,14 @@
       "file": "patterns/components-card-selectablecard--selectable-cards-pattern.tsx",
       "storybook": "?path=/story/components-card-selectablecard--selectable-cards-pattern",
       "source": "src/components/molecules/SelectableCard/SelectableCard.stories.tsx"
+    },
+    {
+      "id": "components-carousel--image-carousel",
+      "title": "Components/Carousel",
+      "name": "Pattern — image carousel",
+      "file": "patterns/components-carousel--image-carousel.tsx",
+      "storybook": "?path=/story/components-carousel--image-carousel",
+      "source": "src/components/organisms/Carousel/Carousel.stories.tsx"
     },
     {
       "id": "components-chart--audience-activity-heatmap",

@@ -47,8 +47,8 @@ npm run validate:composition  # molecules/organisms must compose atoms (CI)
 |------|------------|
 | Atoms | `Avatar`, `Badge`, `Button`, `Checkbox`, `IconButton`, `Input`, `Kbd`, `Radio`, `RiveHand`, `Skeleton`, `Status`, `Switch`, `TextArea`, `TextLink`, `Tooltip` |
 | Molecules | `Accordion`, `CalEmbed`, `Card`, `ChatQa`, `CheckboxGroup`, `Chip`, `DisplayControls`, `Dropdown`, `Field`, `FloatingActionButton`, `HeroIntro`, `IntakeForm`, `NavList`, `PageHeader`, `PillGroup`, `PromptBar`, `RadioGroup`, `Search`, `Select`, `SelectableCard`, `SegmentedControl`, `Stat`, `StepProgress`, `TaskRows`, `TextSequence` |
-| Organisms | `Chart`, `Confetti`, `Dialog`, `FooterReveal`, `HeroTileStack`, `IntakeConfirmation`, `IntakeModal`, `MoreMenu`, `Panel`, `ScrollHorizontal`, `Sheet`, `SiteNav`, `Tab`, `Toast` |
-| Planned, not built | `Carousel`, `Pagination`, `Table` |
+| Organisms | `Carousel`, `Chart`, `Confetti`, `Dialog`, `FooterReveal`, `HeroTileStack`, `IntakeConfirmation`, `IntakeModal`, `MoreMenu`, `Panel`, `ScrollHorizontal`, `Sheet`, `SiteNav`, `Tab`, `Toast` |
+| Planned, not built | `Pagination`, `Table` |
 
 The list is `src/package.manifest.ts`. `npm run build` fails when it and `src/index.ts` disagree.
 

@@ -452,6 +452,19 @@ export {
   type TextSequenceTrigger,
 } from "./components/molecules/TextSequence/TextSequence";
 export {
+  Carousel,
+  carouselBreakpoints,
+  carouselDefaultItemWidth,
+  carouselProgressPlacements,
+  type CarouselBreakpoint,
+  type CarouselItemProps,
+  type CarouselItemWidth,
+  type CarouselLabels,
+  type CarouselLayoutClassName,
+  type CarouselProgressPlacement,
+  type CarouselProps,
+} from "./components/organisms/Carousel/Carousel";
+export {
   Chart,
   ChartCartesian,
   ChartCartesianNoData,

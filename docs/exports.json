@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -137,6 +137,19 @@
         "components-card-card--headerless-media",
         "components-card-card--outlined-layout",
         "components-card-card--pinned-height"
+      ]
+    },
+    {
+      "name": "Carousel",
+      "tier": "organism",
+      "category": "Container",
+      "summary": "A row of items to drag, scroll, or step through, with a progress scrubber under it.",
+      "storybook": {
+        "title": "Components/Carousel",
+        "docs": "?path=/docs/components-carousel--docs"
+      },
+      "patterns": [
+        "components-carousel--image-carousel"
       ]
     },
     {
@@ -860,7 +873,6 @@
     }
   ],
   "planned": [
-    "Carousel",
     "Pagination",
     "Table"
   ],

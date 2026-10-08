@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.6 · Pattern — editorial profile
+// @thewhatmatters/wmds@0.4.7 · Pattern — editorial profile
 // Storybook: Guides/Profile typography → Pattern — editorial profile (?path=/story/guides-profile-typography--editorial-profile)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

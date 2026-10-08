@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.6 · Pattern — marketing header
+// @thewhatmatters/wmds@0.4.7 · Pattern — marketing header
 // Storybook: Components/SiteNav → Pattern — marketing header (?path=/story/components-sitenav--marketing-header)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

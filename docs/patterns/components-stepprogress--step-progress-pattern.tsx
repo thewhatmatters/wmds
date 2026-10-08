@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.6 · Pattern — step progress
+// @thewhatmatters/wmds@0.4.7 · Pattern — step progress
 // Storybook: Components/StepProgress → Pattern — step progress (?path=/story/components-stepprogress--step-progress-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
