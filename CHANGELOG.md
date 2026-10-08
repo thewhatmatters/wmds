@@ -7,6 +7,26 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.7
+
+**Carousel: a row of items with a progress scrubber.** New component, built on the open `motion` package. The WhatMatters About page is the first use. See **ADR-0043**.
+
+- **Carousel** (new) with **Carousel.Item** — a horizontal row the visitor drags, scrolls (touch, trackpad, shift-wheel), or steps through with the keyboard. A mouse drag glides on and stops softly at each end; the row does not loop. Name it with `aria-label` or `aria-labelledby` (one is required).
+  - `itemWidth` — a percentage of the row, one number or `{ base, sm, md, lg }`. Default `{ base: 80, sm: 55, lg: 40 }`, so the next item always shows. The gap is the grid gutter.
+  - `snap` (default on) rests the row on an item's leading edge. `bleed` runs it to the page edges while items start on the grid. `fade` (default on) fades clipped items the way `scroll-fade-x` does.
+  - `progress` — the scrubber under the row: `center` (default) or `start` for a shorter track (full width on phones), `full`, or `none`. The filled part's place is the row's progress and its width the share of the row in view. Drag it, or press the track. It hides itself, keeping its space, while every item fits.
+- **Decisions taken** (the request left them open): one component with the scrubber as a prop, not a separate part; the scrubber is hidden from assistive tech and is not a tab stop — the row takes Left, Right, Home, and End, and each item says its place ("2 of 4"); no previous and next buttons in this version.
+- **Also:** a drag never clicks a link inside an item, and images are not picked up by the browser's own drag. Reduced motion moves the row at once, with no glide. Right-to-left flips the direction and the arrow keys. On the server and the first paint the row is at its start with the scrubber at zero; it measures again on resize and when an image loads.
+- New **Components/Carousel → Pattern — image carousel**: rounded outlined **Card** tiles with an image in the body.
+
+### Consumer actions
+
+1. **WhatMatters site, About page: replace the hand-built image strip.** Copy **Components/Carousel → Pattern — image carousel** (`node_modules/@thewhatmatters/wmds/docs/patterns/components-carousel--image-carousel.tsx`) into `components/image-carousel.tsx`, keep its header comment, and render `<ImageCarousel label="Selected work" images={…} />` where the strip is. Delete the scroll-snap list and its classes (`scroll-fade-x`, `snap-x`, `overflow-x-auto`, the per-image **Card** markup) — the pattern has the cards.
+2. **Name the row once.** If a heading already sits over the strip, give the heading an `id` and pass `aria-labelledby` in place of `aria-label` (change the pattern's one prop). Do not also put that `aria-labelledby` on a `section` around it: two landmarks with one name fail the accessibility check.
+3. **`next/image` is fine.** To use it, swap the pattern's `<img>` for `<Image>` with the same `className`, a `width` and `height` (or `fill` inside a sized box), and `sizes="(min-width: 1024px) 40vw, (min-width: 640px) 55vw, 80vw"` to match the default `itemWidth`. Change `sizes` if you change `itemWidth`.
+4. **Page layout.** Place it on the grid like any other block: `className="col-span-full"` inside a `band`. Add `bleed` if the row should run to the page edges. The scrubber's hit area is 44px tall, so drop any margin the old strip had under it.
+5. Other apps: none. Everything here is new.
+
 ## 0.4.6
 
 **TextArea shows one focus ring.** A focused **TextArea** drew two: the ring on its shell, and the browser's own outline on the field inside it.

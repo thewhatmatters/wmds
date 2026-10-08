@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.6 · Pattern — post index
+// @thewhatmatters/wmds@0.4.7 · Pattern — post index
 // Storybook: Components/IndexList → Pattern — post index (?path=/story/components-indexlist--post-index)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

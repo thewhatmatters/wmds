@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.6 · Pattern — filtered index
+// @thewhatmatters/wmds@0.4.7 · Pattern — filtered index
 // Storybook: Guides/Filter panel → Pattern — filtered index (?path=/story/guides-filter-panel--filtered-index)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -53,7 +53,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   // Container
   { name: "Accordion", category: "Container", title: "Components/Accordion", description: "Expand and collapse rows with leading, label, and trailing slots." },
   { name: "Card", category: "Container", title: "Components/Card/Card", description: "Surface with header, body, and footer slots for layout cards and simple cards." },
-  { name: "Carousel", category: "Container", planned: true, description: "Not built yet." },
+  { name: "Carousel", category: "Container", title: "Components/Carousel", description: "A row of items to drag, scroll, or step through, with a progress scrubber under it." },
   { name: "SelectableCard", category: "Container", title: "Components/Card/SelectableCard", description: "Multi-select card grid item with a check badge and optional toggle." },
 
   // Content

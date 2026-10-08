@@ -25,7 +25,7 @@ Modular composed units — Field, Card, Chip, Search, etc. May compose atoms and
 Section-scale UI — Dialog, Tab, MoreMenu, etc. Storybook: **`Components/{Name}`** (or **`Components/{Family}/{Name}`**). Exported.
 
 **Planned:**
-**Table**, **Carousel**, and **Pagination** are not built yet — `plannedExports` in `src/package.manifest.ts`. `src/lib/tableLayout/` is the groundwork kept for **Table**.
+**Table** and **Pagination** are not built yet — `plannedExports` in `src/package.manifest.ts`. `src/lib/tableLayout/` is the groundwork kept for **Table**.
 
 **Guides** (`src/guides/`):
 Cross-component guidance — Storybook **`Guides/{Name}`**. Storybook-only compositions; never exported. Product pages and flows live in each product's app, not here.

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.6 · Pattern — post page
+// @thewhatmatters/wmds@0.4.7 · Pattern — post page
 // Storybook: Guides/Post page → Pattern — post page (?path=/story/guides-post-page--post-page)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
