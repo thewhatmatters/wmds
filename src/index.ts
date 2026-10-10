@@ -323,6 +323,12 @@ export {
   type IntakeFormProps,
 } from "./components/molecules/IntakeForm/IntakeForm";
 export {
+  LinkTile,
+  linkTileLoadingRatio,
+  type LinkTileLayoutClassName,
+  type LinkTileProps,
+} from "./components/molecules/LinkTile/LinkTile";
+export {
   NavList,
   navListLabelAlignments,
   type NavListIcon,
@@ -451,6 +457,18 @@ export {
   type TextSequenceShapeVariant,
   type TextSequenceTrigger,
 } from "./components/molecules/TextSequence/TextSequence";
+export {
+  TileGrid,
+  tileGridBreakpoints,
+  tileGridDefaultColumns,
+  tileGridLayouts,
+  type TileGridBreakpoint,
+  type TileGridColumns,
+  type TileGridItemProps,
+  type TileGridLayout,
+  type TileGridLayoutClassName,
+  type TileGridProps,
+} from "./components/molecules/TileGrid/TileGrid";
 export {
   Carousel,
   carouselBreakpoints,
@@ -617,6 +635,24 @@ export {
   type SiteNavReadRowProps,
   type SiteNavState,
 } from "./components/organisms/SiteNav/SiteNav";
+export {
+  FilterPanel,
+  countFilterOptions,
+  filterFacetValues,
+  filterSelectionCount,
+  matchesFilterSelection,
+  useFilterSelection,
+  type FilterFacets,
+  type FilterPanelGroup,
+  type FilterPanelLabels,
+  type FilterPanelLayoutClassName,
+  type FilterPanelOption,
+  type FilterPanelProps,
+  type FilterPanelRailProps,
+  type FilterPanelTriggerProps,
+  type FilterSelection,
+  type UseFilterSelectionOptions,
+} from "./components/organisms/FilterPanel/FilterPanel";
 export {
   FooterReveal,
   useFooterRevealProgress,

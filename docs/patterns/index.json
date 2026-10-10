@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -443,6 +443,14 @@
       "source": "src/components/molecules/Field/Field.stories.tsx"
     },
     {
+      "id": "components-filterpanel--panel",
+      "title": "Components/FilterPanel",
+      "name": "Pattern — filter panel",
+      "file": "patterns/components-filterpanel--panel.tsx",
+      "storybook": "?path=/story/components-filterpanel--panel",
+      "source": "src/components/organisms/FilterPanel/FilterPanel.stories.tsx"
+    },
+    {
       "id": "components-footerreveal--marketing-hero-pattern",
       "title": "Components/FooterReveal",
       "name": "Pattern — marketing hero",
@@ -593,6 +601,22 @@
       "file": "patterns/components-kbd--shortcut.tsx",
       "storybook": "?path=/story/components-kbd--shortcut",
       "source": "src/components/atoms/Kbd/Kbd.stories.tsx"
+    },
+    {
+      "id": "components-linktile--resource-tile",
+      "title": "Components/LinkTile",
+      "name": "Pattern — resource tile",
+      "file": "patterns/components-linktile--resource-tile.tsx",
+      "storybook": "?path=/story/components-linktile--resource-tile",
+      "source": "src/components/molecules/LinkTile/LinkTile.stories.tsx"
+    },
+    {
+      "id": "components-linktile--router-link",
+      "title": "Components/LinkTile",
+      "name": "Pattern — router link",
+      "file": "patterns/components-linktile--router-link.tsx",
+      "storybook": "?path=/story/components-linktile--router-link",
+      "source": "src/components/molecules/LinkTile/LinkTile.stories.tsx"
     },
     {
       "id": "components-moremenu--action-menu",
@@ -923,6 +947,14 @@
       "source": "src/components/molecules/TextSequence/TextSequence.stories.tsx"
     },
     {
+      "id": "components-tilegrid--masonry",
+      "title": "Components/TileGrid",
+      "name": "Pattern — tile grid",
+      "file": "patterns/components-tilegrid--masonry.tsx",
+      "storybook": "?path=/story/components-tilegrid--masonry",
+      "source": "src/components/molecules/TileGrid/TileGrid.stories.tsx"
+    },
+    {
       "id": "components-toast--stacked-notifications",
       "title": "Components/Toast",
       "name": "Pattern — stacked notifications",
@@ -995,6 +1027,14 @@
       "source": "src/guides/ChartExplorations/ChartExplorations.stories.tsx"
     },
     {
+      "id": "guides-filter-panel--filtered-grid",
+      "title": "Guides/Filter panel",
+      "name": "Pattern — filtered grid",
+      "file": "patterns/guides-filter-panel--filtered-grid.tsx",
+      "storybook": "?path=/story/guides-filter-panel--filtered-grid",
+      "source": "src/guides/FilterPanel/FilterPanel.stories.tsx"
+    },
+    {
       "id": "guides-filter-panel--filtered-index",
       "title": "Guides/Filter panel",
       "name": "Pattern — filtered index",
@@ -1025,6 +1065,14 @@
       "file": "patterns/guides-profile-typography--editorial-profile.tsx",
       "storybook": "?path=/story/guides-profile-typography--editorial-profile",
       "source": "src/guides/ProfileTypography/ProfileTypography.stories.tsx"
+    },
+    {
+      "id": "guides-resource-detail--detail",
+      "title": "Guides/Resource detail",
+      "name": "Pattern — resource detail",
+      "file": "patterns/guides-resource-detail--detail.tsx",
+      "storybook": "?path=/story/guides-resource-detail--detail",
+      "source": "src/guides/ResourceDetail/ResourceDetail.stories.tsx"
     }
   ]
 }

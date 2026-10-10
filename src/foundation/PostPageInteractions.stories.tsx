@@ -98,3 +98,46 @@ export const MetadataPanel: Story = {
     }
   },
 };
+
+export const PanelAfterArticle: Story = {
+  name: "by default the panel follows the article in the markup, with the date and reading time under the title",
+  render: () => (
+    <PostPage post={samplePost} metadataSide="end" metadataColumns={3}>
+      <SamplePostBody />
+    </PostPage>
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    const panel = canvas.getByRole("complementary", { name: "Metadata" });
+    const prose = canvasElement.querySelector<HTMLElement>("[data-prose]");
+    if (prose == null) throw new Error("Prose is missing");
+    // Source order is article, then panel — no order utility moves it at any width.
+    expect(prose.compareDocumentPosition(panel) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(panel.className).not.toContain("order-");
+
+    const header = canvasElement.querySelector("header");
+    if (header == null) throw new Error("Header is missing");
+    const summary = header.querySelector("p:last-of-type");
+    expect(summary).toHaveTextContent("Sep 14, 2026");
+    expect(summary).toHaveTextContent("6 min read");
+    expect(summary?.querySelector("time")).toHaveAttribute("datetime", "2026-09-14");
+    // It hides from lg, where the panel is beside the article.
+    expect(summary?.className).toContain("lg:hidden");
+  },
+};
+
+export const PanelBeforeArticle: Story = {
+  name: "metadataStack before puts the panel first in the markup and drops the line under the title",
+  render: () => (
+    <PostPage post={samplePost} metadataStack="before">
+      <SamplePostBody />
+    </PostPage>
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    const panel = canvas.getByRole("complementary", { name: "Metadata" });
+    const prose = canvasElement.querySelector<HTMLElement>("[data-prose]");
+    if (prose == null) throw new Error("Prose is missing");
+    expect(panel.compareDocumentPosition(prose) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(panel.className).not.toContain("order-");
+    expect(canvasElement.querySelector("header time")).toBeNull();
+  },
+};

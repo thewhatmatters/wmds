@@ -3,7 +3,7 @@ import { typographyClass } from "../../../lib/typography";
 import { cn } from "../../../lib/cn";
 import { cardLayoutSectionInsetXClasses, cardTitleClasses } from "../../molecules/Card/cardStyles";
 
-export const dialogSizes = ["sm", "md", "lg"] as const;
+export const dialogSizes = ["sm", "md", "lg", "full"] as const;
 
 export type DialogSize = (typeof dialogSizes)[number];
 
@@ -22,7 +22,15 @@ export const dialogPanelSizeClasses: Record<DialogSize, string> = {
   sm: "w-full max-w-sm",
   md: "w-full max-w-lg",
   lg: "w-full max-w-2xl",
+  // The window less the overlay's margin, up to 90rem × 60rem; the whole screen on phones.
+  full: "h-full w-full max-w-[90rem] max-md:rounded-none md:max-h-[60rem]",
 };
+
+/** `size="full"` — no margin around the panel on phones, a wider one from tablet up. */
+export const dialogOverlayRootFullClasses = "max-md:p-0 md:p-6";
+
+/** `size="full"` — the panel's box fills the overlay, so the Card inside can take its height. */
+export const dialogPanelBoxFullClasses = "h-full items-center";
 
 /** Dialog body copy — typography only; horizontal inset comes from section stack / header. */
 export const dialogBodyCopyClasses = cn(typographyClass("body"), "text-fg");

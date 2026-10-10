@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.7 · Pattern — link
+// @thewhatmatters/wmds@0.4.8 · Pattern — link
 // Storybook: Components/Button/Button → Pattern — link (?path=/story/components-button-button--link-render)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.7 · Pattern — column caption
+// @thewhatmatters/wmds@0.4.8 · Pattern — column caption
 // Storybook: Components/SectionCaption → Pattern — column caption (?path=/story/components-sectioncaption--column-caption)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

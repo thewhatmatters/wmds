@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../lib/storyCopySource";
+import { lockedViewportStory } from "../../lib/viewports";
 import { PostPageGuide } from "./PostPageExample";
 
 const meta = {
@@ -31,22 +32,31 @@ A blog post page — a display title, a metadata panel, and the article. Copy **
 
 \`\`\`
 main.grid-page
+├── {overlay}
 └── article.band
-    ├── header (col-span-full, lg:col-span-10) — Breadcrumb · h1 · lead
-    ├── aside (col-span-full, lg:col-span-4 or 3, lg:sticky; lg:order-last with metadataSide="end") — SectionCaption "Metadata" · DescriptionList
-    │   └── Date · Author · Reading time · Categories · Agents (stacked) · Share (stacked)
-    └── div (col-span-full, lg:col-span-8 or 9) — SectionCaption "Article" (p) · Prose
+    ├── header (col-span-full, lg:col-span-10) — Breadcrumb · h1 · lead · date / reading time (below lg, when the panel stacks after)
+    ├── aside — here with metadataStack="before"
+    ├── div (col-span-full, lg:col-span-8 or 9) — SectionCaption "Article" (p) · Prose
+    └── aside — here with metadataStack="after" (default)
+        (col-span-full, lg:col-span-4 or 3, lg:sticky) — SectionCaption "Metadata" · DescriptionList
+        └── Date · Author · Reading time · Categories · Agents (stacked) · Share (stacked)
 \`\`\`
 
-**Where the panel sits.** From \`lg\` it takes 4 of the 12 columns before the article (default). \`metadataSide="end"\` puts it after the article, and \`metadataColumns={3}\` narrows it to 3 columns, giving the article 9. Below \`lg\` it stacks above the article either way, and it comes before the article in reading and tab order.
+**Beside the article, from \`lg\`.** The panel takes 4 of the 12 columns before the article (default). \`metadataSide="end"\` puts it after the article, and \`metadataColumns={3}\` narrows it to 3 columns, giving the article 9.
 
-**The panel sticks from \`lg\`.** Beside the article it stays in view under the pinned **SiteNav** (\`top: calc(var(--site-nav-height) + 1rem)\`), so the share and copy actions are there wherever the reader stops. It is short enough never to need its own scroll. Below \`lg\` it stacks above the article and scrolls with the page.
+**Stacked, below \`lg\`.** \`metadataStack="after"\` (default) puts the article first and the panel under it, so a reader on a phone meets the article, not a table. A line under the title then carries what a reader wants first — the date and the reading time — and hides from \`lg\`, where the panel is beside the article and has both. \`metadataStack="before"\` stacks the panel above the article, with no line under the title.
+
+**Reading and tab order.** \`metadataStack\` is also where the panel sits in the markup, at every width. \`"after"\` with \`metadataSide="end"\`, and \`"before"\` with \`"start"\`, match what is on screen at every width. The other two pairings move the panel to its side from \`lg\` with an order utility, so there its place on screen and its place in the tab order differ.
+
+**The panel sticks from \`lg\`.** Beside the article it stays in view under the pinned **SiteNav** (\`top: calc(var(--site-nav-height) + 1rem)\`), so the share and copy actions are there wherever the reader stops. It is short enough never to need its own scroll. Below \`lg\` it scrolls with the page.
 
 ## Best practices
 
+- **Do** pair \`metadataSide="end"\` with the default \`metadataStack="after"\` (or \`"start"\` with \`"before"\`) so the tab order matches the layout at every width.
 - **Do** render the markdown with \`#\` mapped to \`h2\` — the title is the page's \`h1\`.
 - **Do** map markdown links to **TextLink** with \`external\` for other sites.
 - **Do** keep the panel to facts and actions about this post; related posts belong under the article.
+- **Do** mount page-level layers (a **GridOverlay**) through \`overlay\` — it renders inside the page grid. Adding an element to the pasted markup reads as drift to \`wmds-check\`.
 - **Don't** wrap the page in another \`main\` — inside an app shell that already has one, change the pattern's \`main\` to a \`div\`.
 - **Don't** let an ancestor clip overflow (\`overflow: hidden\`) — it stops the panel sticking.
         `.trim(),
@@ -146,6 +156,9 @@ function CopyButton({ text, label }: { text: string; label: string }) {
 /** Where the metadata panel sits from lg: before the article (start) or after it (end). */
 export type PostMetadataSide = "start" | "end";
 
+/** Where the panel sits below lg, where it stacks: before the article or after it (default). */
+export type PostMetadataStack = "before" | "after";
+
 /** How many of the page's 12 columns the panel takes from lg; the article takes the rest. */
 export type PostMetadataColumns = 3 | 4;
 
@@ -163,84 +176,125 @@ export interface PostPageProps {
   post: PostPageData;
   /** The post's rendered markdown. */
   children: ReactNode;
-  /** Where the panel sits from lg. Below lg it stacks above the article either way. Default: "start". */
+  /** Where the panel sits from lg, beside the article. Default: "start". */
   metadataSide?: PostMetadataSide;
   /** The panel's width from lg, in columns. Default: 4. */
   metadataColumns?: PostMetadataColumns;
+  /**
+   * Where the panel sits below lg, where it stacks. "after" (default) puts the article first, with
+   * the date and reading time in a line under the title. It is also the panel's place in reading
+   * and tab order at every width, so pair "after" with metadataSide="end" and "before" with "start".
+   */
+  metadataStack?: PostMetadataStack;
+  /** Page-level layers inside the page grid — for example a GridOverlay. */
+  overlay?: ReactNode;
 }
 
 /** A blog post: the title, a metadata panel, and the article, which is the rendered markdown. */
-export function PostPage({ post, children, metadataSide = "start", metadataColumns = 4 }: PostPageProps) {
+export function PostPage({
+  post,
+  children,
+  metadataSide = "start",
+  metadataColumns = 4,
+  metadataStack = "after",
+  overlay,
+}: PostPageProps) {
   const metadataHeadingId = useId();
   const encodedUrl = encodeURIComponent(post.url);
   const encodedTitle = encodeURIComponent(post.title);
+  const stackedAfter = metadataStack === "after";
+  // From lg the panel's side wins; the order utility moves it only when its side and its place
+  // in the markup disagree.
+  const panelOrder =
+    metadataSide === "end" && !stackedAfter ? " lg:order-last" : metadataSide === "start" && stackedAfter ? " lg:order-1" : "";
+  const articleOrder = metadataSide === "start" && stackedAfter ? " lg:order-2" : "";
+
+  const panel = (
+    <aside
+      aria-labelledby={metadataHeadingId}
+      className={
+        "col-span-full lg:sticky lg:top-[calc(var(--site-nav-height)+1rem)] lg:mt-0 " +
+        (stackedAfter ? "mt-10 " : "") +
+        metadataColumnClasses[metadataColumns] +
+        panelOrder
+      }
+    >
+      <SectionCaption id={metadataHeadingId}>Metadata</SectionCaption>
+      <DescriptionList variant="mono" rule="dotted">
+        <DescriptionList.Item name="Date">
+          <time dateTime={post.date}>{post.dateLabel}</time>
+        </DescriptionList.Item>
+        <DescriptionList.Item name="Author">
+          <Badge emphasis="outline" mono>
+            {post.author}
+          </Badge>
+        </DescriptionList.Item>
+        <DescriptionList.Item name="Reading time">{post.readingTime}</DescriptionList.Item>
+        <DescriptionList.Item name="Categories">
+          {post.categories.map((category) => (
+            <Badge key={category.href} emphasis="outline" mono render={<a href={category.href} />}>
+              {category.label}
+            </Badge>
+          ))}
+        </DescriptionList.Item>
+        <DescriptionList.Item name="Agents" layout="stacked">
+          <CopyButton text={post.markdown} label="Copy for LLM" />
+          <Button role="secondary" size="sm" icon={<FileText />} render={<a href={post.markdownHref} />}>
+            View as Markdown
+          </Button>
+        </DescriptionList.Item>
+        <DescriptionList.Item name="Share" layout="stacked">
+          <Button
+            role="secondary"
+            size="sm"
+            external
+            render={<a href={"https://x.com/intent/post?url=" + encodedUrl + "&text=" + encodedTitle} />}
+          >
+            Twitter/X
+          </Button>
+          <Button
+            role="secondary"
+            size="sm"
+            external
+            render={<a href={"https://www.linkedin.com/sharing/share-offsite/?url=" + encodedUrl} />}
+          >
+            LinkedIn
+          </Button>
+        </DescriptionList.Item>
+      </DescriptionList>
+    </aside>
+  );
 
   return (
     <main className="grid-page bg-body">
+      {overlay}
       <article className="band py-6 sm:py-10 lg:py-14">
         <header className="col-span-full mb-4 flex flex-col gap-3 sm:mb-8 lg:col-span-10">
           <Breadcrumb items={post.breadcrumb} variant="mono" separator="slash" className="mb-3" />
           <h1 className="type-display-2 text-balance text-fg">{post.title}</h1>
           <p className="type-reading max-w-[40rem] text-muted">{post.description}</p>
+          {stackedAfter ? (
+            <p className="type-eyebrow text-muted lg:hidden">
+              <time dateTime={post.date}>{post.dateLabel}</time>
+              <span aria-hidden="true"> / </span>
+              <span className="sr-only">, </span>
+              {post.readingTime} read
+            </p>
+          ) : null}
         </header>
 
-        <aside
-          aria-labelledby={metadataHeadingId}
+        {stackedAfter ? null : panel}
+
+        <div
           className={
-            "col-span-full lg:sticky lg:top-[calc(var(--site-nav-height)+1rem)] " +
-            metadataColumnClasses[metadataColumns] +
-            (metadataSide === "end" ? " lg:order-last" : "")
+            "col-span-full lg:mt-0 " + (stackedAfter ? "" : "mt-6 ") + articleColumnClasses[metadataColumns] + articleOrder
           }
         >
-          <SectionCaption id={metadataHeadingId}>Metadata</SectionCaption>
-          <DescriptionList variant="mono" rule="dotted">
-            <DescriptionList.Item name="Date">
-              <time dateTime={post.date}>{post.dateLabel}</time>
-            </DescriptionList.Item>
-            <DescriptionList.Item name="Author">
-              <Badge emphasis="outline" mono>
-                {post.author}
-              </Badge>
-            </DescriptionList.Item>
-            <DescriptionList.Item name="Reading time">{post.readingTime}</DescriptionList.Item>
-            <DescriptionList.Item name="Categories">
-              {post.categories.map((category) => (
-                <Badge key={category.href} emphasis="outline" mono render={<a href={category.href} />}>
-                  {category.label}
-                </Badge>
-              ))}
-            </DescriptionList.Item>
-            <DescriptionList.Item name="Agents" layout="stacked">
-              <CopyButton text={post.markdown} label="Copy for LLM" />
-              <Button role="secondary" size="sm" icon={<FileText />} render={<a href={post.markdownHref} />}>
-                View as Markdown
-              </Button>
-            </DescriptionList.Item>
-            <DescriptionList.Item name="Share" layout="stacked">
-              <Button
-                role="secondary"
-                size="sm"
-                external
-                render={<a href={"https://x.com/intent/post?url=" + encodedUrl + "&text=" + encodedTitle} />}
-              >
-                Twitter/X
-              </Button>
-              <Button
-                role="secondary"
-                size="sm"
-                external
-                render={<a href={"https://www.linkedin.com/sharing/share-offsite/?url=" + encodedUrl} />}
-              >
-                LinkedIn
-              </Button>
-            </DescriptionList.Item>
-          </DescriptionList>
-        </aside>
-
-        <div className={"col-span-full mt-6 lg:mt-0 " + articleColumnClasses[metadataColumns]}>
           <SectionCaption as="p">Article</SectionCaption>
           <Prose className="mt-6">{children}</Prose>
         </div>
+
+        {stackedAfter ? panel : null}
       </article>
     </main>
   );
@@ -260,4 +314,36 @@ export const MetadataEnd: Story = {
       },
     },
   },
+};
+
+export const StackedAfterPhone: Story = {
+  name: "Stacked after — phone",
+  render: () => <PostPageGuide metadataSide="end" metadataColumns={3} />,
+  ...lockedViewportStory("mobile"),
+};
+
+export const StackedAfterTablet: Story = {
+  name: "Stacked after — tablet",
+  render: () => <PostPageGuide metadataSide="end" metadataColumns={3} />,
+  ...lockedViewportStory("tablet"),
+};
+
+export const StackedAfterPhoneDark: Story = {
+  name: "Stacked after — phone, dark",
+  render: () => <PostPageGuide metadataSide="end" metadataColumns={3} />,
+  ...lockedViewportStory("mobile"),
+  globals: { ...lockedViewportStory("mobile").globals, theme: "dark" },
+};
+
+export const StackedAfterTabletDark: Story = {
+  name: "Stacked after — tablet, dark",
+  render: () => <PostPageGuide metadataSide="end" metadataColumns={3} />,
+  ...lockedViewportStory("tablet"),
+  globals: { ...lockedViewportStory("tablet").globals, theme: "dark" },
+};
+
+export const StackedBeforePhone: Story = {
+  name: "Stacked before — phone",
+  render: () => <PostPageGuide metadataStack="before" />,
+  ...lockedViewportStory("mobile"),
 };

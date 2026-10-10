@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.7 · Pattern — marketing hero ruled grid
+// @thewhatmatters/wmds@0.4.8 · Pattern — marketing hero ruled grid
 // Storybook: Components/FooterReveal → Pattern — marketing hero ruled grid (?path=/story/components-footerreveal--marketing-hero-ruled-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

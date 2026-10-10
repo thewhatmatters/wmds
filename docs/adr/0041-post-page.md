@@ -40,3 +40,11 @@ The app deletes its hand-built `<dl>`, its copy button's swap and announcement, 
 
 The site put the panel after the article at 3 columns by editing the pattern's classes, which `wmds-check` reports as drift. **Pattern — post page** takes `metadataSide` (`start`, default, or `end` — `lg:order-last`) and `metadataColumns` (`4`, default, or `3`; the article takes the rest). Below `lg` the panel stacks above the article either way, and it stays first in reading and tab order.
 
+### Amendment — 2026-10-09: the panel after the article when it stacks
+
+Below `lg` the panel stacked above the article at every setting. On the site's post it is 375px tall, so a phone or a tablet showed the title and a table of metadata and no article.
+
+- **`metadataStack` (`"before"` | `"after"`), default `"after"`.** The article comes first when the page is one column. The default changes because the problem is the default's: a reader on a phone comes for the article.
+- **A line under the title — the date and the reading time** in `type-eyebrow` — shows when the panel stacks after, and hides from `lg`, where the panel is beside the article and has both. The "/" between them is decoration; screen readers hear a comma.
+- **`metadataStack` is the panel's place in the markup**, not a visual reorder. `"after"` with `metadataSide="end"` and `"before"` with `"start"` need no order utility, so reading order, tab order, and layout agree at every width. The other two pairings keep the panel on its side from `lg` with an order utility, and there its place on screen and in the tab order differ; the docs say to prefer the matching pairs.
+- From `lg` nothing changes: the panel is sticky beside the article.
