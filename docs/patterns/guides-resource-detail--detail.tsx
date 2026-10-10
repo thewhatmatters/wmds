@@ -1,8 +1,8 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — resource detail
+// @thewhatmatters/wmds@0.4.9 · Pattern — resource detail
 // Storybook: Guides/Resource detail → Pattern — resource detail (?path=/story/guides-resource-detail--detail)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { useEffect, useId, type ReactNode } from "react";
+import { useEffect, useId, type ReactElement, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Badge,
@@ -12,6 +12,7 @@ import {
   Dialog,
   IconButton,
   type BreadcrumbItemDef,
+  type BreadcrumbLinkItem,
 } from "@thewhatmatters/wmds";
 
 export interface ResourceImage {
@@ -233,6 +234,8 @@ export interface ResourceDetailPageProps {
   item: ResourceDetailItem;
   /** The path to this resource, ending with it — Home, Resources, this resource. */
   breadcrumb: BreadcrumbItemDef[];
+  /** The router's link for the breadcrumb, in place of a plain anchor — (item) => <Link href={item.href} />. */
+  renderLink?: (item: BreadcrumbLinkItem) => ReactElement;
   /** The app's image component, in place of img — (image) => <Image {...image} sizes="…" />. */
   renderImage?: (image: ResourceImage) => ReactNode;
   /** Page-level layers inside the page grid — for example a GridOverlay. */
@@ -240,14 +243,20 @@ export interface ResourceDetailPageProps {
 }
 
 /** The detail as its own page: opened directly, or from a shared link. */
-export function ResourceDetailPage({ item, breadcrumb, renderImage, overlay }: ResourceDetailPageProps) {
+export function ResourceDetailPage({ item, breadcrumb, renderLink, renderImage, overlay }: ResourceDetailPageProps) {
   const headingId = useId();
 
   return (
     <main className="grid-page bg-body">
       {overlay}
       <article aria-labelledby={headingId} className="band py-6 sm:py-10 lg:py-14">
-        <Breadcrumb items={breadcrumb} variant="mono" separator="slash" className="col-span-full mb-6" />
+        <Breadcrumb
+          items={breadcrumb}
+          variant="mono"
+          separator="slash"
+          renderLink={renderLink}
+          className="col-span-full mb-6"
+        />
         <div className="col-span-full lg:col-span-8">
           <ResourceMedia item={item} renderImage={renderImage} />
         </div>

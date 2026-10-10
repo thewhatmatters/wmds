@@ -45,7 +45,14 @@ export const linkTileCaptionClasses = "flex min-w-0 items-start gap-2";
 /** Holds the source mark on the title's first line. */
 export const linkTileSourceClasses = "flex h-5 shrink-0 items-center";
 
-export const linkTileTextClasses = "flex min-w-0 flex-1 flex-col gap-0.5";
+/** The title's lines, then the meta line on its 16px line, with no gap between them: the leading is the space. */
+export const linkTileTextClasses = "flex min-w-0 flex-1 flex-col";
+
+/** The loading placeholder's title line — the title's 20px line box, with the bar centered in it. */
+export const linkTileLoadingLineClasses = "flex h-5 items-center";
+
+/** The loading placeholder's meta line — the meta's 16px line box. */
+export const linkTileLoadingMetaLineClasses = "flex h-4 items-center";
 
 /** Two lines at most. Hover and keyboard focus underline it, as a quiet **TextLink** does. */
 export const linkTileTitleClasses = cn(
@@ -58,7 +65,8 @@ export const linkTileTitleClasses = cn(
 
 export const linkTileExternalIconClasses = "ml-1 inline-block size-[0.85em] align-[-0.05em] stroke-current text-muted";
 
-export const linkTileMetaClasses = cn(typographyClass("caption"), "truncate");
+/** One line, on the 16px caption line so it sits close under the title. */
+export const linkTileMetaClasses = cn(typographyClass("caption-tight"), "truncate");
 
 /** A tag on a tile with no image sits at the caption's end. */
 export const linkTileTagInlineClasses = "flex shrink-0 items-center";

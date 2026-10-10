@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — settings row
+// @thewhatmatters/wmds@0.4.9 · Pattern — settings row
 // Storybook: Components/Switch → Pattern — settings row (?path=/story/components-switch--settings-row)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

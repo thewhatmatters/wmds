@@ -106,6 +106,15 @@
   --text-supporting-weight: var(--font-weight-normal);
   --text-supporting-leading: 1.6667;
 
+  /**
+   * WMDS extension — a single line directly under a label: `type-supporting`'s size and weight on
+   * a 16px line, so the pair reads as one unit (**LinkTile**'s meta line). Not for wrapped text —
+   * that stays on `type-supporting`.
+   */
+  --text-caption-size: var(--text-supporting-size);
+  --text-caption-weight: var(--text-supporting-weight);
+  --text-caption-leading: 1.3333;
+
   --text-code-size: var(--font-size-base);
   --text-code-weight: var(--font-weight-normal);
   --text-code-leading: 1.4286;
@@ -225,6 +234,13 @@
   font-size: var(--text-supporting-size);
   font-weight: var(--text-supporting-weight);
   line-height: var(--text-supporting-leading);
+}
+
+@utility type-caption {
+  font-family: var(--font-family-body);
+  font-size: var(--text-caption-size);
+  font-weight: var(--text-caption-weight);
+  line-height: var(--text-caption-leading);
 }
 
 @utility type-code {

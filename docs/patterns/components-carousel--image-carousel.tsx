@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — image carousel
+// @thewhatmatters/wmds@0.4.9 · Pattern — image carousel
 // Storybook: Components/Carousel → Pattern — image carousel (?path=/story/components-carousel--image-carousel)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

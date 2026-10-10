@@ -19,8 +19,8 @@ export type TileGridColumns = number | Partial<Record<TileGridBreakpoint, number
 export const tileGridDefaultColumns = { base: 1, sm: 2, lg: 3 } as const satisfies TileGridColumns;
 
 /**
- * A packed grid's row track, in px (`--spacing`). A tile spans as many as its height needs, so
- * the space under a tile is the row gap plus at most this much less one.
+ * A packed grid's row track, in px (`--spacing`). A tile spans as many as its height needs, rounded
+ * up, so the space under a tile is the row gap plus less than this much (32px to just under 36px).
  */
 export const tileGridRowUnitPx = 4;
 

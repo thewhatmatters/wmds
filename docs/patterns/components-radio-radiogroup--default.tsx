@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — vertical
+// @thewhatmatters/wmds@0.4.9 · Pattern — vertical
 // Storybook: Components/Radio/RadioGroup → Pattern — vertical (?path=/story/components-radio-radiogroup--default)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

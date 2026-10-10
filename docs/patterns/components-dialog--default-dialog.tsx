@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — dialog
+// @thewhatmatters/wmds@0.4.9 · Pattern — dialog
 // Storybook: Components/Dialog → Pattern — dialog (?path=/story/components-dialog--default-dialog)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

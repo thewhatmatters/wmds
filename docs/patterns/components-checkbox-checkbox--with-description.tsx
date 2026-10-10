@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — with description
+// @thewhatmatters/wmds@0.4.9 · Pattern — with description
 // Storybook: Components/Checkbox/Checkbox → Pattern — with description (?path=/story/components-checkbox-checkbox--with-description)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

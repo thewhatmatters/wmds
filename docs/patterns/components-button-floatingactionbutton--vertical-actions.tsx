@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — vertical actions
+// @thewhatmatters/wmds@0.4.9 · Pattern — vertical actions
 // Storybook: Components/Button/FloatingActionButton → Pattern — vertical actions (?path=/story/components-button-floatingactionbutton--vertical-actions)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

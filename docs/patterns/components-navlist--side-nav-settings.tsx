@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — side nav (settings)
+// @thewhatmatters/wmds@0.4.9 · Pattern — side nav (settings)
 // Storybook: Components/NavList → Pattern — side nav (settings) (?path=/story/components-navlist--side-nav-settings)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -120,3 +120,35 @@ export const EmptyState: Story = {
     expect(canvas.queryByText("No posts match these filters.")).toBeNull();
   },
 };
+
+export const RouterTitleLink: Story = {
+  name: "render puts the title on the router's link: one link, the same quiet treatment",
+  render: () => (
+    <div className="w-[56rem]">
+      <IndexList aria-label="Posts">
+        <IndexList.Item
+          title="How we scope a brand sprint"
+          render={<a href="#brand-sprint" data-router="" />}
+          meta={<time dateTime="2026-09-14">Sep 14, 2026</time>}
+        />
+        <IndexList.Item
+          title="Writing briefs people finish reading"
+          href="#writing-briefs"
+          meta={<time dateTime="2026-06-21">Jun 21, 2026</time>}
+        />
+      </IndexList>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const list = within(canvasElement).getByRole("list", { name: "Posts" });
+    const links = within(list).getAllByRole("link");
+    expect(links).toHaveLength(2);
+    const [routed, plain] = links;
+    expect(routed).toHaveAttribute("data-router");
+    expect(routed).toHaveAttribute("href", "#brand-sprint");
+    expect(routed).toHaveTextContent("How we scope a brand sprint");
+    expect(routed.closest("h2")).not.toBeNull();
+    // The router's link looks and focuses like the plain one.
+    expect(routed.className).toBe(plain.className);
+  },
+};

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — with count
+// @thewhatmatters/wmds@0.4.9 · Pattern — with count
 // Storybook: Components/Checkbox/Checkbox → Pattern — with count (?path=/story/components-checkbox-checkbox--with-count)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

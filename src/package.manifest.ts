@@ -104,6 +104,7 @@ export const packageManifest = {
     "--cluster-height-lg",
     "scroll-fade-y",
     "scroll-fade-x",
+    "type-caption",
     "type-eyebrow",
     "type-reading",
   ] as const,

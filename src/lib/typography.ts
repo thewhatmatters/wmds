@@ -15,6 +15,7 @@ export type TypographyRole =
   | "body"
   | "ui-label"
   | "caption"
+  | "caption-tight"
   | "overline"
   | "eyebrow"
   | "reading";
@@ -34,6 +35,7 @@ export type AstryxTypeScale =
   | "body"
   | "label"
   | "supporting"
+  | "caption"
   | "code"
   | "control"
   | "eyebrow"
@@ -193,6 +195,18 @@ export const typographyStyles: TypographyStyle[] = [
     usedIn: ["Address line", "Input description"],
   },
   {
+    role: "caption-tight",
+    label: "Caption, tight",
+    description:
+      "A single line directly under a label — supporting size and weight on a 16px line (WMDS extension). Not for wrapped text; that stays caption",
+    astryxType: "caption",
+    className: "type-caption text-muted",
+    tracking: "normal",
+    trackingClass: "tracking-normal",
+    sample: "contrast.example",
+    usedIn: ["LinkTile meta line"],
+  },
+  {
     role: "overline",
     label: "Overline",
     description: "Section labels in app UI — supporting sans + uppercase (WMDS extension). For editorial captions use eyebrow",
@@ -249,6 +263,7 @@ export const astryxTypeScale: Array<{
   { type: "body", utility: "type-body", size: "0.875rem", weight: "400", leading: "1.43" },
   { type: "label", utility: "type-label", size: "0.875rem", weight: "500", leading: "1.43" },
   { type: "supporting", utility: "type-supporting", size: "0.75rem", weight: "400", leading: "1.67" },
+  { type: "caption", utility: "type-caption", size: "0.75rem", weight: "400", leading: "1.33" },
   { type: "code", utility: "type-code", size: "0.875rem", weight: "400", leading: "1.43" },
   { type: "control", utility: "type-control", size: "0.875rem", weight: "500", leading: "1" },
   { type: "eyebrow", utility: "type-eyebrow", size: "0.75rem mono, uppercase", weight: "400", leading: "1.33" },

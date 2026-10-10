@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — router link
+// @thewhatmatters/wmds@0.4.9 · Pattern — router link
 // Storybook: Components/LinkTile → Pattern — router link (?path=/story/components-linktile--router-link)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

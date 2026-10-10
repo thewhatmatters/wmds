@@ -1,8 +1,8 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — post page
+// @thewhatmatters/wmds@0.4.9 · Pattern — post page
 // Storybook: Guides/Post page → Pattern — post page (?path=/story/guides-post-page--post-page)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { useEffect, useId, useState, type ReactNode } from "react";
+import { useEffect, useId, useState, type ReactElement, type ReactNode } from "react";
 import { Copy, FileText } from "lucide-react";
 import {
   Badge,
@@ -107,6 +107,11 @@ export interface PostPageProps {
    * and tab order at every width, so pair "after" with metadataSide="end" and "before" with "start".
    */
   metadataStack?: PostMetadataStack;
+  /**
+   * The router's link for the breadcrumb and the category tags, in place of a plain anchor —
+   * (link) => <Link href={link.href} />.
+   */
+  renderLink?: (link: { label: string; href: string }) => ReactElement;
   /** Page-level layers inside the page grid — for example a GridOverlay. */
   overlay?: ReactNode;
 }
@@ -118,6 +123,7 @@ export function PostPage({
   metadataSide = "start",
   metadataColumns = 4,
   metadataStack = "after",
+  renderLink,
   overlay,
 }: PostPageProps) {
   const metadataHeadingId = useId();
@@ -153,7 +159,12 @@ export function PostPage({
         <DescriptionList.Item name="Reading time">{post.readingTime}</DescriptionList.Item>
         <DescriptionList.Item name="Categories">
           {post.categories.map((category) => (
-            <Badge key={category.href} emphasis="outline" mono render={<a href={category.href} />}>
+            <Badge
+              key={category.href}
+              emphasis="outline"
+              mono
+              render={renderLink != null ? renderLink(category) : <a href={category.href} />}
+            >
               {category.label}
             </Badge>
           ))}
@@ -191,7 +202,13 @@ export function PostPage({
       {overlay}
       <article className="band py-6 sm:py-10 lg:py-14">
         <header className="col-span-full mb-4 flex flex-col gap-3 sm:mb-8 lg:col-span-10">
-          <Breadcrumb items={post.breadcrumb} variant="mono" separator="slash" className="mb-3" />
+          <Breadcrumb
+            items={post.breadcrumb}
+            variant="mono"
+            separator="slash"
+            renderLink={renderLink}
+            className="mb-3"
+          />
           <h1 className="type-display-2 text-balance text-fg">{post.title}</h1>
           <p className="type-reading max-w-[40rem] text-muted">{post.description}</p>
           {stackedAfter ? (

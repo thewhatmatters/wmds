@@ -56,6 +56,7 @@ main.grid-page
 - **Do** render the markdown with \`#\` mapped to \`h2\` — the title is the page's \`h1\`.
 - **Do** map markdown links to **TextLink** with \`external\` for other sites.
 - **Do** keep the panel to facts and actions about this post; related posts belong under the article.
+- **Do** pass \`renderLink\` — \`(link) => <Link href={link.href} />\` — so the breadcrumb and the category tags use the app's router. Swapping an anchor in the pasted markup reads as drift.
 - **Do** mount page-level layers (a **GridOverlay**) through \`overlay\` — it renders inside the page grid. Adding an element to the pasted markup reads as drift to \`wmds-check\`.
 - **Don't** wrap the page in another \`main\` — inside an app shell that already has one, change the pattern's \`main\` to a \`div\`.
 - **Don't** let an ancestor clip overflow (\`overflow: hidden\`) — it stops the panel sticking.
@@ -81,7 +82,7 @@ export const PostPage: Story = {
       },
     },
     `
-import { useEffect, useId, useState, type ReactNode } from "react";
+import { useEffect, useId, useState, type ReactElement, type ReactNode } from "react";
 import { Copy, FileText } from "lucide-react";
 import {
   Badge,
@@ -186,6 +187,11 @@ export interface PostPageProps {
    * and tab order at every width, so pair "after" with metadataSide="end" and "before" with "start".
    */
   metadataStack?: PostMetadataStack;
+  /**
+   * The router's link for the breadcrumb and the category tags, in place of a plain anchor —
+   * (link) => <Link href={link.href} />.
+   */
+  renderLink?: (link: { label: string; href: string }) => ReactElement;
   /** Page-level layers inside the page grid — for example a GridOverlay. */
   overlay?: ReactNode;
 }
@@ -197,6 +203,7 @@ export function PostPage({
   metadataSide = "start",
   metadataColumns = 4,
   metadataStack = "after",
+  renderLink,
   overlay,
 }: PostPageProps) {
   const metadataHeadingId = useId();
@@ -232,7 +239,12 @@ export function PostPage({
         <DescriptionList.Item name="Reading time">{post.readingTime}</DescriptionList.Item>
         <DescriptionList.Item name="Categories">
           {post.categories.map((category) => (
-            <Badge key={category.href} emphasis="outline" mono render={<a href={category.href} />}>
+            <Badge
+              key={category.href}
+              emphasis="outline"
+              mono
+              render={renderLink != null ? renderLink(category) : <a href={category.href} />}
+            >
               {category.label}
             </Badge>
           ))}
@@ -270,7 +282,13 @@ export function PostPage({
       {overlay}
       <article className="band py-6 sm:py-10 lg:py-14">
         <header className="col-span-full mb-4 flex flex-col gap-3 sm:mb-8 lg:col-span-10">
-          <Breadcrumb items={post.breadcrumb} variant="mono" separator="slash" className="mb-3" />
+          <Breadcrumb
+            items={post.breadcrumb}
+            variant="mono"
+            separator="slash"
+            renderLink={renderLink}
+            className="mb-3"
+          />
           <h1 className="type-display-2 text-balance text-fg">{post.title}</h1>
           <p className="type-reading max-w-[40rem] text-muted">{post.description}</p>
           {stackedAfter ? (

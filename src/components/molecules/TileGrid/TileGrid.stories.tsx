@@ -85,7 +85,7 @@ TileGrid
 
 **Reading order and tab order are the order of the items, in both layouts.** A masonry grid puts each next item in the shortest column (the first of them on a tie), so the order runs across the top row and then down the page — never down one column and then the next.
 
-A masonry grid packs once it has measured its tiles. On the server and the first paint the tiles sit in aligned rows; after that they close up, and again whenever a tile's height or the column count changes. One column needs no packing. The space under a tile is the row gap (2rem), within 3px.
+A masonry grid packs once it has measured its tiles. On the server and the first paint the tiles sit in aligned rows; after that they close up, and again whenever a tile's height or the column count changes. One column needs no packing. The space under a tile is the row gap (2rem) plus less than 4px: a tile's height is rounded up to the next 4px row track, so the space measures from 32px to just under 36px.
 
 **On a server-rendered page**, a masonry grid of two or more columns moves once, at hydration: the tiles go from aligned rows to packed. That move is instant — no tile slides or fades; motion is for a change in the items only. **\`layout="uniform"\` does not move at all**: it is laid out by CSS alone, so the server's markup is the final layout. Use it where a move at hydration is not acceptable.
 
