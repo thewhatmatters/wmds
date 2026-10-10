@@ -273,7 +273,7 @@ import {
 | `DescriptionList` | `layout` (`inline` \| `stacked`), `rule` (`solid` \| `dotted` \| `none`), `variant` (`sans` \| `mono`), `DescriptionList.Item` `name` / `layout` | Components/DescriptionList — **Pattern — post metadata**, **Pattern — details** |
 | `SectionCaption` | `children`, `as`, `id`, `end`, `marker`, `rule` | Components/SectionCaption — **Pattern — column caption**, **Pattern — caption with an action** |
 | `Prose` | `size` (`lg` \| `md`), `measure` (`reading` \| `none`), `as` | Components/Prose — **Pattern — article body**. Full page: **Guides/Post page → Pattern — post page** |
-| `IndexList` | `captions`, `size`, `titleAs`, `empty`, `IndexList.Item` `meta` / `title` / `href` / `preview` | Components/IndexList — **Pattern — post index**. With filters: **Guides/Filter panel → Pattern — filtered index** |
+| `IndexList` | `captions`, `size`, `titleAs`, `empty`, `IndexList.Item` `meta` / `title` / `href` or `render` / `preview` | Components/IndexList — **Pattern — post index**. With filters: **Guides/Filter panel → Pattern — filtered index** |
 | `LinkTile` | `title`, `href` / `render`, `external`, `media`, `ratio`, `meta`, `tag`, `source`, `loading` | Components/LinkTile — **Pattern — resource tile**, **Pattern — router link** |
 | `TileGrid` | `layout` (`masonry` / `uniform`), `columns`, `empty`, `busy`, `TileGrid.Item` | Components/TileGrid — **Pattern — tile grid**. With filters: **Guides/Filter panel → Pattern — filtered grid** |
 | `FilterPanel` | `groups`, `selection`, `onSelectionChange`, `resultsLabel`, `labels`; `FilterPanel.Rail` / `.Trigger` / `.Sheet`; `useFilterSelection`, `matchesFilterSelection`, `countFilterOptions` | Components/FilterPanel — **Pattern — filter panel** |

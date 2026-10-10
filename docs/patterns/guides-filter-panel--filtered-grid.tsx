@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — filtered grid
+// @thewhatmatters/wmds@0.4.9 · Pattern — filtered grid
 // Storybook: Guides/Filter panel → Pattern — filtered grid (?path=/story/guides-filter-panel--filtered-grid)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

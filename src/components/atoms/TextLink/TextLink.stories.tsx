@@ -33,6 +33,7 @@ TextLink (\`a\`)
 - **Do** use **TextLink** inside body copy and supporting text.
 - **Do** use \`variant="quiet"\` for a linked title inside a heading — never inside running prose, where links must stay underlined.
 - **Do** use \`external\` only when a new tab is genuinely useful.
+- **Do** pass \`render={<Link href="/blog/post" />}\` in place of \`href\` for a link the app's router should handle; the treatment and the focus ring stay the same.
 - **Don't** use it for actions—use **Button**.
 - **Don't** override its color or underline treatment with \`className\`.
         `.trim(),

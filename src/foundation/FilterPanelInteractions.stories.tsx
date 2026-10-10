@@ -177,3 +177,22 @@ export const ControlledSelection: Story = {
     });
   },
 };
+
+export const RouterLinks: Story = {
+  name: "renderLink puts each post title on the router's link",
+  render: () => (
+    <FilteredIndex
+      title="Blog"
+      posts={samplePosts}
+      groups={sampleGroups}
+      renderLink={(post) => <a href={post.href} data-router={post.slug} />}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const list = within(canvasElement).getByRole("list", { name: "Posts" });
+    const links = within(list).getAllByRole("link");
+    expect(links).toHaveLength(samplePosts.length);
+    expect(links.map((link) => link.getAttribute("data-router"))).toEqual(samplePosts.map((post) => post.slug));
+    expect(links[0]).toHaveAttribute("href", samplePosts[0].href);
+  },
+};

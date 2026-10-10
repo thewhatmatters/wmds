@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { hydrateRoot } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 import { expect, userEvent, waitFor, within } from "storybook/test";
+import { Avatar } from "../components/atoms/Avatar/Avatar";
 import { LinkTile } from "../components/molecules/LinkTile/LinkTile";
 import { TileGrid, type TileGridLayout } from "../components/molecules/TileGrid/TileGrid";
 import { FilteredGrid, sampleResourceGroups, sampleResources } from "../guides/FilterPanel/FilterPanelExample";
@@ -253,5 +254,72 @@ export const UniformHydratesInPlace: Story = {
     expect(moving).toEqual([]);
     root.unmount();
     host.remove();
+  },
+};
+
+const captionImage = sampleResources[2].image;
+
+export const TileCaptionRhythm: Story = {
+  name: "the title and meta sit as a tight pair, and a two-line title, a source mark, and the placeholder line up",
+  render: () => (
+    <div className="grid w-[60rem] grid-cols-4 items-start gap-6">
+      {[
+        { key: "one", title: "Contrast checker" },
+        { key: "two", title: "A much longer resource name that has to wrap onto a second line" },
+      ].map((tile) => (
+        <LinkTile
+          key={tile.key}
+          title={tile.title}
+          href={`#${tile.key}`}
+          meta="contrast.example"
+          ratio={4 / 3}
+          media={<img src={captionImage.src} alt="" width={captionImage.width} height={captionImage.height} />}
+        />
+      ))}
+      <LinkTile
+        title="Contrast checker"
+        href="#source"
+        meta="contrast.example"
+        ratio={4 / 3}
+        source={<Avatar name="Contrast" size="xsm" />}
+        media={<img src={captionImage.src} alt="" width={captionImage.width} height={captionImage.height} />}
+      />
+      <LinkTile loading />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const [one, two, source] = [...canvasElement.querySelectorAll<HTMLElement>("a[data-link-tile]")];
+    const loading = canvasElement.querySelector<HTMLElement>("[data-loading]");
+    if (loading == null) throw new Error("Placeholder is missing");
+    const box = (element: Element | null | undefined) => {
+      if (element == null) throw new Error("Part is missing");
+      return element.getBoundingClientRect();
+    };
+    const parts = (tile: HTMLElement) => ({
+      frame: box(tile.querySelector("[data-link-tile-frame]")),
+      title: box(tile.querySelector("[id$='-title']")),
+      meta: box(tile.querySelector("[id$='-meta']")),
+    });
+
+    for (const tile of [one, two, source]) {
+      const { frame, title, meta } = parts(tile);
+      // 12px from the image to the title; the meta line starts where the title's last line ends.
+      expect(Math.round(title.top - frame.bottom)).toBe(12);
+      expect(Math.round(meta.top - title.bottom)).toBe(0);
+      expect(Math.round(meta.height)).toBe(16);
+    }
+    // One line is 20px; a long title clamps at two.
+    expect(Math.round(parts(one).title.height)).toBe(20);
+    expect(Math.round(parts(two).title.height)).toBe(40);
+
+    // The source mark is centered on the title's first line, and the title keeps its place.
+    const mark = box(source.querySelector("span[aria-hidden='true'] > *"));
+    const sourceTitle = parts(source).title;
+    expect(Math.abs(mark.top + mark.height / 2 - (sourceTitle.top + 10))).toBeLessThanOrEqual(1);
+    expect(Math.round(sourceTitle.top)).toBe(Math.round(parts(one).title.top));
+
+    // The placeholder takes the same room as a one-line tile, so nothing moves when it is replaced.
+    // (The 1.3333 leading lands 0.02px under 16px, so compare to a tenth of a pixel.)
+    expect(Math.abs(box(loading).height - box(one).height)).toBeLessThan(0.1);
   },
 };

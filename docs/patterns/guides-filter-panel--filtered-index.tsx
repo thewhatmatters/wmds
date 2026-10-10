@@ -1,8 +1,8 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — filtered index
+// @thewhatmatters/wmds@0.4.9 · Pattern — filtered index
 // Storybook: Guides/Filter panel → Pattern — filtered index (?path=/story/guides-filter-panel--filtered-index)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
-import { type ReactNode } from "react";
+import { type ReactElement, type ReactNode } from "react";
 import {
   FilterPanel,
   IndexList,
@@ -41,6 +41,8 @@ export interface FilteredIndexProps {
   selection?: FilterSelection;
   /** Every change: an option on or off, or Clear all. */
   onSelectionChange?: (selection: FilterSelection) => void;
+  /** The router's link for a post's title, in place of a plain anchor — (post) => <Link href={post.href} />. */
+  renderLink?: (post: FilteredPost) => ReactElement;
   /** Page-level layers inside the page grid — for example a GridOverlay. */
   overlay?: ReactNode;
 }
@@ -52,6 +54,7 @@ export function FilteredIndex({
   defaultSelection,
   selection: selectionProp,
   onSelectionChange,
+  renderLink,
   overlay,
 }: FilteredIndexProps) {
   const [selection, setSelection] = useFilterSelection({
@@ -93,7 +96,8 @@ export function FilteredIndex({
                 <IndexList.Item
                   key={post.slug}
                   title={post.title}
-                  href={post.href}
+                  href={renderLink != null ? undefined : post.href}
+                  render={renderLink?.(post)}
                   meta={<time dateTime={post.date}>{post.dateLabel}</time>}
                   preview={<p>{post.description}</p>}
                 />

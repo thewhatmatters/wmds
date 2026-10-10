@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — tile grid
+// @thewhatmatters/wmds@0.4.9 · Pattern — tile grid
 // Storybook: Components/TileGrid → Pattern — tile grid (?path=/story/components-tilegrid--masonry)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

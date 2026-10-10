@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — ruled grid footer
+// @thewhatmatters/wmds@0.4.9 · Pattern — ruled grid footer
 // Storybook: Components/FooterReveal → Pattern — ruled grid footer (?path=/story/components-footerreveal--ruled-grid-footer-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

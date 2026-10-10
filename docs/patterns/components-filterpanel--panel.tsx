@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — filter panel
+// @thewhatmatters/wmds@0.4.9 · Pattern — filter panel
 // Storybook: Components/FilterPanel → Pattern — filter panel (?path=/story/components-filterpanel--panel)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -61,6 +61,7 @@ Closing the dialog returns focus to the tile it was opened from. Previous is off
 
 - **Do** give each resource its own route (\`/resources/<slug>\`) and open the dialog from that route, so the address can be shared and Back closes it. In Next.js this is an intercepting route for the dialog and a plain route for the page.
 - **Do** make \`onPrevious\`, \`onNext\`, and \`onClose\` route changes — replace the route for previous and next, so Back still returns to the grid.
+- **Do** pass \`renderLink\` to the page form — \`(item) => <Link href={item.href} />\` — so the breadcrumb uses the app's router.
 - **Do** keep the note to a sentence or two; the info column scrolls when it is longer.
 - **Do** give a video a \`poster\`, and \`captions\` (WebVTT) when it has speech.
 - **Don't** add view counts, stats, or a save control. They are not part of this pattern.
@@ -98,7 +99,7 @@ export const Detail: Story = {
       },
     },
     `
-import { useEffect, useId, type ReactNode } from "react";
+import { useEffect, useId, type ReactElement, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Badge,
@@ -108,6 +109,7 @@ import {
   Dialog,
   IconButton,
   type BreadcrumbItemDef,
+  type BreadcrumbLinkItem,
 } from "@thewhatmatters/wmds";
 
 export interface ResourceImage {
@@ -329,6 +331,8 @@ export interface ResourceDetailPageProps {
   item: ResourceDetailItem;
   /** The path to this resource, ending with it — Home, Resources, this resource. */
   breadcrumb: BreadcrumbItemDef[];
+  /** The router's link for the breadcrumb, in place of a plain anchor — (item) => <Link href={item.href} />. */
+  renderLink?: (item: BreadcrumbLinkItem) => ReactElement;
   /** The app's image component, in place of img — (image) => <Image {...image} sizes="…" />. */
   renderImage?: (image: ResourceImage) => ReactNode;
   /** Page-level layers inside the page grid — for example a GridOverlay. */
@@ -336,14 +340,20 @@ export interface ResourceDetailPageProps {
 }
 
 /** The detail as its own page: opened directly, or from a shared link. */
-export function ResourceDetailPage({ item, breadcrumb, renderImage, overlay }: ResourceDetailPageProps) {
+export function ResourceDetailPage({ item, breadcrumb, renderLink, renderImage, overlay }: ResourceDetailPageProps) {
   const headingId = useId();
 
   return (
     <main className="grid-page bg-body">
       {overlay}
       <article aria-labelledby={headingId} className="band py-6 sm:py-10 lg:py-14">
-        <Breadcrumb items={breadcrumb} variant="mono" separator="slash" className="col-span-full mb-6" />
+        <Breadcrumb
+          items={breadcrumb}
+          variant="mono"
+          separator="slash"
+          renderLink={renderLink}
+          className="col-span-full mb-6"
+        />
         <div className="col-span-full lg:col-span-8">
           <ResourceMedia item={item} renderImage={renderImage} />
         </div>

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — disabled control
+// @thewhatmatters/wmds@0.4.9 · Pattern — disabled control
 // Storybook: Components/Tooltip → Pattern — disabled control (?path=/story/components-tooltip--disabled-control)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

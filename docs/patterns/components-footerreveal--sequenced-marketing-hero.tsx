@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — marketing hero with sequenced gallery
+// @thewhatmatters/wmds@0.4.9 · Pattern — marketing hero with sequenced gallery
 // Storybook: Components/FooterReveal → Pattern — marketing hero with sequenced gallery (?path=/story/components-footerreveal--sequenced-marketing-hero)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

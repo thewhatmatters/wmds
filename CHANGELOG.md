@@ -7,6 +7,35 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.9
+
+**Fixes from the site's 0.4.8 upgrade: router links in every page pattern, a tighter tile caption, and a checker that no longer skips files.**
+
+- **`renderLink` on the page patterns** — one prop name everywhere, for links the app's router should handle. Without it they were plain anchors that reload the page, and swapping one in the pasted markup reads as drift.
+  - **Guides/Filter panel → Pattern — filtered index**: `renderLink={(post) => <Link href={post.href} />}` (new) — post titles.
+  - **Guides/Post page → Pattern — post page**: `renderLink={(link) => <Link href={link.href} />}` (new) — the **Breadcrumb** and the category tags. View as Markdown and the share links stay plain anchors.
+  - **Guides/Resource detail → Pattern — resource detail**: `renderLink={(item) => <Link href={item.href} />}` (new) on `ResourceDetailPage` — the **Breadcrumb**.
+  - **Pattern — filtered grid** already had it, for tiles.
+- **IndexList.Item** `render` (new) — `render={<Link href="/blog/post" />}` in place of `href`, the same shape as **LinkTile** and **Badge**. `href` is now optional.
+- **TextLink** `render` (new) — the same, for any text link. `href` is now optional; pass one or the other.
+- **`type-caption`** (new type step; `typographyClass("caption-tight")`) — `type-supporting`'s size and weight on a 16px line. For a single line directly under a label; not for wrapped text, which stays on `type-supporting`. In this release it is used on **LinkTile**'s meta line only. **Foundations → Typography** lists it.
+- **LinkTile** — the title and the meta line sit as a pair: no gap between them, and the meta line is on `type-caption`. The space between the title's text and the meta's goes from about 9px to about 5px. The 12px between the image and the title and the two-line clamp are unchanged. A tile with a meta line is 6px shorter. The `loading` placeholder's bars sit in the same 20px and 16px lines, so a placeholder is exactly as tall as a loaded tile with a one-line title.
+- **`wmds-check`** — finds a pasted pattern's header when a `"use client"` or `"use server"` directive (or blank lines) comes before it. It read line 1 only, so such a file was skipped silently and never checked for drift. Findings name the header's line.
+- **0.4.8 Consumer actions corrected** — they said to put `"use client"` above the pattern header. The header goes first and the directive below it, as the `use-wmds` skill says. Both orders now work with `wmds-check`.
+- **TileGrid docs** — the space under a masonry tile is the 2rem row gap plus less than 4px (32px to just under 36px), not "within 3px". A tile's height rounds up to the next 4px row track. The behavior has not changed.
+
+### Consumer actions
+
+Re-copy three patterns, then pass the app's link through `renderLink`. Do the wiring in a client component (a function cannot cross from a server component), and remove any `<Link>` added to pasted markup.
+
+1. **Re-copy Guides/Filter panel → Pattern — filtered index** (`node_modules/@thewhatmatters/wmds/docs/patterns/guides-filter-panel--filtered-index.tsx`) over `components/blog-index.tsx`, re-apply your content, data, and handlers, and pass `renderLink={(post) => <Link href={post.href} />}` to `<FilteredIndex>`.
+2. **Re-copy Guides/Post page → Pattern — post page** (`…/docs/patterns/guides-post-page--post-page.tsx`) over `components/post-page.tsx`, re-apply your content, and pass `renderLink={(link) => <Link href={link.href} />}` to `<PostPage>`.
+3. **Re-copy Guides/Resource detail → Pattern — resource detail** (`…/docs/patterns/guides-resource-detail--detail.tsx`) over `components/resource-detail.tsx`, re-apply your content, and pass `renderLink={(item) => <Link href={item.href} />}` to `<ResourceDetailPage>`.
+4. **Pattern headers:** the header stays on the first lines with `"use client"` below it. A file with the directive first is now checked too, so `npx wmds-check` may report drift it skipped before. Fix the drift, or re-copy.
+5. **LinkTile:** nothing to do. Tiles with a meta line are 6px shorter. Update a screenshot baseline or a test that measures a tile's height. **Pattern — filtered grid** did not change; no re-copy.
+6. **`type-caption`:** do not move other text to it. It is for one line under a label.
+7. Other apps: none. `render` on **TextLink** and **IndexList.Item** is optional.
+
 ## 0.4.8
 
 **A filtered grid and a resource detail for a resources page.** Three new components and two page patterns: a tile that is one link, a grid that packs tiles in reading order, the filter panel as a component, and a resource's detail as a dialog over the grid or as its own page. The WhatMatters Resources page is the first use. See **ADR-0044**.
@@ -25,9 +54,9 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 ### Consumer actions
 
-1. **WhatMatters site, Resources page: use the new grid.** Copy **Guides/Filter panel → Pattern — filtered grid** (`node_modules/@thewhatmatters/wmds/docs/patterns/guides-filter-panel--filtered-grid.tsx`) into `components/resource-grid.tsx`, keep its header comment, and add `"use client"` above it. Each item is `{ id, title, href, image: { src, alt, width, height }, meta?, tag?, facets }` with `href: "/resources/<slug>"`; give every image its real `width` and `height`. Delete the hand-built list in `app/resources/page.tsx` and its classes.
+1. **WhatMatters site, Resources page: use the new grid.** Copy **Guides/Filter panel → Pattern — filtered grid** (`node_modules/@thewhatmatters/wmds/docs/patterns/guides-filter-panel--filtered-grid.tsx`) into `components/resource-grid.tsx`, keep its header comment as the first lines, and add `"use client"` below it. Each item is `{ id, title, href, image: { src, alt, width, height }, meta?, tag?, facets }` with `href: "/resources/<slug>"`; give every image its real `width` and `height`. Delete the hand-built list in `app/resources/page.tsx` and its classes.
 2. **Wire the grid in one small client file** (functions cannot cross from a server component): `components/resources.tsx` with `"use client"` renders `<FilteredGrid title="Resources" caption="Library" items={items} groups={groups} renderLink={(item) => <Link href={item.href} scroll={false} />} renderImage={(image) => <Image {...image} sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw" />} overlay={<SiteGridOverlay />} />`. `app/resources/page.tsx` loads the items and renders it. Change `sizes` if you change `columns`; allow the image hosts in `next.config.ts`. Do not edit the pasted file for any of this.
-3. **Add the detail.** Copy **Guides/Resource detail → Pattern — resource detail** (`…/docs/patterns/guides-resource-detail--detail.tsx`) into `components/resource-detail.tsx`, keep its header comment, and add `"use client"`. Each resource needs `{ id, title, image, video?: { src, poster, captions? }, category, tags?, meta?, note, added, addedLabel, visitHref, rows? }`.
+3. **Add the detail.** Copy **Guides/Resource detail → Pattern — resource detail** (`…/docs/patterns/guides-resource-detail--detail.tsx`) into `components/resource-detail.tsx`, keep its header comment as the first lines, and add `"use client"` below it. Each resource needs `{ id, title, image, video?: { src, poster, captions? }, category, tags?, meta?, note, added, addedLabel, visitHref, rows? }`.
 4. **Pick the form by route.**
    - The page: `app/resources/[slug]/page.tsx` renders `<ResourceDetailPage item={…} breadcrumb={[{ label: "Home", href: "/" }, { label: "Resources", href: "/resources" }, { label: item.title }]} overlay={<SiteGridOverlay />} />`. Delete `app/resources/[category]`: the categories become a filter group on the grid. No redirects.
    - The dialog: a parallel slot with an intercepting route (`app/resources/@detail/(.)[slug]/page.tsx`, a `default.tsx` that returns `null`, and `{detail}` in `app/resources/layout.tsx`) renders a client component with `<ResourceDetailDialog item={…} open onClose={() => router.back()} onPrevious={previous ? () => router.replace("/resources/" + previous.slug, { scroll: false }) : undefined} onNext={…} position={"3 of 9"} />`. Leave `onPrevious` out on the first resource and `onNext` out on the last.

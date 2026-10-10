@@ -53,6 +53,8 @@ export interface FilteredIndexProps {
   selection?: FilterSelection;
   /** Every change: an option on or off, or Clear all. */
   onSelectionChange?: (selection: FilterSelection) => void;
+  /** The router's link for a post's title, in place of a plain anchor — (post) => <Link href={post.href} />. */
+  renderLink?: (post: FilteredPost) => ReactElement;
   /** Page-level layers inside the page grid — for example a GridOverlay. */
   overlay?: ReactNode;
 }
@@ -64,6 +66,7 @@ export function FilteredIndex({
   defaultSelection,
   selection: selectionProp,
   onSelectionChange,
+  renderLink,
   overlay,
 }: FilteredIndexProps) {
   const [selection, setSelection] = useFilterSelection({
@@ -105,7 +108,8 @@ export function FilteredIndex({
                 <IndexList.Item
                   key={post.slug}
                   title={post.title}
-                  href={post.href}
+                  href={renderLink != null ? undefined : post.href}
+                  render={renderLink?.(post)}
                   meta={<time dateTime={post.date}>{post.dateLabel}</time>}
                   preview={<p>{post.description}</p>}
                 />

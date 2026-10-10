@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — brand + CTA
+// @thewhatmatters/wmds@0.4.9 · Pattern — brand + CTA
 // Storybook: Components/SiteNav → Pattern — brand + CTA (?path=/story/components-sitenav--brand-and-cta)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

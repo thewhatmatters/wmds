@@ -230,22 +230,26 @@ for (const file of files) {
   });
 
   // Pasted patterns.
-  const header = lines[0]?.match(/^\/\/ @thewhatmatters\/wmds@([\w.-]+) · (.+)$/);
+  // The header is the file's first comment line. A "use client" / "use server" directive or blank
+  // lines may come before it.
+  const headerIndex = lines.findIndex((line) => line.trim() !== "" && !/^\s*["']use (client|server)["'];?\s*$/.test(line));
+  const headerLine = headerIndex === -1 ? 0 : headerIndex;
+  const header = lines[headerLine]?.match(/^\/\/ @thewhatmatters\/wmds@([\w.-]+) · (.+)$/);
   const id = source.match(/\?path=\/story\/([\w-]+)/)?.[1];
   if (header && id && packageRoot) {
     const shipped = path.join(packageRoot, "docs", "patterns", `${id}.tsx`);
     if (!existsSync(shipped)) {
-      report(file, 1, "pattern-removed", "error", `pattern ${id} no longer ships in ${packageVersion} — see CHANGELOG.md`);
+      report(file, headerLine + 1, "pattern-removed", "error", `pattern ${id} no longer ships in ${packageVersion} — see CHANGELOG.md`);
     } else {
       if (header[1] !== packageVersion) {
-        report(file, 1, "pattern-stale", "warn", `pasted from ${header[1]}, installed ${packageVersion} — re-copy if CHANGELOG names it`);
+        report(file, headerLine + 1, "pattern-stale", "warn", `pasted from ${header[1]}, installed ${packageVersion} — re-copy if CHANGELOG names it`);
       }
       const shippedStructure = patternStructure(readFileSync(shipped, "utf8"));
       const pastedStructure = patternStructure(source);
       if (shippedStructure.join("\n") !== pastedStructure.join("\n")) {
         report(
           file,
-          1,
+          headerLine + 1,
           "pattern-drift",
           "warn",
           `markup or classes differ from docs/patterns/${id}.tsx (${firstDifference(shippedStructure, pastedStructure)}) — allowed edits are content, data, handlers, exports`,

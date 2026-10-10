@@ -164,5 +164,19 @@ export function ServicesCard({ onPick }: { onPick: (value: string) => void }) {
       expect(markup.rules).toEqual(["pattern-drift"]);
       expect(markup.findings[0]).toMatchObject({ severity: "warn" });
     });
+
+    it("finds the header under a use client directive", () => {
+      installPackage();
+      // A directive above the header must not hide the file from the pattern rules.
+      const clean = check({ "services.tsx": `"use client";\n\n${shipped}` }, ["--max-warnings", "0"]);
+      expect(clean.findings).toEqual([]);
+      const drifted = check({
+        "services.tsx": `'use client'\n${shipped.replace('className="w-full"', 'className="w-full bg-brand"')}`,
+      });
+      expect(drifted.rules).toEqual(["pattern-drift"]);
+      expect(drifted.findings[0]).toMatchObject({ line: 2 });
+      const stale = check({ "services.tsx": `"use client";\n${shipped.replace("wmds@9.9.9", "wmds@9.9.8")}` });
+      expect(stale.rules).toEqual(["pattern-stale"]);
+    });
   });
 });

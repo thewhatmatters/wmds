@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — resource tile
+// @thewhatmatters/wmds@0.4.9 · Pattern — resource tile
 // Storybook: Components/LinkTile → Pattern — resource tile (?path=/story/components-linktile--resource-tile)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

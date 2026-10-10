@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — submit / async
+// @thewhatmatters/wmds@0.4.9 · Pattern — submit / async
 // Storybook: Components/Button/Button → Pattern — submit / async (?path=/story/components-button-button--multi-state-badge)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

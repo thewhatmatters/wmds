@@ -59,6 +59,7 @@ The panel's rule sits level with the main column's caption rule.
 - **Do** hold the selection in the URL (\`selection\` + \`onSelectionChange\`) only when filtered views need their own links; otherwise leave it to the pattern.
 - **Do** give every grid image its real \`width\` and \`height\` — the tile holds its space from them, so nothing moves when the image loads.
 - **Do** pass items in the order they should read. The grid has no sort, search, or paging in this version; it shows every item.
+- **Do** pass \`renderLink\` — \`(post) => <Link href={post.href} />\` on the index, \`(item) => <Link href={item.href} />\` on the grid — so titles and tiles use the app's router.
 - **Do** mount page-level layers through \`overlay\`. Adding an element to the pasted markup reads as drift to \`wmds-check\`.
 - **Don't** write the count into the option label ("Guides (2)") — the panel shows \`count\`.
 - **Don't** put a link or a button inside a tile. The tile is the link.
@@ -84,7 +85,7 @@ export const FilteredIndex: Story = {
       },
     },
     `
-import { type ReactNode } from "react";
+import { type ReactElement, type ReactNode } from "react";
 import {
   FilterPanel,
   IndexList,
@@ -123,6 +124,8 @@ export interface FilteredIndexProps {
   selection?: FilterSelection;
   /** Every change: an option on or off, or Clear all. */
   onSelectionChange?: (selection: FilterSelection) => void;
+  /** The router's link for a post's title, in place of a plain anchor — (post) => <Link href={post.href} />. */
+  renderLink?: (post: FilteredPost) => ReactElement;
   /** Page-level layers inside the page grid — for example a GridOverlay. */
   overlay?: ReactNode;
 }
@@ -134,6 +137,7 @@ export function FilteredIndex({
   defaultSelection,
   selection: selectionProp,
   onSelectionChange,
+  renderLink,
   overlay,
 }: FilteredIndexProps) {
   const [selection, setSelection] = useFilterSelection({
@@ -175,7 +179,8 @@ export function FilteredIndex({
                 <IndexList.Item
                   key={post.slug}
                   title={post.title}
-                  href={post.href}
+                  href={renderLink != null ? undefined : post.href}
+                  render={renderLink?.(post)}
                   meta={<time dateTime={post.date}>{post.dateLabel}</time>}
                   preview={<p>{post.description}</p>}
                 />

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — about you
+// @thewhatmatters/wmds@0.4.9 · Pattern — about you
 // Storybook: Components/IntakeForm → Pattern — about you (?path=/story/components-intakeform--about-you-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

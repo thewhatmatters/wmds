@@ -5,6 +5,7 @@ import {
   useId,
   useMemo,
   useState,
+  type ReactElement,
   type ReactNode,
 } from "react";
 import { ChevronDown } from "lucide-react";
@@ -73,7 +74,10 @@ export interface IndexListProps {
 export interface IndexListItemProps {
   /** The row's title — a link to `href`. */
   title: string;
-  href: string;
+  /** Where the title goes. Leave it out when `render` carries the destination. */
+  href?: string;
+  /** The router's link for the title, in place of a plain anchor — `render={<Link href="/blog/post" />}`. */
+  render?: ReactElement;
   /** The meta column, for example a `<time>`. Above the title where the list is one column. */
   meta?: ReactNode;
   /** A short preview. When set, a control at the row's end expands it under the title. */
@@ -143,6 +147,7 @@ function IndexListRoot({
 function IndexListItem({
   title,
   href,
+  render,
   meta,
   preview,
   defaultOpen = false,
@@ -169,7 +174,7 @@ function IndexListItem({
       {meta != null ? <div className={indexListMetaClasses}>{meta}</div> : null}
       <div className={indexListTitleCellClasses}>
         <Title className={cn(indexListTitleClasses, indexListTitleSizeClasses[size])}>
-          <TextLink variant="quiet" href={href}>
+          <TextLink variant="quiet" href={href} render={render}>
             {title}
           </TextLink>
         </Title>

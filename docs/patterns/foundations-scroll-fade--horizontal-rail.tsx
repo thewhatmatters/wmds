@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — horizontal rail
+// @thewhatmatters/wmds@0.4.9 · Pattern — horizontal rail
 // Storybook: Foundations/Scroll fade → Pattern — horizontal rail (?path=/story/foundations-scroll-fade--horizontal-rail)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

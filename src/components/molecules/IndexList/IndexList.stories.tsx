@@ -75,6 +75,7 @@ Editorial index for list pages — a blog, case studies, resources. Each **Index
 |---------|--------|
 | **Index with captions** | \`captions={{ meta, title }}\` — column captions on the rows' tracks (\`type-eyebrow\`) |
 | **Linked title** | \`title\` + \`href\` on each item — a quiet **TextLink** inside the heading |
+| **Router link** | \`render={<Link href="/blog/post" />}\` in place of \`href\` — the title goes through the app's router |
 | **Preview** | \`preview\` on an item — **IconButton** disclosure; \`open\` / \`onOpenChange\` to control it |
 | **Title scale** | \`size\` — \`lg\` type-display-3 (default), \`md\` type-heading-1, \`sm\` type-heading-3 |
 | **Heading level** | \`titleAs\` — \`h2\` (default), \`h3\`, \`h4\` |

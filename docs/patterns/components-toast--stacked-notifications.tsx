@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.8 · Pattern — stacked notifications
+// @thewhatmatters/wmds@0.4.9 · Pattern — stacked notifications
 // Storybook: Components/Toast → Pattern — stacked notifications (?path=/story/components-toast--stacked-notifications)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

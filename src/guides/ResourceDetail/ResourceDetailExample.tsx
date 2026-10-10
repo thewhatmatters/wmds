@@ -2,12 +2,12 @@
  * Storybook-only — the live **Guides/Resource detail** pattern and its sample data. Apps copy the
  * Show code in ResourceDetail.stories.tsx, not this file.
  */
-import { useEffect, useId, useState, type ReactNode } from "react";
+import { useEffect, useId, useState, type ReactElement, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "../../components/atoms/Badge/Badge";
 import { Button } from "../../components/atoms/Button/Button";
 import { IconButton } from "../../components/atoms/IconButton/IconButton";
-import { Breadcrumb, type BreadcrumbItemDef } from "../../components/molecules/Breadcrumb/Breadcrumb";
+import { Breadcrumb, type BreadcrumbItemDef, type BreadcrumbLinkItem } from "../../components/molecules/Breadcrumb/Breadcrumb";
 import { DescriptionList } from "../../components/molecules/DescriptionList/DescriptionList";
 import { Dialog } from "../../components/organisms/Dialog/Dialog";
 import { FilteredGrid, sampleResourceGroups, sampleResources } from "../FilterPanel/FilterPanelExample";
@@ -234,6 +234,8 @@ export interface ResourceDetailPageProps {
   item: ResourceDetailItem;
   /** The path to this resource, ending with it — Home, Resources, this resource. */
   breadcrumb: BreadcrumbItemDef[];
+  /** The router's link for the breadcrumb, in place of a plain anchor — (item) => <Link href={item.href} />. */
+  renderLink?: (item: BreadcrumbLinkItem) => ReactElement;
   /** The app's image component, in place of img — (image) => <Image {...image} sizes="…" />. */
   renderImage?: (image: ResourceImage) => ReactNode;
   /** Page-level layers inside the page grid — for example a GridOverlay. */
@@ -241,14 +243,20 @@ export interface ResourceDetailPageProps {
 }
 
 /** The detail as its own page: opened directly, or from a shared link. */
-export function ResourceDetailPage({ item, breadcrumb, renderImage, overlay }: ResourceDetailPageProps) {
+export function ResourceDetailPage({ item, breadcrumb, renderLink, renderImage, overlay }: ResourceDetailPageProps) {
   const headingId = useId();
 
   return (
     <main className="grid-page bg-body">
       {overlay}
       <article aria-labelledby={headingId} className="band py-6 sm:py-10 lg:py-14">
-        <Breadcrumb items={breadcrumb} variant="mono" separator="slash" className="col-span-full mb-6" />
+        <Breadcrumb
+          items={breadcrumb}
+          variant="mono"
+          separator="slash"
+          renderLink={renderLink}
+          className="col-span-full mb-6"
+        />
         <div className="col-span-full lg:col-span-8">
           <ResourceMedia item={item} renderImage={renderImage} />
         </div>

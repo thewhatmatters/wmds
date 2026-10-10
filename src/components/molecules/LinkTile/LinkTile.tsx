@@ -9,6 +9,8 @@ import {
   linkTileFrameClasses,
   linkTileFrameFixedClasses,
   linkTileFrameNaturalClasses,
+  linkTileLoadingLineClasses,
+  linkTileLoadingMetaLineClasses,
   linkTileLoadingRatio,
   linkTileLoadingRootClasses,
   linkTileMetaClasses,
@@ -112,8 +114,12 @@ export function LinkTile({
           <Skeleton radius="none" />
         </span>
         <span className={linkTileTextClasses}>
-          <Skeleton width="70%" height={16} radius="inner" index={1} />
-          <Skeleton width="40%" height={12} radius="inner" index={2} />
+          <span className={linkTileLoadingLineClasses}>
+            <Skeleton width="70%" height={12} radius="inner" index={1} />
+          </span>
+          <span className={linkTileLoadingMetaLineClasses}>
+            <Skeleton width="40%" height={10} radius="inner" index={2} />
+          </span>
         </span>
       </div>
     );
