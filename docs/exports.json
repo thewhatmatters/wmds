@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -318,6 +318,19 @@
       ]
     },
     {
+      "name": "FilterPanel",
+      "tier": "organism",
+      "category": "Form controls",
+      "summary": "Checkbox filters for an index page: a side rail from tablet up and the same groups in a bottom Sheet on phones.",
+      "storybook": {
+        "title": "Components/FilterPanel",
+        "docs": "?path=/docs/components-filterpanel--docs"
+      },
+      "patterns": [
+        "components-filterpanel--panel"
+      ]
+    },
+    {
       "name": "FloatingActionButton",
       "tier": "molecule",
       "category": "Action",
@@ -465,6 +478,20 @@
         "components-kbd--command-row",
         "components-kbd--numbered-choices",
         "components-kbd--shortcut"
+      ]
+    },
+    {
+      "name": "LinkTile",
+      "tier": "molecule",
+      "category": "Navigation",
+      "summary": "A resource tile that is one link: a preview image with a name, where it lives, and an optional tag.",
+      "storybook": {
+        "title": "Components/LinkTile",
+        "docs": "?path=/docs/components-linktile--docs"
+      },
+      "patterns": [
+        "components-linktile--resource-tile",
+        "components-linktile--router-link"
       ]
     },
     {
@@ -842,6 +869,19 @@
       ]
     },
     {
+      "name": "TileGrid",
+      "tier": "molecule",
+      "category": "Layout",
+      "summary": "A grid of tiles that pack as masonry or sit in equal rows, in reading order either way.",
+      "storybook": {
+        "title": "Components/TileGrid",
+        "docs": "?path=/docs/components-tilegrid--docs"
+      },
+      "patterns": [
+        "components-tilegrid--masonry"
+      ]
+    },
+    {
       "name": "Toast",
       "tier": "organism",
       "category": "Overlay",
@@ -892,6 +932,7 @@
     "Guides/Filter panel",
     "Guides/Overlay flows",
     "Guides/Post page",
-    "Guides/Profile typography"
+    "Guides/Profile typography",
+    "Guides/Resource detail"
   ]
 }

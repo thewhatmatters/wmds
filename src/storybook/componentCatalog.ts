@@ -80,6 +80,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "CheckboxGroup", category: "Form controls", title: "Components/Checkbox/CheckboxGroup", description: "Multi-select options with a group validation band." },
   { name: "Chip", category: "Form controls", title: "Components/Chip", description: "Filter and toggle pill: multi-select, single-select, removable, or read-only." },
   { name: "Field", category: "Form controls", title: "Components/Field", description: "Label and layout wrapper, vertical or horizontal." },
+  { name: "FilterPanel", category: "Form controls", title: "Components/FilterPanel", description: "Checkbox filters for an index page: a side rail from tablet up and the same groups in a bottom Sheet on phones." },
   { name: "Input", category: "Form controls", title: "Components/Input", description: "Pill text field with optional icon, end badge, status, and loading." },
   { name: "IntakeForm", category: "Form controls", title: "Components/IntakeForm", description: "Contact details step of the Start a project flow." },
   { name: "PillGroup", category: "Form controls", title: "Components/PillGroup", description: "Wrapping radio pills for a single choice." },
@@ -94,6 +95,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   // Layout
   { name: "DisplayControls", category: "Layout", title: "Components/DisplayControls", description: "Grid visibility and theme mode controls with G and T shortcuts." },
   { name: "PageHeader", category: "Layout", title: "Components/PageHeader", description: "Page chrome row: app band, section heading, or toolbar." },
+  { name: "TileGrid", category: "Layout", title: "Components/TileGrid", description: "A grid of tiles that pack as masonry or sit in equal rows, in reading order either way." },
 
   // Marketing
   { name: "FooterReveal", category: "Marketing", title: "Components/FooterReveal", description: "Marketing page root where the content scrolls away to reveal a sticky footer." },
@@ -105,6 +107,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
 
   // Navigation
   { name: "Breadcrumb", category: "Navigation", title: "Components/Breadcrumb", description: "The path to the current page; a long path folds its middle into a menu of links." },
+  { name: "LinkTile", category: "Navigation", title: "Components/LinkTile", description: "A resource tile that is one link: a preview image with a name, where it lives, and an optional tag." },
   { name: "NavList", category: "Navigation", title: "Components/NavList", description: "Sectioned secondary navigation with inset pill rows." },
   { name: "Pagination", category: "Navigation", planned: true, description: "Not built yet." },
   { name: "SiteNav", category: "Navigation", title: "Components/SiteNav", description: "Marketing site header that collapses to a pinned pill, with mega menus." },

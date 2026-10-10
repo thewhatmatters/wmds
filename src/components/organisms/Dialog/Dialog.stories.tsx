@@ -31,6 +31,7 @@ Modal overlay system — **Dialog** for general modals, **AlertDialog** for bloc
 | **Blocking confirm** | \`AlertDialog\` | Cancel + confirm footer; scrim dismiss off by default |
 | **Destructive confirm** | \`AlertDialog confirmRole="destructive"\` | Irreversible actions |
 | **Form in modal** | \`Dialog.Content\` + body children + footer actions | \`size="lg"\` for wider forms |
+| **Detail view, media viewer** | \`Dialog.Content size="full"\` | The window less a margin (up to 90rem × 60rem); the whole screen on phones. \`headerEnd\` holds previous / next beside the close; \`aria-labelledby\` names it from a heading in the body. See **Guides/Resource detail** |
 
 Shared overlay: portal to \`document.body\`, \`aria-modal\`, focus trap, scroll lock, **medium** enter/exit motion.
 
@@ -39,7 +40,7 @@ Shared overlay: portal to \`document.body\`, \`aria-modal\`, focus trap, scroll 
 \`\`\`
 Dialog (open / onOpenChange)
 └── Dialog.Content — Card shell (rounded-2xl shadow-md)
-    ├── Card.Header — \`headerStart\` | title + optional IconButton close
+    ├── Card.Header — \`headerStart\` | title · \`headerEnd\` + optional IconButton close
     ├── body — 16px inset copy / form fields
     └── Card.Footer — Button action cluster
 

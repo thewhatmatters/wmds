@@ -22,6 +22,8 @@ import { OverlayPanelHeader } from "./OverlayPanelHeader";
 import {
   dialogBackdropClasses,
   dialogOverlayRootClasses,
+  dialogOverlayRootFullClasses,
+  dialogPanelBoxFullClasses,
   dialogPanelSizeClasses,
   dialogSizes,
   overlayPanelChromeClasses,
@@ -55,11 +57,19 @@ export interface DialogContentProps {
   description?: ReactNode;
   /** Leading header slot — icon, **Badge**, **Status** (**Card.Header** `start`). */
   headerStart?: ReactNode;
+  /** Actions before the close — **IconButton** `size="sm"`, for example previous and next. */
+  headerEnd?: ReactNode;
   /** Header dismiss — default `true` for generic dialogs. */
   showClose?: boolean;
   /** Footer action cluster — compose **Button** roles. */
   footer?: ReactNode;
+  /**
+   * `sm` / `md` (default) / `lg` — a centered panel of that width. `full` — the window less a
+   * margin (up to 90rem × 60rem), and the whole screen on phones: media viewers and detail views.
+   */
   size?: DialogSize;
+  /** Names the dialog when there is no `title` — the id of a heading inside the body. */
+  "aria-labelledby"?: string;
   className?: DialogLayoutClassName;
   children?: ReactNode;
 }
@@ -69,6 +79,8 @@ export interface DialogPortalProps {
   "aria-labelledby"?: string;
   "aria-describedby"?: string;
   initialFocusSelector?: string;
+  /** Fill the window (the whole screen on phones) — **Dialog.Content** `size="full"`. */
+  fill?: boolean;
   children: ReactNode;
 }
 
@@ -78,6 +90,7 @@ export function DialogPortal({
   "aria-labelledby": ariaLabelledBy,
   "aria-describedby": ariaDescribedBy,
   initialFocusSelector,
+  fill = false,
   children,
 }: DialogPortalProps) {
   const {
@@ -158,7 +171,7 @@ export function DialogPortal({
     <AnimatePresence>
       {open ? (
         <motion.div
-          className={dialogOverlayRootClasses}
+          className={cn(dialogOverlayRootClasses, fill && dialogOverlayRootFullClasses)}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -168,7 +181,7 @@ export function DialogPortal({
           <div className={dialogBackdropClasses} aria-hidden="true" />
           <motion.div
             ref={panelRef}
-            className="relative z-[1] flex w-full justify-center"
+            className={cn("relative z-[1] flex w-full justify-center", fill && dialogPanelBoxFullClasses)}
             role={role}
             aria-modal="true"
             aria-labelledby={ariaLabelledBy}
@@ -249,8 +262,10 @@ function DialogContent({
   description,
   headerStart,
   showClose = true,
+  headerEnd,
   footer,
   size = "md",
+  "aria-labelledby": ariaLabelledBy,
   className,
   children,
 }: DialogContentProps) {
@@ -265,8 +280,9 @@ function DialogContent({
   return (
     <DialogPortal
       role="dialog"
-      aria-labelledby={hasTitle ? titleId : undefined}
+      aria-labelledby={hasTitle ? titleId : ariaLabelledBy}
       aria-describedby={hasDescription ? descriptionId : undefined}
+      fill={size === "full"}
     >
       <Card
         padding="none"
@@ -274,7 +290,7 @@ function DialogContent({
         className={cn(
           dialogPanelSizeClasses[size],
           overlayPanelChromeClasses,
-          overlayPanelMaxHeightClasses,
+          size === "full" ? undefined : overlayPanelMaxHeightClasses,
           dialogPanelShellClasses,
           className,
         )}
@@ -285,6 +301,7 @@ function DialogContent({
           title={title}
           description={description}
           headerStart={headerStart}
+          headerEnd={headerEnd}
           showClose={showClose}
           closeLabel="Close dialog"
           onClose={() => onOpenChange(false)}

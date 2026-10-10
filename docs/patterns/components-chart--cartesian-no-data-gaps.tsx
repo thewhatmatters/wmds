@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.7 · Pattern — Cartesian no-data gaps
+// @thewhatmatters/wmds@0.4.8 · Pattern — Cartesian no-data gaps
 // Storybook: Components/Chart → Pattern — Cartesian no-data gaps (?path=/story/components-chart--cartesian-no-data-gaps)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

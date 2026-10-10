@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.7 · Pattern — supporting copy link
+// @thewhatmatters/wmds@0.4.8 · Pattern — supporting copy link
 // Storybook: Components/TextLink → Pattern — supporting copy link (?path=/story/components-textlink--supporting-copy)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

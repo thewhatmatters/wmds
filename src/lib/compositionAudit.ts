@@ -106,6 +106,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "IndexList owns the preview disclosure chevron (Lucide ChevronDown) passed to IconButton.",
   },
   {
+    file: "components/molecules/LinkTile/LinkTile.tsx",
+    ruleId: "lucide-import",
+    reason: "LinkTile owns the external mark after its title (Lucide SquareArrowOutUpRight, as TextLink external).",
+  },
+  {
     file: "components/molecules/PromptBar/PromptBar.tsx",
     ruleId: "lucide-import",
     reason: "PromptBar owns the send glyph (Lucide ArrowRight) passed to IconButton.",
@@ -124,6 +129,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     file: "components/organisms/MoreMenu/MoreMenu.tsx",
     ruleId: "lucide-import",
     reason: "MoreMenu owns the built-in kebab trigger glyph (IconButton shell).",
+  },
+  {
+    file: "components/organisms/FilterPanel/FilterPanel.tsx",
+    ruleId: "lucide-import",
+    reason: "FilterPanel.Trigger owns its default glyph (Lucide SlidersHorizontal) passed to Button `icon`.",
   },
   {
     file: "components/organisms/ChatDock/ChatDock.tsx",

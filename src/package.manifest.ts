@@ -25,9 +25,9 @@ const atoms = [
   "Tooltip",
 ] as const;
 
-const molecules = ["Accordion", "Breadcrumb", "CalEmbed", "Card", "ChatQa", "CheckboxGroup", "Chip", "DescriptionList", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "HeroIntro", "IndexList", "IntakeForm", "NavList", "PageHeader", "PillGroup", "PromptBar", "RadioGroup", "Search", "Select", "SelectableCard", "SegmentedControl", "Stat", "StepProgress", "TaskRows", "TextSequence"] as const;
+const molecules = ["Accordion", "Breadcrumb", "CalEmbed", "Card", "ChatQa", "CheckboxGroup", "Chip", "DescriptionList", "DisplayControls", "Dropdown", "Field", "FloatingActionButton", "HeroIntro", "IndexList", "IntakeForm", "LinkTile", "NavList", "PageHeader", "PillGroup", "PromptBar", "RadioGroup", "Search", "Select", "SelectableCard", "SegmentedControl", "Stat", "StepProgress", "TaskRows", "TextSequence", "TileGrid"] as const;
 
-const organisms = ["Carousel", "Chart", "ChatDock", "Confetti", "Dialog", "FooterReveal", "HeroTileStack", "IntakeConfirmation", "IntakeModal", "MoreMenu", "Panel", "ScrollHorizontal", "Sheet", "SiteNav", "Tab", "Toast"] as const;
+const organisms = ["Carousel", "Chart", "ChatDock", "Confetti", "Dialog", "FilterPanel", "FooterReveal", "HeroTileStack", "IntakeConfirmation", "IntakeModal", "MoreMenu", "Panel", "ScrollHorizontal", "Sheet", "SiteNav", "Tab", "Toast"] as const;
 
 /** In the catalog before the atomic rebuild and not rebuilt yet. Move a name into its tier when it ships. */
 const planned = ["Pagination", "Table"] as const;

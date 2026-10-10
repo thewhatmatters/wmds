@@ -26,6 +26,8 @@ export interface OverlayPanelHeaderProps {
   descriptionClassName?: string;
   /** Leading slot — Lucide glyph, **Badge**, **Status**; same role as **Card.Header** `start`. */
   headerStart?: ReactNode;
+  /** Actions before the close — **IconButton** `size="sm"`, for example previous and next. */
+  headerEnd?: ReactNode;
   showClose?: boolean;
   closeLabel?: string;
   onClose?: () => void;
@@ -42,6 +44,7 @@ export function OverlayPanelHeader({
   titleClassName = cardTitleClasses,
   descriptionClassName = cardSubtitleClasses,
   headerStart,
+  headerEnd,
   showClose = true,
   closeLabel = "Close",
   onClose,
@@ -51,7 +54,7 @@ export function OverlayPanelHeader({
   const hasTitle = title != null;
   const hasDescription = description != null;
 
-  if (!hasTitle && !showClose && headerStart == null) {
+  if (!hasTitle && !showClose && headerStart == null && headerEnd == null) {
     return null;
   }
 
@@ -84,14 +87,19 @@ export function OverlayPanelHeader({
         ) : null
       }
       end={
-        showClose ? (
-          <IconButton
-            size="sm"
-            role="ghost"
-            icon={<X strokeWidth={2} />}
-            aria-label={closeLabel}
-            onClick={() => onClose?.()}
-          />
+        showClose || headerEnd != null ? (
+          <div className="flex items-center gap-1">
+            {headerEnd}
+            {showClose ? (
+              <IconButton
+                size="sm"
+                role="ghost"
+                icon={<X strokeWidth={2} />}
+                aria-label={closeLabel}
+                onClick={() => onClose?.()}
+              />
+            ) : null}
+          </div>
         ) : null
       }
     />
