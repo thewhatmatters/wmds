@@ -22,7 +22,7 @@ Ship **CopyField** as a molecule. It composes **Input** and **Button**. It does 
 
 ## Consequences
 
-The unlock page imports `CopyField` and passes the key. A plain text copy stays on **Pattern — copy button**.
+The unlock page imports `CopyField` and passes the key. A plain text copy stays on **Pattern — copy button**. On brand navy the section is `bg-brand text-on-brand` — see **ADR-0046**.
 
 ## References
 

@@ -261,7 +261,8 @@
       "patterns": [
         "components-copyfield--clipboard-blocked",
         "components-copyfield--copied",
-        "components-copyfield--copy-key"
+        "components-copyfield--copy-key",
+        "components-copyfield--on-navy"
       ]
     },
     {

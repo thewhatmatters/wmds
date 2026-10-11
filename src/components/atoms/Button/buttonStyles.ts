@@ -5,7 +5,15 @@ import {
 } from "../../../lib/clusterScale";
 
 /** Prescribed action roles — not a semantic color picker. ADR-0004. */
-export const buttonRoles = ["primary", "secondary", "ghost", "destructive", "inverse", "outline"] as const;
+export const buttonRoles = [
+  "primary",
+  "secondary",
+  "ghost",
+  "destructive",
+  "inverse",
+  "outline",
+  "inverse-outline",
+] as const;
 
 export type ButtonRole = (typeof buttonRoles)[number];
 
@@ -60,6 +68,12 @@ export const buttonRoleClasses: Record<ButtonRole, string> = {
   inverse: "bg-on-brand text-brand shadow-raised hover:bg-on-brand-hover active:bg-on-brand-hover",
   /** Hairline outline, transparent fill. Gallery intro action. */
   outline: "border border-fg bg-transparent text-fg hover:bg-ghost-hover active:bg-ghost-active",
+  /**
+   * Hairline on a brand-navy field. Border and label are `--color-on-brand` (white).
+   * Hover uses the inverse fill (`--color-on-brand-hover`) and brand ink so the label stays readable.
+   */
+  "inverse-outline":
+    "border border-on-brand bg-transparent text-on-brand hover:bg-on-brand-hover hover:text-brand active:bg-on-brand-hover active:text-brand",
 };
 
 /** `role="outline"` with `emphasis="quiet"` — the same outline on the quiet `border-border` hairline. */

@@ -250,6 +250,10 @@ describe("CopyField", () => {
 
     const label = view.container.querySelector("label");
     expect(label?.getAttribute("for")).toBe(view.field.id);
+    expect(label?.className).toContain("type-label");
+    expect(label?.className).not.toContain("text-fg");
+    expect(view.hint.className).toContain("type-supporting");
+    expect(view.hint.className).not.toContain("text-muted");
     expect(shell?.contains(label)).toBe(false);
     expect(shell?.contains(view.hint)).toBe(false);
   });

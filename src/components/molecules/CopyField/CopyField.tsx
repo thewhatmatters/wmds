@@ -13,11 +13,11 @@ import { Copy } from "lucide-react";
 import { Button, buttonStatusHoldMs, type ButtonStatus } from "../../atoms/Button/Button";
 import { Input } from "../../atoms/Input/Input";
 import { cn } from "../../../lib/cn";
-import { typographyClass } from "../../../lib/typography";
 import {
   copyFieldButtonClasses,
   copyFieldClasses,
   copyFieldHintClasses,
+  copyFieldLabelClasses,
   copyFieldShellClasses,
   copyFieldValueClasses,
 } from "./copyFieldStyles";
@@ -190,7 +190,7 @@ export const CopyField = forwardRef<HTMLInputElement, CopyFieldProps>(function C
   return (
     <div className={cn(copyFieldClasses, className)}>
       {label != null ? (
-        <label id={labelId} htmlFor={fieldId} className={typographyClass("ui-label")}>
+        <label id={labelId} htmlFor={fieldId} className={copyFieldLabelClasses}>
           {label}
         </label>
       ) : null}
