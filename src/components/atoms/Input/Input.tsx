@@ -25,6 +25,7 @@ import {
   inputIconPositionClasses,
   inputIconSizeClasses,
   inputInlineClasses,
+  inputMonoFaceClasses,
   inputShellClasses,
   inputSizeClasses,
   inputSoloFocusRingBaseClasses,
@@ -62,6 +63,8 @@ export interface InputProps
   loading?: boolean;
   /** Leading Lucide icon. */
   icon?: ReactElement;
+  /** Monospace value — `type-code` instead of the sans face. For a read-only key or id. */
+  mono?: boolean;
   /**
    * Trailing inset inside the shell — pass {@link Badge} (e.g. Required).
    * Atoms cannot import Badge; compose at call site. Combinable with `status` / `loading`.
@@ -126,6 +129,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     loading = false,
     icon,
     endBadge,
+    mono = false,
     inline = false,
     className,
     disabled,
@@ -173,6 +177,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         aria-describedby={describedBy}
         className={cn(
           inputDisabledClasses,
+          mono && inputMonoFaceClasses,
           hasMessage
             ? cn(
                 inputAttachedFieldClasses,

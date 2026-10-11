@@ -252,6 +252,16 @@ export {
   type CheckboxGroupProps,
 } from "./components/molecules/CheckboxGroup/CheckboxGroup";
 export {
+  CopyField,
+  copyFieldCopiedLabel,
+  copyFieldCopyLabel,
+  copyFieldFallbackHint,
+  copyFieldStates,
+  type CopyFieldLayoutClassName,
+  type CopyFieldProps,
+  type CopyFieldState,
+} from "./components/molecules/CopyField/CopyField";
+export {
   DescriptionList,
   descriptionListLayouts,
   descriptionListRules,

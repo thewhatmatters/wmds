@@ -22,6 +22,13 @@ export const inputBaseClasses =
   "placeholder:text-disabled " +
   inputShellTransitionClasses;
 
+/**
+ * Monospace face for a read-only key or id (`type-code`).
+ * `!font-mono` wins over `font-sans` on the same element (`cn` does not merge).
+ * `!leading-none` keeps the single-line field's centering.
+ */
+export const inputMonoFaceClasses = "type-code !font-mono !leading-none";
+
 /** Solo shell — ring sits on the input with page offset. */
 export const inputSoloFocusRingBaseClasses =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-body";

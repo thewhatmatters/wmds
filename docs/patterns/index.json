@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.9",
+  "version": "0.4.10",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -369,6 +369,30 @@
       "file": "patterns/components-checkbox-checkboxgroup--option-counts.tsx",
       "storybook": "?path=/story/components-checkbox-checkboxgroup--option-counts",
       "source": "src/components/molecules/CheckboxGroup/CheckboxGroup.stories.tsx"
+    },
+    {
+      "id": "components-copyfield--clipboard-blocked",
+      "title": "Components/CopyField",
+      "name": "Pattern — clipboard blocked",
+      "file": "patterns/components-copyfield--clipboard-blocked.tsx",
+      "storybook": "?path=/story/components-copyfield--clipboard-blocked",
+      "source": "src/components/molecules/CopyField/CopyField.stories.tsx"
+    },
+    {
+      "id": "components-copyfield--copied",
+      "title": "Components/CopyField",
+      "name": "Pattern — copied",
+      "file": "patterns/components-copyfield--copied.tsx",
+      "storybook": "?path=/story/components-copyfield--copied",
+      "source": "src/components/molecules/CopyField/CopyField.stories.tsx"
+    },
+    {
+      "id": "components-copyfield--copy-key",
+      "title": "Components/CopyField",
+      "name": "Pattern — copy key",
+      "file": "patterns/components-copyfield--copy-key.tsx",
+      "storybook": "?path=/story/components-copyfield--copy-key",
+      "source": "src/components/molecules/CopyField/CopyField.stories.tsx"
     },
     {
       "id": "components-descriptionlist--details",
