@@ -395,6 +395,14 @@
       "source": "src/components/molecules/CopyField/CopyField.stories.tsx"
     },
     {
+      "id": "components-copyfield--on-navy",
+      "title": "Components/CopyField",
+      "name": "Pattern — on a navy field",
+      "file": "patterns/components-copyfield--on-navy.tsx",
+      "storybook": "?path=/story/components-copyfield--on-navy",
+      "source": "src/components/molecules/CopyField/CopyField.stories.tsx"
+    },
+    {
       "id": "components-descriptionlist--details",
       "title": "Components/DescriptionList",
       "name": "Pattern — details",

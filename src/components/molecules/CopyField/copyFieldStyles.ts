@@ -1,5 +1,4 @@
 import { cn } from "../../../lib/cn";
-import { typographyClass } from "../../../lib/typography";
 import {
   promptBarSendClasses,
   promptBarShellClasses,
@@ -8,6 +7,12 @@ import {
 
 /** Label, pill, and the blocked-clipboard hint. */
 export const copyFieldClasses = "flex w-full min-w-0 flex-col gap-2";
+
+/**
+ * Same type step as an Input label (`type-label`). Color is inherited, not `text-fg`,
+ * so a parent `text-on-brand` paints the label on a navy field.
+ */
+export const copyFieldLabelClasses = "type-label";
 
 /**
  * PromptBar's pill. The shell owns the border, radius, and the one inset focus ring.
@@ -27,5 +32,8 @@ export const copyFieldValueClasses = "h-9 min-h-9 w-full min-w-0 flex-1 truncate
  */
 export const copyFieldButtonClasses = cn(promptBarSendClasses, "shrink-0");
 
-/** Blocked-clipboard hint. Caption so it can wrap; hidden from layout until shown. */
-export const copyFieldHintClasses = cn(typographyClass("caption"));
+/**
+ * Blocked-clipboard hint. Supporting type, color inherited (same reason as the label).
+ * Hidden from layout until shown.
+ */
+export const copyFieldHintClasses = "type-supporting";

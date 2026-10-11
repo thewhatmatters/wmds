@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Button } from "../../atoms/Button/Button";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { CopyField, copyFieldStates } from "./CopyField";
 
@@ -49,7 +50,7 @@ Read-only value the visitor copies — an API key on an unlock page. The pill is
 
 \`\`\`
 CopyField
-├── label
+├── label — type-label, color inherited (a \`text-on-brand\` parent paints it)
 ├── PromptBar shell
 │   ├── Input (inline, mono, readOnly) — type-code value, truncates
 │   └── Button (secondary, sm) — Copy icon, then the status check; polite live region
@@ -64,7 +65,8 @@ The button is a real button, so Enter and Space copy. The value is selected on f
 - **Do** give \`label\` or \`aria-label\`.
 - **Don't** log the value. The field never writes it to the console.
 - **Don't** restyle the shell with \`className\` — it is layout only.
-- **Don't** add a button color. The action is **Button** \`role="secondary"\`.
+- **Don't** add a button color. The action inside the pill is **Button** \`role="secondary"\`.
+- **Do** on a navy field wrap the section in \`bg-brand text-on-brand\`. The label and hint inherit. Actions beside the field are **Button** \`role="inverse"\` and \`role="inverse-outline"\`. Paste **Pattern — on a navy field**. Don't put \`data-theme="dark"\` on that section.
         `.trim(),
       },
     },
@@ -149,4 +151,60 @@ export function UnlockKeyBlocked({ apiKey }: { apiKey: string }) {
 }
 `,
   ),
+};
+
+export const OnNavy: Story = {
+  name: "Pattern — on a navy field",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "The unlock page sits on brand navy. The section is `bg-brand text-on-brand`, so the label and hint inherit white. The pill stays a surface, and the key stays dark on it. Continue is **Button** `role=\"inverse\"`. Back is `role=\"inverse-outline\"` (on-brand hairline). Do not set `data-theme=\"dark\"` here — the dark surface is about 1:1 on this navy, so the pill and a secondary button disappear.",
+        },
+      },
+    },
+    `
+import { Button, CopyField } from "@thewhatmatters/wmds";
+
+export function UnlockOnBrand({
+  apiKey,
+  onContinue,
+  onSecondary,
+}: {
+  apiKey: string;
+  onContinue: () => void;
+  onSecondary: () => void;
+}) {
+  return (
+    <section className="flex w-full flex-col gap-4 bg-brand px-6 py-8 text-on-brand">
+      <CopyField label="API key" value={apiKey} />
+      <div className="flex flex-wrap gap-2">
+        <Button role="inverse" type="button" onClick={onContinue}>
+          Continue
+        </Button>
+        <Button role="inverse-outline" type="button" onClick={onSecondary}>
+          Back
+        </Button>
+      </div>
+    </section>
+  );
+}
+`,
+  ),
+  render: function OnNavyRender() {
+    return (
+      <section className="flex w-full flex-col gap-4 bg-brand px-6 py-8 text-on-brand">
+        <CopyField label="API key" value={sampleKey} />
+        <div className="flex flex-wrap gap-2">
+          <Button role="inverse" type="button" onClick={() => undefined}>
+            Continue
+          </Button>
+          <Button role="inverse-outline" type="button" onClick={() => undefined}>
+            Back
+          </Button>
+        </div>
+      </section>
+    );
+  },
 };

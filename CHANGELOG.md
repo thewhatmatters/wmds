@@ -15,12 +15,15 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Input** `mono` (new, optional) — the same monospace face, for a read-only key or id. Existing inputs are unchanged.
 - `state` (`"copied"` | `"fallback"`) pins that appearance for a specimen. Omit it in the app.
 - Patterns: **Components/CopyField → Pattern — copy key**, **Pattern — copied**, **Pattern — clipboard blocked**.
+- **On a navy field** — `data-theme="dark"` does not belong on `bg-brand`. Dark surfaces are `#262626`, about 1:1 on `#011272`, so the pill and a secondary button disappear. The label and the clipboard hint inherit the section color instead of `text-fg` / `text-muted`. The pill stays a surface. **Button** `role="inverse-outline"` is the on-brand hairline (`--color-on-brand`, no new color). The filled action stays `role="inverse"`. See **ADR-0046**. Paste **Components/CopyField → Pattern — on a navy field**.
 
 ### Consumer actions
 
-None for existing apps.
+None for existing apps on a light surface.
 
-To copy an API key: `import { CopyField } from "@thewhatmatters/wmds"` and render `<CopyField label="API key" value={apiKey} />`. Paste **Components/CopyField → Pattern — copy key** (`docs/patterns/components-copyfield--copy-key.tsx`). Do not log the key, and do not pass `state`.
+On a brand-navy section: wrap it in `bg-brand text-on-brand`. Do not set `data-theme="dark"` on that section. Paste **Components/CopyField → Pattern — on a navy field** (`docs/patterns/components-copyfield--on-navy.tsx`): `<CopyField label="API key" value={apiKey} />`, **Button** `role="inverse"` for the filled action, `role="inverse-outline"` for the hairline. Do not log the key, and do not pass `state`.
+
+To copy an API key on a light surface: `import { CopyField } from "@thewhatmatters/wmds"` and render `<CopyField label="API key" value={apiKey} />`. Paste **Components/CopyField → Pattern — copy key** (`docs/patterns/components-copyfield--copy-key.tsx`). Do not log the key, and do not pass `state`.
 
 ## 0.4.9
 
