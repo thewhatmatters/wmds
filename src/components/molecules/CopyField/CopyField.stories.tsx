@@ -35,7 +35,7 @@ const meta = {
         component: `
 ## Usage
 
-Read-only value the visitor copies — an API key on an unlock page. Composes **Input** (\`mono\`, \`readOnly\`) and **Button**.
+Read-only value the visitor copies — an API key on an unlock page. The pill is **PromptBar**'s shell. **Input** (\`inline\`, \`mono\`, \`readOnly\`) is the value; **Button** \`role="secondary"\` \`size="sm"\` sits at the trailing end, the way PromptBar seats send. A long value truncates in the track. It does not run under the button.
 
 | Pattern | Props |
 |---------|--------|
@@ -49,8 +49,10 @@ Read-only value the visitor copies — an API key on an unlock page. Composes **
 
 \`\`\`
 CopyField
-├── Input (mono, readOnly) — type-code value, label
-├── Button (secondary) — Copy icon, then the status check; polite live region
+├── label
+├── PromptBar shell
+│   ├── Input (inline, mono, readOnly) — type-code value, truncates
+│   └── Button (secondary, sm) — Copy icon, then the status check; polite live region
 └── hint — polite status, only when the clipboard is blocked
 \`\`\`
 
@@ -83,7 +85,7 @@ export const CopyKey: Story = {
       docs: {
         description: {
           story:
-            "A read-only key and a Copy key button. A click copies the value. The button is in the tab order.",
+            "A read-only key with Copy key seated inside the pill. A click copies the value. A long key truncates and stays clear of the button. The button is in the tab order.",
         },
       },
     },

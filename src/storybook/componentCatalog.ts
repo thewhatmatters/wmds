@@ -79,7 +79,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "Checkbox", category: "Form controls", title: "Components/Checkbox/Checkbox", description: "Boolean toggle with label, description, and validation." },
   { name: "CheckboxGroup", category: "Form controls", title: "Components/Checkbox/CheckboxGroup", description: "Multi-select options with a group validation band." },
   { name: "Chip", category: "Form controls", title: "Components/Chip", description: "Filter and toggle pill: multi-select, single-select, removable, or read-only." },
-  { name: "CopyField", category: "Form controls", title: "Components/CopyField", description: "Read-only monospace value with a button that copies it." },
+  { name: "CopyField", category: "Form controls", title: "Components/CopyField", description: "Read-only monospace value with Copy key seated inside the pill." },
   { name: "Field", category: "Form controls", title: "Components/Field", description: "Label and layout wrapper, vertical or horizontal." },
   { name: "FilterPanel", category: "Form controls", title: "Components/FilterPanel", description: "Checkbox filters for an index page: a side rail from tablet up and the same groups in a bottom Sheet on phones." },
   { name: "Input", category: "Form controls", title: "Components/Input", description: "Pill text field with optional icon, end badge, status, and loading." },

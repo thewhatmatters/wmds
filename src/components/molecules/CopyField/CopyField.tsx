@@ -13,12 +13,13 @@ import { Copy } from "lucide-react";
 import { Button, buttonStatusHoldMs, type ButtonStatus } from "../../atoms/Button/Button";
 import { Input } from "../../atoms/Input/Input";
 import { cn } from "../../../lib/cn";
+import { typographyClass } from "../../../lib/typography";
 import {
   copyFieldButtonClasses,
   copyFieldClasses,
-  copyFieldControlClasses,
   copyFieldHintClasses,
-  copyFieldRowClasses,
+  copyFieldShellClasses,
+  copyFieldValueClasses,
 } from "./copyFieldStyles";
 
 export const copyFieldStates = ["idle", "copied", "fallback"] as const;
@@ -81,6 +82,7 @@ function selectFieldText(field: HTMLInputElement) {
 
 /**
  * Read-only monospace value plus a button that copies it.
+ * The button sits inside the pill, at the trailing end, the way PromptBar seats send.
  * The value is never written to the console.
  */
 export const CopyField = forwardRef<HTMLInputElement, CopyFieldProps>(function CopyField(
@@ -98,6 +100,9 @@ export const CopyField = forwardRef<HTMLInputElement, CopyFieldProps>(function C
   ref,
 ) {
   const hintId = useId();
+  const labelId = useId();
+  const generatedId = useId();
+  const fieldId = id ?? generatedId;
   const fieldRef = useRef<HTMLInputElement | null>(null);
   const mountedRef = useRef(true);
   const [internal, setInternal] = useState<CopyFieldState>("idle");
@@ -184,27 +189,32 @@ export const CopyField = forwardRef<HTMLInputElement, CopyFieldProps>(function C
 
   return (
     <div className={cn(copyFieldClasses, className)}>
-      <div className={copyFieldRowClasses}>
-        <div className={copyFieldControlClasses}>
-          <Input
-            ref={setField}
-            id={id}
-            mono
-            readOnly
-            value={value}
-            label={label}
-            aria-label={label == null ? ariaLabel : undefined}
-            spellCheck={false}
-            autoComplete="off"
-            aria-describedby={phase === "fallback" ? hintId : undefined}
-            onFocus={onFocus}
-            onMouseUp={onMouseUp}
-          />
-        </div>
+      {label != null ? (
+        <label id={labelId} htmlFor={fieldId} className={typographyClass("ui-label")}>
+          {label}
+        </label>
+      ) : null}
+      <div className={copyFieldShellClasses}>
+        <Input
+          ref={setField}
+          id={fieldId}
+          inline
+          mono
+          readOnly
+          value={value}
+          aria-labelledby={label != null ? labelId : undefined}
+          aria-label={label == null ? ariaLabel : undefined}
+          spellCheck={false}
+          autoComplete="off"
+          aria-describedby={phase === "fallback" ? hintId : undefined}
+          className={copyFieldValueClasses}
+          onFocus={onFocus}
+          onMouseUp={onMouseUp}
+        />
         <Button
           type="button"
           role="secondary"
-          size="md"
+          size="sm"
           icon={<Copy strokeWidth={2} />}
           status={buttonStatus}
           statusLabels={{ success: copiedLabel }}

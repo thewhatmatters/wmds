@@ -229,4 +229,28 @@ describe("CopyField", () => {
     expect(view.button.getAttribute("data-status")).toBe("success");
     expect(view.hint.textContent).toBe("");
   });
+
+  it("seats the button inside the pill and truncates a long value", () => {
+    const longKey = `wm_test_${"a".repeat(80)}`;
+    const view = mount({ label: "API key", value: longKey });
+    root = view.root;
+    container = view.container;
+
+    const shell = view.button.parentElement;
+    expect(shell).not.toBeNull();
+    expect(shell?.contains(view.field)).toBe(true);
+    expect(shell?.className).toContain("rounded-[1.625rem]");
+    expect(shell?.className).toContain("items-end");
+    expect(view.field.className).toContain("truncate");
+    expect(view.field.className).toContain("min-w-0");
+    expect(view.button.className).toContain("shrink-0");
+    expect(view.field.className).not.toContain("absolute");
+    expect(view.button.className).not.toContain("absolute");
+    expect(view.field.value).toBe(longKey);
+
+    const label = view.container.querySelector("label");
+    expect(label?.getAttribute("for")).toBe(view.field.id);
+    expect(shell?.contains(label)).toBe(false);
+    expect(shell?.contains(view.hint)).toBe(false);
+  });
 });
