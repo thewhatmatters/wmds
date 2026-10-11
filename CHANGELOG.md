@@ -11,7 +11,7 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 **CopyField: a read-only value with a Copy key button.** For copying an API key. See **ADR-0045**.
 
-- **CopyField** (new) — a read-only **Input** (`mono`, `type-code`) and a **Button** `role="secondary"` labeled "Copy key". A click copies `value` and the label switches to "Copied" for `buttonStatusHoldMs` (2s), announced from the button's polite live region, then returns. The button is in the tab order (Enter and Space). Focusing the value selects it. If the Clipboard API is missing or blocked, the field selects the value, tries `execCommand('copy')`, and shows "Press Cmd/Ctrl+C to copy." in a polite status. The value is never logged.
+- **CopyField** (new) — a read-only monospace value and a **Button** `role="secondary"` `size="sm"` labeled "Copy key", seated at the trailing end of **PromptBar**'s pill. **Input** is `inline` `mono` (`type-code`) and truncates, so a long key does not run under the button. A click copies `value` and the label switches to "Copied" for `buttonStatusHoldMs` (2s), announced from the button's polite live region, then returns. The button is in the tab order (Enter and Space). Focusing the value selects it. If the Clipboard API is missing or blocked, the field selects the value, tries `execCommand('copy')`, and shows "Press Cmd/Ctrl+C to copy." in a polite status. The value is never logged.
 - **Input** `mono` (new, optional) — the same monospace face, for a read-only key or id. Existing inputs are unchanged.
 - `state` (`"copied"` | `"fallback"`) pins that appearance for a specimen. Omit it in the app.
 - Patterns: **Components/CopyField → Pattern — copy key**, **Pattern — copied**, **Pattern — clipboard blocked**.

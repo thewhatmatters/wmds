@@ -253,7 +253,7 @@
       "name": "CopyField",
       "tier": "molecule",
       "category": "Form controls",
-      "summary": "Read-only monospace value with a button that copies it.",
+      "summary": "Read-only monospace value with Copy key seated inside the pill.",
       "storybook": {
         "title": "Components/CopyField",
         "docs": "?path=/docs/components-copyfield--docs"

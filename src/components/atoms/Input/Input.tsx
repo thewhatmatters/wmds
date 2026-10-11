@@ -70,7 +70,7 @@ export interface InputProps
    * Atoms cannot import Badge; compose at call site. Combinable with `status` / `loading`.
    */
   endBadge?: ReactElement;
-  /** Inside Search — no outer shell; parent pill owns border and focus ring. */
+  /** Inside a parent pill (Search, CopyField) — no outer shell; the parent owns border and focus ring. */
   inline?: boolean;
   className?: InputLayoutClassName;
 }
@@ -93,7 +93,9 @@ function assertInputPattern(
     console.warn("[WMDS Input] `message` requires `status`.");
   }
   if (props.inline && (props.label != null || props.description != null || props.status != null || props.message != null)) {
-    console.warn("[WMDS Input] `inline` is for Search rows only — omit label, description, and validation.");
+    console.warn(
+      "[WMDS Input] `inline` is for a parent pill (Search, CopyField) — omit label, description, and validation.",
+    );
   }
 }
 
