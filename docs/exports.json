@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.9",
+  "version": "0.4.10",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -248,6 +248,21 @@
         "docs": "?path=/docs/components-confetti--docs"
       },
       "patterns": []
+    },
+    {
+      "name": "CopyField",
+      "tier": "molecule",
+      "category": "Form controls",
+      "summary": "Read-only monospace value with a button that copies it.",
+      "storybook": {
+        "title": "Components/CopyField",
+        "docs": "?path=/docs/components-copyfield--docs"
+      },
+      "patterns": [
+        "components-copyfield--clipboard-blocked",
+        "components-copyfield--copied",
+        "components-copyfield--copy-key"
+      ]
     },
     {
       "name": "DescriptionList",

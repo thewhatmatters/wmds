@@ -71,6 +71,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "Chip owns the filter/toggle shell (aria-pressed segment control).",
   },
   {
+    file: "components/molecules/CopyField/CopyField.tsx",
+    ruleId: "lucide-import",
+    reason: "CopyField owns the copy glyph (Lucide Copy) passed to Button icon. The confirmation check is Button's status glyph.",
+  },
+  {
     file: "components/molecules/Dropdown/DropdownItem.tsx",
     ruleId: "lucide-import",
     reason: "Dropdown.Item owns the selected-state check in the end slot (listbox pattern).",

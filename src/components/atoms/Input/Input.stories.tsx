@@ -55,6 +55,7 @@ const meta = {
 | **Status only** | \`status\` without \`message\` — border + trailing icon |
 | **Loading** | \`loading\` — trailing spinner |
 | **End badge** | \`endBadge={<Badge>Required</Badge>}\` — trailing inset inside the pill |
+| **Monospace** | \`mono\` — \`type-code\` face for a read-only key or id |
 
 ## Best practices
 
@@ -158,6 +159,16 @@ export const EndBadgeWithError: Story = {
     endBadge: <Badge size="sm">Required</Badge>,
     status: "error",
     message: "Please enter a valid email address.",
+  },
+};
+
+export const Monospace: Story = {
+  name: "Reference — monospace",
+  args: {
+    mono: true,
+    readOnly: true,
+    label: "API key",
+    defaultValue: "wm_test_4f8c2a91e0b7",
   },
 };
 

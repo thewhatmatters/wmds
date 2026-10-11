@@ -7,6 +7,21 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.10
+
+**CopyField: a read-only value with a Copy key button.** For copying an API key. See **ADR-0045**.
+
+- **CopyField** (new) — a read-only **Input** (`mono`, `type-code`) and a **Button** `role="secondary"` labeled "Copy key". A click copies `value` and the label switches to "Copied" for `buttonStatusHoldMs` (2s), announced from the button's polite live region, then returns. The button is in the tab order (Enter and Space). Focusing the value selects it. If the Clipboard API is missing or blocked, the field selects the value, tries `execCommand('copy')`, and shows "Press Cmd/Ctrl+C to copy." in a polite status. The value is never logged.
+- **Input** `mono` (new, optional) — the same monospace face, for a read-only key or id. Existing inputs are unchanged.
+- `state` (`"copied"` | `"fallback"`) pins that appearance for a specimen. Omit it in the app.
+- Patterns: **Components/CopyField → Pattern — copy key**, **Pattern — copied**, **Pattern — clipboard blocked**.
+
+### Consumer actions
+
+None for existing apps.
+
+To copy an API key: `import { CopyField } from "@thewhatmatters/wmds"` and render `<CopyField label="API key" value={apiKey} />`. Paste **Components/CopyField → Pattern — copy key** (`docs/patterns/components-copyfield--copy-key.tsx`). Do not log the key, and do not pass `state`.
+
 ## 0.4.9
 
 **Fixes from the site's 0.4.8 upgrade: router links in every page pattern, a tighter tile caption, and a checker that no longer skips files.**
