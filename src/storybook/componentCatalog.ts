@@ -128,7 +128,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "DescriptionList", category: "Table & list", title: "Components/DescriptionList", description: "Name-and-value rows (dl, dt, dd) with a solid or dotted rule; values take text, tags, or actions." },
   { name: "IndexList", category: "Table & list", title: "Components/IndexList", description: "Editorial index rows: a meta column, a large linked title, and an optional preview, under shared column captions." },
   { name: "Table", category: "Table & list", planned: true, description: "Not built yet." },
-  { name: "TaskRows", category: "Table & list", title: "Components/TaskRows", description: "Expandable task rows with status, meta, and detail rails." },
+  { name: "TaskRows", category: "Table & list", title: "Components/TaskRows", description: "Expandable task rows, and a needs-you table with a status dot, waiting pill, and metric." },
 ];
 
 /** Manager URL path for a title's docs page, e.g. `/docs/components-button-button--docs`. */

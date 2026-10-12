@@ -7,6 +7,23 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.15
+
+**TaskRows: a needs-you table.**
+
+- **TaskRows** `variant="table"` (new) — columns of title, waiting, and metric. Not an accordion. `columns` is `{ id: "title" | "waiting" | "metric", header, align?, width? }`. Defaults are Item, Waiting, and Metric.
+- **TaskRows.Row** (new) — `title`, `href` or `render` (a router link; `render` wins), `status` (`tone`, `label` such as "Open · 2d", `pulsing`), `waiting` (a muted **Badge** pill and a detail line), `metric` (`value` is tabular, plus `detail`).
+- `source` — `ready` (default), `loading` (skeleton, `aria-busy`), `error` (the `note` in the destructive color), `unwired` (the `note` as a muted footer line, no fake metric).
+- `empty` — shown when there are no rows. Defaults to "Nothing waiting".
+- Below `md` the headers are visually hidden and each row is two lines: the title, then the status, the waiting detail, and the metric.
+- Pattern: **Components/TaskRows → Pattern — needs you**.
+
+### Consumer actions
+
+None for existing **TaskRows** lists and capsules.
+
+For a needs-you table, paste **Components/TaskRows → Pattern — needs you** (`docs/patterns/components-taskrows--needs-you-table.tsx`). Pass `source="unwired"` and `note` when a source is not connected. Do not invent a zero.
+
 ## 0.4.14
 
 **Chart: a segmented progress ring, a tabular legend, and a SegmentedBar that renders before it is measured.**

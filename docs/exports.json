@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.14",
+  "version": "0.4.15",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -831,7 +831,7 @@
       "name": "TaskRows",
       "tier": "molecule",
       "category": "Table & list",
-      "summary": "Expandable task rows with status, meta, and detail rails.",
+      "summary": "Expandable task rows, and a needs-you table with a status dot, waiting pill, and metric.",
       "storybook": {
         "title": "Components/TaskRows",
         "docs": "?path=/docs/components-taskrows--docs"
@@ -842,6 +842,7 @@
         "components-taskrows--card-with-status-rows",
         "components-taskrows--controlled-expand",
         "components-taskrows--custom-slots",
+        "components-taskrows--needs-you-table",
         "components-taskrows--status-list",
         "components-taskrows--tag-chips"
       ]

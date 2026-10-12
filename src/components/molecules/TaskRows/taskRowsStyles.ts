@@ -1,6 +1,6 @@
 import { typographyClass } from "../../../lib/typography";
 
-export const taskRowsVariants = ["list", "capsule"] as const;
+export const taskRowsVariants = ["list", "capsule", "table"] as const;
 
 export type TaskRowsVariant = (typeof taskRowsVariants)[number];
 
@@ -56,3 +56,42 @@ export const taskRowsDetailRowClasses =
 export const taskRowsDetailLabelClasses = `${typographyClass("caption")} text-muted`;
 
 export const taskRowsDetailMetaClasses = `${typographyClass("caption")} font-mono tabular-nums text-muted`;
+
+/** Needs-you table — column headers from `md`, two-line rows below. */
+export const taskRowsTableClasses = "flex w-full min-w-0 flex-col";
+
+export const taskRowsTableHeadClasses =
+  "max-md:sr-only md:grid md:items-baseline md:gap-4 md:border-b md:border-border md:pb-2";
+
+export const taskRowsTableHeadCellClasses = `${typographyClass("caption")} text-muted`;
+
+export const taskRowsTableColumnsClasses = "md:[grid-template-columns:var(--task-rows-columns)]";
+
+export const taskRowsTableRowClasses =
+  "grid grid-cols-1 gap-1 border-b border-border py-3 last:border-b-0 md:items-center md:gap-4";
+
+export const taskRowsTableTitleClasses = `${typographyClass("ui-label")} min-w-0 text-fg`;
+
+export const taskRowsTableStatusClasses = "flex min-w-0 items-center gap-2 text-muted";
+
+export const taskRowsTableStatusLabelClasses = `${typographyClass("caption")} text-muted`;
+
+export const taskRowsTableWaitingClasses = "flex min-w-0 flex-col items-start gap-1";
+
+export const taskRowsTableDetailClasses = `${typographyClass("caption")} text-muted`;
+
+export const taskRowsTableMetricClasses = "flex min-w-0 flex-col gap-1 md:items-end";
+
+export const taskRowsTableMetricValueClasses =
+  "font-mono text-sm tabular-nums leading-none text-fg";
+
+export const taskRowsTableMobileLineClasses =
+  "max-md:flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 md:hidden";
+
+export const taskRowsTableNoteClasses = `${typographyClass("caption")} text-muted`;
+
+export const taskRowsTableErrorClasses = "type-supporting text-destructive";
+
+export const taskRowsTableEmptyClasses = `${typographyClass("body")} py-6 text-center text-muted`;
+
+export const taskRowsTableAlignEndClasses = "md:text-end";
