@@ -7,6 +7,19 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.21
+
+**A table.**
+
+- **Table** (new, atom) — `Table`, `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHead`, `TableCell`, `TableCaption`. Semantic HTML in a focusable, horizontal-scroll `region`. No new color, radius, shadow, or variant.
+- Patterns: **Components/Table → Pattern — basic table** and **Pattern — approvals queue** (Approve `primary`, Deny `outline`, an inline Confirm deny / Cancel step in the same row, then a success or failed status pill; keyboard focus follows, Escape cancels, and each button's `aria-label` carries the row name). States: deny confirm step, decided, empty, mobile 390.
+- `Table` moves out of the planned list.
+- See ADR-0048.
+
+### Consumer actions
+
+None for existing pages. To adopt it, `import { Table } from "@thewhatmatters/wmds"` and paste a **Components/Table** pattern (`docs/patterns/components-table--basic.tsx`, `docs/patterns/components-table--approvals.tsx`).
+
 ## 0.4.20
 
 **An app shell.**

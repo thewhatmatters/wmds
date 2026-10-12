@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.20 · Pattern — revenue by line
+// @thewhatmatters/wmds@0.4.21 · Pattern — revenue by line
 // Storybook: Components/Chart → Pattern — revenue by line (?path=/story/components-chart--revenue-by-line)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

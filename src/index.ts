@@ -126,6 +126,25 @@ export {
   type SwitchSize,
 } from "./components/atoms/Switch/Switch";
 export {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+  tableAligns,
+  type TableAlign,
+  type TableCellProps,
+  type TableHeadProps,
+  type TableLayoutClassName,
+  type TableProps,
+  type TableRowProps,
+  type TableSectionProps,
+  type TableCaptionProps,
+} from "./components/atoms/Table/Table";
+export {
   TextArea,
   textareaResizes,
   type TextAreaLayoutClassName,

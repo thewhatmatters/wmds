@@ -129,7 +129,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   // Table & list
   { name: "DescriptionList", category: "Table & list", title: "Components/DescriptionList", description: "Name-and-value rows (dl, dt, dd) with a solid or dotted rule; values take text, tags, or actions." },
   { name: "IndexList", category: "Table & list", title: "Components/IndexList", description: "Editorial index rows: a meta column, a large linked title, and an optional preview, under shared column captions." },
-  { name: "Table", category: "Table & list", planned: true, description: "Not built yet." },
+  { name: "Table", category: "Table & list", title: "Components/Table", description: "Semantic table in a horizontal-scroll box, with a row-actions pattern for approvals." },
   { name: "TaskRows", category: "Table & list", title: "Components/TaskRows", description: "Expandable task rows, and a needs-you table with a status dot, waiting pill, and metric." },
 ];
 
