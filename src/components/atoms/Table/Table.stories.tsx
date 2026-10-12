@@ -6,6 +6,7 @@ import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCo
 import { lockedViewportStory } from "../../../lib/viewports";
 import { Badge } from "../Badge/Badge";
 import { Button } from "../Button/Button";
+import { Card } from "../../molecules/Card/Card";
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "./Table";
 
 type ApprovalDecision = "approved" | "denied";
@@ -24,13 +25,23 @@ const approvalItems: ApprovalItem[] = [
   { id: "launch-week-recap", name: "Launch week recap", kind: "Post", waiting: "5 hours" },
 ];
 
-/** The row's buttons, side by side. */
+type ApprovalView = "table" | "card";
+
+interface ApprovalsQueueProps {
+  items: ApprovalItem[];
+  onDecision?: (item: ApprovalItem, decision: ApprovalDecision) => void;
+}
+
+/** Mirrors **Pattern — approvals queue** Show code below. */
+/** The row's buttons. `table` sits them side by side; `card` gives each half the row. */
 function ActionGroup({
   label,
+  view,
   onEscape,
   children,
 }: {
   label: string;
+  view: ApprovalView;
   onEscape?: () => void;
   children: ReactNode;
 }) {
@@ -38,7 +49,7 @@ function ActionGroup({
     <div
       role="group"
       aria-label={label}
-      className="flex h-11 items-center gap-2"
+      className={view === "card" ? "grid h-11 grid-cols-2 items-center gap-2" : "flex h-11 items-center gap-2"}
       onKeyDown={(event) => {
         if (event.key === "Escape") onEscape?.();
       }}
@@ -48,128 +59,164 @@ function ActionGroup({
   );
 }
 
-/** Mirrors **Pattern — approvals queue** Show code below. */
-function ApprovalsQueue({
-  items,
-  onDecision,
-}: {
-  items: ApprovalItem[];
-  onDecision?: (item: ApprovalItem, decision: ApprovalDecision) => void;
-}) {
+function ApprovalsQueue({ items, onDecision }: ApprovalsQueueProps) {
   const [decisions, setDecisions] = useState<Record<string, ApprovalDecision>>({});
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
-  const [focusId, setFocusId] = useState<string | null>(null);
+  const [focusKey, setFocusKey] = useState<string | null>(null);
 
   useEffect(() => {
-    if (focusId) document.getElementById(focusId)?.focus();
-  }, [focusId]);
+    if (!focusKey) return;
+    const targets = document.querySelectorAll<HTMLElement>(`[data-focus="${focusKey}"]`);
+    Array.from(targets)
+      .find((target) => target.getClientRects().length > 0)
+      ?.focus();
+  }, [focusKey]);
 
   const waiting = items.filter((item) => !decisions[item.id]).length;
 
   function decide(item: ApprovalItem, decision: ApprovalDecision) {
     setDecisions((current) => ({ ...current, [item.id]: decision }));
     setConfirmingId(null);
-    setFocusId(`${item.id}-decision`);
+    setFocusKey(`${item.id}-decision`);
     onDecision?.(item, decision);
   }
 
   function cancel(item: ApprovalItem) {
     setConfirmingId(null);
-    setFocusId(`${item.id}-deny`);
+    setFocusKey(`${item.id}-deny`);
+  }
+
+  function renderDecision(item: ApprovalItem, view: ApprovalView) {
+    const decision = decisions[item.id];
+    const full = view === "card" ? "w-full" : undefined;
+    if (decision) {
+      return (
+        <div className="flex h-11 items-center">
+          <span
+            data-focus={`${item.id}-decision`}
+            tabIndex={-1}
+            className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body"
+          >
+            <Badge status={decision === "approved" ? "success" : "failed"} dot>
+              {decision === "approved" ? "Approved" : "Denied"}
+            </Badge>
+          </span>
+        </div>
+      );
+    }
+    if (confirmingId === item.id) {
+      return (
+        <ActionGroup label={`Confirm denying ${item.name}`} view={view} onEscape={() => cancel(item)}>
+          <Button
+            data-focus={`${item.id}-confirm`}
+            role="primary"
+            icon={<X />}
+            className={full}
+            aria-label={`Confirm deny ${item.name}`}
+            onClick={() => decide(item, "denied")}
+          >
+            Confirm deny
+          </Button>
+          <Button role="ghost" className={full} aria-label={`Cancel deny ${item.name}`} onClick={() => cancel(item)}>
+            Cancel
+          </Button>
+        </ActionGroup>
+      );
+    }
+    return (
+      <ActionGroup label={`Actions for ${item.name}`} view={view}>
+        <Button
+          role="primary"
+          icon={<Check />}
+          className={full}
+          aria-label={`Approve ${item.name}`}
+          onClick={() => decide(item, "approved")}
+        >
+          Approve
+        </Button>
+        <Button
+          data-focus={`${item.id}-deny`}
+          role="outline"
+          icon={<X />}
+          className={full}
+          aria-label={`Deny ${item.name}`}
+          onClick={() => {
+            setConfirmingId(item.id);
+            setFocusKey(`${item.id}-confirm`);
+          }}
+        >
+          Deny
+        </Button>
+      </ActionGroup>
+    );
   }
 
   return (
-    <Table aria-label="Approvals waiting on you">
-      <TableCaption>{waiting} waiting on you</TableCaption>
-      <colgroup>
-        <col className="w-40" />
-        <col className="w-44" />
-        <col className="w-32" />
-        <col className="w-72" />
-      </colgroup>
-      <TableHeader>
-        <TableRow>
-          <TableHead sticky>Name</TableHead>
-          <TableHead>Type</TableHead>
-          <TableHead>Waiting</TableHead>
-          <TableHead>Decision</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+    <>
+      <div className="sm:hidden">
+        <p className="mb-3 text-muted">{waiting} waiting on you</p>
         {items.length === 0 ? (
-          <TableRow>
-            <TableCell colSpan={4} align="center">
-              Nothing waiting on you
-            </TableCell>
-          </TableRow>
+          <Card variant="outlined" padding="md">
+            <p className="text-center">Nothing waiting on you</p>
+          </Card>
         ) : (
-          items.map((item) => {
-            const decision = decisions[item.id];
-            const confirming = confirmingId === item.id;
-            return (
-              <TableRow key={item.id}>
-                <TableCell sticky>{item.name}</TableCell>
-                <TableCell>{item.kind}</TableCell>
-                <TableCell>{item.waiting}</TableCell>
-                <TableCell>
-                  {decision ? (
-                    <div className="flex h-11 items-center">
-                      <span
-                        id={`${item.id}-decision`}
-                        tabIndex={-1}
-                        className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body"
-                      >
-                        <Badge status={decision === "approved" ? "success" : "failed"} dot>
-                          {decision === "approved" ? "Approved" : "Denied"}
-                        </Badge>
-                      </span>
+          <ul aria-label="Approvals waiting on you" className="flex flex-col gap-3">
+            {items.map((item) => (
+              <li key={item.id}>
+                <Card variant="outlined" padding="md">
+                  <div className="flex flex-col gap-3">
+                    <div>
+                      <p className="font-medium">{item.name}</p>
+                      <p className="text-muted">
+                        {item.kind} · Waiting {item.waiting}
+                      </p>
                     </div>
-                  ) : confirming ? (
-                    <ActionGroup label={`Confirm denying ${item.name}`} onEscape={() => cancel(item)}>
-                      <Button
-                        id={`${item.id}-confirm`}
-                        role="primary"
-                        icon={<X />}
-                        aria-label={`Confirm deny ${item.name}`}
-                        onClick={() => decide(item, "denied")}
-                      >
-                        Confirm deny
-                      </Button>
-                      <Button role="ghost" aria-label={`Cancel deny ${item.name}`} onClick={() => cancel(item)}>
-                        Cancel
-                      </Button>
-                    </ActionGroup>
-                  ) : (
-                    <ActionGroup label={`Actions for ${item.name}`}>
-                      <Button
-                        role="primary"
-                        icon={<Check />}
-                        aria-label={`Approve ${item.name}`}
-                        onClick={() => decide(item, "approved")}
-                      >
-                        Approve
-                      </Button>
-                      <Button
-                        id={`${item.id}-deny`}
-                        role="outline"
-                        icon={<X />}
-                        aria-label={`Deny ${item.name}`}
-                        onClick={() => {
-                          setConfirmingId(item.id);
-                          setFocusId(`${item.id}-confirm`);
-                        }}
-                      >
-                        Deny
-                      </Button>
-                    </ActionGroup>
-                  )}
+                    {renderDecision(item, "card")}
+                  </div>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <div className="hidden sm:block">
+        <Table aria-label="Approvals waiting on you">
+          <TableCaption>{waiting} waiting on you</TableCaption>
+          <colgroup>
+            <col className="w-40" />
+            <col className="w-44" />
+            <col className="w-32" />
+            <col className="w-72" />
+          </colgroup>
+          <TableHeader>
+            <TableRow>
+              <TableHead sticky>Name</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Waiting</TableHead>
+              <TableHead>Decision</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {items.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} align="center">
+                  Nothing waiting on you
                 </TableCell>
               </TableRow>
-            );
-          })
-        )}
-      </TableBody>
-    </Table>
+            ) : (
+              items.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell sticky>{item.name}</TableCell>
+                  <TableCell>{item.kind}</TableCell>
+                  <TableCell>{item.waiting}</TableCell>
+                  <TableCell>{renderDecision(item, "table")}</TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   );
 }
 
@@ -181,6 +228,7 @@ import { Check, X } from "lucide-react";
 import {
   Badge,
   Button,
+  Card,
   Table,
   TableBody,
   TableCaption,
@@ -204,13 +252,17 @@ export interface ApprovalsQueueProps {
   onDecision?: (item: ApprovalItem, decision: ApprovalDecision) => void;
 }
 
-/** The row's buttons, side by side. */
+type ApprovalView = "table" | "card";
+
+/** The row's buttons. \`table\` sits them side by side; \`card\` gives each half the row. */
 function ActionGroup({
   label,
+  view,
   onEscape,
   children,
 }: {
   label: string;
+  view: ApprovalView;
   onEscape?: () => void;
   children: ReactNode;
 }) {
@@ -218,7 +270,7 @@ function ActionGroup({
     <div
       role="group"
       aria-label={label}
-      className="flex h-11 items-center gap-2"
+      className={view === "card" ? "grid h-11 grid-cols-2 items-center gap-2" : "flex h-11 items-center gap-2"}
       onKeyDown={(event) => {
         if (event.key === "Escape") onEscape?.();
       }}
@@ -231,118 +283,161 @@ function ActionGroup({
 export function ApprovalsQueue({ items, onDecision }: ApprovalsQueueProps) {
   const [decisions, setDecisions] = useState<Record<string, ApprovalDecision>>({});
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
-  const [focusId, setFocusId] = useState<string | null>(null);
+  const [focusKey, setFocusKey] = useState<string | null>(null);
 
   useEffect(() => {
-    if (focusId) document.getElementById(focusId)?.focus();
-  }, [focusId]);
+    if (!focusKey) return;
+    const targets = document.querySelectorAll<HTMLElement>(\`[data-focus="\${focusKey}"]\`);
+    Array.from(targets)
+      .find((target) => target.getClientRects().length > 0)
+      ?.focus();
+  }, [focusKey]);
 
   const waiting = items.filter((item) => !decisions[item.id]).length;
 
   function decide(item: ApprovalItem, decision: ApprovalDecision) {
     setDecisions((current) => ({ ...current, [item.id]: decision }));
     setConfirmingId(null);
-    setFocusId(\`\${item.id}-decision\`);
+    setFocusKey(\`\${item.id}-decision\`);
     onDecision?.(item, decision);
   }
 
   function cancel(item: ApprovalItem) {
     setConfirmingId(null);
-    setFocusId(\`\${item.id}-deny\`);
+    setFocusKey(\`\${item.id}-deny\`);
+  }
+
+  function renderDecision(item: ApprovalItem, view: ApprovalView) {
+    const decision = decisions[item.id];
+    const full = view === "card" ? "w-full" : undefined;
+    if (decision) {
+      return (
+        <div className="flex h-11 items-center">
+          <span
+            data-focus={\`\${item.id}-decision\`}
+            tabIndex={-1}
+            className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body"
+          >
+            <Badge status={decision === "approved" ? "success" : "failed"} dot>
+              {decision === "approved" ? "Approved" : "Denied"}
+            </Badge>
+          </span>
+        </div>
+      );
+    }
+    if (confirmingId === item.id) {
+      return (
+        <ActionGroup label={\`Confirm denying \${item.name}\`} view={view} onEscape={() => cancel(item)}>
+          <Button
+            data-focus={\`\${item.id}-confirm\`}
+            role="primary"
+            icon={<X />}
+            className={full}
+            aria-label={\`Confirm deny \${item.name}\`}
+            onClick={() => decide(item, "denied")}
+          >
+            Confirm deny
+          </Button>
+          <Button role="ghost" className={full} aria-label={\`Cancel deny \${item.name}\`} onClick={() => cancel(item)}>
+            Cancel
+          </Button>
+        </ActionGroup>
+      );
+    }
+    return (
+      <ActionGroup label={\`Actions for \${item.name}\`} view={view}>
+        <Button
+          role="primary"
+          icon={<Check />}
+          className={full}
+          aria-label={\`Approve \${item.name}\`}
+          onClick={() => decide(item, "approved")}
+        >
+          Approve
+        </Button>
+        <Button
+          data-focus={\`\${item.id}-deny\`}
+          role="outline"
+          icon={<X />}
+          className={full}
+          aria-label={\`Deny \${item.name}\`}
+          onClick={() => {
+            setConfirmingId(item.id);
+            setFocusKey(\`\${item.id}-confirm\`);
+          }}
+        >
+          Deny
+        </Button>
+      </ActionGroup>
+    );
   }
 
   return (
-    <Table aria-label="Approvals waiting on you">
-      <TableCaption>{waiting} waiting on you</TableCaption>
-      <colgroup>
-        <col className="w-40" />
-        <col className="w-44" />
-        <col className="w-32" />
-        <col className="w-72" />
-      </colgroup>
-      <TableHeader>
-        <TableRow>
-          <TableHead sticky>Name</TableHead>
-          <TableHead>Type</TableHead>
-          <TableHead>Waiting</TableHead>
-          <TableHead>Decision</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+    <>
+      <div className="sm:hidden">
+        <p className="mb-3 text-muted">{waiting} waiting on you</p>
         {items.length === 0 ? (
-          <TableRow>
-            <TableCell colSpan={4} align="center">
-              Nothing waiting on you
-            </TableCell>
-          </TableRow>
+          <Card variant="outlined" padding="md">
+            <p className="text-center">Nothing waiting on you</p>
+          </Card>
         ) : (
-          items.map((item) => {
-            const decision = decisions[item.id];
-            const confirming = confirmingId === item.id;
-            return (
-              <TableRow key={item.id}>
-                <TableCell sticky>{item.name}</TableCell>
-                <TableCell>{item.kind}</TableCell>
-                <TableCell>{item.waiting}</TableCell>
-                <TableCell>
-                  {decision ? (
-                    <div className="flex h-11 items-center">
-                      <span
-                        id={\`\${item.id}-decision\`}
-                        tabIndex={-1}
-                        className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body"
-                      >
-                        <Badge status={decision === "approved" ? "success" : "failed"} dot>
-                          {decision === "approved" ? "Approved" : "Denied"}
-                        </Badge>
-                      </span>
+          <ul aria-label="Approvals waiting on you" className="flex flex-col gap-3">
+            {items.map((item) => (
+              <li key={item.id}>
+                <Card variant="outlined" padding="md">
+                  <div className="flex flex-col gap-3">
+                    <div>
+                      <p className="font-medium">{item.name}</p>
+                      <p className="text-muted">
+                        {item.kind} · Waiting {item.waiting}
+                      </p>
                     </div>
-                  ) : confirming ? (
-                    <ActionGroup label={\`Confirm denying \${item.name}\`} onEscape={() => cancel(item)}>
-                      <Button
-                        id={\`\${item.id}-confirm\`}
-                        role="primary"
-                        icon={<X />}
-                        aria-label={\`Confirm deny \${item.name}\`}
-                        onClick={() => decide(item, "denied")}
-                      >
-                        Confirm deny
-                      </Button>
-                      <Button role="ghost" aria-label={\`Cancel deny \${item.name}\`} onClick={() => cancel(item)}>
-                        Cancel
-                      </Button>
-                    </ActionGroup>
-                  ) : (
-                    <ActionGroup label={\`Actions for \${item.name}\`}>
-                      <Button
-                        role="primary"
-                        icon={<Check />}
-                        aria-label={\`Approve \${item.name}\`}
-                        onClick={() => decide(item, "approved")}
-                      >
-                        Approve
-                      </Button>
-                      <Button
-                        id={\`\${item.id}-deny\`}
-                        role="outline"
-                        icon={<X />}
-                        aria-label={\`Deny \${item.name}\`}
-                        onClick={() => {
-                          setConfirmingId(item.id);
-                          setFocusId(\`\${item.id}-confirm\`);
-                        }}
-                      >
-                        Deny
-                      </Button>
-                    </ActionGroup>
-                  )}
+                    {renderDecision(item, "card")}
+                  </div>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <div className="hidden sm:block">
+        <Table aria-label="Approvals waiting on you">
+          <TableCaption>{waiting} waiting on you</TableCaption>
+          <colgroup>
+            <col className="w-40" />
+            <col className="w-44" />
+            <col className="w-32" />
+            <col className="w-72" />
+          </colgroup>
+          <TableHeader>
+            <TableRow>
+              <TableHead sticky>Name</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Waiting</TableHead>
+              <TableHead>Decision</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {items.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} align="center">
+                  Nothing waiting on you
                 </TableCell>
               </TableRow>
-            );
-          })
-        )}
-      </TableBody>
-    </Table>
+            ) : (
+              items.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell sticky>{item.name}</TableCell>
+                  <TableCell>{item.kind}</TableCell>
+                  <TableCell>{item.waiting}</TableCell>
+                  <TableCell>{renderDecision(item, "table")}</TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   );
 }
 `;
@@ -558,12 +653,13 @@ export const Decided: Story = {
   render: () => <ApprovalsQueue items={approvalItems} />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const table = within(canvas.getByRole("region", { name: "Approvals waiting on you" }));
     await userEvent.click(canvas.getByRole("button", { name: "Approve Maya Chen" }));
-    await expect(canvas.getByText("Approved")).toBeVisible();
+    await expect(table.getByText("Approved")).toBeVisible();
     await userEvent.click(canvas.getByRole("button", { name: "Deny Dev Patel" }));
     await userEvent.click(await canvas.findByRole("button", { name: "Confirm deny Dev Patel" }));
-    await expect(canvas.getByText("Denied")).toBeVisible();
-    await expect(canvas.getByText("2 waiting on you")).toBeVisible();
+    await expect(table.getByText("Denied")).toBeVisible();
+    await expect(table.getByText("2 waiting on you")).toBeVisible();
   },
 };
 
