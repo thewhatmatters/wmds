@@ -46,7 +46,7 @@ function ActionGroup({
     <div
       role="group"
       aria-label={label}
-      className="flex items-center gap-2"
+      className="flex h-11 items-center gap-2"
       onKeyDown={(event) => {
         if (event.key === "Escape") onEscape?.();
       }}
@@ -82,9 +82,15 @@ export function ApprovalsQueue({ items, onDecision }: ApprovalsQueueProps) {
   return (
     <Table aria-label="Approvals waiting on you">
       <TableCaption>{waiting} waiting on you</TableCaption>
+      <colgroup>
+        <col className="w-40" />
+        <col className="w-44" />
+        <col className="w-32" />
+        <col className="w-72" />
+      </colgroup>
       <TableHeader>
         <TableRow>
-          <TableHead>Name</TableHead>
+          <TableHead sticky>Name</TableHead>
           <TableHead>Type</TableHead>
           <TableHead>Waiting</TableHead>
           <TableHead>Decision</TableHead>
@@ -103,14 +109,22 @@ export function ApprovalsQueue({ items, onDecision }: ApprovalsQueueProps) {
             const confirming = confirmingId === item.id;
             return (
               <TableRow key={item.id}>
-                <TableCell>{item.name}</TableCell>
+                <TableCell sticky>{item.name}</TableCell>
                 <TableCell>{item.kind}</TableCell>
                 <TableCell>{item.waiting}</TableCell>
-                <TableCell id={`${item.id}-decision`} tabIndex={-1}>
+                <TableCell>
                   {decision ? (
-                    <Badge status={decision === "approved" ? "success" : "failed"} dot>
-                      {decision === "approved" ? "Approved" : "Denied"}
-                    </Badge>
+                    <div className="flex h-11 items-center">
+                      <span
+                        id={`${item.id}-decision`}
+                        tabIndex={-1}
+                        className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body"
+                      >
+                        <Badge status={decision === "approved" ? "success" : "failed"} dot>
+                          {decision === "approved" ? "Approved" : "Denied"}
+                        </Badge>
+                      </span>
+                    </div>
                   ) : confirming ? (
                     <ActionGroup label={`Confirm denying ${item.name}`} onEscape={() => cancel(item)}>
                       <Button

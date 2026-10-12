@@ -13,12 +13,14 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 - **Table** (new, atom) — `Table`, `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHead`, `TableCell`, `TableCaption`. Semantic HTML in a focusable, horizontal-scroll `region`. No new color, radius, shadow, or variant.
 - Patterns: **Components/Table → Pattern — basic table** and **Pattern — approvals queue** (Approve `primary`, Deny `outline`, an inline Confirm deny / Cancel step in the same row, then a success or failed status pill; keyboard focus follows, Escape cancels, and each button's `aria-label` carries the row name). States: deny confirm step, decided, empty, mobile 390.
+- **Table** polish: headers use `ui-label` and the caption `body` (one step up), `sticky` on `TableHead` / `TableCell` pins a column to the start edge (existing `bg-body` surface), and a table with a `colgroup` lays out from its `col` widths (fixed layout) so an empty and a filled table match.
+- **Pattern — approvals queue**: the row keeps one height through pending, confirm, and decided (44px decision slot); focus after a decision lands on the status pill and shows the `focus-ring` only for keyboard focus (no box after a mouse click); the Name column is sticky; a `colgroup` fixes the column widths for the filled and empty states.
 - `Table` moves out of the planned list.
 - See ADR-0048.
 
 ### Consumer actions
 
-None for existing pages. To adopt it, `import { Table } from "@thewhatmatters/wmds"` and paste a **Components/Table** pattern (`docs/patterns/components-table--basic.tsx`, `docs/patterns/components-table--approvals.tsx`).
+None for existing pages. If you pasted **Pattern — approvals queue** from an earlier draft, re-copy `docs/patterns/components-table--approvals.tsx`. To adopt it, `import { Table } from "@thewhatmatters/wmds"` and paste a **Components/Table** pattern (`docs/patterns/components-table--basic.tsx`, `docs/patterns/components-table--approvals.tsx`).
 
 ## 0.4.20
 

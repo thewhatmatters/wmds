@@ -11,6 +11,7 @@ import {
   tableHeaderClasses,
   tableRowClasses,
   tableScrollClasses,
+  tableStickyClasses,
   type TableAlign,
 } from "./tableStyles";
 
@@ -42,12 +43,16 @@ export interface TableRowProps extends Omit<HTMLAttributes<HTMLTableRowElement>,
 export interface TableHeadProps extends Omit<ThHTMLAttributes<HTMLTableCellElement>, "className" | "align"> {
   /** Text alignment of the column. Default `start`. */
   align?: TableAlign;
+  /** Pin the column to the start edge while the table scrolls sideways. Set it on every cell of the column. */
+  sticky?: boolean;
   className?: TableLayoutClassName;
 }
 
 export interface TableCellProps extends Omit<TdHTMLAttributes<HTMLTableCellElement>, "className" | "align"> {
   /** Text alignment of the column. Default `start`. `end` sets tabular figures. */
   align?: TableAlign;
+  /** Pin the column to the start edge while the table scrolls sideways. Set it on every cell of the column. */
+  sticky?: boolean;
   className?: TableLayoutClassName;
 }
 
@@ -96,17 +101,17 @@ function TableRow({ children, className, ...rest }: TableRowProps) {
   );
 }
 
-function TableHead({ align = "start", scope = "col", className, children, ...rest }: TableHeadProps) {
+function TableHead({ align = "start", sticky, scope = "col", className, children, ...rest }: TableHeadProps) {
   return (
-    <th {...rest} scope={scope} className={cn(tableHeadClasses, tableAlignClasses[align], className)}>
+    <th {...rest} scope={scope} className={cn(tableHeadClasses, tableAlignClasses[align], sticky && tableStickyClasses, className)}>
       {children}
     </th>
   );
 }
 
-function TableCell({ align = "start", className, children, ...rest }: TableCellProps) {
+function TableCell({ align = "start", sticky, className, children, ...rest }: TableCellProps) {
   return (
-    <td {...rest} className={cn(tableCellClasses, tableAlignClasses[align], className)}>
+    <td {...rest} className={cn(tableCellClasses, tableAlignClasses[align], sticky && tableStickyClasses, className)}>
       {children}
     </td>
   );

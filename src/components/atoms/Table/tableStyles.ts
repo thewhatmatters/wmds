@@ -9,7 +9,8 @@ export type TableAlign = (typeof tableAligns)[number];
 export const tableScrollClasses =
   "w-full max-w-full overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus-ring";
 
-export const tableClasses = `w-full min-w-max caption-bottom border-collapse text-fg ${typographyClass("body")}`;
+/** A table with a `colgroup` lays its columns out from the `col` widths, so a filled and an empty table match. */
+export const tableClasses = `w-full min-w-max caption-bottom border-collapse has-[colgroup]:table-fixed text-fg ${typographyClass("body")}`;
 
 export const tableHeaderClasses = "[&_tr]:border-b [&_tr]:border-border";
 
@@ -19,11 +20,14 @@ export const tableFooterClasses = "border-t border-border-emphasized [&>tr]:bord
 
 export const tableRowClasses = "border-b border-border transition-colors hover:bg-ghost-hover";
 
-export const tableHeadClasses = `h-11 px-3 text-start align-middle font-normal whitespace-nowrap text-muted ${typographyClass("caption")}`;
+export const tableHeadClasses = `h-11 px-3 text-start align-middle font-normal whitespace-nowrap ${typographyClass("ui-label")}`;
 
 export const tableCellClasses = "px-3 py-3 align-middle";
 
-export const tableCaptionClasses = `mt-3 text-start text-muted ${typographyClass("caption")}`;
+export const tableCaptionClasses = `mt-3 text-start ${typographyClass("body")} text-muted`;
+
+/** A column pinned to the start edge while the rest scrolls — opaque so cells slide under it. */
+export const tableStickyClasses = "sticky start-0 z-10 bg-body";
 
 export const tableAlignClasses: Record<TableAlign, string> = {
   start: "text-start",

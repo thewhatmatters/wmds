@@ -38,7 +38,7 @@ function ActionGroup({
     <div
       role="group"
       aria-label={label}
-      className="flex items-center gap-2"
+      className="flex h-11 items-center gap-2"
       onKeyDown={(event) => {
         if (event.key === "Escape") onEscape?.();
       }}
@@ -81,9 +81,15 @@ function ApprovalsQueue({
   return (
     <Table aria-label="Approvals waiting on you">
       <TableCaption>{waiting} waiting on you</TableCaption>
+      <colgroup>
+        <col className="w-40" />
+        <col className="w-44" />
+        <col className="w-32" />
+        <col className="w-72" />
+      </colgroup>
       <TableHeader>
         <TableRow>
-          <TableHead>Name</TableHead>
+          <TableHead sticky>Name</TableHead>
           <TableHead>Type</TableHead>
           <TableHead>Waiting</TableHead>
           <TableHead>Decision</TableHead>
@@ -102,14 +108,22 @@ function ApprovalsQueue({
             const confirming = confirmingId === item.id;
             return (
               <TableRow key={item.id}>
-                <TableCell>{item.name}</TableCell>
+                <TableCell sticky>{item.name}</TableCell>
                 <TableCell>{item.kind}</TableCell>
                 <TableCell>{item.waiting}</TableCell>
-                <TableCell id={`${item.id}-decision`} tabIndex={-1}>
+                <TableCell>
                   {decision ? (
-                    <Badge status={decision === "approved" ? "success" : "failed"} dot>
-                      {decision === "approved" ? "Approved" : "Denied"}
-                    </Badge>
+                    <div className="flex h-11 items-center">
+                      <span
+                        id={`${item.id}-decision`}
+                        tabIndex={-1}
+                        className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body"
+                      >
+                        <Badge status={decision === "approved" ? "success" : "failed"} dot>
+                          {decision === "approved" ? "Approved" : "Denied"}
+                        </Badge>
+                      </span>
+                    </div>
                   ) : confirming ? (
                     <ActionGroup label={`Confirm denying ${item.name}`} onEscape={() => cancel(item)}>
                       <Button
@@ -204,7 +218,7 @@ function ActionGroup({
     <div
       role="group"
       aria-label={label}
-      className="flex items-center gap-2"
+      className="flex h-11 items-center gap-2"
       onKeyDown={(event) => {
         if (event.key === "Escape") onEscape?.();
       }}
@@ -240,9 +254,15 @@ export function ApprovalsQueue({ items, onDecision }: ApprovalsQueueProps) {
   return (
     <Table aria-label="Approvals waiting on you">
       <TableCaption>{waiting} waiting on you</TableCaption>
+      <colgroup>
+        <col className="w-40" />
+        <col className="w-44" />
+        <col className="w-32" />
+        <col className="w-72" />
+      </colgroup>
       <TableHeader>
         <TableRow>
-          <TableHead>Name</TableHead>
+          <TableHead sticky>Name</TableHead>
           <TableHead>Type</TableHead>
           <TableHead>Waiting</TableHead>
           <TableHead>Decision</TableHead>
@@ -261,14 +281,22 @@ export function ApprovalsQueue({ items, onDecision }: ApprovalsQueueProps) {
             const confirming = confirmingId === item.id;
             return (
               <TableRow key={item.id}>
-                <TableCell>{item.name}</TableCell>
+                <TableCell sticky>{item.name}</TableCell>
                 <TableCell>{item.kind}</TableCell>
                 <TableCell>{item.waiting}</TableCell>
-                <TableCell id={\`\${item.id}-decision\`} tabIndex={-1}>
+                <TableCell>
                   {decision ? (
-                    <Badge status={decision === "approved" ? "success" : "failed"} dot>
-                      {decision === "approved" ? "Approved" : "Denied"}
-                    </Badge>
+                    <div className="flex h-11 items-center">
+                      <span
+                        id={\`\${item.id}-decision\`}
+                        tabIndex={-1}
+                        className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body"
+                      >
+                        <Badge status={decision === "approved" ? "success" : "failed"} dot>
+                          {decision === "approved" ? "Approved" : "Denied"}
+                        </Badge>
+                      </span>
+                    </div>
                   ) : confirming ? (
                     <ActionGroup label={\`Confirm denying \${item.name}\`} onEscape={() => cancel(item)}>
                       <Button
@@ -339,8 +367,8 @@ Semantic table in a horizontal-scroll box. Use it for rows that share columns �
 | **TableCaption** | \`caption\` — what the table is, or a count |
 | **TableHeader** / **TableBody** / **TableFooter** | \`thead\` / \`tbody\` / \`tfoot\` |
 | **TableRow** | \`tr\` — hairline rule, ghost hover fill |
-| **TableHead** | \`th\` (\`scope="col"\`; pass \`scope="row"\` for a row header) |
-| **TableCell** | \`td\` — \`align\` \`start\` (default) / \`center\` / \`end\` (tabular figures) |
+| **TableHead** | \`th\` (\`scope="col"\`; pass \`scope="row"\` for a row header) — \`sticky\` pins the column to the start edge |
+| **TableCell** | \`td\` — \`align\` \`start\` (default) / \`center\` / \`end\` (tabular figures); \`sticky\` as on TableHead |
 
 ## Anatomy
 
@@ -357,6 +385,8 @@ Table (div region → table)
 - **Do** name every table with \`aria-label\` or \`aria-labelledby\` — it names the scrolling region too.
 - **Do** put status in a **Badge** \`status\` pill and actions in **Button**; the cell adds no style of its own.
 - **Do** right-align figures with \`align="end"\`.
+- **Do** put a \`colgroup\` of \`col\` widths after the caption when the table can be empty or its cells change — the table then lays out from those widths, so the empty and filled states match.
+- **Do** set \`sticky\` on every cell of the first column of a wide table so it stays in view on a phone.
 - **Do** show an empty row ("Nothing waiting on you") rather than a bare header.
 - **Don't** pass colors, borders, or type classes through \`className\` — it is layout only.
 - **Don't** use it for page layout, or for a decision that needs a dialog — see **Pattern — approvals queue** for an inline confirm.
