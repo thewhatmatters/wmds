@@ -7,6 +7,22 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.12
+
+**Badge: a status pill for run state, cadence, and freshness.**
+
+- **Badge** `status` (new) — `active` | `idle` | `success` | `failed` | `warning`. A pill at cluster height (28px `sm`, 36px `md`) with tabular figures. `active` uses `bg-brand-tint` and `text-brand-outline` (navy `#011272` in light, the lifted navy in dark). The others use the existing muted fills. Not with `count`, `iconOnly`, or `avatar`.
+- `dot` (new) — an 8px mark on a status pill. It pulses when `status` is `active`. Reduced motion holds it still. The mark is Badge's own dot, not the **Status** component.
+- `icon` on a status pill leads cadence ("Every 2 days") and freshness ("Last checked 1d ago").
+- Plain label badges stay on the 20 / 24px shell.
+- Pattern: **Components/Badge → Pattern — status pill**.
+
+### Consumer actions
+
+None for existing badges.
+
+For a routine's state: `<Badge status="active" dot>Active</Badge>`, and `<Badge status="idle" icon={<Calendar />}>Every 2 days</Badge>`. Paste **Components/Badge → Pattern — status pill** (`docs/patterns/components-badge--status-pill.tsx`).
+
 ## 0.4.11
 
 **Stat: a hero figure with a visible "vs" line.**

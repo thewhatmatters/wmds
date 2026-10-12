@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.11 · Pattern — short form
+// @thewhatmatters/wmds@0.4.12 · Pattern — short form
 // Storybook: Components/IntakeForm → Pattern — short form (?path=/story/components-intakeform--short-form-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

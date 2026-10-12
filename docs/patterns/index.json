@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.11",
+  "version": "0.4.12",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -24,6 +24,14 @@
       "name": "Pattern — outline tags",
       "file": "patterns/components-badge--outline-tags.tsx",
       "storybook": "?path=/story/components-badge--outline-tags",
+      "source": "src/components/atoms/Badge/Badge.stories.tsx"
+    },
+    {
+      "id": "components-badge--status-pill",
+      "title": "Components/Badge",
+      "name": "Pattern — status pill",
+      "file": "patterns/components-badge--status-pill.tsx",
+      "storybook": "?path=/story/components-badge--status-pill",
       "source": "src/components/atoms/Badge/Badge.stories.tsx"
     },
     {

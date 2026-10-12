@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.11 · Pattern — copy key
+// @thewhatmatters/wmds@0.4.12 · Pattern — copy key
 // Storybook: Components/CopyField → Pattern — copy key (?path=/story/components-copyfield--copy-key)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

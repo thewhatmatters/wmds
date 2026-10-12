@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.11",
+  "version": "0.4.12",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -57,13 +57,14 @@
       "name": "Badge",
       "tier": "atom",
       "category": "Feedback & status",
-      "summary": "Compact semantic label in solid or muted fill, with count, icon, and avatar patterns.",
+      "summary": "Compact semantic label in solid or muted fill, with count, icon, avatar, and status-pill patterns.",
       "storybook": {
         "title": "Components/Badge",
         "docs": "?path=/docs/components-badge--docs"
       },
       "patterns": [
         "components-badge--outline-tags",
+        "components-badge--status-pill",
         "components-badge--with-avatar"
       ]
     },

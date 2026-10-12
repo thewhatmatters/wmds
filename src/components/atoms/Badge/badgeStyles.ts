@@ -1,4 +1,5 @@
 import type { SemanticVariant } from "../../../lib/semanticVariants";
+import { clusterHeightClasses } from "../../../lib/clusterScale";
 import { cn } from "../../../lib/cn";
 import { motionTransition } from "../../../lib/motion";
 
@@ -11,6 +12,43 @@ export type BadgeSize = "sm" | "md";
 export const badgeEmphases = ["solid", "muted", "outline"] as const;
 
 export type BadgeEmphasis = (typeof badgeEmphases)[number];
+
+/** Run state, cadence, and freshness — a pill, not a new component. */
+export const badgeStatuses = ["active", "idle", "success", "failed", "warning"] as const;
+
+export type BadgeStatus = (typeof badgeStatuses)[number];
+
+/**
+ * Status-pill fills. `active` is brand navy through `bg-brand-tint` / `text-brand-outline`
+ * (navy in light, the lifted navy in dark). The others reuse muted badge fills.
+ */
+export const badgeStatusSurfaceClasses: Record<BadgeStatus, string> = {
+  active: "border border-transparent bg-brand-tint text-brand-outline",
+  idle: "border border-border bg-secondary text-secondary-foreground",
+  success: "bg-success-muted text-success",
+  failed: "bg-error-muted text-error",
+  warning: "bg-warning-muted text-warning",
+};
+
+/** 8px mark — same scale as Status `variant="dot"`, painted here so Badge stays an atom. */
+export const badgeStatusDotClasses = "inline-block size-2 shrink-0 rounded-full";
+
+export const badgeStatusDotToneClasses: Record<BadgeStatus, string> = {
+  active: "bg-brand-outline",
+  idle: "bg-muted",
+  success: "bg-success",
+  failed: "bg-error",
+  warning: "bg-warning",
+};
+
+/** Pulses on `active` only. Reduced motion clears it in global.css. */
+export const badgeStatusDotPulseClass = "animate-status-dot-pulse";
+
+/** Cluster heights so a status pill sits with Chip, not the 20px label badge. */
+export const badgeStatusSizeClasses: Record<BadgeSize, string> = {
+  sm: `${clusterHeightClasses.sm} gap-1.5 rounded-full px-2.5 text-xs leading-none tabular-nums`,
+  md: `${clusterHeightClasses.md} gap-2 rounded-full px-3 text-sm leading-none tabular-nums`,
+};
 
 /** Shared shell — Astryx-style compact pill labels. */
 export const badgeBaseClasses =

@@ -14,14 +14,20 @@ import {
   badgeLabelSizeClasses,
   badgeMonoClasses,
   badgeSolidClasses,
+  badgeStatusDotClasses,
+  badgeStatusDotPulseClass,
+  badgeStatusDotToneClasses,
+  badgeStatusSizeClasses,
+  badgeStatusSurfaceClasses,
   badgeSurfaceClasses,
   type BadgeEmphasis,
   type BadgeSize,
+  type BadgeStatus,
   type BadgeVariant,
 } from "./badgeStyles";
 
-export type { BadgeEmphasis, BadgeSize, BadgeVariant } from "./badgeStyles";
-export { badgeEmphases, badgeVariants } from "./badgeStyles";
+export type { BadgeEmphasis, BadgeSize, BadgeStatus, BadgeVariant } from "./badgeStyles";
+export { badgeEmphases, badgeStatuses, badgeVariants } from "./badgeStyles";
 
 /** Layout-only — not for colors, borders, or typography overrides. */
 export type BadgeLayoutClassName = string;
@@ -65,6 +71,13 @@ export interface BadgeProps {
   /** Leading Lucide icon — label pattern, or required for `iconOnly`. Not with `avatar`. */
   icon?: ReactElement;
   /**
+   * Status pill — run state (`active`), cadence, or freshness. Owns the fill:
+   * `active` is the brand-tint pill; the others are muted. Not with `count`, `iconOnly`, or `avatar`.
+   */
+  status?: BadgeStatus;
+  /** Leading 8px dot on a status pill. Pulses when `status` is `active`. */
+  dot?: boolean;
+  /**
    * Leading round image — renders **Avatar** at `badgeAvatarSize` for this badge's `size`.
    * Mutually exclusive with `icon`, `iconOnly`, and `count`.
    */
@@ -78,7 +91,7 @@ export interface BadgeProps {
 }
 
 function assertBadgePattern(
-  props: Pick<BadgeProps, "count" | "icon" | "avatar" | "iconOnly" | "children" | "render" | "mono">,
+  props: Pick<BadgeProps, "count" | "icon" | "avatar" | "iconOnly" | "children" | "render" | "mono" | "status" | "dot">,
 ) {
   if ((props.render != null || props.mono) && (props.count != null || props.iconOnly)) {
     console.warn("[WMDS Badge] `render` and `mono` apply to label, icon, and avatar badges — not `count` or `iconOnly`.");
@@ -90,6 +103,14 @@ function assertBadgePattern(
 
   if (props.count != null && props.icon) {
     console.warn("[WMDS Badge] `count` is mutually exclusive with `icon`.");
+  }
+
+  if (props.status && (props.count != null || props.iconOnly || props.avatar)) {
+    console.warn("[WMDS Badge] `status` is a label pill — not with `count`, `iconOnly`, or `avatar`.");
+  }
+
+  if (props.dot && !props.status) {
+    console.warn("[WMDS Badge] `dot` applies to a `status` pill.");
   }
 
   if (props.iconOnly) {
@@ -117,6 +138,7 @@ interface BadgeLabelProps {
   "data-emphasis": BadgeEmphasis;
   "data-pattern": string;
   "data-mono"?: string;
+  "data-status"?: BadgeStatus;
 }
 
 /** Label shell — a `<span>` by default, or badge chrome composed onto `render` (Base UI). */
@@ -126,8 +148,9 @@ function BadgeLabel({ render, ...props }: BadgeLabelProps) {
 
 /**
  * Short status, count, or category label — solid, muted, or outline semantic fills.
+ * `status` is the pill for run state, cadence, and freshness (a dot and an optional icon).
  * Pattern-first: label, count, icon + label, avatar + label, icon-only, muted and outline emphasis,
- * mono caps, and links (`render`).
+ * mono caps, links (`render`), and the status pill.
  */
 export function Badge({
   children,
@@ -140,16 +163,20 @@ export function Badge({
   icon,
   avatar,
   iconOnly = false,
+  status,
+  dot = false,
   id,
   className,
 }: BadgeProps) {
-  assertBadgePattern({ count, icon, avatar, iconOnly, children, render, mono });
+  assertBadgePattern({ count, icon, avatar, iconOnly, children, render, mono, status, dot });
 
-  const surface = badgeSurfaceClasses(variant, emphasis);
-  const isCount = count != null && avatar == null;
-  const isIconOnly = iconOnly && icon != null && !isCount && avatar == null;
-  const hasAvatar = avatar != null && !isCount && !isIconOnly;
+  const isCount = count != null && avatar == null && status == null;
+  const isIconOnly = iconOnly && icon != null && !isCount && avatar == null && status == null;
+  const hasAvatar = avatar != null && !isCount && !isIconOnly && status == null;
+  const isStatus = status != null && !isCount && !isIconOnly && !hasAvatar;
   const isIconLabel = icon != null && !isCount && !isIconOnly && !hasAvatar;
+  const showDot = isStatus && dot;
+  const surface = isStatus ? badgeStatusSurfaceClasses[status] : badgeSurfaceClasses(variant, emphasis);
 
   if (isCount) {
     return (
@@ -187,8 +214,12 @@ export function Badge({
       className={cn(
         badgeBaseClasses,
         surface,
-        hasAvatar ? badgeAvatarLabelSizeClasses[size] : badgeLabelSizeClasses[size],
-        isIconLabel && badgeIconGapClasses[size],
+        isStatus
+          ? badgeStatusSizeClasses[size]
+          : hasAvatar
+            ? badgeAvatarLabelSizeClasses[size]
+            : badgeLabelSizeClasses[size],
+        !isStatus && isIconLabel && badgeIconGapClasses[size],
         mono && badgeMonoClasses,
         render != null && badgeInteractiveClasses,
         render != null && emphasis === "outline" && badgeInteractiveOutlineClasses,
@@ -196,12 +227,24 @@ export function Badge({
       )}
       data-variant={variant}
       data-size={size}
-      data-emphasis={emphasis}
-      data-pattern={hasAvatar ? "avatar" : isIconLabel ? "icon" : "label"}
+      data-emphasis={isStatus ? "muted" : emphasis}
+      data-pattern={isStatus ? "status" : hasAvatar ? "avatar" : isIconLabel ? "icon" : "label"}
       data-mono={mono ? "" : undefined}
+      data-status={isStatus ? status : undefined}
     >
       {hasAvatar && avatar != null ? (
         <Avatar name={avatar.alt} src={avatar.src} size={badgeAvatarSize[size]} />
+      ) : null}
+      {showDot ? (
+        <span
+          className={cn(
+            badgeStatusDotClasses,
+            badgeStatusDotToneClasses[status],
+            status === "active" && badgeStatusDotPulseClass,
+          )}
+          data-pulsing={status === "active" ? "" : undefined}
+          aria-hidden
+        />
       ) : null}
       {isIconLabel ? <BadgeIcon size={size}>{icon}</BadgeIcon> : null}
       {children}
