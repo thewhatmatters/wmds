@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.10",
+  "version": "0.4.11",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -763,12 +763,13 @@
       "name": "Stat",
       "tier": "molecule",
       "category": "Data visualization",
-      "summary": "At-a-glance metric tile with label, value, and optional trend.",
+      "summary": "At-a-glance metric tile with label, value, optional trend, and a hero size with a visible vs line.",
       "storybook": {
         "title": "Components/Stat",
         "docs": "?path=/docs/components-stat--docs"
       },
       "patterns": [
+        "components-stat--hero-stat",
         "components-stat--insights-row"
       ]
     },
