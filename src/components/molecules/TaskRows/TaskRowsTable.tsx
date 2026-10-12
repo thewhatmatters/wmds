@@ -121,9 +121,13 @@ export function TaskRowsTable({
         ))}
       </div>
       {rows.length === 0 ? (
-        <p className={taskRowsTableEmptyClasses} role="status">
-          {empty}
-        </p>
+        <div role="row">
+          <div role="cell">
+            <p className={taskRowsTableEmptyClasses} role="status">
+              {empty}
+            </p>
+          </div>
+        </div>
       ) : (
         rows
       )}
