@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.10",
+  "version": "0.4.11",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -825,6 +825,14 @@
       "file": "patterns/components-sitenav--mega-menu.tsx",
       "storybook": "?path=/story/components-sitenav--mega-menu",
       "source": "src/components/organisms/SiteNav/SiteNav.stories.tsx"
+    },
+    {
+      "id": "components-stat--hero-stat",
+      "title": "Components/Stat",
+      "name": "Pattern — hero stat",
+      "file": "patterns/components-stat--hero-stat.tsx",
+      "storybook": "?path=/story/components-stat--hero-stat",
+      "source": "src/components/molecules/Stat/Stat.stories.tsx"
     },
     {
       "id": "components-stat--insights-row",

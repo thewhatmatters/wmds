@@ -7,6 +7,25 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.11
+
+**Stat: a hero figure with a visible "vs" line.**
+
+- **Stat** `size="lg"` (new) — the figure is `type-display-3` with tabular numbers. The label is sentence case. `sm` and `md` are unchanged.
+- `context` (new) — a visible secondary line under the figure, tabular, for "vs $14,850" or "of $1M goal". `trend.label` stays a tooltip on the badge.
+- `icon` (new) — a leading Lucide glyph in a brand-tint tile (**ButtonIcon**). The glyph uses `text-brand-outline`, which is navy (`#011272`) in light and the lifted navy in dark.
+- `action` (new) — label-row slot. Pass **Button** `size="sm"` ("View details").
+- `unavailable` (new) — `{ reason, label? }` replaces the figure with muted "Not connected" (or `label`) and the reason. `trend` and `context` stay hidden. Do not fake a zero.
+- `trend.direction` accepts `flat`, the same muted badge as `neutral`.
+- `loading` still sets `aria-busy` and a **Skeleton**. `lg` adds a third bar for the context line.
+- Pattern: **Components/Stat → Pattern — hero stat**.
+
+### Consumer actions
+
+None for existing **Stat** tiles.
+
+For a hero KPI with a visible comparison: `size="lg"`, `context="vs $14,850"`, optional `icon` and `action`. Paste **Components/Stat → Pattern — hero stat** (`docs/patterns/components-stat--hero-stat.tsx`). When the source is unwired, pass `unavailable={{ reason }}` instead of a zero.
+
 ## 0.4.10
 
 **CopyField: a read-only value with a Copy key button.** For copying an API key. See **ADR-0045**.

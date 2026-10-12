@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.10 · Pattern — inline prose link
+// @thewhatmatters/wmds@0.4.11 · Pattern — inline prose link
 // Storybook: Components/TextLink → Pattern — inline prose link (?path=/story/components-textlink--inline-prose)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

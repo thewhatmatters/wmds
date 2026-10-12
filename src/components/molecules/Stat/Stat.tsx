@@ -1,11 +1,19 @@
 import type { ReactNode } from "react";
 import { Badge } from "../../atoms/Badge/Badge";
+import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
 import { Skeleton } from "../../atoms/Skeleton/Skeleton";
 import { cn } from "../../../lib/cn";
 import {
   statContentClasses,
+  statContentLgClasses,
+  statContextClasses,
   statGroupGridClasses,
+  statIconButtonSize,
+  statIconTileClasses,
+  statIconTileSizeClasses,
   statLabelClasses,
+  statLabelLgClasses,
+  statLoadingContextHeight,
   statLoadingLabelHeights,
   statLoadingValueHeights,
   statShellClasses,
@@ -14,7 +22,9 @@ import {
   statLabelRowClasses,
   statLabelStartClasses,
   statLabelTextClasses,
+  statLabelTrailClasses,
   statTrendBadgeVariant,
+  statUnavailableClasses,
   statValueRowClasses,
   statValueSizeClasses,
   type StatGroupColumns,
@@ -40,9 +50,18 @@ export type StatLayoutClassName = string;
 export interface StatTrend {
   /** Trend copy — e.g. `+2.1%` or `-0.8%`. */
   value: string;
+  /** `up` / `down` tint the badge. `neutral` and `flat` stay muted. */
   direction?: StatTrendDirection;
-  /** Optional context — exposed as `title` on the trend badge for sighted tooltips. */
+  /** Optional tooltip on the trend badge. Visible "vs" copy belongs on `context`. */
   label?: string;
+}
+
+/** Replaces the figure when the metric source is not wired. */
+export interface StatUnavailable {
+  /** Stand-in for the figure. Default `Not connected`. */
+  label?: string;
+  /** Why the figure is missing — visible under the stand-in. */
+  reason: string;
 }
 
 export interface StatProps {
@@ -52,9 +71,20 @@ export interface StatProps {
   value: ReactNode;
   /** Compact delta — **Badge** `emphasis="muted"` in the value row. */
   trend?: StatTrend;
-  /** Leading slot — inline with the label row. */
+  /**
+   * Visible secondary line under the figure — e.g. `vs $14,850` or `of $1M goal`.
+   * Tabular figures. Hidden while `unavailable` is set (the reason takes this line).
+   */
+  context?: ReactNode;
+  /** Leading tile — pass a Lucide glyph. Composed with **ButtonIcon**. */
+  icon?: ReactNode;
+  /** Label-row action — pass **Button** `size="sm"` (e.g. View details). */
+  action?: ReactNode;
+  /** Replaces the figure and hides `trend` when the source is not wired. */
+  unavailable?: StatUnavailable;
+  /** Leading slot — inline with the label row, after `icon`. */
   start?: ReactNode;
-  /** Trailing slot — inline with the label row (e.g. share, kebab). */
+  /** Trailing slot — inline with the label row, before `action`. */
   end?: ReactNode;
   size?: StatSize;
   /** Skeleton label + value — sets `aria-busy` on the tile. */
@@ -98,6 +128,9 @@ function StatLoadingContent({ size, index = 0 }: { size: StatSize; index?: numbe
         radius="inner"
         index={index + 1}
       />
+      {size === "lg" ? (
+        <Skeleton width="40%" height={statLoadingContextHeight} radius="inner" index={index + 2} />
+      ) : null}
     </>
   );
 }
@@ -106,32 +139,60 @@ function StatRoot({
   label,
   value,
   trend,
+  context,
+  icon,
+  action,
+  unavailable,
   start,
   end,
   size = "sm",
   loading = false,
   className,
 }: StatProps) {
+  const trail = end != null || action != null;
+
   return (
     <article
       className={cn(statShellClasses, statShellSizeClasses[size], className)}
       aria-busy={loading || undefined}
       aria-label={loading ? label : undefined}
     >
-      <div className={statContentClasses}>
+      <div className={cn(statContentClasses, size === "lg" && statContentLgClasses)}>
         {loading ? (
           <StatLoadingContent size={size} />
         ) : (
           <>
             <div className={statLabelRowClasses}>
+              {icon != null ? (
+                <span className={cn(statIconTileClasses, statIconTileSizeClasses[size])}>
+                  <ButtonIcon size={statIconButtonSize[size]}>{icon}</ButtonIcon>
+                </span>
+              ) : null}
               {start != null ? <div className={statLabelStartClasses}>{start}</div> : null}
-              <span className={cn(statLabelClasses, statLabelTextClasses)}>{label}</span>
-              {end != null ? <div className={statLabelEndClasses}>{end}</div> : null}
+              <span className={size === "lg" ? statLabelLgClasses : cn(statLabelClasses, statLabelTextClasses)}>
+                {label}
+              </span>
+              {trail ? (
+                <div className={action != null ? statLabelTrailClasses : statLabelEndClasses}>
+                  {end}
+                  {action}
+                </div>
+              ) : null}
             </div>
-            <div className={statValueRowClasses}>
-              <span className={statValueSizeClasses[size]}>{value}</span>
-              {trend != null ? <StatTrendBadge trend={trend} /> : null}
-            </div>
+            {unavailable != null ? (
+              <>
+                <p className={statUnavailableClasses}>{unavailable.label ?? "Not connected"}</p>
+                <p className={statContextClasses}>{unavailable.reason}</p>
+              </>
+            ) : (
+              <>
+                <div className={statValueRowClasses}>
+                  <span className={statValueSizeClasses[size]}>{value}</span>
+                  {trend != null ? <StatTrendBadge trend={trend} /> : null}
+                </div>
+                {context != null ? <p className={statContextClasses}>{context}</p> : null}
+              </>
+            )}
           </>
         )}
       </div>
@@ -158,7 +219,8 @@ function StatGroup({
 
 /**
  * At-a-glance metric tile — label, headline value, optional muted trend badge.
- * Compose in **Stat.Group** for insights rows; pair **Card** + **Chart** below for history.
+ * `size="lg"` is the hero figure (`type-display-3`, tabular). `context` is the visible
+ * "vs" line. Compose in **Stat.Group** for insights rows; pair **Card** + **Chart** below for history.
  */
 export const Stat = Object.assign(StatRoot, {
   Group: StatGroup,

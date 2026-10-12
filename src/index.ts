@@ -425,6 +425,7 @@ export {
   type StatSize,
   type StatTrend,
   type StatTrendDirection,
+  type StatUnavailable,
 } from "./components/molecules/Stat/Stat";
 export {
   StepProgress,
