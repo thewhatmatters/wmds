@@ -7,6 +7,22 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.13
+
+**NavList: link rows, a trailing mark, a section action, and an app sidebar.**
+
+- **NavList** item `href` (new) — the row is an anchor, so a server-rendered app navigates without mapping `onSelect` to a router. `render={<Link href="/tasks/ikea" />}` (new) is the router link. Pass one. If both are set, `render` is used.
+- `trailing` (new) — a **Status** dot or a **Badge** `status` pill at the end of the row. Counts stay tabular beside it.
+- Section `action` (new) — an **IconButton** for filter or more, in the section label row.
+- **Button** `layout="nav"` accepts `render`, the same way a pill does. A selected link sets `aria-current="page"`.
+- Pattern: **Components/NavList → Pattern — app sidebar** — brand row, **Search**, sections, a footer slot, and below `lg` a **Sheet** `side="start"` opened from a menu **IconButton** in **PageHeader** `variant="app"`.
+
+### Consumer actions
+
+None for existing button rows.
+
+To navigate from a row: pass `href` or `render`. Paste **Components/NavList → Pattern — app sidebar** (`docs/patterns/components-navlist--app-sidebar.tsx`) for the sidebar and the phone sheet.
+
 ## 0.4.12
 
 **Badge: a status pill for run state, cadence, and freshness.**

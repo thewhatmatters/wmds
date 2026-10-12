@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.12 · Pattern — intake modal
+// @thewhatmatters/wmds@0.4.13 · Pattern — intake modal
 // Storybook: Components/IntakeModal → Pattern — intake modal (?path=/story/components-intakemodal--intake-modal-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

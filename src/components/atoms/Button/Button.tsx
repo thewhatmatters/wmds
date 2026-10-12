@@ -173,8 +173,8 @@ function assertActionPattern(
     console.warn("[WMDS Button] `endIcon` is mutually exclusive with `count`.");
   }
 
-  if (props.render != null && (props.layout !== "pill" || props.status != null)) {
-    console.warn("[WMDS Button] `render` is supported on `layout=\"pill\"` without `status` only.");
+  if (props.render != null && (props.layout === "row" || props.status != null)) {
+    console.warn("[WMDS Button] `render` is supported on `layout=\"pill\"` and `layout=\"nav\"` without `status` only.");
   }
 }
 
@@ -186,6 +186,26 @@ interface ButtonPillProps
   "data-role": ButtonRole;
   "data-size": ButtonSize;
 }
+
+/** Nav row — a `<button>` by default, or the same chrome on `render` (an `<a>` or a router link). */
+const ButtonNav = forwardRef<HTMLButtonElement, ButtonPillProps>(function ButtonNav(
+  { render, type, disabled, ...props },
+  ref,
+) {
+  return useRender({
+    render,
+    ref,
+    defaultTagName: "button",
+    props: render
+      ? {
+          ...props,
+          "aria-disabled": disabled ? true : undefined,
+          "data-disabled": disabled ? "" : undefined,
+          tabIndex: disabled ? -1 : props.tabIndex,
+        }
+      : { ...props, type, disabled },
+  });
+});
 
 /** Pill shell — a `<button>` by default, or Button chrome composed onto `render` (Base UI). */
 const ButtonPill = forwardRef<HTMLButtonElement, ButtonPillProps>(function ButtonPill(
@@ -299,9 +319,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
 
   if (layout === "nav") {
     return (
-      <button
+      <ButtonNav
         {...buttonProps}
         ref={ref}
+        render={render}
         type={type}
         disabled={disabled}
         onClick={onClick}
@@ -318,11 +339,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
           buttonNavStateClasses(selected),
           className,
         )}
+        data-role={role}
+        data-size={size}
         data-layout="nav"
         data-selected={selected ? "" : undefined}
       >
         {children}
-      </button>
+      </ButtonNav>
     );
   }
 

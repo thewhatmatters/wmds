@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.12 · Pattern — tag chips
+// @thewhatmatters/wmds@0.4.13 · Pattern — tag chips
 // Storybook: Components/TaskRows → Pattern — tag chips (?path=/story/components-taskrows--tag-chips)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
