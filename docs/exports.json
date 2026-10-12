@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.16",
+  "version": "0.4.17",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -128,7 +128,7 @@
       "name": "Card",
       "tier": "molecule",
       "category": "Container",
-      "summary": "Surface with header, body, and footer slots for layout cards and simple cards.",
+      "summary": "Surface with header, body, and footer slots, including a dark terminal frame.",
       "storybook": {
         "title": "Components/Card/Card",
         "docs": "?path=/docs/components-card-card--docs"
@@ -137,7 +137,8 @@
         "components-card-card--body-slot-occupancy-history",
         "components-card-card--headerless-media",
         "components-card-card--outlined-layout",
-        "components-card-card--pinned-height"
+        "components-card-card--pinned-height",
+        "components-card-card--terminal-frame"
       ]
     },
     {

@@ -52,4 +52,8 @@ describe("Card layout shell density", () => {
   it("densifies bottom to 2px when Body is terminal", () => {
     expect(cardLayoutShellBottomClasses(true)).toBe("pb-[2px]");
   });
+
+  it("drops the bottom pad for a terminal frame so the dark surface reaches the shell", () => {
+    expect(cardLayoutShellBottomClasses(true, true)).toBe("pb-0");
+  });
 });
