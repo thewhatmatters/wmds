@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.16",
+  "version": "0.4.17",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -240,6 +240,14 @@
       "name": "Pattern — pinned height",
       "file": "patterns/components-card-card--pinned-height.tsx",
       "storybook": "?path=/story/components-card-card--pinned-height",
+      "source": "src/components/molecules/Card/Card.stories.tsx"
+    },
+    {
+      "id": "components-card-card--terminal-frame",
+      "title": "Components/Card/Card",
+      "name": "Pattern — terminal frame",
+      "file": "patterns/components-card-card--terminal-frame.tsx",
+      "storybook": "?path=/story/components-card-card--terminal-frame",
       "source": "src/components/molecules/Card/Card.stories.tsx"
     },
     {

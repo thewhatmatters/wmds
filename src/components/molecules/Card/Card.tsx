@@ -6,6 +6,8 @@ import {
   type HTMLAttributes,
   type ReactNode,
 } from "react";
+import { Badge } from "../../atoms/Badge/Badge";
+import { Skeleton } from "../../atoms/Skeleton/Skeleton";
 import { cn } from "../../../lib/cn";
 import {
   cardAddressClasses,
@@ -32,15 +34,39 @@ import {
   cardSectionPaddingClasses,
   cardShapeClasses,
   cardSubtitleClasses,
+  cardTerminalBarClasses,
+  cardTerminalFrameClasses,
+  cardTerminalFrameElementClasses,
+  cardTerminalHeightClasses,
+  cardTerminalMessageClasses,
+  cardTerminalStageClasses,
+  cardTerminalTitleClasses,
   cardTitleClasses,
   cardVariantClasses,
+  type CardBodyVariant,
   type CardPadding,
   type CardShape,
+  type CardTerminalHeight,
+  type CardTerminalState,
   type CardVariant,
 } from "./cardStyles";
 
-export type { CardPadding, CardShape, CardVariant } from "./cardStyles";
-export { cardPaddings, cardShapes, cardVariants } from "./cardStyles";
+export type {
+  CardBodyVariant,
+  CardPadding,
+  CardShape,
+  CardTerminalHeight,
+  CardTerminalState,
+  CardVariant,
+} from "./cardStyles";
+export {
+  cardBodyVariants,
+  cardPaddings,
+  cardShapes,
+  cardTerminalHeights,
+  cardTerminalStates,
+  cardVariants,
+} from "./cardStyles";
 
 /** Layout-only — not for surface, border, or radius overrides. */
 export type CardLayoutClassName = string;
@@ -64,6 +90,28 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
 export interface CardSectionProps extends HTMLAttributes<HTMLElement> {
   children?: ReactNode;
   className?: CardLayoutClassName;
+}
+
+export interface CardBodyProps extends Omit<CardSectionProps, "title"> {
+  /**
+   * `slot` (default) is the composition well.
+   * `terminal` is a dark embed frame. It is not `bodyTerminal`, which only densifies the shell bottom.
+   */
+  variant?: CardBodyVariant;
+  /** Embed URL. Omit while `loading` or `disconnected`. */
+  src?: string;
+  /** Inline document when there is no `src`. `src` wins when both are set. */
+  srcDoc?: string;
+  /** Accessible name of the embed. Default `Terminal`. */
+  title?: string;
+  /** `sm` 160px, `md` 256px, `lg` 384px, `fill` grows in a pinned card. Default `md`. */
+  height?: CardTerminalHeight;
+  /** Muted **Read only** badge in the frame bar. */
+  readOnly?: boolean;
+  /** `ready` shows the embed. `loading` is a **Skeleton**. `disconnected` is a status line. */
+  state?: CardTerminalState;
+  /** Status copy when `state` is `disconnected`. Default `Disconnected`. */
+  message?: string;
 }
 
 export interface CardHeaderProps extends CardSectionProps {
@@ -102,10 +150,19 @@ function CardRoot({
   const hasFooter = childList.some(
     (child) => isValidElement(child) && child.type === CardFooter,
   );
+  const hasTerminalFrame =
+    isLayout &&
+    childList.some(
+      (child) =>
+        isValidElement(child) &&
+        child.type === CardBody &&
+        (child.props as CardBodyProps).variant === "terminal",
+    );
   const inferredBodyTerminal = isLayout && hasBody && !hasFooter;
   const inferredHeaderless = isLayout && hasBody && !hasHeader;
   const terminalBody = bodyTerminal ?? inferredBodyTerminal;
   const omitHeader = headerless ?? inferredHeaderless;
+  const flushTerminal = hasTerminalFrame && !hasFooter;
 
   return (
     <CardPaddingContext.Provider value={padding}>
@@ -117,7 +174,7 @@ function CardRoot({
               ? cn(
                   cardLayoutShellClasses,
                   cardLayoutShellTopClasses(!omitHeader),
-                  cardLayoutShellBottomClasses(terminalBody),
+                  cardLayoutShellBottomClasses(terminalBody, flushTerminal),
                   cardLayoutShellShapeClasses[shape],
                   cardLayoutVariantClasses[variant],
                 )
@@ -162,22 +219,78 @@ function CardHeader({
   );
 }
 
-/** Inset well — composition slot for any supporting content. */
-function CardBody({ className, children, ...props }: CardSectionProps) {
+/** Inset well — composition slot, or a dark embed when `variant="terminal"`. */
+function CardBody({
+  className,
+  children,
+  variant = "slot",
+  src,
+  srcDoc,
+  title = "Terminal",
+  height = "md",
+  readOnly = false,
+  state = "ready",
+  message = "Disconnected",
+  ...props
+}: CardBodyProps) {
   const padding = useCardPadding();
   const terminal = useContext(CardBodyTerminalContext);
   const isLayout = padding === "none";
+  const frame = variant === "terminal";
+  const ready = state === "ready" && (src != null || srcDoc != null);
+
   return (
     <div
       className={cn(
-        cardSectionPaddingClasses[padding].body,
-        isLayout && terminal && cardLayoutTerminalBodyClasses,
-        isLayout && !terminal && cardLayoutScrollBodyClasses,
+        frame ? cardTerminalFrameClasses : cardSectionPaddingClasses[padding].body,
+        frame && cardTerminalHeightClasses[height],
+        !frame && isLayout && terminal && cardLayoutTerminalBodyClasses,
+        !frame && isLayout && !terminal && cardLayoutScrollBodyClasses,
         className,
       )}
+      data-variant={frame ? "terminal" : undefined}
+      data-theme={frame ? "dark" : undefined}
+      data-state={frame ? state : undefined}
+      data-height={frame ? height : undefined}
       {...props}
     >
-      {children}
+      {frame ? (
+        <>
+          <div className={cardTerminalBarClasses}>
+            <span className={cardTerminalTitleClasses}>{title}</span>
+            {readOnly ? (
+              <Badge size="sm" emphasis="muted">
+                Read only
+              </Badge>
+            ) : null}
+          </div>
+          <div
+            className={cardTerminalStageClasses}
+            aria-busy={state === "loading" || undefined}
+          >
+            {state === "loading" ? <Skeleton width="100%" height="100%" radius="inner" /> : null}
+            {state === "disconnected" ? (
+              <p className={cardTerminalMessageClasses} role="status">
+                {message}
+              </p>
+            ) : null}
+            {state === "ready" && !ready ? (
+              <p className={cardTerminalMessageClasses} role="status">
+                No session
+              </p>
+            ) : null}
+            {ready ? (
+              <iframe
+                className={cardTerminalFrameElementClasses}
+                title={title}
+                {...(src != null ? { src } : { srcDoc })}
+              />
+            ) : null}
+          </div>
+        </>
+      ) : (
+        children
+      )}
     </div>
   );
 }
@@ -201,7 +314,8 @@ function CardDivider({ className, ...props }: HTMLAttributes<HTMLHRElement>) {
  * (2px gutter, square, transparent — occupant owns fill and chrome).
  * Headerless Body densifies shell top to 2px; footerless / `bodyTerminal` densifies shell bottom to 2px.
  * Pin a height on the root (`className`) with Header + Body + Footer — Header/Footer stay put;
- * **Card.Body** scrolls. No new variant.
+ * **Card.Body** scrolls. `bodyTerminal` is that density flag.
+ * **`Card.Body variant="terminal"`** is a separate dark embed frame (`data-theme="dark"` in both page themes).
  */
 export const Card = Object.assign(CardRoot, {
   Header: CardHeader,

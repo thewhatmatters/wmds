@@ -3,7 +3,7 @@ import { createElement } from "react";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it } from "vitest";
-import { Card, type CardProps } from "./Card";
+import { Card, type CardBodyProps, type CardProps } from "./Card";
 
 describe("Card pinned height with Footer", () => {
   let root: Root | undefined;
@@ -85,5 +85,91 @@ describe("Card pinned height with Footer", () => {
     expect(body?.className).toContain("flex-1");
     expect(body?.className).toContain("[&>*]:flex-1");
     expect(body?.className).not.toContain("overflow-y-auto");
+  });
+});
+
+describe("Card.Body terminal frame", () => {
+  let root: Root | undefined;
+  let container: HTMLDivElement | undefined;
+
+  afterEach(() => {
+    act(() => {
+      root?.unmount();
+    });
+    container?.remove();
+    root = undefined;
+    container = undefined;
+  });
+
+  function renderFrame(props: CardBodyProps) {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+    act(() => {
+      root?.render(
+        createElement(
+          Card,
+          { padding: "none" } as CardProps,
+          createElement(Card.Header, { start: createElement("h2", null, "Session") }),
+          createElement(Card.Body, props),
+        ),
+      );
+    });
+  }
+
+  it("embeds a dark read-only frame without treating bodyTerminal as the variant", () => {
+    renderFrame({
+      variant: "terminal",
+      title: "session.log",
+      src: "https://example.com/term",
+      height: "sm",
+      readOnly: true,
+    });
+
+    const card = container?.firstElementChild;
+    expect(card?.className).toContain("pb-0");
+    expect(card?.className).not.toContain("pb-[2px]");
+
+    const frame = container?.querySelector("[data-variant='terminal']");
+    expect(frame?.getAttribute("data-theme")).toBe("dark");
+    expect(frame?.getAttribute("data-state")).toBe("ready");
+    expect(frame?.textContent).toContain("Read only");
+    const iframe = frame?.querySelector("iframe");
+    expect(iframe?.getAttribute("title")).toBe("session.log");
+    expect(iframe?.getAttribute("src")).toBe("https://example.com/term");
+  });
+
+  it("shows a skeleton while loading and a status line when disconnected", () => {
+    renderFrame({ variant: "terminal", title: "session.log", state: "loading" });
+    const loading = container?.querySelector("[data-variant='terminal']");
+    expect(loading?.getAttribute("data-state")).toBe("loading");
+    expect(loading?.querySelector("iframe")).toBeNull();
+    expect(loading?.getAttribute("aria-busy") ?? loading?.querySelector("[aria-busy='true']")).toBeTruthy();
+
+    act(() => {
+      root?.render(
+        createElement(
+          Card,
+          { padding: "none" } as CardProps,
+          createElement(Card.Header, { start: createElement("h2", null, "Session") }),
+          createElement(Card.Body, {
+            variant: "terminal",
+            title: "session.log",
+            state: "disconnected",
+            message: "Session disconnected",
+          } as CardBodyProps),
+        ),
+      );
+    });
+
+    const offline = container?.querySelector("[data-variant='terminal']");
+    expect(offline?.querySelector("iframe")).toBeNull();
+    expect(offline?.textContent).toContain("Session disconnected");
+  });
+
+  it("says there is no session when ready without a source", () => {
+    renderFrame({ variant: "terminal", title: "session.log" });
+    expect(container?.textContent).toContain("No session");
+    expect(container?.querySelector("iframe")).toBeNull();
   });
 });

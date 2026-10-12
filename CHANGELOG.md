@@ -7,6 +7,19 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.17
+
+**Card.Body can be a terminal frame.**
+
+- **`Card.Body variant="terminal"`** is a dark embed. `data-theme="dark"` on the frame uses the existing dark tokens, so the surface stays dark in both page themes. No new color.
+- `src` or `srcDoc`, `title`, `height` (`sm` | `md` | `lg` | `fill`), `readOnly` (muted **Read only** badge), `state` (`ready` | `loading` | `disconnected`).
+- `bodyTerminal` is unchanged: it only densifies the shell bottom when Body has no Footer. A terminal frame sits flush to the bottom of a footerless card.
+- Pattern: **Components/Card/Card → Pattern — terminal frame**.
+
+### Consumer actions
+
+Replace a hand-rolled iframe in **Card.Body** with `variant="terminal"`. Paste **Components/Card/Card → Pattern — terminal frame** (`docs/patterns/components-card-card--terminal-frame.tsx`). `bodyTerminal` still means footerless density — do not use it as the embed.
+
 ## 0.4.16
 
 **DisplayControls can be a theme switch, with a no-flash snippet.**

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.16 · Pattern — chat dock
+// @thewhatmatters/wmds@0.4.17 · Pattern — chat dock
 // Storybook: Components/ChatDock → Pattern — chat dock (?path=/story/components-chatdock--pattern-chat-dock)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

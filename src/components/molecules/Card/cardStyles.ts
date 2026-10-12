@@ -54,7 +54,8 @@ export function cardLayoutShellTopClasses(hasHeader = true): string {
   return hasHeader ? "pt-4" : "pt-[2px]";
 }
 
-export function cardLayoutShellBottomClasses(bodyTerminal = false): string {
+export function cardLayoutShellBottomClasses(bodyTerminal = false, flush = false): string {
+  if (flush) return "pb-0";
   return bodyTerminal ? "pb-[2px]" : "pb-4";
 }
 
@@ -173,3 +174,38 @@ export const cardAddressClasses =
   `${typographyClass("body")} flex flex-col gap-0 leading-snug`;
 
 export const cardDividerClasses = "m-0 border-0 border-t border-border";
+
+/** `slot` is the composition well. `terminal` is a dark embed frame — not the `bodyTerminal` density flag. */
+export const cardBodyVariants = ["slot", "terminal"] as const;
+
+export type CardBodyVariant = (typeof cardBodyVariants)[number];
+
+export const cardTerminalHeights = ["sm", "md", "lg", "fill"] as const;
+
+export type CardTerminalHeight = (typeof cardTerminalHeights)[number];
+
+export const cardTerminalStates = ["ready", "loading", "disconnected"] as const;
+
+export type CardTerminalState = (typeof cardTerminalStates)[number];
+
+/** Dark in both page themes — `data-theme="dark"` on the frame swaps the existing tokens. */
+export const cardTerminalFrameClasses =
+  "flex min-h-0 w-full flex-col overflow-hidden bg-surface text-fg";
+
+export const cardTerminalHeightClasses: Record<CardTerminalHeight, string> = {
+  sm: "h-40",
+  md: "h-64",
+  lg: "h-96",
+  fill: "min-h-40 flex-1",
+};
+
+export const cardTerminalBarClasses =
+  "flex h-9 shrink-0 items-center gap-2 border-b border-border px-3";
+
+export const cardTerminalTitleClasses = `${typographyClass("ui-label")} min-w-0 flex-1 truncate`;
+
+export const cardTerminalStageClasses = "flex min-h-0 flex-1 flex-col";
+
+export const cardTerminalFrameElementClasses = "min-h-0 w-full flex-1 border-0 bg-surface";
+
+export const cardTerminalMessageClasses = `${typographyClass("caption")} px-3 py-4 text-muted`;

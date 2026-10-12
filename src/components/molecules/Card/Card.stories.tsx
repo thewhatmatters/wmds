@@ -884,6 +884,107 @@ export const RoundedStandalone: Story = {
   ),
 };
 
+const terminalPreview =
+  '<!doctype html><html><body style="margin:0;background:#262626;color:#fafafa;font:14px ui-monospace,monospace;padding:16px">$ scan --target etheris<br>12 findings</body></html>';
+
+function TerminalFrames() {
+  return (
+    <div className="grid w-full max-w-3xl gap-4">
+      <section>
+        <Card padding="none">
+        <Card.Header start={<h2 className={cardTitleClasses}>Session</h2>} />
+        <Card.Body
+          variant="terminal"
+          title="session.log"
+          srcDoc={terminalPreview}
+          height="sm"
+          readOnly
+        />
+      </Card>
+      </section>
+      <section>
+        <Card padding="none">
+        <Card.Header start={<h2 className={cardTitleClasses}>Loading</h2>} />
+        <Card.Body variant="terminal" title="session.log" height="sm" state="loading" />
+      </Card>
+      </section>
+      <section>
+        <Card padding="none">
+        <Card.Header start={<h2 className={cardTitleClasses}>Offline</h2>} />
+        <Card.Body
+          variant="terminal"
+          title="session.log"
+          height="sm"
+          state="disconnected"
+          message="Session disconnected"
+        />
+      </Card>
+      </section>
+    </div>
+  );
+}
+
+export const TerminalFrame: Story = {
+  name: "Pattern — terminal frame",
+  render: () => <TerminalFrames />,
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Dark embed in both page themes. `data-theme=\"dark\"` on the frame uses the existing dark tokens — no new color. `bodyTerminal` is still only the footerless density flag. `readOnly` is a muted badge. `loading` is a **Skeleton**. `disconnected` is a status line. `height=\"fill\"` grows inside a pinned card.",
+        },
+      },
+    },
+    `
+import {
+  Card,
+  cardTitleClasses,
+} from "@thewhatmatters/wmds";
+
+const terminalPreview =
+  '<!doctype html><html><body style="margin:0;background:#262626;color:#fafafa;font:14px ui-monospace,monospace;padding:16px">$ scan --target etheris<br>12 findings</body></html>';
+
+export function TerminalFrames() {
+  return (
+    <div className="grid w-full max-w-3xl gap-4">
+      <section>
+        <Card padding="none">
+        <Card.Header start={<h2 className={cardTitleClasses}>Session</h2>} />
+        <Card.Body
+          variant="terminal"
+          title="session.log"
+          srcDoc={terminalPreview}
+          height="sm"
+          readOnly
+        />
+      </Card>
+      </section>
+      <section>
+        <Card padding="none">
+        <Card.Header start={<h2 className={cardTitleClasses}>Loading</h2>} />
+        <Card.Body variant="terminal" title="session.log" height="sm" state="loading" />
+      </Card>
+      </section>
+      <section>
+        <Card padding="none">
+        <Card.Header start={<h2 className={cardTitleClasses}>Offline</h2>} />
+        <Card.Body
+          variant="terminal"
+          title="session.log"
+          height="sm"
+          state="disconnected"
+          message="Session disconnected"
+        />
+      </Card>
+      </section>
+    </div>
+  );
+}
+`,
+  ),
+};
+
 /**
  * Known accessibility violations — listed in docs/audits/2026-10-03.md.
  * Checks fail on every other story. These report without failing until the component is fixed.
