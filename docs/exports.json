@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.12",
+  "version": "0.4.13",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -529,12 +529,13 @@
       "name": "NavList",
       "tier": "molecule",
       "category": "Navigation",
-      "summary": "Sectioned secondary navigation with inset pill rows.",
+      "summary": "Sectioned secondary navigation with inset pill rows, link items, and a trailing mark.",
       "storybook": {
         "title": "Components/NavList",
         "docs": "?path=/docs/components-navlist--docs"
       },
       "patterns": [
+        "components-navlist--app-sidebar",
         "components-navlist--side-nav-settings"
       ]
     },

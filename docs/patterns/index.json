@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.12",
+  "version": "0.4.13",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -673,6 +673,14 @@
       "file": "patterns/components-moremenu--in-card-header.tsx",
       "storybook": "?path=/story/components-moremenu--in-card-header",
       "source": "src/components/organisms/MoreMenu/MoreMenu.stories.tsx"
+    },
+    {
+      "id": "components-navlist--app-sidebar",
+      "title": "Components/NavList",
+      "name": "Pattern — app sidebar",
+      "file": "patterns/components-navlist--app-sidebar.tsx",
+      "storybook": "?path=/story/components-navlist--app-sidebar",
+      "source": "src/components/molecules/NavList/NavList.stories.tsx"
     },
     {
       "id": "components-navlist--side-nav-settings",

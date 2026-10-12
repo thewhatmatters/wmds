@@ -30,11 +30,15 @@ export const navListItemWrapClasses = "relative w-full px-2";
 
 export const navListItemLabelClasses = "min-w-0 flex-1 truncate text-left";
 
+export const navListItemTrailClasses = "ml-auto flex shrink-0 items-center gap-2";
+
 export const navListItemCountClasses = cn(
-  "ml-auto tabular-nums",
+  "tabular-nums",
   typographyClass("caption"),
   "text-muted",
 );
+
+export const navListSectionLabelRowClasses = "flex items-center justify-between gap-2";
 
 export function navListItemIconClasses(selected: boolean) {
   return selected ? "text-fg" : "text-muted";

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.12 · Pattern — on a navy field
+// @thewhatmatters/wmds@0.4.13 · Pattern — on a navy field
 // Storybook: Components/CopyField → Pattern — on a navy field (?path=/story/components-copyfield--on-navy)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

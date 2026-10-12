@@ -1,6 +1,7 @@
 import {
   cloneElement,
   createContext,
+  createElement,
   isValidElement,
   useContext,
   type ReactElement,
@@ -14,10 +15,13 @@ import {
   navListItemCountClasses,
   navListItemIconClasses,
   navListItemLabelClasses,
+  navListItemTrailClasses,
   navListItemWrapClasses,
+  navListSectionLabelRowClasses,
   navListSectionBrandBandClasses,
   navListSectionClasses,
   navListSectionLabelBrandClasses,
+  navListSectionLabelClasses,
   navListSectionLabelDefaultClasses,
   navListShellClasses,
   type NavListLabelAlignment,
@@ -36,12 +40,23 @@ export interface NavListItemDef {
   label: string;
   icon?: NavListIcon;
   count?: number;
+  /** Plain URL. The row is an anchor, so a server-rendered app does not need `onSelect` to navigate. */
+  href?: string;
+  /**
+   * Router link in place of `href` — `render={<Link href="/tasks/ikea" />}`.
+   * Pass `href` or `render`, not both.
+   */
+  render?: ReactElement;
+  /** Trailing mark — a **Status** dot or a **Badge** `status` pill. Not a second label. */
+  trailing?: ReactNode;
 }
 
 export interface NavListSectionDef {
   label?: string;
   /** `brand` aligns the first section overline to an adjacent 56px header band. */
   labelAlign?: NavListLabelAlignment;
+  /** Section control — filter or more. Pass **IconButton**. */
+  action?: ReactNode;
   items: NavListItemDef[];
 }
 
@@ -58,6 +73,8 @@ export interface NavListProps {
 export interface NavListSectionProps {
   label?: string;
   labelAlign?: NavListLabelAlignment;
+  /** Section control — filter or more. Pass **IconButton**. */
+  action?: ReactNode;
   children: ReactNode;
   className?: NavListLayoutClassName;
 }
@@ -67,6 +84,12 @@ export interface NavListItemProps {
   label: string;
   icon?: NavListIcon;
   count?: number;
+  /** Plain URL. The row is an anchor. */
+  href?: string;
+  /** Router link in place of `href`. Pass one, not both. */
+  render?: ReactElement;
+  /** Trailing mark — a **Status** dot or a **Badge** `status` pill. */
+  trailing?: ReactNode;
   selected?: boolean;
   onSelect?: (id: string) => void;
   className?: NavListLayoutClassName;
@@ -97,33 +120,53 @@ function NavListItemIcon({ icon, selected }: { icon: NavListIcon; selected: bool
 function NavListSectionLabel({
   label,
   labelAlign = "section",
+  action,
 }: {
   label: string;
   labelAlign?: NavListLabelAlignment;
+  action?: ReactNode;
 }) {
   if (labelAlign === "brand") {
     return (
-      <div className={navListSectionBrandBandClasses}>
+      <div className={cn(navListSectionBrandBandClasses, action != null && "justify-between gap-2")}>
         <p className={navListSectionLabelBrandClasses}>{label}</p>
+        {action}
       </div>
     );
   }
 
-  return <p className={navListSectionLabelDefaultClasses}>{label}</p>;
+  return (
+    <div className={cn(navListSectionLabelDefaultClasses, navListSectionLabelRowClasses)}>
+      <p className={navListSectionLabelClasses}>{label}</p>
+      {action}
+    </div>
+  );
 }
 
 function NavListSectionRoot({
   label,
   labelAlign = "section",
+  action,
   children,
   className,
 }: NavListSectionProps) {
   return (
     <div className={cn(navListSectionClasses, className)}>
-      {label != null ? <NavListSectionLabel label={label} labelAlign={labelAlign} /> : null}
+      {label != null ? (
+        <NavListSectionLabel label={label} labelAlign={labelAlign} action={action} />
+      ) : null}
       {children}
     </div>
   );
+}
+
+function navListItemRender(href: string | undefined, render: ReactElement | undefined) {
+  if (render != null && href != null) {
+    console.warn("[WMDS NavList] Pass `href` or `render` on an item, not both. `render` is used.");
+  }
+  if (render != null) return render;
+  if (href != null) return createElement("a", { href });
+  return undefined;
 }
 
 function NavListItemRoot({
@@ -131,6 +174,9 @@ function NavListItemRoot({
   label,
   icon,
   count,
+  href,
+  render,
+  trailing,
   selected: selectedProp,
   onSelect,
   className,
@@ -138,6 +184,7 @@ function NavListItemRoot({
   const context = useContext(NavListContext);
   const selected = selectedProp ?? context.activeId === id;
   const handleSelect = onSelect ?? context.onSelect;
+  const link = navListItemRender(href, render);
 
   return (
     <div className={cn(navListItemWrapClasses, className)}>
@@ -145,12 +192,18 @@ function NavListItemRoot({
         layout="nav"
         type="button"
         selected={selected}
+        render={link}
         onClick={handleSelect != null ? () => handleSelect(id) : undefined}
       >
         {icon != null ? <NavListItemIcon icon={icon} selected={selected} /> : null}
         <span className={navListItemLabelClasses}>{label}</span>
-        {count != null ? (
-          <span className={navListItemCountClasses}>{count.toLocaleString()}</span>
+        {count != null || trailing != null ? (
+          <span className={navListItemTrailClasses}>
+            {count != null ? (
+              <span className={navListItemCountClasses}>{count.toLocaleString()}</span>
+            ) : null}
+            {trailing}
+          </span>
         ) : null}
       </Button>
     </div>
@@ -175,6 +228,7 @@ function NavListRoot({
             <NavListSectionRoot
               key={section.label ?? index}
               label={section.label}
+              action={section.action}
               labelAlign={
                 section.labelAlign ?? (index === 0 && section.label != null ? "brand" : "section")
               }
@@ -197,8 +251,8 @@ function NavListRoot({
 }
 
 /**
- * Sectioned secondary navigation — inset pills with optional icons and counts.
- * Compose **NavList.Item** with **Button** `layout="nav"` or pass a `sections` array.
+ * Sectioned secondary navigation — inset pills with optional icons, counts, and trailing marks.
+ * `href` or `render` makes a row a link. Compose **NavList.Item** or pass a `sections` array.
  */
 export const NavList = Object.assign(NavListRoot, {
   Section: NavListSectionRoot,
