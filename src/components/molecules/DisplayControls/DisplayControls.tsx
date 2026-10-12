@@ -14,8 +14,15 @@ import {
 } from "./displayControlsStyles";
 
 export {
+  applyDisplayTheme,
+  commitDisplayTheme,
   displayControlThemeModes,
+  displayThemeNoFlashScript,
+  displayThemeStorageKey,
   nextDisplayControlThemeMode,
+  persistDisplayTheme,
+  readDisplayTheme,
+  subscribeDisplayTheme,
   type DisplayControlThemeMode,
 } from "./displayControlsState";
 
@@ -32,18 +39,32 @@ export interface DisplayControlsLabels {
   dark: string;
 }
 
-export interface DisplayControlsProps {
-  gridVisible: boolean;
-  onGridVisibleChange: (visible: boolean) => void;
+type DisplayControlsSharedProps = {
   theme: DisplayControlThemeMode;
   onThemeChange: (theme: DisplayControlThemeMode) => void;
-  /** Enables global `g` and `t` shortcuts. Default: true. */
+  /** Enables global shortcuts. Default: true. `G` is only active for `controls="display"`. */
   keyboardShortcuts?: boolean;
   labels?: Partial<DisplayControlsLabels>;
   "aria-label"?: string;
   /** Layout-only: fixed/absolute placement and margin. */
   className?: DisplayControlsLayoutClassName;
-}
+};
+
+export type DisplayControlsProps = DisplayControlsSharedProps &
+  (
+    | {
+        /** Grid guide plus theme. Default. */
+        controls?: "display";
+        gridVisible: boolean;
+        onGridVisibleChange: (visible: boolean) => void;
+      }
+    | {
+        /** Theme only — appearance in a sidebar footer. No grid button, no `G`. */
+        controls: "theme";
+        gridVisible?: boolean;
+        onGridVisibleChange?: (visible: boolean) => void;
+      }
+  );
 
 const defaultLabels: DisplayControlsLabels = {
   grid: "Grid",
@@ -56,7 +77,8 @@ const defaultLabels: DisplayControlsLabels = {
 };
 
 export function DisplayControls({
-  gridVisible,
+  controls = "display",
+  gridVisible = false,
   onGridVisibleChange,
   theme,
   onThemeChange,
@@ -66,6 +88,7 @@ export function DisplayControls({
   className,
 }: DisplayControlsProps) {
   const labels = { ...defaultLabels, ...labelsProp };
+  const themeOnly = controls === "theme";
 
   useEffect(() => {
     if (!keyboardShortcuts) return;
@@ -73,12 +96,13 @@ export function DisplayControls({
     const onKeyDown = (event: KeyboardEvent) => {
       const shortcut = displayControlShortcutFromEvent(event);
       if (shortcut == null) return;
-
-      event.preventDefault();
       if (shortcut === "grid") {
+        if (themeOnly || onGridVisibleChange == null) return;
+        event.preventDefault();
         onGridVisibleChange(!gridVisible);
         return;
       }
+      event.preventDefault();
       onThemeChange(nextDisplayControlThemeMode(theme));
     };
 
@@ -90,6 +114,7 @@ export function DisplayControls({
     onGridVisibleChange,
     onThemeChange,
     theme,
+    themeOnly,
   ]);
 
   return (
@@ -99,19 +124,21 @@ export function DisplayControls({
       className={cn(displayControlsRootClasses, className)}
       data-theme-mode={theme}
     >
-      <Button
-        role="secondary"
-        size="sm"
-        aria-label={gridVisible ? labels.hideGrid : labels.showGrid}
-        aria-pressed={gridVisible}
-        aria-keyshortcuts="G"
-        onClick={() => onGridVisibleChange(!gridVisible)}
-      >
-        <span className={displayControlsButtonContentClasses}>
-          <Kbd>G</Kbd>
-          <span>{labels.grid}</span>
-        </span>
-      </Button>
+      {themeOnly ? null : (
+        <Button
+          role="secondary"
+          size="sm"
+          aria-label={gridVisible ? labels.hideGrid : labels.showGrid}
+          aria-pressed={gridVisible}
+          aria-keyshortcuts="G"
+          onClick={() => onGridVisibleChange?.(!gridVisible)}
+        >
+          <span className={displayControlsButtonContentClasses}>
+            <Kbd>G</Kbd>
+            <span>{labels.grid}</span>
+          </span>
+        </Button>
+      )}
 
       <Button
         role="secondary"

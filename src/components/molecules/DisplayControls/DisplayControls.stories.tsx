@@ -1,12 +1,19 @@
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { GridOverlay } from "../../../lib/GridOverlay";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import {
+  commitDisplayTheme,
   DisplayControls,
   displayControlThemeModes,
+  readDisplayTheme,
+  subscribeDisplayTheme,
   type DisplayControlThemeMode,
 } from "./DisplayControls";
+
+function themeServerSnapshot(): DisplayControlThemeMode {
+  return "auto";
+}
 
 const meta = {
   title: "Components/DisplayControls",
@@ -42,8 +49,9 @@ DisplayControls (group)
 - **Do** place the cluster at one stable viewport edge.
 - **Do** keep grid and theme state controlled by the app.
 - **Do** disable **GridOverlay**'s own shortcut when this cluster owns keyboard input.
-- **Don't** show it when grid guides are not useful to the audience.
+- **Don't** show the grid button when grid guides are not useful to the audience — use \`controls="theme"\`.
 - **Don't** add unrelated preferences to this compact cluster.
+- **Do** paste \`displayThemeNoFlashScript\` in \`<head>\` before the stylesheet, then call \`commitDisplayTheme\` when the appearance changes.
         `.trim(),
       },
     },
@@ -132,6 +140,70 @@ export function Page() {
         onGridVisibleChange={setGridVisible}
         theme={theme}
         onThemeChange={setTheme}
+      />
+    </div>
+  );
+}
+`,
+  ),
+};
+
+function ThemeSwitchDemo() {
+  const theme = useSyncExternalStore(subscribeDisplayTheme, readDisplayTheme, themeServerSnapshot);
+
+  return (
+    <div className="flex w-full max-w-xs items-center justify-between gap-3 rounded-xl border border-border bg-surface p-3">
+      <span className="type-label">Appearance</span>
+      <DisplayControls
+        controls="theme"
+        aria-label="Appearance"
+        theme={theme}
+        onThemeChange={commitDisplayTheme}
+      />
+    </div>
+  );
+}
+
+export const ThemeSwitch: Story = {
+  name: "Pattern — theme switch",
+  render: () => <ThemeSwitchDemo />,
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Sidebar footer appearance control. `controls=\"theme\"` omits the grid button and does not capture **G**. **T** still cycles Auto, Light, and Dark. `commitDisplayTheme` writes `wmds-theme` and sets or clears `data-theme`. Paste `displayThemeNoFlashScript` in the document head before the stylesheet so the first paint matches the saved choice. `auto` follows `prefers-color-scheme`.",
+        },
+      },
+    },
+    `
+import { useSyncExternalStore } from "react";
+import {
+  commitDisplayTheme,
+  DisplayControls,
+  displayThemeNoFlashScript,
+  readDisplayTheme,
+  subscribeDisplayTheme,
+  type DisplayControlThemeMode,
+} from "@thewhatmatters/wmds";
+
+export { displayThemeNoFlashScript };
+
+function themeServerSnapshot(): DisplayControlThemeMode {
+  return "auto";
+}
+
+export function ThemeSwitch() {
+  const theme = useSyncExternalStore(subscribeDisplayTheme, readDisplayTheme, themeServerSnapshot);
+
+  return (
+    <div className="flex w-full max-w-xs items-center justify-between gap-3 rounded-xl border border-border bg-surface p-3">
+      <span className="type-label">Appearance</span>
+      <DisplayControls
+        controls="theme"
+        aria-label="Appearance"
+        theme={theme}
+        onThemeChange={commitDisplayTheme}
       />
     </div>
   );

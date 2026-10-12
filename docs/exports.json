@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.15",
+  "version": "0.4.16",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -300,13 +300,14 @@
       "name": "DisplayControls",
       "tier": "molecule",
       "category": "Layout",
-      "summary": "Grid visibility and theme mode controls with G and T shortcuts.",
+      "summary": "Grid visibility and theme mode controls, including a theme-only appearance switch.",
       "storybook": {
         "title": "Components/DisplayControls",
         "docs": "?path=/docs/components-displaycontrols--docs"
       },
       "patterns": [
-        "components-displaycontrols--page-utilities"
+        "components-displaycontrols--page-utilities",
+        "components-displaycontrols--theme-switch"
       ]
     },
     {

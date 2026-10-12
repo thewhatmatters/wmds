@@ -7,6 +7,21 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.16
+
+**DisplayControls can be a theme switch, with a no-flash snippet.**
+
+- **DisplayControls** `controls="theme"` drops the grid button. **G** is not captured. **T** still cycles Auto → Light → Dark.
+- `readDisplayTheme`, `persistDisplayTheme`, `applyDisplayTheme`, `commitDisplayTheme`, and `subscribeDisplayTheme` remember the choice under `wmds-theme` and set or clear `data-theme` on `<html>`. `light` clears the attribute. `dark` sets it. `auto` follows `prefers-color-scheme` and keeps listening until the next call. `useSyncExternalStore(subscribeDisplayTheme, readDisplayTheme, …)` reads the saved choice without a hydration mismatch.
+- `displayThemeNoFlashScript` is the head snippet that reads the same key before paint. Paste it before the stylesheet.
+- Pattern: **Components/DisplayControls → Pattern — theme switch**.
+
+### Consumer actions
+
+Paste `displayThemeNoFlashScript` in `<head>` before the stylesheet (a `<script>` whose text is that string). Render **DisplayControls** with `controls="theme"` and call `commitDisplayTheme` from `onThemeChange`. Paste **Components/DisplayControls → Pattern — theme switch** (`docs/patterns/components-displaycontrols--theme-switch.tsx`).
+
+Existing grid + theme pages keep `controls` omitted. **Pattern — page display controls** is unchanged.
+
 ## 0.4.15
 
 **TaskRows: a needs-you table.**

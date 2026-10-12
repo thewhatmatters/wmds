@@ -276,9 +276,16 @@ export {
   type DescriptionListVariant,
 } from "./components/molecules/DescriptionList/DescriptionList";
 export {
+  applyDisplayTheme,
+  commitDisplayTheme,
   DisplayControls,
   displayControlThemeModes,
+  displayThemeNoFlashScript,
+  displayThemeStorageKey,
   nextDisplayControlThemeMode,
+  persistDisplayTheme,
+  readDisplayTheme,
+  subscribeDisplayTheme,
   type DisplayControlsLabels,
   type DisplayControlsLayoutClassName,
   type DisplayControlsProps,
