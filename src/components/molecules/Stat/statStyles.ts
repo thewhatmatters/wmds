@@ -74,6 +74,9 @@ export const statValueSizeClasses: Record<StatSize, string> = {
 /** Visible secondary line — "vs $14,850", "of $1M goal". Figures stay tabular. */
 export const statContextClasses = `${typographyClass("caption")} tabular-nums`;
 
+/** One line under the figure — "3 new" or "vs last scan". Figures stay tabular. */
+export const statDetailClasses = `${typographyClass("caption")} tabular-nums text-muted`;
+
 /** Stand-in figure when the source is not wired. */
 export const statUnavailableClasses = "type-body text-muted";
 

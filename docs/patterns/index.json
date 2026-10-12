@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.17",
+  "version": "0.4.18",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -681,6 +681,22 @@
       "file": "patterns/components-linktile--router-link.tsx",
       "storybook": "?path=/story/components-linktile--router-link",
       "source": "src/components/molecules/LinkTile/LinkTile.stories.tsx"
+    },
+    {
+      "id": "components-logview--detail-pane",
+      "title": "Components/LogView",
+      "name": "Pattern — detail pane",
+      "file": "patterns/components-logview--detail-pane.tsx",
+      "storybook": "?path=/story/components-logview--detail-pane",
+      "source": "src/components/molecules/LogView/LogView.stories.tsx"
+    },
+    {
+      "id": "components-logview--log-viewer",
+      "title": "Components/LogView",
+      "name": "Pattern — log viewer",
+      "file": "patterns/components-logview--log-viewer.tsx",
+      "storybook": "?path=/story/components-logview--log-viewer",
+      "source": "src/components/molecules/LogView/LogView.stories.tsx"
     },
     {
       "id": "components-moremenu--action-menu",
