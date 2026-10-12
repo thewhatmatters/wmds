@@ -7,6 +7,17 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.19
+
+**A chart beside a stat column.**
+
+- **Pattern — revenue by line** composes **Chart.Cartesian** and a column of **Stat** inside a **Card**. No new component.
+- The same pattern includes the unwired state: "Revenue by line is not wired". Do not draw a series until the source exists.
+
+### Consumer actions
+
+Paste **Components/Chart → Pattern — revenue by line** (`docs/patterns/components-chart--revenue-by-line.tsx`). Keep the unwired card until revenue by line is connected. Drop it once `data` is real.
+
 ## 0.4.18
 
 **A log viewer, and a dark detail pane.**

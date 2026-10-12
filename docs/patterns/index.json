@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.18",
+  "version": "0.4.19",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -312,6 +312,14 @@
       "name": "Pattern — ranked audience breakdown",
       "file": "patterns/components-chart--ranked-audience-breakdown.tsx",
       "storybook": "?path=/story/components-chart--ranked-audience-breakdown",
+      "source": "src/components/organisms/Chart/Chart.stories.tsx"
+    },
+    {
+      "id": "components-chart--revenue-by-line",
+      "title": "Components/Chart",
+      "name": "Pattern — revenue by line",
+      "file": "patterns/components-chart--revenue-by-line.tsx",
+      "storybook": "?path=/story/components-chart--revenue-by-line",
       "source": "src/components/organisms/Chart/Chart.stories.tsx"
     },
     {
