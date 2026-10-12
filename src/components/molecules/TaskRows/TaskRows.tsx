@@ -14,6 +14,13 @@ import { Status } from "../../atoms/Status/Status";
 import { Accordion } from "../Accordion/Accordion";
 import { cn } from "../../../lib/cn";
 import {
+  TaskRowsRow,
+  TaskRowsTable,
+  taskRowsTableColumnsDefault,
+  type TaskRowsColumn,
+  type TaskRowsRowProps,
+} from "./TaskRowsTable";
+import {
   taskRowsDetailButtonClasses,
   taskRowsDetailLabelClasses,
   taskRowsDetailMetaClasses,
@@ -37,6 +44,20 @@ import {
 } from "./taskRowsStyles";
 
 export type { TaskRowStatus, TaskRowsDetailLayout, TaskRowsDetailVariant, TaskRowsVariant } from "./taskRowsStyles";
+export type {
+  TaskRowsColumn,
+  TaskRowsRowProps,
+  TaskRowsTableColumnId,
+  TaskRowsTableMetric,
+  TaskRowsTableSource,
+  TaskRowsTableStatus,
+  TaskRowsTableWaiting,
+} from "./TaskRowsTable";
+export {
+  taskRowsTableColumnIds,
+  taskRowsTableColumnsDefault,
+  taskRowsTableSources,
+} from "./TaskRowsTable";
 export {
   taskRowStatuses,
   taskRowsDetailLayouts,
@@ -60,19 +81,26 @@ const DEFAULT_LABELS: TaskRowsLabels = {
 interface TaskRowsContextValue {
   variant: TaskRowsVariant;
   labels: TaskRowsLabels;
+  columns: TaskRowsColumn[];
 }
 
 const TaskRowsContext = createContext<TaskRowsContextValue>({
   variant: "list",
   labels: DEFAULT_LABELS,
+  columns: taskRowsTableColumnsDefault,
 });
 
 export interface TaskRowsProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode;
-  /** `list` — inset panel with dividers. `capsule` — separated rounded rows. */
+  /** Rows. Omit them on `variant="table"` to show `empty`. */
+  children?: ReactNode;
+  /** `list` — inset panel with dividers. `capsule` — separated rounded rows. `table` — needs-you columns. */
   variant?: TaskRowsVariant;
   /** List only — drop the standalone shell (radius, fill, shadow) inside **Card.Body**. */
   inset?: boolean;
+  /** `variant="table"` — column headers. Defaults to Item, Waiting, Metric. */
+  columns?: TaskRowsColumn[];
+  /** `variant="table"` — shown when there are no rows. Defaults to "Nothing waiting". */
+  empty?: ReactNode;
   labels?: Partial<TaskRowsLabels>;
   className?: TaskRowsLayoutClassName;
 }
@@ -123,6 +151,8 @@ function TaskRowsRoot({
   variant = "list",
   inset = false,
   labels,
+  columns = taskRowsTableColumnsDefault,
+  empty,
   className,
   children,
   ...props
@@ -131,9 +161,20 @@ function TaskRowsRoot({
     () => ({
       variant,
       labels: { ...DEFAULT_LABELS, ...labels },
+      columns,
     }),
-    [labels, variant],
+    [columns, labels, variant],
   );
+
+  if (variant === "table") {
+    return (
+      <TaskRowsContext.Provider value={contextValue}>
+        <TaskRowsTable columns={columns} empty={empty} className={className} {...props}>
+          {children}
+        </TaskRowsTable>
+      </TaskRowsContext.Provider>
+    );
+  }
 
   return (
     <TaskRowsContext.Provider value={contextValue}>
@@ -142,6 +183,15 @@ function TaskRowsRoot({
       </Accordion>
     </TaskRowsContext.Provider>
   );
+}
+
+function TaskRowsTableRow(props: TaskRowsRowProps) {
+  const { variant, columns } = useContext(TaskRowsContext);
+  if (variant !== "table") {
+    console.warn('[WMDS TaskRows] TaskRows.Row belongs in variant="table".');
+    return null;
+  }
+  return <TaskRowsRow {...props} columns={columns} />;
 }
 
 function taskRowsExpandOnlyDetailsClasses(layout: TaskRowsDetailLayout): string {
@@ -341,4 +391,5 @@ function TaskRowsDetail({
 export const TaskRows = Object.assign(TaskRowsRoot, {
   Item: TaskRowsItem,
   Detail: TaskRowsDetail,
+  Row: TaskRowsTableRow,
 });

@@ -7,7 +7,14 @@ import { Status } from "../../atoms/Status/Status";
 import { cn } from "../../../lib/cn";
 import { typographyClass } from "../../../lib/typography";
 import { Chip } from "../Chip/Chip";
-import { Card, cardBodyTextClasses, cardTitleClasses } from "../Card/Card";
+import {
+  Card,
+  cardBodyTextClasses,
+  cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantPadYClasses,
+  cardTitleClasses,
+} from "../Card/Card";
+import type { TaskRowsColumn } from "./TaskRows";
 import { TaskRows } from "./TaskRows";
 import { storyCopySource, storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 
@@ -632,4 +639,140 @@ export function ReorderPanel() {
     `,
   ),
   render: () => <ControlledExpandDemo />,
+};
+
+const needsYouColumns: TaskRowsColumn[] = [
+  { id: "title", header: "Campaign" },
+  { id: "waiting", header: "Waiting on you" },
+  { id: "metric", header: "Live posts", align: "end" },
+];
+
+const needsYouWellClasses = [
+  "flex flex-col",
+  cardLayoutBodyOccupantPadYClasses,
+  cardLayoutBodyOccupantInsetXClasses,
+].join(" ");
+
+function CampaignsThatNeedYou() {
+  return (
+    <div className="grid w-full gap-6">
+      <section>
+        <Card shape="rounded">
+        <Card.Header start={<h2 className={cardTitleClasses}>Campaigns that need you</h2>} />
+        <Card.Body>
+          <div className={needsYouWellClasses}>
+            <TaskRows variant="table" columns={needsYouColumns} empty="Nothing waiting">
+              <TaskRows.Row
+                title="Stir in strength"
+                href="/campaigns/stir"
+                status={{ tone: "success", label: "Active · day 41" }}
+                waiting={{ label: "22 creators", detail: "4 waiting over 5 days" }}
+                metric={{ value: "49", detail: "12 this week" }}
+              />
+              <TaskRows.Row
+                title="Healthier every day"
+                href="/campaigns/healthier"
+                status={{ tone: "warning", label: "Open · 2d" }}
+                waiting={{ label: "4 creators", detail: "all within 48h target" }}
+                metric={{ value: "10", detail: "2 this week" }}
+              />
+              <TaskRows.Row title="Outreach" source="unwired" note="Outreach is not connected" />
+              <TaskRows.Row title="Matching" source="loading" />
+              <TaskRows.Row title="Brand settings" source="error" note="Could not load this source" />
+            </TaskRows>
+          </div>
+        </Card.Body>
+      </Card>
+      </section>
+      <section>
+        <Card shape="rounded">
+        <Card.Header start={<h2 className={cardTitleClasses}>Caught up</h2>} />
+        <Card.Body>
+          <div className={needsYouWellClasses}>
+            <TaskRows variant="table" columns={needsYouColumns} empty="Nothing waiting" />
+          </div>
+        </Card.Body>
+      </Card>
+      </section>
+    </div>
+  );
+}
+
+const needsYouShowCode = `
+import { Card, TaskRows, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantPadYClasses, cardTitleClasses, type TaskRowsColumn } from "@thewhatmatters/wmds";
+
+const columns: TaskRowsColumn[] = [
+  { id: "title", header: "Campaign" },
+  { id: "waiting", header: "Waiting on you" },
+  { id: "metric", header: "Live posts", align: "end" },
+];
+
+const wellClasses = [
+  "flex flex-col",
+  cardLayoutBodyOccupantPadYClasses,
+  cardLayoutBodyOccupantInsetXClasses,
+].join(" ");
+
+export function CampaignsThatNeedYou() {
+  return (
+    <div className="grid w-full gap-6">
+      <section>
+        <Card shape="rounded">
+        <Card.Header start={<h2 className={cardTitleClasses}>Campaigns that need you</h2>} />
+        <Card.Body>
+          <div className={wellClasses}>
+            <TaskRows variant="table" columns={columns} empty="Nothing waiting">
+              <TaskRows.Row
+                title="Stir in strength"
+                href="/campaigns/stir"
+                status={{ tone: "success", label: "Active · day 41" }}
+                waiting={{ label: "22 creators", detail: "4 waiting over 5 days" }}
+                metric={{ value: "49", detail: "12 this week" }}
+              />
+              <TaskRows.Row
+                title="Healthier every day"
+                href="/campaigns/healthier"
+                status={{ tone: "warning", label: "Open · 2d" }}
+                waiting={{ label: "4 creators", detail: "all within 48h target" }}
+                metric={{ value: "10", detail: "2 this week" }}
+              />
+              <TaskRows.Row title="Outreach" source="unwired" note="Outreach is not connected" />
+              <TaskRows.Row title="Matching" source="loading" />
+              <TaskRows.Row title="Brand settings" source="error" note="Could not load this source" />
+            </TaskRows>
+          </div>
+        </Card.Body>
+      </Card>
+      </section>
+      <section>
+        <Card shape="rounded">
+        <Card.Header start={<h2 className={cardTitleClasses}>Caught up</h2>} />
+        <Card.Body>
+          <div className={wellClasses}>
+            <TaskRows variant="table" columns={columns} empty="Nothing waiting" />
+          </div>
+        </Card.Body>
+      </Card>
+      </section>
+    </div>
+  );
+}
+`;
+
+export const NeedsYouTable: Story = {
+  name: "Pattern — needs you",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Campaigns that need you. `variant=\"table\"` with a title link, a status dot and label, a waiting pill and sub-line, and a tabular metric. `source=\"unwired\"` is a footer note, `loading` is a skeleton, `error` names the failed source. No rows reads \"Nothing waiting\". Below `md` each row is two lines.",
+        },
+      },
+    },
+    needsYouShowCode,
+  ),
+  render: function NeedsYouTableRender() {
+    return <CampaignsThatNeedYou />;
+  },
 };

@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.14",
+  "version": "0.4.15",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -936,6 +936,14 @@
       "name": "Pattern — custom leading / trailing",
       "file": "patterns/components-taskrows--custom-slots.tsx",
       "storybook": "?path=/story/components-taskrows--custom-slots",
+      "source": "src/components/molecules/TaskRows/TaskRows.stories.tsx"
+    },
+    {
+      "id": "components-taskrows--needs-you-table",
+      "title": "Components/TaskRows",
+      "name": "Pattern — needs you",
+      "file": "patterns/components-taskrows--needs-you-table.tsx",
+      "storybook": "?path=/story/components-taskrows--needs-you-table",
       "source": "src/components/molecules/TaskRows/TaskRows.stories.tsx"
     },
     {
