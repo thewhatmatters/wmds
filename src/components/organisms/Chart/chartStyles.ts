@@ -9,6 +9,38 @@ export const chartFrameClasses = "relative w-full";
 export const chartSegmentBarHostClasses =
   "relative block w-full min-w-0 [height:var(--chart-segment-height,2rem)]";
 
+/** CSS ticks drawn before the host has a width (SSR and the first paint). */
+export const chartSegmentBarFallbackClasses = "flex h-full w-full items-stretch gap-px";
+
+export const chartSegmentBarFallbackTickClasses = "min-w-0 flex-1 rounded-[2px]";
+
+/** Segmented ring — fixed box, ticks in a 100×100 viewBox. sm 96 / md 160 / lg 192. */
+export const chartSegmentedRingFrameClasses = "relative inline-flex shrink-0 flex-col items-center";
+
+export const chartSegmentedRingSizeClasses = {
+  sm: "size-24",
+  md: "size-40",
+  lg: "size-48",
+} as const;
+
+export const chartSegmentedRingCenterClasses =
+  "pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-[16%] text-center";
+
+export const chartSegmentedRingValueClasses = {
+  sm: `${typographyClass("subheading")} tabular-nums`,
+  md: `${typographyClass("section-heading")} tabular-nums`,
+  lg: "type-display-3 tabular-nums tracking-tight text-fg",
+} as const;
+
+export const chartSegmentedRingLabelClasses = typographyClass("caption");
+
+/** Muted on purpose — `typographyClass("ui-label")` includes `text-fg`, which would win. */
+export const chartSegmentedRingUnavailableLabelClasses = "type-label text-muted";
+
+export const chartSegmentedRingUnavailableReasonClasses = typographyClass("caption");
+
+export const chartSegmentedRingOverflowClasses = "type-caption text-destructive";
+
 /** Ranked percentage breakdown — audience fit, locations, and demographics. */
 export const chartRankedBarListClasses = "flex w-full min-w-0 flex-col gap-3";
 
@@ -160,6 +192,26 @@ export const chartLegendItemClasses = "flex items-center gap-2";
 export const chartLegendSwatchClasses = "size-2 shrink-0 rounded-full";
 
 export const chartLegendLabelClasses = `${typographyClass("caption")} text-muted`;
+
+/** Tabular legend — swatch, label, mono value, percent, delta. One row per series. */
+export const chartLegendTabularClasses = "flex w-full min-w-0 flex-col gap-2";
+
+export const chartLegendTabularItemClasses =
+  "grid grid-cols-[auto_minmax(0,1fr)_auto_auto_auto] items-baseline gap-x-3";
+
+export const chartLegendTabularLabelClasses = `${typographyClass("caption")} min-w-0 truncate text-fg`;
+
+export const chartLegendTabularValueClasses =
+  "text-right font-mono text-xs tabular-nums leading-none text-fg";
+
+export const chartLegendTabularPercentClasses =
+  "text-right font-mono text-xs tabular-nums leading-none text-muted";
+
+export const chartLegendTabularDeltaClasses = {
+  up: "text-right font-mono text-xs tabular-nums leading-none text-success",
+  down: "text-right font-mono text-xs tabular-nums leading-none text-destructive",
+  flat: "text-right font-mono text-xs tabular-nums leading-none text-muted",
+} as const;
 
 /** @deprecated Use chartTooltipPanelClasses — ADR-0015 rename. */
 export const chartPeriodTooltipClasses = chartTooltipPanelClasses;

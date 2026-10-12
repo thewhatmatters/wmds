@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.13",
+  "version": "0.4.14",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -157,7 +157,7 @@
       "name": "Chart",
       "tier": "organism",
       "category": "Data visualization",
-      "summary": "visx-based charts: capacity bars, ranked bars, unit grids, heatmaps, and time series.",
+      "summary": "visx-based charts: capacity bars, segmented rings, ranked bars, unit grids, heatmaps, and time series.",
       "storybook": {
         "title": "Components/Chart",
         "docs": "?path=/docs/components-chart--docs"
@@ -169,6 +169,7 @@
         "components-chart--occupancy-in-card",
         "components-chart--post-reach-distribution",
         "components-chart--ranked-audience-breakdown",
+        "components-chart--segmented-ring-pattern",
         "components-chart--unit-grid-composition"
       ]
     },

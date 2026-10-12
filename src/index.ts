@@ -544,6 +544,11 @@ export {
   type ChartSegmentFillVariant,
   type ChartSegmentPreset,
   type ChartSegmentedBarProps,
+  type ChartSegmentedRingProps,
+  type ChartSegmentedRingSize,
+  type ChartSegmentedRingUnavailable,
+  chartSegmentedRingSegmentDefault,
+  chartSegmentedRingSizes,
   type ChartTone,
   type ChartUnitGridLayoutClassName,
   type ChartUnitGridPart,
@@ -762,7 +767,12 @@ export type {
 } from "./components/organisms/Chart/ChartCartesian";
 export type { ChartSegmentedBarAnimate } from "./components/organisms/Chart/chartSegmentedBarMotion";
 export type { ChartLoadingLayoutClassName, ChartLoadingProps } from "./components/organisms/Chart/ChartLoading";
-export type { ChartLegendLayoutClassName, ChartLegendProps } from "./components/organisms/Chart/ChartLegend";
+export type {
+  ChartLegendLayoutClassName,
+  ChartLegendProps,
+  ChartLegendVariant,
+} from "./components/organisms/Chart/ChartLegend";
+export { chartLegendVariants } from "./components/organisms/Chart/ChartLegend";
 export type {
   ChartTooltipContentLayoutClassName,
   ChartTooltipContentProps,
@@ -785,6 +795,7 @@ export {
   resolvePeriodSegmentPreset,
   resolvePeriodSegments,
   type ChartSeriesConfig,
+  type ChartSeriesConfigDelta,
   type ChartSeriesConfigEntry,
   type ChartTooltipIndicator,
   type ChartTooltipItem,

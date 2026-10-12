@@ -583,10 +583,22 @@ export const chartTooltipIndicators = ["dot", "line", "dashed"] as const;
 
 export type ChartTooltipIndicator = (typeof chartTooltipIndicators)[number];
 
+/** Direction for a tabular legend delta. Omitted direction is flat. */
+export type ChartSeriesConfigDelta = {
+  label: string;
+  direction?: "up" | "down" | "flat";
+};
+
 /** One series entry — shared by tooltip, legend, and Area marks. */
 export type ChartSeriesConfigEntry = {
   label: string;
   color: string;
+  /** Tabular legend — mono value, already formatted ("1,569"). */
+  value?: string;
+  /** Tabular legend — whole percent ("46%"). */
+  percent?: string;
+  /** Tabular legend — signed change ("+8%"). */
+  delta?: ChartSeriesConfigDelta;
 };
 
 /** Series labels and colors decoupled from data shape (shadcn ChartConfig). */

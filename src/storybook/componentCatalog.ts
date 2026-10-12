@@ -63,7 +63,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "SectionCaption", category: "Content", title: "Components/SectionCaption", description: "Small uppercase mono caption over a page column, on a rule, with an optional action." },
 
   // Data visualization
-  { name: "Chart", category: "Data visualization", title: "Components/Chart", description: "visx-based charts: capacity bars, ranked bars, unit grids, heatmaps, and time series." },
+  { name: "Chart", category: "Data visualization", title: "Components/Chart", description: "visx-based charts: capacity bars, segmented rings, ranked bars, unit grids, heatmaps, and time series." },
   { name: "Stat", category: "Data visualization", title: "Components/Stat", description: "At-a-glance metric tile with label, value, optional trend, and a hero size with a visible vs line." },
 
   // Feedback & status

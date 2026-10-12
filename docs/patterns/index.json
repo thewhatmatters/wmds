@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.13",
+  "version": "0.4.14",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -304,6 +304,14 @@
       "name": "Pattern — ranked audience breakdown",
       "file": "patterns/components-chart--ranked-audience-breakdown.tsx",
       "storybook": "?path=/story/components-chart--ranked-audience-breakdown",
+      "source": "src/components/organisms/Chart/Chart.stories.tsx"
+    },
+    {
+      "id": "components-chart--segmented-ring-pattern",
+      "title": "Components/Chart",
+      "name": "Pattern — segmented ring",
+      "file": "patterns/components-chart--segmented-ring-pattern.tsx",
+      "storybook": "?path=/story/components-chart--segmented-ring-pattern",
       "source": "src/components/organisms/Chart/Chart.stories.tsx"
     },
     {

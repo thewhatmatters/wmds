@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.13 · Pattern — post metadata
+// @thewhatmatters/wmds@0.4.14 · Pattern — post metadata
 // Storybook: Components/DescriptionList → Pattern — post metadata (?path=/story/components-descriptionlist--post-metadata)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

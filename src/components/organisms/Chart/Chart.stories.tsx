@@ -9,9 +9,11 @@ import { Select, type SelectOption } from "../../molecules/Select/Select";
 import { typographyClass } from "../../../lib/typography";
 import {
   chartPeriodKindFromValue,
+  chartSeriesColor,
   chartSeriesConfigFromKeys,
   chartSeriesConfigFromTone,
   chartTooltipItemsFromConfig,
+  type ChartSeriesConfig,
 } from "../../../lib/chartTheme";
 import {
   buildCartesianSeriesWithLeadingGap,
@@ -242,7 +244,8 @@ Dashboard visualizations on **visx v4** — WMDS owns the **shell**; patterns ow
 
 | Plot family | Pattern | Axes |
 |-------------|---------|------|
-| **Capacity meter** | \`Chart.SegmentedBar\` — \`value\` / \`max\`, \`fill="velocity"\` \\| \`semantic\` | No |
+| **Capacity meter** | \`Chart.SegmentedBar\` — \`value\` / \`max\`, \`fill="velocity"\` \\| \`semantic\`. CSS ticks until the host is measured | No |
+| **Progress ring** | \`Chart.SegmentedRing\` — segmented radial meter, center figure, tabular **Chart.Legend** | No |
 | **Ranked breakdown** | \`Chart.RankedBars\` — ordered labeled values such as audience country / age | No |
 | **Unit composition** | \`Chart.UnitGrid\` — exact part-to-whole units, typically 100 | Yes |
 | **Distribution strip** | \`Chart.DistributionStrip\` — independent entity values + reference | Yes |
@@ -269,6 +272,8 @@ Card.Header / Footer usually carry KPI copy; the chart mark sits in **Card.Body*
 - **Do** use \`chartFormatPercent(value, max)\` for headline percent copy.
 - **Do** pass \`label\` when \`role="meter"\` needs more context than a percent.
 - **Do** use \`Chart.SegmentedBar\` only for **capacity** — snapshot fill (\`value\` / \`max\`). Daily history → **Chart.Cartesian** + **Chart.Cartesian.Area** (ADR-0015).
+- **Do** use \`Chart.SegmentedRing\` for a radial capacity meter (channels total, weekly goal). Pair a breakdown with \`Chart.Legend variant="tabular"\`. \`unavailable\` replaces the center when the source is unwired — do not draw a zero. Values above \`max\` clamp the arc and mark overflow.
+- **Do** render \`Chart.SegmentedBar\` from the server. It draws CSS ticks before it has a width, then the measured SVG.
 - **Do** use \`Chart.RankedBars\` for ordered percentage comparisons; sort the data before passing it.
 - **Do** use \`Chart.UnitGrid\` only for honest part-to-whole composition, \`Chart.DistributionStrip\` for one metric across peers, and \`Chart.Heatmap\` when both axes are categorical.
 - **Do** use \`fill="velocity"\` for occupancy-style capacity bars; \`fill="semantic"\` for RAG utilization meters (red → orange → yellow → green).
@@ -1123,5 +1128,305 @@ const periodOptions = [
         />
       </ChartCardBodyStatePreview>
     );
+  },
+};
+
+const channelLegend = {
+  widget: {
+    label: "Chat widget",
+    color: chartSeriesColor(0),
+    value: "1,569",
+    percent: "46%",
+    delta: { label: "+8%", direction: "up" },
+  },
+  email: {
+    label: "Email",
+    color: chartSeriesColor(1),
+    value: "921",
+    percent: "27%",
+    delta: { label: "-3%", direction: "down" },
+  },
+  whatsapp: {
+    label: "WhatsApp",
+    color: chartSeriesColor(2),
+    value: "580",
+    percent: "17%",
+    delta: { label: "+21%", direction: "up" },
+  },
+  slack: {
+    label: "Slack Connect",
+    color: chartSeriesColor(3),
+    value: "342",
+    percent: "10%",
+    delta: { label: "+2%", direction: "up" },
+  },
+} satisfies ChartSeriesConfig;
+
+const ringWellClasses = [
+  "flex w-full flex-col items-center gap-6",
+  cardLayoutBodyOccupantPadYClasses,
+  cardLayoutBodyOccupantInsetXClasses,
+].join(" ");
+
+function SegmentedRingExamples() {
+  return (
+    <div className="grid w-full gap-6 lg:grid-cols-2">
+      <section>
+        <Card shape="rounded">
+        <Card.Header start={<h2 className={cardTitleClasses}>Channels</h2>} />
+        <Card.Body>
+          <div className={ringWellClasses}>
+            <Chart.SegmentedRing
+              value={2842}
+              max={3412}
+              tone="primary"
+              size="lg"
+              centerValue="3,412"
+              centerLabel="conversations"
+              label="3,412 conversations"
+              animate="none"
+            />
+            <Chart.Legend variant="tabular" config={channelLegend} className="w-full" />
+          </div>
+        </Card.Body>
+      </Card>
+      </section>
+      <section>
+        <Card shape="rounded">
+        <Card.Header start={<h2 className={cardTitleClasses}>Weekly goals</h2>} />
+        <Card.Body>
+          <div className={ringWellClasses}>
+            <Chart.SegmentedRing
+              value={38}
+              max={100}
+              tone="primary"
+              size="md"
+              centerValue="38%"
+              centerLabel="of weekly goals"
+              label="Weekly goals 38%"
+              animate="none"
+            />
+          </div>
+        </Card.Body>
+      </Card>
+      </section>
+      <section>
+        <Card shape="rounded">
+        <Card.Header start={<h2 className={cardTitleClasses}>Over capacity</h2>} />
+        <Card.Body>
+          <div className={ringWellClasses}>
+            <Chart.SegmentedRing
+              value={128}
+              max={100}
+              tone="primary"
+              size="md"
+              centerValue="128%"
+              centerLabel="of goal"
+              label="Goal 128%"
+              animate="none"
+            />
+          </div>
+        </Card.Body>
+      </Card>
+      </section>
+      <section>
+        <Card shape="rounded">
+        <Card.Header start={<h2 className={cardTitleClasses}>Empty</h2>} />
+        <Card.Body>
+          <div className={ringWellClasses}>
+            <Chart.SegmentedRing
+              value={0}
+              max={3412}
+              tone="primary"
+              size="md"
+              centerValue="0"
+              centerLabel="conversations"
+              label="0 conversations"
+              animate="none"
+            />
+          </div>
+        </Card.Body>
+      </Card>
+      </section>
+      <section>
+        <Card shape="rounded">
+        <Card.Header start={<h2 className={cardTitleClasses}>Not connected</h2>} />
+        <Card.Body>
+          <div className={ringWellClasses}>
+            <Chart.SegmentedRing
+              value={0}
+              max={100}
+              tone="primary"
+              size="md"
+              unavailable={{ reason: "Source is not connected" }}
+              label="Conversations"
+              animate="none"
+            />
+          </div>
+        </Card.Body>
+      </Card>
+      </section>
+    </div>
+  );
+}
+
+const segmentedRingShowCode = `
+import { Card, Chart, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantPadYClasses, cardTitleClasses, chartSeriesColor, type ChartSeriesConfig } from "@thewhatmatters/wmds";
+
+const channelLegend: ChartSeriesConfig = {
+  widget: {
+    label: "Chat widget",
+    color: chartSeriesColor(0),
+    value: "1,569",
+    percent: "46%",
+    delta: { label: "+8%", direction: "up" },
+  },
+  email: {
+    label: "Email",
+    color: chartSeriesColor(1),
+    value: "921",
+    percent: "27%",
+    delta: { label: "-3%", direction: "down" },
+  },
+  whatsapp: {
+    label: "WhatsApp",
+    color: chartSeriesColor(2),
+    value: "580",
+    percent: "17%",
+    delta: { label: "+21%", direction: "up" },
+  },
+  slack: {
+    label: "Slack Connect",
+    color: chartSeriesColor(3),
+    value: "342",
+    percent: "10%",
+    delta: { label: "+2%", direction: "up" },
+  },
+};
+
+const ringWellClasses = [
+  "flex w-full flex-col items-center gap-6",
+  cardLayoutBodyOccupantPadYClasses,
+  cardLayoutBodyOccupantInsetXClasses,
+].join(" ");
+
+export function SegmentedRingExamples() {
+  return (
+    <div className="grid w-full gap-6 lg:grid-cols-2">
+      <section>
+        <Card shape="rounded">
+        <Card.Header start={<h2 className={cardTitleClasses}>Channels</h2>} />
+        <Card.Body>
+          <div className={ringWellClasses}>
+            <Chart.SegmentedRing
+              value={2842}
+              max={3412}
+              tone="primary"
+              size="lg"
+              centerValue="3,412"
+              centerLabel="conversations"
+              label="3,412 conversations"
+              animate="none"
+            />
+            <Chart.Legend variant="tabular" config={channelLegend} className="w-full" />
+          </div>
+        </Card.Body>
+      </Card>
+      </section>
+      <section>
+        <Card shape="rounded">
+        <Card.Header start={<h2 className={cardTitleClasses}>Weekly goals</h2>} />
+        <Card.Body>
+          <div className={ringWellClasses}>
+            <Chart.SegmentedRing
+              value={38}
+              max={100}
+              tone="primary"
+              size="md"
+              centerValue="38%"
+              centerLabel="of weekly goals"
+              label="Weekly goals 38%"
+              animate="none"
+            />
+          </div>
+        </Card.Body>
+      </Card>
+      </section>
+      <section>
+        <Card shape="rounded">
+        <Card.Header start={<h2 className={cardTitleClasses}>Over capacity</h2>} />
+        <Card.Body>
+          <div className={ringWellClasses}>
+            <Chart.SegmentedRing
+              value={128}
+              max={100}
+              tone="primary"
+              size="md"
+              centerValue="128%"
+              centerLabel="of goal"
+              label="Goal 128%"
+              animate="none"
+            />
+          </div>
+        </Card.Body>
+      </Card>
+      </section>
+      <section>
+        <Card shape="rounded">
+        <Card.Header start={<h2 className={cardTitleClasses}>Empty</h2>} />
+        <Card.Body>
+          <div className={ringWellClasses}>
+            <Chart.SegmentedRing
+              value={0}
+              max={3412}
+              tone="primary"
+              size="md"
+              centerValue="0"
+              centerLabel="conversations"
+              label="0 conversations"
+              animate="none"
+            />
+          </div>
+        </Card.Body>
+      </Card>
+      </section>
+      <section>
+        <Card shape="rounded">
+        <Card.Header start={<h2 className={cardTitleClasses}>Not connected</h2>} />
+        <Card.Body>
+          <div className={ringWellClasses}>
+            <Chart.SegmentedRing
+              value={0}
+              max={100}
+              tone="primary"
+              size="md"
+              unavailable={{ reason: "Source is not connected" }}
+              label="Conversations"
+              animate="none"
+            />
+          </div>
+        </Card.Body>
+      </Card>
+      </section>
+    </div>
+  );
+}
+`;
+
+export const SegmentedRingPattern: Story = {
+  name: "Pattern — segmented ring",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Radial capacity meter. Partial (channels, weekly goal), over capacity (the arc clamps and a line marks it), empty, and not connected (`unavailable` — the track stays empty). **Chart.Legend** `variant=\"tabular\"` is the breakdown: swatch, label, mono value, percent, delta. `animate=\"none\"` holds the final fill; `animate=\"initial\"` sweeps, and reduced motion does not. **Chart.SegmentedBar** draws the same kind of tick in CSS until its host is measured.",
+        },
+      },
+    },
+    segmentedRingShowCode,
+  ),
+  render: function SegmentedRingPatternRender() {
+    return <SegmentedRingExamples />;
   },
 };
