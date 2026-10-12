@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.19",
+  "version": "0.4.20",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -9,6 +9,14 @@
       "file": "patterns/components-accordion--flush.tsx",
       "storybook": "?path=/story/components-accordion--flush",
       "source": "src/components/molecules/Accordion/Accordion.stories.tsx"
+    },
+    {
+      "id": "components-appshell--portal-dashboard-pattern",
+      "title": "Components/AppShell",
+      "name": "Pattern — portal dashboard",
+      "file": "patterns/components-appshell--portal-dashboard-pattern.tsx",
+      "storybook": "?path=/story/components-appshell--portal-dashboard-pattern",
+      "source": "src/components/organisms/AppShell/AppShell.stories.tsx"
     },
     {
       "id": "components-avatar--dropdown-row",

@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.19",
+  "version": "0.4.20",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -38,6 +38,19 @@
       },
       "patterns": [
         "components-accordion--flush"
+      ]
+    },
+    {
+      "name": "AppShell",
+      "tier": "organism",
+      "category": "Layout",
+      "summary": "App chrome: a sidebar on the page background, the page as an inset raised surface with a title bar, a phone Sheet menu, and an optional aside.",
+      "storybook": {
+        "title": "Components/AppShell",
+        "docs": "?path=/docs/components-appshell--docs"
+      },
+      "patterns": [
+        "components-appshell--portal-dashboard-pattern"
       ]
     },
     {

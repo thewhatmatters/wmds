@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.19 · Pattern — default
+// @thewhatmatters/wmds@0.4.20 · Pattern — default
 // Storybook: Components/Switch → Pattern — default (?path=/story/components-switch--default)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -1,0 +1,410 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
+import { expect, userEvent, waitFor } from "storybook/test";
+import { ChartColumn, Download, FileText, FolderOpen, LayoutDashboard, Megaphone, Settings, Users } from "lucide-react";
+import { Avatar } from "../../atoms/Avatar/Avatar";
+import { Badge } from "../../atoms/Badge/Badge";
+import { Button } from "../../atoms/Button/Button";
+import { Card, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantPadYClasses, cardTitleClasses } from "../../molecules/Card/Card";
+import { DescriptionList } from "../../molecules/DescriptionList/DescriptionList";
+import { NavList, type NavListSectionDef } from "../../molecules/NavList/NavList";
+import { Stat } from "../../molecules/Stat/Stat";
+import { TaskRows, type TaskRowsColumn } from "../../molecules/TaskRows/TaskRows";
+import { lockedViewportStory } from "../../../lib/viewports";
+import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
+import { AppShell } from "./AppShell";
+
+const sections: NavListSectionDef[] = [
+  {
+    items: [
+      { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard strokeWidth={1.75} /> },
+      { id: "campaigns", label: "Campaigns", icon: <Megaphone strokeWidth={1.75} />, count: 12 },
+      { id: "creators", label: "Creators", icon: <Users strokeWidth={1.75} /> },
+      { id: "reports", label: "Reports", icon: <ChartColumn strokeWidth={1.75} /> },
+    ],
+  },
+  {
+    label: "Workspace",
+    items: [
+      { id: "library", label: "Library", icon: <FolderOpen strokeWidth={1.75} /> },
+      { id: "invoices", label: "Invoices", icon: <FileText strokeWidth={1.75} /> },
+      { id: "settings", label: "Settings", icon: <Settings strokeWidth={1.75} /> },
+    ],
+  },
+];
+
+const columns: TaskRowsColumn[] = [
+  { id: "title", header: "Campaign" },
+  { id: "waiting", header: "Waiting on you" },
+  { id: "metric", header: "Live posts", align: "end" },
+];
+
+const wellClasses = [
+  "flex flex-col",
+  cardLayoutBodyOccupantPadYClasses,
+  cardLayoutBodyOccupantInsetXClasses,
+].join(" ");
+
+export interface PortalDashboardProps {
+  defaultSidebarOpen?: boolean;
+  defaultAsideOpen?: boolean;
+}
+
+export function PortalDashboard({
+  defaultSidebarOpen = true,
+  defaultAsideOpen = false,
+}: PortalDashboardProps) {
+  const [activeId, setActiveId] = useState("dashboard");
+  const [asideOpen, setAsideOpen] = useState(defaultAsideOpen);
+
+  return (
+    <AppShell
+      title="Dashboard"
+      defaultSidebarOpen={defaultSidebarOpen}
+      asideOpen={asideOpen}
+      onAsideOpenChange={setAsideOpen}
+      asideTitle="Stir in strength"
+      asideDescription="Campaign details"
+      brand={
+        <>
+          <Avatar name="WhatMatters" size="sm" />
+          <span className="type-label text-fg">WhatMatters</span>
+        </>
+      }
+      sidebar={
+        <NavList
+          aria-label="Portal"
+          className="w-full"
+          sections={sections}
+          activeId={activeId}
+          onSelect={setActiveId}
+        />
+      }
+      header={
+        <>
+          <Button role="secondary" size="sm" icon={<Download strokeWidth={2} />} className="max-sm:!hidden">
+            Export
+          </Button>
+          <Button role="primary" size="sm" onClick={() => setAsideOpen(true)}>
+            Details
+          </Button>
+        </>
+      }
+      aside={
+        <DescriptionList rule="dotted">
+          <DescriptionList.Item name="Status">
+            <Badge status="success" dot>Active · day 41</Badge>
+          </DescriptionList.Item>
+          <DescriptionList.Item name="Creators">22</DescriptionList.Item>
+          <DescriptionList.Item name="Waiting">4 over 5 days</DescriptionList.Item>
+          <DescriptionList.Item name="Live posts">49</DescriptionList.Item>
+        </DescriptionList>
+      }
+    >
+      <div className="grid gap-6">
+        <Stat.Group aria-label="Key figures" columns={4}>
+          <Stat label="Live posts" value="49" trend={{ value: "+12.5%", direction: "up" }} context="vs 43 last month" />
+          <Stat label="Creators" value="128" trend={{ value: "+4.1%", direction: "up" }} context="vs 123 last month" />
+          <Stat label="Reach" value="256K" trend={{ value: "-1.2%", direction: "down" }} context="vs 259K last month" />
+          <Stat label="Waiting on you" value="26" trend={{ value: "0%", direction: "neutral" }} context="across 3 campaigns" />
+        </Stat.Group>
+        <section aria-labelledby="needs-you-heading">
+          <Card>
+            <Card.Header start={<h2 id="needs-you-heading" className={cardTitleClasses}>Campaigns that need you</h2>} />
+            <Card.Body>
+              <div className={wellClasses}>
+                <TaskRows variant="table" columns={columns} empty="Nothing waiting">
+                  <TaskRows.Row
+                    title="Stir in strength"
+                    href="/campaigns/stir"
+                    status={{ tone: "success", label: "Active · day 41" }}
+                    waiting={{ label: "22 creators", detail: "4 waiting over 5 days" }}
+                    metric={{ value: "49", detail: "12 this week" }}
+                  />
+                  <TaskRows.Row
+                    title="Healthier every day"
+                    href="/campaigns/healthier"
+                    status={{ tone: "warning", label: "Open · 2d" }}
+                    waiting={{ label: "4 creators", detail: "all within 48h target" }}
+                    metric={{ value: "10", detail: "2 this week" }}
+                  />
+                  <TaskRows.Row
+                    title="Summer launch"
+                    href="/campaigns/summer"
+                    status={{ tone: "destructive", label: "Paused · 9d" }}
+                    waiting={{ label: "9 creators", detail: "brief needs approval" }}
+                    metric={{ value: "3", detail: "none this week" }}
+                  />
+                </TaskRows>
+              </div>
+            </Card.Body>
+          </Card>
+        </section>
+      </div>
+    </AppShell>
+  );
+}
+
+/** The overlay fades in over the medium tier; the accessibility check waits for the end of it. */
+async function settleOverlay() {
+  await waitFor(() => expect(document.body.querySelector('[role="dialog"]')).not.toBeNull());
+  await new Promise((resolve) => setTimeout(resolve, 800));
+}
+
+const meta = {
+  title: "Components/AppShell",
+  component: AppShell,
+  tags: ["autodocs"],
+  ...storyMetaDocsDefaults(),
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: {
+      description: {
+        component: `
+## Usage
+
+App chrome for a signed-in product: a **sidebar** on the page background and the page as an inset, raised surface with a **title bar**. It composes **NavList** (the sidebar), **PageHeader** \`variant="app"\` (the title bar), **Sheet** (the sidebar below \`lg\`), and **Panel** (the aside). It adds no color, radius, or shadow of its own — the surface uses the **Card** shell radius and \`shadow-soft-card\`.
+
+| Part | Prop or slot | Composes |
+|------|--------------|----------|
+| Brand row | \`brand\` / **AppShell.Brand** | A 56px band — the same token as the title bar, so their bottom edges align |
+| Sidebar | \`sidebar\` / **AppShell.Sidebar** | **NavList** with \`className="w-full"\` |
+| Title bar | \`title\`, \`header\` / **AppShell.Header** | **PageHeader** \`variant="app"\` — \`h1\`, the toggle, and trailing controls |
+| Aside | \`aside\` / **AppShell.Aside**, \`asideTitle\` | **Panel** \`side="end"\` — non-blocking |
+| Page | \`children\` | Scrolls inside \`main\` |
+
+## Anatomy
+
+\`\`\`
+AppShell
+├── sidebar column (lg+)      brand row · NavList          — on bg-body
+├── surface                   rounded, shadow-soft-card, 8px inset
+│   ├── PageHeader app        PanelLeft toggle · h1 · header
+│   └── main                  children
+├── Sheet side="start"        the sidebar below lg
+└── Panel side="end"          aside
+\`\`\`
+
+## Best practices
+
+- **Do** pass a **NavList** with \`aria-label\` — it is the navigation landmark. The title bar is the \`banner\`; the page is \`main\`.
+- **Do** keep the toggle: it collapses the sidebar from \`lg\` and opens the **Sheet** below it. **Ctrl** / **⌘** + **B** does the same. Focus inside a collapsing sidebar returns to the toggle.
+- **Do** own the aside state (\`asideOpen\`, \`onAsideOpenChange\`) when a title-bar button opens it. **Panel** keeps the page interactive; Escape closes it and returns focus to that button.
+- **Do** use \`useAppShell()\` in a child when it needs the shell's state.
+- **Don't** put a second page \`h1\` in \`children\` — \`title\` is the \`h1\`.
+- **Don't** re-theme the surface with \`className\` — it is layout only (height).
+- **Don't** use it for marketing pages — that is **SiteNav**.
+
+## For agents building UIs
+
+Copy **Pattern — portal dashboard**. The states below reuse the same page: **State — collapsed**, **State — aside open**, **State — phone**, and **State — phone menu open**.
+        `.trim(),
+      },
+    },
+  },
+} satisfies Meta<typeof AppShell>;
+
+export default meta;
+type Story = StoryObj<typeof AppShell>;
+
+export const PortalDashboardPattern: Story = {
+  name: "Pattern — portal dashboard",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "A WhatMatters portal page — brand row, grouped **NavList**, key figures as **Stat** tiles, and a campaigns table in a **Card**. The toggle in the title bar collapses the sidebar; Details opens the aside.",
+        },
+      },
+    },
+    `"use client";
+
+import { useState } from "react";
+import { ChartColumn, Download, FileText, FolderOpen, LayoutDashboard, Megaphone, Settings, Users } from "lucide-react";
+import {
+  AppShell,
+  Avatar,
+  Badge,
+  Button,
+  Card,
+  DescriptionList,
+  NavList,
+  Stat,
+  TaskRows,
+  cardLayoutBodyOccupantInsetXClasses,
+  cardLayoutBodyOccupantPadYClasses,
+  cardTitleClasses,
+  type NavListSectionDef,
+  type TaskRowsColumn,
+} from "@thewhatmatters/wmds";
+
+const sections: NavListSectionDef[] = [
+  {
+    items: [
+      { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard strokeWidth={1.75} /> },
+      { id: "campaigns", label: "Campaigns", icon: <Megaphone strokeWidth={1.75} />, count: 12 },
+      { id: "creators", label: "Creators", icon: <Users strokeWidth={1.75} /> },
+      { id: "reports", label: "Reports", icon: <ChartColumn strokeWidth={1.75} /> },
+    ],
+  },
+  {
+    label: "Workspace",
+    items: [
+      { id: "library", label: "Library", icon: <FolderOpen strokeWidth={1.75} /> },
+      { id: "invoices", label: "Invoices", icon: <FileText strokeWidth={1.75} /> },
+      { id: "settings", label: "Settings", icon: <Settings strokeWidth={1.75} /> },
+    ],
+  },
+];
+
+const columns: TaskRowsColumn[] = [
+  { id: "title", header: "Campaign" },
+  { id: "waiting", header: "Waiting on you" },
+  { id: "metric", header: "Live posts", align: "end" },
+];
+
+const wellClasses = [
+  "flex flex-col",
+  cardLayoutBodyOccupantPadYClasses,
+  cardLayoutBodyOccupantInsetXClasses,
+].join(" ");
+
+interface PortalDashboardProps {
+  defaultSidebarOpen?: boolean;
+  defaultAsideOpen?: boolean;
+}
+
+export function PortalDashboard({
+  defaultSidebarOpen = true,
+  defaultAsideOpen = false,
+}: PortalDashboardProps) {
+  const [activeId, setActiveId] = useState("dashboard");
+  const [asideOpen, setAsideOpen] = useState(defaultAsideOpen);
+
+  return (
+    <AppShell
+      title="Dashboard"
+      defaultSidebarOpen={defaultSidebarOpen}
+      asideOpen={asideOpen}
+      onAsideOpenChange={setAsideOpen}
+      asideTitle="Stir in strength"
+      asideDescription="Campaign details"
+      brand={
+        <>
+          <Avatar name="WhatMatters" size="sm" />
+          <span className="type-label text-fg">WhatMatters</span>
+        </>
+      }
+      sidebar={
+        <NavList
+          aria-label="Portal"
+          className="w-full"
+          sections={sections}
+          activeId={activeId}
+          onSelect={setActiveId}
+        />
+      }
+      header={
+        <>
+          <Button role="secondary" size="sm" icon={<Download strokeWidth={2} />} className="max-sm:!hidden">
+            Export
+          </Button>
+          <Button role="primary" size="sm" onClick={() => setAsideOpen(true)}>
+            Details
+          </Button>
+        </>
+      }
+      aside={
+        <DescriptionList rule="dotted">
+          <DescriptionList.Item name="Status">
+            <Badge status="success" dot>Active · day 41</Badge>
+          </DescriptionList.Item>
+          <DescriptionList.Item name="Creators">22</DescriptionList.Item>
+          <DescriptionList.Item name="Waiting">4 over 5 days</DescriptionList.Item>
+          <DescriptionList.Item name="Live posts">49</DescriptionList.Item>
+        </DescriptionList>
+      }
+    >
+      <div className="grid gap-6">
+        <Stat.Group aria-label="Key figures" columns={4}>
+          <Stat label="Live posts" value="49" trend={{ value: "+12.5%", direction: "up" }} context="vs 43 last month" />
+          <Stat label="Creators" value="128" trend={{ value: "+4.1%", direction: "up" }} context="vs 123 last month" />
+          <Stat label="Reach" value="256K" trend={{ value: "-1.2%", direction: "down" }} context="vs 259K last month" />
+          <Stat label="Waiting on you" value="26" trend={{ value: "0%", direction: "neutral" }} context="across 3 campaigns" />
+        </Stat.Group>
+        <section aria-labelledby="needs-you-heading">
+          <Card>
+            <Card.Header start={<h2 id="needs-you-heading" className={cardTitleClasses}>Campaigns that need you</h2>} />
+            <Card.Body>
+              <div className={wellClasses}>
+                <TaskRows variant="table" columns={columns} empty="Nothing waiting">
+                  <TaskRows.Row
+                    title="Stir in strength"
+                    href="/campaigns/stir"
+                    status={{ tone: "success", label: "Active · day 41" }}
+                    waiting={{ label: "22 creators", detail: "4 waiting over 5 days" }}
+                    metric={{ value: "49", detail: "12 this week" }}
+                  />
+                  <TaskRows.Row
+                    title="Healthier every day"
+                    href="/campaigns/healthier"
+                    status={{ tone: "warning", label: "Open · 2d" }}
+                    waiting={{ label: "4 creators", detail: "all within 48h target" }}
+                    metric={{ value: "10", detail: "2 this week" }}
+                  />
+                  <TaskRows.Row
+                    title="Summer launch"
+                    href="/campaigns/summer"
+                    status={{ tone: "destructive", label: "Paused · 9d" }}
+                    waiting={{ label: "9 creators", detail: "brief needs approval" }}
+                    metric={{ value: "3", detail: "none this week" }}
+                  />
+                </TaskRows>
+              </div>
+            </Card.Body>
+          </Card>
+        </section>
+      </div>
+    </AppShell>
+  );
+}
+`,
+  ),
+  render: () => <PortalDashboard />,
+};
+
+export const Collapsed: Story = {
+  name: "State — collapsed",
+  parameters: {
+    docs: { description: { story: "`sidebarOpen` false — the surface takes the full width and the toggle expands it." } },
+  },
+  render: () => <PortalDashboard defaultSidebarOpen={false} />,
+};
+
+export const AsideOpen: Story = {
+  name: "State — aside open",
+  parameters: {
+    docs: { description: { story: "The aside is a **Panel** on the end edge. The page behind it stays interactive." } },
+  },
+  render: () => <PortalDashboard defaultAsideOpen />,
+  play: async () => {
+    await settleOverlay();
+  },
+};
+
+export const Phone: Story = {
+  name: "State — phone",
+  render: () => <PortalDashboard />,
+  ...lockedViewportStory("mobile"),
+};
+
+export const PhoneMenuOpen: Story = {
+  name: "State — phone menu open",
+  render: () => <PortalDashboard />,
+  play: async ({ canvas }) => {
+    await userEvent.click(canvas.getByRole("button", { name: "Menu" }));
+    await settleOverlay();
+  },
+  ...lockedViewportStory("mobile"),
+};
