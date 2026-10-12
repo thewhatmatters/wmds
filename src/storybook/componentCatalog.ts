@@ -59,12 +59,13 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   // Content
   { name: "Avatar", category: "Content", title: "Components/Avatar", description: "Circular identity with initials fallback and an optional presence dot." },
   { name: "Kbd", category: "Content", title: "Components/Kbd", description: "One physical keycap; compose several for a shortcut." },
+  { name: "LogView", category: "Content", title: "Components/LogView", description: "Scrolling log with a line count, copy, and follow." },
   { name: "Prose", category: "Content", title: "Components/Prose", description: "Long-form article text set from plain HTML, with a reading measure." },
   { name: "SectionCaption", category: "Content", title: "Components/SectionCaption", description: "Small uppercase mono caption over a page column, on a rule, with an optional action." },
 
   // Data visualization
   { name: "Chart", category: "Data visualization", title: "Components/Chart", description: "visx-based charts: capacity bars, segmented rings, ranked bars, unit grids, heatmaps, and time series." },
-  { name: "Stat", category: "Data visualization", title: "Components/Stat", description: "At-a-glance metric tile with label, value, optional trend, and a hero size with a visible vs line." },
+  { name: "Stat", category: "Data visualization", title: "Components/Stat", description: "At-a-glance metric tile with label, value, optional trend, a hero size with a visible vs line, and an optional detail line." },
 
   // Feedback & status
   { name: "Badge", category: "Feedback & status", title: "Components/Badge", description: "Compact semantic label in solid or muted fill, with count, icon, avatar, and status-pill patterns." },

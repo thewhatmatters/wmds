@@ -7,6 +7,18 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.18
+
+**A log viewer, and a dark detail pane.**
+
+- **LogView** (new) — line numbers, a tabular line count, **Copy**, and **Follow**. `follow` keeps the scroller on the last line. `loading` is a **Skeleton**. An empty log says "No log lines".
+- **Stat** `detail` — one tabular line under the figure, for example "3 new". Hidden while `loading` or `unavailable`. Hero props (`size="lg"`, `context`, `icon`, `action`, `unavailable`) stay.
+- Patterns: **Components/LogView → Pattern — log viewer**, **Pattern — detail pane** (prev/next, tags, a 2×2 stat grid, the log, on `data-theme="dark"`).
+
+### Consumer actions
+
+`import { LogView } from "@thewhatmatters/wmds"`. Paste **Components/LogView → Pattern — log viewer** (`docs/patterns/components-logview--log-viewer.tsx`) and **Pattern — detail pane** (`docs/patterns/components-logview--detail-pane.tsx`). Pass `detail` on **Stat** for the sub line. Existing hero stats keep `size`, `context`, `icon`, `action`, and `unavailable`.
+
 ## 0.4.17
 
 **Card.Body can be a terminal frame.**

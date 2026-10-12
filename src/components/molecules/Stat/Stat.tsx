@@ -23,6 +23,7 @@ import {
   statLabelStartClasses,
   statLabelTextClasses,
   statLabelTrailClasses,
+  statDetailClasses,
   statTrendBadgeVariant,
   statUnavailableClasses,
   statValueRowClasses,
@@ -76,11 +77,16 @@ export interface StatProps {
    * Tabular figures. Hidden while `unavailable` is set (the reason takes this line).
    */
   context?: ReactNode;
+  /**
+   * One tabular line under the figure — for example "3 new" or "vs last scan".
+   * Hidden while `loading` or `unavailable`.
+   */
+  detail?: ReactNode;
   /** Leading tile — pass a Lucide glyph. Composed with **ButtonIcon**. */
   icon?: ReactNode;
   /** Label-row action — pass **Button** `size="sm"` (e.g. View details). */
   action?: ReactNode;
-  /** Replaces the figure and hides `trend` when the source is not wired. */
+  /** Replaces the figure and hides `trend`, `context`, and `detail` when the source is not wired. */
   unavailable?: StatUnavailable;
   /** Leading slot — inline with the label row, after `icon`. */
   start?: ReactNode;
@@ -140,6 +146,7 @@ function StatRoot({
   value,
   trend,
   context,
+  detail,
   icon,
   action,
   unavailable,
@@ -191,6 +198,7 @@ function StatRoot({
                   {trend != null ? <StatTrendBadge trend={trend} /> : null}
                 </div>
                 {context != null ? <p className={statContextClasses}>{context}</p> : null}
+                {detail != null ? <p className={statDetailClasses}>{detail}</p> : null}
               </>
             )}
           </>
@@ -220,7 +228,8 @@ function StatGroup({
 /**
  * At-a-glance metric tile — label, headline value, optional muted trend badge.
  * `size="lg"` is the hero figure (`type-display-3`, tabular). `context` is the visible
- * "vs" line. Compose in **Stat.Group** for insights rows; pair **Card** + **Chart** below for history.
+ * "vs" line. `detail` is one tabular line under the figure. Compose in **Stat.Group**
+ * for insights rows; pair **Card** + **Chart** below for history.
  */
 export const Stat = Object.assign(StatRoot, {
   Group: StatGroup,

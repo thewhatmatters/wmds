@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.17",
+  "version": "0.4.18",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -515,6 +515,20 @@
       ]
     },
     {
+      "name": "LogView",
+      "tier": "molecule",
+      "category": "Content",
+      "summary": "Scrolling log with a line count, copy, and follow.",
+      "storybook": {
+        "title": "Components/LogView",
+        "docs": "?path=/docs/components-logview--docs"
+      },
+      "patterns": [
+        "components-logview--detail-pane",
+        "components-logview--log-viewer"
+      ]
+    },
+    {
       "name": "MoreMenu",
       "tier": "organism",
       "category": "Action",
@@ -768,7 +782,7 @@
       "name": "Stat",
       "tier": "molecule",
       "category": "Data visualization",
-      "summary": "At-a-glance metric tile with label, value, optional trend, and a hero size with a visible vs line.",
+      "summary": "At-a-glance metric tile with label, value, optional trend, a hero size with a visible vs line, and an optional detail line.",
       "storybook": {
         "title": "Components/Stat",
         "docs": "?path=/docs/components-stat--docs"

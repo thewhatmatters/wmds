@@ -355,6 +355,12 @@ export {
   type LinkTileProps,
 } from "./components/molecules/LinkTile/LinkTile";
 export {
+  LogView,
+  type LogViewLabels,
+  type LogViewLayoutClassName,
+  type LogViewProps,
+} from "./components/molecules/LogView/LogView";
+export {
   NavList,
   navListLabelAlignments,
   type NavListIcon,
