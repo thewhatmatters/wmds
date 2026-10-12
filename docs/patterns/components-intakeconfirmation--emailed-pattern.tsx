@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.11 · Pattern — emailed
+// @thewhatmatters/wmds@0.4.12 · Pattern — emailed
 // Storybook: Components/IntakeConfirmation → Pattern — emailed (?path=/story/components-intakeconfirmation--emailed-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

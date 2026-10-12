@@ -13,12 +13,14 @@ export {
   Badge,
   badgeAvatarSize,
   badgeEmphases,
+  badgeStatuses,
   badgeVariants,
   type BadgeAvatar,
   type BadgeEmphasis,
   type BadgeLayoutClassName,
   type BadgeProps,
   type BadgeSize,
+  type BadgeStatus,
   type BadgeVariant,
 } from "./components/atoms/Badge/Badge";
 export { BadgeIcon } from "./components/atoms/Badge/BadgeIcon";

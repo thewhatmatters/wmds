@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Check, Tag, X } from "lucide-react";
+import { Calendar, Check, CircleCheck, Tag, X } from "lucide-react";
 import { withStoryCopySource } from "../../../lib/storyCopySource";
 import { Button } from "../Button/Button";
 import { Badge, badgeVariants, type BadgeVariant } from "./Badge";
@@ -18,6 +18,8 @@ const meta = {
     icon: { control: false },
     avatar: { control: false },
     iconOnly: { control: "boolean" },
+    status: { control: "select", options: ["active", "idle", "success", "failed", "warning"] },
+    dot: { control: "boolean" },
     children: { control: "text" },
   },
   args: {
@@ -36,6 +38,7 @@ const meta = {
 | Pattern | Props |
 |---------|--------|
 | **Status label** | \`variant\` + label |
+| **Status pill** | \`status\` (\`active\` \\| \`idle\` \\| \`success\` \\| \`failed\` \\| \`warning\`) + label. \`dot\` pulses on \`active\`. \`icon\` for cadence and freshness |
 | **Muted label** | \`emphasis="muted"\` + \`variant\` + label |
 | **Outline tag** | \`emphasis="outline"\` + \`mono\` — hairline, transparent fill, mono caps (authors, categories) |
 | **Tag link** | \`render={<a href />}\` — a tag that navigates (a category to the filtered list) |
@@ -50,9 +53,10 @@ Solid semantic fills for status and category labels. **Variants:** \`neutral\` (
 
 - **Do** badge states that need attention — errors, warnings, follow-up items.
 - **Do** keep labels to one or two words; use surrounding text for detail.
-- **Do** pair **Status** \`variant="dot"\` beside a label in list rows — not inside Badge.
+- **Do** use \`status\` for a run, a cadence ("Every 2 days"), or freshness ("Last checked 1d ago"). The pill is cluster height and tabular.
+- **Do** pair **Status** \`variant="dot"\` beside a label in a list row. The status pill paints its own 8px dot — do not nest **Status** inside **Badge**.
 - **Don't** badge every healthy row — if all items show green "Active", none stand out.
-- **Don't** use badges for metadata (dates, durations) — use supporting text.
+- **Don't** use a plain badge for dates. Cadence and freshness go on a \`status="idle"\` pill; other dates stay supporting text.
 - **Don't** make badges clickable for actions — use **Button**. A tag that navigates (a category, an author) composes onto a link with \`render={<a href />}\`.
 - **Don't** use badges as decoration. The one sanctioned decorative use is inline emphasis in a marketing hero — **Components/HeroTileStack → Pattern — marketing hero**.
         `.trim(),
@@ -70,6 +74,73 @@ export const StatusLabel: Story = {
     children: "Active",
     variant: "success",
   },
+};
+
+const statusPillCopySource = `
+import { Badge } from "@thewhatmatters/wmds";
+import { Calendar, CircleCheck } from "lucide-react";
+
+export function RoutineStatus() {
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <Badge status="active" dot>
+        Active
+      </Badge>
+      <Badge status="idle" icon={<Calendar strokeWidth={2} />}>
+        Every 2 days
+      </Badge>
+      <Badge status="idle" icon={<CircleCheck strokeWidth={2} />}>
+        Last checked 1d ago
+      </Badge>
+      <Badge status="success" dot>
+        Succeeded
+      </Badge>
+      <Badge status="failed" dot>
+        Failed
+      </Badge>
+      <Badge status="warning" dot>
+        Needs a look
+      </Badge>
+    </div>
+  );
+}
+`;
+
+export const StatusPill: Story = {
+  name: "Pattern — status pill",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            'Run state, cadence, and freshness. `active` is the brand-tint pill and its dot pulses. `idle` carries a Lucide icon for schedule or last-checked. Figures are tabular. Cluster height, so the pill sits with Chip.',
+        },
+      },
+    },
+    statusPillCopySource,
+  ),
+  render: () => (
+    <div className="flex flex-wrap items-center gap-2">
+      <Badge status="active" dot>
+        Active
+      </Badge>
+      <Badge status="idle" icon={<Calendar strokeWidth={2} />}>
+        Every 2 days
+      </Badge>
+      <Badge status="idle" icon={<CircleCheck strokeWidth={2} />}>
+        Last checked 1d ago
+      </Badge>
+      <Badge status="success" dot>
+        Succeeded
+      </Badge>
+      <Badge status="failed" dot>
+        Failed
+      </Badge>
+      <Badge status="warning" dot>
+        Needs a look
+      </Badge>
+    </div>
+  ),
 };
 
 export const SemanticVariants: Story = {
