@@ -75,7 +75,7 @@ export function PageHeader({
   }
 
   return (
-    <header aria-label={labelledByTitle} className={cn(pageHeaderShellClasses[variant], className)}>
+    <header aria-label={ariaLabel} className={cn(pageHeaderShellClasses[variant], className)}>
       <div className={pageHeaderStartClasses}>
         {start}
         {hasTitle ? (

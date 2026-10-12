@@ -513,6 +513,14 @@ export {
   type TileGridProps,
 } from "./components/molecules/TileGrid/TileGrid";
 export {
+  AppShell,
+  useAppShell,
+  type AppShellContextValue,
+  type AppShellLabels,
+  type AppShellLayoutClassName,
+  type AppShellProps,
+} from "./components/organisms/AppShell/AppShell";
+export {
   Carousel,
   carouselBreakpoints,
   carouselDefaultItemWidth,

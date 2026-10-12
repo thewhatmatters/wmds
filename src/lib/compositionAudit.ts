@@ -192,6 +192,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "Chart.UnitGrid owns visx-composed SVG unit marks — ADR-0015.",
   },
   {
+    file: "components/organisms/AppShell/AppShell.tsx",
+    ruleId: "lucide-import",
+    reason: "AppShell owns the sidebar toggle glyph (Lucide PanelLeft) passed to IconButton.",
+  },
+  {
     file: "components/organisms/Tab/Tab.tsx",
     ruleId: "raw-button",
     reason: "Tab owns the WAI-ARIA tab trigger and responsive More overflow trigger shells.",

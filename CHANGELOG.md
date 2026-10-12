@@ -7,6 +7,21 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.20
+
+**An app shell.**
+
+- **AppShell** (new) — a sidebar on the page background and the page as an inset, raised surface with a title bar. It composes **NavList**, **PageHeader** `variant="app"`, **Sheet** (the sidebar below `lg`), and **Panel** (the optional aside). No new color, radius, shadow, or variant.
+- `<AppShell title brand sidebar header aside>` or the slots **AppShell.Brand**, **Sidebar**, **Header**, **Aside**. A `PanelLeft` toggle collapses the sidebar, **Ctrl** / **⌘** + **B** does the same, and `useAppShell()` returns the state.
+- Patterns: **Components/AppShell → Pattern — portal dashboard**. States: collapsed, aside open, phone, phone menu open.
+- **PageHeader** now applies `aria-label` when `title` is also set (it used to drop it), so a page header can have a name that tells it apart from other banners.
+- **Sheet**, **Panel**, **Dialog**, and **AlertDialog** headers carry `role="presentation"`, so an open overlay no longer adds a second `banner` landmark beside the page header.
+- See ADR-0047.
+
+### Consumer actions
+
+None for existing pages. To adopt it, `import { AppShell } from "@thewhatmatters/wmds"` and paste **Components/AppShell → Pattern — portal dashboard** (`docs/patterns/components-appshell--portal-dashboard-pattern.tsx`).
+
 ## 0.4.19
 
 **A chart beside a stat column.**

@@ -60,6 +60,8 @@ export function OverlayPanelHeader({
 
   const header = (
     <Card.Header
+      // A header in a portaled dialog is not the page banner; drop the role so a page header stays the only one.
+      role="presentation"
       className={cn(
         overlayPanelHeaderClasses,
         delineated ? overlayPanelHeaderDelineatedInnerClasses : undefined,

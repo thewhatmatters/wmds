@@ -95,6 +95,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "TextArea", category: "Form controls", title: "Components/TextArea", description: "Multiline field with the same label, status, and loading as Input." },
 
   // Layout
+  { name: "AppShell", category: "Layout", title: "Components/AppShell", description: "App chrome: a sidebar on the page background, the page as an inset raised surface with a title bar, a phone Sheet menu, and an optional aside." },
   { name: "DisplayControls", category: "Layout", title: "Components/DisplayControls", description: "Grid visibility and theme mode controls, including a theme-only appearance switch." },
   { name: "PageHeader", category: "Layout", title: "Components/PageHeader", description: "Page chrome row: app band, section heading, or toolbar." },
   { name: "TileGrid", category: "Layout", title: "Components/TileGrid", description: "A grid of tiles that pack as masonry or sit in equal rows, in reading order either way." },
