@@ -86,7 +86,7 @@ export function AppSidebar() {
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col bg-body lg:flex-row">
-      <div className="hidden h-full lg:block">
+      <div className="max-lg:hidden h-full lg:block">
         <SidebarBody activeId={activeId} onSelect={setActiveId} />
       </div>
       <div className="flex min-w-0 flex-1 flex-col">
@@ -104,7 +104,7 @@ export function AppSidebar() {
             />
           }
         />
-        <div className="hidden px-4 py-6 lg:block">
+        <div className="max-lg:hidden px-4 py-6 lg:block">
           <PageHeader variant="page" title="Overview" />
         </div>
       </div>
