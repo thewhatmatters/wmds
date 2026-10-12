@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { expect, userEvent, waitFor } from "storybook/test";
 import { ChartColumn, Download, FileText, FolderOpen, LayoutDashboard, Megaphone, Settings, Users } from "lucide-react";
 import { Avatar } from "../../atoms/Avatar/Avatar";
@@ -7,6 +7,13 @@ import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
 import { Card, cardLayoutBodyOccupantInsetXClasses, cardLayoutBodyOccupantPadYClasses, cardTitleClasses } from "../../molecules/Card/Card";
 import { DescriptionList } from "../../molecules/DescriptionList/DescriptionList";
+import {
+  commitDisplayTheme,
+  DisplayControls,
+  readDisplayTheme,
+  subscribeDisplayTheme,
+  type DisplayControlThemeMode,
+} from "../../molecules/DisplayControls/DisplayControls";
 import { NavList, type NavListSectionDef } from "../../molecules/NavList/NavList";
 import { Stat } from "../../molecules/Stat/Stat";
 import { TaskRows, type TaskRowsColumn } from "../../molecules/TaskRows/TaskRows";
@@ -45,6 +52,10 @@ const wellClasses = [
   cardLayoutBodyOccupantInsetXClasses,
 ].join(" ");
 
+function themeServerSnapshot(): DisplayControlThemeMode {
+  return "auto";
+}
+
 export interface PortalDashboardProps {
   defaultSidebarOpen?: boolean;
   defaultAsideOpen?: boolean;
@@ -56,6 +67,7 @@ export function PortalDashboard({
 }: PortalDashboardProps) {
   const [activeId, setActiveId] = useState("dashboard");
   const [asideOpen, setAsideOpen] = useState(defaultAsideOpen);
+  const theme = useSyncExternalStore(subscribeDisplayTheme, readDisplayTheme, themeServerSnapshot);
 
   return (
     <AppShell
@@ -79,6 +91,17 @@ export function PortalDashboard({
           activeId={activeId}
           onSelect={setActiveId}
         />
+      }
+      sidebarFooter={
+        <div className="flex items-center justify-between gap-3">
+          <span className="type-label">Appearance</span>
+          <DisplayControls
+            controls="theme"
+            aria-label="Appearance"
+            theme={theme}
+            onThemeChange={commitDisplayTheme}
+          />
+        </div>
       }
       header={
         <>
@@ -168,7 +191,8 @@ App chrome for a signed-in product: a **sidebar** on the page background and the
 | Part | Prop or slot | Composes |
 |------|--------------|----------|
 | Brand row | \`brand\` / **AppShell.Brand** | A 56px band — the same token as the title bar, so their bottom edges align |
-| Sidebar | \`sidebar\` / **AppShell.Sidebar** | **NavList** with \`className="w-full"\` |
+| Sidebar | \`sidebar\` / **AppShell.Sidebar** | **NavList** with \`className="w-full"\`, scrolls |
+| Sidebar footer | \`sidebarFooter\` / **AppShell.SidebarFooter** | Pinned under the nav — **DisplayControls** \`controls="theme"\` |
 | Title bar | \`title\`, \`header\` / **AppShell.Header** | **PageHeader** \`variant="app"\` — \`h1\`, the toggle, and trailing controls |
 | Aside | \`aside\` / **AppShell.Aside**, \`asideTitle\` | **Panel** \`side="end"\` — non-blocking |
 | Page | \`children\` | Scrolls inside \`main\` |
@@ -177,7 +201,7 @@ App chrome for a signed-in product: a **sidebar** on the page background and the
 
 \`\`\`
 AppShell
-├── sidebar column (lg+)      brand row · NavList          — on bg-body
+├── sidebar column (lg+)      brand row · NavList (scrolls) · footer — on bg-body
 ├── surface                   rounded, shadow-soft-card, 8px inset
 │   ├── PageHeader app        PanelLeft toggle · h1 · header
 │   └── main                  children
@@ -194,6 +218,108 @@ AppShell
 - **Don't** put a second page \`h1\` in \`children\` — \`title\` is the \`h1\`.
 - **Don't** re-theme the surface with \`className\` — it is layout only (height).
 - **Don't** use it for marketing pages — that is **SiteNav**.
+
+## Sidebar footer
+
+\`sidebarFooter\` / **AppShell.SidebarFooter** is pinned to the bottom of the sidebar column and of the phone **Sheet**; the **NavList** above it scrolls on its own. Put a **DisplayControls** \`controls="theme"\` switch there (**Pattern — portal dashboard**) and it stays visible at 1440×900 and on a phone. The slot adds only the brand row's 16px inset — no fill, border, or type. Using it does not close the phone menu.
+
+## Mobile toggle name
+
+Below \`lg\` the title-bar toggle is named **Menu** (\`labels.menu\`) and so is the **Sheet** it opens. Keep that name — find it in tests with \`getByRole("button", { name: "Menu" })\`. Translate it through \`labels\`; do not rename it. The desktop toggle is **Collapse sidebar** / **Expand sidebar**.
+
+## Server rendering
+
+**Which parts render on the server.** All of **AppShell** server-renders when it is imported from a client module: the sidebar column (brand row, **NavList**, \`sidebarFooter\`), the title bar with both toggles, and \`main\` with the page. The desktop and phone toggles are two buttons, one hidden by CSS per breakpoint, so the server HTML needs no viewport query. The phone **Sheet** and the aside **Panel** render nothing until they open (they portal on the client), so no dialog is in the server HTML. \`sidebarOpen\` and the aside state start from \`defaultSidebarOpen\` / \`defaultAsideOpen\`. **DisplayControls** renders its \`auto\` state on the server; \`useSyncExternalStore\` with a server snapshot of \`"auto"\` switches to the saved choice after hydration without a mismatch.
+
+**What needs \`"use client"\`.** Every module in \`@thewhatmatters/wmds\` ships with the \`"use client"\` directive, so a Server Component can render the components but cannot call hooks or pass event handlers into them, and a non-component export (such as \`displayThemeNoFlashScript\`) is a client reference there, not its value. **AppShell** takes \`onSidebarOpenChange\`, \`onAsideOpenChange\`, **NavList** \`onSelect\`, and a **DisplayControls** \`onThemeChange\` — all functions — so the file that renders it is a \`"use client"\` module. Page content passed as \`children\` can stay a Server Component: a client component renders the server-rendered \`children\` it is given.
+
+**The no-flash script goes in the head.** \`displayThemeNoFlashScript\` sets or clears \`data-theme\` on \`<html>\` before first paint. Render it in \`<head>\` before the stylesheet, from a client module that renders the \`<script>\` (below), and put \`suppressHydrationWarning\` on \`<html>\` because the script changes its attributes.
+
+**Next.js App Router.**
+
+\`\`\`tsx
+// app/theme-script.tsx — a client module: the package's exports are client references on the server
+"use client";
+
+import { displayThemeNoFlashScript } from "@thewhatmatters/wmds";
+
+export function ThemeScript() {
+  return <script dangerouslySetInnerHTML={{ __html: displayThemeNoFlashScript }} />;
+}
+\`\`\`
+
+\`\`\`tsx
+// app/layout.tsx — a Server Component
+import "@thewhatmatters/wmds/styles.css";
+import type { ReactNode } from "react";
+import { ThemeScript } from "./theme-script";
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
+      <body>{children}</body>
+    </html>
+  );
+}
+\`\`\`
+
+\`\`\`tsx
+// app/(portal)/portal-shell.tsx — the client boundary
+"use client";
+
+import { usePathname } from "next/navigation";
+import { useSyncExternalStore, type ReactNode } from "react";
+import {
+  AppShell,
+  DisplayControls,
+  NavList,
+  commitDisplayTheme,
+  readDisplayTheme,
+  subscribeDisplayTheme,
+  type DisplayControlThemeMode,
+} from "@thewhatmatters/wmds";
+
+function themeServerSnapshot(): DisplayControlThemeMode {
+  return "auto";
+}
+
+export function PortalShell({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const theme = useSyncExternalStore(subscribeDisplayTheme, readDisplayTheme, themeServerSnapshot);
+
+  return (
+    <AppShell
+      title="Dashboard"
+      sidebar={
+        <NavList
+          aria-label="Portal"
+          className="w-full"
+          activeId={pathname}
+          sections={[{ items: [{ id: "/", label: "Dashboard", href: "/" }] }]}
+        />
+      }
+      sidebarFooter={
+        <DisplayControls controls="theme" aria-label="Appearance" theme={theme} onThemeChange={commitDisplayTheme} />
+      }
+    >
+      {children}
+    </AppShell>
+  );
+}
+\`\`\`
+
+\`\`\`tsx
+// app/(portal)/layout.tsx — a Server Component; its pages stay Server Components
+import type { ReactNode } from "react";
+import { PortalShell } from "./portal-shell";
+
+export default function PortalLayout({ children }: { children: ReactNode }) {
+  return <PortalShell>{children}</PortalShell>;
+}
+\`\`\`
 
 ## For agents building UIs
 
@@ -220,7 +346,7 @@ export const PortalDashboardPattern: Story = {
     },
     `"use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { ChartColumn, Download, FileText, FolderOpen, LayoutDashboard, Megaphone, Settings, Users } from "lucide-react";
 import {
   AppShell,
@@ -229,12 +355,17 @@ import {
   Button,
   Card,
   DescriptionList,
+  DisplayControls,
   NavList,
   Stat,
   TaskRows,
+  commitDisplayTheme,
+  readDisplayTheme,
+  subscribeDisplayTheme,
   cardLayoutBodyOccupantInsetXClasses,
   cardLayoutBodyOccupantPadYClasses,
   cardTitleClasses,
+  type DisplayControlThemeMode,
   type NavListSectionDef,
   type TaskRowsColumn,
 } from "@thewhatmatters/wmds";
@@ -270,6 +401,10 @@ const wellClasses = [
   cardLayoutBodyOccupantInsetXClasses,
 ].join(" ");
 
+function themeServerSnapshot(): DisplayControlThemeMode {
+  return "auto";
+}
+
 interface PortalDashboardProps {
   defaultSidebarOpen?: boolean;
   defaultAsideOpen?: boolean;
@@ -281,6 +416,7 @@ export function PortalDashboard({
 }: PortalDashboardProps) {
   const [activeId, setActiveId] = useState("dashboard");
   const [asideOpen, setAsideOpen] = useState(defaultAsideOpen);
+  const theme = useSyncExternalStore(subscribeDisplayTheme, readDisplayTheme, themeServerSnapshot);
 
   return (
     <AppShell
@@ -304,6 +440,17 @@ export function PortalDashboard({
           activeId={activeId}
           onSelect={setActiveId}
         />
+      }
+      sidebarFooter={
+        <div className="flex items-center justify-between gap-3">
+          <span className="type-label">Appearance</span>
+          <DisplayControls
+            controls="theme"
+            aria-label="Appearance"
+            theme={theme}
+            onThemeChange={commitDisplayTheme}
+          />
+        </div>
       }
       header={
         <>

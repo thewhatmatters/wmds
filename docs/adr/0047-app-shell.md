@@ -30,6 +30,12 @@ Add **AppShell** (organism, `Components/AppShell`). It composes existing compone
 - The desktop and phone toggles are two buttons, one hidden by CSS per breakpoint, so the server render needs no viewport query.
 - Using it for marketing pages is wrong; that is **SiteNav**.
 
+### Addendum — 2026-10-12: sidebar footer, mobile toggle name, server rendering
+
+- **`sidebarFooter` / `AppShell.SidebarFooter`** — a slot pinned under the sidebar's scroll region, in the column from `lg` and in the phone **Sheet**. The brand row and the footer are `shrink-0`; the **NavList** wrapper (`min-h-0 flex-1 overflow-y-auto`) scrolls between them. The footer takes the brand row's 16px inset and `py-3`. No color, border, radius, or shadow is added. It holds the **DisplayControls** `controls="theme"` switch in **Pattern — portal dashboard**. It is outside the `nav`, so using it does not close the phone menu. Only one copy is visible at a time; both are mounted while the phone menu is open, and the **T** shortcut they both register commits the same value, so it is idempotent.
+- **Mobile toggle name** — the phone toggle's accessible name is **"Menu"** (`labels.menu`) and the **Sheet** title matches it. This is a contract: tests and assistive technology find the control by that name. Apps translate it through `labels`; they do not rename it.
+- **Server rendering** — every package module carries `"use client"`. **AppShell** server-renders in full when a client module renders it (sidebar, footer, title bar, both toggles, page); the **Sheet** and **Panel** render nothing until opened. The file that renders **AppShell** is a client module because its props include functions; page content passed as `children` can stay a Server Component. `displayThemeNoFlashScript` goes in `<head>`, rendered by a client module (on the server a package export is a client reference, not a string), with `suppressHydrationWarning` on `<html>`. The Next.js App Router example is in `docs/component-contracts.md → AppShell — server rendering` and **Components/AppShell** Docs.
+
 ## References
 
 - ADR-0003, ADR-0004, ADR-0016, ADR-0018, ADR-0019

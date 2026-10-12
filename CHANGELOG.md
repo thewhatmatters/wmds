@@ -7,6 +7,19 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.22
+
+**A pinned sidebar footer, and AppShell on the server.**
+
+- **AppShell** `sidebarFooter` / **AppShell.SidebarFooter** (new) — pinned to the bottom of the sidebar column and the phone **Sheet**. The **NavList** scrolls on its own above it, so a theme switch stays visible at 1440x900 and on a phone. No new color, border, radius, or shadow.
+- **Pattern — portal dashboard** now puts a **DisplayControls** `controls="theme"` switch in the footer.
+- Documented: the phone toggle's accessible name is **"Menu"** (`labels.menu`), and the docs now say which parts render on the server, which need a `"use client"` boundary, that `displayThemeNoFlashScript` goes in `<head>`, and a Next.js App Router example (`docs/component-contracts.md → AppShell — server rendering`).
+- See the ADR-0047 addendum.
+
+### Consumer actions
+
+None for existing shells. To pin a footer, pass `sidebarFooter`. Re-copy **Components/AppShell → Pattern — portal dashboard** (`docs/patterns/components-appshell--portal-dashboard-pattern.tsx`) to get the theme switch in the footer.
+
 ## 0.4.21
 
 **A table.**

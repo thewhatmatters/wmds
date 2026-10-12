@@ -27,6 +27,7 @@ import {
   appShellRootClasses,
   appShellSheetBodyClasses,
   appShellSidebarBodyClasses,
+  appShellSidebarFooterClasses,
   appShellSidebarClasses,
   appShellSurfaceClasses,
   appShellToggleDesktopClasses,
@@ -61,6 +62,8 @@ export interface AppShellProps {
   brand?: ReactNode;
   /** Sidebar body — a **NavList**. Omit it for a shell with no sidebar. */
   sidebar?: ReactNode;
+  /** Pinned to the bottom of the sidebar and the phone menu while the **NavList** above it scrolls — a **DisplayControls** `controls="theme"` switch, an account row. */
+  sidebarFooter?: ReactNode;
   /** Trailing title-bar controls — **Button**, **Avatar**, **MoreMenu** at one cluster tier. */
   header?: ReactNode;
   /** Right slide-out content, in a non-blocking **Panel**. Omit it for no aside. */
@@ -96,6 +99,10 @@ function AppShellBrand({ children }: AppShellSlotProps) {
 }
 
 function AppShellSidebar({ children }: AppShellSlotProps) {
+  return <>{children}</>;
+}
+
+function AppShellSidebarFooter({ children }: AppShellSlotProps) {
   return <>{children}</>;
 }
 
@@ -158,6 +165,7 @@ function pickSlots(children: ReactNode) {
   const slots: {
     brand?: ReactNode;
     sidebar?: ReactNode;
+    sidebarFooter?: ReactNode;
     header?: ReactNode;
     aside?: { title?: ReactNode; description?: ReactNode; children?: ReactNode };
     content: ReactNode[];
@@ -170,6 +178,7 @@ function pickSlots(children: ReactNode) {
     }
     if (child.type === AppShellBrand) slots.brand = child.props.children;
     else if (child.type === AppShellSidebar) slots.sidebar = child.props.children;
+    else if (child.type === AppShellSidebarFooter) slots.sidebarFooter = child.props.children;
     else if (child.type === AppShellHeader) slots.header = child.props.children;
     else if (child.type === AppShellAside) slots.aside = child.props;
     else slots.content.push(child);
@@ -181,6 +190,7 @@ function AppShellRoot({
   title,
   brand: brandProp,
   sidebar: sidebarProp,
+  sidebarFooter: sidebarFooterProp,
   header: headerProp,
   aside: asideProp,
   asideTitle,
@@ -199,6 +209,7 @@ function AppShellRoot({
   const slots = pickSlots(children);
   const brand = brandProp ?? slots.brand;
   const sidebar = sidebarProp ?? slots.sidebar;
+  const sidebarFooter = sidebarFooterProp ?? slots.sidebarFooter;
   const header = headerProp ?? slots.header;
   const aside = asideProp ?? slots.aside?.children;
   const hasSidebar = sidebar != null;
@@ -284,6 +295,7 @@ function AppShellRoot({
 
   const desktopLabel = sidebarOpen ? labels.collapse : labels.expand;
   const brandRow = brand != null ? <div className={appShellBrandClasses}>{brand}</div> : null;
+  const footerRow = sidebarFooter != null ? <div className={appShellSidebarFooterClasses}>{sidebarFooter}</div> : null;
 
   const toggle = hasSidebar ? (
     <Tooltip.Provider>
@@ -338,6 +350,7 @@ function AppShellRoot({
           >
             {brandRow}
             <div className={appShellSidebarBodyClasses}>{sidebar}</div>
+            {footerRow}
           </div>
         ) : null}
 
@@ -356,7 +369,8 @@ function AppShellRoot({
               {/* The click handler only closes the menu after a nav choice; it adds no control. */}
               <div className={appShellSheetBodyClasses} onClick={handleMenuClick}>
                 {brandRow}
-                {sidebar}
+                <div className={appShellSidebarBodyClasses}>{sidebar}</div>
+                {footerRow}
               </div>
             </Sheet.Content>
           </Sheet>
@@ -385,6 +399,7 @@ function AppShellRoot({
 export const AppShell = Object.assign(AppShellRoot, {
   Brand: AppShellBrand,
   Sidebar: AppShellSidebar,
+  SidebarFooter: AppShellSidebarFooter,
   Header: AppShellHeader,
   Aside: AppShellAside,
 });

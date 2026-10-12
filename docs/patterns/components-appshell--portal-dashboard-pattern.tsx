@@ -1,10 +1,10 @@
-// @thewhatmatters/wmds@0.4.21 · Pattern — portal dashboard
+// @thewhatmatters/wmds@0.4.22 · Pattern — portal dashboard
 // Storybook: Components/AppShell → Pattern — portal dashboard (?path=/story/components-appshell--portal-dashboard-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { ChartColumn, Download, FileText, FolderOpen, LayoutDashboard, Megaphone, Settings, Users } from "lucide-react";
 import {
   AppShell,
@@ -13,12 +13,17 @@ import {
   Button,
   Card,
   DescriptionList,
+  DisplayControls,
   NavList,
   Stat,
   TaskRows,
+  commitDisplayTheme,
+  readDisplayTheme,
+  subscribeDisplayTheme,
   cardLayoutBodyOccupantInsetXClasses,
   cardLayoutBodyOccupantPadYClasses,
   cardTitleClasses,
+  type DisplayControlThemeMode,
   type NavListSectionDef,
   type TaskRowsColumn,
 } from "@thewhatmatters/wmds";
@@ -54,6 +59,10 @@ const wellClasses = [
   cardLayoutBodyOccupantInsetXClasses,
 ].join(" ");
 
+function themeServerSnapshot(): DisplayControlThemeMode {
+  return "auto";
+}
+
 interface PortalDashboardProps {
   defaultSidebarOpen?: boolean;
   defaultAsideOpen?: boolean;
@@ -65,6 +74,7 @@ export function PortalDashboard({
 }: PortalDashboardProps) {
   const [activeId, setActiveId] = useState("dashboard");
   const [asideOpen, setAsideOpen] = useState(defaultAsideOpen);
+  const theme = useSyncExternalStore(subscribeDisplayTheme, readDisplayTheme, themeServerSnapshot);
 
   return (
     <AppShell
@@ -88,6 +98,17 @@ export function PortalDashboard({
           activeId={activeId}
           onSelect={setActiveId}
         />
+      }
+      sidebarFooter={
+        <div className="flex items-center justify-between gap-3">
+          <span className="type-label">Appearance</span>
+          <DisplayControls
+            controls="theme"
+            aria-label="Appearance"
+            theme={theme}
+            onThemeChange={commitDisplayTheme}
+          />
+        </div>
       }
       header={
         <>

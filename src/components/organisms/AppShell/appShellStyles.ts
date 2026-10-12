@@ -16,6 +16,9 @@ export const appShellBrandClasses = cn(
 
 export const appShellSidebarBodyClasses = "min-h-0 flex-1 overflow-y-auto";
 
+/** Pinned under the scrolling nav — the same 16px inset as the brand row. */
+export const appShellSidebarFooterClasses = "box-border shrink-0 px-4 py-3";
+
 /** 8px inset around the raised surface. */
 export const appShellCanvasClasses = "flex min-h-0 min-w-0 flex-1 p-2";
 
