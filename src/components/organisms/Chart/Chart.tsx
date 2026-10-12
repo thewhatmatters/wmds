@@ -13,7 +13,8 @@ import {
   type ChartSegmentPreset,
   type ChartTone,
 } from "../../../lib/chartTheme";
-import { chartFrameClasses, chartSegmentBarHostClasses } from "./chartStyles";
+import { chartFrameClasses, chartSegmentBarFallbackClasses, chartSegmentBarFallbackTickClasses, chartSegmentBarHostClasses } from "./chartStyles";
+import { ChartSegmentedRing } from "./ChartSegmentedRing";
 import { ChartLegend } from "./ChartLegend";
 import { ChartTooltipContent } from "./ChartTooltipContent";
 import { ChartLoading } from "./ChartLoading";
@@ -45,6 +46,12 @@ export {
 
 export type { ChartSegmentFillVariant, ChartSegmentPreset, ChartTone } from "../../../lib/chartTheme";
 export type { ChartSegmentedBarAnimate } from "./chartSegmentedBarMotion";
+export type {
+  ChartSegmentedRingProps,
+  ChartSegmentedRingSize,
+  ChartSegmentedRingUnavailable,
+} from "./ChartSegmentedRing";
+export { chartSegmentedRingSegmentDefault, chartSegmentedRingSizes } from "./ChartSegmentedRing";
 export {
   chartCategoricalCount,
   chartCategoricalPalette,
@@ -248,6 +255,88 @@ function ChartSegmentedBarInner({
   );
 }
 
+function chartSegmentFallbackCount(segments: number | undefined, preset: ChartSegmentPreset): number {
+  const config = chartSegmentPresets[preset];
+  return (
+    segments ??
+    ("segments" in config ? config.segments : undefined) ??
+    chartSegmentPresets.default.segments
+  );
+}
+
+function chartSegmentFallbackColor(
+  index: number,
+  count: number,
+  filled: number,
+  tone: ChartTone,
+  fill: ChartSegmentFillVariant,
+): { color: string; opacity: number } {
+  if (index >= filled) {
+    return { color: chartUiTokens.placeholder, opacity: 1 };
+  }
+  if (fill === "semantic") {
+    const t = count <= 1 ? 1 : index / (count - 1);
+    const stops = chartSegmentFillVariants.semantic.stops;
+    let color: string = stops[0].color;
+    for (const stop of stops) {
+      if (t + 0.001 >= stop.offset) {
+        color = stop.color;
+      }
+    }
+    return { color, opacity: 1 };
+  }
+  if (fill === "velocity") {
+    const t = count <= 1 ? 0 : index / (count - 1);
+    const { startOpacity, endOpacity } = chartSegmentFillVariants.velocity;
+    return { color: chartStroke(tone), opacity: startOpacity + (endOpacity - startOpacity) * t };
+  }
+  return { color: chartStroke(tone), opacity: 1 };
+}
+
+/** CSS ticks for the server render and the frame before ResizeObserver reports a width. */
+function ChartSegmentedBarFallback({
+  value,
+  max,
+  tone = "primary",
+  fill = "solid",
+  segments,
+  preset = "default",
+  label,
+}: Omit<ChartSegmentedBarProps, "className" | "animate">) {
+  const count = chartSegmentFallbackCount(segments, preset);
+  const safeMax = max > 0 ? max : 1;
+  const clamped = Math.min(Math.max(Number.isFinite(value) ? value : 0, 0), safeMax);
+  const filled = Math.round((clamped / safeMax) * count);
+  const percentLabel = `${Math.round((clamped / safeMax) * 100)}%`;
+  const ariaLabel = label ?? `${percentLabel} of capacity`;
+
+  return (
+    <div
+      role="meter"
+      aria-label={ariaLabel}
+      aria-valuenow={Math.round(clamped)}
+      aria-valuemin={0}
+      aria-valuemax={safeMax}
+      aria-valuetext={percentLabel}
+      data-chart-segment-fallback=""
+      className={chartSegmentBarFallbackClasses}
+    >
+      {Array.from({ length: count }, (_, index) => {
+        const swatch = chartSegmentFallbackColor(index, count, filled, tone, fill);
+        return (
+          <span
+            key={index}
+            data-segment=""
+            data-filled={index < filled ? "true" : "false"}
+            className={chartSegmentBarFallbackTickClasses}
+            style={{ backgroundColor: swatch.color, opacity: swatch.opacity }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 function useChartHostWidth<T extends HTMLElement>() {
   const hostRef = useRef<T>(null);
   const [width, setWidth] = useState(0);
@@ -322,7 +411,17 @@ function ChartSegmentedBar({
           gradientId={gradientId}
           fillProgress={resolvedProgress}
         />
-      ) : null}
+      ) : (
+        <ChartSegmentedBarFallback
+          value={value}
+          max={max}
+          tone={tone}
+          fill={fill}
+          segments={segments}
+          preset={preset}
+          label={label}
+        />
+      )}
     </div>
   );
 }
@@ -331,6 +430,7 @@ function ChartSegmentedBar({
 export const Chart = Object.assign(ChartFrameRoot, {
   Frame: ChartFrameRoot,
   SegmentedBar: ChartSegmentedBar,
+  SegmentedRing: ChartSegmentedRing,
   RankedBars: ChartRankedBars,
   UnitGrid: ChartUnitGrid,
   DistributionStrip: ChartDistributionStrip,
@@ -381,7 +481,7 @@ export type {
 } from "./ChartCartesian";
 export { ChartLoading, ChartLegend, ChartRankedBars, ChartUnitGrid, ChartDistributionStrip, ChartHeatmap, ChartTooltipContent };
 export type { ChartLoadingLayoutClassName, ChartLoadingProps } from "./ChartLoading";
-export type { ChartLegendProps, ChartLegendLayoutClassName } from "./ChartLegend";
+export type { ChartLegendProps, ChartLegendLayoutClassName, ChartLegendVariant } from "./ChartLegend";
 export type {
   ChartRankedBarItem,
   ChartRankedBarsAnimate,

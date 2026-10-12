@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.13 · Pattern — path
+// @thewhatmatters/wmds@0.4.14 · Pattern — path
 // Storybook: Components/Breadcrumb → Pattern — path (?path=/story/components-breadcrumb--path)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

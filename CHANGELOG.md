@@ -7,6 +7,26 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.14
+
+**Chart: a segmented progress ring, a tabular legend, and a SegmentedBar that renders before it is measured.**
+
+- **Chart.SegmentedRing** (new) — radial capacity meter. `value` / `max`, `segments` (default 72), `tone`, `centerValue`, `centerLabel`, `size` (`sm` 96px, `md` 160px, `lg` 192px), `animate` (`initial` sweeps on mount, `none` holds the fill), `label`. The figure is tabular. A fixed viewBox, so the ticks are in the server HTML.
+- Over capacity — a value above `max` fills every tick and shows "Over capacity". The arc does not grow past the ring.
+- `unavailable` — `{ reason, label? }` empties the track and replaces the center with muted "Not connected" (or `label`) and the reason. Do not pass a zero for an unwired source.
+- Reduced motion — no sweep. The server render is the settled fill, so hydration matches.
+- **Chart.Legend** `variant="tabular"` (new) — one row: swatch, label, mono value, percent, delta. `config` entries take optional `value`, `percent`, and `delta` (`{ label, direction?: "up" | "down" | "flat" }`). `up` is success, `down` is destructive, `flat` is muted. The default `series` variant is unchanged.
+- **Chart.SegmentedBar** — draws CSS ticks when the host width is still 0 (server HTML and the first client render). The measured SVG, including `fill="velocity"` and `fill="semantic"`, replaces them once the width is known. `animate="initial"` still springs that SVG.
+- Pattern: **Components/Chart → Pattern — segmented ring**.
+
+### Consumer actions
+
+None for existing **Chart.Legend** rows or **Chart.SegmentedBar** props.
+
+**Chart.SegmentedBar** now shows ticks before hydration. A client island is no longer required for the meter to appear. `animate="initial"` still springs once the bar has a width.
+
+For a radial meter and a source breakdown, paste **Components/Chart → Pattern — segmented ring** (`docs/patterns/components-chart--segmented-ring-pattern.tsx`). Pass `unavailable={{ reason }}` when the source is unwired.
+
 ## 0.4.13
 
 **NavList: link rows, a trailing mark, a section action, and an app sidebar.**

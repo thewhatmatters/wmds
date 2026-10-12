@@ -167,6 +167,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "Chart owns visx-composed SVG marks (SegmentedBar) — ADR-0012.",
   },
   {
+    file: "components/organisms/Chart/ChartSegmentedRing.tsx",
+    ruleId: "inline-svg",
+    reason: "Chart.SegmentedRing owns the segmented radial meter SVG — ADR-0012.",
+  },
+  {
     file: "components/organisms/Chart/ChartCartesian.tsx",
     ruleId: "inline-svg",
     reason: "Chart.Cartesian owns visx-composed SVG (Area, axes, grid, no-data hatch, crosshair) — ADR-0012, ADR-0015, ADR-0027.",
