@@ -1171,7 +1171,8 @@ const ringWellClasses = [
 function SegmentedRingExamples() {
   return (
     <div className="grid w-full gap-6 lg:grid-cols-2">
-      <Card shape="rounded">
+      <section>
+        <Card shape="rounded">
         <Card.Header start={<h2 className={cardTitleClasses}>Channels</h2>} />
         <Card.Body>
           <div className={ringWellClasses}>
@@ -1189,7 +1190,9 @@ function SegmentedRingExamples() {
           </div>
         </Card.Body>
       </Card>
-      <Card shape="rounded">
+      </section>
+      <section>
+        <Card shape="rounded">
         <Card.Header start={<h2 className={cardTitleClasses}>Weekly goals</h2>} />
         <Card.Body>
           <div className={ringWellClasses}>
@@ -1206,7 +1209,9 @@ function SegmentedRingExamples() {
           </div>
         </Card.Body>
       </Card>
-      <Card shape="rounded">
+      </section>
+      <section>
+        <Card shape="rounded">
         <Card.Header start={<h2 className={cardTitleClasses}>Over capacity</h2>} />
         <Card.Body>
           <div className={ringWellClasses}>
@@ -1223,7 +1228,9 @@ function SegmentedRingExamples() {
           </div>
         </Card.Body>
       </Card>
-      <Card shape="rounded">
+      </section>
+      <section>
+        <Card shape="rounded">
         <Card.Header start={<h2 className={cardTitleClasses}>Empty</h2>} />
         <Card.Body>
           <div className={ringWellClasses}>
@@ -1240,7 +1247,9 @@ function SegmentedRingExamples() {
           </div>
         </Card.Body>
       </Card>
-      <Card shape="rounded">
+      </section>
+      <section>
+        <Card shape="rounded">
         <Card.Header start={<h2 className={cardTitleClasses}>Not connected</h2>} />
         <Card.Body>
           <div className={ringWellClasses}>
@@ -1256,6 +1265,7 @@ function SegmentedRingExamples() {
           </div>
         </Card.Body>
       </Card>
+      </section>
     </div>
   );
 }
@@ -1303,7 +1313,8 @@ const ringWellClasses = [
 export function SegmentedRingExamples() {
   return (
     <div className="grid w-full gap-6 lg:grid-cols-2">
-      <Card shape="rounded">
+      <section>
+        <Card shape="rounded">
         <Card.Header start={<h2 className={cardTitleClasses}>Channels</h2>} />
         <Card.Body>
           <div className={ringWellClasses}>
@@ -1321,7 +1332,9 @@ export function SegmentedRingExamples() {
           </div>
         </Card.Body>
       </Card>
-      <Card shape="rounded">
+      </section>
+      <section>
+        <Card shape="rounded">
         <Card.Header start={<h2 className={cardTitleClasses}>Weekly goals</h2>} />
         <Card.Body>
           <div className={ringWellClasses}>
@@ -1338,7 +1351,9 @@ export function SegmentedRingExamples() {
           </div>
         </Card.Body>
       </Card>
-      <Card shape="rounded">
+      </section>
+      <section>
+        <Card shape="rounded">
         <Card.Header start={<h2 className={cardTitleClasses}>Over capacity</h2>} />
         <Card.Body>
           <div className={ringWellClasses}>
@@ -1355,7 +1370,9 @@ export function SegmentedRingExamples() {
           </div>
         </Card.Body>
       </Card>
-      <Card shape="rounded">
+      </section>
+      <section>
+        <Card shape="rounded">
         <Card.Header start={<h2 className={cardTitleClasses}>Empty</h2>} />
         <Card.Body>
           <div className={ringWellClasses}>
@@ -1372,7 +1389,9 @@ export function SegmentedRingExamples() {
           </div>
         </Card.Body>
       </Card>
-      <Card shape="rounded">
+      </section>
+      <section>
+        <Card shape="rounded">
         <Card.Header start={<h2 className={cardTitleClasses}>Not connected</h2>} />
         <Card.Body>
           <div className={ringWellClasses}>
@@ -1388,6 +1407,7 @@ export function SegmentedRingExamples() {
           </div>
         </Card.Body>
       </Card>
+      </section>
     </div>
   );
 }
