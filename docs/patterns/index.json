@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.15",
+  "version": "0.4.16",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -464,6 +464,14 @@
       "name": "Pattern — page display controls",
       "file": "patterns/components-displaycontrols--page-utilities.tsx",
       "storybook": "?path=/story/components-displaycontrols--page-utilities",
+      "source": "src/components/molecules/DisplayControls/DisplayControls.stories.tsx"
+    },
+    {
+      "id": "components-displaycontrols--theme-switch",
+      "title": "Components/DisplayControls",
+      "name": "Pattern — theme switch",
+      "file": "patterns/components-displaycontrols--theme-switch.tsx",
+      "storybook": "?path=/story/components-displaycontrols--theme-switch",
       "source": "src/components/molecules/DisplayControls/DisplayControls.stories.tsx"
     },
     {

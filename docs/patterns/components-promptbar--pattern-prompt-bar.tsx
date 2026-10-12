@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.15 · Pattern — prompt bar
+// @thewhatmatters/wmds@0.4.16 · Pattern — prompt bar
 // Storybook: Components/PromptBar → Pattern — prompt bar (?path=/story/components-promptbar--pattern-prompt-bar)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
