@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.22",
+  "version": "0.4.23",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -1025,6 +1025,14 @@
       "file": "patterns/components-taskrows--tag-chips.tsx",
       "storybook": "?path=/story/components-taskrows--tag-chips",
       "source": "src/components/molecules/TaskRows/TaskRows.stories.tsx"
+    },
+    {
+      "id": "components-textarea--save-status",
+      "title": "Components/TextArea",
+      "name": "Pattern — save status",
+      "file": "patterns/components-textarea--save-status.tsx",
+      "storybook": "?path=/story/components-textarea--save-status",
+      "source": "src/components/atoms/TextArea/TextArea.stories.tsx"
     },
     {
       "id": "components-textlink--external-destination",

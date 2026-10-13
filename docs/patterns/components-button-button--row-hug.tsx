@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.22 · Pattern — row (hug)
+// @thewhatmatters/wmds@0.4.23 · Pattern — row (hug)
 // Storybook: Components/Button/Button → Pattern — row (hug) (?path=/story/components-button-button--row-hug)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
