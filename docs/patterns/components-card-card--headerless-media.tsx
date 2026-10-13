@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.22 · Pattern — headerless media
+// @thewhatmatters/wmds@0.4.23 · Pattern — headerless media
 // Storybook: Components/Card/Card → Pattern — headerless media (?path=/story/components-card-card--headerless-media)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -49,6 +49,12 @@ export interface TextAreaProps
   message?: string;
   /** Status band placement when `message` is set — default `bottom`. */
   messagePosition?: InputMessagePosition;
+  /**
+   * Progress text under the field, announced politely as it changes — "Saving…", "Saved".
+   * The live region stays mounted while the prop is a string (pass `""` when idle), so a change is
+   * heard. Not validation — use `status` + `message` for that. Omitted with `inline`.
+   */
+  liveStatus?: string;
   /** Trailing spinner — async validation. */
   loading?: boolean;
   /** Visible row count — default **4**. */
@@ -72,12 +78,12 @@ function assertTextAreaA11y(
 }
 
 function assertTextAreaPattern(
-  props: Pick<TextAreaProps, "status" | "message" | "inline" | "label" | "description">,
+  props: Pick<TextAreaProps, "status" | "message" | "inline" | "label" | "description" | "liveStatus">,
 ) {
   if (props.message != null && props.status == null) {
     console.warn("[WMDS TextArea] `message` requires `status`.");
   }
-  if (props.inline && (props.label != null || props.description != null || props.status != null || props.message != null)) {
+  if (props.inline && (props.label != null || props.description != null || props.liveStatus != null || props.status != null || props.message != null)) {
     console.warn("[WMDS TextArea] `inline` is for PromptBar only — omit label, description, and validation.");
   }
 }
@@ -93,6 +99,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
     description,
     status,
     message,
+    liveStatus,
     messagePosition = "bottom",
     loading = false,
     rows = 4,
@@ -109,7 +116,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
   const generatedId = useId();
   const controlId = idProp ?? generatedId;
   assertTextAreaA11y({ label, "aria-label": rest["aria-label"], "aria-labelledby": rest["aria-labelledby"] });
-  assertTextAreaPattern({ status, message, inline, label, description });
+  assertTextAreaPattern({ status, message, inline, label, description, liveStatus });
 
   const hasMessage = message != null && message.length > 0 && status != null;
   const showTrailingStatusIcon = !hasMessage && (loading || status != null);
@@ -215,7 +222,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
       <div className={inputControlStackClasses}>{soloShell}</div>
     );
 
-  if (label == null && description == null) {
+  if (label == null && description == null && liveStatus == null) {
     return control;
   }
 
@@ -233,6 +240,11 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
       {descriptionId != null ? (
         <p id={descriptionId} className={typographyClass("caption")}>
           {description}
+        </p>
+      ) : null}
+      {liveStatus != null ? (
+        <p role="status" aria-live="polite" id={`${controlId}-live-status`} className={typographyClass("caption")}>
+          {liveStatus}
         </p>
       ) : null}
     </div>

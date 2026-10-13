@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  Fit,
-  Layout,
-  Rive,
-  RuntimeLoader,
-  useRive,
-  useStateMachineInput,
-  useViewModelInstanceColor,
-} from "@rive-app/react-canvas";
+import * as riveNamespace from "@rive-app/react-canvas";
 import { motion } from "motion/react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -51,6 +43,14 @@ export {
   type RiveHandEntrance,
   type RiveHandName,
 };
+
+// The runtime is CommonJS. A bundler exposes its named exports; Node ESM exposes only `default`
+// (the whole `module.exports`), so a named import fails to link there.
+type RiveRuntime = typeof riveNamespace;
+const { Fit, Layout, Rive, RuntimeLoader, useRive, useStateMachineInput, useViewModelInstanceColor }: RiveRuntime =
+  "RuntimeLoader" in riveNamespace
+    ? riveNamespace
+    : (riveNamespace as unknown as { default: RiveRuntime }).default;
 
 // The runtime defaults to a public CDN. Load the WASM the app serves beside the `.riv` file.
 RuntimeLoader.setWasmUrl(riveHandWasmSrc);

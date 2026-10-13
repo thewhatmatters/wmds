@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.22",
+  "version": "0.4.23",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -900,7 +900,9 @@
         "title": "Components/TextArea",
         "docs": "?path=/docs/components-textarea--docs"
       },
-      "patterns": []
+      "patterns": [
+        "components-textarea--save-status"
+      ]
     },
     {
       "name": "TextLink",

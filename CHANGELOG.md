@@ -7,6 +7,18 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.23
+
+**The package loads under Node, and TextArea announces progress.**
+
+- **Fixed:** importing `@thewhatmatters/wmds` in Node ESM (a node test runner, or vitest in a DOM environment) threw `SyntaxError: Named export 'Rive' not found`. `@rive-app/react-canvas` is CommonJS, and **RiveHand** imported it by name; Node only exposes `default` for a CommonJS module. **RiveHand** now reads the runtime from the namespace and falls back to `default`, so bundlers (Vite, Next) and Node both load it. The `motion` imports were not the cause. The build now imports `dist/index.js` in Node, and a unit test does the same.
+- **TextArea** `liveStatus` (new) — progress text under the field, in a polite live region (`role="status"`, `aria-live="polite"`). Pass `""` when idle so the region stays mounted and "Saving…" / "Saved" are heard. It is separate from the validation `status` + `message`. `description` and `message` were already tied to the field with `aria-describedby`; tests now cover it.
+- **Pattern — save status** is new on **Components/TextArea**.
+
+### Consumer actions
+
+None. To announce a save state, pass `liveStatus`. Copy **Components/TextArea → Pattern — save status** (`docs/patterns/components-textarea--save-status.tsx`) for a worked example.
+
 ## 0.4.22
 
 **A pinned sidebar footer, and AppShell on the server.**
