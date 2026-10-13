@@ -42,3 +42,104 @@ The site assistant. At rest, a **PromptBar** pinned to the bottom of the page gr
 
 The app owns `messages`, `thinking`, `followUps`, the votes, the gate's open state, `onSend`, and `onSuggestionSelect`; ChatDock never fetches or parses Markdown (`content` is text or rendered Markdown). `placement="inline"` is for previews only. Copy **Components/ChatDock → Pattern — chat dock**. See **ADR-0039**.
 
+## AppShell
+
+signed-in page chrome — a sidebar on `bg-body`, the page as an inset raised surface with a title bar (**PageHeader** `variant="app"`), the phone **Sheet**, and the optional aside **Panel**. See **ADR-0047**.
+
+**Sidebar footer.** `sidebarFooter` (or **AppShell.SidebarFooter**) is pinned to the bottom of the sidebar column and of the phone **Sheet**. The **NavList** above it scrolls on its own, so a **DisplayControls** `controls="theme"` switch stays visible at 1440x900 and on a phone. It takes a 16px inset (`px-4`, like the brand row) and `py-3`; the slot adds no fill, border, or type. A choice inside the footer does not close the phone menu — only a link or button inside the `nav` does. The slot is not rendered when empty or when there is no `sidebar`.
+
+**Mobile toggle name.** Below `lg` the title-bar toggle is a ghost **IconButton** whose accessible name is **"Menu"** (`labels.menu`), with `aria-haspopup="dialog"` and `aria-expanded`. The **Sheet** it opens has the same title. The desktop toggle is named "Collapse sidebar" / "Expand sidebar" (`labels.collapse`, `labels.expand`) and is hidden below `lg`. Keep "Menu" as the phone name — tests and screen reader users find the control by it. Translate it through `labels.menu`; do not rename it to a page or product name.
+
+## AppShell — server rendering
+
+**Which parts render on the server.** All of **AppShell** server-renders when it is imported from a client module: the sidebar column (brand row, **NavList**, `sidebarFooter`), the title bar with both toggles, and `main` with the page. The desktop and phone toggles are two buttons, one hidden by CSS per breakpoint, so the server HTML needs no viewport query. The phone **Sheet** and the aside **Panel** render nothing until they open (they portal on the client), so no dialog is in the server HTML. `sidebarOpen` and the aside state start from `defaultSidebarOpen` / `defaultAsideOpen`. **DisplayControls** renders its `auto` state on the server; `useSyncExternalStore` with a server snapshot of `"auto"` switches to the saved choice after hydration without a mismatch.
+
+**What needs `"use client"`.** Every module in `@thewhatmatters/wmds` ships with the `"use client"` directive, so a Server Component can render the components but cannot call hooks or pass event handlers into them, and a non-component export (such as `displayThemeNoFlashScript`) is a client reference there, not its value. **AppShell** takes `onSidebarOpenChange`, `onAsideOpenChange`, **NavList** `onSelect`, and a **DisplayControls** `onThemeChange` — all functions — so the file that renders it is a `"use client"` module. Page content passed as `children` can stay a Server Component: a client component renders the server-rendered `children` it is given.
+
+**The no-flash script goes in the head.** `displayThemeNoFlashScript` sets or clears `data-theme` on `<html>` before first paint. Render it in `<head>` before the stylesheet, from a client module that renders the `<script>` (below), and put `suppressHydrationWarning` on `<html>` because the script changes its attributes.
+
+**Next.js App Router.**
+
+```tsx
+// app/theme-script.tsx — a client module: the package's exports are client references on the server
+"use client";
+
+import { displayThemeNoFlashScript } from "@thewhatmatters/wmds";
+
+export function ThemeScript() {
+  return <script dangerouslySetInnerHTML={{ __html: displayThemeNoFlashScript }} />;
+}
+```
+
+```tsx
+// app/layout.tsx — a Server Component
+import "@thewhatmatters/wmds/styles.css";
+import type { ReactNode } from "react";
+import { ThemeScript } from "./theme-script";
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+```tsx
+// app/(portal)/portal-shell.tsx — the client boundary
+"use client";
+
+import { usePathname } from "next/navigation";
+import { useSyncExternalStore, type ReactNode } from "react";
+import {
+  AppShell,
+  DisplayControls,
+  NavList,
+  commitDisplayTheme,
+  readDisplayTheme,
+  subscribeDisplayTheme,
+  type DisplayControlThemeMode,
+} from "@thewhatmatters/wmds";
+
+function themeServerSnapshot(): DisplayControlThemeMode {
+  return "auto";
+}
+
+export function PortalShell({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const theme = useSyncExternalStore(subscribeDisplayTheme, readDisplayTheme, themeServerSnapshot);
+
+  return (
+    <AppShell
+      title="Dashboard"
+      sidebar={
+        <NavList
+          aria-label="Portal"
+          className="w-full"
+          activeId={pathname}
+          sections={[{ items: [{ id: "/", label: "Dashboard", href: "/" }] }]}
+        />
+      }
+      sidebarFooter={
+        <DisplayControls controls="theme" aria-label="Appearance" theme={theme} onThemeChange={commitDisplayTheme} />
+      }
+    >
+      {children}
+    </AppShell>
+  );
+}
+```
+
+```tsx
+// app/(portal)/layout.tsx — a Server Component; its pages stay Server Components
+import type { ReactNode } from "react";
+import { PortalShell } from "./portal-shell";
+
+export default function PortalLayout({ children }: { children: ReactNode }) {
+  return <PortalShell>{children}</PortalShell>;
+}
+```
