@@ -7,6 +7,18 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.24
+
+**One focus ring on TextArea and Input.**
+
+- **TextArea** and **Input** no longer show a second ring. The shell's ring sat 2px off the border behind a page-colored gap, so it read as a gray ring around the field's own edge. The ring now hugs the border, one `--color-focus-ring` (or status ring) token, for solo and validation shells.
+- The inner field of **TextArea**, **Input**, **PromptBar** and **CopyField** drops its outline and ring with `!important`. A global `:focus-visible { outline }` rule in an app is unlayered and used to beat the component's layered `outline-none`, which painted a blue ring inside the shell.
+- New **Components/TextArea → Focused** story.
+
+### Consumer actions
+
+None.
+
 ## 0.4.23
 
 **The package loads under Node, and TextArea announces progress.**
