@@ -105,7 +105,7 @@ A closed preview leaves the tab order and the accessibility tree once it has fol
 - **Do** place **IndexList** on **grid-page** through a \`band\` column span; \`className\` is layout only.
 - **Do** pass \`empty\` when filters can remove every row.
 - **Don't** put actions or forms inside \`preview\` — it is a summary, not a detail view.
-- **Don't** use it for tabular data with many columns or sorting — **Table** is planned for that.
+- **Don't** use it for tabular data with many columns or sorting — **Table**.
         `.trim(),
       },
     },

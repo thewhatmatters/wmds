@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.20 · Default
+// @thewhatmatters/wmds@0.4.21 · Default
 // Storybook: Components/TextSequence → Default (?path=/story/components-textsequence--default)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

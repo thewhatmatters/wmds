@@ -20,6 +20,7 @@ const atoms = [
   "Skeleton",
   "Status",
   "Switch",
+  "Table",
   "TextArea",
   "TextLink",
   "Tooltip",
@@ -30,7 +31,7 @@ const molecules = ["Accordion", "Breadcrumb", "CalEmbed", "Card", "ChatQa", "Che
 const organisms = ["AppShell", "Carousel", "Chart", "ChatDock", "Confetti", "Dialog", "FilterPanel", "FooterReveal", "HeroTileStack", "IntakeConfirmation", "IntakeModal", "MoreMenu", "Panel", "ScrollHorizontal", "Sheet", "SiteNav", "Tab", "Toast"] as const;
 
 /** In the catalog before the atomic rebuild and not rebuilt yet. Move a name into its tier when it ships. */
-const planned = ["Pagination", "Table"] as const;
+const planned = ["Pagination"] as const;
 
 export const packageManifest = {
   /** Modules exported from src/index.ts today. */

@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.20",
+  "version": "0.4.21",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -945,6 +945,22 @@
       "file": "patterns/components-tab--settings-pages.tsx",
       "storybook": "?path=/story/components-tab--settings-pages",
       "source": "src/components/organisms/Tab/Tab.stories.tsx"
+    },
+    {
+      "id": "components-table--approvals",
+      "title": "Components/Table",
+      "name": "Pattern — approvals queue",
+      "file": "patterns/components-table--approvals.tsx",
+      "storybook": "?path=/story/components-table--approvals",
+      "source": "src/components/atoms/Table/Table.stories.tsx"
+    },
+    {
+      "id": "components-table--basic",
+      "title": "Components/Table",
+      "name": "Pattern — basic table",
+      "file": "patterns/components-table--basic.tsx",
+      "storybook": "?path=/story/components-table--basic",
+      "source": "src/components/atoms/Table/Table.stories.tsx"
     },
     {
       "id": "components-taskrows--action-details",

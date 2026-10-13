@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.20",
+  "version": "0.4.21",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -858,6 +858,20 @@
       ]
     },
     {
+      "name": "Table",
+      "tier": "atom",
+      "category": "Table & list",
+      "summary": "Semantic table in a horizontal-scroll box, with a row-actions pattern for approvals.",
+      "storybook": {
+        "title": "Components/Table",
+        "docs": "?path=/docs/components-table--docs"
+      },
+      "patterns": [
+        "components-table--approvals",
+        "components-table--basic"
+      ]
+    },
+    {
       "name": "TaskRows",
       "tier": "molecule",
       "category": "Table & list",
@@ -964,8 +978,7 @@
     }
   ],
   "planned": [
-    "Pagination",
-    "Table"
+    "Pagination"
   ],
   "lib": [
     "cn",

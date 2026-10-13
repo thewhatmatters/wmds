@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.20 · Pattern — two-line intro
+// @thewhatmatters/wmds@0.4.21 · Pattern — two-line intro
 // Storybook: Components/HeroIntro → Pattern — two-line intro (?path=/story/components-herointro--two-line-intro)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
