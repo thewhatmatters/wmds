@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.22 · Pattern — flush
+// @thewhatmatters/wmds@0.4.25 · Pattern — flush
 // Storybook: Components/Accordion → Pattern — flush (?path=/story/components-accordion--flush)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

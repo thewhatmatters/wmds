@@ -7,6 +7,20 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.25
+
+**An opt-in counter for the Carousel.**
+
+- **Carousel** `counter` (new, default `false`) — a visible "1 of 6" under the row on `type-supporting`, `text-muted`, tabular figures; announced politely (`aria-live="polite"`) as the item the row rests on changes; hidden (keeping its space) while every item fits. `labels.counter(position, count)` words it.
+- **Carousel** `onIndexChange(index, count)` (new) — 0-based; fires once the row has been still for a moment and the item it rests on has changed. At the end of the row the index is the last item.
+- **Carousel** `activeIndex` (new) — controlled: the row moves to that item (0-based) when it changes; the first value is applied without a glide.
+- With none of the new props, the markup and behavior are unchanged.
+- Stories: **Carousel → Review — 390 counter** and **Reference — count outside the row**. See the ADR-0043 addendum.
+
+### Consumer actions
+
+None. To show the count, pass `counter`; to show it elsewhere, pass `onIndexChange`. No **Pattern — …** Show code changed.
+
 ## 0.4.22
 
 **A pinned sidebar footer, and AppShell on the server.**
