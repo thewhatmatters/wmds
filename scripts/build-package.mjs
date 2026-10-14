@@ -70,5 +70,7 @@ writeFileSync(
 );
 
 run("node scripts/validate-manifest.mjs");
+// The main entry must load under plain Node ESM (a node test runner) — a CommonJS dependency imported by name fails here.
+run("node --input-type=module -e \"await import('./dist/index.js')\"");
 
 console.log("Built @thewhatmatters/wmds → dist/");

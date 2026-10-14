@@ -7,6 +7,9 @@ import { lockedViewportStory } from "../../../lib/viewports";
 import { Badge } from "../Badge/Badge";
 import { Button } from "../Button/Button";
 import { Card } from "../../molecules/Card/Card";
+import { Sheet } from "../../organisms/Sheet/Sheet";
+import { dialogFooterActionsClasses } from "../../organisms/Dialog/dialogStyles";
+import { TextLink } from "../TextLink/TextLink";
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "./Table";
 
 type ApprovalDecision = "approved" | "denied";
@@ -678,4 +681,151 @@ export const Mobile: Story = {
     </div>
   ),
   ...lockedViewportStory("mobile"),
+};
+
+const approvalsWithSheetCode = `
+import { useState } from "react";
+import {
+  Button,
+  Sheet,
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TextLink,
+  dialogFooterActionsClasses,
+} from "@thewhatmatters/wmds";
+
+interface ApprovalRow {
+  id: string;
+  name: string;
+  kind: string;
+  waiting: string;
+}
+
+export function ApprovalsWithSheet({ rows }: { rows: ApprovalRow[] }) {
+  const [id, setId] = useState<string | null>(null);
+  const row = rows.find((item) => item.id === id);
+
+  return (
+    <>
+      <Table aria-label="Approvals waiting on you">
+        <TableCaption>{rows.length} waiting on you</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Kind</TableHead>
+            <TableHead align="end">Waiting</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {rows.map((item) => (
+            <TableRow key={item.id} onClick={() => setId(item.id)}>
+              <TableCell>
+                <TextLink
+                  variant="quiet"
+                  href={\`#\${item.id}\`}
+                  onClick={(event) => event.preventDefault()}
+                >
+                  {item.name}
+                </TextLink>
+              </TableCell>
+              <TableCell>{item.kind}</TableCell>
+              <TableCell align="end">{item.waiting}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <Sheet open={row != null} onOpenChange={(open) => setId(open ? id : null)}>
+        <Sheet.Content
+          side="end"
+          title={row?.name}
+          description={row?.kind}
+          footer={
+            <div className={dialogFooterActionsClasses}>
+              <Button size="sm" role="outline" onClick={() => setId(null)}>
+                Deny
+              </Button>
+              <Button size="sm" role="primary" onClick={() => setId(null)}>
+                Approve
+              </Button>
+            </div>
+          }
+        >
+          <p>Waiting {row?.waiting}.</p>
+        </Sheet.Content>
+      </Sheet>
+    </>
+  );
+}
+`;
+
+export const ApprovalsWithSheet: Story = {
+  name: "Pattern — approvals with sheet",
+  args: { children: null },
+  render: function ApprovalsWithSheetPattern() {
+    const [id, setId] = useState<string | null>(null);
+    const row = approvalItems.find((item) => item.id === id);
+
+    return (
+      <>
+        <Table aria-label="Approvals waiting on you">
+          <TableCaption>{approvalItems.length} waiting on you</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Kind</TableHead>
+              <TableHead align="end">Waiting</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {approvalItems.map((item) => (
+              <TableRow key={item.id} onClick={() => setId(item.id)}>
+                <TableCell>
+                  <TextLink variant="quiet" href={`#${item.id}`} onClick={(event) => event.preventDefault()}>
+                    {item.name}
+                  </TextLink>
+                </TableCell>
+                <TableCell>{item.kind}</TableCell>
+                <TableCell align="end">{item.waiting}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <Sheet open={row != null} onOpenChange={(open) => setId(open ? id : null)}>
+          <Sheet.Content
+            side="end"
+            title={row?.name}
+            description={row?.kind}
+            footer={
+              <div className={dialogFooterActionsClasses}>
+                <Button size="sm" role="outline" onClick={() => setId(null)}>
+                  Deny
+                </Button>
+                <Button size="sm" role="primary" onClick={() => setId(null)}>
+                  Approve
+                </Button>
+              </div>
+            }
+          >
+            <p>Waiting {row?.waiting}.</p>
+          </Sheet.Content>
+        </Sheet>
+      </>
+    );
+  },
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "A row click sets the sheet id. The name is a link so the row has a focus stop and the sheet returns focus to it on close. Table takes no new props.",
+        },
+      },
+    },
+    approvalsWithSheetCode,
+  ),
 };

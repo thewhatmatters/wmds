@@ -7,7 +7,7 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
-## 0.4.25
+## 0.4.27
 
 **An opt-in counter for the Carousel.**
 
@@ -20,6 +20,44 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 ### Consumer actions
 
 None. To show the count, pass `counter`; to show it elsewhere, pass `onIndexChange`. No **Pattern — …** Show code changed.
+
+## 0.4.26
+
+**A side sheet with header actions, a phone layout, and URL state.**
+
+- **Sheet** `Sheet.Content` `headerActions` (new) — controls before the close (**IconButton** `size="sm"`: previous / next, share).
+- **Sheet** `side="end"` is **full-screen below `md`** (no inset, no radius; header and footer pinned, body scrolls, footer clears the home indicator). From `md` it is a rail over a lighter scrim (`bg-overlay/50`). The page behind is `inert` while open; closing a deep-linked sheet moves focus to `main`; reduced motion fades instead of sliding.
+- **`useSheetParam(kind, { initialUrl? })`**, **`readSheetParam(url)`**, **`withSheetParam(url, id | null, kind)`** (new) — keep a sheet in `?sheet=<kind>&id=<id>` with the History API, no router. Back closes; a deep link opens on first render; `initialUrl` serves the open sheet from the server.
+- New patterns: **Components/Sheet → Pattern — side sheet**, **Pattern — side sheet header actions**, **Pattern — side sheet URL deep link**; **Components/Table → Pattern — approvals with sheet**.
+- See ADR-0049.
+
+### Consumer actions
+
+None required. Every `side="end"` **Sheet**, including **SiteNav**'s phone menu, is now full-screen below `md`; check a phone width. To keep a detail in the URL, wire `useSheetParam` as in **Pattern — side sheet URL deep link** (new patterns, nothing to re-copy).
+
+## 0.4.24
+
+**One focus ring on TextArea and Input.**
+
+- **TextArea** and **Input** no longer show a second ring. The shell's ring sat 2px off the border behind a page-colored gap, so it read as a gray ring around the field's own edge. The ring now hugs the border, one `--color-focus-ring` (or status ring) token, for solo and validation shells.
+- The inner field of **TextArea**, **Input**, **PromptBar** and **CopyField** drops its outline and ring with `!important`. A global `:focus-visible { outline }` rule in an app is unlayered and used to beat the component's layered `outline-none`, which painted a blue ring inside the shell.
+- New **Components/TextArea → Focused** story.
+
+### Consumer actions
+
+None.
+
+## 0.4.23
+
+**The package loads under Node, and TextArea announces progress.**
+
+- **Fixed:** importing `@thewhatmatters/wmds` in Node ESM (a node test runner, or vitest in a DOM environment) threw `SyntaxError: Named export 'Rive' not found`. `@rive-app/react-canvas` is CommonJS, and **RiveHand** imported it by name; Node only exposes `default` for a CommonJS module. **RiveHand** now reads the runtime from the namespace and falls back to `default`, so bundlers (Vite, Next) and Node both load it. The `motion` imports were not the cause. The build now imports `dist/index.js` in Node, and a unit test does the same.
+- **TextArea** `liveStatus` (new) — progress text under the field, in a polite live region (`role="status"`, `aria-live="polite"`). Pass `""` when idle so the region stays mounted and "Saving…" / "Saved" are heard. It is separate from the validation `status` + `message`. `description` and `message` were already tied to the field with `aria-describedby`; tests now cover it.
+- **Pattern — save status** is new on **Components/TextArea**.
+
+### Consumer actions
+
+None. To announce a save state, pass `liveStatus`. Copy **Components/TextArea → Pattern — save status** (`docs/patterns/components-textarea--save-status.tsx`) for a worked example.
 
 ## 0.4.22
 

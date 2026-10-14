@@ -31,7 +31,7 @@ A strip of tiles is one component and a paste of **Pattern — image carousel**.
 
 - ADR-0002, ADR-0004, ADR-0005, ADR-0008, ADR-0036
 
-## Addendum — counter, index callback, controlled index (0.4.25)
+## Addendum — counter, index callback, controlled index (0.4.27)
 
 Approved by Randy on 2026-10-13. Three opt-in props; none changes the default behavior or markup.
 

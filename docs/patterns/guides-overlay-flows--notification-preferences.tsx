@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.25 · Pattern — notification preferences
+// @thewhatmatters/wmds@0.4.27 · Pattern — notification preferences
 // Storybook: Guides/Overlay flows → Pattern — notification preferences (?path=/story/guides-overlay-flows--notification-preferences)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

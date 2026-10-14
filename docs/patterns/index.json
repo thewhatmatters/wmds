@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.25",
+  "version": "0.4.27",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -859,6 +859,30 @@
       "source": "src/components/organisms/Sheet/Sheet.stories.tsx"
     },
     {
+      "id": "components-sheet--side-sheet",
+      "title": "Components/Sheet",
+      "name": "Pattern — side sheet",
+      "file": "patterns/components-sheet--side-sheet.tsx",
+      "storybook": "?path=/story/components-sheet--side-sheet",
+      "source": "src/components/organisms/Sheet/Sheet.stories.tsx"
+    },
+    {
+      "id": "components-sheet--side-sheet-header-actions",
+      "title": "Components/Sheet",
+      "name": "Pattern — side sheet header actions",
+      "file": "patterns/components-sheet--side-sheet-header-actions.tsx",
+      "storybook": "?path=/story/components-sheet--side-sheet-header-actions",
+      "source": "src/components/organisms/Sheet/Sheet.stories.tsx"
+    },
+    {
+      "id": "components-sheet--side-sheet-url-deep-link",
+      "title": "Components/Sheet",
+      "name": "Pattern — side sheet URL deep link",
+      "file": "patterns/components-sheet--side-sheet-url-deep-link.tsx",
+      "storybook": "?path=/story/components-sheet--side-sheet-url-deep-link",
+      "source": "src/components/organisms/Sheet/Sheet.stories.tsx"
+    },
+    {
       "id": "components-sitenav--brand-and-cta",
       "title": "Components/SiteNav",
       "name": "Pattern — brand + CTA",
@@ -955,6 +979,14 @@
       "source": "src/components/atoms/Table/Table.stories.tsx"
     },
     {
+      "id": "components-table--approvals-with-sheet",
+      "title": "Components/Table",
+      "name": "Pattern — approvals with sheet",
+      "file": "patterns/components-table--approvals-with-sheet.tsx",
+      "storybook": "?path=/story/components-table--approvals-with-sheet",
+      "source": "src/components/atoms/Table/Table.stories.tsx"
+    },
+    {
       "id": "components-table--basic",
       "title": "Components/Table",
       "name": "Pattern — basic table",
@@ -1025,6 +1057,14 @@
       "file": "patterns/components-taskrows--tag-chips.tsx",
       "storybook": "?path=/story/components-taskrows--tag-chips",
       "source": "src/components/molecules/TaskRows/TaskRows.stories.tsx"
+    },
+    {
+      "id": "components-textarea--save-status",
+      "title": "Components/TextArea",
+      "name": "Pattern — save status",
+      "file": "patterns/components-textarea--save-status.tsx",
+      "storybook": "?path=/story/components-textarea--save-status",
+      "source": "src/components/atoms/TextArea/TextArea.stories.tsx"
     },
     {
       "id": "components-textlink--external-destination",

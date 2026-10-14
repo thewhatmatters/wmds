@@ -45,6 +45,9 @@ export const packageManifest = {
     { name: "pressScaleClass", path: "./lib/motion", reexport: "pressScaleClass" },
     { name: "GridOverlay", path: "./lib/GridOverlay" },
     { name: "GRID_ON_CLASS", path: "./lib/gridOverlayUtils", reexport: "GRID_ON_CLASS" },
+    { name: "useSheetParam", path: "./lib/sheetParam", reexport: "useSheetParam" },
+    { name: "readSheetParam", path: "./lib/sheetParam", reexport: "readSheetParam" },
+    { name: "withSheetParam", path: "./lib/sheetParam", reexport: "withSheetParam" },
   ] as const,
 
   /** Internal filesystem/import tiers; Storybook uses ADR-0026 functional categories. */

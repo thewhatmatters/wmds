@@ -1,5 +1,7 @@
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, userEvent, waitFor, within } from "storybook/test";
+import { withStoryCopySource } from "../../../lib/storyCopySource";
 import { TextArea, textareaResizes, inputStatuses } from "./TextArea";
 
 function TextAreaSpecimen({ children }: { children: ReactNode }) {
@@ -23,6 +25,7 @@ const meta = {
     label: { control: "text" },
     description: { control: "text" },
     message: { control: "text" },
+    liveStatus: { control: "text" },
     loading: { control: "boolean" },
     disabled: { control: "boolean" },
     rows: { control: "number" },
@@ -51,6 +54,7 @@ const meta = {
 | **With label** | \`label\`, optional \`description\` |
 | **Validation** | \`status\` + \`message\` — tinted status band (\`messagePosition\` top or bottom) |
 | **Status only** | \`status\` without \`message\` — border + top-trailing icon |
+| **Live status** | \`liveStatus\` — "Saving…" / "Saved" announced politely (\`role="status"\`, \`aria-live="polite"\`) |
 | **Loading** | \`loading\` — trailing spinner |
 | **Resize** | \`resize="none" | "vertical" | "both"\` — default \`vertical\` |
 | **Inline** | \`inline\` — no shell. **PromptBar** owns the pill. Not a standalone field |
@@ -65,6 +69,7 @@ const meta = {
 
 - **Do** use \`status\` + \`message\` for validation — not label asterisks.
 - **Do** set \`aria-label\` when \`label\` is omitted.
+- **Do** use \`liveStatus\` for progress ("Saving…", "Saved"); pass \`""\` when idle so the region stays mounted and the next change is heard. \`description\` and \`message\` are tied to the field with \`aria-describedby\`.
 - **Do** keep \`resize="vertical"\` unless layout must stay fixed height.
 - **Don't** restyle the shell with \`className\` — layout width only.
 - **Don't** use \`inline\` outside **PromptBar**. The parent pill owns the border and focus ring.
@@ -177,5 +182,101 @@ export const ResizeNone: Story = {
     placeholder: "Resize disabled for dashboard tiles.",
     resize: "none",
     rows: 5,
+  },
+};
+
+export const SaveStatus: Story = {
+  name: "Pattern — save status",
+  args: {
+    label: "Notes",
+    description: "Saved automatically as you type.",
+  },
+  render: function SaveStatusRender(args) {
+    const [value, setValue] = useState("");
+    const [saveState, setSaveState] = useState<"idle" | "saving" | "saved">("idle");
+
+    useEffect(() => {
+      if (saveState !== "saving") return;
+      const timer = setTimeout(() => setSaveState("saved"), 600);
+      return () => clearTimeout(timer);
+    }, [saveState, value]);
+
+    return (
+      <TextArea
+        {...args}
+        value={value}
+        onChange={(event) => {
+          setValue(event.target.value);
+          setSaveState("saving");
+        }}
+        liveStatus={saveState === "saving" ? "Saving…" : saveState === "saved" ? "Saved" : ""}
+      />
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const field = canvas.getByRole("textbox", { name: "Notes" });
+    await expect(field).toHaveAccessibleDescription("Saved automatically as you type.");
+    const region = canvas.getByRole("status");
+    await expect(region).toHaveAttribute("aria-live", "polite");
+    await userEvent.type(field, "Pick up tomatoes");
+    await expect(region).toHaveTextContent("Saving…");
+    await expect(await canvas.findByText("Saved")).toBeVisible();
+  },
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "`liveStatus` is a polite live region under the field. It stays mounted while idle (`\"\"`), so “Saving…” and “Saved” are announced. `description` is read with the field through `aria-describedby`.",
+        },
+      },
+    },
+    `
+"use client";
+
+import { useEffect, useState } from "react";
+import { TextArea } from "@thewhatmatters/wmds";
+
+export function NotesField() {
+  const [value, setValue] = useState("");
+  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved">("idle");
+
+  useEffect(() => {
+    if (saveState !== "saving") return;
+    const timer = setTimeout(() => setSaveState("saved"), 600);
+    return () => clearTimeout(timer);
+  }, [saveState, value]);
+
+  return (
+    <TextArea
+      label="Notes"
+      description="Saved automatically as you type."
+      value={value}
+      onChange={(event) => {
+        setValue(event.target.value);
+        setSaveState("saving");
+      }}
+      liveStatus={saveState === "saving" ? "Saving…" : saveState === "saved" ? "Saved" : ""}
+    />
+  );
+}
+`,
+  ),
+};
+
+export const Focused: Story = {
+  name: "Focused",
+  args: {
+    label: "Intro",
+    defaultValue: "This is my intro",
+    description: "One ring on the shell. The field adds no outline or ring of its own.",
+  },
+  play: async ({ canvasElement }) => {
+    const field = canvasElement.querySelector("textarea");
+    if (!field) throw new Error("TextArea field not found");
+    field.focus();
+    await waitFor(() => expect(field).toHaveFocus());
+    expect(getComputedStyle(field).outlineStyle).toBe("none");
   },
 };

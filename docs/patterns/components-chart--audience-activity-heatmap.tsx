@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.25 · Pattern — matrix heatmap
+// @thewhatmatters/wmds@0.4.27 · Pattern — matrix heatmap
 // Storybook: Components/Chart → Pattern — matrix heatmap (?path=/story/components-chart--audience-activity-heatmap)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
