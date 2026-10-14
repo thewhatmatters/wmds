@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.27 · Pattern — approvals with sheet
+// @thewhatmatters/wmds@0.4.28 · Pattern — approvals with sheet
 // Storybook: Components/Table → Pattern — approvals with sheet (?path=/story/components-table--approvals-with-sheet)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

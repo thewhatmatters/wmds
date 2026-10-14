@@ -50,18 +50,38 @@ export function trapFocus(container: HTMLElement): () => void {
   };
 }
 
-/** Prevent background scroll while a modal is open — returns cleanup. */
+/**
+ * Prevent background scroll while a modal is open — returns cleanup.
+ *
+ * `html { scrollbar-gutter: stable }` (grid.css) keeps a scrollbar-wide strip after the body stops scrolling,
+ * and a fixed scrim cannot paint into it — on a classic-scrollbar platform it shows as a pale band at the
+ * trailing edge. While locked the gutter is released so the scrim reaches the edge, and the body takes its
+ * width as padding so the page behind does not move.
+ */
 export function lockBodyScroll(): () => void {
   if (typeof document === "undefined") {
     return () => undefined;
   }
 
-  const { body } = document;
+  const { body, documentElement } = document;
   const previousOverflow = body.style.overflow;
+  const previousPaddingRight = body.style.paddingRight;
+  const previousGutter = documentElement.style.scrollbarGutter;
+
   body.style.overflow = "hidden";
+  // The reserved strip is the viewport less the scrollable area; read it once scrolling is off.
+  const reservesGutter = getComputedStyle(documentElement).scrollbarGutter.includes("stable");
+  const gutter = reservesGutter ? Math.max(0, window.innerWidth - documentElement.scrollWidth) : 0;
+  if (gutter > 0) {
+    const currentPaddingRight = parseFloat(getComputedStyle(body).paddingRight) || 0;
+    documentElement.style.scrollbarGutter = "auto";
+    body.style.paddingRight = `${currentPaddingRight + gutter}px`;
+  }
 
   return () => {
     body.style.overflow = previousOverflow;
+    body.style.paddingRight = previousPaddingRight;
+    documentElement.style.scrollbarGutter = previousGutter;
   };
 }
 

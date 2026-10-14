@@ -42,7 +42,7 @@ Shared overlay: portal to \`document.body\`, \`aria-modal\`, focus trap, scroll 
 Dialog (open / onOpenChange)
 └── Dialog.Content — Card shell (rounded-2xl shadow-md)
     ├── Card.Header — \`headerStart\` | title · \`headerEnd\` + optional IconButton close
-    ├── body — 16px inset copy / form fields
+    ├── body — 24px inset copy / form fields
     └── Card.Footer — Button action cluster
 
 AlertDialog — same overlay + compact sm panel

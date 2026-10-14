@@ -7,6 +7,8 @@ import { DialogProvider, useDialogLabelIds } from "./DialogContext";
 import {
   alertDialogTitleClasses,
   dialogPanelSizeClasses,
+  dialogHeaderInsetTopClasses,
+  dialogPanelInsetXClasses,
   dialogPanelShellClasses,
   dialogBodyMutedClasses,
   overlayPanelChromeClasses,
@@ -110,6 +112,7 @@ export function AlertDialog({
             overlayPanelChromeClasses,
             overlayPanelMaxHeightClasses,
             dialogPanelShellClasses,
+            dialogPanelInsetXClasses,
             className,
           )}
         >
@@ -119,6 +122,7 @@ export function AlertDialog({
             title={title}
             titleClassName={alertDialogTitleClasses}
             showClose={false}
+            className={dialogHeaderInsetTopClasses}
           />
 
           <div className={overlayPanelDialogBodyScrollClasses}>

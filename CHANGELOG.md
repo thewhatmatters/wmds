@@ -9,16 +9,18 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 ## 0.4.28
 
-**AlertDialog takes a body, and Input takes a rich label.**
+**AlertDialog takes a body, Input takes a rich label, and dialogs get a roomier edge.**
 
 - **AlertDialog** `children` (new) — content between the description and the actions, such as a typed-confirmation **Input**. It renders outside the description `<p>`, so `aria-describedby` still names the description alone. Cancel still takes initial focus. Without `children` the markup is unchanged.
 - **Input** `label` is now `ReactNode` (was `string`), so a label can read "Type **@handle** to confirm". The `<label htmlFor>` association is unchanged, and the whole label is the field's accessible name. A string label behaves as before.
 - **Pattern — alert dialog (typed confirmation delete)** is new on **Components/Dialog**: Delete stays off until the typed value matches the handle (a leading `@`, case, and surrounding spaces are ignored), and the field clears on reopen. **Pattern — rich label** is new on **Components/Input**.
 - New interaction test **Internal/Interactions/Overlay → AlertDialog — typed confirmation**.
+- **Dialog** and **AlertDialog** edge inset is **24px** on every side, phones included (was 16px): header, body, and footer share the same horizontal inset, and the panel's top and bottom are 24px. A pill action now clears the 16px panel radius instead of sitting in the corner. **Sheet**, **Panel**, and **Card** keep their 16px layout. `dialogStyles` adds `dialogPanelInsetXClasses`, `dialogHeaderInsetTopClasses`, `dialogFooterInsetBottomClasses`.
+- **Dialog**, **Sheet**, and **IntakeModal** scroll lock no longer leaves a pale strip at the trailing edge on platforms with classic scrollbars: `html { scrollbar-gutter: stable }` kept that strip after the body stopped scrolling, and the fixed scrim cannot paint into it. While a modal is open the gutter is released and the body takes its width as `padding-right`, so the page behind does not move and the scrim reaches the edge.
 
 ### Consumer actions
 
-None. To ask for a typed confirmation, pass an **Input** as `children` of **AlertDialog** and set `confirmDisabled` until the value matches. Copy **Components/Dialog → Pattern — alert dialog (typed confirmation delete)**.
+None. To ask for a typed confirmation, pass an **Input** as `children` of **AlertDialog** and set `confirmDisabled` until the value matches. Copy **Components/Dialog → Pattern — alert dialog (typed confirmation delete)**. A **Dialog** or **AlertDialog** is 16px wider on each side's content inset and 16px taller (8px top, 8px bottom); check the narrowest phone width. No `className` change is needed.
 
 ## 0.4.27
 
