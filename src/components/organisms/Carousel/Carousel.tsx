@@ -26,6 +26,7 @@ import {
 import { cn } from "../../../lib/cn";
 import { motionTransitionProp } from "../../../lib/motion";
 import {
+  carouselActiveIndex,
   carouselClamp,
   carouselDragThreshold,
   carouselMaxScroll,
@@ -39,6 +40,7 @@ import {
   carouselThumbShare,
 } from "./carouselMath";
 import {
+  carouselCounterClasses,
   carouselDefaultItemWidth,
   carouselExtentClasses,
   carouselFrameClasses,
@@ -72,6 +74,8 @@ export type CarouselLayoutClassName = string;
 export interface CarouselLabels {
   /** Names each item by its place. Default: "2 of 4". */
   item: (position: number, count: number) => string;
+  /** The visible counter under the row. Default: "1 of 6". */
+  counter: (position: number, count: number) => string;
 }
 
 /** The row is a labelled region: name it, or point at the heading that does. */
@@ -97,6 +101,12 @@ interface CarouselBaseProps {
    * `full` row width, or `none`. It hides itself while every item fits.
    */
   progress?: CarouselProgressPlacement;
+  /** Show "1 of 6" under the row, announced politely as it changes. Hidden while every item fits. Default: `false`. */
+  counter?: boolean;
+  /** Fires with the 0-based index and the item count when the item the row rests on changes. */
+  onIndexChange?: (index: number, count: number) => void;
+  /** Controlled: the row moves to this item (0-based) when it changes. */
+  activeIndex?: number;
   labels?: Partial<CarouselLabels>;
   /** **Carousel.Item** children, one per item. */
   children?: ReactNode;
@@ -119,6 +129,7 @@ const CarouselItemContext = createContext<CarouselItemContextValue | null>(null)
 
 const defaultLabels: CarouselLabels = {
   item: (position, count) => `${position} of ${count}`,
+  counter: (position, count) => `${position} of ${count}`,
 };
 
 interface CarouselMetrics {
@@ -126,6 +137,8 @@ interface CarouselMetrics {
   max: number;
   /** Where the row rests — each item's leading edge. */
   points: number[];
+  /** Each item's leading edge, in px from the row's start. */
+  offsets: number[];
   /** `1` left to right, `-1` right to left. */
   direction: 1 | -1;
 }
@@ -147,6 +160,9 @@ interface CarouselScrubState {
   /** How far the filled part can travel, in px. */
   travel: number;
 }
+
+/** How long the row is still, in ms, before the item it rests on counts as changed. */
+const restingDelay = 120;
 
 /** Extra px either side of the filled part that still count as a press on it. */
 const thumbHitSlop = 10;
@@ -189,6 +205,9 @@ function CarouselRoot({
   bleed = false,
   fade = true,
   progress = "center",
+  counter = false,
+  onIndexChange,
+  activeIndex,
   labels,
   children,
   className,
@@ -199,7 +218,7 @@ function CarouselRoot({
   const trackRef = useRef<HTMLDivElement>(null);
   const progressTrackRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
-  const metrics = useRef<CarouselMetrics>({ max: 0, points: [0], direction: 1 });
+  const metrics = useRef<CarouselMetrics>({ max: 0, points: [0], offsets: [], direction: 1 });
   const animation = useRef<ReturnType<typeof animate> | null>(null);
   /** Where an animated move is heading — a second key press steps on from there. */
   const target = useRef<number | null>(null);
@@ -208,6 +227,14 @@ function CarouselRoot({
   const suppressClick = useRef(false);
   /** `null` until the row is measured — the server and the first paint. */
   const [overflowing, setOverflowing] = useState<boolean | null>(null);
+  /** The item the row rests on — it follows the scroll once the row has been still for a moment. */
+  const [restingIndex, setRestingIndex] = useState(0);
+  const settleTimer = useRef<number | undefined>(undefined);
+  const lastReported = useRef(0);
+  const lastApplied = useRef<number | undefined>(undefined);
+  const itemCount = useRef(0);
+  const onIndexChangeRef = useRef(onIndexChange);
+  const moveToRef = useRef<(position: number, animated?: boolean) => void>(() => {});
 
   /** The position being driven, in px from the row's start. Past either end while the row is overscrolled. */
   const drive = useMotionValue(0);
@@ -225,6 +252,14 @@ function CarouselRoot({
     root.style.setProperty("--carousel-progress", String(carouselProgress(position, max)));
     setEdgeFade(viewport, "--scroll-fade-s", position > 1);
     setEdgeFade(viewport, "--scroll-fade-e", position < max - 1);
+    window.clearTimeout(settleTimer.current);
+    settleTimer.current = window.setTimeout(() => {
+      const index = carouselActiveIndex(metrics.current.offsets, Math.abs(viewport.scrollLeft), metrics.current.max);
+      setRestingIndex(index);
+      if (index === lastReported.current) return;
+      lastReported.current = index;
+      onIndexChangeRef.current?.(index, itemCount.current);
+    }, restingDelay);
   }, []);
 
   const writePosition = useCallback(
@@ -285,6 +320,11 @@ function CarouselRoot({
     animation.current = animate(drive, to, { ...motionTransitionProp("medium"), onComplete: finish });
   }
 
+  useEffect(() => {
+    onIndexChangeRef.current = onIndexChange;
+    moveToRef.current = moveTo;
+  });
+
   /** Let go: glide on with the pointer's momentum and come to rest — on an item's edge when `snap` is on. */
   function settle(velocity: number) {
     const { max, points } = metrics.current;
@@ -344,7 +384,7 @@ function CarouselRoot({
             const rect = item.getBoundingClientRect();
             return direction === 1 ? rect.left - first.left : first.right - rect.right;
           });
-    metrics.current = { max, direction, points: carouselSnapPoints(offsets, max) };
+    metrics.current = { max, direction, points: carouselSnapPoints(offsets, max), offsets };
 
     const progressTrack = progressTrackRef.current;
     if (progressTrack) {
@@ -373,7 +413,24 @@ function CarouselRoot({
     };
   }, [measure, progress]);
 
-  useEffect(() => () => animation.current?.stop(), []);
+  useEffect(
+    () => () => {
+      animation.current?.stop();
+      window.clearTimeout(settleTimer.current);
+    },
+    [],
+  );
+
+  // Controlled: move to the item when `activeIndex` changes, once the row is measured.
+  useEffect(() => {
+    if (activeIndex == null || overflowing == null || activeIndex === lastApplied.current) return;
+    const { offsets, max } = metrics.current;
+    if (offsets.length === 0) return;
+    const first = lastApplied.current === undefined;
+    lastApplied.current = activeIndex;
+    const offset = offsets[carouselClamp(Math.round(activeIndex), 0, offsets.length - 1)];
+    moveToRef.current(snap ? carouselNearestSnap(metrics.current.points, offset) : carouselClamp(offset, 0, max), !first);
+  }, [activeIndex, overflowing, snap]);
 
   function handlePointerDown(event: PointerEvent<HTMLDivElement>) {
     // Touch and pen scroll the row natively; the pointer drag is for a mouse.
@@ -520,6 +577,11 @@ function CarouselRoot({
 
   const itemLabel = labels?.item ?? defaultLabels.item;
   const items = Children.toArray(children);
+  itemCount.current = items.length;
+  const counterLabel = (labels?.counter ?? defaultLabels.counter)(
+    Math.min(restingIndex, Math.max(items.length - 1, 0)) + 1,
+    items.length,
+  );
   const overflowState = overflowing == null ? undefined : String(overflowing);
 
   return (
@@ -583,6 +645,19 @@ function CarouselRoot({
             <div ref={thumbRef} className={carouselProgressThumbClasses} data-carousel-progress-thumb="" />
           </div>
         </div>
+      ) : null}
+      {counter ? (
+        // Always in the tree so a screen reader catches the change; the row's items already say
+        // their place, so this is the one spoken update while the visitor moves.
+        <p
+          aria-live="polite"
+          aria-atomic="true"
+          data-carousel-counter=""
+          data-overflowing={overflowState}
+          className={carouselCounterClasses}
+        >
+          {counterLabel}
+        </p>
       ) : null}
     </div>
   );

@@ -55,4 +55,25 @@ describe("Carousel on the server", () => {
     expect(html).not.toContain("snap-mandatory");
     expect(html).not.toContain("scroll-fade-x");
   });
+
+  it("leaves the counter out by default and renders it on request", () => {
+    expect(render()).not.toContain("data-carousel-counter");
+    const html = render({ counter: true });
+    expect(html).toContain("data-carousel-counter");
+    expect(html).toContain('aria-live="polite"');
+    expect(html).toContain(">1 of 3<");
+    // Not measured yet: it is shown, and hides itself only once the row is known to fit.
+    expect(html).not.toMatch(/data-carousel-counter="" data-overflowing/);
+  });
+
+  it("words the counter from labels.counter", () => {
+    const html = render({ counter: true, labels: { counter: (position, count) => `${position} / ${count}` } });
+    expect(html).toContain(">1 / 3<");
+    expect(html).toContain('aria-label="1 of 3"');
+  });
+
+  it("does not change the markup with the new props left at their defaults", () => {
+    expect(render({ counter: false })).toBe(render());
+    expect(render({ activeIndex: undefined, onIndexChange: undefined })).toBe(render());
+  });
 });

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  carouselActiveIndex,
   carouselMaxScroll,
   carouselNearestSnap,
   carouselOverflows,
@@ -76,5 +77,26 @@ describe("carouselMath", () => {
     expect(carouselOverscrollOffset(0)).toBe(0);
     expect(Math.abs(carouselOverscrollOffset(100))).toBeLessThan(100);
     expect(carouselOverscrollOffset(-40)).toBeLessThan(0);
+  });
+});
+
+describe("carouselActiveIndex", () => {
+  const offsets = [0, 300, 600, 900, 1200, 1500];
+
+  it("is the item whose leading edge is nearest", () => {
+    expect(carouselActiveIndex(offsets, 0, 1100)).toBe(0);
+    expect(carouselActiveIndex(offsets, 140, 1100)).toBe(0);
+    expect(carouselActiveIndex(offsets, 160, 1100)).toBe(1);
+    expect(carouselActiveIndex(offsets, 600, 1100)).toBe(2);
+  });
+
+  it("is the last item once the row reaches its end", () => {
+    expect(carouselActiveIndex(offsets, 1100, 1100)).toBe(5);
+    expect(carouselActiveIndex(offsets, 1099.5, 1100)).toBe(5);
+  });
+
+  it("is the first item when nothing scrolls or nothing is measured", () => {
+    expect(carouselActiveIndex(offsets, 0, 0)).toBe(0);
+    expect(carouselActiveIndex([], 50, 100)).toBe(0);
   });
 });

@@ -94,3 +94,18 @@ export function carouselProgressAtPointer(pointer: number, trackWidth: number, t
 export function carouselOverscrollOffset(overshoot: number): number {
   return overshoot * carouselOverscrollElasticity;
 }
+
+/**
+ * The item the row rests on, 0-based: the one whose leading edge is nearest `position`. At the
+ * end of the row it is the last item, which can share its resting place with several before it.
+ */
+export function carouselActiveIndex(itemOffsets: readonly number[], position: number, maxScroll: number): number {
+  const count = itemOffsets.length;
+  if (count === 0) return 0;
+  if (maxScroll > 0 && position >= maxScroll - epsilon) return count - 1;
+  let nearest = 0;
+  for (let index = 1; index < count; index += 1) {
+    if (Math.abs(itemOffsets[index] - position) < Math.abs(itemOffsets[nearest] - position)) nearest = index;
+  }
+  return nearest;
+}

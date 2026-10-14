@@ -1,4 +1,5 @@
 import { cn } from "../../../lib/cn";
+import { typographyClass } from "../../../lib/typography";
 import { focusRingTransitionClasses, motionTransition } from "../../../lib/motion";
 
 export const carouselProgressPlacements = ["center", "start", "full", "none"] as const;
@@ -96,3 +97,7 @@ export const carouselProgressThumbClasses = cn(
   "group-data-[scrubbing]/carousel-progress:cursor-grabbing group-data-[scrubbing]/carousel-progress:bg-fg",
   motionTransition("fast"),
 );
+
+/** The "1 of 6" line under the row. Like the scrubber, it keeps its space when every item fits. */
+export const carouselCounterClasses =
+  cn(typographyClass("caption"), "mt-2 self-center text-muted tabular-nums data-[overflowing=false]:invisible");

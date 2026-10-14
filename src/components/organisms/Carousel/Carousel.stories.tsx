@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { storybookViewports } from "../../../lib/viewports";
 import { TextLink } from "../../atoms/TextLink/TextLink";
@@ -73,12 +74,12 @@ function ImageRow({ images, ...props }: CarouselProps & { images: SampleImage[] 
   );
 }
 
-type PageSpecimenProps = Pick<CarouselProps, "itemWidth" | "snap" | "bleed" | "fade" | "progress"> & {
+type PageSpecimenProps = Pick<CarouselProps, "itemWidth" | "snap" | "bleed" | "fade" | "progress" | "counter"> & {
   images?: SampleImage[];
 };
 
 /** The carousel on the page grid, under the heading that names it — what the review stories show at each width. */
-function PageSpecimen({ images = sampleImages, itemWidth, snap, bleed, fade, progress }: PageSpecimenProps) {
+function PageSpecimen({ images = sampleImages, itemWidth, snap, bleed, fade, progress, counter }: PageSpecimenProps) {
   return (
     <main className="grid-page">
       <div className="band">
@@ -93,6 +94,7 @@ function PageSpecimen({ images = sampleImages, itemWidth, snap, bleed, fade, pro
           bleed={bleed}
           fade={fade}
           progress={progress}
+          counter={counter}
           className="col-span-full"
         />
       </div>
@@ -110,6 +112,9 @@ const meta = {
     snap: { control: "boolean" },
     bleed: { control: "boolean" },
     fade: { control: "boolean" },
+    counter: { control: "boolean" },
+    onIndexChange: { control: false },
+    activeIndex: { control: "number" },
     itemWidth: { control: "object" },
     labels: { control: false },
     children: { control: false },
@@ -120,6 +125,7 @@ const meta = {
     snap: true,
     bleed: false,
     fade: true,
+    counter: false,
   },
   parameters: {
     wmdsLayout: "padded",
@@ -139,6 +145,9 @@ A horizontal row of items with a progress scrubber under it — a strip of work 
 | **Run to the page edges** | \`bleed\` — the row reaches the page edges; items still start on the grid |
 | **Edge fade** | \`fade\` (default on) — items fade where the row clips them |
 | **Scrubber** | \`progress\` — \`center\` (default) or \`start\`: a shorter track, full width on phones; \`full\`: the row's width; \`none\`: no scrubber |
+| **Counter** | \`counter\` (default off) — a visible "1 of 6" under the row, announced politely; hidden while every item fits. \`labels.counter\` words it |
+| **Follow the row** | \`onIndexChange(index, count)\` — 0-based, fires when the item the row rests on changes |
+| **Move the row** | \`activeIndex\` — 0-based; the row moves to that item when it changes |
 | **Item names** | \`labels={{ item: (position, count) => … }}\` — default "2 of 4" |
 
 ## Anatomy
@@ -395,4 +404,46 @@ export const Review390Dark: Story = {
   render: (args) => <PageSpecimen {...args} />,
   parameters: reviewParameters,
   globals: { viewport: { value: "review390", isRotated: false }, theme: "dark" },
+};
+
+export const CounterReview390: Story = {
+  name: "Review — 390 counter",
+  args: { itemWidth: 82, snap: true, bleed: true, progress: "none", counter: true },
+  render: (args) => <PageSpecimen {...args} images={manyImages.slice(0, 6)} />,
+  parameters: reviewParameters,
+  globals: { viewport: { value: "review390", isRotated: false } },
+};
+
+export const ExternalCounter: Story = {
+  name: "Reference — count outside the row",
+  render: function ExternalCounterRender(args) {
+    const [shown, setShown] = useState({ index: 0, count: 6 });
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex items-baseline justify-between">
+          <h2 id="carousel-external-heading" className="type-heading-3">
+            Selected work
+          </h2>
+          <p className="type-supporting text-muted tabular-nums" data-testid="external-count">
+            {shown.index + 1} of {shown.count}
+          </p>
+        </div>
+        <ImageRow
+          {...args}
+          aria-label={undefined}
+          aria-labelledby="carousel-external-heading"
+          images={manyImages.slice(0, 6)}
+          onIndexChange={(index, count) => setShown({ index, count })}
+        />
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The count lives in a section header: `onIndexChange` reports the item the row rests on (0-based) and the count, and the page shows them. Leave `counter` off when the page owns the number.",
+      },
+    },
+  },
 };

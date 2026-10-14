@@ -30,3 +30,13 @@ A strip of tiles is one component and a paste of **Pattern — image carousel**.
 ## References
 
 - ADR-0002, ADR-0004, ADR-0005, ADR-0008, ADR-0036
+
+## Addendum — counter, index callback, controlled index (0.4.27)
+
+Approved by Randy on 2026-10-13. Three opt-in props; none changes the default behavior or markup.
+
+- **`counter`** renders "1 of 6" under the row (`labels.counter`, default `${position} of ${count}`) in an `aria-live="polite"`, `aria-atomic` paragraph. It is hidden with `visibility`, not removed, while every item fits, as the scrubber is, so the page does not move. It works with `progress="none"`. It is announced once the row settles rather than on every scroll event, so a drag does not read out each item it passes.
+- **`onIndexChange(index, count)`** reports the *resting* item: the item whose leading edge is nearest the scroll position, read after the row has been still for 120ms. At the end of the row the index is the last item, since several items can share that resting place. A page that shows the count itself (a section header) uses this and leaves `counter` off.
+- **`activeIndex`** moves the row to an item when it changes (animated, except the first value, which is applied at once). It is not locked: the visitor can still scroll away, and the row does not snap back until `activeIndex` changes again. Pair it with `onIndexChange` to hold the index in state.
+- Rejected: counting snap points instead of items (the count would not match the item names), and announcing every scroll step.
+
