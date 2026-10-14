@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.27",
+  "version": "0.4.28",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -307,6 +307,7 @@
       },
       "patterns": [
         "components-dialog--alert-dialog-destructive",
+        "components-dialog--alert-dialog-typed-confirmation",
         "components-dialog--default-dialog",
         "components-dialog--form-dialog"
       ]

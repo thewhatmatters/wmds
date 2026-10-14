@@ -122,8 +122,32 @@ export const overlayPanelDialogBodyScrollClasses = cn(
   "py-1",
 );
 
-/** Dialog footer — top inset without hairlines. */
-export const overlayPanelDialogFooterClasses = cn(overlayPanelFooterClasses, "pt-2");
+/**
+ * Dialog / AlertDialog edge inset — 24px on every side, phones included.
+ * The Card shell gives 16px at the sides (header, body, footer `px-4`) and 16px top / bottom;
+ * `px-2` on the shell plus {@link dialogHeaderInsetTopClasses} / {@link dialogFooterInsetBottomClasses}
+ * add the remaining 8px, so a pill action clears the 16px shell radius. **Sheet** / **Panel** keep 16px.
+ */
+export const dialogPanelInsetXClasses = "px-2";
+
+/** Header top — 16px shell pad + 8px = 24px. */
+export const dialogHeaderInsetTopClasses = "pt-2";
+
+/** Footer bottom — 16px shell pad + 8px = 24px. */
+export const dialogFooterInsetBottomClasses = "pb-2";
+
+/** Body of a **Dialog** with no footer — it is the last row, so it owns the bottom (2px shell + 22px = 24px). */
+export const overlayPanelDialogBodyLastScrollClasses = cn(
+  overlayPanelBodyScrollClasses,
+  "pt-1 pb-[22px]",
+);
+
+/** Dialog footer — top inset without hairlines, 24px from the bottom edge. */
+export const overlayPanelDialogFooterClasses = cn(
+  overlayPanelFooterClasses,
+  "pt-2",
+  dialogFooterInsetBottomClasses,
+);
 
 /** Footer shell when a scroll body precedes the footer. */
 export const overlayPanelFooterDelineatedShellClasses = "shrink-0 w-full";

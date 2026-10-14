@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.27",
+  "version": "0.4.28",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -464,6 +464,14 @@
       "name": "Pattern — alert dialog (destructive)",
       "file": "patterns/components-dialog--alert-dialog-destructive.tsx",
       "storybook": "?path=/story/components-dialog--alert-dialog-destructive",
+      "source": "src/components/organisms/Dialog/Dialog.stories.tsx"
+    },
+    {
+      "id": "components-dialog--alert-dialog-typed-confirmation",
+      "title": "Components/Dialog",
+      "name": "Pattern — alert dialog (typed confirmation delete)",
+      "file": "patterns/components-dialog--alert-dialog-typed-confirmation.tsx",
+      "storybook": "?path=/story/components-dialog--alert-dialog-typed-confirmation",
       "source": "src/components/organisms/Dialog/Dialog.stories.tsx"
     },
     {

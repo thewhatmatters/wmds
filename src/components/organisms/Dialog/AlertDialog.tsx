@@ -7,6 +7,8 @@ import { DialogProvider, useDialogLabelIds } from "./DialogContext";
 import {
   alertDialogTitleClasses,
   dialogPanelSizeClasses,
+  dialogHeaderInsetTopClasses,
+  dialogPanelInsetXClasses,
   dialogPanelShellClasses,
   dialogBodyMutedClasses,
   overlayPanelChromeClasses,
@@ -28,6 +30,12 @@ export interface AlertDialogProps {
   onOpenChange: (open: boolean) => void;
   title: ReactNode;
   description?: ReactNode;
+  /**
+   * Content between the description and the actions — a typed-confirmation Input, a short list.
+   * It sits outside the description `<p>`, so `aria-describedby` still names the description alone.
+   * Cancel keeps initial focus; pair a field with `confirmDisabled`.
+   */
+  children?: ReactNode;
   cancelLabel?: string;
   confirmLabel: string;
   /** Confirm button role — default `primary`; use `destructive` for irreversible actions. */
@@ -53,6 +61,7 @@ export function AlertDialog({
   onOpenChange,
   title,
   description,
+  children,
   cancelLabel = "Cancel",
   confirmLabel,
   confirmRole = "primary",
@@ -103,6 +112,7 @@ export function AlertDialog({
             overlayPanelChromeClasses,
             overlayPanelMaxHeightClasses,
             dialogPanelShellClasses,
+            dialogPanelInsetXClasses,
             className,
           )}
         >
@@ -112,6 +122,7 @@ export function AlertDialog({
             title={title}
             titleClassName={alertDialogTitleClasses}
             showClose={false}
+            className={dialogHeaderInsetTopClasses}
           />
 
           <div className={overlayPanelDialogBodyScrollClasses}>
@@ -119,6 +130,9 @@ export function AlertDialog({
               <p id={descriptionId} className={dialogBodyMutedClasses}>
                 {description}
               </p>
+            ) : null}
+            {children != null ? (
+              <div className={description != null ? "mt-3" : undefined}>{children}</div>
             ) : null}
           </div>
 

@@ -30,7 +30,10 @@ import {
   overlayPanelDialogBodyScrollClasses,
   overlayPanelDialogFooterClasses,
   overlayPanelMaxHeightClasses,
+  dialogHeaderInsetTopClasses,
+  dialogPanelInsetXClasses,
   dialogPanelShellClasses,
+  overlayPanelDialogBodyLastScrollClasses,
   type DialogSize,
 } from "./dialogStyles";
 
@@ -292,6 +295,7 @@ function DialogContent({
           overlayPanelChromeClasses,
           size === "full" ? undefined : overlayPanelMaxHeightClasses,
           dialogPanelShellClasses,
+          dialogPanelInsetXClasses,
           className,
         )}
       >
@@ -305,10 +309,13 @@ function DialogContent({
           showClose={showClose}
           closeLabel="Close dialog"
           onClose={() => onOpenChange(false)}
+          className={dialogHeaderInsetTopClasses}
         />
 
         {showBodySlot ? (
-          <div className={overlayPanelDialogBodyScrollClasses}>
+          <div
+            className={hasFooter ? overlayPanelDialogBodyScrollClasses : overlayPanelDialogBodyLastScrollClasses}
+          >
             {!hasTitle && hasDescription ? (
               <p id={descriptionId} className="text-muted">
                 {description}

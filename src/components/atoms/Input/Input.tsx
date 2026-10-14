@@ -3,6 +3,7 @@ import {
   useId,
   type InputHTMLAttributes,
   type ReactElement,
+  type ReactNode,
 } from "react";
 import { cn } from "../../../lib/cn";
 import { typographyClass } from "../../../lib/typography";
@@ -49,8 +50,11 @@ export type InputLayoutClassName = string;
 export interface InputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
   size?: InputSize;
-  /** Optional visible label — omit for bare inputs. No label asterisk; use `endBadge` for Required. */
-  label?: string;
+  /**
+   * Optional visible label — omit for bare inputs. No label asterisk; use `endBadge` for Required.
+   * Text or inline markup (`<strong>`, `<code>`). It names the field, so keep it to phrasing content.
+   */
+  label?: ReactNode;
   /** Neutral helper below the control — hidden when validation `message` is shown. */
   description?: string;
   /** Validation status — border + trailing icon. */
