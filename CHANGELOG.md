@@ -7,6 +7,20 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.26
+
+**A side sheet with header actions, a phone layout, and URL state.**
+
+- **Sheet** `Sheet.Content` `headerActions` (new) — controls before the close (**IconButton** `size="sm"`: previous / next, share).
+- **Sheet** `side="end"` is **full-screen below `md`** (no inset, no radius; header and footer pinned, body scrolls, footer clears the home indicator). From `md` it is a rail over a lighter scrim (`bg-overlay/50`). The page behind is `inert` while open; closing a deep-linked sheet moves focus to `main`; reduced motion fades instead of sliding.
+- **`useSheetParam(kind, { initialUrl? })`**, **`readSheetParam(url)`**, **`withSheetParam(url, id | null, kind)`** (new) — keep a sheet in `?sheet=<kind>&id=<id>` with the History API, no router. Back closes; a deep link opens on first render; `initialUrl` serves the open sheet from the server.
+- New patterns: **Components/Sheet → Pattern — side sheet**, **Pattern — side sheet header actions**, **Pattern — side sheet URL deep link**; **Components/Table → Pattern — approvals with sheet**.
+- See ADR-0049.
+
+### Consumer actions
+
+None required. Every `side="end"` **Sheet**, including **SiteNav**'s phone menu, is now full-screen below `md`; check a phone width. To keep a detail in the URL, wire `useSheetParam` as in **Pattern — side sheet URL deep link** (new patterns, nothing to re-copy).
+
 ## 0.4.24
 
 **One focus ring on TextArea and Input.**

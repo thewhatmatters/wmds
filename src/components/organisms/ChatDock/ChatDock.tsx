@@ -713,6 +713,12 @@ function ChatDockRoot({
           open: { y: 0, opacity: 1, transition: medium },
           closed: { y: "100%", opacity: 1, transition: { ...medium, delay: foldDelay } },
         };
+  /** True when a completed animation ended on the closed target (compared by value, minus `transition`). */
+  const isCloseTarget = (definition: unknown, closed: TargetAndTransition) => {
+    if (typeof definition !== "object" || definition === null) return false;
+    const done = definition as Record<string, unknown>;
+    return Object.entries(closed).every(([key, value]) => key === "transition" || done[key] === value);
+  };
   // Header, conversation, then rows settle in one stagger apart, a beat after the window starts
   // to open; they all fade out together before it folds.
   const sectionVariants: Variants = reduceMotion
@@ -884,8 +890,9 @@ function ChatDockRoot({
               hidden={windowHidden}
               initial={false}
               animate={windowTargets[state]}
-              onAnimationComplete={() => {
-                if (!openRef.current) setFolded(true);
+              onAnimationComplete={(definition) => {
+                // A late "open finished" callback must not hide a window that is already closing.
+                if (!openRef.current && isCloseTarget(definition, windowTargets.closed)) setFolded(true);
               }}
             >
               <div ref={windowContentRef} className={chatDockWindowContentClasses}>
