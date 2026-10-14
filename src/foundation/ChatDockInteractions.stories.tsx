@@ -265,7 +265,10 @@ export const ReducedMotion: Story = {
       await nextFrame();
       // Full size at once, fading in rather than growing.
       expect(card.hidden).toBe(false);
-      expect(card.getBoundingClientRect().height).toBeCloseTo(inlineOpenHeight, 0);
+      // Wait for layout: under load the first frame can still measure 0.
+      await waitFor(() => {
+        expect(card.getBoundingClientRect().height).toBeCloseTo(inlineOpenHeight, 0);
+      });
       expect(Number(getComputedStyle(card).opacity)).toBeLessThan(1);
       await waitFor(
         () => {
@@ -276,7 +279,9 @@ export const ReducedMotion: Story = {
 
       await userEvent.keyboard("{Escape}");
       await nextFrame();
-      expect(card.getBoundingClientRect().height).toBeCloseTo(inlineOpenHeight, 0);
+      await waitFor(() => {
+        expect(card.getBoundingClientRect().height).toBeCloseTo(inlineOpenHeight, 0);
+      });
       await waitFor(
         () => {
           expect(card.hidden).toBe(true);

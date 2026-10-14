@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, userEvent, within } from "storybook/test";
+import { expect, userEvent, waitFor, within } from "storybook/test";
 import { withStoryCopySource } from "../../../lib/storyCopySource";
 import { TextArea, textareaResizes, inputStatuses } from "./TextArea";
 
@@ -263,4 +263,20 @@ export function NotesField() {
 }
 `,
   ),
+};
+
+export const Focused: Story = {
+  name: "Focused",
+  args: {
+    label: "Intro",
+    defaultValue: "This is my intro",
+    description: "One ring on the shell. The field adds no outline or ring of its own.",
+  },
+  play: async ({ canvasElement }) => {
+    const field = canvasElement.querySelector("textarea");
+    if (!field) throw new Error("TextArea field not found");
+    field.focus();
+    await waitFor(() => expect(field).toHaveFocus());
+    expect(getComputedStyle(field).outlineStyle).toBe("none");
+  },
 };

@@ -66,7 +66,7 @@ export const textareaShellResizePaddingClasses: Record<InputSize, string> = {
 };
 
 export const textareaShellFocusRingBaseClasses =
-  "focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-body";
+  "focus-within:outline-none focus-within:ring-2";
 
 export const textareaShellFocusRingColorClasses = {
   default: "focus-within:ring-focus-ring",
@@ -181,7 +181,7 @@ export const textareaBaseClasses = cn(inputBaseClasses, "block leading-normal");
  * `focus-within` ring, so the field drops its own outline and ring.
  */
 export const textareaShellFieldClasses =
-  "w-full border-0 bg-transparent shadow-none focus-visible:outline-none focus-visible:ring-0";
+  "w-full border-0 bg-transparent shadow-none focus-visible:!outline-none focus-visible:!ring-0";
 
 /**
  * Inside **PromptBar** — the parent pill owns border, radius, and focus ring.
@@ -189,7 +189,7 @@ export const textareaShellFieldClasses =
  */
 export const textareaInlineClasses =
   "block w-full min-w-0 resize-none rounded-none border-0 bg-transparent font-sans font-normal tracking-normal text-fg shadow-none " +
-  "placeholder:text-disabled focus-visible:outline-none focus-visible:ring-0";
+  "placeholder:text-disabled focus-visible:!outline-none focus-visible:!ring-0";
 
 export {
   inputAttachedFieldClasses,

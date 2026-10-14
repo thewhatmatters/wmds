@@ -31,7 +31,7 @@ export const inputMonoFaceClasses = "type-code !font-mono !leading-none";
 
 /** Solo shell — ring sits on the input with page offset. */
 export const inputSoloFocusRingBaseClasses =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-body";
+  "focus-visible:outline-none focus-visible:ring-2";
 
 export const inputSoloFocusRingColorClasses = {
   default: "focus-visible:ring-focus-ring",
@@ -43,11 +43,11 @@ export const inputSoloFocusRingColorClasses = {
 /** Focus ring on compound validation shell ([Astryx ChatComposer](https://astryx.atmeta.com/components/ChatComposer)). */
 export const inputCompoundShellFocusRingClasses: Record<InputStatus, string> = {
   error:
-    "focus-within:outline-none focus-within:ring-2 focus-within:ring-error-focus-ring focus-within:ring-offset-2 focus-within:ring-offset-body",
+    "focus-within:outline-none focus-within:ring-2 focus-within:ring-error-focus-ring",
   warning:
-    "focus-within:outline-none focus-within:ring-2 focus-within:ring-warning-focus-ring focus-within:ring-offset-2 focus-within:ring-offset-body",
+    "focus-within:outline-none focus-within:ring-2 focus-within:ring-warning-focus-ring",
   success:
-    "focus-within:outline-none focus-within:ring-2 focus-within:ring-success-focus-ring focus-within:ring-offset-2 focus-within:ring-offset-body",
+    "focus-within:outline-none focus-within:ring-2 focus-within:ring-success-focus-ring",
 };
 
 /** @deprecated Use {@link inputCompoundShellFocusRingClasses}. */
@@ -311,11 +311,11 @@ export const inputAttachedFieldClasses =
   inputShellTransitionClasses;
 
 export const inputAttachedInputClasses =
-  "rounded-none border-0 shadow-none focus-visible:outline-none focus-visible:ring-0";
+  "rounded-none border-0 shadow-none focus-visible:!outline-none focus-visible:!ring-0";
 
 /** Input inside Search / inline row — parent owns shell and focus ring. */
 export const inputInlineClasses =
-  "rounded-none border-0 bg-transparent shadow-none focus-visible:outline-none focus-visible:ring-0";
+  "rounded-none border-0 bg-transparent shadow-none focus-visible:!outline-none focus-visible:!ring-0";
 
 /** @deprecated Split shells removed — use {@link inputCompoundWrapperClasses}. */
 export const inputAttachedShellClasses = "border-b-0";
