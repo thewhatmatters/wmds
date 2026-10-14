@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { Button } from "../components/atoms/Button/Button";
+import { Input } from "../components/atoms/Input/Input";
 import { AlertDialog } from "../components/organisms/Dialog/AlertDialog";
 import { Dialog } from "../components/organisms/Dialog/Dialog";
 import { Sheet } from "../components/organisms/Sheet/Sheet";
@@ -280,6 +281,118 @@ export const SideSheetPopstateCloses: Story = {
     window.history.back();
     await waitFor(() => {
       expect(queryPortal().queryByRole("dialog")).not.toBeInTheDocument();
+    });
+  },
+};
+
+export const AlertDialogTypedConfirmation: Story = {
+  name: "AlertDialog — typed confirmation",
+  render: function AlertDialogTypedConfirmationExample() {
+    const handle = "@sarah-lee";
+    const [open, setOpen] = useState(false);
+    const [typed, setTyped] = useState("");
+    const [deleted, setDeleted] = useState(false);
+    const normalize = (value: string) => value.trim().replace(/^@/, "").toLowerCase();
+    const matches = typed.trim() !== "" && normalize(typed) === normalize(handle);
+
+    function handleOpenChange(next: boolean) {
+      setOpen(next);
+      if (!next) {
+        setTyped("");
+      }
+    }
+
+    return (
+      <>
+        <Button role="destructive" onClick={() => setOpen(true)}>
+          Delete account
+        </Button>
+        {deleted ? <p data-testid="deleted">Deleted</p> : null}
+        <AlertDialog
+          open={open}
+          onOpenChange={handleOpenChange}
+          title="Delete this account?"
+          description="This removes the account and everything it owns."
+          cancelLabel="Keep account"
+          confirmLabel="Delete account"
+          confirmRole="destructive"
+          confirmDisabled={!matches}
+          onConfirm={() => {
+            setDeleted(true);
+            handleOpenChange(false);
+          }}
+        >
+          <Input
+            label={
+              <>
+                Type <strong>{handle}</strong> to confirm
+              </>
+            }
+            value={typed}
+            onChange={(event) => setTyped(event.target.value)}
+          />
+        </AlertDialog>
+      </>
+    );
+  },
+  play: async ({ canvas }) => {
+    await userEvent.click(canvas.getByRole("button", { name: /^delete account$/i }));
+
+    await waitFor(() => {
+      expect(queryPortal().getByRole("alertdialog")).toBeInTheDocument();
+    });
+    const dialog = queryPortal().getByRole("alertdialog");
+
+    // Cancel is focused on open.
+    await waitFor(() => {
+      expect(queryPortal().getByRole("button", { name: /keep account/i })).toHaveFocus();
+    });
+
+    // The field is named by the rich label; the description alone describes the dialog.
+    const field = queryPortal().getByRole("textbox", { name: "Type @sarah-lee to confirm" });
+    await expect(dialog).toHaveAccessibleDescription("This removes the account and everything it owns.");
+    await expect(dialog.querySelector(`#${CSS.escape(dialog.getAttribute("aria-describedby") ?? "")}`)).not.toContainElement(field);
+
+    const confirm = within(dialog).getByRole("button", { name: /^delete account$/i });
+    await expect(confirm).toBeDisabled();
+
+    // Partial and wrong values keep it off.
+    await userEvent.type(field, "@sarah");
+    await expect(confirm).toBeDisabled();
+    await userEvent.clear(field);
+    await userEvent.type(field, "@someone-else");
+    await expect(confirm).toBeDisabled();
+
+    // Leading @, case, and surrounding spaces are ignored.
+    await userEvent.clear(field);
+    await userEvent.type(field, "  SARAH-Lee ");
+    await waitFor(() => {
+      expect(confirm).toBeEnabled();
+    });
+
+    // Cancel, reopen — the field is empty and the button is off again.
+    await userEvent.click(queryPortal().getByRole("button", { name: /keep account/i }));
+    await waitFor(() => {
+      expect(queryPortal().queryByRole("alertdialog")).not.toBeInTheDocument();
+    });
+    await userEvent.click(canvas.getByRole("button", { name: /^delete account$/i }));
+    await waitFor(() => {
+      expect(queryPortal().getByRole("alertdialog")).toBeInTheDocument();
+    });
+    const reopened = queryPortal().getByRole("textbox", { name: "Type @sarah-lee to confirm" });
+    await expect(reopened).toHaveValue("");
+    await expect(within(queryPortal().getByRole("alertdialog")).getByRole("button", { name: /^delete account$/i })).toBeDisabled();
+
+    // A matching value confirms.
+    await userEvent.type(reopened, "@sarah-lee");
+    const confirmAgain = within(queryPortal().getByRole("alertdialog")).getByRole("button", { name: /^delete account$/i });
+    await waitFor(() => {
+      expect(confirmAgain).toBeEnabled();
+    });
+    await userEvent.click(confirmAgain);
+    await waitFor(() => {
+      expect(canvas.getByTestId("deleted")).toBeInTheDocument();
+      expect(queryPortal().queryByRole("alertdialog")).not.toBeInTheDocument();
     });
   },
 };

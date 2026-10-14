@@ -5,7 +5,7 @@ import { Input } from "../../atoms/Input/Input";
 import { AlertDialog, alertDialogConfirmRoles } from "./AlertDialog";
 import { Dialog, dialogSizes } from "./Dialog";
 import { dialogFooterActionsClasses } from "./dialogStyles";
-import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySource";
+import { storyCopySource, storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 
 const meta = {
   title: "Components/Dialog",
@@ -30,6 +30,7 @@ Modal overlay system — **Dialog** for general modals, **AlertDialog** for bloc
 | **General modal** | \`Dialog\` + \`Dialog.Content\` | Card shell, optional close, scrim dismiss |
 | **Blocking confirm** | \`AlertDialog\` | Cancel + confirm footer; scrim dismiss off by default |
 | **Destructive confirm** | \`AlertDialog confirmRole="destructive"\` | Irreversible actions |
+| **Typed confirmation** | \`AlertDialog\` + \`children\` (an **Input**) + \`confirmDisabled\` | \`children\` renders between the description and the actions, outside the description; the field's \`label\` takes markup |
 | **Form in modal** | \`Dialog.Content\` + body children + footer actions | \`size="lg"\` for wider forms |
 | **Detail view, media viewer** | \`Dialog.Content size="full"\` | The window less a margin (up to 90rem × 60rem); the whole screen on phones. \`headerEnd\` holds previous / next beside the close; \`aria-labelledby\` names it from a heading in the body. See **Guides/Resource detail** |
 
@@ -44,7 +45,11 @@ Dialog (open / onOpenChange)
     ├── body — 16px inset copy / form fields
     └── Card.Footer — Button action cluster
 
-AlertDialog — same overlay + compact sm panel + cancel/confirm Buttons
+AlertDialog — same overlay + compact sm panel
+├── title
+├── description — \`<p>\`, the dialog's aria-describedby
+├── children — optional body (an Input), outside the description
+└── cancel/confirm Buttons
 \`\`\`
 
 ## Best practices
@@ -303,6 +308,120 @@ export function DeleteProjectAlert() {
   );
 }
 `),
+};
+
+function normalizeHandle(value: string): string {
+  return value.trim().replace(/^@/, "").toLowerCase();
+}
+
+export const AlertDialogTypedConfirmation: Story = {
+  name: "Pattern — alert dialog (typed confirmation delete)",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "`children` sits between the description and the actions, outside the description `<p>` — `aria-describedby` still names the description alone. The **Input** `label` takes markup, so the handle can be bold. Delete stays off until the typed value matches the handle (a leading `@`, case, and surrounding spaces are ignored); Cancel keeps initial focus, and the field clears on reopen.",
+        },
+      },
+    },
+    `
+import { useState } from "react";
+import { AlertDialog, Button, Input } from "@thewhatmatters/wmds";
+
+function normalizeHandle(value: string): string {
+  return value.trim().replace(/^@/, "").toLowerCase();
+}
+
+export function DeleteAccountAlert({ handle }: { handle: string }) {
+  const [open, setOpen] = useState(false);
+  const [typed, setTyped] = useState("");
+  const matches = typed.trim() !== "" && normalizeHandle(typed) === normalizeHandle(handle);
+
+  function handleOpenChange(next: boolean) {
+    setOpen(next);
+    if (!next) {
+      setTyped("");
+    }
+  }
+
+  return (
+    <>
+      <Button role="destructive" onClick={() => setOpen(true)}>
+        Delete account
+      </Button>
+      <AlertDialog
+        open={open}
+        onOpenChange={handleOpenChange}
+        title="Delete this account?"
+        description="This removes the account and everything it owns. You cannot undo this action."
+        cancelLabel="Keep account"
+        confirmLabel="Delete account"
+        confirmRole="destructive"
+        confirmDisabled={!matches}
+        onConfirm={() => handleOpenChange(false)}
+      >
+        <Input
+          label={
+            <>
+              Type <strong>{handle}</strong> to confirm
+            </>
+          }
+          value={typed}
+          onChange={(event) => setTyped(event.target.value)}
+          autoComplete="off"
+          spellCheck={false}
+        />
+      </AlertDialog>
+    </>
+  );
+}
+`,
+  ),
+  render: function AlertDialogTypedConfirmationPattern() {
+    const handle = "@sarah-lee";
+    const [open, setOpen] = useState(false);
+    const [typed, setTyped] = useState("");
+    const matches = typed.trim() !== "" && normalizeHandle(typed) === normalizeHandle(handle);
+
+    function handleOpenChange(next: boolean) {
+      setOpen(next);
+      if (!next) {
+        setTyped("");
+      }
+    }
+
+    return (
+      <>
+        <Button role="destructive" onClick={() => setOpen(true)}>
+          Delete account
+        </Button>
+        <AlertDialog
+          open={open}
+          onOpenChange={handleOpenChange}
+          title="Delete this account?"
+          description="This removes the account and everything it owns. You cannot undo this action."
+          cancelLabel="Keep account"
+          confirmLabel="Delete account"
+          confirmRole="destructive"
+          confirmDisabled={!matches}
+          onConfirm={() => handleOpenChange(false)}
+        >
+          <Input
+            label={
+              <>
+                Type <strong>{handle}</strong> to confirm
+              </>
+            }
+            value={typed}
+            onChange={(event) => setTyped(event.target.value)}
+            autoComplete="off"
+            spellCheck={false}
+          />
+        </AlertDialog>
+      </>
+    );
+  },
 };
 
 export const AlertDialogPrimary: Story = {

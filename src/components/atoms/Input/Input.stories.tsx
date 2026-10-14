@@ -51,6 +51,7 @@ const meta = {
 |---------|--------|
 | **Bare** | \`placeholder\` + \`aria-label\` — Find pill, toolbar search |
 | **With label** | \`label\`, optional \`description\` |
+| **Rich label** | \`label\` with inline markup (\`<strong>\`) — still the field's accessible name |
 | **Validation** | \`status\` + \`message\` — tinted status band (\`messagePosition\` top or bottom) |
 | **Status only** | \`status\` without \`message\` — border + trailing icon |
 | **Loading** | \`loading\` — trailing spinner |
@@ -88,6 +89,27 @@ export const WithLabel: Story = {
     type: "email",
     placeholder: "you@example.com",
     description: "We'll never share your email.",
+  },
+};
+
+export const RichLabel: Story = {
+  name: "Pattern — rich label",
+  args: {
+    label: (
+      <>
+        Type <strong>@sarah-lee</strong> to confirm
+      </>
+    ),
+    placeholder: "@sarah-lee",
+    autoComplete: "off",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`label` takes inline markup. The whole label is the field's accessible name (\"Type @sarah-lee to confirm\"). Keep it to text, `<strong>`, and `<code>`.",
+      },
+    },
   },
 };
 

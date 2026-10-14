@@ -7,6 +7,19 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.28
+
+**AlertDialog takes a body, and Input takes a rich label.**
+
+- **AlertDialog** `children` (new) — content between the description and the actions, such as a typed-confirmation **Input**. It renders outside the description `<p>`, so `aria-describedby` still names the description alone. Cancel still takes initial focus. Without `children` the markup is unchanged.
+- **Input** `label` is now `ReactNode` (was `string`), so a label can read "Type **@handle** to confirm". The `<label htmlFor>` association is unchanged, and the whole label is the field's accessible name. A string label behaves as before.
+- **Pattern — alert dialog (typed confirmation delete)** is new on **Components/Dialog**: Delete stays off until the typed value matches the handle (a leading `@`, case, and surrounding spaces are ignored), and the field clears on reopen. **Pattern — rich label** is new on **Components/Input**.
+- New interaction test **Internal/Interactions/Overlay → AlertDialog — typed confirmation**.
+
+### Consumer actions
+
+None. To ask for a typed confirmation, pass an **Input** as `children` of **AlertDialog** and set `confirmDisabled` until the value matches. Copy **Components/Dialog → Pattern — alert dialog (typed confirmation delete)**.
+
 ## 0.4.27
 
 **An opt-in counter for the Carousel.**

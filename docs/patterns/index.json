@@ -467,6 +467,14 @@
       "source": "src/components/organisms/Dialog/Dialog.stories.tsx"
     },
     {
+      "id": "components-dialog--alert-dialog-typed-confirmation",
+      "title": "Components/Dialog",
+      "name": "Pattern — alert dialog (typed confirmation delete)",
+      "file": "patterns/components-dialog--alert-dialog-typed-confirmation.tsx",
+      "storybook": "?path=/story/components-dialog--alert-dialog-typed-confirmation",
+      "source": "src/components/organisms/Dialog/Dialog.stories.tsx"
+    },
+    {
       "id": "components-dialog--default-dialog",
       "title": "Components/Dialog",
       "name": "Pattern — dialog",
