@@ -6,6 +6,8 @@ import { AlertDialog } from "../components/organisms/Dialog/AlertDialog";
 import { Dialog } from "../components/organisms/Dialog/Dialog";
 import { Sheet } from "../components/organisms/Sheet/Sheet";
 import { Panel } from "../components/organisms/Panel/Panel";
+import { useSheetParam } from "../lib/sheetParam/useSheetParam";
+import { withSheetParam } from "../lib/sheetParam/sheetParam";
 
 /**
  * Browser interaction tests for overlay primitives — run via `npm run test:interactions`.
@@ -189,3 +191,95 @@ export const PanelNonModal: Story = {
 for (const story of [AlertDialogBlocking, PanelNonModal]) {
   story.parameters = { ...story.parameters, a11y: { test: "todo" } };
 }
+
+function UrlSheetExample() {
+  const { open, id, onOpenChange } = useSheetParam("approval");
+  return (
+    <main>
+      <Button role="primary" onClick={() => onOpenChange(true, "maya-chen")}>
+        Review Maya Chen
+      </Button>
+      <Sheet open={open} onOpenChange={(next) => onOpenChange(next)}>
+        <Sheet.Content side="end" title={`Approval ${id ?? ""}`} description="Creator application">
+          <p className="text-muted">Detail.</p>
+        </Sheet.Content>
+      </Sheet>
+    </main>
+  );
+}
+
+function resetUrl() {
+  window.history.replaceState(null, "", withSheetParam(window.location.href, null, "approval"));
+}
+
+export const SideSheetOpenByUrl: Story = {
+  name: "Side sheet — opens from the URL, focus goes to main on close",
+  beforeEach: () => {
+    window.history.replaceState(
+      null,
+      "",
+      withSheetParam(window.location.href, "maya-chen", "approval"),
+    );
+    return resetUrl;
+  },
+  render: function SideSheetOpenByUrlExample() {
+    return <UrlSheetExample />;
+  },
+  play: async () => {
+    await waitFor(() => {
+      expect(queryPortal().getByRole("dialog")).toBeInTheDocument();
+    });
+    await expect(queryPortal().getByRole("dialog")).toHaveAccessibleName(/maya-chen/i);
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => {
+      expect(queryPortal().queryByRole("dialog")).not.toBeInTheDocument();
+    });
+    await expect(window.location.search).not.toContain("sheet=");
+    await waitFor(() => {
+      expect(document.querySelector("main")).toHaveFocus();
+    });
+  },
+};
+
+export const SideSheetScrimAndFocus: Story = {
+  name: "Side sheet — scrim closes, focus returns, page is inert",
+  beforeEach: () => resetUrl,
+  render: function SideSheetScrimAndFocusExample() {
+    return <UrlSheetExample />;
+  },
+  play: async ({ canvas }) => {
+    const opener = canvas.getByRole("button", { name: /review maya chen/i });
+    await userEvent.click(opener);
+    await waitFor(() => {
+      expect(queryPortal().getByRole("dialog")).toBeInTheDocument();
+    });
+    await expect(window.location.search).toContain("sheet=approval");
+    await expect(opener.closest("[inert]")).not.toBeNull();
+
+    const dialog = queryPortal().getByRole("dialog");
+    await userEvent.pointer({ keys: "[MouseLeft]", target: dialog.parentElement as HTMLElement, coords: { clientX: 4, clientY: 4 } });
+    await waitFor(() => {
+      expect(queryPortal().queryByRole("dialog")).not.toBeInTheDocument();
+    });
+    await expect(opener).toHaveFocus();
+    await expect(opener.closest("[inert]")).toBeNull();
+  },
+};
+
+export const SideSheetPopstateCloses: Story = {
+  name: "Side sheet — Back closes",
+  beforeEach: () => resetUrl,
+  render: function SideSheetPopstateClosesExample() {
+    return <UrlSheetExample />;
+  },
+  play: async ({ canvas }) => {
+    await userEvent.click(canvas.getByRole("button", { name: /review maya chen/i }));
+    await waitFor(() => {
+      expect(queryPortal().getByRole("dialog")).toBeInTheDocument();
+    });
+    window.history.back();
+    await waitFor(() => {
+      expect(queryPortal().queryByRole("dialog")).not.toBeInTheDocument();
+    });
+  },
+};

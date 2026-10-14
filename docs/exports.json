@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.24",
+  "version": "0.4.26",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -761,7 +761,10 @@
       },
       "patterns": [
         "components-sheet--bottom-sheet",
-        "components-sheet--end-sheet"
+        "components-sheet--end-sheet",
+        "components-sheet--side-sheet",
+        "components-sheet--side-sheet-header-actions",
+        "components-sheet--side-sheet-url-deep-link"
       ]
     },
     {
@@ -868,6 +871,7 @@
       },
       "patterns": [
         "components-table--approvals",
+        "components-table--approvals-with-sheet",
         "components-table--basic"
       ]
     },
@@ -991,7 +995,10 @@
     "focusRingTransitionClasses",
     "pressScaleClass",
     "GridOverlay",
-    "GRID_ON_CLASS"
+    "GRID_ON_CLASS",
+    "useSheetParam",
+    "readSheetParam",
+    "withSheetParam"
   ],
   "guides": [
     "Guides/Chart explorations",

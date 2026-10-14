@@ -22,11 +22,11 @@ export type SheetSize = (typeof sheetSizes)[number];
 
 /**
  * Viewport inset on the **opposite** edge from entry — mobile only (`16px`).
- * Entry side + top/bottom stay flush; scrim peeks on the trailing edge only.
+ * `bottom` and `start` keep a scrim strip; `end` is full-screen below `md` (no inset).
  */
 export const sheetOverlayInsetClasses: Record<SheetSide, string> = {
   bottom: "pt-4 md:pt-0",
-  end: "pl-4 md:pl-0",
+  end: "",
   start: "pr-4 md:pr-0",
 };
 
@@ -48,6 +48,9 @@ export const sheetOverlayRootClasses: Record<SheetSide, string> = {
 
 export { dialogBackdropClasses as sheetBackdropClasses };
 
+/** Lighter scrim for the `end` side sheet — the page stays readable behind the rail. */
+export const sheetEndBackdropClasses = cn(dialogBackdropClasses, "bg-overlay/50");
+
 /** Cross-axis size — width on side sheets, max-height on bottom. */
 export const sheetPanelSizeClasses: Record<SheetSide, Record<SheetSize, string>> = {
   bottom: {
@@ -56,9 +59,9 @@ export const sheetPanelSizeClasses: Record<SheetSide, Record<SheetSize, string>>
     lg: "max-h-[min(85vh,100%)]",
   },
   end: {
-    sm: "w-full max-w-sm",
-    md: "w-full max-w-md",
-    lg: "w-full max-w-lg",
+    sm: "w-full md:max-w-sm",
+    md: "w-full md:max-w-md",
+    lg: "w-full md:max-w-lg",
   },
   start: {
     sm: "w-full max-w-sm",
@@ -74,10 +77,10 @@ export const sheetPanelBaseClasses = [
   "max-h-full min-h-0 bg-surface shadow-soft-card",
 ].join(" ");
 
-/** Edge-attached shell — radius on the inner edge only (not floating). */
+/** Edge-attached shell — radius on the inner edge only (not floating). `end` has none below `md` (full-screen). */
 export const sheetPanelPlacementClasses: Record<SheetSide, string> = {
   bottom: "w-full rounded-t-2xl",
-  end: "h-full w-full rounded-l-2xl",
+  end: "h-full w-full rounded-none md:rounded-l-2xl",
   start: "h-full w-full rounded-r-2xl",
 };
 
@@ -119,3 +122,13 @@ export function sheetPanelMotionVariants(side: SheetSide): Variants {
 export function sheetPanelMotionTransition(side: SheetSide) {
   return motionTransitionProp(side === "bottom" ? "medium" : "medium-max");
 }
+
+/** Bottom padding that clears the home indicator — full-screen `end` sheet, below `md`. */
+export const sheetSafeAreaBottomClasses = "max-md:pb-[max(1rem,env(safe-area-inset-bottom))]";
+
+/** Slide-free variants — reduced motion fades only. */
+export const sheetPanelReducedMotionVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+  exit: { opacity: 0 },
+};

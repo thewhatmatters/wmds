@@ -81,3 +81,48 @@ export function focusInitialElement(
   const focusable = container.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
   focusable?.focus();
 }
+
+/**
+ * Mark every other top-level node of `document.body` inert while a modal surface is open —
+ * returns cleanup. Nodes that were already inert are left alone.
+ */
+export function inertPageBehind(surface: HTMLElement): () => void {
+  if (typeof document === "undefined") {
+    return () => undefined;
+  }
+
+  let root: HTMLElement = surface;
+  while (root.parentElement != null && root.parentElement !== document.body) {
+    root = root.parentElement;
+  }
+
+  const marked: HTMLElement[] = [];
+  for (const node of Array.from(document.body.children)) {
+    if (node === root || !(node instanceof HTMLElement) || node.hasAttribute("inert")) {
+      continue;
+    }
+    node.setAttribute("inert", "");
+    marked.push(node);
+  }
+
+  return () => {
+    for (const node of marked) {
+      node.removeAttribute("inert");
+    }
+  };
+}
+
+/** Where focus goes when the opener is gone — the page's main landmark (a deep link has no trigger). */
+export function focusMainContent(): void {
+  if (typeof document === "undefined") {
+    return;
+  }
+  const main = document.querySelector<HTMLElement>("main, [role='main']");
+  if (main == null) {
+    return;
+  }
+  if (!main.hasAttribute("tabindex")) {
+    main.setAttribute("tabindex", "-1");
+  }
+  main.focus({ preventScroll: true });
+}

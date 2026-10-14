@@ -898,3 +898,11 @@ export {
   type MotionDuration,
   type MotionEase,
 } from "./lib/motion";
+export {
+  readSheetParam,
+  useSheetParam,
+  withSheetParam,
+  type SheetParamValue,
+  type UseSheetParamOptions,
+  type UseSheetParamResult,
+} from "./lib/sheetParam";

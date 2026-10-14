@@ -6,10 +6,12 @@ import {
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { cn } from "../../../lib/cn";
 import {
   focusInitialElement,
+  focusMainContent,
+  inertPageBehind,
   lockBodyScroll,
   trapFocus,
 } from "../../../lib/dialogOverlay";
@@ -27,12 +29,15 @@ import { OverlayPanelHeader } from "../Dialog/OverlayPanelHeader";
 import { SheetProvider, useSheetContext, useSheetLabelIds } from "./SheetContext";
 import {
   sheetBackdropClasses,
+  sheetEndBackdropClasses,
   sheetOverlayRootClasses,
   sheetPanelBaseClasses,
   sheetPanelMotionTransition,
   sheetPanelMotionVariants,
   sheetPanelPlacementClasses,
+  sheetPanelReducedMotionVariants,
   sheetPanelSizeClasses,
+  sheetSafeAreaBottomClasses,
   sheetSides,
   sheetSizes,
   type SheetSide,
@@ -64,6 +69,8 @@ export interface SheetContentProps {
   description?: ReactNode;
   /** Leading header slot — icon, **Badge**, **Status** (**Card.Header** `start`). */
   headerStart?: ReactNode;
+  /** Actions before the close — **IconButton** `size="sm"` or **Button** `size="xs"` (share, open in full, previous / next). */
+  headerActions?: ReactNode;
   showClose?: boolean;
   footer?: ReactNode;
   className?: SheetLayoutClassName;
@@ -91,6 +98,7 @@ function SheetPortal({
     triggerRef,
   } = useSheetContext("SheetPortal");
 
+  const reduceMotion = useReducedMotion();
   const panelRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
@@ -108,19 +116,36 @@ function SheetPortal({
 
     const unlockScroll = lockBodyScroll();
     const panel = panelRef.current;
+    const restorePage = panel != null ? inertPageBehind(panel) : () => undefined;
 
     let releaseFocusTrap: () => void = () => {};
+    let initialFocusFrame = 0;
     if (panel != null) {
       releaseFocusTrap = trapFocus(panel);
-      window.requestAnimationFrame(() => {
+      initialFocusFrame = window.requestAnimationFrame(() => {
         focusInitialElement(panel);
       });
     }
 
     return () => {
+      window.cancelAnimationFrame(initialFocusFrame);
       releaseFocusTrap();
+      restorePage();
       unlockScroll();
-      previousFocusRef.current?.focus?.();
+      const previous = previousFocusRef.current;
+      if (previous != null && previous.isConnected && previous !== document.body) {
+        previous.focus();
+      } else {
+        // A deep link has no opener to return to. Move focus once the page is
+        // un-inert and the close has committed, so it is not dropped to <body>.
+        focusMainContent();
+        window.requestAnimationFrame(() => {
+          const active = document.activeElement;
+          if (active == null || active === document.body || panel?.contains(active)) {
+            focusMainContent();
+          }
+        });
+      }
     };
   }, [open, triggerRef]);
 
@@ -150,6 +175,8 @@ function SheetPortal({
     if (panelRef.current?.contains(target)) {
       return;
     }
+    // Keep the press from moving focus to the page after close() has returned it to the opener.
+    event.preventDefault();
     close();
   }
 
@@ -168,7 +195,10 @@ function SheetPortal({
           transition={motionTransitionProp("medium")}
           onMouseDown={handleBackdropClick}
         >
-          <div className={sheetBackdropClasses} aria-hidden="true" />
+          <div
+            className={side === "end" ? sheetEndBackdropClasses : sheetBackdropClasses}
+            aria-hidden="true"
+          />
           <motion.div
             ref={panelRef}
             className={cn(
@@ -182,7 +212,11 @@ function SheetPortal({
             aria-modal="true"
             aria-labelledby={ariaLabelledBy}
             aria-describedby={ariaDescribedBy}
-            variants={sheetPanelMotionVariants(side)}
+            variants={
+              reduceMotion === true
+                ? sheetPanelReducedMotionVariants
+                : sheetPanelMotionVariants(side)
+            }
             initial="hidden"
             animate="visible"
             exit="exit"
@@ -260,6 +294,7 @@ function SheetContent({
   title,
   description,
   headerStart,
+  headerActions,
   showClose = true,
   footer,
   className,
@@ -270,6 +305,7 @@ function SheetContent({
   const hasDescription = description != null;
   const hasScrollBody = children != null || (!hasTitle && hasDescription);
   const hasFooter = footer != null;
+  const safeArea = side === "end" ? sheetSafeAreaBottomClasses : undefined;
 
   return (
     <SheetPortal
@@ -282,6 +318,7 @@ function SheetContent({
         className={cn(
           overlayPanelSectionStackClasses,
           footer == null ? "pb-4" : undefined,
+          footer == null ? safeArea : undefined,
           className,
         )}
       >
@@ -291,6 +328,7 @@ function SheetContent({
           title={title}
           description={description}
           headerStart={headerStart}
+          headerEnd={headerActions}
           showClose={showClose}
           closeLabel="Close sheet"
           onClose={() => onOpenChange(false)}
@@ -312,10 +350,12 @@ function SheetContent({
           hasScrollBody ? (
             <footer className={overlayPanelFooterDelineatedShellClasses}>
               <hr className={overlayPanelFooterHairlineClasses} aria-hidden="true" />
-              <div className={overlayPanelFooterDelineatedInnerClasses}>{footer}</div>
+              <div className={cn(overlayPanelFooterDelineatedInnerClasses, safeArea)}>
+                {footer}
+              </div>
             </footer>
           ) : (
-            <footer className={cn(overlayPanelFooterClasses, "pb-4")}>{footer}</footer>
+            <footer className={cn(overlayPanelFooterClasses, "pb-4", safeArea)}>{footer}</footer>
           )
         ) : null}
       </div>
