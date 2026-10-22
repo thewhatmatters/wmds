@@ -24,6 +24,7 @@ import {
   appShellBrandClasses,
   appShellCanvasClasses,
   appShellMainClasses,
+  appShellSkipLinkClasses,
   appShellRootClasses,
   appShellSheetBodyClasses,
   appShellSidebarBodyClasses,
@@ -46,6 +47,8 @@ export interface AppShellLabels {
   menu: string;
   /** Default title of the aside **Panel**. */
   aside: string;
+  /** The skip link, the first tab stop, which moves focus to the page content. */
+  skipToContent: string;
 }
 
 const DEFAULT_LABELS: AppShellLabels = {
@@ -53,6 +56,7 @@ const DEFAULT_LABELS: AppShellLabels = {
   expand: "Expand sidebar",
   menu: "Menu",
   aside: "Details",
+  skipToContent: "Skip to content",
 };
 
 export interface AppShellProps {
@@ -294,6 +298,7 @@ function AppShellRoot({
   }
 
   const desktopLabel = sidebarOpen ? labels.collapse : labels.expand;
+  const mainId = `${sidebarId}-main`;
   const brandRow = brand != null ? <div className={appShellBrandClasses}>{brand}</div> : null;
   const footerRow = sidebarFooter != null ? <div className={appShellSidebarFooterClasses}>{sidebarFooter}</div> : null;
 
@@ -342,6 +347,17 @@ function AppShellRoot({
   return (
     <AppShellContext.Provider value={context}>
       <div className={cn(appShellRootClasses, className)}>
+        <a
+          href={`#${mainId}`}
+          className={appShellSkipLinkClasses}
+          onClick={(event) => {
+            // Focus <main> without writing a hash into the URL, which an app's router may own.
+            event.preventDefault();
+            document.getElementById(mainId)?.focus();
+          }}
+        >
+          {labels.skipToContent}
+        </a>
         {hasSidebar ? (
           <div
             ref={sidebarRef}
@@ -357,7 +373,7 @@ function AppShellRoot({
         <div className={appShellCanvasClasses}>
           <div className={appShellSurfaceClasses}>
             <PageHeader variant="app" title={title} aria-label={title} start={toggle} end={header} />
-            <main id={`${sidebarId}-main`} tabIndex={-1} className={appShellMainClasses}>
+            <main id={mainId} tabIndex={-1} className={appShellMainClasses}>
               {slots.content}
             </main>
           </div>

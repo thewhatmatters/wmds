@@ -44,3 +44,17 @@ export const ToggleAndAside: Story = {
     await expect(details).toHaveFocus();
   },
 };
+
+export const SkipLink: Story = {
+  name: "the first Tab reaches a skip link that moves focus to the page",
+  render: () => <PortalDashboard />,
+  play: async ({ canvas }) => {
+    await userEvent.tab();
+    const skip = canvas.getByRole("link", { name: "Skip to content" });
+    expect(skip).toHaveFocus();
+    const before = window.location.href;
+    await userEvent.keyboard("{Enter}");
+    expect(canvas.getByRole("main")).toHaveFocus();
+    expect(window.location.href).toBe(before);
+  },
+};
