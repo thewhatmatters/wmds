@@ -1,3 +1,5 @@
+import { useEffect, useRef, type RefObject } from "react";
+
 const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -145,4 +147,111 @@ export function focusMainContent(): void {
     main.setAttribute("tabindex", "-1");
   }
   main.focus({ preventScroll: true });
+}
+
+export interface OverlayLifecycleOptions {
+  /** The overlay is showing. The lifecycle runs while this is true and the panel is mounted. */
+  open: boolean;
+  /** Called when the overlay asks to close (Escape). */
+  onClose: () => void;
+  /**
+   * A modal overlay locks page scroll, makes the page behind inert, and traps Tab inside the panel.
+   * A non-modal overlay (Panel) does none of these. Default `true`.
+   */
+  modal?: boolean;
+  /** Escape closes the overlay. It still blocks overlays beneath it when `false`. Default `true`. */
+  closeOnEscape?: boolean;
+  /** CSS selector for the control that takes focus on open; else the first tabbable control. */
+  initialFocus?: string;
+  /** Where focus returns on close; else whatever had focus when the overlay opened. */
+  returnFocusRef?: RefObject<HTMLElement | null>;
+}
+
+/** Open overlays, oldest first. Only the last one answers Escape. */
+const overlayStack: object[] = [];
+
+/**
+ * The whole open → close lifecycle of an overlay panel, shared by Dialog, Sheet, IntakeModal and Panel.
+ *
+ * While open: scroll lock, inert page and focus trap (modal only); focus moves into the panel; Escape
+ * closes the topmost overlay only, and is left alone when something inside already handled it
+ * (`defaultPrevented`). On close: focus returns to the opener when it is still in the page and focus
+ * has not moved on elsewhere, else to `<main>` (a deep link has no opener).
+ */
+export function useOverlayLifecycle(
+  panelRef: RefObject<HTMLElement | null>,
+  { open, onClose, modal = true, closeOnEscape = true, initialFocus, returnFocusRef }: OverlayLifecycleOptions,
+): void {
+  const onCloseRef = useRef(onClose);
+  const closeOnEscapeRef = useRef(closeOnEscape);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+    closeOnEscapeRef.current = closeOnEscape;
+  });
+
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!open || panel == null) {
+      return undefined;
+    }
+
+    const entry = {};
+    overlayStack.push(entry);
+    const opener = returnFocusRef?.current ?? (document.activeElement as HTMLElement | null);
+
+    const releaseModal = modal ? chainCleanups(lockBodyScroll(), inertPageBehind(panel), trapFocus(panel)) : noop;
+    // Move focus in on the next frame (the panel is mid-entrance), unless the user has already put it
+    // somewhere: inside the panel, or elsewhere in the page beside a non-modal panel.
+    const initialFocusFrame = window.requestAnimationFrame(() => {
+      const active = document.activeElement;
+      if (active == null || active === document.body || active === opener) {
+        focusInitialElement(panel, initialFocus);
+      }
+    });
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key !== "Escape" || event.defaultPrevented || overlayStack.at(-1) !== entry) {
+        return;
+      }
+      if (!closeOnEscapeRef.current) return;
+      event.preventDefault();
+      onCloseRef.current();
+    }
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      window.cancelAnimationFrame(initialFocusFrame);
+      overlayStack.splice(overlayStack.indexOf(entry), 1);
+      releaseModal();
+      restoreFocus(panel, opener);
+    };
+  }, [initialFocus, modal, open, panelRef, returnFocusRef]);
+}
+
+function noop() {}
+
+function chainCleanups(...cleanups: Array<() => void>): () => void {
+  return () => {
+    for (const cleanup of cleanups.reverse()) cleanup();
+  };
+}
+
+/** Return focus on close, unless the user already moved it somewhere else in the page. */
+function restoreFocus(panel: HTMLElement, opener: HTMLElement | null) {
+  const active = document.activeElement;
+  const focusLeftPanel = active != null && active !== document.body && !panel.contains(active);
+  if (focusLeftPanel) return;
+
+  if (opener != null && opener.isConnected && opener !== document.body) {
+    opener.focus();
+    return;
+  }
+  // No opener to return to. Move focus once the page is un-inert and the close has committed,
+  // so it is not dropped to <body>.
+  focusMainContent();
+  window.requestAnimationFrame(() => {
+    const now = document.activeElement;
+    if (now == null || now === document.body || panel.contains(now)) focusMainContent();
+  });
 }

@@ -1,6 +1,5 @@
 import {
   useCallback,
-  useEffect,
   useRef,
   type MouseEvent,
   type ReactNode,
@@ -11,11 +10,7 @@ import {
   Card,
 } from "../../molecules/Card/Card";
 import { cn } from "../../../lib/cn";
-import {
-  focusInitialElement,
-  lockBodyScroll,
-  trapFocus,
-} from "../../../lib/dialogOverlay";
+import { useOverlayLifecycle } from "../../../lib/dialogOverlay";
 import { motionTransitionProp } from "../../../lib/motion";
 import { DialogProvider, useDialogContext, useDialogLabelIds } from "./DialogContext";
 import { OverlayPanelHeader } from "./OverlayPanelHeader";
@@ -105,55 +100,18 @@ export function DialogPortal({
   } = useDialogContext("DialogPortal");
 
   const panelRef = useRef<HTMLDivElement>(null);
-  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const close = useCallback(() => {
     onOpenChange(false);
   }, [onOpenChange]);
 
-  useEffect(() => {
-    if (!open) {
-      return undefined;
-    }
-
-    previousFocusRef.current =
-      triggerRef.current ?? (document.activeElement as HTMLElement | null);
-
-    const unlockScroll = lockBodyScroll();
-    const panel = panelRef.current;
-
-    let releaseFocusTrap: () => void = () => {};
-    if (panel != null) {
-      releaseFocusTrap = trapFocus(panel);
-      window.requestAnimationFrame(() => {
-        focusInitialElement(panel, initialFocusSelector);
-      });
-    }
-
-    return () => {
-      releaseFocusTrap();
-      unlockScroll();
-      previousFocusRef.current?.focus?.();
-    };
-  }, [initialFocusSelector, open, triggerRef]);
-
-  useEffect(() => {
-    if (!open || !dismissOnEscape) {
-      return undefined;
-    }
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        close();
-      }
-    }
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [close, dismissOnEscape, open]);
+  useOverlayLifecycle(panelRef, {
+    open,
+    onClose: close,
+    closeOnEscape: dismissOnEscape,
+    initialFocus: initialFocusSelector,
+    returnFocusRef: triggerRef,
+  });
 
   function handleBackdropClick(event: MouseEvent<HTMLDivElement>) {
     const target = event.target as Node;
