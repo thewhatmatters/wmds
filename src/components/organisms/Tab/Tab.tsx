@@ -4,13 +4,10 @@ import {
   isValidElement,
   useCallback,
   useContext,
-  useEffect,
   useId,
   useLayoutEffect,
   useMemo,
   useRef,
-  useState,
-  type CSSProperties,
   type KeyboardEvent,
   type ReactElement,
   type ReactNode,
@@ -18,13 +15,10 @@ import {
 import { ChevronDown } from "lucide-react";
 import { LayoutGroup, motion } from "motion/react";
 import { Dropdown } from "../../molecules/Dropdown/Dropdown";
-import {
-  measureDropdownMenuStyle,
-  type DropdownMenuMeasureRow,
-} from "../../molecules/Dropdown/dropdownMenuPosition";
+import { type DropdownMenuMeasureRow } from "../../molecules/Dropdown/dropdownMenuPosition";
+import { textOf, useOverflowMenu } from "../../molecules/Dropdown/useOverflowMenu";
 import { cn } from "../../../lib/cn";
 import { motionTransitionProp } from "../../../lib/motion";
-import { resolveTabOverflow } from "./tabOverflow";
 import {
   tabCountClasses,
   tabIndicatorClasses,
@@ -139,57 +133,20 @@ function TabGroup({
   className,
 }: TabGroupProps) {
   const layoutId = useId();
-  const menuId = useId();
-  const rootRef = useRef<HTMLDivElement>(null);
-  const moreRef = useRef<HTMLButtonElement>(null);
-  const measureMoreRef = useRef<HTMLSpanElement>(null);
-  const measureRefs = useRef(new Map<string, HTMLSpanElement>());
   const visibleTabRefs = useRef(new Map<string, HTMLButtonElement>());
   const pendingFocusValue = useRef<string | null>(null);
   const items = useMemo(() => toTabItems(children), [children]);
-  const values = items.map((item) => item.props.value);
-  const [visibleValues, setVisibleValues] = useState(values);
-  const [overflowValues, setOverflowValues] = useState<string[]>([]);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [menuStyle, setMenuStyle] = useState<CSSProperties | null>(null);
-  const [menuActiveIndex, setMenuActiveIndex] = useState(0);
+  const itemsByValue = useMemo(() => new Map(items.map((item) => [item.props.value, item])), [items]);
+  const pick = (ids: readonly string[]) => ids.flatMap((id) => itemsByValue.get(id) ?? []);
 
-  const recalculate = useCallback(() => {
-    const root = rootRef.current;
-    const more = measureMoreRef.current;
-    if (root == null || more == null) return;
-
-    const measuredItems = items.map((item) => ({
-      value: item.props.value,
-      width: Math.ceil(measureRefs.current.get(item.props.value)?.getBoundingClientRect().width ?? 0),
-    }));
-
-    if (measuredItems.some((item) => item.width === 0)) return;
-
-    const result = resolveTabOverflow(
-      measuredItems,
-      value,
-      root.clientWidth,
-      Math.ceil(more.getBoundingClientRect().width),
-    );
-    setVisibleValues(result.visibleValues);
-    setOverflowValues(result.overflowValues);
-    if (result.overflowValues.length === 0) {
-      setMenuOpen(false);
-      setMenuStyle(null);
-    }
-  }, [items, value]);
-
-  useLayoutEffect(() => {
-    recalculate();
-    const root = rootRef.current;
-    if (root == null) return undefined;
-
-    const observer = new ResizeObserver(recalculate);
-    observer.observe(root);
-    void document.fonts?.ready.then(recalculate);
-    return () => observer.disconnect();
-  }, [recalculate]);
+  const overflow = useOverflowMenu({
+    ids: items.map((item) => item.props.value),
+    activeId: value,
+    toMenuRows: (ids) =>
+      pick(ids).map((item) => ({ label: textOf(item.props.children), disabled: item.props.disabled })),
+    toMeasureRows: (ids) => toMeasureRows(pick(ids)),
+  });
+  const { menu } = overflow;
 
   useLayoutEffect(() => {
     const pending = pendingFocusValue.current;
@@ -199,58 +156,10 @@ function TabGroup({
       node.focus();
       pendingFocusValue.current = null;
     }
-  }, [visibleValues, value]);
+  }, [overflow.visibleIds, value]);
 
-  const visibleSet = new Set(visibleValues);
-  const visibleItems = items.filter((item) => visibleSet.has(item.props.value));
-  const overflowSet = new Set(overflowValues);
-  const overflowItems = items.filter((item) => overflowSet.has(item.props.value));
-
-  const closeMenu = useCallback(() => {
-    setMenuOpen(false);
-    setMenuStyle(null);
-  }, []);
-
-  const openMenu = useCallback(() => {
-    const trigger = moreRef.current;
-    if (trigger == null) return;
-    setMenuStyle(
-      measureDropdownMenuStyle(trigger, toMeasureRows(overflowItems), {
-        align: "end",
-        widthMode: "content",
-      }),
-    );
-    setMenuActiveIndex(0);
-    setMenuOpen(true);
-  }, [overflowItems]);
-
-  useEffect(() => {
-    if (!menuOpen) return undefined;
-
-    function handlePointerDown(event: MouseEvent) {
-      if (rootRef.current != null && !rootRef.current.contains(event.target as Node)) {
-        closeMenu();
-      }
-    }
-
-    function handleEscape(event: globalThis.KeyboardEvent) {
-      if (event.key === "Escape") {
-        closeMenu();
-        moreRef.current?.focus();
-      }
-    }
-
-    document.addEventListener("mousedown", handlePointerDown);
-    document.addEventListener("keydown", handleEscape);
-    window.addEventListener("resize", closeMenu);
-    window.addEventListener("scroll", closeMenu, true);
-    return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
-      document.removeEventListener("keydown", handleEscape);
-      window.removeEventListener("resize", closeMenu);
-      window.removeEventListener("scroll", closeMenu, true);
-    };
-  }, [closeMenu, menuOpen]);
+  const visibleItems = pick(overflow.visibleIds);
+  const overflowItems = pick(overflow.overflowIds);
 
   const selectValue = useCallback(
     (nextValue: string, focus = false) => {
@@ -276,32 +185,10 @@ function TabGroup({
     if (nextValue != null) selectValue(nextValue, true);
   }
 
-  function selectOverflowValue(nextValue: string) {
-    pendingFocusValue.current = nextValue;
-    onValueChange(nextValue);
-    closeMenu();
-  }
-
-  function handleMoreKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
-    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-      event.preventDefault();
-      if (!menuOpen) {
-        openMenu();
-        setMenuActiveIndex(event.key === "ArrowDown" ? 0 : Math.max(overflowItems.length - 1, 0));
-      } else {
-        const delta = event.key === "ArrowDown" ? 1 : -1;
-        setMenuActiveIndex((current) =>
-          (current + delta + overflowItems.length) % overflowItems.length,
-        );
-      }
-      return;
-    }
-
-    if ((event.key === "Enter" || event.key === " ") && menuOpen) {
-      event.preventDefault();
-      const item = overflowItems[menuActiveIndex];
-      if (item != null && !item.props.disabled) selectOverflowValue(item.props.value);
-    }
+  function selectOverflowValue(item: ReactElement<TabItemProps>) {
+    if (item.props.disabled) return;
+    menu.close({ returnFocus: true });
+    selectValue(item.props.value, true);
   }
 
   const context: TabContextValue = {
@@ -317,7 +204,7 @@ function TabGroup({
   };
 
   return (
-    <div ref={rootRef} className={cn(tabRootClasses, className)}>
+    <div {...overflow.rowProps} className={cn(tabRootClasses, className)}>
       <LayoutGroup id={layoutId}>
         <div
           role="tablist"
@@ -328,14 +215,13 @@ function TabGroup({
           <TabContext.Provider value={context}>{visibleItems}</TabContext.Provider>
           {overflowItems.length > 0 ? (
             <button
-              ref={moreRef}
+              ref={overflow.moreRef}
               type="button"
               aria-haspopup="menu"
-              aria-expanded={menuOpen}
-              aria-controls={menuOpen ? menuId : undefined}
+              aria-expanded={menu.triggerProps["aria-expanded"]}
+              aria-controls={menu.triggerProps["aria-controls"]}
               className={cn(tabItemClasses, tabItemSizeClasses[size])}
-              onClick={() => (menuOpen ? closeMenu() : openMenu())}
-              onKeyDown={handleMoreKeyDown}
+              onClick={menu.toggle}
             >
               <span>More</span>
               <ChevronDown className={tabMoreIconClasses} strokeWidth={2} aria-hidden />
@@ -348,10 +234,7 @@ function TabGroup({
         {items.map((item) => (
           <span
             key={item.props.value}
-            ref={(node) => {
-              if (node == null) measureRefs.current.delete(item.props.value);
-              else measureRefs.current.set(item.props.value, node);
-            }}
+            ref={overflow.measureRef(item.props.value)}
             className={cn(tabItemClasses, tabItemSizeClasses[size])}
           >
             <span>{item.props.children}</span>
@@ -361,7 +244,7 @@ function TabGroup({
           </span>
         ))}
         <span
-          ref={measureMoreRef}
+          ref={overflow.moreMeasureRef}
           className={cn(tabItemClasses, tabItemSizeClasses[size])}
         >
           <span>More</span>
@@ -369,20 +252,18 @@ function TabGroup({
         </span>
       </div>
 
-      {menuOpen && menuStyle != null ? (
-        <Dropdown.Menu id={menuId} role="menu" aria-label={`${ariaLabel} overflow`} style={menuStyle}>
+      {menu.open && menu.menuStyle != null ? (
+        <Dropdown.Menu {...menu.menuProps} role="menu" aria-label={`${ariaLabel} overflow`}>
           {overflowItems.map((item, index) => (
             <li key={item.props.value} role="presentation">
               <Dropdown.Item
+                {...menu.rowProps(index)}
                 role="menuitem"
-                tabIndex={-1}
                 truncate={false}
                 selected={item.props.value === value}
-                active={index === menuActiveIndex}
                 disabled={item.props.disabled}
                 end={item.props.count?.toLocaleString()}
-                onMouseEnter={() => setMenuActiveIndex(index)}
-                onClick={() => selectOverflowValue(item.props.value)}
+                onClick={() => selectOverflowValue(item)}
               >
                 {item.props.children}
               </Dropdown.Item>

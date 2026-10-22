@@ -5,16 +5,11 @@ import {
   Children,
   createContext,
   isValidElement,
-  useCallback,
   useContext,
   useEffect,
-  useId,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
-  type KeyboardEvent,
   type ReactElement,
   type ReactNode,
   type RefObject,
@@ -30,8 +25,7 @@ import {
   cardLayoutBodyOccupantWellClasses,
 } from "../../molecules/Card/Card";
 import { Dropdown } from "../../molecules/Dropdown/Dropdown";
-import { measureDropdownMenuStyle } from "../../molecules/Dropdown/dropdownMenuPosition";
-import { resolveTabOverflow } from "../Tab/tabOverflow";
+import { textOf, useOverflowMenu } from "../../molecules/Dropdown/useOverflowMenu";
 import { Sheet } from "../Sheet/Sheet";
 import {
   siteNavBarBaseClasses,
@@ -489,144 +483,20 @@ function SiteNavLinks({
   closeDelay = 150,
 }: SiteNavLinksProps) {
   const context = useContext(SiteNavContext);
-  const menuId = useId();
-  const rootRef = useRef<HTMLDivElement>(null);
-  const moreRef = useRef<HTMLButtonElement>(null);
-  const measureMoreRef = useRef<HTMLSpanElement>(null);
-  const measureRefs = useRef(new Map<string, HTMLSpanElement>());
 
   const items = useMemo(() => toSiteNavChildren(children), [children]);
-  const ids = items.map(siteNavItemId);
-  const activeId = siteNavCurrentId(items);
+  const itemsById = new Map(items.map((item) => [siteNavItemId(item), item]));
+  const pick = (ids: readonly string[]) => ids.flatMap((id) => itemsById.get(id) ?? []);
+  const rowsFor = (ids: readonly string[]) => pick(ids).flatMap(overflowRows);
 
-  const [visibleIds, setVisibleIds] = useState(ids);
-  const [overflowIds, setOverflowIds] = useState<string[]>([]);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [menuStyle, setMenuStyle] = useState<CSSProperties | null>(null);
-  const [menuActiveIndex, setMenuActiveIndex] = useState(0);
-
-  const recalculate = useCallback(() => {
-    const root = rootRef.current;
-    const more = measureMoreRef.current;
-    if (root == null || more == null) return;
-
-    const measured = items.map((item) => ({
-      value: siteNavItemId(item),
-      width: Math.ceil(
-        measureRefs.current.get(siteNavItemId(item))?.getBoundingClientRect().width ?? 0,
-      ),
-    }));
-    if (measured.some((item) => item.width === 0)) return;
-
-    const result = resolveTabOverflow(
-      measured,
-      activeId,
-      root.clientWidth,
-      Math.ceil(more.getBoundingClientRect().width),
-    );
-    setVisibleIds(result.visibleValues);
-    setOverflowIds(result.overflowValues);
-    if (result.overflowValues.length === 0) {
-      setMenuOpen(false);
-      setMenuStyle(null);
-    }
-  }, [activeId, items]);
-
-  useLayoutEffect(() => {
-    recalculate();
-    const root = rootRef.current;
-    if (root == null) return undefined;
-    const observer = new ResizeObserver(recalculate);
-    observer.observe(root);
-    void document.fonts?.ready.then(recalculate);
-    return () => observer.disconnect();
-  }, [recalculate]);
-
-  const visibleSet = new Set(visibleIds);
-  const overflowSet = new Set(overflowIds);
-  const visibleItems = items.filter((item) => visibleSet.has(siteNavItemId(item)));
-  const overflowItems = items.filter((item) => overflowSet.has(siteNavItemId(item)));
-
-  const closeMenu = useCallback(() => {
-    setMenuOpen(false);
-    setMenuStyle(null);
-  }, []);
-
-  const openMenu = useCallback(() => {
-    const trigger = moreRef.current;
-    if (trigger == null) return;
-    const rows = overflowItems.flatMap(overflowRows);
-    setMenuStyle(
-      measureDropdownMenuStyle(
-        trigger,
-        rows.map((row) => ({ label: String(row.label ?? "") })),
-        {
-          align: "end",
-          widthMode: "content",
-        },
-      ),
-    );
-    setMenuActiveIndex(0);
-    setMenuOpen(true);
-  }, [overflowItems]);
-
-  useEffect(() => {
-    if (!menuOpen) return undefined;
-
-    function handlePointerDown(event: MouseEvent) {
-      const target = event.target as Node;
-      if (rootRef.current?.contains(target)) return;
-      const menu = document.getElementById(menuId);
-      if (menu?.contains(target)) return;
-      closeMenu();
-    }
-
-    function handleEscape(event: globalThis.KeyboardEvent) {
-      if (event.key === "Escape") {
-        closeMenu();
-        moreRef.current?.focus();
-      }
-    }
-
-    document.addEventListener("mousedown", handlePointerDown);
-    document.addEventListener("keydown", handleEscape);
-    window.addEventListener("resize", closeMenu);
-    window.addEventListener("scroll", closeMenu, true);
-    return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
-      document.removeEventListener("keydown", handleEscape);
-      window.removeEventListener("resize", closeMenu);
-      window.removeEventListener("scroll", closeMenu, true);
-    };
-  }, [closeMenu, menuId, menuOpen]);
-
-  function handleMoreKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
-    const rows = overflowItems.flatMap(overflowRows);
-    if (rows.length === 0) return;
-    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-      event.preventDefault();
-      if (!menuOpen) {
-        openMenu();
-        setMenuActiveIndex(event.key === "ArrowDown" ? 0 : Math.max(rows.length - 1, 0));
-        return;
-      }
-      const delta = event.key === "ArrowDown" ? 1 : -1;
-      setMenuActiveIndex((current) => (current + delta + rows.length) % rows.length);
-    }
-    if ((event.key === "Enter" || event.key === " ") && menuOpen) {
-      event.preventDefault();
-      const rows = overflowItems.flatMap(overflowRows);
-      const row = rows[menuActiveIndex];
-      if (row != null) activateOverflowHref(row.href);
-    }
-  }
-
-  function activateOverflowHref(href: string | undefined) {
-    closeMenu();
-    if (href != null && href.length > 0) {
-      window.location.assign(href);
-    }
-  }
+  const overflow = useOverflowMenu({
+    ids: items.map(siteNavItemId),
+    activeId: siteNavCurrentId(items),
+    toMenuRows: (ids) => rowsFor(ids).map((row) => ({ label: textOf(row.label), disabled: row.href == null })),
+  });
+  const { menu } = overflow;
+  const visibleItems = pick(overflow.visibleIds);
+  const menuRows = rowsFor(overflow.overflowIds);
 
   function overflowRows(item: SiteNavChild): Array<{
     id: string;
@@ -670,7 +540,7 @@ function SiteNavLinks({
   }
 
   return (
-    <div ref={rootRef} className={siteNavLinksRootClasses}>
+    <div {...overflow.rowProps} className={siteNavLinksRootClasses}>
       <NavigationMenu.Root
         aria-label={ariaLabel}
         delay={delay}
@@ -697,22 +567,21 @@ function SiteNavLinks({
         </NavigationMenu.Portal>
       </NavigationMenu.Root>
 
-      {overflowItems.length > 0 ? (
+      {overflow.overflowIds.length > 0 ? (
         <Button
-          ref={moreRef}
+          ref={overflow.moreRef}
           role="ghost"
           size="sm"
           aria-haspopup="menu"
-          aria-expanded={menuOpen}
-          aria-controls={menuOpen ? menuId : undefined}
-          data-state={menuOpen ? "open" : "closed"}
+          aria-expanded={menu.open}
+          aria-controls={menu.triggerProps["aria-controls"]}
+          data-state={menu.open ? "open" : "closed"}
           className={siteNavMoreTriggerClasses}
-          onClick={() => (menuOpen ? closeMenu() : openMenu())}
-          onKeyDown={handleMoreKeyDown}
+          onClick={menu.toggle}
         >
           <span className={siteNavTriggerLabelClasses}>
             More
-            <span className={siteNavMoreIconClasses} data-state={menuOpen ? "open" : "closed"}>
+            <span className={siteNavMoreIconClasses} data-state={menu.open ? "open" : "closed"}>
               <ChevronDown strokeWidth={2} aria-hidden />
             </span>
           </span>
@@ -727,10 +596,7 @@ function SiteNavLinks({
           return (
             <span
               key={id}
-              ref={(node) => {
-                if (node == null) measureRefs.current.delete(id);
-                else measureRefs.current.set(id, node);
-              }}
+              ref={overflow.measureRef(id)}
               className={cn(
                 siteNavMeasureItemClasses,
                 menu ? siteNavTriggerClasses : siteNavLinkClasses,
@@ -742,7 +608,7 @@ function SiteNavLinks({
           );
         })}
         <span
-          ref={measureMoreRef}
+          ref={overflow.moreMeasureRef}
           className={cn(siteNavMoreTriggerClasses, siteNavMeasureMoreClasses)}
         >
           More
@@ -750,24 +616,20 @@ function SiteNavLinks({
         </span>
       </div>
 
-      {menuOpen && menuStyle != null
+      {menu.open && menu.menuStyle != null
         ? createPortal(
-            <Dropdown.Menu
-              id={menuId}
-              role="menu"
-              aria-label={`${ariaLabel} overflow`}
-              style={menuStyle}
-            >
-              {overflowItems.flatMap(overflowRows).map((row, index) => (
+            <Dropdown.Menu {...menu.menuProps} role="menu" aria-label={`${ariaLabel} overflow`}>
+              {menuRows.map((row, index) => (
                 <li key={row.id} role="presentation">
+                  {/* Real links: Cmd-click and middle-click open a new tab, as in the bar. */}
                   <Dropdown.Item
+                    {...menu.rowProps(index)}
                     role="menuitem"
-                    tabIndex={-1}
                     truncate={false}
                     selected={Boolean(row.current)}
-                    active={index === menuActiveIndex}
-                    onMouseEnter={() => setMenuActiveIndex(index)}
-                    onClick={() => activateOverflowHref(row.href)}
+                    disabled={row.href == null}
+                    render={row.href != null ? <a href={row.href} aria-current={row.current ? "page" : undefined} /> : undefined}
+                    onClick={() => menu.close()}
                   >
                     {row.label}
                   </Dropdown.Item>

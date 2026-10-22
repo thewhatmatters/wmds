@@ -35,6 +35,8 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
   - **Tab** closes the menu. A press outside closes it (`pointerdown`, so touch works too). Scroll and resize keep it attached to its trigger.
   - **Keyboard:** ArrowDown/ArrowUp, Home/End, and type-ahead; disabled rows are skipped.
   - **Screen readers hear the active row.** **Select**'s trigger is a select-only `combobox` naming the active option with `aria-activedescendant`. **MoreMenu** and Breadcrumb move real focus onto the rows; Space chooses a row like Enter does.
+  - **Tab** and **SiteNav** More menus use it too, through one overflow module (`useOverflowMenu`) that owns measuring, the fit, and the More menu. SiteNav no longer reaches into Tab. More menus now follow their trigger on scroll instead of closing, and stop listening for Escape on the whole page.
+  - **SiteNav** More rows are real links (`<a href>`), so Cmd-click and middle-click open a new tab.
   - **Dropdown.Item** forwards its ref. A row that is both active and selected now shows the active fill, so focus is visible on it.
 - **Theme** sets `color-scheme` (new): `light` on `:root` and `dark` under `[data-theme="dark"]`, so native scrollbars, form controls, and autofill follow the theme instead of staying light in dark mode.
 - **`docs/exports.json`** now lists all 41 lib helpers `src/index.ts` exports (was 12). Nothing was added to or removed from the package. `npm run validate:manifest` now also fails when `src/index.ts` exports a lib helper the manifest does not list.
