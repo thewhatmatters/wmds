@@ -17,6 +17,7 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - New interaction test **Internal/Interactions/Overlay → AlertDialog — typed confirmation**.
 - **Dialog** and **AlertDialog** edge inset is **24px** on every side, phones included (was 16px): header, body, and footer share the same horizontal inset, and the panel's top and bottom are 24px. A pill action now clears the 16px panel radius instead of sitting in the corner. **Sheet**, **Panel**, and **Card** keep their 16px layout. `dialogStyles` adds `dialogPanelInsetXClasses`, `dialogHeaderInsetTopClasses`, `dialogFooterInsetBottomClasses`.
 - **Dialog**, **Sheet**, and **IntakeModal** scroll lock no longer leaves a pale strip at the trailing edge on platforms with classic scrollbars: `html { scrollbar-gutter: stable }` kept that strip after the body stopped scrolling, and the fixed scrim cannot paint into it. While a modal is open the gutter is released and the body takes its width as `padding-right`, so the page behind does not move and the scrim reaches the edge.
+- **`docs/exports.json`** now lists all 41 lib helpers `src/index.ts` exports (was 12). Nothing was added to or removed from the package. `npm run validate:manifest` now also fails when `src/index.ts` exports a lib helper the manifest does not list.
 
 ### Consumer actions
 
