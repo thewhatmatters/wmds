@@ -87,3 +87,20 @@ export const MegaMenuKeyboard: Story = {
 for (const story of [MegaMenuKeyboard]) {
   story.parameters = { ...story.parameters, a11y: { test: "todo" } };
 }
+
+export const PinnedScrollPadding: Story = {
+  name: "pinned compact bar keeps focused elements out from under it",
+  render: () => (
+    <SiteNav
+      placement="fixed"
+      state="compact"
+      start={<SiteNav.Brand href="#home" aria-label="WhatMatters" icon={<Sparkles />} />}
+      end={<Button role="primary" size="sm" render={<a href="#start" />}>Start</Button>}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    await waitFor(() => expect(canvas.getByRole("banner", { name: "Site" })).toHaveAttribute("data-state", "compact"));
+    expect(document.documentElement.style.scrollPaddingTop).toContain("--site-nav-height");
+  },
+};
