@@ -27,6 +27,8 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
   - **Dialog** and **IntakeModal** make the page behind inert, as **Sheet** already did, so a screen reader's virtual cursor stays in the modal.
   - **Panel** moves focus into itself on open (its first control).
   - On close, focus returns to the opener only if it is still in the page and focus has not moved on elsewhere; otherwise it goes to `<main>`. This was Sheet-only before.
+  - Stacked modals share one scroll lock, so the page scrolls again however they close (closing them out of order used to leave it locked).
+  - New interaction tests in **Internal/Interactions/Overlay lifecycle** cover the shared lifecycle and each of the four overlays.
   - **IntakeModal** `dismissOnEscape` (new, default `true`): set `false` so Escape cannot drop typed answers.
 - **Theme** sets `color-scheme` (new): `light` on `:root` and `dark` under `[data-theme="dark"]`, so native scrollbars, form controls, and autofill follow the theme instead of staying light in dark mode.
 - **`docs/exports.json`** now lists all 41 lib helpers `src/index.ts` exports (was 12). Nothing was added to or removed from the package. `npm run validate:manifest` now also fails when `src/index.ts` exports a lib helper the manifest does not list.

@@ -60,12 +60,28 @@ export function trapFocus(container: HTMLElement): () => void {
  * trailing edge. While locked the gutter is released so the scrim reaches the edge, and the body takes its
  * width as padding so the page behind does not move.
  */
+let scrollLocks = 0;
+let releaseScrollLock: () => void = () => undefined;
+
 export function lockBodyScroll(): () => void {
   if (typeof document === "undefined") {
     return () => undefined;
   }
 
-  const { body, documentElement } = document;
+  // Stacked modals share one lock: the first saves the page's styles, the last restores them, in
+  // whatever order they close. Restoring per lock would leave the page locked when they close out of order.
+  scrollLocks += 1;
+  if (scrollLocks === 1) releaseScrollLock = applyScrollLock(document);
+  let released = false;
+  return () => {
+    if (released) return;
+    released = true;
+    scrollLocks -= 1;
+    if (scrollLocks === 0) releaseScrollLock();
+  };
+}
+
+function applyScrollLock({ body, documentElement }: Document): () => void {
   const previousOverflow = body.style.overflow;
   const previousPaddingRight = body.style.paddingRight;
   const previousGutter = documentElement.style.scrollbarGutter;
