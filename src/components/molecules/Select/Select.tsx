@@ -1,16 +1,7 @@
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-  type KeyboardEvent,
-  type ReactNode,
-} from "react";
+import { useId, useRef, useState, type ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 import { Dropdown } from "../Dropdown/Dropdown";
+import { useDropdownMenu } from "../Dropdown/useDropdownMenu";
 import { cn } from "../../../lib/cn";
 import { measureSelectMenuStyle } from "./selectMenuPosition";
 import {
@@ -102,19 +93,11 @@ export function Select({
 }: SelectProps) {
   const generatedId = useId();
   const controlId = idProp ?? generatedId;
-  const listboxId = `${controlId}-listbox`;
   const descriptionId = description != null ? `${controlId}-description` : undefined;
   const describedBy = [ariaDescribedBy, descriptionId].filter(Boolean).join(" ") || undefined;
-  const rootRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
-  const [open, setOpen] = useState(false);
-  const [menuStyle, setMenuStyle] = useState<CSSProperties | null>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
-  const [activeIndex, setActiveIndex] = useState<number>(() => {
-    const initial = valueProp ?? defaultValue;
-    const index = options.findIndex((option) => option.value === initial);
-    return index >= 0 ? index : 0;
-  });
 
   const isControlled = valueProp !== undefined;
   const value = isControlled ? valueProp : uncontrolledValue;
@@ -123,159 +106,47 @@ export function Select({
 
   const selectedLabel = findOptionLabel(options, value);
 
-  const close = useCallback(() => {
-    setOpen(false);
-    setMenuStyle(null);
-  }, []);
-
-  const openListbox = useCallback(() => {
-    const shell = shellRef.current;
-    if (shell != null) {
-      setMenuStyle(measureSelectMenuStyle(shell, options));
+  function selectValue(nextValue: string) {
+    if (!isControlled) {
+      setUncontrolledValue(nextValue);
     }
-    setOpen(true);
-  }, [options]);
+    onValueChange?.(nextValue);
+    menu.close({ returnFocus: true });
+  }
 
-  const selectValue = useCallback(
-    (nextValue: string) => {
-      if (!isControlled) {
-        setUncontrolledValue(nextValue);
-      }
-      onValueChange?.(nextValue);
-      close();
+  const menu = useDropdownMenu({
+    rows: options,
+    triggerRef,
+    focus: "trigger",
+    initialIndex: options.findIndex((option) => option.value === value),
+    measure: () => (shellRef.current == null ? null : measureSelectMenuStyle(shellRef.current, options)),
+    onChoose: (index) => {
+      const option = options[index];
+      if (option != null) selectValue(option.value);
     },
-    [close, isControlled, onValueChange],
-  );
-
-  const updateMenuPosition = useCallback(() => {
-    const shell = shellRef.current;
-    if (shell == null) {
-      return;
-    }
-
-    setMenuStyle(measureSelectMenuStyle(shell, options));
-  }, [options]);
-
-  useLayoutEffect(() => {
-    if (!open) {
-      return undefined;
-    }
-
-    updateMenuPosition();
-
-    window.addEventListener("resize", updateMenuPosition);
-    window.addEventListener("scroll", updateMenuPosition, true);
-
-    return () => {
-      window.removeEventListener("resize", updateMenuPosition);
-      window.removeEventListener("scroll", updateMenuPosition, true);
-    };
-  }, [open, updateMenuPosition]);
-
-  useEffect(() => {
-    if (!open) {
-      return undefined;
-    }
-
-    function handlePointerDown(event: MouseEvent) {
-      if (rootRef.current != null && !rootRef.current.contains(event.target as Node)) {
-        close();
-      }
-    }
-
-    document.addEventListener("mousedown", handlePointerDown);
-    return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
-    };
-  }, [close, open]);
-
-  useEffect(() => {
-    const index = options.findIndex((option) => option.value === value);
-    if (index >= 0) {
-      setActiveIndex(index);
-    }
-  }, [options, value]);
-
-  function moveActive(delta: number) {
-    setActiveIndex((current) => {
-      if (options.length === 0) {
-        return 0;
-      }
-      return (current + delta + options.length) % options.length;
-    });
-  }
-
-  function handleTriggerKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
-    if (disabled) {
-      return;
-    }
-
-    switch (event.key) {
-      case "ArrowDown":
-        event.preventDefault();
-        if (!open) {
-          openListbox();
-        } else {
-          moveActive(1);
-        }
-        break;
-      case "ArrowUp":
-        event.preventDefault();
-        if (!open) {
-          openListbox();
-        } else {
-          moveActive(-1);
-        }
-        break;
-      case "Enter":
-      case " ":
-        event.preventDefault();
-        if (open) {
-          const option = options[activeIndex];
-          if (option != null) {
-            selectValue(option.value);
-          }
-        } else {
-          openListbox();
-        }
-        break;
-      case "Escape":
-        event.preventDefault();
-        close();
-        break;
-      default:
-        break;
-    }
-  }
+  });
 
   const control = (
-    <div ref={rootRef} className={cn(selectRootClasses, className)}>
+    <div {...menu.rootProps} className={cn(selectRootClasses, className)}>
       <div
         ref={shellRef}
         className={cn(selectShellClasses[size], disabled && selectShellDisabledClasses)}
-        data-open={open ? "true" : "false"}
+        data-open={menu.open ? "true" : "false"}
       >
         <button
+          ref={triggerRef}
           type="button"
           id={controlId}
+          role="combobox"
           disabled={disabled}
           aria-label={label == null ? ariaLabel : undefined}
           aria-labelledby={label != null ? `${controlId}-label` : undefined}
           aria-describedby={describedBy}
           aria-haspopup="listbox"
-          aria-expanded={open}
-          aria-controls={listboxId}
+          {...menu.triggerProps}
           onClick={() => {
-            if (disabled) {
-              return;
-            }
-            if (open) {
-              close();
-            } else {
-              openListbox();
-            }
+            if (!disabled) menu.toggle();
           }}
-          onKeyDown={handleTriggerKeyDown}
           className={selectTriggerInnerClasses[size]}
         >
           <span
@@ -290,7 +161,7 @@ export function Select({
             <span
               className={cn(
                 selectTriggerCaretRotateClasses,
-                open && selectTriggerCaretOpenClasses,
+                menu.open && selectTriggerCaretOpenClasses,
               )}
             >
               <ChevronDown strokeWidth={2} />
@@ -298,31 +169,23 @@ export function Select({
           </span>
         </button>
       </div>
-      {open && menuStyle != null ? (
-        <Dropdown.Menu
-          id={listboxId}
-          role="listbox"
-          aria-labelledby={controlId}
-          style={menuStyle}
-        >
+      {menu.open && menu.menuStyle != null ? (
+        <Dropdown.Menu {...menu.menuProps} role="listbox" aria-labelledby={controlId}>
           {options.map((option, index) => {
             const isSelected = option.value === value;
-            const isActive = index === activeIndex;
 
             return (
               <li key={option.value} role="presentation">
                 <Dropdown.Item
+                  {...menu.rowProps(index)}
                   role="option"
                   aria-selected={isSelected}
-                  tabIndex={-1}
                   selected={isSelected}
-                  active={isActive}
                   truncate={false}
                   start={option.start}
                   end={option.end}
-                  onMouseEnter={() => {
-                    setActiveIndex(index);
-                  }}
+                  // Keep focus on the trigger: it owns the keyboard and names the active option.
+                  onMouseDown={(event) => event.preventDefault()}
                   onClick={() => {
                     selectValue(option.value);
                   }}

@@ -30,6 +30,16 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
   - Stacked modals share one scroll lock, so the page scrolls again however they close (closing them out of order used to leave it locked).
   - New interaction tests in **Internal/Interactions/Overlay lifecycle** cover the shared lifecycle and each of the four overlays.
   - **IntakeModal** `dismissOnEscape` (new, default `true`): set `false` so Escape cannot drop typed answers.
+- **Menus share one behaviour** (`useDropdownMenu`, internal, in the Dropdown folder). **Select**, **MoreMenu**, and **Breadcrumb**'s "…" menu:
+  - **Escape** closes only the menu and returns focus to its trigger, so a menu inside a **Dialog** or **Sheet** no longer closes the overlay too. An Escape during IME composition is ignored by menus and overlays.
+  - **Tab** closes the menu. A press outside closes it (`pointerdown`, so touch works too). Scroll and resize keep it attached to its trigger.
+  - **Keyboard:** ArrowDown/ArrowUp, Home/End, and type-ahead; disabled rows are skipped.
+  - **Screen readers hear the active row.** **Select**'s trigger is a select-only `combobox` naming the active option with `aria-activedescendant`. **MoreMenu** and Breadcrumb move real focus onto the rows; Space chooses a row like Enter does.
+  - **Tab** and **SiteNav** More menus use it too, through one overflow module (`useOverflowMenu`) that owns measuring, the fit, and the More menu. SiteNav no longer reaches into Tab. More menus now follow their trigger on scroll instead of closing, and stop listening for Escape on the whole page.
+  - **SiteNav** More rows are real links (`<a href>`), so Cmd-click and middle-click open a new tab.
+  - **Tab**: More now sits beside the `tablist` instead of inside it (a `tablist` may only own tabs), which clears the accessibility violations its overflow stories were waiving.
+  - New interaction tests in **Internal/Interactions/Menus** cover the shared behaviour and all five menus, including a Select and a MoreMenu inside a **Dialog** and a Breadcrumb inside a **Sheet**, where Escape closes the menu and leaves the overlay open.
+  - **Dropdown.Item** forwards its ref. A row that is both active and selected now shows the active fill, so focus is visible on it.
 - **Theme** sets `color-scheme` (new): `light` on `:root` and `dark` under `[data-theme="dark"]`, so native scrollbars, form controls, and autofill follow the theme instead of staying light in dark mode.
 - **`docs/exports.json`** now lists all 41 lib helpers `src/index.ts` exports (was 12). Nothing was added to or removed from the package. `npm run validate:manifest` now also fails when `src/index.ts` exports a lib helper the manifest does not list.
 

@@ -6,7 +6,8 @@ import { typographyClass } from "../../../lib/typography";
 export const tabSizes = ["sm", "md", "lg"] as const;
 export type TabSize = (typeof tabSizes)[number];
 
-export const tabRootClasses = "relative min-w-0";
+/** Flex row: the tablist, then More beside it (More is not a tab, so it sits outside the tablist). */
+export const tabRootClasses = "relative flex min-w-0 items-stretch";
 
 /** Label row. Overflow is resolved into More rather than horizontal scrolling. */
 export const tabListClasses = cn(
