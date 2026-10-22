@@ -12,3 +12,19 @@ globalThis.fetch = (input, init) => {
   if (url.endsWith(".wasm")) return new Promise<Response>(() => {});
   return realFetch(input, init);
 };
+
+/**
+ * Node 25+ ships its own `localStorage`, `sessionStorage`, and `Storage` globals (`localStorage` is
+ * undefined unless Node runs with `--localstorage-file`). Vitest's DOM environment skips any global
+ * Node already defines, so happy-dom tests got Node's storage instead of the DOM's. Put the DOM's
+ * back. On older Node the environment already installed happy-dom's, and this changes nothing.
+ */
+if ("happyDOM" in globalThis) {
+  const { Storage: DomStorage } = await import("happy-dom");
+  const install = (key: string, value: unknown) =>
+    Object.defineProperty(globalThis, key, { value, configurable: true, writable: true });
+  if (globalThis.Storage !== (DomStorage as unknown)) install("Storage", DomStorage);
+  for (const key of ["localStorage", "sessionStorage"] as const) {
+    if (!(globalThis[key] instanceof DomStorage)) install(key, new DomStorage());
+  }
+}
