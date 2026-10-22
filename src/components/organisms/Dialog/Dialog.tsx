@@ -156,14 +156,17 @@ export function DialogPortal({
   }, [close, dismissOnEscape, open]);
 
   function handleBackdropClick(event: MouseEvent<HTMLDivElement>) {
-    if (!dismissOnBackdrop) {
-      return;
-    }
     const target = event.target as Node;
     if (panelRef.current?.contains(target)) {
       return;
     }
-    close();
+    // A press on the scrim must never move focus: it would land on <body>, outside the dialog, and
+    // the next Tab would leave it (AlertDialog keeps the dialog open). On close it would also undo
+    // the focus close() returns to the opener.
+    event.preventDefault();
+    if (dismissOnBackdrop) {
+      close();
+    }
   }
 
   if (typeof document === "undefined") {
