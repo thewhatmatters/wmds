@@ -124,6 +124,12 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
 
   const role = fab ? "primary" : (roleProp ?? "ghost");
   const isDisabled = disabled || loading;
+  // Loading keeps the button focusable: native `disabled` would drop keyboard focus to <body>.
+  // `aria-disabled` plus this guard block activation instead.
+  const isBusyDisabled = loading && !disabled;
+  const guardedClick: React.MouseEventHandler<HTMLButtonElement> | undefined = isBusyDisabled
+    ? (event) => event.preventDefault()
+    : onClick;
   const tooltip = title === undefined ? ariaLabel : title;
   const insetSize = inset ? (size as IconButtonInsetSize) : null;
   const hitClass = inset
@@ -180,8 +186,8 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
           "data-pattern": fab ? "fab" : inset ? "inset" : "icon",
           "data-loading": loading || undefined,
           title: tooltip === "" ? undefined : tooltip,
-          tabIndex: isDisabled ? -1 : buttonProps.tabIndex,
-          onClick,
+          tabIndex: disabled ? -1 : buttonProps.tabIndex,
+          onClick: guardedClick,
           onKeyDown,
           id,
           name,
@@ -193,7 +199,8 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
           ...buttonProps,
           className: classNameMerged,
           type,
-          disabled: isDisabled,
+          disabled,
+          "aria-disabled": isBusyDisabled || undefined,
           "aria-busy": loading || undefined,
           "aria-label": ariaLabel,
           "aria-current": ariaCurrent,
@@ -203,7 +210,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
           "aria-pressed": pressed ?? buttonProps["aria-pressed"],
           "data-pressed": pressed === true ? "" : undefined,
           title: tooltip === "" ? undefined : tooltip,
-          onClick,
+          onClick: guardedClick,
           onKeyDown,
           id,
           name,

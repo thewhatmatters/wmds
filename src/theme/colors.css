@@ -9,6 +9,9 @@
  * Brand actions: primary / on-primary (WhatMatters — separate from accent).
  */
 :root {
+  /* Native UI (scrollbars, form controls, autofill) follows the theme. */
+  color-scheme: light;
+
   /* Surface hierarchy — body/muted lightened for softer inset wells (test) */
   --color-background-body: #f8f8f8;
   --color-background-surface: #ffffff;
@@ -155,6 +158,7 @@
 }
 
 [data-theme="dark"] {
+  color-scheme: dark;
   --color-background-body: #1b1b1b;
   --color-background-surface: #262626;
   --color-background-card: #1b1b1b;

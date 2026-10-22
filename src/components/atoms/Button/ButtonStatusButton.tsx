@@ -76,7 +76,10 @@ export const ButtonStatusButton = forwardRef<
   }, ref) {
   const labels = resolveStatusLabels(children, statusLabels);
   const label = labels[status];
-  const isDisabled = disabled || status === "loading" || (status === "error" && disableOnError);
+  // Busy states keep the button focusable: native `disabled` would drop keyboard focus to <body>
+  // mid-submit. `aria-disabled` plus the click guard below block activation instead.
+  const isBusyDisabled = !disabled && (status === "loading" || (status === "error" && disableOnError));
+  const isDisabled = disabled || isBusyDisabled;
   const paint = getStatusPaint(status, role);
 
   return (
@@ -85,7 +88,8 @@ export const ButtonStatusButton = forwardRef<
       ref={ref}
       type={type}
       layout
-      disabled={isDisabled}
+      disabled={disabled}
+      aria-disabled={isBusyDisabled || undefined}
       aria-busy={status === "loading" || undefined}
       aria-live="polite"
       aria-label={ariaLabel}
@@ -108,7 +112,14 @@ export const ButtonStatusButton = forwardRef<
       )}
       whileTap={isDisabled ? undefined : { scale: 0.98 }}
       transition={statusMorphTransition}
-      onClick={onClick}
+      onClick={(event) => {
+        if (isBusyDisabled) {
+          // Also stops a submit button from submitting its form again.
+          event.preventDefault();
+          return;
+        }
+        onClick?.(event);
+      }}
       id={id}
       name={name}
       form={form}

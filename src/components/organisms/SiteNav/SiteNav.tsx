@@ -167,6 +167,22 @@ function slotsLayoutClass(
  * **specimen** (`placement="inline"` without a scroller). Collapse ownership lives in
  * {@link useSiteNavCollapse}.
  */
+/**
+ * While the compact bar is pinned over the page, keep the focused element out from under it:
+ * browsers honour `scroll-padding-top` when they scroll a newly focused element into view.
+ */
+function usePinnedScrollPadding(pinned: boolean, scrollContainer?: RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    if (!pinned || typeof document === "undefined") return;
+    const scroller = scrollContainer?.current ?? document.documentElement;
+    const previous = scroller.style.scrollPaddingTop;
+    scroller.style.scrollPaddingTop = "calc(var(--site-nav-height) + var(--spacing) * 4)";
+    return () => {
+      scroller.style.scrollPaddingTop = previous;
+    };
+  }, [pinned, scrollContainer]);
+}
+
 function SiteNavRoot({
   start,
   middle,
@@ -205,6 +221,8 @@ function SiteNavRoot({
   const hasScrollContainer = scrollContainer != null;
   /** Page / scroll-panel chrome: compact pins; expanded stays in normal document flow. */
   const isPageChrome = placement === "fixed" || hasScrollContainer;
+
+  usePinnedScrollPadding(isPageChrome && compact, scrollContainer);
 
   const hasMobile = mobile != null;
   const hasStart = start != null;

@@ -91,10 +91,8 @@ export function Field({
   const descriptionId = description != null ? `${fieldId}-description` : undefined;
   const legendId = label != null ? `${fieldId}-legend` : undefined;
 
-  const wiredChild =
-    singleChild != null && controlId != null && (singleChild.props as { id?: string }).id == null
-      ? cloneElement(singleChild, { id: controlId } as { id: string })
-      : singleChild;
+  // The description must reach the control itself: `aria-describedby` on a wrapper <div> is ignored.
+  const wiredChild = singleChild != null ? wireControl(singleChild, controlId, descriptionId) : singleChild;
 
   const controlStack =
     childCount > 1 ? (
@@ -116,8 +114,8 @@ export function Field({
 
   if (label == null) {
     return (
-      <div className={cn(fieldVerticalStackClasses, className)} aria-describedby={descriptionId}>
-        {children}
+      <div className={cn(fieldVerticalStackClasses, className)}>
+        {childCount > 1 ? children : (wiredChild ?? children)}
         {descriptionNode}
       </div>
     );
@@ -142,7 +140,7 @@ export function Field({
 
   if (orientation === "horizontal") {
     return (
-      <div className={cn(fieldHorizontalStackClasses, className)} aria-describedby={descriptionId}>
+      <div className={cn(fieldHorizontalStackClasses, className)}>
         <label
           htmlFor={controlId}
           className={cn(fieldHorizontalLabelColumnClasses, fieldLabelClassesFor(disabled))}
@@ -158,7 +156,7 @@ export function Field({
   }
 
   return (
-    <div className={cn(fieldVerticalStackClasses, className)} aria-describedby={descriptionId}>
+    <div className={cn(fieldVerticalStackClasses, className)}>
       <label htmlFor={controlId} className={fieldLabelClassesFor(disabled)}>
         {label}
       </label>
@@ -166,4 +164,15 @@ export function Field({
       {descriptionNode}
     </div>
   );
+}
+
+/** Gives the single control its id (unless it has one) and appends the description to its `aria-describedby`. */
+function wireControl(child: ReactElement, controlId: string | undefined, descriptionId: string | undefined) {
+  const props = child.props as { id?: string; "aria-describedby"?: string };
+  const wired: { id?: string; "aria-describedby"?: string } = {};
+  if (props.id == null && controlId != null) wired.id = controlId;
+  if (descriptionId != null) {
+    wired["aria-describedby"] = [props["aria-describedby"], descriptionId].filter(Boolean).join(" ");
+  }
+  return Object.keys(wired).length > 0 ? cloneElement(child, wired) : child;
 }

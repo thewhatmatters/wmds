@@ -112,6 +112,13 @@ export const AlertDialogBlocking: Story = {
       expect(queryPortal().getByRole("alertdialog")).toBeInTheDocument();
     });
 
+    // A press on the scrim neither closes it nor moves focus out of it.
+    const alert = queryPortal().getByRole("alertdialog");
+    await waitFor(() => expect(alert).toContainElement(document.activeElement as HTMLElement));
+    await userEvent.pointer({ keys: "[MouseLeft]", target: alert.parentElement as HTMLElement, coords: { clientX: 4, clientY: 4 } });
+    expect(queryPortal().getByRole("alertdialog")).toBeInTheDocument();
+    expect(alert).toContainElement(document.activeElement as HTMLElement);
+
     await userEvent.click(queryPortal().getByRole("button", { name: /^delete project$/i }));
 
     await waitFor(() => {

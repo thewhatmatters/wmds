@@ -1,6 +1,5 @@
 import {
   useCallback,
-  useEffect,
   useRef,
   type MouseEvent,
   type ReactNode,
@@ -8,13 +7,7 @@ import {
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { cn } from "../../../lib/cn";
-import {
-  focusInitialElement,
-  focusMainContent,
-  inertPageBehind,
-  lockBodyScroll,
-  trapFocus,
-} from "../../../lib/dialogOverlay";
+import { useOverlayLifecycle } from "../../../lib/dialogOverlay";
 import { motionTransitionProp } from "../../../lib/motion";
 import {
   overlayPanelBodyScrollClasses,
@@ -100,72 +93,17 @@ function SheetPortal({
 
   const reduceMotion = useReducedMotion();
   const panelRef = useRef<HTMLDivElement>(null);
-  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const close = useCallback(() => {
     onOpenChange(false);
   }, [onOpenChange]);
 
-  useEffect(() => {
-    if (!open) {
-      return undefined;
-    }
-
-    previousFocusRef.current =
-      triggerRef.current ?? (document.activeElement as HTMLElement | null);
-
-    const unlockScroll = lockBodyScroll();
-    const panel = panelRef.current;
-    const restorePage = panel != null ? inertPageBehind(panel) : () => undefined;
-
-    let releaseFocusTrap: () => void = () => {};
-    let initialFocusFrame = 0;
-    if (panel != null) {
-      releaseFocusTrap = trapFocus(panel);
-      initialFocusFrame = window.requestAnimationFrame(() => {
-        focusInitialElement(panel);
-      });
-    }
-
-    return () => {
-      window.cancelAnimationFrame(initialFocusFrame);
-      releaseFocusTrap();
-      restorePage();
-      unlockScroll();
-      const previous = previousFocusRef.current;
-      if (previous != null && previous.isConnected && previous !== document.body) {
-        previous.focus();
-      } else {
-        // A deep link has no opener to return to. Move focus once the page is
-        // un-inert and the close has committed, so it is not dropped to <body>.
-        focusMainContent();
-        window.requestAnimationFrame(() => {
-          const active = document.activeElement;
-          if (active == null || active === document.body || panel?.contains(active)) {
-            focusMainContent();
-          }
-        });
-      }
-    };
-  }, [open, triggerRef]);
-
-  useEffect(() => {
-    if (!open || !dismissOnEscape) {
-      return undefined;
-    }
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        close();
-      }
-    }
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [close, dismissOnEscape, open]);
+  useOverlayLifecycle(panelRef, {
+    open,
+    onClose: close,
+    closeOnEscape: dismissOnEscape,
+    returnFocusRef: triggerRef,
+  });
 
   function handleBackdropClick(event: MouseEvent<HTMLDivElement>) {
     if (!dismissOnBackdrop) {

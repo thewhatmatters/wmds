@@ -99,6 +99,9 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
   const [uncontrolledChecked, setUncontrolledChecked] = useState(defaultChecked ?? false);
   const resolvedChecked = isControlled ? Boolean(checked) : uncontrolledChecked;
   const isDisabled = disabled || loading;
+  // Loading keeps the input focusable: native `disabled` would drop keyboard focus to <body>
+  // mid-toggle. `aria-disabled` plus the change guard below block toggling instead.
+  const isBusyDisabled = loading && !disabled;
   const hasMessage = message != null && message.length > 0 && status != null;
   const messageId = hasMessage ? `${controlId}-message` : undefined;
   const descriptionId =
@@ -107,7 +110,7 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
     [rest["aria-describedby"], descriptionId, messageId].filter(Boolean).join(" ") || undefined;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (readOnly) {
+    if (readOnly || isBusyDisabled) {
       event.preventDefault();
       return;
     }
@@ -145,7 +148,8 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
         role="switch"
         checked={isControlled ? checked : undefined}
         defaultChecked={!isControlled ? defaultChecked : undefined}
-        disabled={isDisabled}
+        disabled={disabled}
+        aria-disabled={isBusyDisabled || undefined}
         readOnly={readOnly}
         aria-invalid={status === "error" || undefined}
         aria-describedby={describedBy}

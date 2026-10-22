@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Copy } from "lucide-react";
-import { expect, spyOn, userEvent, waitFor } from "storybook/test";
+import { expect, fn, spyOn, userEvent, waitFor } from "storybook/test";
 import { Button, buttonStatusHoldMs, type ButtonStatus } from "../components/atoms/Button/Button";
 
 /**
@@ -143,5 +143,42 @@ export const ExternalLink: Story = {
     const x = canvas.getByRole("link", { name: "Twitter/X (opens in a new tab)" });
     expect(x).toHaveAttribute("target", "_blank");
     expect(x.querySelector("svg")).toBeNull();
+  },
+};
+
+const saveSpy = fn();
+
+function SaveButton({ onSave }: { onSave: () => void }) {
+  const [status, setStatus] = useState<ButtonStatus>("idle");
+  return (
+    <Button
+      role="primary"
+      size="sm"
+      status={status}
+      onClick={() => {
+        onSave();
+        setStatus("loading");
+      }}
+    >
+      Save
+    </Button>
+  );
+}
+
+export const LoadingKeepsFocus: Story = {
+  name: "a loading button keeps keyboard focus and ignores presses",
+  render: () => <SaveButton onSave={saveSpy} />,
+  play: async ({ canvas }) => {
+    saveSpy.mockClear();
+    const button = canvas.getByRole("button", { name: "Save" });
+    button.focus();
+    await userEvent.keyboard("{Enter}");
+    await waitFor(() => expect(button).toHaveAttribute("data-status", "loading"));
+    expect(button).not.toBeDisabled();
+    expect(button).toHaveAttribute("aria-disabled", "true");
+    expect(button).toHaveFocus();
+
+    await userEvent.keyboard("{Enter}");
+    expect(saveSpy).toHaveBeenCalledTimes(1);
   },
 };

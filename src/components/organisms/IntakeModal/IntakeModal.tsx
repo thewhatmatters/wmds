@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, type ReactNode } from "react";
+import { useCallback, useId, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -8,7 +8,7 @@ import { Button } from "../../atoms/Button/Button";
 import { IconButton } from "../../atoms/IconButton/IconButton";
 import { StepProgress } from "../../molecules/StepProgress/StepProgress";
 import { cn } from "../../../lib/cn";
-import { focusInitialElement, lockBodyScroll, trapFocus } from "../../../lib/dialogOverlay";
+import { useOverlayLifecycle } from "../../../lib/dialogOverlay";
 import { motionTransitionProp } from "../../../lib/motion";
 import {
   intakeModalBodyClasses,
@@ -46,6 +46,11 @@ export interface IntakeModalProps {
   backDisabled?: boolean;
   continueDisabled?: boolean;
   continueLabel?: string;
+  /**
+   * Escape closes the modal. Set `false` when closing would lose answers the visitor has typed
+   * (the Close button still closes). Default `true`.
+   */
+  dismissOnEscape?: boolean;
   children?: ReactNode;
   className?: IntakeModalLayoutClassName;
 }
@@ -69,58 +74,23 @@ export function IntakeModal({
   backDisabled = false,
   continueDisabled = false,
   continueLabel = "Continue",
+  dismissOnEscape = true,
   children,
   className,
 }: IntakeModalProps) {
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
-  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const close = useCallback(() => {
     onOpenChange(false);
   }, [onOpenChange]);
 
-  useEffect(() => {
-    if (!open) {
-      return undefined;
-    }
-
-    previousFocusRef.current = document.activeElement as HTMLElement | null;
-    const unlockScroll = lockBodyScroll();
-    const panel = panelRef.current;
-    let releaseFocusTrap: () => void = () => undefined;
-
-    if (panel != null) {
-      releaseFocusTrap = trapFocus(panel);
-      window.requestAnimationFrame(() => {
-        focusInitialElement(panel, '[aria-label="Close"]');
-      });
-    }
-
-    return () => {
-      releaseFocusTrap();
-      unlockScroll();
-      previousFocusRef.current?.focus?.();
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) {
-      return undefined;
-    }
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        close();
-      }
-    }
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [close, open]);
+  useOverlayLifecycle(panelRef, {
+    open,
+    onClose: close,
+    closeOnEscape: dismissOnEscape,
+    initialFocus: '[aria-label="Close"]',
+  });
 
   if (typeof document === "undefined") {
     return null;

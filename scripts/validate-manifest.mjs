@@ -1,6 +1,7 @@
 /**
  * Check the package against src/package.manifest.ts — the manifest is read, not copied.
  *
+ * - manifest lib helpers and the values src/index.ts exports from src/lib/ match, both ways
  * - every manifest component has a folder that src/index.ts exports from
  * - nothing is exported from a component folder the manifest does not list
  * - planned components are not exported yet
@@ -33,12 +34,17 @@ const fail = (message) => errors.push(message);
 
 // --- src/index.ts ↔ manifest
 const exportedValues = new Set();
+const exportedLibValues = new Set();
 const exportedFolders = new Map(); // "atoms/Button" → tier
 for (const [, typeOnly, names, from] of read("src/index.ts").matchAll(/export (type )?\{([^}]*)\} from "([^"]+)";/g)) {
   if (!typeOnly) {
     for (const entry of names.split(",")) {
       const name = entry.trim();
-      if (name && !name.startsWith("type ")) exportedValues.add(name.split(/\s+as\s+/).pop());
+      if (name && !name.startsWith("type ")) {
+        const exported = name.split(/\s+as\s+/).pop();
+        exportedValues.add(exported);
+        if (from.startsWith("./lib/")) exportedLibValues.add(exported);
+      }
     }
   }
   const folder = /^\.\/components\/(atoms|molecules|organisms)\/([^/]+)\//.exec(from);
@@ -47,6 +53,13 @@ for (const [, typeOnly, names, from] of read("src/index.ts").matchAll(/export (t
 
 for (const { name } of manifest.libExports) {
   if (!exportedValues.has(name)) fail(`src/index.ts does not export lib helper "${name}"`);
+}
+
+const manifestLibNames = new Set(manifest.libExports.map(({ name }) => name));
+for (const name of exportedLibValues) {
+  if (!manifestLibNames.has(name)) {
+    fail(`src/index.ts exports lib helper "${name}" but the manifest does not list it in libExports`);
+  }
 }
 
 for (const [tier, names] of Object.entries(manifest.atomicExports)) {

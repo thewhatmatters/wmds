@@ -1,12 +1,12 @@
 import {
   useCallback,
-  useEffect,
   useRef,
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "../../../lib/cn";
+import { useOverlayLifecycle } from "../../../lib/dialogOverlay";
 import {
   overlayPanelBodyScrollClasses,
   overlayPanelChromeClasses,
@@ -75,42 +75,18 @@ function PanelPortal({
   const { open, onOpenChange, dismissOnEscape, triggerRef } = usePanelContext("PanelPortal");
 
   const panelRef = useRef<HTMLDivElement>(null);
-  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const close = useCallback(() => {
     onOpenChange(false);
   }, [onOpenChange]);
 
-  useEffect(() => {
-    if (!open) {
-      return undefined;
-    }
-
-    previousFocusRef.current =
-      triggerRef.current ?? (document.activeElement as HTMLElement | null);
-
-    return () => {
-      previousFocusRef.current?.focus?.();
-    };
-  }, [open, triggerRef]);
-
-  useEffect(() => {
-    if (!open || !dismissOnEscape) {
-      return undefined;
-    }
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        close();
-      }
-    }
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [close, dismissOnEscape, open]);
+  useOverlayLifecycle(panelRef, {
+    open,
+    onClose: close,
+    modal: false,
+    closeOnEscape: dismissOnEscape,
+    returnFocusRef: triggerRef,
+  });
 
   if (typeof document === "undefined") {
     return null;
