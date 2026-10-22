@@ -1,5 +1,5 @@
 import { useRender } from "@base-ui/react/use-render";
-import type { ButtonHTMLAttributes, ReactElement, ReactNode } from "react";
+import { forwardRef, type ButtonHTMLAttributes, type ReactElement, type ReactNode, type Ref } from "react";
 import { Check } from "lucide-react";
 import { cn } from "../../../lib/cn";
 import {
@@ -41,7 +41,7 @@ export interface DropdownItemProps
 /**
  * Dropdown row — start | label | end. Used by **Select** listbox options and future menu patterns.
  */
-export function DropdownItem({
+export const DropdownItem = forwardRef<HTMLButtonElement, DropdownItemProps>(function DropdownItem({
   children,
   start,
   end,
@@ -53,7 +53,7 @@ export function DropdownItem({
   type = "button",
   render,
   ...props
-}: DropdownItemProps) {
+}, ref) {
   const trailing = selected ? (
     <span className={dropdownItemSelectedCheckClasses} aria-hidden>
       <Check strokeWidth={2} />
@@ -64,8 +64,9 @@ export function DropdownItem({
 
   const rowClassName = cn(
     dropdownItemButtonClasses,
-    selected && "hover:bg-transparent focus-visible:bg-transparent",
-    active && !selected && dropdownItemActiveClasses,
+    // The active row (keyboard or pointer) is always filled, a selected one included, so focus is visible.
+    selected && !active && "hover:bg-transparent",
+    active && dropdownItemActiveClasses,
     disabled && dropdownItemDisabledClasses,
     className,
   );
@@ -88,6 +89,7 @@ export function DropdownItem({
   return (
     <DropdownItemShell
       {...props}
+      elementRef={ref}
       render={render}
       type={type}
       disabled={disabled}
@@ -96,18 +98,21 @@ export function DropdownItem({
       {content}
     </DropdownItemShell>
   );
-}
+});
 
 interface DropdownItemShellProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
+  /** Not `ref`: a plain function component only receives `ref` as a prop on React 19. */
+  elementRef?: Ref<HTMLButtonElement>;
   render?: ReactElement;
   className: string;
   children: ReactNode;
 }
 
 /** A `<button>` by default, or the row composed onto `render` — a link in a menu of links. */
-function DropdownItemShell({ render, type, disabled, ...props }: DropdownItemShellProps) {
+function DropdownItemShell({ elementRef, render, type, disabled, ...props }: DropdownItemShellProps) {
   return useRender({
     render,
+    ref: elementRef,
     defaultTagName: "button",
     props: render
       ? { ...props, "aria-disabled": disabled ? true : undefined }

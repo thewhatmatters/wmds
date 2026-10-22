@@ -1,16 +1,4 @@
-import {
-  Fragment,
-  useCallback,
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-  type FocusEvent,
-  type KeyboardEvent,
-  type ReactElement,
-} from "react";
+import { Fragment, useRef, type ReactElement } from "react";
 import { useRender } from "@base-ui/react/use-render";
 import { ChevronRight, Ellipsis } from "lucide-react";
 import { cn } from "../../../lib/cn";
@@ -18,6 +6,7 @@ import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
 import { IconButton } from "../../atoms/IconButton/IconButton";
 import { Dropdown } from "../Dropdown/Dropdown";
 import { measureDropdownMenuStyle } from "../Dropdown/dropdownMenuPosition";
+import { useDropdownMenu } from "../Dropdown/useDropdownMenu";
 import {
   breadcrumbItemClasses,
   breadcrumbLinkClasses,
@@ -171,153 +160,55 @@ function BreadcrumbMore({
   label: string;
   renderLink: (item: BreadcrumbLinkItem) => ReactElement;
 }) {
-  const menuId = useId();
-  const rootRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLDivElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const [open, setOpen] = useState(false);
-  const [menuStyle, setMenuStyle] = useState<CSSProperties | null>(null);
-  const focusOnOpenRef = useRef(false);
-
-  const position = useCallback(() => {
-    const trigger = triggerRef.current;
-    if (trigger == null) return;
-    setMenuStyle(
-      measureDropdownMenuStyle(
-        trigger,
-        items.map((item) => ({ label: item.label })),
-        { align: "start", widthMode: "content" },
-      ),
-    );
-  }, [items]);
-
-  const close = useCallback((returnFocus: boolean) => {
-    setOpen(false);
-    setMenuStyle(null);
-    if (returnFocus) triggerRef.current?.querySelector("button")?.focus();
-  }, []);
-
-  useLayoutEffect(() => {
-    if (!open) return undefined;
-    position();
-    window.addEventListener("resize", position);
-    window.addEventListener("scroll", position, true);
-    return () => {
-      window.removeEventListener("resize", position);
-      window.removeEventListener("scroll", position, true);
-    };
-  }, [open, position]);
-
-  // Opening moves focus to the first link, so the menu is in reach from the keyboard.
-  useEffect(() => {
-    if (!open || menuStyle == null || !focusOnOpenRef.current) return;
-    focusOnOpenRef.current = false;
-    menuRef.current?.querySelector<HTMLElement>("a, [href], button")?.focus();
-  }, [open, menuStyle]);
-
-  useEffect(() => {
-    if (!open) return undefined;
-    function handlePointerDown(event: MouseEvent) {
-      if (
-        rootRef.current != null &&
-        !rootRef.current.contains(event.target as Node)
-      )
-        close(false);
-    }
-    document.addEventListener("mousedown", handlePointerDown);
-    return () => document.removeEventListener("mousedown", handlePointerDown);
-  }, [open, close]);
-
-  function links(): HTMLElement[] {
-    return [
-      ...(menuRef.current?.querySelectorAll<HTMLElement>("a, [href], button") ??
-        []),
-    ];
-  }
-
-  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    if (!open) {
-      if (event.key === "ArrowDown") {
-        event.preventDefault();
-        focusOnOpenRef.current = true;
-        setOpen(true);
-      }
-      return;
-    }
-    if (event.key === "Escape") {
-      event.preventDefault();
-      close(true);
-      return;
-    }
-    if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
-    const all = links();
-    if (all.length === 0) return;
-    event.preventDefault();
-    const index = all.indexOf(document.activeElement as HTMLElement);
-    const step = event.key === "ArrowDown" ? 1 : -1;
-    const next =
-      index === -1
-        ? step === 1
-          ? 0
-          : all.length - 1
-        : (index + step + all.length) % all.length;
-    all[next]?.focus();
-  }
-
-  // Tabbing out of the control and its menu closes the menu.
-  function handleBlur(event: FocusEvent<HTMLDivElement>) {
-    if (!open) return;
-    const next = event.relatedTarget as Node | null;
-    if (next == null || !rootRef.current?.contains(next)) close(false);
-  }
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const rows = items.map((item) => ({ label: item.label, disabled: !hasHref(item) }));
+  const menu = useDropdownMenu({
+    rows,
+    triggerRef,
+    focus: "items",
+    measure: () =>
+      triggerRef.current == null
+        ? null
+        : measureDropdownMenuStyle(
+            triggerRef.current,
+            items.map((item) => ({ label: item.label })),
+            { align: "start", widthMode: "content" },
+          ),
+  });
 
   return (
-    <div
-      ref={rootRef}
-      className={breadcrumbMoreClasses}
-      onKeyDown={handleKeyDown}
-      onBlur={handleBlur}
-    >
-      <div ref={triggerRef} className="inline-flex">
-        <IconButton
-          size="sm"
-          icon={<Ellipsis />}
-          aria-label={label}
-          title=""
-          aria-expanded={open}
-          aria-controls={open ? menuId : undefined}
-          onClick={() => {
-            if (open) {
-              close(false);
-            } else {
-              focusOnOpenRef.current = true;
-              setOpen(true);
-            }
-          }}
-        />
-      </div>
-      {open && menuStyle != null ? (
-        <div ref={menuRef}>
-          <Dropdown.Menu id={menuId} aria-label={label} style={menuStyle}>
-            {items.map((item) => (
-              <li key={itemKey(item)}>
-                {hasHref(item) ? (
-                  <Dropdown.Item
-                    truncate={false}
-                    render={renderLink(item)}
-                    onClick={() => close(false)}
-                  >
-                    {item.label}
-                  </Dropdown.Item>
-                ) : (
-                  <Dropdown.Item truncate={false} disabled>
-                    {item.label}
-                  </Dropdown.Item>
-                )}
-              </li>
-            ))}
-          </Dropdown.Menu>
-        </div>
+    <div {...menu.rootProps} className={breadcrumbMoreClasses}>
+      <IconButton
+        ref={triggerRef}
+        size="sm"
+        icon={<Ellipsis />}
+        aria-label={label}
+        title=""
+        aria-expanded={menu.triggerProps["aria-expanded"]}
+        aria-controls={menu.triggerProps["aria-controls"]}
+        onClick={menu.toggle}
+      />
+      {menu.open && menu.menuStyle != null ? (
+        <Dropdown.Menu {...menu.menuProps} aria-label={label}>
+          {items.map((item, index) => (
+            <li key={itemKey(item)}>
+              {hasHref(item) ? (
+                <Dropdown.Item
+                  {...menu.rowProps(index)}
+                  truncate={false}
+                  render={renderLink(item)}
+                  onClick={() => menu.close()}
+                >
+                  {item.label}
+                </Dropdown.Item>
+              ) : (
+                <Dropdown.Item {...menu.rowProps(index)} truncate={false} disabled>
+                  {item.label}
+                </Dropdown.Item>
+              )}
+            </li>
+          ))}
+        </Dropdown.Menu>
       ) : null}
     </div>
   );

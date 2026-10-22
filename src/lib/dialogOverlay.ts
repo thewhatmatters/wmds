@@ -226,7 +226,8 @@ export function useOverlayLifecycle(
     });
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key !== "Escape" || event.defaultPrevented || overlayStack.at(-1) !== entry) {
+      // An Escape during text composition (IME) cancels the composition, not the overlay.
+      if (event.key !== "Escape" || event.isComposing || event.defaultPrevented || overlayStack.at(-1) !== entry) {
         return;
       }
       if (!closeOnEscapeRef.current) return;
