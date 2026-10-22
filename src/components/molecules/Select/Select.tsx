@@ -58,6 +58,8 @@ export interface SelectProps {
   className?: SelectLayoutClassName;
   id?: string;
   "aria-label"?: string;
+  /** Extra ids that describe the trigger (Field passes its description here); joined with `description`. */
+  "aria-describedby"?: string;
 }
 
 function assertSelectA11y(
@@ -96,11 +98,13 @@ export function Select({
   className,
   id: idProp,
   "aria-label": ariaLabel,
+  "aria-describedby": ariaDescribedBy,
 }: SelectProps) {
   const generatedId = useId();
   const controlId = idProp ?? generatedId;
   const listboxId = `${controlId}-listbox`;
   const descriptionId = description != null ? `${controlId}-description` : undefined;
+  const describedBy = [ariaDescribedBy, descriptionId].filter(Boolean).join(" ") || undefined;
   const rootRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -257,7 +261,7 @@ export function Select({
           disabled={disabled}
           aria-label={label == null ? ariaLabel : undefined}
           aria-labelledby={label != null ? `${controlId}-label` : undefined}
-          aria-describedby={descriptionId}
+          aria-describedby={describedBy}
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-controls={listboxId}

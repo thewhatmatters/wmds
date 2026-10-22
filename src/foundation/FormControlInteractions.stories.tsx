@@ -2,9 +2,11 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor } from "storybook/test";
 import { Checkbox } from "../components/atoms/Checkbox/Checkbox";
+import { Input } from "../components/atoms/Input/Input";
 import { Switch } from "../components/atoms/Switch/Switch";
 import { TextArea } from "../components/atoms/TextArea/TextArea";
 import { CheckboxGroup } from "../components/molecules/CheckboxGroup/CheckboxGroup";
+import { Field } from "../components/molecules/Field/Field";
 import { RadioGroup } from "../components/molecules/RadioGroup/RadioGroup";
 import { SegmentedControl } from "../components/molecules/SegmentedControl/SegmentedControl";
 
@@ -189,5 +191,27 @@ export const TextAreaSoloFocusRing: Story = {
     // The shell's ring is the only focus indicator — no browser outline on the field inside it.
     await expect(getComputedStyle(field).outlineStyle).toBe("none");
     await waitFor(() => expect(getComputedStyle(shell).boxShadow).not.toBe("none"));
+  },
+};
+
+export const FieldDescription: Story = {
+  name: "Field — description describes the control",
+  render: () => (
+    <div className="flex w-80 flex-col gap-6">
+      <Field label="Email" description="We only use it to reply.">
+        <Input type="email" aria-describedby="email-extra" />
+      </Field>
+      <span id="email-extra" hidden>
+        Work address preferred.
+      </span>
+      <Field label="Team" orientation="horizontal" description="Shown on your profile.">
+        <Input />
+      </Field>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const email = canvas.getByRole("textbox", { name: "Email" });
+    expect(email).toHaveAccessibleDescription("Work address preferred. We only use it to reply.");
+    expect(canvas.getByRole("textbox", { name: "Team" })).toHaveAccessibleDescription("Shown on your profile.");
   },
 };
