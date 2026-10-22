@@ -97,6 +97,7 @@ export function useDropdownMenu({
     ({ returnFocus = false }: { returnFocus?: boolean } = {}) => {
       setOpen(false);
       setMenuStyle(null);
+      typeAhead.current = { text: "", at: 0 };
       if (returnFocus) triggerRef.current?.focus();
     },
     [triggerRef],

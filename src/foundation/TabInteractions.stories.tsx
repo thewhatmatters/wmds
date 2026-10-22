@@ -39,26 +39,20 @@ export const OverflowSelectionPromotion: Story = {
     const tablist = canvas.getByRole("tablist", { name: /settings pages/i });
 
     await waitFor(() => {
-      expect(within(tablist).getByRole("button", { name: /more/i })).toBeInTheDocument();
+      expect(canvas.getByRole("button", { name: /more/i })).toBeInTheDocument();
     });
 
-    await userEvent.click(within(tablist).getByRole("button", { name: /more/i }));
+    await userEvent.click(canvas.getByRole("button", { name: /more/i }));
     await userEvent.click(canvas.getByRole("menuitem", { name: /api keys/i }));
 
     await waitFor(() => {
       const promoted = within(tablist).getByRole("tab", { name: /api keys/i });
-      const more = within(tablist).getByRole("button", { name: /more/i });
+      const more = canvas.getByRole("button", { name: /more/i });
       expect(promoted).toHaveAttribute("aria-selected", "true");
-      expect(promoted.nextElementSibling).toBe(more);
+      // The promoted tab takes the last slot, right before More (which sits outside the tablist).
+      expect(tablist.lastElementChild).toBe(promoted);
+      expect(tablist.nextElementSibling).toBe(more);
     });
   },
 };
 
-/**
- * Known accessibility violations — listed in docs/audits/2026-10-03.md.
- * Checks fail on every other story. These report without failing until the component is fixed.
- * Remove a story from this list when it passes.
- */
-for (const story of [OverflowSelectionPromotion]) {
-  story.parameters = { ...story.parameters, a11y: { test: "todo" } };
-}

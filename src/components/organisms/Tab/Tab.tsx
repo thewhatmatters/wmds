@@ -213,22 +213,22 @@ function TabGroup({
           className={tabListClasses}
         >
           <TabContext.Provider value={context}>{visibleItems}</TabContext.Provider>
-          {overflowItems.length > 0 ? (
-            <button
-              ref={overflow.moreRef}
-              type="button"
-              aria-haspopup="menu"
-              aria-expanded={menu.triggerProps["aria-expanded"]}
-              aria-controls={menu.triggerProps["aria-controls"]}
-              className={cn(tabItemClasses, tabItemSizeClasses[size])}
-              onClick={menu.toggle}
-            >
-              <span>More</span>
-              <ChevronDown className={tabMoreIconClasses} strokeWidth={2} aria-hidden />
-            </button>
-          ) : null}
         </div>
       </LayoutGroup>
+      {overflowItems.length > 0 ? (
+        <button
+          ref={overflow.moreRef}
+          type="button"
+          aria-haspopup="menu"
+          aria-expanded={menu.triggerProps["aria-expanded"]}
+          aria-controls={menu.triggerProps["aria-controls"]}
+          className={cn(tabItemClasses, tabItemSizeClasses[size])}
+          onClick={menu.toggle}
+        >
+          <span>More</span>
+          <ChevronDown className={tabMoreIconClasses} strokeWidth={2} aria-hidden />
+        </button>
+      ) : null}
 
       <div className={tabMeasureRailClasses} aria-hidden>
         {items.map((item) => (
