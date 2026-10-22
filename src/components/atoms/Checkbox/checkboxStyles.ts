@@ -97,7 +97,7 @@ export const checkboxRowClasses = cn(checkboxRowBaseClasses, checkboxRowLabelOnl
 export const checkboxRowDisabledClasses = "cursor-not-allowed";
 
 export const checkboxHiddenInputClasses =
-  "peer absolute inset-0 z-10 size-full cursor-pointer opacity-0 disabled:cursor-not-allowed";
+  "peer absolute inset-0 z-10 size-full cursor-pointer opacity-0 disabled:cursor-not-allowed aria-disabled:cursor-not-allowed";
 
 export const checkboxFocusRingClasses =
   "peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-focus-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-body";

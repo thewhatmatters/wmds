@@ -1,4 +1,4 @@
-import { createContext, useContext, useId, useMemo, useState, type ReactElement, type ReactNode } from "react";
+import { createContext, useContext, useId, useMemo, useRef, useState, type ReactElement, type ReactNode } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { Button } from "../../atoms/Button/Button";
 import { SectionCaption } from "../../atoms/SectionCaption/SectionCaption";
@@ -138,17 +138,30 @@ function FilterPanelGroups() {
   );
 }
 
+const focusableSelector = "button:not([disabled]), input:not([disabled]), a[href]";
+
 /** The side rail: the caption with Clear all at its end, over the groups. */
 function FilterPanelRail({ className }: FilterPanelRailProps) {
   const { labels, activeCount, onSelectionChange } = useFilterPanel("FilterPanel.Rail");
   const headingId = useId();
+  const railRef = useRef<HTMLElement>(null);
+  const clearRef = useRef<HTMLButtonElement>(null);
+
+  // Clear all disables itself, which would drop keyboard focus to <body>: hand focus to the first group.
+  function clearAll() {
+    onSelectionChange({});
+    const next = [...(railRef.current?.querySelectorAll<HTMLElement>(focusableSelector) ?? [])].find(
+      (element) => element !== clearRef.current,
+    );
+    next?.focus();
+  }
 
   return (
-    <aside aria-labelledby={headingId} className={className} data-filter-panel-rail="">
+    <aside ref={railRef} aria-labelledby={headingId} className={className} data-filter-panel-rail="">
       <SectionCaption
         id={headingId}
         end={
-          <Button role="ghost" size="xs" disabled={activeCount === 0} onClick={() => onSelectionChange({})}>
+          <Button ref={clearRef} role="ghost" size="xs" disabled={activeCount === 0} onClick={clearAll}>
             {labels.clear}
           </Button>
         }
@@ -181,6 +194,13 @@ function FilterPanelTrigger({ icon, className }: FilterPanelTriggerProps) {
 function FilterPanelSheet() {
   const { labels, activeCount, onSelectionChange, resultsLabel, sheetOpen, setSheetOpen } =
     useFilterPanel("FilterPanel.Sheet");
+  const showRef = useRef<HTMLButtonElement>(null);
+
+  // Clear all disables itself, which would drop keyboard focus to <body>: hand focus to the results button.
+  function clearAll() {
+    onSelectionChange({});
+    showRef.current?.focus();
+  }
 
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
@@ -188,10 +208,10 @@ function FilterPanelSheet() {
         title={labels.title}
         footer={
           <div className="flex items-center justify-end gap-2">
-            <Button role="secondary" size="sm" disabled={activeCount === 0} onClick={() => onSelectionChange({})}>
+            <Button role="secondary" size="sm" disabled={activeCount === 0} onClick={clearAll}>
               {labels.clear}
             </Button>
-            <Button role="primary" size="sm" onClick={() => setSheetOpen(false)}>
+            <Button ref={showRef} role="primary" size="sm" onClick={() => setSheetOpen(false)}>
               {labels.show(resultsLabel)}
             </Button>
           </div>
