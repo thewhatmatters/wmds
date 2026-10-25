@@ -46,8 +46,8 @@ export const badgeStatusDotPulseClass = "animate-status-dot-pulse";
 
 /** Cluster heights so a status pill sits with Chip, not the 20px label badge. */
 export const badgeStatusSizeClasses: Record<BadgeSize, string> = {
-  sm: `${clusterHeightClasses.sm} gap-1.5 rounded-full px-2.5 text-xs leading-none tabular-nums`,
-  md: `${clusterHeightClasses.md} gap-2 rounded-full px-3 text-sm leading-none tabular-nums`,
+  sm: `${clusterHeightClasses.sm} gap-1.5 rounded-[var(--radius-control)] px-2.5 text-xs leading-none tabular-nums`,
+  md: `${clusterHeightClasses.md} gap-2 rounded-[var(--radius-control)] px-3 text-sm leading-none tabular-nums`,
 };
 
 /** Shared shell — Astryx-style compact pill labels. */
@@ -109,8 +109,8 @@ export const badgeInteractiveOutlineClasses = "hover:border-fg";
 
 /** Label sizing — text-only and icon patterns share the same padding shell. */
 export const badgeLabelSizeClasses: Record<BadgeSize, string> = {
-  sm: "h-5 rounded-full px-2 text-xs leading-none",
-  md: "h-6 rounded-full px-2.5 text-sm leading-none",
+  sm: "h-5 rounded-[var(--radius-control)] px-2 text-xs leading-none",
+  md: "h-6 rounded-[var(--radius-control)] px-2.5 text-sm leading-none",
 };
 
 /** Gap between leading icon and label — only when `icon` is set. */
@@ -124,8 +124,8 @@ export const badgeIconGapClasses: Record<BadgeSize, string> = {
  * sm pairs with Avatar `xsm` (20px); md pairs with Avatar `sm` (24px).
  */
 export const badgeAvatarLabelSizeClasses: Record<BadgeSize, string> = {
-  sm: "h-5 gap-1 rounded-full py-0 pl-0 pr-2 text-xs leading-none",
-  md: "h-6 gap-1.5 rounded-full py-0 pl-0 pr-2.5 text-sm leading-none",
+  sm: "h-5 gap-1 rounded-[var(--radius-control)] py-0 pl-0 pr-2 text-xs leading-none",
+  md: "h-6 gap-1.5 rounded-[var(--radius-control)] py-0 pl-0 pr-2.5 text-sm leading-none",
 };
 
 export const badgeIconSizeClasses: Record<BadgeSize, string> = {

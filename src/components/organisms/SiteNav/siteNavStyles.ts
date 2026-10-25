@@ -72,7 +72,7 @@ export const siteNavBarStateClasses: Record<SiteNavState, string> = {
     "w-full border border-transparent bg-transparent px-[var(--grid-margin)] shadow-none",
   ),
   compact: cn(
-    "box-border rounded-full border border-elevation-edge bg-elevation-surface p-1.5 shadow-soft-sm backdrop-blur-md",
+    "box-border rounded-[var(--radius-control)] border border-elevation-edge bg-elevation-surface p-1.5 shadow-soft-sm backdrop-blur-md",
     "supports-[backdrop-filter]:bg-elevation-surface",
   ),
 };

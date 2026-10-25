@@ -83,7 +83,7 @@ export const accordionTrailingClusterClasses = "flex shrink-0 items-center gap-2
 
 /** Chevron column — decorative inside the disclosure button. */
 export const accordionChevronSlotClasses =
-  "-ml-2 flex size-7 shrink-0 items-center justify-center rounded-full text-muted";
+  "-ml-2 flex size-7 shrink-0 items-center justify-center rounded-[var(--radius-control)] text-muted";
 
 export const accordionChevronRotateClasses =
   "inline-flex " + motionTransition("medium") + " transition-transform";

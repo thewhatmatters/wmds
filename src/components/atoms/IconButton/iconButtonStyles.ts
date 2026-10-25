@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 
 /** Circular icon-only control — square hit target from {@link iconButtonSizeClasses}. */
-export const iconButtonShapeClass = "shrink-0 rounded-full";
+export const iconButtonShapeClass = "shrink-0 rounded-[var(--radius-control)]";
 
 /** Expanded disclosure/menu trigger — retain the ghost hover surface while open. */
 export const iconButtonExpandedStyle = {
@@ -20,7 +20,7 @@ export const iconButtonFabClasses = "shadow-soft-card";
 
 /** Pill shell for a compact row of ghost IconButtons — Pattern: toolbar group. */
 export const iconButtonToolbarGroupClasses =
-  "inline-flex items-center gap-1 rounded-full border border-border bg-surface p-1";
+  "inline-flex items-center gap-1 rounded-[var(--radius-control)] border border-border bg-surface p-1";
 
 /** Inset dismiss hit targets — removable Chip trailing × (pairs with sm | md | lg). */
 export const iconButtonInsetHitClasses: Record<"sm" | "md" | "lg", string> = {

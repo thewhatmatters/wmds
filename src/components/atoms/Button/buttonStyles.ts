@@ -22,7 +22,7 @@ export type ButtonSize = "xs" | "sm" | "md" | "lg";
 export type IconButtonSize = ButtonSize;
 
 /** All action buttons are pills by default — `layout="row"` for flat full-width detail lines. */
-export const buttonPillClass = "rounded-full";
+export const buttonPillClass = "rounded-[var(--radius-control)]";
 
 export const buttonLayouts = ["pill", "row", "nav"] as const;
 
@@ -151,7 +151,7 @@ export const buttonRowWidthClasses: Record<ButtonWidth, string> = {
 
 /** Inset nav row — **NavList** rows (icon + label + optional count as children). */
 export const buttonNavLayoutClasses =
-  "h-auto min-h-0 w-full justify-start gap-2.5 rounded-xl px-2.5 py-2 text-left " +
+  "h-auto min-h-0 w-full justify-start gap-2.5 rounded-[var(--radius-control-box)] px-2.5 py-2 text-left " +
   "text-sm font-normal leading-[var(--line-height-sm)] " +
   "focus-visible:ring-inset focus-visible:ring-offset-0";
 

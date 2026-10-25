@@ -4,7 +4,7 @@ import { cn } from "../../../lib/cn";
 
 /** Floating panel — fixed positioning applied by parent (Select, MoreMenu). */
 export const dropdownMenuClasses = cn(
-  "z-50 max-h-60 overflow-y-auto rounded-2xl border border-elevation-edge bg-surface p-0.5 shadow-soft-sm",
+  "z-50 max-h-60 overflow-y-auto rounded-[var(--radius-surface)] border border-elevation-edge bg-surface p-0.5 shadow-soft-sm",
   motionTransition("fast"),
 );
 

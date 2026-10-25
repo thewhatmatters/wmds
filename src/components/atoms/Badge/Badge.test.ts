@@ -39,7 +39,7 @@ describe("Badge status pill", () => {
     expect(pill?.getAttribute("data-status")).toBe("active");
     expect(pill?.className).toContain("bg-brand-tint");
     expect(pill?.className).toContain("text-brand-outline");
-    expect(pill?.className).toContain("rounded-full");
+    expect(pill?.className).toContain("rounded-[var(--radius-control)]");
     expect(pill?.className).toContain("tabular-nums");
     expect(pill?.className).toContain("h-7");
     expect(pill?.textContent).toBe("Active");

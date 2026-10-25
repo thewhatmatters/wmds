@@ -43,6 +43,8 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Theme** sets `color-scheme` (new): `light` on `:root` and `dark` under `[data-theme="dark"]`, so native scrollbars, form controls, and autofill follow the theme instead of staying light in dark mode.
 - **`docs/exports.json`** now lists all 41 lib helpers `src/index.ts` exports (was 12). Nothing was added to or removed from the package. `npm run validate:manifest` now also fails when `src/index.ts` exports a lib helper the manifest does not list.
 
+- **Design knobs for shape (new).** `--radius-control` (default pill) and `--radius-surface` (default 16px) reshape every control and surface. Set them on `:root`, or on a wrapper with Tailwind (`[--radius-control:4px]`), for rectangular buttons, inputs, selects, chips, badges and tabs, and squarer cards and menus. Avatars, dots, spinners, radios, switches and progress bars stay round. Defaults are unchanged: every component renders as before. **CONSUMING.md → Design knobs**; new story **Foundations/Shape → Design knobs — rectangular controls**; new interaction test **Internal/Interactions/Shape**.
+
 ### Consumer actions
 
 None. To ask for a typed confirmation, pass an **Input** as `children` of **AlertDialog** and set `confirmDisabled` until the value matches. Copy **Components/Dialog → Pattern — alert dialog (typed confirmation delete)**. A **Dialog** or **AlertDialog** is 16px wider on each side's content inset and 16px taller (8px top, 8px bottom); check the narrowest phone width. No `className` change is needed.

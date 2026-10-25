@@ -30,7 +30,7 @@ export const appShellSurfaceClasses = cn(
 
 /** First tab stop: hidden until focused, then pinned over the top-start corner. */
 export const appShellSkipLinkClasses =
-  "sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-full " +
+  "sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-[var(--radius-control)] " +
   "focus:bg-body focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-fg " +
   "focus:outline-none focus:ring-2 focus:ring-focus-ring";
 

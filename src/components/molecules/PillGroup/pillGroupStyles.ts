@@ -6,7 +6,7 @@ export const pillGroupClasses = "flex flex-wrap gap-2";
 
 export const pillGroupShapeClasses = cn(
   badgeBaseClasses,
-  "min-h-11 cursor-pointer rounded-full px-4",
+  "min-h-11 cursor-pointer rounded-[var(--radius-control)] px-4",
   "peer-focus-visible:ring-2 peer-focus-visible:ring-focus-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-body",
 );
 

@@ -12,7 +12,7 @@ export type SegmentedControlLayout = (typeof segmentedControlLayouts)[number];
 
 /** Shared track — recessed `bg-body` well; inset padding matches Dropdown menu (`p-0.5`). */
 export const segmentedControlTrackClasses = cn(
-  "relative inline-flex items-stretch rounded-full bg-body p-0.5 shadow-hairline",
+  "relative inline-flex items-stretch rounded-[var(--radius-control)] bg-body p-0.5 shadow-hairline",
   motionTransition("fast"),
 );
 
@@ -36,7 +36,7 @@ export const segmentedControlItemSizeClasses: Record<SegmentedControlSize, strin
 };
 
 export const segmentedControlItemClasses = cn(
-  "relative inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full font-sans font-medium tracking-normal",
+  "relative inline-flex shrink-0 cursor-pointer items-center justify-center rounded-[var(--radius-control-inner)] font-sans font-medium tracking-normal",
   "transition-[color] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-inset",
   motionTransition("fast"),
 );
@@ -75,4 +75,4 @@ export const segmentedControlItemUnselectedClasses = "text-muted hover:text-fg";
 
 /** Sliding selected segment — raised surface pill inside the body well. */
 export const segmentedControlThumbClasses =
-  "pointer-events-none absolute inset-0 rounded-full bg-surface shadow-raised";
+  "pointer-events-none absolute inset-0 rounded-[var(--radius-control-inner)] bg-surface shadow-raised";

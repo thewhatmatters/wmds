@@ -316,6 +316,25 @@ Browse [lucide.dev/icons](https://lucide.dev/icons/).
 
 ## Customization
 
+### Design knobs (shape)
+
+A site whose design isn't WMDS's default shape (rectangular buttons instead of pills, squarer cards) changes it with **design knobs**: allow-listed CSS variables that every component reads. Don't restyle components with `className`. A knob reshapes every component inside the element it's set on, and keeps focus rings, hit areas and nested radii consistent.
+
+| Knob | Default | Reshapes |
+|------|---------|----------|
+| `--radius-control` | pill | Button, IconButton, Input, Search, Select, Chip, PillGroup, Badge, SegmentedControl, Tab, the compact SiteNav bar. Multi-line controls (TextArea, NavList rows) use 12px or the knob, whichever is smaller. |
+| `--radius-surface` | `16px` | Card layout shells and occupants, Dropdown menus, Toast, ChatQa, Carousel. Smaller surfaces scale with it: Stat, LogView and Skeleton at ¾ (12px), a padded Card at ½ (8px). |
+
+Avatars, status dots, spinners, radios, switches, progress bars and chart marks stay round.
+
+Set knobs for the whole app on `:root` in `brand.css` (below), or for one page or section with a Tailwind arbitrary property on a plain wrapper:
+
+```tsx
+<main className="grid-page [--radius-control:4px] [--radius-surface:6px]">…</main>
+```
+
+Derived radii (`--radius-control-inner`, `--radius-control-box`, `--radius-surface-md`, `--radius-surface-sm`, `--radius-card-shell`, `--radius-card-body`) follow the knobs; don't set them. See **Foundations → Shape → Design knobs — rectangular controls**.
+
 ### Brand override (`--color-primary`)
 
 The **only** per-app color hook is the primary brand color. The WhatMatters default palette stays in **`src/theme/colors.css`**; an app overrides it by redefining the allowlisted tokens on `:root` (light) and `[data-theme="dark"]` (dark) in a stylesheet imported **after** `@thewhatmatters/wmds/styles.css`.

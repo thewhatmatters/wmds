@@ -53,7 +53,7 @@ describe("ChatQa", () => {
     expect(panel?.tagName).toBe("DL");
     expect(panel?.className).toContain("bg-surface");
     expect(panel?.className).toContain("border-border");
-    expect(panel?.className).toContain("rounded-2xl");
+    expect(panel?.className).toContain("rounded-[var(--radius-surface)]");
     expect(panel?.className).not.toContain("bg-brand");
     expect(panel?.className).not.toContain("shadow");
 
