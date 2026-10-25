@@ -51,6 +51,14 @@
       "source": "src/components/atoms/Badge/Badge.stories.tsx"
     },
     {
+      "id": "components-band--page-in-bands",
+      "title": "Components/Band",
+      "name": "Pattern — page in bands",
+      "file": "patterns/components-band--page-in-bands.tsx",
+      "storybook": "?path=/story/components-band--page-in-bands",
+      "source": "src/components/atoms/Band/Band.stories.tsx"
+    },
+    {
       "id": "components-breadcrumb--editorial",
       "title": "Components/Breadcrumb",
       "name": "Pattern — editorial",

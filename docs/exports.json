@@ -82,6 +82,19 @@
       ]
     },
     {
+      "name": "Band",
+      "tier": "atom",
+      "category": "Layout",
+      "summary": "Full-bleed page section in a brand tone (inverse, field) on the page's own columns.",
+      "storybook": {
+        "title": "Components/Band",
+        "docs": "?path=/docs/components-band--docs"
+      },
+      "patterns": [
+        "components-band--page-in-bands"
+      ]
+    },
+    {
       "name": "Breadcrumb",
       "tier": "molecule",
       "category": "Navigation",

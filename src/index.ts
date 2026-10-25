@@ -81,6 +81,17 @@ export {
   type UseKbdChoiceKeysOptions,
 } from "./components/atoms/Kbd/useKbdChoiceKeys";
 export {
+  Band,
+  bandElements,
+  bandSpacings,
+  bandTones,
+  type BandElement,
+  type BandLayoutClassName,
+  type BandProps,
+  type BandSpacing,
+  type BandTone,
+} from "./components/atoms/Band/Band";
+export {
   Prose,
   proseElements,
   proseMeasures,

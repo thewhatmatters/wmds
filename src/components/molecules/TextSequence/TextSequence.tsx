@@ -39,6 +39,8 @@ const wordDuration = 0.72;
 const shapeDuration = 0.55;
 const asteriskIdleDuration = 8;
 const pillIdleDuration = 1.4;
+/** Word masks reach this far past the glyph box (top and sides). */
+const textSequenceMaskHeadroom = "0.08em";
 
 /** Layout only — width and margin. Not for re-theming. */
 export type TextSequenceLayoutClassName = string;
@@ -283,6 +285,11 @@ function playSequence(root: HTMLElement, config: SequenceMotionConfig) {
         box.style.display = "inline-block";
         box.style.position = "relative";
         box.style.verticalAlign = "baseline";
+        // Headroom above and to the sides, so tall caps on tight display leading (and outline
+        // strokes) aren't clipped. The negative margin keeps the layout; the bottom stays flush
+        // so the word still slides in from out of sight.
+        box.style.padding = `${textSequenceMaskHeadroom} ${textSequenceMaskHeadroom} 0`;
+        box.style.margin = `-${textSequenceMaskHeadroom} -${textSequenceMaskHeadroom} 0`;
       }
 
       const shapes = [...root.querySelectorAll<HTMLElement>("[data-text-sequence-shape]")];

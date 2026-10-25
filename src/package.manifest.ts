@@ -8,6 +8,7 @@
 const atoms = [
   "Avatar",
   "Badge",
+  "Band",
   "Button",
   "Checkbox",
   "IconButton",

@@ -179,4 +179,52 @@ export function ServicesCard({ onPick }: { onPick: (value: string) => void }) {
       expect(stale.rules).toEqual(["pattern-stale"]);
     });
   });
+
+  describe("brand-contrast", () => {
+    // The reference client from the offer sheet ("Theme a client" story).
+    const brand = `:root {
+  --color-primary: #b33a1c;
+  --color-on-primary: #fff6ea;
+  --color-brand-surface: #120d08;
+  --color-on-brand-surface: #f3e3c3;
+  --color-on-brand-surface-muted: #a89a80;
+  --color-field: #e2522b;
+  --color-on-field: #120d08;
+}
+[data-theme="dark"] {
+  --color-primary: #e86a3e;
+  --color-on-primary: #120d08;
+}`;
+
+    it("passes brand-kit pairs that clear 4.5:1", () => {
+      const result = check({ "brand.css": brand });
+      expect(result.findings).toEqual([]);
+    });
+
+    it("fails an on-colour or muted step under 4.5:1, on its own line", () => {
+      const result = check({
+        "brand.css": brand.replace("--color-on-brand-surface-muted: #a89a80", "--color-on-brand-surface-muted: #5c5346"),
+      });
+      expect(result.rules).toEqual(["brand-contrast"]);
+      expect(result.findings[0]).toMatchObject({ file: path.join("src", "brand.css"), line: 6, severity: "error" });
+      expect(result.status).toBe(1);
+    });
+
+    it("reads each rule on its own, including inside @media", () => {
+      const result = check({
+        "brand.css": `@media (prefers-color-scheme: dark) {\n  :root { --color-field: #e2522b; --color-on-field: #ffffff; }\n}`,
+      });
+      expect(result.rules).toEqual(["brand-contrast"]);
+      expect(result.findings[0]).toMatchObject({ line: 2 });
+    });
+
+    it("skips pairs it cannot resolve: a var(), a mix, or one side in another rule", () => {
+      const result = check({
+        "brand.css": `:root { --color-field: var(--color-primary); --color-on-field: #ffffff; }
+.x { --color-field: #ffffff; }
+.y { --color-on-field: #ffffff; --color-field: color-mix(in srgb, white 50%, black); }`,
+      });
+      expect(result.findings).toEqual([]);
+    });
+  });
 });

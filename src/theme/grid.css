@@ -89,6 +89,44 @@ html {
 }
 
 /*
+ * Band (the component, `[data-band]`) holds its own `grid-page`, so standing alone it is a full-width
+ * section on the page's columns. Placed inside a `grid-page` it spans every column (its own class), paints its
+ * background out to the viewport edges, and its inner page becomes a subgrid, so its columns stay the
+ * page's. The bleed is border-image outset: ink overflow, which never adds a horizontal scrollbar.
+ */
+/* `default` keeps the page's own background, so it paints nothing. */
+.grid-page > [data-band]:not([data-tone="default"]) {
+  border-image-source: linear-gradient(var(--color-background-body), var(--color-background-body));
+  border-image-slice: 0 fill;
+  border-image-outset: 0 100vmax;
+}
+
+/* The band and its page both pass the page's column tracks down (subgrid needs a grid parent). */
+.grid-page > [data-band] {
+  display: grid;
+  grid-template-columns: subgrid;
+  column-gap: var(--grid-column-gap);
+}
+
+.grid-page > [data-band] > .grid-page {
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  max-width: none;
+  margin-inline: 0;
+  padding-inline: 0;
+}
+
+@supports not (grid-template-columns: subgrid) {
+  .grid-page > [data-band] {
+    display: block;
+  }
+
+  .grid-page > [data-band] > .grid-page {
+    grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  }
+}
+
+/*
  * Overlay stays a child of `.grid-page` so tracks share that page's max-width,
  * margin, and gutter. `--grid-guides-before` / `--grid-guides-after` (set by
  * GridOverlay) pull the column guides and margin lines across the rest of the

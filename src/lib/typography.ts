@@ -22,6 +22,8 @@ export type TypographyRole =
 
 /** Astryx semantic type names (Foundation reference). */
 export type AstryxTypeScale =
+  | "display-hero"
+  | "display-xl"
   | "display-1"
   | "display-2"
   | "display-3"
@@ -250,6 +252,8 @@ export const astryxTypeScale: Array<{
   weight: string;
   leading: string;
 }> = [
+  { type: "display-hero", utility: "type-display-hero", size: "clamp(3.5rem → 16rem), 16vw", weight: "700", leading: "0.92" },
+  { type: "display-xl", utility: "type-display-xl", size: "clamp(2.75rem → 8.5rem), 9vw", weight: "700", leading: "0.9" },
   { type: "display-1", utility: "type-display-1", size: "clamp(2.5rem → 5rem)", weight: "700", leading: "1.15" },
   { type: "display-2", utility: "type-display-2", size: "clamp(2rem → 3.15rem)", weight: "600", leading: "1.2" },
   { type: "display-3", utility: "type-display-3", size: "clamp(1.5rem → 2.1875rem)", weight: "600", leading: "1.24" },

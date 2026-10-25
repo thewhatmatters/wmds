@@ -89,6 +89,22 @@
   --text-display-3-weight: var(--font-weight-semibold);
   --text-display-3-leading: 1.24;
 
+  /**
+   * Hero — the one oversized moment on a marketing page (a poster headline). Fluid to 16vw:
+   * 62px at 390, 230px at 1440. A brand kit may set `--text-display-hero-size` for its face
+   * (a condensed face carries more vw). Tight leading; long words break instead of overflowing.
+   */
+  --text-display-hero-size: clamp(3.5rem, 16vw, 16rem);
+  --text-display-hero-weight: var(--font-weight-bold);
+  --text-display-hero-leading: 0.92;
+  --text-display-hero-tracking: -0.04em;
+
+  /** XL — big statement rows under a hero (section titles, price rows): 44px → 136px. */
+  --text-display-xl-size: clamp(2.75rem, 9vw, 8.5rem);
+  --text-display-xl-weight: var(--font-weight-bold);
+  --text-display-xl-leading: 0.9;
+  --text-display-xl-tracking: -0.03em;
+
   /* Body & UI */
   --text-large-size: var(--font-size-lg);
   --text-large-weight: var(--font-weight-semibold);
@@ -143,27 +159,58 @@
   --text-control-leading: 1;
 }
 
-/* Semantic type utilities — size + weight + leading from tokens; color via text-fg / text-muted. */
+/*
+ * Semantic type utilities — size + weight + leading from tokens; color via text-fg / text-muted.
+ * Display steps read the brand-kit knobs (fonts.css) with the step's own value as the fallback.
+ * With no fallback (display-2/3 tracking, case), an unset knob leaves the inherited value alone.
+ */
+@utility type-display-hero {
+  font-family: var(--font-display, var(--font-family-heading));
+  font-size: var(--text-display-hero-size);
+  font-weight: var(--font-display-weight, var(--text-display-hero-weight));
+  line-height: var(--text-display-hero-leading);
+  letter-spacing: var(--font-display-tracking, var(--text-display-hero-tracking));
+  text-transform: var(--font-display-case);
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+@utility type-display-xl {
+  font-family: var(--font-display, var(--font-family-heading));
+  font-size: var(--text-display-xl-size);
+  font-weight: var(--font-display-weight, var(--text-display-xl-weight));
+  line-height: var(--text-display-xl-leading);
+  letter-spacing: var(--font-display-tracking, var(--text-display-xl-tracking));
+  text-transform: var(--font-display-case);
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
 @utility type-display-1 {
-  font-family: var(--font-family-heading);
+  font-family: var(--font-display, var(--font-family-heading));
   font-size: var(--text-display-1-size);
-  font-weight: var(--text-display-1-weight);
+  font-weight: var(--font-display-weight, var(--text-display-1-weight));
   line-height: var(--text-display-1-leading);
-  letter-spacing: var(--text-display-1-tracking);
+  letter-spacing: var(--font-display-tracking, var(--text-display-1-tracking));
+  text-transform: var(--font-display-case);
 }
 
 @utility type-display-2 {
-  font-family: var(--font-family-heading);
+  font-family: var(--font-display, var(--font-family-heading));
   font-size: var(--text-display-2-size);
-  font-weight: var(--text-display-2-weight);
+  font-weight: var(--font-display-weight, var(--text-display-2-weight));
   line-height: var(--text-display-2-leading);
+  letter-spacing: var(--font-display-tracking);
+  text-transform: var(--font-display-case);
 }
 
 @utility type-display-3 {
-  font-family: var(--font-family-heading);
+  font-family: var(--font-display, var(--font-family-heading));
   font-size: var(--text-display-3-size);
-  font-weight: var(--text-display-3-weight);
+  font-weight: var(--font-display-weight, var(--text-display-3-weight));
   line-height: var(--text-display-3-leading);
+  letter-spacing: var(--font-display-tracking);
+  text-transform: var(--font-display-case);
 }
 
 @utility type-heading-1 {
