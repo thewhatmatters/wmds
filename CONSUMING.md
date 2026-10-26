@@ -342,6 +342,7 @@ A client's brand on WMDS is a short `brand.css` (imported after `styles.css`, un
 | Knob | Default | Reads it |
 |------|---------|----------|
 | `--font-family-heading` | Geist | `type-heading-*`, and every display step when `--font-display` is unset |
+| `--text-large-weight` | `400` (regular) | `type-large` subtext. Body and subtext at 1.5rem and below stay regular or lighter; raise it only for a face that reads too thin |
 | `--font-display` | unset (the heading face) | every `type-display-*` step (`hero`, `xl`, `1`, `2`, `3`) |
 | `--font-display-weight` | each step's own (700 / 600) | display steps: set `400` for a one-weight face, so nothing is faux-bolded |
 | `--font-display-tracking` | each step's own | display steps: `0` for a condensed face |

@@ -118,7 +118,8 @@
 
   /* Body & UI */
   --text-large-size: var(--font-size-lg);
-  --text-large-weight: var(--font-weight-semibold);
+  /* Subtext at 1.5rem and below is regular, not bold (Randy, 2026-10-26). A knob: apps may set it. */
+  --text-large-weight: var(--font-weight-normal);
   --text-large-leading: 1.4118;
 
   --text-body-size: var(--font-size-base);

@@ -277,7 +277,7 @@ export const astryxTypeScale: Array<{
   { type: "heading-4", utility: "type-heading-4", size: "0.875rem", weight: "600", leading: "1.43" },
   { type: "heading-5", utility: "type-heading-5", size: "0.75rem", weight: "600", leading: "1.67" },
   { type: "heading-6", utility: "type-heading-6", size: "0.625rem", weight: "600", leading: "1.6" },
-  { type: "large", utility: "type-large", size: "1.0625rem", weight: "600", leading: "1.41" },
+  { type: "large", utility: "type-large", size: "1.0625rem", weight: "400", leading: "1.41" },
   { type: "body", utility: "type-body", size: "0.875rem", weight: "400", leading: "1.43" },
   { type: "label", utility: "type-label", size: "0.875rem", weight: "500", leading: "1.43" },
   { type: "supporting", utility: "type-supporting", size: "0.75rem", weight: "400", leading: "1.67" },

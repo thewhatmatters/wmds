@@ -11,6 +11,7 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 **Capitals are tracked 0.08–0.12em (Eyebrow rule E3).**
 
+- **`type-large` is regular weight (was semibold; Body rule B4, Randy 2026-10-26: "regular or lighter when it's 1.5rem and below").** `--text-large-weight` is a documented knob for a face that needs more weight.
 - **`type-eyebrow`** tracking is **0.08em** (was 0.05em): `--text-eyebrow-tracking`. Affects **SectionCaption**, **IndexList** captions, **DescriptionList** `variant="mono"`, **FilterPanel** titles and anything on `typographyClass("eyebrow")`.
 - **`typographyClass("overline")`** tracks 0.08em (was `tracking-wider`, 0.05em).
 - **Badge** `mono` and **Button** `mono` track 0.12em (was 0.14em).
@@ -29,7 +30,7 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 ### Consumer actions
 
-Re-copy the four **Components/FooterReveal** patterns named above if you pasted them (and write your own headline in sentence case). In your own code, give uppercase text `tracking-[0.08em]` (or use `type-eyebrow`) instead of `tracking-wider`. Labels are slightly wider; check eyebrows and mono badges at 390. A **SectionCaption** that should stay in the heading outline needs `as="h2"`; a test that finds it with `getByRole("heading")` now needs `getByText`.
+Re-copy the four **Components/FooterReveal** patterns named above if you pasted them (and write your own headline in sentence case). In your own code, give uppercase text `tracking-[0.08em]` (or use `type-eyebrow`) instead of `tracking-wider`. Labels are slightly wider; check eyebrows and mono badges at 390. A **SectionCaption** that should stay in the heading outline needs `as="h2"`; a test that finds it with `getByRole("heading")` now needs `getByText`. If your app sets subtext in `type-large` and wants the old weight, set `--text-large-weight: 600`.
 
 ## 0.4.29
 
