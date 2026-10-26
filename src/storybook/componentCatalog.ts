@@ -72,6 +72,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "InlinePill", category: "Content", title: "Components/InlinePill", description: "A key word inside running text in a soft pill that scales with the text, with an optional picture that can pop in on scroll." },
   { name: "Confetti", category: "Feedback & status", title: "Components/Confetti", description: "Celebratory burst after an async success, fired from a provider." },
   { name: "IntakeConfirmation", category: "Feedback & status", title: "Components/IntakeConfirmation", description: "Booked or emailed confirmation that ends the Start a project flow." },
+  { name: "Notice", category: "Feedback & status", title: "Components/Notice", description: "Inline callout in five tones with a title, copy, an action, and an optional remembered dismiss." },
   { name: "Skeleton", category: "Feedback & status", title: "Components/Skeleton", description: "Shimmering layout placeholders that mirror the resolved UI." },
   { name: "Status", category: "Feedback & status", title: "Components/Status", description: "Task progress ring or semantic dot at a fixed scale." },
   { name: "StepProgress", category: "Feedback & status", title: "Components/StepProgress", description: "Segmented step indicator with a Step N of M label." },

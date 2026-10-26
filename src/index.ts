@@ -424,6 +424,14 @@ export {
   type NavListSectionProps,
 } from "./components/molecules/NavList/NavList";
 export {
+  Notice,
+  noticeStoragePrefix,
+  noticeTones,
+  type NoticeLayoutClassName,
+  type NoticeProps,
+  type NoticeTone,
+} from "./components/molecules/Notice/Notice";
+export {
   PageHeader,
   pageHeaderAppBandHeightClasses,
   pageHeaderHeadingLevels,
