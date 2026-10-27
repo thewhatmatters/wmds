@@ -111,12 +111,14 @@ export const siteNavSlotsClasses = {
   endOnly: "flex w-full items-center justify-end",
 } as const;
 
-export const siteNavStartClasses = "flex shrink-0 items-center gap-2";
+/** Phone touch tier: below `md`, links and buttons in the start and end slots are at least 44px. */
+const siteNavTouchTierClasses = "max-md:[&_a]:min-h-11 max-md:[&_button]:min-h-11 max-md:[&_button]:min-w-11";
+export const siteNavStartClasses = `flex shrink-0 items-center gap-2 ${siteNavTouchTierClasses}`;
 export const siteNavMiddleClasses =
   "flex min-w-0 flex-1 items-center justify-center";
 /** Compact hug middle — content-sized; can shrink only when the pill hits `max-w-full`. */
 export const siteNavMiddleHugClasses = "flex min-w-0 max-w-full items-center justify-center";
-export const siteNavEndClasses = "flex shrink-0 flex-nowrap items-center gap-2";
+export const siteNavEndClasses = `flex shrink-0 flex-nowrap items-center gap-2 ${siteNavTouchTierClasses}`;
 
 /**
  * Middle slot when a `mobile` menu is supplied. Shown from `md`.
