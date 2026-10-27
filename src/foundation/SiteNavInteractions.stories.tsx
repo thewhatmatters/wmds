@@ -104,3 +104,36 @@ export const PinnedScrollPadding: Story = {
     expect(document.documentElement.style.scrollPaddingTop).toContain("--site-nav-height");
   },
 };
+
+export const MobileMenuTrigger: Story = {
+  name: "mobile menu trigger names its state and controls the sheet",
+  render: () => (
+    <SiteNav
+      placement="inline"
+      state="expanded"
+      start={<SiteNav.Brand href="#home" aria-label="WhatMatters" icon={<Sparkles />} />}
+      mobile={<SiteNav.MobileLink href="#product">Product</SiteNav.MobileLink>}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    // The trigger is display:none from `md` up, which empties its computed name — read aria-label.
+    const trigger = canvasElement.querySelector<HTMLButtonElement>('button[aria-haspopup="dialog"]');
+    if (trigger == null) throw new Error("mobile menu trigger not rendered");
+    await expect(trigger).toHaveAttribute("aria-label", "Open menu");
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(trigger).toHaveAttribute("aria-haspopup", "dialog");
+    await expect(trigger).not.toHaveAttribute("aria-controls");
+
+    trigger.click();
+    const dialog = await within(document.body).findByRole("dialog", { name: "Menu" });
+    await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "true"));
+    await expect(trigger).toHaveAttribute("aria-label", "Close menu");
+    await expect(trigger).toHaveAttribute("aria-controls", dialog.id);
+
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(trigger).toHaveAttribute("aria-label", "Open menu"));
+    await expect(trigger).not.toHaveAttribute("aria-controls");
+    // Let the exit animation finish so the a11y check doesn't read a half-faded panel.
+    await waitFor(() => expect(dialog).not.toBeInTheDocument());
+  },
+};
