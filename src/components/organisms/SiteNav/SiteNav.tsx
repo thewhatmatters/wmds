@@ -7,6 +7,7 @@ import {
   isValidElement,
   useContext,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -202,6 +203,7 @@ function SiteNavRoot({
     onStateChange,
   });
   const [mobileOpen, setMobileOpen] = useState(false);
+  const mobileSheetId = useId();
   const [menuOpen, setMenuOpen] = useState(false);
   /** Compact hug is scroll-only — mega open must not change expanded chrome. */
   const hugCluster = compact && compactLayout === "hug";
@@ -226,12 +228,15 @@ function SiteNavRoot({
   const mobileTrigger = hasMobile ? (
     <IconButton
       icon={<MenuIcon strokeWidth={2} />}
-      aria-label="Open menu"
+      aria-label={mobileOpen ? "Close menu" : "Open menu"}
       title=""
       size="sm"
       className={siteNavMobileTriggerClasses}
+      aria-haspopup="dialog"
       aria-expanded={mobileOpen}
-      onClick={() => setMobileOpen(true)}
+      /* The sheet only exists while open — never point at a missing id. */
+      aria-controls={mobileOpen ? mobileSheetId : undefined}
+      onClick={() => setMobileOpen((open) => !open)}
     />
   ) : null;
 
@@ -376,7 +381,7 @@ function SiteNavRoot({
 
       {hasMobile ? (
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-          <Sheet.Content side="end" title={mobileTitle}>
+          <Sheet.Content id={mobileSheetId} side="end" title={mobileTitle}>
             <div className={siteNavMobileListClasses}>{mobile}</div>
           </Sheet.Content>
         </Sheet>
