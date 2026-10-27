@@ -7,6 +7,16 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.29
+
+**SiteNav's phone menu button says what it does.**
+
+- **SiteNav** mobile menu trigger says what it does: its label is "Close menu" while the sheet is open ("Open menu" when closed), it sets `aria-haspopup="dialog"`, and `aria-controls` points at the sheet's dialog while it is open (omitted when closed, since the sheet is unmounted). **Sheet.Content** takes `id` (new), set on the `role="dialog"` panel. New interaction test **Internal/Interactions/SiteNav → mobile menu trigger names its state and controls the sheet**.
+
+### Consumer actions
+
+None.
+
 ## 0.4.28
 
 **AlertDialog takes a body, Input takes a rich label, and dialogs get a roomier edge.**
@@ -23,7 +33,6 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **AlertDialog** (and **Dialog** with `dismissOnBackdrop={false}`): a press on the scrim no longer moves focus to `<body>`, where the next Tab left the dialog. The interaction test **AlertDialog — confirm and cancel** now presses the scrim and checks focus stays inside.
 - **AppShell** has a skip link (new): the first Tab shows "Skip to content" over the top-start corner, and Enter moves focus to `<main>` without changing the URL. `labels.skipToContent` (new) words it. New interaction test **Internal/Interactions/AppShell → the first Tab reaches a skip link that moves focus to the page**.
 - **SiteNav**: while the compact bar is pinned (`placement="fixed"` or a `scrollContainer`), the page (or that container) gets `scroll-padding-top` of `--site-nav-height` plus 16px, so an element focused with Tab scrolls into view below the bar instead of under it. The previous value comes back when the bar unpins or unmounts. New interaction test **Internal/Interactions/SiteNav → pinned compact bar keeps focused elements out from under it**.
-- **SiteNav** mobile menu trigger says what it does: its label is "Close menu" while the sheet is open ("Open menu" when closed), it sets `aria-haspopup="dialog"`, and `aria-controls` points at the sheet's dialog while it is open (omitted when closed, since the sheet is unmounted). **Sheet.Content** takes `id` (new), set on the `role="dialog"` panel. New interaction test **Internal/Interactions/SiteNav → mobile menu trigger names its state and controls the sheet**.
 - **Dialog**, **Sheet**, **IntakeModal**, and **Panel** share one open/close lifecycle (`useOverlayLifecycle` in `lib/dialogOverlay`, internal). What changes for users:
   - **Escape closes only the topmost overlay**, so an AlertDialog over a Sheet no longer closes both. An Escape that a control inside already handled (`defaultPrevented`) is left alone.
   - **Dialog** and **IntakeModal** make the page behind inert, as **Sheet** already did, so a screen reader's virtual cursor stays in the modal.
