@@ -69,6 +69,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
 
   // Feedback & status
   { name: "Badge", category: "Feedback & status", title: "Components/Badge", description: "Compact semantic label in solid or muted fill, with count, icon, avatar, and status-pill patterns." },
+  { name: "InlinePill", category: "Content", title: "Components/InlinePill", description: "A key word inside running text in a soft pill that scales with the text, with an optional picture that can pop in on scroll." },
   { name: "Confetti", category: "Feedback & status", title: "Components/Confetti", description: "Celebratory burst after an async success, fired from a provider." },
   { name: "IntakeConfirmation", category: "Feedback & status", title: "Components/IntakeConfirmation", description: "Booked or emailed confirmation that ends the Start a project flow." },
   { name: "Skeleton", category: "Feedback & status", title: "Components/Skeleton", description: "Shimmering layout placeholders that mirror the resolved UI." },

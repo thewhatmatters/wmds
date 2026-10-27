@@ -11,6 +11,7 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 **AlertDialog takes a body, Input takes a rich label, and dialogs get a roomier edge.**
 
+- **InlinePill** (new): a pill that sits inside running text and scales with it (em-sized), with an optional picture on its left held in the pill's padding so it never parts from its word. `useInlinePillsPopIn()` pops the pictures in one after another when the text scrolls into view, on the WMDS motion tokens; nothing under reduced motion. Not a control: `Chip` and `Badge` stay UI-sized. Story **Components/InlinePill**, with a 390px long-word test.
 - **AlertDialog** `children` (new) — content between the description and the actions, such as a typed-confirmation **Input**. It renders outside the description `<p>`, so `aria-describedby` still names the description alone. Cancel still takes initial focus. Without `children` the markup is unchanged.
 - **Input** `label` is now `ReactNode` (was `string`), so a label can read "Type **@handle** to confirm". The `<label htmlFor>` association is unchanged, and the whole label is the field's accessible name. A string label behaves as before.
 - **Pattern — alert dialog (typed confirmation delete)** is new on **Components/Dialog**: Delete stays off until the typed value matches the handle (a leading `@`, case, and surrounding spaces are ignored), and the field clears on reopen. **Pattern — rich label** is new on **Components/Input**.

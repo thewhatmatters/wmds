@@ -462,6 +462,17 @@
       ]
     },
     {
+      "name": "InlinePill",
+      "tier": "atom",
+      "category": "Content",
+      "summary": "A key word inside running text in a soft pill that scales with the text, with an optional picture that can pop in on scroll.",
+      "storybook": {
+        "title": "Components/InlinePill",
+        "docs": "?path=/docs/components-inlinepill--docs"
+      },
+      "patterns": []
+    },
+    {
       "name": "Input",
       "tier": "atom",
       "category": "Form controls",

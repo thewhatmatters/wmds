@@ -12,6 +12,7 @@ const atoms = [
   "Button",
   "Checkbox",
   "IconButton",
+  "InlinePill",
   "Input",
   "Kbd",
   "Prose",

@@ -92,6 +92,15 @@ export {
   type BandTone,
 } from "./components/atoms/Band/Band";
 export {
+  InlinePill,
+  inlinePillPopInKeyframes,
+  useInlinePillsPopIn,
+  type InlinePillLayoutClassName,
+  type InlinePillProps,
+  type InlinePillsPopIn,
+  type InlinePillsPopInState,
+} from "./components/atoms/InlinePill/InlinePill";
+export {
   Prose,
   proseElements,
   proseMeasures,
