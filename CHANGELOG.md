@@ -21,12 +21,13 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
   - `mobileTitle` is now a string (the dialog's accessible name).
   - New interaction tests **Internal/Interactions/SiteNav → phone menu…** (390), **phone menu at 320** (N7) and **phone bar: trailing edge**.
 - **SiteNav** full bar: a wordmark **SiteNav.Brand** and the Menu button pull their own 16px padding past the edges, so the wordmark and the Menu word line up with the content edges (hit areas unchanged; the compact pill keeps its padding). The bar's give-way check measures the slots' margin boxes instead of `scrollWidth`, so that pull doesn't hide a CTA that fits: "Get my free sketch" stays in the bar from 390 (N9). The Menu/Close button is quiet in both states (ghost hover and press fill only). While the phone menu is open, the bar's actions hide, so the menu's own action is the one CTA on screen. New interaction test **phone bar: wordmark and Menu word sit on the content edges**.
+- **Breakpoints rule P5:** every `sm:` (640px) variant in WMDS moves to `md:` (768px): **Field** label column, **TileGrid** `--tile-grid-cols-sm` (now from `md`), **Breadcrumb** gap and label width, **FooterReveal** wordmark size, **Carousel** `--carousel-item-sm` and caption width, the Post page / Resource detail / Filter panel / Profile typography guides, and story Show code. Layout changes only between 640 and 767px, where these now keep their phone layout. New unit test: no `sm:` and no one-off `min-[…]` / `max-[…]` breakpoints anywhere in `src`.
 - `lib/dialogOverlay` exports `tabbablesIn` and `inertAllBut` (internal helpers, also used by SiteNav).
 - **ChatDock**: its 40rem chat column is documented as the text-only exception to Container width W5.
 
 ### Consumer actions
 
-If you pass `mobile` to **SiteNav**, also pass `mobileAction` (usually the same **Button** as your bar CTA) so small phones still reach it when the bar is too tight for it. Keep the bar's CTA label short (about 12 characters) so it fits beside Menu at 390. Tests that find the trigger by `aria-label="Open menu"` now find it by its text, `getByRole("button", { name: "Menu" })`, and the open menu is a `dialog` named by `mobileTitle` (default "Menu"). `mobileTitle` must be a string.
+If you pass `mobile` to **SiteNav**, also pass `mobileAction` (usually the same **Button** as your bar CTA) so small phones still reach it when the bar is too tight for it. Keep the bar's CTA label short (about 12 characters) so it fits beside Menu at 390. Tests that find the trigger by `aria-label="Open menu"` now find it by its text, `getByRole("button", { name: "Menu" })`, and the open menu is a `dialog` named by `mobileTitle` (default "Menu"). `mobileTitle` must be a string. Re-copy any **Pattern** whose Show code used `sm:` (the generated `docs/patterns` show which changed). `--tile-grid-cols-sm` and `--carousel-item-sm` keep their names but now apply from 768px.
 
 ## 0.4.30
 

@@ -21,7 +21,7 @@ export function ProfilePage({ onOpenRole }: { onOpenRole: (company: string) => v
   return (
     <main
       data-theme={theme === "auto" ? undefined : theme}
-      className="grid-page min-h-screen bg-body py-12 [--grid-column-gap:24px] [--grid-max:960px] sm:py-16 lg:py-20"
+      className="grid-page min-h-screen bg-body py-12 [--grid-column-gap:24px] [--grid-max:960px] md:py-16 lg:py-20"
     >
       <GridOverlay
         visible={gridVisible}
@@ -30,7 +30,7 @@ export function ProfilePage({ onOpenRole }: { onOpenRole: (company: string) => v
       />
 
       <div className="band">
-        <article className="col-span-full max-w-[52rem] sm:col-start-2 sm:col-span-6 lg:col-start-2 lg:col-span-10">
+        <article className="col-span-full max-w-[52rem] md:col-start-2 md:col-span-6 lg:col-start-2 lg:col-span-10">
           <header className="flex flex-col items-start gap-4">
             <Avatar name="Avery Kim" size="lg" />
             <div>
@@ -39,13 +39,13 @@ export function ProfilePage({ onOpenRole }: { onOpenRole: (company: string) => v
             </div>
           </header>
 
-          <div className="mt-8 flex flex-col gap-5 sm:mt-10">
+          <div className="mt-8 flex flex-col gap-5 md:mt-10">
             <p className="type-body text-fg">
               Currently building at <TextLink href="#work">WhatMatters</TextLink>.
             </p>
           </div>
 
-          <section id="work" className="mt-12 sm:mt-14">
+          <section id="work" className="mt-12 md:mt-14">
             <h2 className="type-body text-muted">Work</h2>
             <ul className="mt-4 border-t border-border">
               <li className="border-b border-border py-2">
@@ -60,7 +60,7 @@ export function ProfilePage({ onOpenRole }: { onOpenRole: (company: string) => v
             </ul>
           </section>
 
-          <footer className="mt-12 flex flex-col gap-5 sm:mt-14">
+          <footer className="mt-12 flex flex-col gap-5 md:mt-14">
             <p className="type-body text-fg">
               Read my <TextLink href="/writing">writing</TextLink>.
             </p>

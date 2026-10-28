@@ -200,8 +200,8 @@ export function PostPage({
   return (
     <main className="grid-page bg-body">
       {overlay}
-      <article className="band py-6 sm:py-10 lg:py-14">
-        <header className="col-span-full mb-4 flex flex-col gap-3 sm:mb-8 lg:col-span-10">
+      <article className="band py-6 md:py-10 lg:py-14">
+        <header className="col-span-full mb-4 flex flex-col gap-3 md:mb-8 lg:col-span-10">
           <Breadcrumb
             items={post.breadcrumb}
             variant="mono"

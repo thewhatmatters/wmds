@@ -155,7 +155,7 @@ export function ApprovalsQueue({ items, onDecision }: ApprovalsQueueProps) {
 
   return (
     <>
-      <div className="sm:hidden">
+      <div className="md:hidden">
         <p className="mb-3 text-muted">{waiting} waiting on you</p>
         {items.length === 0 ? (
           <Card variant="outlined" padding="md">
@@ -181,7 +181,7 @@ export function ApprovalsQueue({ items, onDecision }: ApprovalsQueueProps) {
           </ul>
         )}
       </div>
-      <div className="hidden sm:block">
+      <div className="hidden md:block">
         <Table aria-label="Approvals waiting on you">
           <TableCaption>{waiting} waiting on you</TableCaption>
           <colgroup>

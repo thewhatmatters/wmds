@@ -60,7 +60,7 @@ export function ComponentOverview() {
             <h2 id={headingId} className={typographyClass("section-heading")}>
               {category}
             </h2>
-            <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {entries.map((entry) => (
                 <li key={entry.name}>
                   <CatalogCard entry={entry} />
