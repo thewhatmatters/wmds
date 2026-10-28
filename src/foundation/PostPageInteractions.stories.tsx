@@ -29,7 +29,9 @@ export const MetadataPanel: Story = {
   play: async ({ canvas, canvasElement }) => {
     // The caption names the panel; its "/" is decoration.
     const panel = canvas.getByRole("complementary", { name: "Metadata" });
-    const caption = within(panel).getByRole("heading", { level: 2, name: "Metadata" });
+    // The caption is a plain eyebrow (Headings H6, Eyebrow E6) that still names the region.
+    const caption = within(panel).getByText("Metadata", { exact: false });
+    expect(caption.tagName).toBe("P");
     expect(caption.textContent).toBe("/ Metadata");
 
     // dl > div > dt + dd

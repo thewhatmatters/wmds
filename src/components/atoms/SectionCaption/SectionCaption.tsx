@@ -17,7 +17,11 @@ export type SectionCaptionLayoutClassName = string;
 export interface SectionCaptionProps {
   /** The caption, in sentence case — for example "Metadata". The utility sets the capitals. */
   children: ReactNode;
-  /** The element. `h2` (default) when the caption names a region; `p` when it only labels a column. */
+  /**
+   * The element. `p` (default): a caption is an eyebrow in capitals, not a heading (Headings H6,
+   * Eyebrow E6). It still names a region through `id` + `aria-labelledby`. `h2`–`h4` only when the
+   * page has no sentence-case heading for that region and people jump to it.
+   */
   as?: SectionCaptionElement;
   /** For `aria-labelledby` on the region the caption names. */
   id?: string;
@@ -36,7 +40,7 @@ export interface SectionCaptionProps {
  */
 export function SectionCaption({
   children,
-  as: Element = "h2",
+  as: Element = "p",
   id,
   marker = true,
   rule = true,

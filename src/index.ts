@@ -414,7 +414,9 @@ export {
 export {
   PageHeader,
   pageHeaderAppBandHeightClasses,
+  pageHeaderHeadingLevels,
   pageHeaderVariants,
+  type PageHeaderHeadingLevel,
   type PageHeaderLayoutClassName,
   type PageHeaderProps,
   type PageHeaderVariant,

@@ -16,10 +16,13 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Badge** `mono` and **Button** `mono` track 0.12em (was 0.14em).
 - Story Show code updated: **Components/FooterReveal → Marketing page pattern** (its column labels).
 - New unit test: every uppercase class string in WMDS tracks 0.08–0.12em.
+- **SectionCaption** `as` defaults to **`p`** (was `h2`): a caption in capitals is an eyebrow, not a heading (Headings H6, Eyebrow E6). It still names a region through `id` + `aria-labelledby`. **FilterPanel**'s "/ Filters" title and the post page's "/ Metadata" follow.
+- **PageHeader** `as` (new): `h1` / `h2` / `h3`, so the title's level follows the page outline (Headings H1). Defaults are unchanged (`app` → `h1`, `page` → `h2`).
+- New interaction test **Internal/Interactions/Heading levels**.
 
 ### Consumer actions
 
-Re-copy **Components/FooterReveal → Marketing page pattern** if you pasted it. In your own code, give uppercase text `tracking-[0.08em]` (or use `type-eyebrow`) instead of `tracking-wider`. Labels are slightly wider; check eyebrows and mono badges at 390.
+Re-copy **Components/FooterReveal → Marketing page pattern** if you pasted it. In your own code, give uppercase text `tracking-[0.08em]` (or use `type-eyebrow`) instead of `tracking-wider`. Labels are slightly wider; check eyebrows and mono badges at 390. A **SectionCaption** that should stay in the heading outline needs `as="h2"`; a test that finds it with `getByRole("heading")` now needs `getByText`.
 
 ## 0.4.29
 
