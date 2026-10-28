@@ -19,6 +19,7 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **SectionCaption** `as` defaults to **`p`** (was `h2`): a caption in capitals is an eyebrow, not a heading (Headings H6, Eyebrow E6). It still names a region through `id` + `aria-labelledby`. **FilterPanel**'s "/ Filters" title and the post page's "/ Metadata" follow.
 - **PageHeader** `as` (new): `h1` / `h2` / `h3`, so the title's level follows the page outline (Headings H1). Defaults are unchanged (`app` → `h1`, `page` → `h2`).
 - New interaction test **Internal/Interactions/Heading levels**.
+- **Foundations/Typography** docs: heading steps sit two apart on the 1.2× ramp (≥ 1.25× between levels, Headings H7); an eyebrow and its heading are one spacing unit (H4, E5). The ramp is unchanged.
 - **FooterReveal** sample headline is sentence case, "We build WhatMatters" (was Title Case; Headings H6). Show code changed in **Components/FooterReveal → Marketing page pattern**, **Marketing hero pattern**, **Marketing hero with gallery intro** and **Sequenced marketing hero**.
 
 ### Consumer actions

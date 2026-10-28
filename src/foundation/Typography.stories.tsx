@@ -18,7 +18,9 @@ const meta = {
         component:
           "WMDS typography in **`src/theme/typography.css`**: geometric **`--font-size-*`** ramp (14px × 1.2) + semantic **`type-*`** utilities. " +
           "Components use **`typographyClass(role)`** from **`src/lib/typography.ts`** — not raw **`text-sm`** / **`font-medium`**. " +
-          "See **ADR-0009**.",
+          "See **ADR-0009**.\n\n" +
+          "**Heading steps (Headings rule H7): skip a step between levels.** Adjacent heading levels on a page should be at least about 1.25× apart, and the ramp is 1.2×, so a heading and the one under it sit **two steps apart** (1.44×): e.g. `type-heading-1` (24px) over `type-heading-3` (17px), not `type-heading-2` (20px). Use at most three heading sizes per page. The ramp itself is unchanged; re-scaling it is logged as an open decision.\n\n" +
+          "**An eyebrow and its heading are one unit (Headings H4, Eyebrow E5).** The eyebrow sits 8–12px above its heading; the space above the unit (from the previous block) is larger than the space below the heading.",
       },
     },
   },
