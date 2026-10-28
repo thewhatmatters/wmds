@@ -20,6 +20,7 @@ const meta = {
           "Components use **`typographyClass(role)`** from **`src/lib/typography.ts`** — not raw **`text-sm`** / **`font-medium`**. " +
           "See **ADR-0009**.\n\n" +
           "**Heading steps (Headings rule H7): skip a step between levels.** Adjacent heading levels on a page should be at least about 1.25× apart, and the ramp is 1.2×, so a heading and the one under it sit **two steps apart** (1.44×): e.g. `type-heading-1` (24px) over `type-heading-3` (17px), not `type-heading-2` (20px). Use at most three heading sizes per page. The ramp itself is unchanged; re-scaling it is logged as an open decision.\n\n" +
+          "**Display type (Rule 3):** display-1/2/3 lead 1.05 / 1.1 / 1.15 and track −0.03 / −0.02 / −0.01em (hero −0.03em). **Shorten, don't shrink (D7):** if a display line runs past its line limit (HeroIntro, HeroTileStack, TextSequence headlines included), cut the copy; never drop to a smaller step to make it fit. A page has at most two display moments, the hero and one closing moment, never on the same screen (D9). A fitted logo-like wordmark (FooterReveal, SVG wordmarks) is a graphic: exempt from D1/D2, hidden from screen readers or labelled, still within contrast and the screen width.\n\n" +
           "**An eyebrow and its heading are one unit (Headings H4, Eyebrow E5).** The eyebrow sits 8–12px above its heading; the space above the unit (from the previous block) is larger than the space below the heading.",
       },
     },

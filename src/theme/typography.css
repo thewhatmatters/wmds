@@ -66,8 +66,8 @@
     var(--text-display-1-size-max)
   );
   --text-display-1-weight: var(--font-weight-bold);
-  --text-display-1-leading: 1.15;
-  --text-display-1-tracking: -0.04em;
+  --text-display-1-leading: 1.05;
+  --text-display-1-tracking: -0.03em;
 
   --text-display-2-size-min: 2rem;
   --text-display-2-size-max: 3.15rem;
@@ -77,7 +77,8 @@
     var(--text-display-2-size-max)
   );
   --text-display-2-weight: var(--font-weight-semibold);
-  --text-display-2-leading: 1.2;
+  --text-display-2-leading: 1.1;
+  --text-display-2-tracking: -0.02em;
 
   --text-display-3-size-min: 1.5rem;
   --text-display-3-size-max: 2.1875rem;
@@ -87,7 +88,8 @@
     var(--text-display-3-size-max)
   );
   --text-display-3-weight: var(--font-weight-semibold);
-  --text-display-3-leading: 1.24;
+  --text-display-3-leading: 1.15;
+  --text-display-3-tracking: -0.01em;
 
   /**
    * Hero — the one oversized moment on a marketing page (a poster headline). Fluid to 16vw:
@@ -97,7 +99,7 @@
   --text-display-hero-size: clamp(3.5rem, 16vw, 16rem);
   --text-display-hero-weight: var(--font-weight-bold);
   --text-display-hero-leading: 0.92;
-  --text-display-hero-tracking: -0.04em;
+  --text-display-hero-tracking: -0.03em;
 
   /** XL — big statement rows under a hero (section titles, price rows): 44px → 136px. */
   --text-display-xl-size: clamp(2.75rem, 9vw, 8.5rem);
@@ -215,7 +217,7 @@
   font-size: var(--text-display-2-size);
   font-weight: var(--font-display-weight, var(--text-display-2-weight));
   line-height: var(--text-display-2-leading);
-  letter-spacing: var(--font-display-tracking);
+  letter-spacing: var(--font-display-tracking, var(--text-display-2-tracking));
   text-transform: var(--font-display-case);
 }
 
@@ -226,7 +228,7 @@
   font-size: var(--text-display-3-size);
   font-weight: var(--font-display-weight, var(--text-display-3-weight));
   line-height: var(--text-display-3-leading);
-  letter-spacing: var(--font-display-tracking);
+  letter-spacing: var(--font-display-tracking, var(--text-display-3-tracking));
   text-transform: var(--font-display-case);
 }
 

@@ -68,7 +68,11 @@ export const footerRevealFieldContentClasses = "footer-reveal-field-content rela
 export const footerRevealBrandCopyClasses =
   "relative z-[1] flex w-full max-w-4xl flex-col items-center gap-10";
 
-export const footerRevealBrandHeadlineClasses = "type-display-1 text-balance text-on-brand";
+/**
+ * The headline is a heading step, not display: the fitted wordmark is the footer's one display moment
+ * (Display rule D9). The wordmark is a logo graphic, exempt from D1/D2, and hidden from screen readers.
+ */
+export const footerRevealBrandHeadlineClasses = "type-heading-1 text-balance text-on-brand";
 
 export const footerRevealSocialListClasses =
   "m-0 flex list-none flex-wrap items-center justify-center gap-x-8 gap-y-3 p-0";
