@@ -27,7 +27,7 @@ const social = <Icon shape="bubble" color="var(--color-chart-categorical-4)" />;
 function HeadlineFrame({ animate = true, children }: { animate?: boolean; children: ReactNode }) {
   const popIn = useInlinePillsPopIn<HTMLHeadingElement>(animate);
   return (
-    <h2 {...popIn} className="max-w-[18em] text-balance text-center type-display-2 font-normal leading-[1.4] tracking-tight [overflow-wrap:anywhere] md:leading-[1.35]">
+    <h2 {...popIn} className="max-w-[18em] text-balance text-left type-display-2 md:text-center font-normal leading-[1.4] tracking-tight [overflow-wrap:anywhere] md:leading-[1.35]">
       {children}
     </h2>
   );
