@@ -225,10 +225,12 @@ export {
 } from "./components/molecules/Chip/Chip";
 export {
   Accordion,
+  accordionSizes,
   accordionVariants,
   type AccordionItemProps,
   type AccordionLayoutClassName,
   type AccordionProps,
+  type AccordionSize,
   type AccordionVariant,
 } from "./components/molecules/Accordion/Accordion";
 export {

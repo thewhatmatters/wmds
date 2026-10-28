@@ -11,6 +11,10 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 **Capitals are tracked 0.08–0.12em (Eyebrow rule E3).**
 
+- **Accordion** `size` (new): `ui` (default, 14px muted panel text) or `reading` (17px regular in ink) for FAQ answers and service descriptions (Body rules B7, B9). New unit test.
+- **IntakeConfirmation** body is `type-large` (regular), not `type-heading-2`: it's a paragraph (B4).
+- **Guides/PostPage** lead sits in ink (was muted) and is shorter, about 2 lines at 390 (B9, L8).
+- **Foundations/Typography** docs: `type-body` 14px is for app UI; marketing paragraphs use `type-large` or `type-reading` (B7); `type-reading` 1.65 is the long-form exception (B1).
 - **`type-large` is regular weight (was semibold; Body rule B4, Randy 2026-10-26: "regular or lighter when it's 1.5rem and below").** `--text-large-weight` is a documented knob for a face that needs more weight.
 - **`type-eyebrow`** tracking is **0.08em** (was 0.05em): `--text-eyebrow-tracking`. Affects **SectionCaption**, **IndexList** captions, **DescriptionList** `variant="mono"`, **FilterPanel** titles and anything on `typographyClass("eyebrow")`.
 - **`typographyClass("overline")`** tracks 0.08em (was `tracking-wider`, 0.05em).
