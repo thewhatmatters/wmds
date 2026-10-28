@@ -60,4 +60,14 @@ describe("HeroIntro firstLine, lead alias and description (0.4.30)", () => {
   it("renders no actions row without actions", () => {
     expect(renderToString(createElement(HeroIntro, { firstLine: "A design studio in Austin." }))).not.toContain('data-slot="actions"');
   });
+
+  it("spaces heading → lead → actions 24 / 32 on the page grid's 24px row gap (Spacing S2)", () => {
+    const html = renderToString(
+      createElement(HeroIntro, { firstLine: "A", description: "Lead.", actions: createElement("a", { href: "/" }, "Go") }),
+    );
+    const lead = html.match(/<p class="([^"]+)"/)?.[1] ?? "";
+    const actions = html.match(/<div class="([^"]+)" data-slot="actions"/)?.[1] ?? "";
+    expect(lead).not.toMatch(/(^|\s)mt-/);
+    expect(actions).toMatch(/(^|\s)mt-2(\s|$)/);
+  });
 });
