@@ -146,7 +146,7 @@ export function MarketingHeroWithGalleryIntroPage() {
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
         <FooterReveal.Brand
-          headline="We Build WhatMatters"
+          headline="We build WhatMatters"
           ctaLabel="Start a project"
           onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
@@ -225,7 +225,7 @@ function GalleryIntroHeroPage() {
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
         <FooterReveal.Brand
-          headline="We Build WhatMatters"
+          headline="We build WhatMatters"
           ctaLabel="Start a project"
           onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"

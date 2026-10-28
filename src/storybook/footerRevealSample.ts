@@ -16,7 +16,7 @@ export const footerRevealRuledSample = {
 } as const;
 
 export const footerRevealBrandSample = {
-  headline: "We Build WhatMatters",
+  headline: "We build WhatMatters",
   ctaLabel: "Start a project",
   wordmark: "WHATMATTERS",
   socialLinks: [

@@ -156,7 +156,7 @@ export function SequencedMarketingHeroPage() {
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
         <FooterReveal.Brand
-          headline="We Build WhatMatters"
+          headline="We build WhatMatters"
           ctaLabel="Start a project"
           onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
@@ -174,7 +174,7 @@ const marketingHeroRuledCopySource = marketingHeroWithGalleryIntroCopySource
   .replace(
     `      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
         <FooterReveal.Brand
-          headline="We Build WhatMatters"
+          headline="We build WhatMatters"
           ctaLabel="Start a project"
           onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
@@ -290,7 +290,7 @@ function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
           <FooterReveal.Ruled {...footerRevealRuledSample} />
         ) : (
           <FooterReveal.Brand
-            headline="We Build WhatMatters"
+            headline="We build WhatMatters"
             ctaLabel="Start a project"
             onCtaClick={openProjectModal}
             wordmark="WHATMATTERS"
@@ -542,7 +542,7 @@ export const MarketingHeroRuledPattern: Story = {
     );
     expect(navLinks).toEqual(["Services", "Resources", "About"]);
     expect(canvasElement.textContent).not.toContain("WHATMATTERS");
-    expect(canvasElement.textContent).not.toContain("We Build WhatMatters");
+    expect(canvasElement.textContent).not.toContain("We build WhatMatters");
     expect(canvasElement.textContent).not.toContain("Selected work");
   },
 };

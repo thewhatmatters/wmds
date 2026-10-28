@@ -287,7 +287,7 @@ export interface FooterRevealSocialLink {
 
 /** Content is the app's: `headline`, `ctaLabel`, and `wordmark` are required, with no defaults. */
 export interface FooterRevealBrandProps {
-  /** Centered display headline, e.g. `We Build WhatMatters`. */
+  /** Centered display headline, e.g. `We build WhatMatters`. */
   headline: string;
   /** Sentence-case label on the surface CTA, e.g. `Start a project`. */
   ctaLabel: string;

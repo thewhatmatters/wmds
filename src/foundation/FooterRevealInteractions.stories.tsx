@@ -129,7 +129,7 @@ export const BrandFooter: Story = {
   ),
   play: async ({ canvasElement }) => {
     const headline = canvasElement.querySelector("h2");
-    expect(headline?.textContent).toBe("We Build WhatMatters");
+    expect(headline?.textContent).toBe("We build WhatMatters");
     const cta = [...canvasElement.querySelectorAll("button")].find(
       (node) => node.textContent === "Start a project",
     );

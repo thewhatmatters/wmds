@@ -161,7 +161,7 @@ export function MarketingPage() {
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
         <FooterReveal.Brand
-          headline="We Build WhatMatters"
+          headline="We build WhatMatters"
           ctaLabel="Start a project"
           onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
@@ -224,7 +224,7 @@ function MarketingPage() {
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
         <FooterReveal.Brand
-          headline="We Build WhatMatters"
+          headline="We build WhatMatters"
           ctaLabel="Start a project"
           onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
@@ -333,7 +333,7 @@ export function MarketingHeroPage() {
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
         <FooterReveal.Brand
-          headline="We Build WhatMatters"
+          headline="We build WhatMatters"
           ctaLabel="Start a project"
           onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
@@ -399,7 +399,7 @@ function MarketingHeroCanvas() {
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
         <FooterReveal.Brand
-          headline="We Build WhatMatters"
+          headline="We build WhatMatters"
           ctaLabel="Start a project"
           onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
@@ -463,7 +463,7 @@ export const MarketingHeroPattern: Story = {
     const fieldGuides = footer.querySelector("[data-footer-reveal='guides']");
     const field = footer.querySelector("[data-footer-reveal='field']");
     const headline = [...footer.querySelectorAll("h2")].find(
-      (node) => node.textContent === "We Build WhatMatters",
+      (node) => node.textContent === "We build WhatMatters",
     );
     if (!fieldGuides || !field || !headline) throw new Error("footer field guides missing");
     expect(getComputedStyle(fieldGuides).display).not.toBe("none");
