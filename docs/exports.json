@@ -419,7 +419,8 @@
         "docs": "?path=/docs/components-herointro--docs"
       },
       "patterns": [
-        "components-herointro--two-line-intro"
+        "components-herointro--two-line-intro",
+        "components-herointro--with-actions"
       ]
     },
     {

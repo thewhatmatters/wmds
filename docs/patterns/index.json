@@ -603,6 +603,14 @@
       "source": "src/components/molecules/HeroIntro/HeroIntro.stories.tsx"
     },
     {
+      "id": "components-herointro--with-actions",
+      "title": "Components/HeroIntro",
+      "name": "Pattern — with description and actions",
+      "file": "patterns/components-herointro--with-actions.tsx",
+      "storybook": "?path=/story/components-herointro--with-actions",
+      "source": "src/components/molecules/HeroIntro/HeroIntro.stories.tsx"
+    },
+    {
       "id": "components-herotilestack--marketing-hero-pattern",
       "title": "Components/HeroTileStack",
       "name": "Pattern — marketing hero",

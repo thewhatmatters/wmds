@@ -51,3 +51,10 @@ export const heroIntroDescriptionClasses =
 
 /** The description under the display step: the same 6-column measure, left on phones, centred from `md`. */
 export const heroIntroDisplayDescriptionClasses = heroIntroDescriptionClasses;
+
+/**
+ * The CTA row under the heading (or the description): one primary and an optional secondary (Hero rule R2).
+ * Left on phones and centred from `md`, like the heading; 32px below the text above it.
+ */
+export const heroIntroActionsClasses =
+  "col-span-full mt-8 flex min-w-0 flex-wrap items-center justify-start gap-3 md:justify-center";

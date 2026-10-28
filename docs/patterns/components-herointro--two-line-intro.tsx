@@ -6,7 +6,7 @@ import { Badge, HeroIntro } from "@thewhatmatters/wmds";
 
 export function MarketingHeroIntro() {
   return (
-    <HeroIntro firstLine="A design studio in Austin, Texas.">
+    <HeroIntro firstLine="A design studio in Austin.">
       We help brands stand out{" "}
       <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
       .

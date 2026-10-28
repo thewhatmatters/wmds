@@ -11,6 +11,7 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 **SiteNav's phone menu follows the Header rule: a "Menu" button that becomes "Close", a full-height panel under the bar, and a link tap closes it.**
 
+- **HeroIntro** `actions` (new): the CTA row under the heading and description, one primary and an optional secondary (Hero rule R2); left on phones, centred from `md`. New story **Pattern — with description and actions**. Story copy is shorter, so the intro holds 3 lines at 390: "A design studio in Austin. / We help brands stand out online." (**HeroIntro**, **HeroTileStack**, **FooterReveal** stories).
 - **SiteNav** `mobile` menu (below `md`), rebuilt to Header and mobile menu rules N5–N8:
   - The trigger is a **Button** with an icon and a visible word, "☰ Menu", that becomes "✕ Close" in the same place (QA #28). The word is the accessible name (was an icon-only button named "Open menu" / "Close menu"). At least 44px tall.
   - The menu opens as a full-height panel **under the bar**, not a side **Sheet**. The bar stays live, so Close sits where Menu was. The panel is a dialog: focus moves to its first link, Tab cycles through the bar and the panel, the page behind is inert and doesn't scroll, Escape or Close closes it, and focus returns to Menu. It closes when the window widens past `md`.
