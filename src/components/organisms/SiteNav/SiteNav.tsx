@@ -105,8 +105,8 @@ export interface SiteNavProps {
   /** Center slot — **SiteNav.Links** (links + mega menus). Hidden below `md` when `mobile` is set. */
   middle?: ReactNode;
   /**
-   * Trailing slot — login link + primary CTA (**Button** `size="sm"`). With `mobile`, it hides under
-   * 360px so the Menu button keeps its word (Header rule N7); the menu's `mobileAction` carries the CTA.
+   * Trailing slot — login link + primary CTA (**Button** `size="sm"`). With `mobile`, it gives way when it
+   * doesn't fit beside the Menu button (Header rule N7); the menu's `mobileAction` carries the CTA.
    */
   end?: ReactNode;
   /**
@@ -189,6 +189,45 @@ function usePinnedScrollPadding(pinned: boolean, scrollContainer?: RefObject<HTM
   }, [pinned, scrollContainer]);
 }
 
+/**
+ * Below `md`, the bar's own actions give way when brand + actions + Menu don't fit (Header rule N7: the
+ * main button hides first, never the Menu word); the open menu carries the action instead. Measured,
+ * not a fixed width, so a short CTA stays as long as it fits. Remembers the width it needed, so it
+ * comes back once there is room again.
+ */
+function useBarTight(rowRef: RefObject<HTMLDivElement | null>, enabled: boolean, layoutKey: string): boolean {
+  const [tight, setTight] = useState(false);
+  const neededRef = useRef(0);
+  useEffect(() => {
+    const row = rowRef.current;
+    if (!enabled || row == null || typeof ResizeObserver === "undefined") return undefined;
+    const wide = window.matchMedia("(min-width: 768px)");
+    const check = () => {
+      if (wide.matches) {
+        setTight(false);
+        return;
+      }
+      setTight((was) => {
+        if (!was && row.scrollWidth > row.clientWidth + 1) {
+          neededRef.current = row.scrollWidth;
+          return true;
+        }
+        if (was && row.clientWidth >= neededRef.current) return false;
+        return was;
+      });
+    };
+    const observer = new ResizeObserver(check);
+    observer.observe(row);
+    wide.addEventListener("change", check);
+    check();
+    return () => {
+      observer.disconnect();
+      wide.removeEventListener("change", check);
+    };
+  }, [rowRef, enabled, layoutKey]);
+  return tight;
+}
+
 function SiteNavRoot({
   start,
   middle,
@@ -220,6 +259,8 @@ function SiteNavRoot({
   const mobilePanelRef = useRef<HTMLDivElement | null>(null);
   const mobileTriggerRef = useRef<HTMLButtonElement | null>(null);
   const closeMobile = useCallback(() => setMobileOpen(false), []);
+  const slotsRowRef = useRef<HTMLDivElement | null>(null);
+  const barTight = useBarTight(slotsRowRef, mobile != null && end != null, compact ? "compact" : "expanded");
   const mobilePanelTop = useSiteNavMobileMenu({
     open: mobileOpen,
     onClose: closeMobile,
@@ -268,7 +309,7 @@ function SiteNavRoot({
 
   function renderSlots(useHugCluster: boolean) {
     return (
-      <div className={slotsLayoutClass(hasStart, hasMiddle, hasEnd, useHugCluster)}>
+      <div ref={slotsRowRef} className={slotsLayoutClass(hasStart, hasMiddle, hasEnd, useHugCluster)}>
         {hasStart ? <div className={siteNavStartClasses}>{start}</div> : null}
         {hasMiddle ? (
           <div
@@ -287,7 +328,13 @@ function SiteNavRoot({
         ) : null}
         {hasEnd ? (
           <div className={siteNavEndClasses}>
-            {end != null && hasMobile ? <div className={siteNavEndActionsClasses}>{end}</div> : end}
+            {end != null && hasMobile ? (
+              <div className={siteNavEndActionsClasses} data-tight={barTight ? "" : undefined}>
+                {end}
+              </div>
+            ) : (
+              end
+            )}
             {mobileTrigger}
           </div>
         ) : null}

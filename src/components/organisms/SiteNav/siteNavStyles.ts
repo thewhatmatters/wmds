@@ -118,7 +118,8 @@ export const siteNavMiddleClasses =
   "flex min-w-0 flex-1 items-center justify-center";
 /** Compact hug middle — content-sized; can shrink only when the pill hits `max-w-full`. */
 export const siteNavMiddleHugClasses = "flex min-w-0 max-w-full items-center justify-center";
-export const siteNavEndClasses = `flex shrink-0 flex-nowrap items-center gap-2 ${siteNavTouchTierClasses}`;
+/** `max-md:ml-auto`: with the links hidden on phones, the actions and Menu still sit at the trailing edge. */
+export const siteNavEndClasses = `flex shrink-0 flex-nowrap items-center gap-2 max-md:ml-auto ${siteNavTouchTierClasses}`;
 
 /**
  * Middle slot when a `mobile` menu is supplied. Shown from `md`.
@@ -268,10 +269,11 @@ export const siteNavMobileLinkClasses = cn(
 );
 
 /** The menu's main action, pinned to the bottom of the panel, full width. */
-export const siteNavMobileActionClasses = "mt-auto flex flex-col gap-2 pt-6 [&>*]:w-full";
+export const siteNavMobileActionClasses = "mt-auto flex flex-col gap-2 pt-6 [&_a]:w-full [&_button]:w-full";
 
 /**
- * The bar's own actions beside the Menu button. They hide under 360px so the button keeps its word
- * (Header rule N7); the open menu carries the main action instead.
+ * The bar's own actions beside the Menu button. When brand + actions + Menu don't fit (`data-tight`,
+ * measured), they hide so the button keeps its word (Header rule N7); the open menu carries the main
+ * action instead.
  */
-export const siteNavEndActionsClasses = "contents max-[359px]:hidden!";
+export const siteNavEndActionsClasses = "contents data-[tight]:hidden!";

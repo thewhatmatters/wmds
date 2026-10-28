@@ -132,6 +132,8 @@ export const MobileMenuTrigger: Story = {
   ),
   play: async ({ canvasElement }) => {
     await expect(window.innerWidth).toBeLessThanOrEqual(400);
+    // The bar never runs off the screen (N7: its main button gives way first when it can't fit).
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
     const trigger = within(canvasElement).getByRole("button", { name: "Menu" });
     await expect(trigger.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
     // N7 / QA #28: the visible word is the name, and it changes.
@@ -213,5 +215,34 @@ export const MobileMenuAt320: Story = {
     await expect(trigger.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth);
     await expect(within(canvasElement).queryByRole("link", { name: "Get my free sketch" })).toBeNull();
     await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+  },
+};
+
+export const MobileMenuTrailingEdge: Story = {
+  name: "phone bar: the actions and Menu sit at the trailing edge",
+  globals: { viewport: { value: "mobile", isRotated: false } },
+  render: () => (
+    <SiteNav
+      placement="inline"
+      state="expanded"
+      start={<SiteNav.Brand href="#home">WhatMatters</SiteNav.Brand>}
+      middle={
+        <SiteNav.Links>
+          <SiteNav.Link href="#services">Services</SiteNav.Link>
+        </SiteNav.Links>
+      }
+      end={<Button size="sm" render={<a href="#sketch" />}>Book</Button>}
+      mobile={<SiteNav.MobileLink href="#services">Services</SiteNav.MobileLink>}
+      mobileAction={<Button render={<a href="#sketch" />}>Book</Button>}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const header = within(canvasElement).getByRole("banner");
+    const trigger = within(canvasElement).getByRole("button", { name: "Menu" });
+    const book = within(canvasElement).getByRole("link", { name: "Book" });
+    const edge = header.querySelector("[data-state]")!.getBoundingClientRect().right;
+    // The Menu button ends near the bar's inner edge, and the short CTA still fits beside it.
+    await expect(edge - trigger.getBoundingClientRect().right).toBeLessThanOrEqual(32);
+    await expect(book).toBeVisible();
   },
 };

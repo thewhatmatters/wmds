@@ -17,15 +17,15 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
   - **Tapping any link in the menu closes it** (QA #25; it used to stay open over the page).
   - **SiteNav.MobileLink** rows are 56px and full width. The current page is marked by weight and the selected fill plus `aria-current="page"`, not colour alone.
   - `mobileAction` (new): the main action, pinned to the bottom of the open menu.
-  - With `mobile`, the bar's `end` actions hide under 360px so Menu keeps its word; `mobileAction` carries the main button there.
+  - With `mobile`, the bar's `end` actions give way when brand + actions + Menu don't fit (measured, not a fixed width), so Menu keeps its word; `mobileAction` carries the main button there. Below `md` the actions and Menu sit at the trailing edge.
   - `mobileTitle` is now a string (the dialog's accessible name).
-  - New interaction tests **Internal/Interactions/SiteNav → phone menu…** (390) and **phone menu at 320** (N7).
+  - New interaction tests **Internal/Interactions/SiteNav → phone menu…** (390), **phone menu at 320** (N7) and **phone bar: trailing edge**.
 - `lib/dialogOverlay` exports `tabbablesIn` and `inertAllBut` (internal helpers, also used by SiteNav).
 - **ChatDock**: its 40rem chat column is documented as the text-only exception to Container width W5.
 
 ### Consumer actions
 
-If you pass `mobile` to **SiteNav**, also pass `mobileAction` (usually the same **Button** as your bar CTA) so phones under 360px still reach it. Tests that find the trigger by `aria-label="Open menu"` now find it by its text, `getByRole("button", { name: "Menu" })`, and the open menu is a `dialog` named by `mobileTitle` (default "Menu"). `mobileTitle` must be a string.
+If you pass `mobile` to **SiteNav**, also pass `mobileAction` (usually the same **Button** as your bar CTA) so small phones still reach it when the bar is too tight for it. Keep the bar's CTA label short (about 12 characters) so it fits beside Menu at 390. Tests that find the trigger by `aria-label="Open menu"` now find it by its text, `getByRole("button", { name: "Menu" })`, and the open menu is a `dialog` named by `mobileTitle` (default "Menu"). `mobileTitle` must be a string.
 
 ## 0.4.30
 
