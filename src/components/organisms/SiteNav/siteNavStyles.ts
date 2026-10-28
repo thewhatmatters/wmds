@@ -135,13 +135,22 @@ export const siteNavMiddleHugResponsiveClasses =
  * IconButton paints `inline-flex`. `md:!hidden` beats a later non-important
  * `.inline-flex`. The class is not `hidden`, so an app's `.hidden` does not match.
  */
-/** The "☰ Menu" / "✕ Close" button: phones only, at least 44px tall (N7). */
-export const siteNavMobileTriggerClasses = "min-h-11 md:!hidden";
+/**
+ * The "☰ Menu" / "✕ Close" button: phones only, at least 44px tall (N7). Quiet in both states: no fill at
+ * rest or open, the ghost hover/press fill only. In the full bar its 16px padding is pulled past the
+ * trailing edge, so the word lines up with the content edge; the compact pill keeps its padding.
+ */
+export const siteNavMobileTriggerClasses = "min-h-11 !px-4 md:!hidden in-data-[state=expanded]:-mr-4";
 
 /**
  * Brand — layout only when wordmark **Button**; icon brands use **IconButton** (circular).
  */
 export const siteNavBrandClasses = "text-fg!";
+/**
+ * A wordmark brand in the full bar: its 16px pill padding is pulled past the leading edge, so the wordmark
+ * starts on the content edge like the page below it (the hit area stays). The compact pill keeps its padding.
+ */
+export const siteNavWordmarkBrandClasses = "text-fg! in-data-[state=expanded]:-ml-4";
 
 /** Links cluster — full middle track width for overflow measure; cluster centered inside. */
 export const siteNavLinksRootClasses =

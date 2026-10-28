@@ -20,6 +20,7 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
   - With `mobile`, the bar's `end` actions give way when brand + actions + Menu don't fit (measured, not a fixed width), so Menu keeps its word; `mobileAction` carries the main button there. Below `md` the actions and Menu sit at the trailing edge.
   - `mobileTitle` is now a string (the dialog's accessible name).
   - New interaction tests **Internal/Interactions/SiteNav → phone menu…** (390), **phone menu at 320** (N7) and **phone bar: trailing edge**.
+- **SiteNav** full bar: a wordmark **SiteNav.Brand** and the Menu button pull their own 16px padding past the edges, so the wordmark and the Menu word line up with the content edges (hit areas unchanged; the compact pill keeps its padding). The bar's give-way check measures the slots' margin boxes instead of `scrollWidth`, so that pull doesn't hide a CTA that fits: "Get my free sketch" stays in the bar from 390 (N9). The Menu/Close button is quiet in both states (ghost hover and press fill only). New interaction test **phone bar: wordmark and Menu word sit on the content edges**.
 - `lib/dialogOverlay` exports `tabbablesIn` and `inertAllBut` (internal helpers, also used by SiteNav).
 - **ChatDock**: its 40rem chat column is documented as the text-only exception to Container width W5.
 

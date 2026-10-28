@@ -246,3 +246,49 @@ export const MobileMenuTrailingEdge: Story = {
     await expect(book).toBeVisible();
   },
 };
+
+export const PhoneBarEdges: Story = {
+  name: "phone bar: wordmark and Menu word sit on the content edges; a CTA that fits stays",
+  globals: { viewport: { value: "mobile", isRotated: false } },
+  // Page chrome, full width, as on a phone (the inline specimen sits inset inside its own frame).
+  parameters: { layout: "fullscreen", wmdsLayout: "fullscreen" },
+  render: () => (
+    <SiteNav
+      placement="fixed"
+      state="expanded"
+      start={<SiteNav.Brand href="#home">WhatMatters</SiteNav.Brand>}
+      middle={
+        <SiteNav.Links>
+          <SiteNav.Link href="#services">Services</SiteNav.Link>
+        </SiteNav.Links>
+      }
+      end={<Button size="sm" render={<a href="#sketch" />}>Get my free sketch</Button>}
+      mobile={<SiteNav.MobileLink href="#services">Services</SiteNav.MobileLink>}
+      mobileAction={<Button render={<a href="#sketch" />}>Get my free sketch</Button>}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    await expect(window.innerWidth).toBeGreaterThanOrEqual(390);
+    const header = within(canvasElement).getByRole("banner");
+    const bar = header.querySelector<HTMLElement>("[data-state=expanded]")!;
+    const style = getComputedStyle(bar);
+    const box = bar.getBoundingClientRect();
+    const contentLeft = box.left + Number.parseFloat(style.borderLeftWidth) + Number.parseFloat(style.paddingLeft);
+    const contentRight = box.right - Number.parseFloat(style.borderRightWidth) - Number.parseFloat(style.paddingRight);
+    const ink = (el: Element) => {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const rects = [...range.getClientRects()];
+      return { left: Math.min(...rects.map((r) => r.left)), right: Math.max(...rects.map((r) => r.right)) };
+    };
+    const brand = within(canvasElement).getByRole("link", { name: "WhatMatters" });
+    const trigger = within(canvasElement).getByRole("button", { name: "Menu" });
+    // The full bar pulls the brand's and the Menu button's own padding past the edges (N9 alignment).
+    await expect(Math.abs(ink(brand).left - contentLeft)).toBeLessThanOrEqual(2);
+    await expect(Math.abs(ink(trigger).right - contentRight)).toBeLessThanOrEqual(2);
+    await expect(trigger.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
+    // That pull isn't counted as overflow: the main button still fits at 390 and stays in the bar (N9).
+    await expect(within(canvasElement).getByRole("link", { name: "Get my free sketch" })).toBeVisible();
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+  },
+};

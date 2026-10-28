@@ -33,6 +33,7 @@ import {
   siteNavBarCompactLayoutClasses,
   siteNavBarStateClasses,
   siteNavBrandClasses,
+  siteNavWordmarkBrandClasses,
   siteNavContainerClasses,
   siteNavEndClasses,
   siteNavExpandedHeightClasses,
@@ -195,6 +196,20 @@ function usePinnedScrollPadding(pinned: boolean, scrollContainer?: RefObject<HTM
  * not a fixed width, so a short CTA stays as long as it fits. Remembers the width it needed, so it
  * comes back once there is room again.
  */
+/**
+ * The width the bar's slots need: their margin boxes plus the gaps between them. Not `scrollWidth`, which
+ * counts the brand's and Menu button's deliberate pull past the content edges as overflow.
+ */
+function slotsWidth(row: HTMLElement): number {
+  const slots = [...row.children].filter((slot) => getComputedStyle(slot).display !== "none");
+  const gap = Number.parseFloat(getComputedStyle(row).columnGap) || 0;
+  const boxes = slots.reduce((sum, slot) => {
+    const style = getComputedStyle(slot);
+    return sum + slot.getBoundingClientRect().width + Number.parseFloat(style.marginLeft) + Number.parseFloat(style.marginRight);
+  }, 0);
+  return boxes + gap * Math.max(0, slots.length - 1);
+}
+
 function useBarTight(rowRef: RefObject<HTMLDivElement | null>, enabled: boolean, layoutKey: string): boolean {
   const [tight, setTight] = useState(false);
   const neededRef = useRef(0);
@@ -208,8 +223,9 @@ function useBarTight(rowRef: RefObject<HTMLDivElement | null>, enabled: boolean,
         return;
       }
       setTight((was) => {
-        if (!was && row.scrollWidth > row.clientWidth + 1) {
-          neededRef.current = row.scrollWidth;
+        const needed = slotsWidth(row);
+        if (!was && needed > row.clientWidth + 1) {
+          neededRef.current = needed;
           return true;
         }
         if (was && row.clientWidth >= neededRef.current) return false;
@@ -518,7 +534,7 @@ function SiteNavBrand({ href, icon, children, "aria-label": ariaLabel }: SiteNav
       size="sm"
       render={<a href={href} />}
       aria-label={ariaLabel}
-      className={siteNavBrandClasses}
+      className={siteNavWordmarkBrandClasses}
     >
       {children}
     </Button>
