@@ -48,7 +48,7 @@ Band (section, data-band, data-tone)
 
 | Prop | Values |
 |------|--------|
-| \`spacing\` | \`md\` (default, 48px above and below), \`lg\` (96px, a hero), \`none\` |
+| \`spacing\` | \`md\` (default, 48px above and below), \`lg\` (64px on phones, 96px from \`md\`: the hero and the closing section), \`none\` |
 | \`as\` | \`section\` (default), \`div\`, \`header\`, \`footer\`, \`aside\` |
 
 ## Best practices

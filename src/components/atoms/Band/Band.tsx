@@ -26,7 +26,7 @@ export interface BandProps {
   children: ReactNode;
   /** `default` keeps the page's colours; `inverse` (brand surface) and `field` re-skin everything inside. */
   tone?: BandTone;
-  /** Space above and below the content: `md` (default) 48px, `lg` 96px, `none`. */
+  /** Space above and below the content: `md` (default) 48px, `lg` 64px on phones → 96px from `md`, `none`. */
   spacing?: BandSpacing;
   /** The band element. Default: `section`. */
   as?: BandElement;

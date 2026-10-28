@@ -8,7 +8,10 @@ export type BandTone = (typeof bandTones)[number];
 
 export const bandSpacings = ["md", "lg", "none"] as const;
 
-/** Space above and below the content: `md` (default) 48px, `lg` 96px, `none` 0. */
+/**
+ * Space above and below the content (Spacing rule S8): `md` (default) 48px at every width, `lg` 64px on
+ * phones and 96px from `md` (the hero and the closing section), `none` 0.
+ */
 export type BandSpacing = (typeof bandSpacings)[number];
 
 export const bandElements = ["section", "div", "header", "footer", "aside"] as const;
@@ -26,6 +29,6 @@ export const bandPageClasses = "grid-page !py-0";
 
 export const bandSpacingClasses: Record<BandSpacing, string> = {
   md: "py-[calc(var(--leading-base)*2)]",
-  lg: "py-[calc(var(--leading-base)*4)]",
+  lg: "py-[calc(var(--grid-baseline)*8)] md:py-[calc(var(--leading-base)*4)]",
   none: "",
 };
