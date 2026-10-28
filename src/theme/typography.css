@@ -165,28 +165,32 @@
  * With no fallback (display-2/3 tracking, case), an unset knob leaves the inherited value alone.
  */
 @utility type-display-hero {
+  /* A long word breaks rather than widen its flex or grid track (Display rule D5, WCAG 1.4.10). */
+  overflow-wrap: anywhere;
   font-family: var(--font-display, var(--font-family-heading));
   font-size: var(--text-display-hero-size);
   font-weight: var(--font-display-weight, var(--text-display-hero-weight));
   line-height: var(--text-display-hero-leading);
   letter-spacing: var(--font-display-tracking, var(--text-display-hero-tracking));
   text-transform: var(--font-display-case);
-  overflow-wrap: break-word;
   text-wrap: balance;
 }
 
 @utility type-display-xl {
+  /* A long word breaks rather than widen its flex or grid track (Display rule D5, WCAG 1.4.10). */
+  overflow-wrap: anywhere;
   font-family: var(--font-display, var(--font-family-heading));
   font-size: var(--text-display-xl-size);
   font-weight: var(--font-display-weight, var(--text-display-xl-weight));
   line-height: var(--text-display-xl-leading);
   letter-spacing: var(--font-display-tracking, var(--text-display-xl-tracking));
   text-transform: var(--font-display-case);
-  overflow-wrap: break-word;
   text-wrap: balance;
 }
 
 @utility type-display-1 {
+  /* A long word breaks rather than widen its flex or grid track (Display rule D5, WCAG 1.4.10). */
+  overflow-wrap: anywhere;
   font-family: var(--font-display, var(--font-family-heading));
   font-size: var(--text-display-1-size);
   font-weight: var(--font-display-weight, var(--text-display-1-weight));
@@ -196,6 +200,8 @@
 }
 
 @utility type-display-2 {
+  /* A long word breaks rather than widen its flex or grid track (Display rule D5, WCAG 1.4.10). */
+  overflow-wrap: anywhere;
   font-family: var(--font-display, var(--font-family-heading));
   font-size: var(--text-display-2-size);
   font-weight: var(--font-display-weight, var(--text-display-2-weight));
@@ -205,6 +211,8 @@
 }
 
 @utility type-display-3 {
+  /* A long word breaks rather than widen its flex or grid track (Display rule D5, WCAG 1.4.10). */
+  overflow-wrap: anywhere;
   font-family: var(--font-display, var(--font-family-heading));
   font-size: var(--text-display-3-size);
   font-weight: var(--font-display-weight, var(--text-display-3-weight));
