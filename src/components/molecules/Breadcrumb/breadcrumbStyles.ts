@@ -24,9 +24,13 @@ export const breadcrumbItemClasses = "inline-flex min-w-0 items-center";
 /** Long labels truncate; the full label stays in the accessible name and the `title`. */
 const breadcrumbLabelClasses = "block max-w-[10rem] truncate sm:max-w-[16rem] lg:max-w-[24rem]";
 
-/** A link crumb — muted, darkening with an underline on hover, the focus ring. */
+/**
+ * A link crumb — muted, darkening with an underline on hover, the focus ring. `py-0.5 -my-0.5` makes
+ * the target 24px tall (Links rule K6, WCAG 2.5.8) without moving the row.
+ */
 export const breadcrumbLinkClasses = cn(
   breadcrumbLabelClasses,
+  "py-0.5 -my-0.5",
   "rounded-sm text-muted underline decoration-transparent decoration-solid underline-offset-4",
   "transition-[color,text-decoration-color]",
   motionTransition("fast"),
