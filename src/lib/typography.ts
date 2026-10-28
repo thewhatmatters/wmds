@@ -81,8 +81,8 @@ export const trackingRules: Array<{
   },
   {
     tracking: "wider",
-    utility: "tracking-wider",
-    rule: "Uppercase overlines only — never on mixed-case text (type-eyebrow carries its own tracking)",
+    utility: "tracking-[0.08em]",
+    rule: "Capitals only, 0.08–0.12em — never on mixed-case text (type-eyebrow carries its own 0.08em)",
   },
 ];
 
@@ -213,9 +213,9 @@ export const typographyStyles: TypographyStyle[] = [
     label: "Overline",
     description: "Section labels in app UI — supporting sans + uppercase (WMDS extension). For editorial captions use eyebrow",
     astryxType: "supporting",
-    className: "type-supporting font-medium uppercase tracking-wider text-muted",
+    className: "type-supporting font-medium uppercase tracking-[0.08em] text-muted",
     tracking: "wider",
-    trackingClass: "tracking-wider",
+    trackingClass: "tracking-[0.08em]",
     sample: "Other options",
     usedIn: ["Card section labels"],
   },
@@ -227,7 +227,7 @@ export const typographyStyles: TypographyStyle[] = [
     astryxType: "eyebrow",
     className: "type-eyebrow text-muted",
     tracking: "wider",
-    trackingClass: "type-eyebrow (0.05em)",
+    trackingClass: "type-eyebrow (0.08em)",
     sample: "Filters",
     usedIn: ["IndexList captions", "Filter panel title", "SectionCaption"],
   },

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.29 · Pattern — portal dashboard
+// @thewhatmatters/wmds@0.4.30 · Pattern — portal dashboard
 // Storybook: Components/AppShell → Pattern — portal dashboard (?path=/story/components-appshell--portal-dashboard-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

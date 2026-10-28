@@ -91,7 +91,7 @@ export const buttonAlignClasses: Record<ButtonAlign, string> = {
  * Size is `--font-size-sm` (12px) — small, still a control label.
  */
 export const buttonMonoLabelClasses =
-  "!font-mono !text-[length:var(--font-size-sm)] !font-normal !uppercase !leading-none !tracking-[0.14em]";
+  "!font-mono !text-[length:var(--font-size-sm)] !font-normal !uppercase !leading-none !tracking-[0.12em]";
 
 /** Trailing new-tab glyph on an `external` link button — the icon **TextLink** `external` shows. */
 export const buttonExternalIconClasses = "-ml-0.5 size-[0.85em] shrink-0 stroke-current";

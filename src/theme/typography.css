@@ -151,7 +151,7 @@
   --text-eyebrow-size: var(--font-size-sm);
   --text-eyebrow-weight: var(--font-weight-normal);
   --text-eyebrow-leading: 1.3333;
-  --text-eyebrow-tracking: 0.05em;
+  --text-eyebrow-tracking: 0.08em; /* Capitals take 0.08–0.12em (Eyebrow rule E3). */
 
   /** WMDS extension — fixed-height control shells (Button, Chip, Input). Phase 4 migrates atoms here. */
   --text-control-size: var(--font-size-base);

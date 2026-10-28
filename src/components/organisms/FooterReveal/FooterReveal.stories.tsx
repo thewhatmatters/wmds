@@ -142,7 +142,7 @@ export function MarketingPage() {
         <main className="grid-page">
           <div className="band pt-10">
             <div className="col-span-full flex flex-col gap-4 lg:col-span-8 lg:col-start-3">
-              <p className="type-supporting font-medium uppercase tracking-wider text-muted">WhatMatters</p>
+              <p className="type-supporting font-medium uppercase tracking-[0.08em] text-muted">WhatMatters</p>
               <h1 className="type-display-2 text-fg">Plan the week around what matters.</h1>
               <p className="type-body max-w-prose text-muted">
                 WhatMatters turns a noisy backlog into one calm list. Set priorities once and let the week reshuffle itself.
@@ -205,7 +205,7 @@ function MarketingPage() {
         <main className="grid-page">
           <div className="band pt-10">
             <div className="col-span-full flex flex-col gap-4 lg:col-span-8 lg:col-start-3">
-              <p className="type-supporting font-medium uppercase tracking-wider text-muted">WhatMatters</p>
+              <p className="type-supporting font-medium uppercase tracking-[0.08em] text-muted">WhatMatters</p>
               <h1 className="type-display-2 text-fg">Plan the week around what matters.</h1>
               <p className="type-body max-w-prose text-muted">
                 WhatMatters turns a noisy backlog into one calm list. Set priorities once and let the week reshuffle itself.

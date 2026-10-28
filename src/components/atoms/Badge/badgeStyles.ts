@@ -91,7 +91,7 @@ export function badgeSurfaceClasses(variant: BadgeVariant, emphasis: BadgeEmphas
 
 /** Mono uppercase label — the same face, size, and tracking as **Button** `mono`. `!` beats the sans medium shell. */
 export const badgeMonoClasses =
-  "!font-mono !text-[length:var(--font-size-sm)] !font-normal !uppercase !tracking-[0.14em]";
+  "!font-mono !text-[length:var(--font-size-sm)] !font-normal !uppercase !tracking-[0.12em]";
 
 /**
  * A badge composed onto a link (`render`): an underline on hover, the hairline darkens on an

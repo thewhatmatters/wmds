@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.29 · Pattern — with avatar
+// @thewhatmatters/wmds@0.4.30 · Pattern — with avatar
 // Storybook: Components/Badge → Pattern — with avatar (?path=/story/components-badge--with-avatar)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

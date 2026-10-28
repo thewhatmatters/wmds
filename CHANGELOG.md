@@ -7,6 +7,20 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.30
+
+**Capitals are tracked 0.08–0.12em (Eyebrow rule E3).**
+
+- **`type-eyebrow`** tracking is **0.08em** (was 0.05em): `--text-eyebrow-tracking`. Affects **SectionCaption**, **IndexList** captions, **DescriptionList** `variant="mono"`, **FilterPanel** titles and anything on `typographyClass("eyebrow")`.
+- **`typographyClass("overline")`** tracks 0.08em (was `tracking-wider`, 0.05em).
+- **Badge** `mono` and **Button** `mono` track 0.12em (was 0.14em).
+- Story Show code updated: **Components/FooterReveal → Marketing page pattern** (its column labels).
+- New unit test: every uppercase class string in WMDS tracks 0.08–0.12em.
+
+### Consumer actions
+
+Re-copy **Components/FooterReveal → Marketing page pattern** if you pasted it. In your own code, give uppercase text `tracking-[0.08em]` (or use `type-eyebrow`) instead of `tracking-wider`. Labels are slightly wider; check eyebrows and mono badges at 390.
+
 ## 0.4.29
 
 **SiteNav's phone menu button says what it does.**

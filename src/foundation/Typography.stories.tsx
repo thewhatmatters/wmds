@@ -139,7 +139,7 @@ export const LetterSpacing: Story = {
       <div className="flex flex-col gap-4">
         <p className={typographyClass("page-heading")}>Page heading — tracking-tight</p>
         <p className={typographyClass("body")}>Body — tracking-normal</p>
-        <p className={typographyClass("overline")}>Overline — tracking-wider</p>
+        <p className={typographyClass("overline")}>Overline — 0.08em tracking</p>
         <p className={typographyClass("eyebrow")}>Eyebrow — type-eyebrow, mono</p>
         <p className="type-code text-muted">type-code — Geist Mono (0123456789)</p>
       </div>

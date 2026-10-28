@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.29 · Pattern — segmented ring
+// @thewhatmatters/wmds@0.4.30 · Pattern — segmented ring
 // Storybook: Components/Chart → Pattern — segmented ring (?path=/story/components-chart--segmented-ring-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

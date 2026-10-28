@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.29 · Pattern — basic table
+// @thewhatmatters/wmds@0.4.30 · Pattern — basic table
 // Storybook: Components/Table → Pattern — basic table (?path=/story/components-table--basic)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
