@@ -628,11 +628,22 @@ export const Disabled: Story = {
         </Button>
       </div>
       <div className="flex flex-wrap gap-2">
-        {buttonRoles.map((role) => (
-          <Button key={role} role={role} disabled>
-            {role}
-          </Button>
-        ))}
+        {buttonRoles
+          .filter((role) => !role.startsWith("inverse"))
+          .map((role) => (
+            <Button key={role} role={role} disabled>
+              {role}
+            </Button>
+          ))}
+      </div>
+      {/* The inverse roles sit on the brand field. */}
+      <div className="flex flex-wrap gap-2 rounded-[var(--radius-surface)] bg-brand p-4">
+        <Button role="inverse" disabled>
+          inverse
+        </Button>
+        <Button role="inverse-outline" disabled>
+          inverse-outline
+        </Button>
       </div>
     </div>
   ),

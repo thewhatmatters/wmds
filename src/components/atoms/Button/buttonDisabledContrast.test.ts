@@ -21,6 +21,8 @@ const themes = {
     page: "#1b1b1b",
     roles: { primary: ["#fafaf8", "#5a6d85"], secondary: ["#fafafa", "#262626"], ghost: ["#ebebeb", null], destructive: ["#171717", "#ffc6c1"], inverse: ["#011272", "#ffffff"], outline: ["#fafafa", null] },
   },
+  /** The inverse roles on the brand field (navy in both themes). */
+  brandField: { page: "#011272", roles: { "inverse-outline": ["#ffffff", null] } },
   /** The brand-kit reference client (Foundations/Brand kit → Theme a client). */
   client: { page: "#f8f8f8", roles: { primary: ["#fff6ea", "#b33a1c"] } },
   clientDark: { page: "#1b1b1b", roles: { primary: ["#120d08", "#e86a3e"] } },
