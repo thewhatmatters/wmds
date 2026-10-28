@@ -290,5 +290,11 @@ export const PhoneBarEdges: Story = {
     // That pull isn't counted as overflow: the main button still fits at 390 and stays in the bar (N9).
     await expect(within(canvasElement).getByRole("link", { name: "Get my free sketch" })).toBeVisible();
     await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+    // Open, the menu's own action is the one CTA on screen; the bar's copy hides.
+    await userEvent.click(trigger);
+    await waitFor(() => expect(document.querySelectorAll("a[href='#sketch']:not([hidden])").length).toBeGreaterThan(0));
+    const visible = [...document.querySelectorAll<HTMLElement>("a[href='#sketch']")].filter((a) => a.getClientRects().length > 0);
+    await expect(visible).toHaveLength(1);
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Close" }));
   },
 };

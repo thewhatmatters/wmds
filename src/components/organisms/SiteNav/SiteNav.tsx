@@ -345,7 +345,7 @@ function SiteNavRoot({
         {hasEnd ? (
           <div className={siteNavEndClasses}>
             {end != null && hasMobile ? (
-              <div className={siteNavEndActionsClasses} data-tight={barTight ? "" : undefined}>
+              <div className={siteNavEndActionsClasses} data-tight={barTight ? "" : undefined} data-menu-open={mobileOpen ? "" : undefined}>
                 {end}
               </div>
             ) : (

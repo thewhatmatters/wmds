@@ -283,6 +283,6 @@ export const siteNavMobileActionClasses = "mt-auto flex flex-col gap-2 pt-6 [&_a
 /**
  * The bar's own actions beside the Menu button. When brand + actions + Menu don't fit (`data-tight`,
  * measured), they hide so the button keeps its word (Header rule N7); the open menu carries the main
- * action instead.
+ * action instead. While the phone menu is open they hide too: the menu's own action is the one CTA on screen.
  */
-export const siteNavEndActionsClasses = "contents data-[tight]:hidden!";
+export const siteNavEndActionsClasses = "contents data-[tight]:hidden! max-md:data-[menu-open]:hidden!";
