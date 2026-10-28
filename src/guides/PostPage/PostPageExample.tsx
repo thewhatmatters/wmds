@@ -210,7 +210,8 @@ export function PostPage({
             className="mb-3"
           />
           <h1 className="type-display-2 text-balance text-fg">{post.title}</h1>
-          <p className="type-reading max-w-[40rem] text-muted">{post.description}</p>
+          {/* The lead summarises the post, so it sits in ink, about 2 lines at 390 (Lead L8, Body B9). */}
+          <p className="type-reading max-w-[40rem] text-fg">{post.description}</p>
           {stackedAfter ? (
             <p className="type-eyebrow text-muted lg:hidden">
               <time dateTime={post.date}>{post.dateLabel}</time>
@@ -248,7 +249,7 @@ export const samplePost: PostPageData = {
     { label: "How we scope a brand sprint" },
   ],
   title: "How we scope a brand sprint",
-  description: "Two weeks, one decision a day: the questions we ask before a sprint starts and what we hand over at the end.",
+  description: "Two weeks, one decision a day, and what we hand over at the end.",
   date: "2026-09-14",
   dateLabel: "Sep 14, 2026",
   author: "Randy Lee",

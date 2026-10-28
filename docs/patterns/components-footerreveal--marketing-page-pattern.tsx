@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.29 · Pattern — marketing page
+// @thewhatmatters/wmds@0.4.30 · Pattern — marketing page
 // Storybook: Components/FooterReveal → Pattern — marketing page (?path=/story/components-footerreveal--marketing-page-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -6,10 +6,10 @@ import { Button, FooterReveal, SiteNav, footerRevealFieldClasses } from "@thewha
 import { Sparkles } from "lucide-react";
 
 const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
+  { label: "Contra", href: "https://contra.com/thewhatmatters" },
   { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
+  { label: "X", href: "https://x.com/thewhatmatters", ariaLabel: "WhatMatters on X" },
 ] as const;
 
 // Opens the multi-step project form. There is no /start route.
@@ -45,7 +45,7 @@ export function MarketingPage() {
         <main className="grid-page">
           <div className="band pt-10">
             <div className="col-span-full flex flex-col gap-4 lg:col-span-8 lg:col-start-3">
-              <p className="type-supporting font-medium uppercase tracking-wider text-muted">WhatMatters</p>
+              <p className="type-supporting font-medium uppercase tracking-[0.08em] text-muted">WhatMatters</p>
               <h1 className="type-display-2 text-fg">Plan the week around what matters.</h1>
               <p className="type-body max-w-prose text-muted">
                 WhatMatters turns a noisy backlog into one calm list. Set priorities once and let the week reshuffle itself.
@@ -64,7 +64,7 @@ export function MarketingPage() {
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
         <FooterReveal.Brand
-          headline="We Build WhatMatters"
+          headline="We build WhatMatters"
           ctaLabel="Start a project"
           onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"

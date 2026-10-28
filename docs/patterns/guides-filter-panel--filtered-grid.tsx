@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.29 · Pattern — filtered grid
+// @thewhatmatters/wmds@0.4.30 · Pattern — filtered grid
 // Storybook: Guides/Filter panel → Pattern — filtered grid (?path=/story/guides-filter-panel--filtered-grid)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -32,7 +32,7 @@ export interface FilteredResource {
   title: string;
   /** Where the tile goes — the resource's page in the app, for example /resources/type-scale. */
   href: string;
-  /** Only for a tile that links straight to another site: it opens a new tab. */
+  /** Only for a tile that links straight to another site: it shows the external mark. */
   external?: boolean;
   /** The preview. */
   image: ResourceImage;

@@ -730,18 +730,21 @@ export interface SiteNavMenuLinkProps {
   children: ReactNode;
   /** Leading Lucide glyph. */
   icon?: ReactElement;
-  /** Opens in a new tab with the external-destination indicator. */
+  /** Another site: opens in the same tab (Links K9). Add `newTab` to open a new tab and say so. */
   external?: boolean;
+  /** `external` only — opt in to a new tab; adds "(opens in a new tab)" to the accessible name. */
+  newTab?: boolean;
   size?: Extract<ButtonSize, "xs" | "sm">;
 }
 
 /** Quiet link row inside a menu section — ghost **Button** anchor that closes the menu on click. */
-function SiteNavMenuLink({ href, children, icon, external = false, size = "sm" }: SiteNavMenuLinkProps) {
+function SiteNavMenuLink({ href, children, icon, external = false, newTab = false, size = "sm" }: SiteNavMenuLinkProps) {
+  const opensNewTab = external && newTab;
   return (
     <NavigationMenu.Link
       href={href}
-      target={external ? "_blank" : undefined}
-      rel={external ? "noopener noreferrer" : undefined}
+      target={opensNewTab ? "_blank" : undefined}
+      rel={opensNewTab ? "noopener noreferrer" : undefined}
       render={
         <Button
           role="ghost"
@@ -751,7 +754,7 @@ function SiteNavMenuLink({ href, children, icon, external = false, size = "sm" }
           icon={icon}
         >
           {children}
-          {external ? <span className="sr-only"> (opens in a new tab)</span> : null}
+          {opensNewTab ? <span className="sr-only"> (opens in a new tab)</span> : null}
         </Button>
       }
     />

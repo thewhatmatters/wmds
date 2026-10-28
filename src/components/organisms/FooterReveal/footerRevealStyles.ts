@@ -68,13 +68,20 @@ export const footerRevealFieldContentClasses = "footer-reveal-field-content rela
 export const footerRevealBrandCopyClasses =
   "relative z-[1] flex w-full max-w-4xl flex-col items-center gap-10";
 
-export const footerRevealBrandHeadlineClasses = "type-display-1 text-balance text-on-brand";
+/**
+ * The headline is a heading step, not display: the fitted wordmark is the footer's one display moment
+ * (Display rule D9). The wordmark is a logo graphic, exempt from D1/D2, and hidden from screen readers.
+ */
+export const footerRevealBrandHeadlineClasses = "type-heading-1 text-balance text-on-brand";
 
 export const footerRevealSocialListClasses =
   "m-0 flex list-none flex-wrap items-center justify-center gap-x-8 gap-y-3 p-0";
 
-/** Heading-1 (24px) so the row clears large-text AA on brand, with the field underline. */
-export const footerRevealSocialLinkClasses = footerRevealFieldLinkClasses + " type-heading-1";
+/**
+ * Heading-1 (24px) so the row clears large-text AA on brand, with the field underline. At least 24px wide, so a
+ * one-letter label (X) is still a 24px target, and 24px tall at the tight leading (Links K6, WCAG 2.5.8).
+ */
+export const footerRevealSocialLinkClasses = footerRevealFieldLinkClasses + " type-heading-1 inline-block min-h-[24px] min-w-[24px] text-center";
 
 /**
  * Full-bleed wordmark frame. Inline-size container for the wordmark's `cqi`
@@ -108,13 +115,6 @@ export const footerRevealWordmarkClasses =
   "whitespace-nowrap text-center font-sans font-bold leading-[0.78] tracking-[-0.045em] " +
   "text-brand-soft";
 
-/** `https` links open in a new tab. Hash placeholders stay in the page. */
-export function footerRevealExternalLinkProps(
-  href: string,
-): { target?: "_blank"; rel?: "noopener" } {
-  if (/^https?:\/\//i.test(href)) return { target: "_blank", rel: "noopener" };
-  return {};
-}
 
 /**
  * Cream field with brand ink. Page background (`bg-body`) and `--color-brand`

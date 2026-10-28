@@ -102,5 +102,14 @@ export const accordionPanelContentCapsuleClasses =
 /** Plain + `flush` — panel content on the label's edge. */
 export const accordionPanelContentFlushClasses = "type-body text-muted tracking-normal pb-4 pt-0";
 
+/** Accordion panel text sizes: `ui` (14px muted, app UI) and `reading` (17px regular in ink, FAQ answers and service descriptions; Body rules B7, B9). */
+export const accordionSizes = ["ui", "reading"] as const;
+export type AccordionSize = (typeof accordionSizes)[number];
+
+/** Swaps the panel's UI text (14px muted) for reading text (17px regular, ink). */
+export function accordionPanelSizeClasses(classes: string, size: AccordionSize): string {
+  return size === "reading" ? classes.replace("type-body text-muted", "type-large text-fg") : classes;
+}
+
 /** @deprecated Use `accordionPanelContentListClasses` or `accordionPanelContentCapsuleClasses`. */
 export const accordionPanelContentClasses = accordionPanelContentListClasses;

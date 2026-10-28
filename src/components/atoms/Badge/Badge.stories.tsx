@@ -349,7 +349,7 @@ export const StatusLabels: Story = {
   render: () => (
     <div className="flex max-w-md flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <p className="text-xs font-medium uppercase tracking-wider text-muted">System status</p>
+        <p className="text-xs font-medium uppercase tracking-[0.08em] text-muted">System status</p>
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="success">Active</Badge>
           <Badge variant="warning">Pending</Badge>
@@ -357,7 +357,7 @@ export const StatusLabels: Story = {
         </div>
       </div>
       <div className="flex flex-col gap-2">
-        <p className="text-xs font-medium uppercase tracking-wider text-muted">Workflow</p>
+        <p className="text-xs font-medium uppercase tracking-[0.08em] text-muted">Workflow</p>
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="neutral">Draft</Badge>
           <Badge variant="info">In review</Badge>

@@ -7,6 +7,48 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.30
+
+**Capitals are tracked 0.08–0.12em (Eyebrow rule E3).**
+
+- **HeroIntro** is left-aligned on phones, where it runs 3+ lines, and centred from `md` (Headings H8). The default step's heading now spans columns 2–11 from `lg` (was 4–9), so a 12-word intro holds 2 lines; `description` keeps the 6-column measure (4–9). Story copy is 12 words or fewer ("A design studio in Austin, Texas. / We help brands stand out online.") across **HeroIntro**, **HeroTileStack** and **FooterReveal** stories.
+- **`type-lead`, `type-large`, `type-body` and `type-reading`** set `text-wrap: pretty`, so a lone word doesn't end a paragraph.
+- **HeroIntro** `lead` is renamed **`firstLine`** (it's the heading's first line, not a lead paragraph). `lead` still works as a deprecated alias and warns in development. New optional **`description`**: a lead paragraph under the heading, `type-lead` in ink (Lead rules L7, L8). Story Show code updated: **Components/HeroIntro**, **Components/FooterReveal** and **Components/HeroTileStack** marketing hero patterns.
+- **Accordion** `size` (new): `ui` (default, 14px muted panel text) or `reading` (17px regular in ink) for FAQ answers and service descriptions (Body rules B7, B9). New unit test.
+- **IntakeConfirmation** body is `type-large` (regular), not `type-heading-2`: it's a paragraph (B4).
+- **Guides/PostPage** lead sits in ink (was muted) and is shorter, about 2 lines at 390 (B9, L8).
+- **Foundations/Typography** docs: `type-body` 14px is for app UI; marketing paragraphs use `type-large` or `type-reading` (B7); `type-reading` 1.65 is the long-form exception (B1).
+- **`type-large` is regular weight (was semibold; Body rule B4, Randy 2026-10-26: "regular or lighter when it's 1.5rem and below").** `--text-large-weight` is a documented knob for a face that needs more weight.
+- **`type-eyebrow`** tracking is **0.08em** (was 0.05em): `--text-eyebrow-tracking`. Affects **SectionCaption**, **IndexList** captions, **DescriptionList** `variant="mono"`, **FilterPanel** titles and anything on `typographyClass("eyebrow")`.
+- **`typographyClass("overline")`** tracks 0.08em (was `tracking-wider`, 0.05em).
+- **Badge** `mono` and **Button** `mono` track 0.12em (was 0.14em).
+- Story Show code updated: **Components/FooterReveal → Marketing page pattern** (its column labels).
+- New unit test: every uppercase class string in WMDS tracks 0.08–0.12em.
+- **SectionCaption** `as` defaults to **`p`** (was `h2`): a caption in capitals is an eyebrow, not a heading (Headings H6, Eyebrow E6). It still names a region through `id` + `aria-labelledby`. **FilterPanel**'s "/ Filters" title and the post page's "/ Metadata" follow.
+- **PageHeader** `as` (new): `h1` / `h2` / `h3`, so the title's level follows the page outline (Headings H1). Defaults are unchanged (`app` → `h1`, `page` → `h2`).
+- New interaction test **Internal/Interactions/Heading levels**.
+- **Every display step** (`type-display-hero`, `-xl`, `-1`, `-2`, `-3`) sets `overflow-wrap: anywhere` (Display rule D5, WCAG 1.4.10): a long word breaks instead of widening its flex or grid track and scrolling a 320px page sideways. `type-display-hero` and `-xl` used `break-word`, which still overflowed inside flex and grid. Normal copy sets as before. New interaction test **Internal/Interactions/Display type**.
+- **`type-lead`** (new, `typographyClass("lead")`): the one paragraph under a page's H1 that sums the page up (Lead paragraph rule L7). 18px on phones to 21px (`--text-lead-size`, about 1.25× the 17px reading body), regular weight, 1.45 leading; use it at the 42rem measure in `text-fg`. Nothing uses it yet, so nothing changes until you adopt it.
+- **Button** and **IconButton** `disabled` stays in the tab order (Buttons rule U6): it sets `aria-disabled` instead of native `disabled`, ignores clicks, Enter and Space (a disabled submit button no longer submits its form, including on Enter in a field), and shows no hover or press feedback. Disabled dims to **70%** (was 50%), so every role's label keeps 3:1 against its fill in light and dark (unit test). **Button** `disabledReason` (new) shows why beside the button (`type-supporting`, muted) and is read with it through `aria-describedby`. `pressScaleClass` skips `aria-disabled`. Story **Components/Button/Button → Reference — disabled**; new interaction test **Internal/Interactions/Button disabled**.
+- **Band** `spacing="lg"` is **64px on phones** and 96px from `md` (was 96px everywhere; Spacing rule S8). `md` stays 48px. A hero or closing band on a phone loses 32px above and below.
+- **Button**, **LinkTile** and **SiteNav** menu links follow the same rule: `external` keeps the same tab (with the external icon on Button and LinkTile), and new **`newTab`** opts in to a new tab and the spoken hint. **PostPage** share links and **ResourceDetail** "Visit" now stay in the tab. **Minor behaviour change.**
+- **TextLink** `external` opens in the **same tab** (was a new tab; Links K9). It still shows the external icon. New **`newTab`** opt-in sets `target="_blank"`, `rel="noopener noreferrer"` and adds "(opens in a new tab)" to the accessible name. **Minor behaviour change.**
+- **FooterReveal** social links open in the same tab (were a new tab for `https`; K9) and are at least 24px wide (K6). `FooterRevealSocialLink` gains an optional **`ariaLabel`**. **FooterRevealRuled**'s email link no longer opens a new tab. Story hrefs are real-looking, and the X link is named "WhatMatters on X".
+- **IconButton** docs: don't disable icon buttons (U6). Hide the action, or keep it enabled and explain on press. No reason slot was added.
+- **Button** `role` docs: on a page background the secondary level is `outline` (U1/U4). The filled `secondary` pill doesn't reach 3:1 against the page (logged as a gap; no visual change in this release).
+- **SiteNav** docs record the **K7 navigation exception**: nav links have no underline; hover shows the ghost pill and darker ink, and the focus ring stays.
+- **Breadcrumb** link crumbs are 24px tall targets (were 20px; Links rule K6, WCAG 2.5.8). Padding plus an equal negative margin, so the row does not move; the focus ring is 2px taller. New interaction test **Internal/Interactions/Link targets**.
+- **Display type (Rule 3, D1/D2):** `type-display-1` leading **1.05** (was 1.15) and tracking **−0.03em** (was −0.04em); `type-display-2` **1.1** (was 1.2), new `--text-display-2-tracking` **−0.02em**; `type-display-3` **1.15** (was 1.24), new `--text-display-3-tracking` **−0.01em**; `type-display-hero` tracking **−0.03em** (was −0.04em). `--font-display-tracking` still overrides every step for a caps face. New unit test.
+- **FooterReveal** headline is `type-heading-1` (was `type-display-1`): the fitted wordmark is the footer's one display moment (D9). The wordmark stays hidden from screen readers and is exempt from D1/D2 as a logo graphic.
+- **Foundations/Typography** docs: heading steps sit two apart on the 1.2× ramp (≥ 1.25× between levels, Headings H7); an eyebrow and its heading are one spacing unit (H4, E5). The ramp is unchanged.
+- **FooterReveal** sample headline is sentence case, "We build WhatMatters" (was Title Case; Headings H6). Show code changed in **Components/FooterReveal → Marketing page pattern**, **Marketing hero pattern**, **Marketing hero with gallery intro** and **Sequenced marketing hero**.
+
+### Consumer actions
+
+Re-copy the four **Components/FooterReveal** patterns named above if you pasted them (and write your own headline in sentence case). In your own code, give uppercase text `tracking-[0.08em]` (or use `type-eyebrow`) instead of `tracking-wider`. Labels are slightly wider; check eyebrows and mono badges at 390. A **SectionCaption** that should stay in the heading outline needs `as="h2"`; a test that finds it with `getByRole("heading")` now needs `getByText`. If your app sets subtext in `type-large` and wants the old weight, set `--text-large-weight: 600`. **HeroIntro:** rename `lead=` to `firstLine=` (re-copy the FooterReveal and HeroTileStack hero patterns); `lead` keeps working until a later release. **Disabled buttons are now focusable** (`aria-disabled`): a test that used `toBeDisabled()` on a WMDS Button or IconButton needs `toHaveAttribute("aria-disabled", "true")`, and code that read `button.disabled` reads `aria-disabled`. Prefer an enabled button plus an error on submit; when you keep one disabled, pass `disabledReason`.
+
+If a **TextLink**, **Button**, **LinkTile** or **SiteNav** menu link with `external` must keep opening a new tab, add `newTab`. Give a one-letter FooterReveal social label an `ariaLabel`.
+
 ## 0.4.29
 
 **SiteNav's phone menu button says what it does.**

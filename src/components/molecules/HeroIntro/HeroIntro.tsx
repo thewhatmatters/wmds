@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { cn } from "../../../lib/cn";
 import {
   heroIntroCopyClasses,
+  heroIntroDescriptionClasses,
+  heroIntroDisplayDescriptionClasses,
   heroIntroDisplayCopyClasses,
   heroIntroDisplayLeadClasses,
   heroIntroLeadClasses,
@@ -18,15 +20,22 @@ export type HeroIntroStep = (typeof heroIntroSteps)[number];
 
 export interface HeroIntroProps {
   /**
-   * First sentence. Wraps when the measure is shorter than the line, including from `md`.
-   * When `children` is passed, the rest of the intro starts on the next line.
+   * The heading's first line. Wraps when the measure is shorter than the line, including from `md`.
+   * When `children` is passed, the rest of the heading starts on the next line.
    */
-  lead: ReactNode;
+  firstLine?: ReactNode;
+  /** @deprecated Renamed to `firstLine` in 0.4.30 (it's the heading's first line, not a lead paragraph). */
+  lead?: ReactNode;
   /**
-   * Rest of the intro. When present, starts on a new line, on the same type step and leading.
-   * Omit it when the heading is only the lead, as on the sequenced hero.
+   * Rest of the heading. When present, starts on a new line, on the same type step and leading.
+   * Omit it when the heading is only the first line, as on the sequenced hero.
    */
   children?: ReactNode;
+  /**
+   * Optional lead paragraph under the heading: `type-lead` in ink (Lead paragraph rule, L7/L8). One or two
+   * sentences that summarise the page.
+   */
+  description?: ReactNode;
   /**
    * `large` — `type-display-2` at normal weight, columns 4–9 from `lg`. The default hero.
    * `display` — the same size, full width of the page grid. The sequenced hero.
@@ -38,18 +47,24 @@ export interface HeroIntroProps {
 }
 
 /**
- * Marketing hero heading. `lead` is the first line. `children`, when passed, is the next line.
- * The component owns the break. This is the page `h1`.
+ * Marketing hero heading. `firstLine` is the first line. `children`, when passed, is the next line.
+ * `description`, when passed, is a lead paragraph under the heading. The component owns the break.
+ * This is the page `h1`.
  */
-export function HeroIntro({ lead, children, step = "large", className }: HeroIntroProps) {
+export function HeroIntro({ firstLine, lead, children, description, step = "large", className }: HeroIntroProps) {
+  if (lead !== undefined && firstLine === undefined && typeof process !== "undefined" && process.env?.NODE_ENV !== "production") {
+    console.warn("[WMDS HeroIntro] `lead` is renamed to `firstLine` (0.4.30); `lead` still works for now.");
+  }
+  const first = firstLine ?? lead;
   const display = step === "display";
   const rest = children != null && children !== false;
   return (
     <div className={cn(heroIntroPageClasses, className)}>
       <h1 className={display ? heroIntroDisplayCopyClasses : heroIntroCopyClasses}>
-        <span className={display ? heroIntroDisplayLeadClasses : heroIntroLeadClasses}>{lead}</span>
+        <span className={display ? heroIntroDisplayLeadClasses : heroIntroLeadClasses}>{first}</span>
         {rest ? <span className={heroIntroRestClasses}>{children}</span> : null}
       </h1>
+      {description != null ? <p className={display ? heroIntroDisplayDescriptionClasses : heroIntroDescriptionClasses}>{description}</p> : null}
     </div>
   );
 }

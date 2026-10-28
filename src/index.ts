@@ -225,10 +225,12 @@ export {
 } from "./components/molecules/Chip/Chip";
 export {
   Accordion,
+  accordionSizes,
   accordionVariants,
   type AccordionItemProps,
   type AccordionLayoutClassName,
   type AccordionProps,
+  type AccordionSize,
   type AccordionVariant,
 } from "./components/molecules/Accordion/Accordion";
 export {
@@ -414,7 +416,9 @@ export {
 export {
   PageHeader,
   pageHeaderAppBandHeightClasses,
+  pageHeaderHeadingLevels,
   pageHeaderVariants,
+  type PageHeaderHeadingLevel,
   type PageHeaderLayoutClassName,
   type PageHeaderProps,
   type PageHeaderVariant,

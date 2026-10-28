@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.29 · Pattern — page in bands
+// @thewhatmatters/wmds@0.4.30 · Pattern — page in bands
 // Storybook: Components/Band → Pattern — page in bands (?path=/story/components-band--page-in-bands)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

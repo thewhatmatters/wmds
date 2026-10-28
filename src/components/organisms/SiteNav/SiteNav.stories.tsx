@@ -40,7 +40,9 @@ Marketing site header. Expanded is **in document flow** (scrolls away with the p
 
 Three slots — \`start\` | \`middle\` | \`end\` — in any combination. **SiteNav.Brand** goes in \`start\`, **SiteNav.Links** in \`middle\`, secondary link + primary **Button** in \`end\`. Supply \`mobile\` to swap the middle slot for a **Menu** IconButton and an end **Sheet** below \`md\`.
 
-A \`current\` link is a light gray pill (\`bg-fill-selected\`), including the mobile sheet row. Compact chrome is the frosted elevation surface (\`bg-elevation-surface\`, \`border-elevation-edge\`, \`shadow-soft-sm\`) and keeps its pill radius and backdrop blur.
+A \`current\` link is a light gray pill (\`bg-fill-selected\`), including the mobile sheet row.
+
+**Links K7 navigation exception:** nav links carry no underline. Their place in the header says they are links; hovering shows a ghost pill and darker ink, and the focus ring stays. Compact chrome is the frosted elevation surface (\`bg-elevation-surface\`, \`border-elevation-edge\`, \`shadow-soft-sm\`) and keeps its pill radius and backdrop blur.
 
 | Prop | Purpose |
 |------|---------|

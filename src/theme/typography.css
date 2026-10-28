@@ -66,8 +66,8 @@
     var(--text-display-1-size-max)
   );
   --text-display-1-weight: var(--font-weight-bold);
-  --text-display-1-leading: 1.15;
-  --text-display-1-tracking: -0.04em;
+  --text-display-1-leading: 1.05;
+  --text-display-1-tracking: -0.03em;
 
   --text-display-2-size-min: 2rem;
   --text-display-2-size-max: 3.15rem;
@@ -77,7 +77,8 @@
     var(--text-display-2-size-max)
   );
   --text-display-2-weight: var(--font-weight-semibold);
-  --text-display-2-leading: 1.2;
+  --text-display-2-leading: 1.1;
+  --text-display-2-tracking: -0.02em;
 
   --text-display-3-size-min: 1.5rem;
   --text-display-3-size-max: 2.1875rem;
@@ -87,7 +88,8 @@
     var(--text-display-3-size-max)
   );
   --text-display-3-weight: var(--font-weight-semibold);
-  --text-display-3-leading: 1.24;
+  --text-display-3-leading: 1.15;
+  --text-display-3-tracking: -0.01em;
 
   /**
    * Hero — the one oversized moment on a marketing page (a poster headline). Fluid to 16vw:
@@ -97,7 +99,7 @@
   --text-display-hero-size: clamp(3.5rem, 16vw, 16rem);
   --text-display-hero-weight: var(--font-weight-bold);
   --text-display-hero-leading: 0.92;
-  --text-display-hero-tracking: -0.04em;
+  --text-display-hero-tracking: -0.03em;
 
   /** XL — big statement rows under a hero (section titles, price rows): 44px → 136px. */
   --text-display-xl-size: clamp(2.75rem, 9vw, 8.5rem);
@@ -105,9 +107,19 @@
   --text-display-xl-leading: 0.9;
   --text-display-xl-tracking: -0.03em;
 
+  /**
+   * Lead — the one paragraph under a page's H1 that sums the page up (Lead paragraph rule L7):
+   * about 1.2–1.3× the 17px reading body, regular weight. 18px on phones → 21px from about 1000px.
+   * Pair it with the 42rem measure (about 62 characters a line at 21px).
+   */
+  --text-lead-size: clamp(1.125rem, calc(1rem + 0.5vw), 1.3125rem);
+  --text-lead-weight: var(--font-weight-normal);
+  --text-lead-leading: 1.45;
+
   /* Body & UI */
   --text-large-size: var(--font-size-lg);
-  --text-large-weight: var(--font-weight-semibold);
+  /* Subtext at 1.5rem and below is regular, not bold (Randy, 2026-10-26). A knob: apps may set it. */
+  --text-large-weight: var(--font-weight-normal);
   --text-large-leading: 1.4118;
 
   --text-body-size: var(--font-size-base);
@@ -151,7 +163,7 @@
   --text-eyebrow-size: var(--font-size-sm);
   --text-eyebrow-weight: var(--font-weight-normal);
   --text-eyebrow-leading: 1.3333;
-  --text-eyebrow-tracking: 0.05em;
+  --text-eyebrow-tracking: 0.08em; /* Capitals take 0.08–0.12em (Eyebrow rule E3). */
 
   /** WMDS extension — fixed-height control shells (Button, Chip, Input). Phase 4 migrates atoms here. */
   --text-control-size: var(--font-size-base);
@@ -165,28 +177,32 @@
  * With no fallback (display-2/3 tracking, case), an unset knob leaves the inherited value alone.
  */
 @utility type-display-hero {
+  /* A long word breaks rather than widen its flex or grid track (Display rule D5, WCAG 1.4.10). */
+  overflow-wrap: anywhere;
   font-family: var(--font-display, var(--font-family-heading));
   font-size: var(--text-display-hero-size);
   font-weight: var(--font-display-weight, var(--text-display-hero-weight));
   line-height: var(--text-display-hero-leading);
   letter-spacing: var(--font-display-tracking, var(--text-display-hero-tracking));
   text-transform: var(--font-display-case);
-  overflow-wrap: break-word;
   text-wrap: balance;
 }
 
 @utility type-display-xl {
+  /* A long word breaks rather than widen its flex or grid track (Display rule D5, WCAG 1.4.10). */
+  overflow-wrap: anywhere;
   font-family: var(--font-display, var(--font-family-heading));
   font-size: var(--text-display-xl-size);
   font-weight: var(--font-display-weight, var(--text-display-xl-weight));
   line-height: var(--text-display-xl-leading);
   letter-spacing: var(--font-display-tracking, var(--text-display-xl-tracking));
   text-transform: var(--font-display-case);
-  overflow-wrap: break-word;
   text-wrap: balance;
 }
 
 @utility type-display-1 {
+  /* A long word breaks rather than widen its flex or grid track (Display rule D5, WCAG 1.4.10). */
+  overflow-wrap: anywhere;
   font-family: var(--font-display, var(--font-family-heading));
   font-size: var(--text-display-1-size);
   font-weight: var(--font-display-weight, var(--text-display-1-weight));
@@ -196,20 +212,24 @@
 }
 
 @utility type-display-2 {
+  /* A long word breaks rather than widen its flex or grid track (Display rule D5, WCAG 1.4.10). */
+  overflow-wrap: anywhere;
   font-family: var(--font-display, var(--font-family-heading));
   font-size: var(--text-display-2-size);
   font-weight: var(--font-display-weight, var(--text-display-2-weight));
   line-height: var(--text-display-2-leading);
-  letter-spacing: var(--font-display-tracking);
+  letter-spacing: var(--font-display-tracking, var(--text-display-2-tracking));
   text-transform: var(--font-display-case);
 }
 
 @utility type-display-3 {
+  /* A long word breaks rather than widen its flex or grid track (Display rule D5, WCAG 1.4.10). */
+  overflow-wrap: anywhere;
   font-family: var(--font-display, var(--font-family-heading));
   font-size: var(--text-display-3-size);
   font-weight: var(--font-display-weight, var(--text-display-3-weight));
   line-height: var(--text-display-3-leading);
-  letter-spacing: var(--font-display-tracking);
+  letter-spacing: var(--font-display-tracking, var(--text-display-3-tracking));
   text-transform: var(--font-display-case);
 }
 
@@ -255,11 +275,22 @@
   line-height: var(--text-heading-6-leading);
 }
 
+@utility type-lead {
+  font-family: var(--font-family-body);
+  font-size: var(--text-lead-size);
+  font-weight: var(--text-lead-weight);
+  line-height: var(--text-lead-leading);
+  /* No lone word on the last line (orphans); an explicit text-balance or text-wrap utility still wins. */
+  text-wrap: pretty;
+}
+
 @utility type-large {
   font-family: var(--font-family-body);
   font-size: var(--text-large-size);
   font-weight: var(--text-large-weight);
   line-height: var(--text-large-leading);
+  /* No lone word on the last line (orphans); an explicit text-balance or text-wrap utility still wins. */
+  text-wrap: pretty;
 }
 
 @utility type-body {
@@ -267,6 +298,8 @@
   font-size: var(--text-body-size);
   font-weight: var(--text-body-weight);
   line-height: var(--text-body-leading);
+  /* No lone word on the last line (orphans); an explicit text-balance or text-wrap utility still wins. */
+  text-wrap: pretty;
 }
 
 @utility type-label {
@@ -302,6 +335,8 @@
   font-size: var(--text-reading-size);
   font-weight: var(--text-reading-weight);
   line-height: var(--text-reading-leading);
+  /* No lone word on the last line (orphans); an explicit text-balance or text-wrap utility still wins. */
+  text-wrap: pretty;
 }
 
 @utility type-eyebrow {

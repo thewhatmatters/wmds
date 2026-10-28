@@ -17,7 +17,7 @@ const meta = {
   },
   args: {
     children: "Metadata",
-    as: "h2",
+    as: "p",
     marker: true,
     rule: true,
   },
@@ -39,7 +39,7 @@ The small uppercase mono caption over a page column — "/ Metadata", "/ Article
 
 | Pattern | Props |
 |---------|--------|
-| **Column caption** | \`children\` in sentence case; \`as="h2"\` (default) names a region — pair \`id\` with \`aria-labelledby\` |
+| **Column caption** | \`children\` in sentence case; \`as="p"\` (default) — pair \`id\` with \`aria-labelledby\` to name a region |
 | **Label only** | \`as="p"\` — labels a column without adding a heading |
 | **With an action** | \`end\` — **Button** \`size="xs"\` (Clear all); it does not grow the row |
 | **Bare** | \`rule={false}\`, \`marker={false}\` |
@@ -58,7 +58,7 @@ SectionCaption (div — rule under it)
 
 - **Do** write the caption in sentence case — screen readers read it as written; the capitals are CSS.
 - **Do** keep the "/" to the \`marker\` — never type it into \`children\`, or screen readers say "slash".
-- **Do** use \`as="h2"\` when the caption is the region's name, \`as="p"\` when the region already has one.
+- **Do** keep the default \`p\`: a caption in capitals is an eyebrow, not a heading. Use \`as="h2"\` only when the region has no sentence-case heading and people jump to it.
 - **Don't** use it for app UI section labels inside cards — \`typographyClass("overline")\`.
         `.trim(),
       },

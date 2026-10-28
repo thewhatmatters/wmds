@@ -28,7 +28,7 @@ A **brand kit** is the small set of allow-listed variables an app sets in \`bran
 | \`--color-field\` / \`--color-on-field\` (+ \`-muted\`) | the primary pair | **Band** \`tone="field"\` |
 | \`--radius-control\` / \`--radius-surface\` | pill / 16px | **Foundations/Shape** |
 
-**Display steps:** \`type-display-hero\` (the one oversized moment: fluid to 16vw, 0.92 leading) and \`type-display-xl\` (statement rows: 44px → 136px, 0.9 leading) sit above \`type-display-1\`. Both break long words instead of overflowing a phone.
+**Display steps:** \`type-display-hero\` (the one oversized moment: fluid to 16vw, 0.92 leading) and \`type-display-xl\` (statement rows: 44px → 136px, 0.9 leading) sit above \`type-display-1\`. Every display step breaks a long word instead of overflowing a phone.
 
 **Contrast:** every on-colour (and its muted step) needs **4.5:1** on its colour. \`npx wmds-check\` fails a \`brand.css\` pair under that (\`brand-contrast\`), and the story's accessibility check runs on the rendered page.
         `.trim(),

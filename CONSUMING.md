@@ -342,6 +342,7 @@ A client's brand on WMDS is a short `brand.css` (imported after `styles.css`, un
 | Knob | Default | Reads it |
 |------|---------|----------|
 | `--font-family-heading` | Geist | `type-heading-*`, and every display step when `--font-display` is unset |
+| `--text-large-weight` | `400` (regular) | `type-large` subtext. Body and subtext at 1.5rem and below stay regular or lighter; raise it only for a face that reads too thin |
 | `--font-display` | unset (the heading face) | every `type-display-*` step (`hero`, `xl`, `1`, `2`, `3`) |
 | `--font-display-weight` | each step's own (700 / 600) | display steps: set `400` for a one-weight face, so nothing is faux-bolded |
 | `--font-display-tracking` | each step's own | display steps: `0` for a condensed face |
@@ -355,7 +356,7 @@ A client's brand on WMDS is a short `brand.css` (imported after `styles.css`, un
 
 The font knobs also work on a section wrapper (`[--font-display:…]`); set the colour pairs on `:root` (and `[data-theme="dark"]` if they differ there). Load the face yourself (`next/font` or `@fontsource/*`).
 
-**Display steps:** `type-display-hero` (fluid to 16vw, 0.92 leading) and `type-display-xl` (44px → 136px, 0.9 leading) sit above `type-display-1`; both break long words rather than overflow a phone. **TextSequence** word masks keep 0.08em headroom above and to the sides, so tall caps and outline strokes aren't clipped.
+**Display steps:** `type-display-hero` (fluid to 16vw, 0.92 leading) and `type-display-xl` (44px → 136px, 0.9 leading) sit above `type-display-1`; every display step breaks a long word rather than overflow a phone (`overflow-wrap: anywhere`, also inside flex and grid). **TextSequence** word masks keep 0.08em headroom above and to the sides, so tall caps and outline strokes aren't clipped.
 
 **Contrast:** every on-colour and muted step needs **4.5:1** on its colour. `npx wmds-check` reads the app's CSS and fails a hex pair under that (`brand-contrast`, an error). Pairs it can't resolve (a `var()` or `color-mix`) aren't checked, so check those yourself.
 

@@ -42,7 +42,8 @@ export const intakeConfirmationClasses = cn(
 export const intakeConfirmationTitleClasses = "type-display-2 text-balance text-fg";
 
 /** Existing heading-2 — the confirmation sentence under the headline. */
-export const intakeConfirmationBodyClasses = "type-heading-2 max-w-2xl text-balance text-fg";
+/** A paragraph, so regular body text, not a heading style (Body rule B4). */
+export const intakeConfirmationBodyClasses = "type-large max-w-2xl text-balance text-fg";
 
 /** Booked time under the body — supporting muted type. */
 export const intakeConfirmationMetaClasses = "type-body text-balance text-muted";

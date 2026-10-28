@@ -18,7 +18,8 @@ export type TypographyRole =
   | "caption-tight"
   | "overline"
   | "eyebrow"
-  | "reading";
+  | "reading"
+  | "lead";
 
 /** Astryx semantic type names (Foundation reference). */
 export type AstryxTypeScale =
@@ -41,7 +42,8 @@ export type AstryxTypeScale =
   | "code"
   | "control"
   | "eyebrow"
-  | "reading";
+  | "reading"
+  | "lead";
 
 export type TypographyTracking = "tight" | "normal" | "wider";
 
@@ -81,8 +83,8 @@ export const trackingRules: Array<{
   },
   {
     tracking: "wider",
-    utility: "tracking-wider",
-    rule: "Uppercase overlines only — never on mixed-case text (type-eyebrow carries its own tracking)",
+    utility: "tracking-[0.08em]",
+    rule: "Capitals only, 0.08–0.12em — never on mixed-case text (type-eyebrow carries its own 0.08em)",
   },
 ];
 
@@ -213,9 +215,9 @@ export const typographyStyles: TypographyStyle[] = [
     label: "Overline",
     description: "Section labels in app UI — supporting sans + uppercase (WMDS extension). For editorial captions use eyebrow",
     astryxType: "supporting",
-    className: "type-supporting font-medium uppercase tracking-wider text-muted",
+    className: "type-supporting font-medium uppercase tracking-[0.08em] text-muted",
     tracking: "wider",
-    trackingClass: "tracking-wider",
+    trackingClass: "tracking-[0.08em]",
     sample: "Other options",
     usedIn: ["Card section labels"],
   },
@@ -227,9 +229,21 @@ export const typographyStyles: TypographyStyle[] = [
     astryxType: "eyebrow",
     className: "type-eyebrow text-muted",
     tracking: "wider",
-    trackingClass: "type-eyebrow (0.05em)",
+    trackingClass: "type-eyebrow (0.08em)",
     sample: "Filters",
     usedIn: ["IndexList captions", "Filter panel title", "SectionCaption"],
+  },
+  {
+    role: "lead",
+    label: "Lead",
+    description:
+      "The one paragraph under a page's H1 that sums the page up — 18px on phones to 21px, regular weight (WMDS extension). One per page, text-fg, at the 42rem measure; section intros stay on body size",
+    astryxType: "lead",
+    className: "type-lead text-fg",
+    tracking: "normal",
+    trackingClass: "tracking-normal",
+    sample: "We design, build and run what your customers check before they visit.",
+    usedIn: ["Hero subhead", "Page lead"],
   },
   {
     role: "reading",
@@ -263,7 +277,7 @@ export const astryxTypeScale: Array<{
   { type: "heading-4", utility: "type-heading-4", size: "0.875rem", weight: "600", leading: "1.43" },
   { type: "heading-5", utility: "type-heading-5", size: "0.75rem", weight: "600", leading: "1.67" },
   { type: "heading-6", utility: "type-heading-6", size: "0.625rem", weight: "600", leading: "1.6" },
-  { type: "large", utility: "type-large", size: "1.0625rem", weight: "600", leading: "1.41" },
+  { type: "large", utility: "type-large", size: "1.0625rem", weight: "400", leading: "1.41" },
   { type: "body", utility: "type-body", size: "0.875rem", weight: "400", leading: "1.43" },
   { type: "label", utility: "type-label", size: "0.875rem", weight: "500", leading: "1.43" },
   { type: "supporting", utility: "type-supporting", size: "0.75rem", weight: "400", leading: "1.67" },
@@ -271,6 +285,7 @@ export const astryxTypeScale: Array<{
   { type: "code", utility: "type-code", size: "0.875rem", weight: "400", leading: "1.43" },
   { type: "control", utility: "type-control", size: "0.875rem", weight: "500", leading: "1" },
   { type: "eyebrow", utility: "type-eyebrow", size: "0.75rem mono, uppercase", weight: "400", leading: "1.33" },
+  { type: "lead", utility: "type-lead", size: "clamp(1.125rem → 1.3125rem)", weight: "400", leading: "1.45" },
   { type: "reading", utility: "type-reading", size: "1.0625rem", weight: "400", leading: "1.65" },
 ];
 

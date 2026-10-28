@@ -39,7 +39,7 @@ describe("PromptBar", () => {
     container = view.container;
 
     expect(view.field).toHaveProperty("placeholder", "Ask anything…");
-    expect(view.send).toHaveProperty("disabled", true);
+    expect(view.send.getAttribute("aria-disabled")).toBe("true");
     expect(view.send.getAttribute("aria-label")).toBe("Send");
     expect(view.send.className).toContain("bg-neutral");
     expect(view.send.className).not.toContain("bg-brand");
@@ -51,7 +51,7 @@ describe("PromptBar", () => {
     root = view.root;
     container = view.container;
 
-    expect(view.send).toHaveProperty("disabled", true);
+    expect(view.send.getAttribute("aria-disabled")).toBe("true");
   });
 
   it("calls the send handler when Enter is pressed", () => {
@@ -60,7 +60,7 @@ describe("PromptBar", () => {
     root = view.root;
     container = view.container;
 
-    expect(view.send).toHaveProperty("disabled", false);
+    expect(view.send.getAttribute("aria-disabled")).toBeNull();
     expect(view.send.className).toContain("bg-brand");
     expect(view.send.className).toContain("text-on-brand");
 

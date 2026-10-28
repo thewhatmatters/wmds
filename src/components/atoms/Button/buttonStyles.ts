@@ -51,8 +51,9 @@ export const buttonBaseClasses =
   pressScaleClass +
   " " +
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body " +
-  "disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50 " +
-  "aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none aria-disabled:opacity-50 " +
+  // Disabled (Buttons rule U6): 70% keeps every role's label at 3:1 or more on its own fill.
+  "disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-70 " +
+  "aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none aria-disabled:opacity-70 " +
   "no-underline";
 
 export const buttonRoleClasses: Record<ButtonRole, string> = {
@@ -91,7 +92,7 @@ export const buttonAlignClasses: Record<ButtonAlign, string> = {
  * Size is `--font-size-sm` (12px) — small, still a control label.
  */
 export const buttonMonoLabelClasses =
-  "!font-mono !text-[length:var(--font-size-sm)] !font-normal !uppercase !leading-none !tracking-[0.14em]";
+  "!font-mono !text-[length:var(--font-size-sm)] !font-normal !uppercase !leading-none !tracking-[0.12em]";
 
 /** Trailing new-tab glyph on an `external` link button — the icon **TextLink** `external` shows. */
 export const buttonExternalIconClasses = "-ml-0.5 size-[0.85em] shrink-0 stroke-current";
@@ -137,7 +138,8 @@ export const buttonRowBaseClasses =
   "transition-[color,background-color,outline-color] " +
   motionTransition("fast") +
   " focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring " +
-  "disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50";
+  "disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-70 " +
+  "aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none aria-disabled:opacity-70";
 
 export const buttonRowLayoutClasses =
   "h-auto min-h-0 rounded-md px-1.5 py-1 text-left font-normal " +
@@ -160,3 +162,6 @@ export function buttonNavStateClasses(selected: boolean): string {
     ? "bg-secondary text-secondary-foreground"
     : "bg-transparent text-muted hover:bg-ghost-hover hover:text-fg";
 }
+
+/** The reason beside a disabled button (Buttons rule U6): supporting type, muted ink (9.8:1). */
+export const buttonDisabledReasonClasses = "type-supporting text-muted";

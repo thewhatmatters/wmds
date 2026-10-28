@@ -68,7 +68,7 @@ export const Keyboard: Story = {
     expect(dialog).toHaveAttribute("aria-modal", "true");
     await expect(dialog).toHaveAccessibleName("Start a project");
     expect(within(dialog).getByRole("progressbar")).toHaveAttribute("aria-valuetext", "Step 1 of 4");
-    expect(within(dialog).getByRole("button", { name: "Back" })).toBeDisabled();
+    expect(within(dialog).getByRole("button", { name: "Back" })).toHaveAttribute("aria-disabled", "true");
 
     const close = within(dialog).getByRole("button", { name: "Close" });
     await waitFor(() => {

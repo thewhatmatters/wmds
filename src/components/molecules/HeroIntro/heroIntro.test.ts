@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest";
 import { HeroIntro } from "./HeroIntro";
 import { heroIntroLeadClasses, heroIntroRestClasses } from "./heroIntroStyles";
 
-const leadCopy = "We're a design and product studio based in Austin, Texas.";
+const leadCopy = "A design studio in Austin, Texas.";
 
 describe("HeroIntro", () => {
   it("puts the lead on its own line and the rest on the next line", async () => {
@@ -33,8 +33,9 @@ describe("HeroIntro", () => {
     const spans = intro?.querySelectorAll(":scope > span");
     expect(page?.className).toContain("grid-page");
     expect(page?.className).toContain("!py-0");
-    expect(intro?.className).toContain("lg:col-start-4");
-    expect(intro?.className).toContain("lg:col-end-10");
+    expect(intro?.className).toContain("lg:col-start-2");
+    expect(intro?.className).toContain("lg:col-end-12");
+    expect(intro?.className).toContain("md:text-center");
     expect(intro?.className).toContain("type-display-2");
     expect(intro?.className).toContain("!font-normal");
     expect(intro?.className).toContain("text-balance");
@@ -67,7 +68,7 @@ describe("HeroIntro", () => {
     expect(intro?.className).toContain("!font-normal");
     expect(intro?.className).toContain("text-balance");
     expect(intro?.className).toContain("col-span-full");
-    expect(intro?.className).not.toContain("lg:col-start-4");
+    expect(intro?.className).not.toContain("lg:col-start-2");
     const lead = intro?.querySelector(":scope > span");
     expect(lead?.className).not.toContain("whitespace-nowrap");
     expect(intro?.querySelectorAll(":scope > span")).toHaveLength(2);
@@ -113,7 +114,7 @@ describe("marketing hero intro show code", () => {
     const liveStart = source.indexOf("\nfunction MarketingHero()");
     const liveEnd = source.indexOf("export const MarketingHeroPattern");
     const live = source.slice(liveStart, liveEnd);
-    const leadProp = `<HeroIntro lead="${leadCopy}">`;
+    const leadProp = `<HeroIntro firstLine="${leadCopy}">`;
 
     expect(copy).toContain(leadProp);
     expect(live).toContain(leadProp);
