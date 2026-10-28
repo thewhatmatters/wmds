@@ -6,10 +6,10 @@ import { Button, FooterReveal, SiteNav, footerRevealFieldClasses } from "@thewha
 import { Sparkles } from "lucide-react";
 
 const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
+  { label: "Contra", href: "https://contra.com/thewhatmatters" },
   { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
+  { label: "X", href: "https://x.com/thewhatmatters", ariaLabel: "WhatMatters on X" },
 ] as const;
 
 // Opens the multi-step project form. There is no /start route.

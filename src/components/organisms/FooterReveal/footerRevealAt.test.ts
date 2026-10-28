@@ -4,7 +4,6 @@ import { footerRevealAt } from "./footerRevealAt";
 import {
   footerRevealBrandClasses,
   footerRevealContentClasses,
-  footerRevealExternalLinkProps,
   footerRevealFadeClasses,
   footerRevealFieldClasses,
   footerRevealRootClasses,
@@ -120,20 +119,6 @@ describe("footer reveal shell", () => {
     expect(source).toContain("reduceMotion ? [0, 0] : [12, 0]");
     expect(source).toContain('aria-hidden="true"');
     expect(source).not.toContain("reduceMotion ? [0, 0] : [6, 0]");
-  });
-});
-
-describe("footerRevealExternalLinkProps", () => {
-  it("opens https links in a new tab", () => {
-    expect(footerRevealExternalLinkProps("https://www.instagram.com/thewhatmatters")).toEqual({
-      target: "_blank",
-      rel: "noopener",
-    });
-  });
-
-  it("leaves placeholder hashes on the same page", () => {
-    expect(footerRevealExternalLinkProps("#contra-TODO")).toEqual({});
-    expect(footerRevealExternalLinkProps("#x-TODO")).toEqual({});
   });
 });
 

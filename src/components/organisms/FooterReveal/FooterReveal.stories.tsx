@@ -54,7 +54,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
         ├── FooterReveal.Brand
         │   ├── headline (type-display-1, centered)
         │   ├── Button role="inverse" type="button" (onCtaClick)
-        │   ├── social links (underlined, https opens in a new tab)
+        │   ├── social links (underlined, same tab)
         │   └── wordmark (aria-hidden, spans the footer width, cropped at the bottom edge)
         └── FooterReveal.Ruled — min-height 100vh; the block is vertically centered when it fits
             ├── nav (TextLink: Services, Resources, About; parent is sans, 4xl below sm, 4rem from sm, text-brand)
@@ -67,7 +67,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
 - One **FooterReveal** per page. Put **SiteNav** and the page or marketing hero inside **Content**.
 - Field color is **\`footerRevealFieldClasses\`** (\`bg-brand\` / \`text-on-brand\`). \`--color-brand\` is \`#011272\` in both themes. White on that navy reports **15.8:1**. The wordmark uses \`--color-brand-soft\` (40% white on the navy) so it stays visible.
 - The CTA is a **Button** \`role="inverse"\` \`type="button"\` (\`onCtaClick\`). It opens a modal; there is no default route. Pass \`ctaHref\` only when the control should be a link. Do not recolor it with \`className\`.
-- Social links use **\`footerRevealFieldLinkClasses\`** at heading-1 size. \`https\` hrefs set \`target="_blank"\` and \`rel="noopener"\`. Placeholder hashes stay on the same page.
+- Social links use **\`footerRevealFieldLinkClasses\`** at heading-1 size, at least 24px wide. They open in the same tab (Links K9). Give a one-letter label an \`ariaLabel\`, e.g. \`X\` → "WhatMatters on X".
 - The wordmark is decorative (\`aria-hidden\`). It spans the footer width: font-size is \`100cqi\` divided by the measured advance width of the word, with no breakpoint cap. The brand panel crops it at the bottom edge, so it does not widen the page.
 - Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. The brand panel clips its wordmark. **FooterReveal.Ruled** fits its wordmark inside the footer width so the letters stay visible.
 - Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`. The brand panel clips its own wordmark.
@@ -83,10 +83,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
+  { label: "Contra", href: "https://contra.com/thewhatmatters" },
   { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
+  { label: "X", href: "https://x.com/thewhatmatters", ariaLabel: "WhatMatters on X" },
 ] as const;
 
 const tiles = [
@@ -103,10 +103,10 @@ import { Button, FooterReveal, SiteNav, footerRevealFieldClasses } from "@thewha
 import { Sparkles } from "lucide-react";
 
 const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
+  { label: "Contra", href: "https://contra.com/thewhatmatters" },
   { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
+  { label: "X", href: "https://x.com/thewhatmatters", ariaLabel: "WhatMatters on X" },
 ] as const;
 
 // Opens the multi-step project form. There is no /start route.
@@ -259,10 +259,10 @@ import { Sparkles } from "lucide-react";
 import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, ScrollHorizontal, SiteNav, footerRevealFieldClasses } from "@thewhatmatters/wmds";
 
 const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
+  { label: "Contra", href: "https://contra.com/thewhatmatters" },
   { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
+  { label: "X", href: "https://x.com/thewhatmatters", ariaLabel: "WhatMatters on X" },
 ] as const;
 
 const tiles = [

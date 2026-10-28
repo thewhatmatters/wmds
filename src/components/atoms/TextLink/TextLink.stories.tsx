@@ -123,7 +123,7 @@ export const ExternalDestination: Story = {
       docs: {
         description: {
           story:
-            "SquareArrowOutUpRight visually reinforces that the destination opens in a new tab; assistive technology receives the same context.",
+            "`external` marks another site with SquareArrowOutUpRight and opens it in the same tab (Links K9). Add `newTab` only when leaving would lose the reader's work; it sets `target=\"_blank\"`, a safe `rel`, and adds \"(opens in a new tab)\" to the accessible name.",
         },
       },
     },

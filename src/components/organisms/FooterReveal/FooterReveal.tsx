@@ -27,7 +27,6 @@ import {
   footerRevealBrandCopyClasses,
   footerRevealBrandHeadlineClasses,
   footerRevealContentClasses,
-  footerRevealExternalLinkProps,
   footerRevealFadeClasses,
   footerRevealFieldClasses,
   footerRevealFieldContentClasses,
@@ -283,6 +282,8 @@ function FooterRevealFooter({ children, className }: FooterRevealFooterProps) {
 export interface FooterRevealSocialLink {
   label: string;
   href: string;
+  /** Accessible name when the label alone is unclear, e.g. `WhatMatters on X` for the label `X`. */
+  ariaLabel?: string;
 }
 
 /** Content is the app's: `headline`, `ctaLabel`, and `wordmark` are required, with no defaults. */
@@ -303,7 +304,7 @@ export interface FooterRevealBrandProps {
   ctaHref?: string;
   /** Decorative wordmark along the bottom edge. Spans the footer width, e.g. `WHATMATTERS`. */
   wordmark: string;
-  /** Underlined text row. `https` links open in a new tab with `rel="noopener"`. Omit to render none. */
+  /** Underlined text row. Links open in the same tab (Links K9). Omit to render none. */
   socialLinks?: readonly FooterRevealSocialLink[];
   className?: FooterRevealLayoutClassName;
 }
@@ -410,7 +411,7 @@ function FooterRevealBrand({
           <ul className={footerRevealSocialListClasses}>
             {socialLinks.map((link) => (
               <li key={link.label}>
-                <a href={link.href} className={footerRevealSocialLinkClasses} {...footerRevealExternalLinkProps(link.href)}>
+                <a href={link.href} className={footerRevealSocialLinkClasses} aria-label={link.ariaLabel}>
                   {link.label}
                 </a>
               </li>

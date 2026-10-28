@@ -10,8 +10,15 @@ describe("TextLink", () => {
     expect(html).not.toContain("target=");
   });
 
-  it("opens another site in a new tab and says so", () => {
+  it("marks another site with the icon and opens it in the same tab (Links K9)", () => {
     const html = renderToString(createElement(TextLink, { href: "https://example.com", external: true, children: "Example" }));
+    expect(html).toContain("<svg");
+    expect(html).not.toContain("target=");
+    expect(html).not.toContain("(opens in a new tab)");
+  });
+
+  it("opens a new tab only with newTab, and says so in the accessible name", () => {
+    const html = renderToString(createElement(TextLink, { href: "https://example.com", external: true, newTab: true, children: "Example" }));
     expect(html).toContain('target="_blank"');
     expect(html).toContain('rel="noopener noreferrer"');
     expect(html).toContain("(opens in a new tab)");

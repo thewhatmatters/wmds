@@ -12,10 +12,10 @@ import { Sparkles } from "lucide-react";
 import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence, footerRevealFieldClasses } from "@thewhatmatters/wmds";
 
 const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
+  { label: "Contra", href: "https://contra.com/thewhatmatters" },
   { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
+  { label: "X", href: "https://x.com/thewhatmatters", ariaLabel: "WhatMatters on X" },
 ] as const;
 
 const tiles = [
