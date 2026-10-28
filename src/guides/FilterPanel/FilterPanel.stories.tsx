@@ -219,7 +219,7 @@ export const FilteredGrid: Story = {
       docs: {
         description: {
           story:
-            "The same panel beside a grid of link tiles. Images keep their own heights and the tiles pack; Tab moves through them in reading order, across the top and then down. A tile to another site opens a new tab and says so. Show code omits the Storybook-only inspector.",
+            "The same panel beside a grid of link tiles. Images keep their own heights and the tiles pack; Tab moves through them in reading order, across the top and then down. A tile to another site shows the external mark and stays in the tab. Show code omits the Storybook-only inspector.",
         },
       },
     },
@@ -254,7 +254,7 @@ export interface FilteredResource {
   title: string;
   /** Where the tile goes — the resource's page in the app, for example /resources/type-scale. */
   href: string;
-  /** Only for a tile that links straight to another site: it opens a new tab. */
+  /** Only for a tile that links straight to another site: it shows the external mark. */
   external?: boolean;
   /** The preview. */
   image: ResourceImage;

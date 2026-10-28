@@ -37,9 +37,9 @@ export const OpensFromTileAndReturnsFocus: Story = {
 
     expect(within(dialog).getByText("3 of 9")).toBeInTheDocument();
     expect(within(dialog).getByRole("heading", { level: 2, name: "Contrast checker" })).toBeInTheDocument();
-    const visit = within(dialog).getByRole("link", { name: "Visit contrast.example (opens in a new tab)" });
+    const visit = within(dialog).getByRole("link", { name: "Visit contrast.example" });
     expect(visit).toHaveAttribute("href", "https://contrast.example");
-    expect(visit).toHaveAttribute("target", "_blank");
+    expect(visit).not.toHaveAttribute("target");
     expect(within(dialog).getByText("Source")).toBeInTheDocument();
 
     await userEvent.keyboard("{Escape}");
@@ -120,7 +120,7 @@ export const PageForm: Story = {
     const path = canvas.getByRole("navigation");
     expect(within(path).getByRole("link", { name: "Resources" })).toBeInTheDocument();
     expect(within(path).getByText("Contrast checker")).toHaveAttribute("aria-current", "page");
-    expect(canvas.getByRole("link", { name: "Visit contrast.example (opens in a new tab)" })).toBeInTheDocument();
+    expect(canvas.getByRole("link", { name: "Visit contrast.example" })).toBeInTheDocument();
     expect(canvas.getByText("Made by")).toBeInTheDocument();
     expect(canvas.queryByRole("button", { name: "Next resource" })).toBeNull();
   },

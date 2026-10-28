@@ -3,7 +3,7 @@ import { Badge } from "../../atoms/Badge/Badge";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { HeroIntro } from "./HeroIntro";
 
-const lead = "We're a design and product studio based in Austin, Texas.";
+const lead = "A design studio in Austin, Texas.";
 
 const meta = {
   title: "Components/HeroIntro",
@@ -11,7 +11,7 @@ const meta = {
   tags: ["autodocs"],
   args: {
     lead,
-    children: "We help brands stand out online with bold ideas, fresh approaches, and products people actually love to use.",
+    children: "We help brands stand out online.",
   },
   ...storyMetaDocsDefaults(),
   parameters: {
@@ -21,11 +21,11 @@ const meta = {
         component: `
 ## Usage
 
-Centered intro under a marketing headline. Pass the first sentence as \`lead\` and the rest as children. **HeroIntro** owns the line break and the page-grid span.
+Intro under a marketing headline, left-aligned (Headings H8: it runs past 2 lines). Pass the first sentence as \`firstLine\` and the rest as children. **HeroIntro** owns the line break and the page-grid span.
 
 Both steps are an \`h1\` on \`type-display-2\` at normal weight, the same font-size and line-height as **ScrollHorizontal.Intro**. \`step="large"\` (default) is columns 4–9 from \`lg\`. \`step="display"\` is full width of the page grid — the sequenced hero.
 
-\`lead\` wraps when the measure is shorter than the line, including from \`md\`. Children always start on the next line. Both lines stay centered, with \`text-wrap: balance\`, so a wrapped line is not a single word. Keep “Austin, Texas” together with a non-breaking space.
+\`lead\` wraps when the measure is shorter than the line, including from \`md\`. Children always start on the next line. Both lines use \`text-wrap: balance\`, so a wrapped line is not a single word. Keep “Austin, Texas” together with a non-breaking space.
 
 Paste it inside **Components/HeroTileStack → Pattern — marketing hero**.
 
@@ -33,7 +33,7 @@ Paste it inside **Components/HeroTileStack → Pattern — marketing hero**.
 
 \`\`\`
 HeroIntro — grid-page, page block pad removed
-└── h1 — type-display-2, normal weight, text-balance, text-muted, centered
+└── h1 — type-display-2, normal weight, text-balance, text-muted, left (display step: centred from md)
     ├── lead — wraps, including from md
     └── children — always the next line
         large: columns 4–9 from lg; full width of the page grid below lg
@@ -61,10 +61,10 @@ import { Badge, HeroIntro } from "@thewhatmatters/wmds";
 
 export function MarketingHeroIntro() {
   return (
-    <HeroIntro firstLine="We're a design and product studio based in Austin, Texas.">
+    <HeroIntro firstLine="A design studio in Austin, Texas.">
       We help brands stand out{" "}
       <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
-      {" "}with bold ideas, fresh approaches, and products people actually love to use.
+      .
     </HeroIntro>
   );
 }
@@ -77,7 +77,7 @@ export const TwoLineIntro: Story = {
       docs: {
         description: {
           story:
-            "lead is the Austin sentence and wraps inside the measure, including from md. Austin, and Texas stay together with a non-breaking space. The rest, including the inline online Badge, always starts on the next line. type-display-2 at normal weight, the same font-size as the gallery statement, with text-wrap balance. Centered on grid-page, columns 4–9 from lg.",
+            "firstLine is the Austin sentence and wraps inside the measure, including from md. Austin, and Texas stay together with a non-breaking space. The rest, including the inline online Badge, always starts on the next line. type-display-2 at normal weight, the same font-size as the gallery statement, with text-wrap balance. Left-aligned on grid-page, columns 4–9 from lg.",
         },
       },
     },
@@ -94,8 +94,8 @@ export const TwoLineIntro: Story = {
         avatar={{ src: "/hero-badges/globe.svg", alt: "" }}
       >
         online
-      </Badge>{" "}
-      with bold ideas, fresh approaches, and products people actually love to use.
+      </Badge>
+      .
     </HeroIntro>
   ),
 };

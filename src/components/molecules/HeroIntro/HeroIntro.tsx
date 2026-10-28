@@ -3,6 +3,7 @@ import { cn } from "../../../lib/cn";
 import {
   heroIntroCopyClasses,
   heroIntroDescriptionClasses,
+  heroIntroDisplayDescriptionClasses,
   heroIntroDisplayCopyClasses,
   heroIntroDisplayLeadClasses,
   heroIntroLeadClasses,
@@ -63,7 +64,7 @@ export function HeroIntro({ firstLine, lead, children, description, step = "larg
         <span className={display ? heroIntroDisplayLeadClasses : heroIntroLeadClasses}>{first}</span>
         {rest ? <span className={heroIntroRestClasses}>{children}</span> : null}
       </h1>
-      {description != null ? <p className={heroIntroDescriptionClasses}>{description}</p> : null}
+      {description != null ? <p className={display ? heroIntroDisplayDescriptionClasses : heroIntroDescriptionClasses}>{description}</p> : null}
     </div>
   );
 }

@@ -119,11 +119,16 @@ export interface ButtonProps
    */
   render?: ReactElement;
   /**
-   * With `render={<a href />}` to another site: opens it in a new tab (`target="_blank"`, a safe
-   * `rel`), tells screen readers so, and shows the trailing external icon **TextLink** uses.
+   * With `render={<a href />}` to another site: shows the trailing external icon **TextLink** uses and
+   * opens in the same tab (Links K9). Add `newTab` to open a new tab.
    */
   external?: boolean;
-  /** `external` only — `false` drops the trailing icon; the spoken "opens in a new tab" stays. */
+  /**
+   * `external` only — opt in to a new tab (`target="_blank"`, a safe `rel`); adds "(opens in a new tab)"
+   * to the accessible name. Only when leaving would lose the reader's work.
+   */
+  newTab?: boolean;
+  /** `external` only — `false` drops the trailing icon. */
   externalIcon?: boolean;
   /** Layout-only: width, margin, flex placement. */
   className?: ButtonLayoutClassName;
@@ -271,6 +276,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     selected = false,
     render,
     external = false,
+    newTab = false,
     externalIcon = true,
     className,
     onClick,
@@ -391,7 +397,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     );
   }
 
-  const opensNewTab = external && render != null;
+  const isExternal = external && render != null;
+  const opensNewTab = isExternal && newTab;
 
   return withReason(
     <ButtonPill
@@ -424,14 +431,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       data-emphasis={role === "outline" ? (emphasis ?? "strong") : undefined}
       data-mono={mono ? "" : undefined}
       data-end-icon={endIcon ? "" : undefined}
-      data-external={opensNewTab ? "" : undefined}
+      data-external={isExternal ? "" : undefined}
     >
       {icon ? <ButtonIcon size={size}>{icon}</ButtonIcon> : null}
       <span className={mono ? buttonMonoLabelClasses : undefined}>
         {children}
         {opensNewTab ? <span className="sr-only"> (opens in a new tab)</span> : null}
       </span>
-      {opensNewTab && externalIcon ? (
+      {isExternal && externalIcon ? (
         <SquareArrowOutUpRight className={buttonExternalIconClasses} strokeWidth={2} aria-hidden />
       ) : null}
       {endIcon ? (

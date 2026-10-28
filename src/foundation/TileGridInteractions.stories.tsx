@@ -123,10 +123,10 @@ export const TileSpokenName: Story = {
     const canvas = within(canvasElement);
     const list = canvas.getByRole("list", { name: "Library" });
     const external = within(list).getByRole("link", {
-      name: "Grid notes gridnotes.example Free (opens in a new tab)",
+      name: "Grid notes gridnotes.example Free",
     });
-    expect(external).toHaveAttribute("target", "_blank");
-    expect(external).toHaveAttribute("rel", "noopener noreferrer");
+    // Links K9: another site stays in the tab unless the tile opts in with `newTab`.
+    expect(external).not.toHaveAttribute("target");
     // One link per tile, nothing nested, and the image keeps its place before it loads.
     expect(external.querySelector("a, button")).toBeNull();
     const image = external.querySelector("img");

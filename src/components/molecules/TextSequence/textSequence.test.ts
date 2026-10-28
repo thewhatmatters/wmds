@@ -483,7 +483,7 @@ describe("marketing hero text sequence story", () => {
     expect(variantEnd).toBeGreaterThan(variantStart);
     const pattern = source.slice(0, variantStart);
     const variant = source.slice(variantStart, variantEnd);
-    expect(pattern).toContain('firstLine="We\'re a design and product studio based in Austin,\u00A0Texas."');
+    expect(pattern).toContain('firstLine="A design studio in Austin,\u00A0Texas."');
     expect(pattern).toContain("Austin,&nbsp;TX");
     expect(pattern).toContain('{"studio specializing in brand and product design."}');
     expect(pattern.indexOf('hand="rock"')).toBeGreaterThan(pattern.indexOf("Austin,&nbsp;TX"));

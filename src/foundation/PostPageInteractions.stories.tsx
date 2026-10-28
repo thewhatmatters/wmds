@@ -50,9 +50,9 @@ export const MetadataPanel: Story = {
     expect(within(panel).getByRole("link", { name: "Guides" })).toHaveAttribute("href", "#guides");
     expect(within(panel).queryByRole("link", { name: "Randy Lee" })).toBeNull();
 
-    // Share links open a new tab and say so.
-    const share = within(panel).getByRole("link", { name: "LinkedIn (opens in a new tab)" });
-    expect(share).toHaveAttribute("target", "_blank");
+    // Share links stay in the tab (Links K9).
+    const share = within(panel).getByRole("link", { name: "LinkedIn" });
+    expect(share).not.toHaveAttribute("target");
     expect(share.getAttribute("href")).toContain(encodeURIComponent(samplePost.url));
 
     // Copy for LLM copies the markdown and confirms.

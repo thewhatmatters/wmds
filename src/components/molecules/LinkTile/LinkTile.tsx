@@ -38,10 +38,12 @@ export interface LinkTileProps {
    */
   render?: ReactElement;
   /**
-   * Another site: opens in a new tab (`target="_blank"`, a safe `rel`), tells screen readers so,
-   * and shows the mark **TextLink** `external` uses after the title.
+   * Another site: shows the mark **TextLink** `external` uses after the title and opens in the same
+   * tab (Links K9). Add `newTab` to open a new tab.
    */
   external?: boolean;
+  /** `external` only — opt in to a new tab (a safe `rel`); screen readers hear "opens in a new tab". */
+  newTab?: boolean;
   /**
    * The preview — an `<img>` (or `next/image`) with its `width` and `height`, so the tile holds its
    * space before the image loads. One image; not a video.
@@ -86,13 +88,14 @@ function frameStyle(ratio: number | undefined): CSSProperties | undefined {
 
 /**
  * A resource tile that is one link — a preview image with the resource's name and where it lives
- * under it. Screen readers hear the title, the meta line, the tag, then "opens in a new tab".
+ * under it. Screen readers hear the title, the meta line, the tag, then "opens in a new tab" with `newTab`.
  */
 export function LinkTile({
   title,
   href,
   render,
   external = false,
+  newTab = false,
   media,
   ratio,
   meta,
@@ -130,7 +133,7 @@ export function LinkTile({
   }
 
   const hasMedia = media != null;
-  const labelledBy = [titleId, meta != null && metaId, tag != null && tagId, external && hintId]
+  const labelledBy = [titleId, meta != null && metaId, tag != null && tagId, external && newTab && hintId]
     .filter(Boolean)
     .join(" ");
 
@@ -138,7 +141,7 @@ export function LinkTile({
     <LinkTileShell
       render={render}
       {...(href != null ? { href } : null)}
-      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : null)}
+      {...(external && newTab ? { target: "_blank", rel: "noopener noreferrer" } : null)}
       className={cn(linkTileRootClasses, className)}
       aria-labelledby={labelledBy}
       data-link-tile=""
@@ -176,7 +179,7 @@ export function LinkTile({
               {meta}
             </span>
           ) : null}
-          {external ? (
+          {external && newTab ? (
             <span id={hintId} className="sr-only">
               (opens in a new tab)
             </span>

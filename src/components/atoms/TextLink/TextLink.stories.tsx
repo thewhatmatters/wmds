@@ -18,7 +18,7 @@ Use **TextLink** for inline navigation inside prose. Its solid underline keeps l
 
 Set \`variant="quiet"\` for headline-size text and list titles: no underline at rest, an underline scaled to the text on hover and keyboard focus, and the same focus ring. A quiet link inherits the surrounding size and weight, so the heading around it owns the type step.
 
-Set \`external\` when the destination opens in a new tab. WMDS appends Lucide **SquareArrowOutUpRight**, adds spoken new-tab context, and supplies a safe \`rel\`.
+Set \`external\` when the destination is another site. WMDS appends Lucide **SquareArrowOutUpRight**, and the link opens in the same tab (Links K9). Add \`newTab\` only when leaving would lose the reader's work: it opens a new tab with a safe \`rel\` and adds spoken new-tab context.
 
 ## Anatomy
 
@@ -32,7 +32,7 @@ TextLink (\`a\`)
 - **Do** write destination-oriented labels that make sense in context.
 - **Do** use **TextLink** inside body copy and supporting text.
 - **Do** use \`variant="quiet"\` for a linked title inside a heading — never inside running prose, where links must stay underlined.
-- **Do** use \`external\` only when a new tab is genuinely useful.
+- **Do** use \`external\` for another site, and \`newTab\` only when a new tab is genuinely useful.
 - **Do** pass \`render={<Link href="/blog/post" />}\` in place of \`href\` for a link the app's router should handle; the treatment and the focus ring stay the same.
 - **Don't** use it for actions—use **Button**.
 - **Don't** override its color or underline treatment with \`className\`.

@@ -7,7 +7,7 @@ import { Badge, LinkTile } from "@thewhatmatters/wmds";
 export interface ResourceTileProps {
   title: string;
   href: string;
-  /** Another site: opens in a new tab. */
+  /** Another site: the external mark, same tab. */
   external?: boolean;
   /** One line under the title, for example the domain. */
   meta?: string;

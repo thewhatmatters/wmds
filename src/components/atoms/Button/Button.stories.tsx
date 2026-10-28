@@ -54,7 +54,7 @@ const meta = {
 | **Submit / async** | \`status\` + optional \`statusLabels\` |
 | **Copy** | \`icon\` + \`status\` — the icon morphs into the check; hold with \`buttonStatusHoldMs\` |
 | **Link** | \`render={<a href />}\` — Button chrome on a real anchor (nav links, header CTAs) |
-| **External link** | \`render={<a href />}\` + \`external\` — new tab, safe \`rel\`, spoken "opens in a new tab", trailing icon |
+| **External link** | \`render={<a href />}\` + \`external\` — the trailing external icon, same tab (Links K9). Add \`newTab\` for a new tab, a safe \`rel\` and a spoken "opens in a new tab" |
 | **On navy** | \`role="inverse"\` filled, \`role="inverse-outline"\` hairline — paste **Components/CopyField → Pattern — on a navy field** |
 
 Pill-shaped by default (\`layout="pill"\`). **Row layout** is flat full-width — for TaskRows detail lines and settings rows. **Roles:** \`primary\` (main CTA), \`secondary\`, \`ghost\`, \`destructive\`, \`inverse\` (surface fill and brand text, for a brand-blue field), \`outline\` (hairline border, transparent fill), \`inverse-outline\` (on-brand hairline, transparent fill, for that same navy field). \`mono\` sets a mono uppercase label. \`endIcon\` adds a trailing accent square. No semantic color variants — success/error live on \`status\` morph only.
@@ -63,7 +63,7 @@ Pill-shaped by default (\`layout="pill"\`). **Row layout** is flat full-width �
 
 - **Do** copy a named story below — don't mix \`status\` with \`count\`, \`endIcon\`, or \`mono\`.
 - **Do** use \`status\` for form submit and async feedback; with \`icon\`, the status glyph morphs out of the icon. \`status\` sits on the pill's live region, so its labels are announced.
-- **Do** set \`external\` on a link to another site — never hand-write \`target\`, \`rel\`, or "(opens in a new tab)".
+- **Do** set \`external\` on a link to another site, and \`newTab\` only when leaving would lose the reader's work — never hand-write \`target\`, \`rel\`, or "(opens in a new tab)".
 - **Do** use \`count\` only for numeric notification badges on nav actions.
 - **Don't** pass arbitrary nodes — no slots, no \`className\` for colors.
 - **Don't** invent new button looks in app code — extend WMDS via ADR.
@@ -347,7 +347,7 @@ export const ExternalLink: Story = {
       docs: {
         description: {
           story:
-            "A pill link to another site. `external` opens it in a new tab with a safe `rel`, adds the spoken \"(opens in a new tab)\", and shows the trailing icon **TextLink** uses (`externalIcon={false}` drops the icon).",
+            "A pill link to another site. `external` shows the trailing icon **TextLink** uses and keeps the same tab (Links K9; `externalIcon={false}` drops the icon). `newTab` opts in to a new tab, a safe `rel` and the spoken \"(opens in a new tab)\".",
         },
       },
     },

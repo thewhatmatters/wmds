@@ -8,7 +8,7 @@ export interface ResourceTileItem {
   id: string;
   title: string;
   href: string;
-  /** Another site: the tile opens it in a new tab. */
+  /** Another site: the tile shows the external mark and stays in the tab. */
   external?: boolean;
   /** One line under the title, for example the domain. */
   meta?: string;
