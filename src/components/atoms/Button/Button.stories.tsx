@@ -620,7 +620,30 @@ export const Sizes: Story = {
 
 export const Disabled: Story = {
   name: "Reference — disabled",
-  args: { children: "Unavailable", disabled: true },
+  render: () => (
+    <div className="flex flex-col items-start gap-6">
+      <div className="flex flex-wrap items-center gap-3">
+        <Button disabled disabledReason="Add a date to send the request">
+          Send request
+        </Button>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {buttonRoles.map((role) => (
+          <Button key={role} role={role} disabled>
+            {role}
+          </Button>
+        ))}
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Avoid it: prefer an enabled button that explains the error on submit. When one is needed, `disabled` keeps the button in the tab order (`aria-disabled`), ignores presses, and dims it to 70% with no hover or press feedback; every role's label stays at 3:1 or more. `disabledReason` shows why beside it and is read with it.",
+      },
+    },
+  },
 };
 
 export const TokenCheck: Story = {

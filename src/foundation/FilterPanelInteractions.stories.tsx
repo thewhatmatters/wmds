@@ -43,7 +43,7 @@ export const PanelFiltersAndClears: Story = {
     // Counts are read with the label; Clear all waits for a filter.
     const guides = within(panel).getByRole("checkbox", { name: "Guides (2 posts)", hidden: true });
     const clear = within(panel).getByRole("button", { name: "Clear all", hidden: true });
-    expect(clear).toBeDisabled();
+    expect(clear).toHaveAttribute("aria-disabled", "true");
 
     guides.click();
     await waitFor(() => {
@@ -51,7 +51,7 @@ export const PanelFiltersAndClears: Story = {
     });
     expect(status).toHaveTextContent("2 posts");
     expect(postTitles(canvasElement)).toEqual(["How we scope a brand sprint", "Writing briefs people finish reading"]);
-    expect(clear).toBeEnabled();
+    expect(clear).not.toHaveAttribute("aria-disabled");
 
     // Groups combine: Guides from 2025 matches nothing, and the empty slot takes the list's place.
     within(panel).getByRole("checkbox", { name: "2025 (1 post)", hidden: true }).click();
@@ -66,7 +66,7 @@ export const PanelFiltersAndClears: Story = {
       expect(status).toHaveTextContent("4 posts");
     });
     expect(guides).not.toBeChecked();
-    expect(clear).toBeDisabled();
+    expect(clear).toHaveAttribute("aria-disabled", "true");
 
     // A collapsed group's options leave the tab order.
     const topic = within(panel).getByRole("button", { name: "Topic", hidden: true });

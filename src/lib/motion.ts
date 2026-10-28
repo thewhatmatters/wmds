@@ -226,7 +226,8 @@ export function motionTransition(
 export const focusRingTransitionClasses =
   `transition-[box-shadow,border-color,outline-color] ${motionTransition("fast")}`;
 
-export const pressScaleClass = "enabled:active:scale-[var(--motion-press-scale)]";
+/** No press feedback on a disabled control, native or `aria-disabled` (Buttons rule U6). */
+export const pressScaleClass = "enabled:not-aria-disabled:active:scale-[var(--motion-press-scale)]";
 
 /** Map WMDS Theme tokens to a Motion `transition` prop — reads CSS vars at runtime. */
 export function motionTransitionProp(

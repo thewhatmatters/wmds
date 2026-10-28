@@ -2,6 +2,7 @@ import { useRender } from "@base-ui/react/use-render";
 import { SquareArrowOutUpRight } from "lucide-react";
 import {
   forwardRef,
+  useId,
   type ButtonHTMLAttributes,
   type ReactElement,
   type ReactNode,
@@ -14,6 +15,7 @@ import type { ButtonStatus } from "./buttonStatusStyles";
 import {
   buttonAlignClasses,
   buttonBaseClasses,
+  buttonDisabledReasonClasses,
   buttonEndIconSquareClasses,
   buttonExternalIconClasses,
   buttonOutlineQuietClasses,
@@ -69,7 +71,16 @@ export interface ButtonProps
    */
   emphasis?: ButtonEmphasis;
   size?: ButtonSize;
+  /**
+   * Disabled (Buttons rule U6): stays in the tab order (`aria-disabled`), ignores presses, dims to 70%
+   * with no hover or press feedback. Prefer an enabled button that explains the error on submit.
+   */
   disabled?: boolean;
+  /**
+   * Why it's disabled, shown beside the button (`type-supporting`, muted) and read with it
+   * (`aria-describedby`). Renders only while `disabled`. Pill, row and nav layouts.
+   */
+  disabledReason?: ReactNode;
   type?: "button" | "submit" | "reset";
   /**
    * Async / submit morph — whole pill animates idle → loading → success → error.
@@ -187,6 +198,12 @@ interface ButtonPillProps
   "data-size": ButtonSize;
 }
 
+/** Swallows a press on a disabled button or link: no submit, no navigation, no handler. */
+function preventActivation(event: React.MouseEvent) {
+  event.preventDefault();
+  event.stopPropagation();
+}
+
 /** Nav row — a `<button>` by default, or the same chrome on `render` (an `<a>` or a router link). */
 const ButtonNav = forwardRef<HTMLButtonElement, ButtonPillProps>(function ButtonNav(
   { render, type, disabled, ...props },
@@ -196,14 +213,15 @@ const ButtonNav = forwardRef<HTMLButtonElement, ButtonPillProps>(function Button
     render,
     ref,
     defaultTagName: "button",
-    props: render
-      ? {
-          ...props,
-          "aria-disabled": disabled ? true : undefined,
-          "data-disabled": disabled ? "" : undefined,
-          tabIndex: disabled ? -1 : props.tabIndex,
-        }
-      : { ...props, type, disabled },
+    // Disabled stays in the tab order (Buttons rule U6): `aria-disabled` plus a click guard, never
+    // native `disabled`, which would drop keyboard focus and hide the reason from screen readers.
+    props: {
+      ...props,
+      ...(render ? null : { type }),
+      "aria-disabled": disabled ? true : undefined,
+      "data-disabled": disabled ? "" : undefined,
+      onClick: disabled ? preventActivation : props.onClick,
+    },
   });
 });
 
@@ -216,14 +234,15 @@ const ButtonPill = forwardRef<HTMLButtonElement, ButtonPillProps>(function Butto
     render,
     ref,
     defaultTagName: "button",
-    props: render
-      ? {
-          ...props,
-          "aria-disabled": disabled ? true : undefined,
-          "data-disabled": disabled ? "" : undefined,
-          tabIndex: disabled ? -1 : props.tabIndex,
-        }
-      : { ...props, type, disabled },
+    // Disabled stays in the tab order (Buttons rule U6): `aria-disabled` plus a click guard, never
+    // native `disabled`, which would drop keyboard focus and hide the reason from screen readers.
+    props: {
+      ...props,
+      ...(render ? null : { type }),
+      "aria-disabled": disabled ? true : undefined,
+      "data-disabled": disabled ? "" : undefined,
+      onClick: disabled ? preventActivation : props.onClick,
+    },
   });
 });
 
@@ -236,6 +255,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     emphasis,
     size = "md",
     disabled,
+    disabledReason,
     type = "button",
     status,
     statusLabels,
@@ -259,6 +279,21 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     ...buttonProps
   }, ref) {
   assertActionPattern({ status, icon, count, layout, render, endIcon, mono, width, align, emphasis, role, external });
+  const reasonId = useId();
+  const showReason = Boolean(disabled) && disabledReason != null && status == null;
+  const describedBy =
+    [buttonProps["aria-describedby"], showReason ? reasonId : undefined].filter(Boolean).join(" ") || undefined;
+  const withReason = (button: ReactElement) =>
+    showReason ? (
+      <>
+        {button}
+        <span id={reasonId} className={buttonDisabledReasonClasses} data-disabled-reason="">
+          {disabledReason}
+        </span>
+      </>
+    ) : (
+      button
+    );
 
   if (status != null) {
     return (
@@ -288,16 +323,18 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   }
 
   if (layout === "row") {
-    return (
+    return withReason(
       <button
         {...buttonProps}
         ref={ref}
         type={type}
-        disabled={disabled}
-        onClick={onClick}
+        aria-disabled={disabled || undefined}
+        data-disabled={disabled ? "" : undefined}
+        onClick={disabled ? preventActivation : onClick}
         aria-label={ariaLabel}
         aria-pressed={ariaPressed}
         aria-keyshortcuts={ariaKeyShortcuts}
+        aria-describedby={describedBy}
         id={id}
         name={name}
         form={form}
@@ -313,12 +350,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         data-width={width ?? "fill"}
       >
         {children}
-      </button>
+      </button>,
     );
   }
 
   if (layout === "nav") {
-    return (
+    return withReason(
       <ButtonNav
         {...buttonProps}
         ref={ref}
@@ -330,6 +367,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         aria-pressed={ariaPressed}
         aria-keyshortcuts={ariaKeyShortcuts}
         aria-current={selected ? "page" : undefined}
+        aria-describedby={describedBy}
         id={id}
         name={name}
         form={form}
@@ -345,13 +383,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         data-selected={selected ? "" : undefined}
       >
         {children}
-      </ButtonNav>
+      </ButtonNav>,
     );
   }
 
   const opensNewTab = external && render != null;
 
-  return (
+  return withReason(
     <ButtonPill
       {...buttonProps}
       {...(opensNewTab ? { target: "_blank", rel: "noopener noreferrer" } : null)}
@@ -363,6 +401,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       aria-label={ariaLabel}
       aria-pressed={ariaPressed}
       aria-keyshortcuts={ariaKeyShortcuts}
+      aria-describedby={describedBy}
       id={id}
       name={name}
       form={form}
@@ -397,6 +436,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         </span>
       ) : null}
       {count != null ? <ButtonBadge value={count} /> : null}
-    </ButtonPill>
+    </ButtonPill>,
   );
 });

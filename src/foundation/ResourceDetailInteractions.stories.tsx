@@ -61,8 +61,8 @@ export const MovesBetweenResources: Story = {
     const previous = within(dialog).getByRole("button", { name: "Previous resource" });
     const next = within(dialog).getByRole("button", { name: "Next resource" });
     // The first resource has nothing before it.
-    expect(previous).toBeDisabled();
-    expect(next).toBeEnabled();
+    expect(previous).toHaveAttribute("aria-disabled", "true");
+    expect(next).not.toHaveAttribute("aria-disabled");
 
     await userEvent.click(next);
     await waitFor(() => {
@@ -73,7 +73,7 @@ export const MovesBetweenResources: Story = {
     expect(video).not.toBeNull();
     expect(video).toHaveAttribute("controls");
     expect(video).not.toHaveAttribute("autoplay");
-    expect(previous).toBeEnabled();
+    expect(previous).not.toHaveAttribute("aria-disabled");
 
     await userEvent.keyboard("{ArrowRight}");
     await waitFor(() => {
@@ -100,8 +100,8 @@ export const LastResource: Story = {
   render: () => <ResourceDetailOverGrid startAt="landing-archive" />,
   play: async () => {
     const dialog = await waitFor(() => body().getByRole("dialog", { name: "Landing page archive" }));
-    expect(within(dialog).getByRole("button", { name: "Next resource" })).toBeDisabled();
-    expect(within(dialog).getByRole("button", { name: "Previous resource" })).toBeEnabled();
+    expect(within(dialog).getByRole("button", { name: "Next resource" })).toHaveAttribute("aria-disabled", "true");
+    expect(within(dialog).getByRole("button", { name: "Previous resource" })).not.toHaveAttribute("aria-disabled");
     expect(within(dialog).getByText("9 of 9")).toBeInTheDocument();
     await userEvent.keyboard("{Escape}");
     await waitFor(() => {

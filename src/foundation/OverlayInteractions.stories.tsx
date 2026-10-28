@@ -361,20 +361,20 @@ export const AlertDialogTypedConfirmation: Story = {
     await expect(dialog.querySelector(`#${CSS.escape(dialog.getAttribute("aria-describedby") ?? "")}`)).not.toContainElement(field);
 
     const confirm = within(dialog).getByRole("button", { name: /^delete account$/i });
-    await expect(confirm).toBeDisabled();
+    await expect(confirm).toHaveAttribute("aria-disabled", "true");
 
     // Partial and wrong values keep it off.
     await userEvent.type(field, "@sarah");
-    await expect(confirm).toBeDisabled();
+    await expect(confirm).toHaveAttribute("aria-disabled", "true");
     await userEvent.clear(field);
     await userEvent.type(field, "@someone-else");
-    await expect(confirm).toBeDisabled();
+    await expect(confirm).toHaveAttribute("aria-disabled", "true");
 
     // Leading @, case, and surrounding spaces are ignored.
     await userEvent.clear(field);
     await userEvent.type(field, "  SARAH-Lee ");
     await waitFor(() => {
-      expect(confirm).toBeEnabled();
+      expect(confirm).not.toHaveAttribute("aria-disabled");
     });
 
     // Cancel, reopen — the field is empty and the button is off again.
@@ -388,13 +388,13 @@ export const AlertDialogTypedConfirmation: Story = {
     });
     const reopened = queryPortal().getByRole("textbox", { name: "Type @sarah-lee to confirm" });
     await expect(reopened).toHaveValue("");
-    await expect(within(queryPortal().getByRole("alertdialog")).getByRole("button", { name: /^delete account$/i })).toBeDisabled();
+    await expect(within(queryPortal().getByRole("alertdialog")).getByRole("button", { name: /^delete account$/i })).toHaveAttribute("aria-disabled", "true");
 
     // A matching value confirms.
     await userEvent.type(reopened, "@sarah-lee");
     const confirmAgain = within(queryPortal().getByRole("alertdialog")).getByRole("button", { name: /^delete account$/i });
     await waitFor(() => {
-      expect(confirmAgain).toBeEnabled();
+      expect(confirmAgain).not.toHaveAttribute("aria-disabled");
     });
     await userEvent.click(confirmAgain);
     await waitFor(() => {
