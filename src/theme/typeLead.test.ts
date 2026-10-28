@@ -20,4 +20,11 @@ describe("type-lead (L7)", () => {
     expect(css).toMatch(/@utility type-lead \{/);
     expect(typographyClass("lead")).toContain("type-lead");
   });
+
+  it("sets running text steps to text-wrap: pretty, so a lone word doesn't end a paragraph", () => {
+    for (const step of ["lead", "large", "body", "reading"]) {
+      const block = css.slice(css.indexOf(`@utility type-${step} {`));
+      expect(block.slice(0, block.indexOf("}")), step).toMatch(/text-wrap:\s*pretty/);
+    }
+  });
 });

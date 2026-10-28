@@ -415,7 +415,9 @@ function expectDefaultHeroMatchesGallery(root: ParentNode) {
   expect(lead.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1);
   expect(statement.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1);
   const lineHeight = Number.parseFloat(getComputedStyle(lead).lineHeight);
-  expect(lead.getBoundingClientRect().height).toBeGreaterThan(lineHeight * 1.25);
+  // From lg the heading spans columns 2–11, so the 12-word intro's first line holds one line (G8, H8);
+  // narrower, it may wrap.
+  if (window.innerWidth >= 1024) expect(lead.getBoundingClientRect().height).toBeLessThanOrEqual(lineHeight * 1.25);
 }
 
 function expandViewportStory(id: keyof typeof expandViewportOptions, minWidth: number, maxWidth: number): Story {

@@ -11,7 +11,8 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 **Capitals are tracked 0.08–0.12em (Eyebrow rule E3).**
 
-- **HeroIntro** is left-aligned at every width (was centred; Headings H8): the intro runs past 2 lines on phones and in the 6-column measure from `lg`. `step="display"` is left on phones and centred from `md`. `description` follows its heading. Story copy is 12 words or fewer ("A design studio in Austin, Texas. / We help brands stand out online.") across **HeroIntro**, **HeroTileStack** and **FooterReveal** stories.
+- **HeroIntro** is left-aligned on phones, where it runs 3+ lines, and centred from `md` (Headings H8). The default step's heading now spans columns 2–11 from `lg` (was 4–9), so a 12-word intro holds 2 lines; `description` keeps the 6-column measure (4–9). Story copy is 12 words or fewer ("A design studio in Austin, Texas. / We help brands stand out online.") across **HeroIntro**, **HeroTileStack** and **FooterReveal** stories.
+- **`type-lead`, `type-large`, `type-body` and `type-reading`** set `text-wrap: pretty`, so a lone word doesn't end a paragraph.
 - **HeroIntro** `lead` is renamed **`firstLine`** (it's the heading's first line, not a lead paragraph). `lead` still works as a deprecated alias and warns in development. New optional **`description`**: a lead paragraph under the heading, `type-lead` in ink (Lead rules L7, L8). Story Show code updated: **Components/HeroIntro**, **Components/FooterReveal** and **Components/HeroTileStack** marketing hero patterns.
 - **Accordion** `size` (new): `ui` (default, 14px muted panel text) or `reading` (17px regular in ink) for FAQ answers and service descriptions (Body rules B7, B9). New unit test.
 - **IntakeConfirmation** body is `type-large` (regular), not `type-heading-2`: it's a paragraph (B4).

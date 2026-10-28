@@ -21,7 +21,7 @@ const meta = {
         component: `
 ## Usage
 
-Intro under a marketing headline, left-aligned (Headings H8: it runs past 2 lines). Pass the first sentence as \`firstLine\` and the rest as children. **HeroIntro** owns the line break and the page-grid span.
+Intro under a marketing headline: left on phones, centred from \`md\` (Headings H8), on columns 2–11 from \`lg\` so a 12-word intro holds 2 lines. Pass the first sentence as \`firstLine\` and the rest as children. **HeroIntro** owns the line break and the page-grid span.
 
 Both steps are an \`h1\` on \`type-display-2\` at normal weight, the same font-size and line-height as **ScrollHorizontal.Intro**. \`step="large"\` (default) is columns 4–9 from \`lg\`. \`step="display"\` is full width of the page grid — the sequenced hero.
 
@@ -33,7 +33,7 @@ Paste it inside **Components/HeroTileStack → Pattern — marketing hero**.
 
 \`\`\`
 HeroIntro — grid-page, page block pad removed
-└── h1 — type-display-2, normal weight, text-balance, text-muted, left (display step: centred from md)
+└── h1 — type-display-2, normal weight, text-balance, text-muted, left on phones, centred from md
     ├── lead — wraps, including from md
     └── children — always the next line
         large: columns 4–9 from lg; full width of the page grid below lg
@@ -77,7 +77,7 @@ export const TwoLineIntro: Story = {
       docs: {
         description: {
           story:
-            "firstLine is the Austin sentence and wraps inside the measure, including from md. Austin, and Texas stay together with a non-breaking space. The rest, including the inline online Badge, always starts on the next line. type-display-2 at normal weight, the same font-size as the gallery statement, with text-wrap balance. Left-aligned on grid-page, columns 4–9 from lg.",
+            "firstLine is the Austin sentence and wraps inside the measure, including from md. Austin, and Texas stay together with a non-breaking space. The rest, including the inline online Badge, always starts on the next line. type-display-2 at normal weight, the same font-size as the gallery statement, with text-wrap balance. Left on phones, centred from md; columns 2–11 from lg.",
         },
       },
     },

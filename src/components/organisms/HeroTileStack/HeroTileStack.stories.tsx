@@ -230,7 +230,9 @@ function expectHeroIntroLines(root: ParentNode) {
   expect(restBox.top).toBeGreaterThanOrEqual(leadBox.bottom - 1);
   const lineHeight = Number.parseFloat(getComputedStyle(lead).lineHeight);
   expect(lineHeight).toBeGreaterThan(0);
-  expect(leadBox.height).toBeGreaterThan(lineHeight * 1.25);
+  // From lg the heading spans columns 2–11, so the 12-word intro's first line holds one line (G8, H8);
+  // narrower, it may wrap.
+  if (window.innerWidth >= 1024) expect(leadBox.height).toBeLessThanOrEqual(lineHeight * 1.25);
   expect(leadBox.left).toBeGreaterThanOrEqual(introBox.left - 1);
   expect(leadBox.right).toBeLessThanOrEqual(introBox.right + 1);
   expect(leadBox.right).toBeLessThanOrEqual(window.innerWidth + 1);
@@ -366,11 +368,12 @@ export const GuidesCoverPrecedingHero: Story = {
 
     const intro = expectHeroIntroLines(canvasElement);
     const introBox = intro.getBoundingClientRect();
-    const columnFour = columns[3]!.getBoundingClientRect();
-    const columnNine = columns[8]!.getBoundingClientRect();
-    expect(Math.abs(introBox.left - columnFour.left)).toBeLessThanOrEqual(1);
-    expect(Math.abs(introBox.right - columnNine.right)).toBeLessThanOrEqual(1);
-    expect(getComputedStyle(intro).gridColumn).toBe("4 / 10");
+    // The heading spans columns 2–11 from lg (G8: a heading may run wider than body text).
+    const columnTwo = columns[1]!.getBoundingClientRect();
+    const columnEleven = columns[10]!.getBoundingClientRect();
+    expect(Math.abs(introBox.left - columnTwo.left)).toBeLessThanOrEqual(1);
+    expect(Math.abs(introBox.right - columnEleven.right)).toBeLessThanOrEqual(1);
+    expect(getComputedStyle(intro).gridColumn).toBe("2 / 12");
 
     const heroRect = hero.getBoundingClientRect();
     const columnRect = columns[0]!.getBoundingClientRect();
@@ -476,11 +479,12 @@ export const GuidesCoverEmptyPage: Story = {
 
     const intro = expectHeroIntroLines(canvasElement);
     const introBox = intro.getBoundingClientRect();
-    const columnFour = columns[3]!.getBoundingClientRect();
-    const columnNine = columns[8]!.getBoundingClientRect();
-    expect(Math.abs(introBox.left - columnFour.left)).toBeLessThanOrEqual(1);
-    expect(Math.abs(introBox.right - columnNine.right)).toBeLessThanOrEqual(1);
-    expect(getComputedStyle(intro).gridColumn).toBe("4 / 10");
+    // The heading spans columns 2–11 from lg (G8: a heading may run wider than body text).
+    const columnTwo = columns[1]!.getBoundingClientRect();
+    const columnEleven = columns[10]!.getBoundingClientRect();
+    expect(Math.abs(introBox.left - columnTwo.left)).toBeLessThanOrEqual(1);
+    expect(Math.abs(introBox.right - columnEleven.right)).toBeLessThanOrEqual(1);
+    expect(getComputedStyle(intro).gridColumn).toBe("2 / 12");
 
     const columnRect = columns[0]!.getBoundingClientRect();
     expect(columnRect.top).toBeLessThanOrEqual(heroRect.top);
@@ -534,7 +538,7 @@ export const IntroLeadBelowMd: Story = {
 };
 
 export const IntroLeadAt1024: Story = {
-  name: "Intro lead wraps at 1024",
+  name: "Intro first line holds one line at 1024",
   tags: ["test", "!dev", "!autodocs"],
   globals: {
     viewport: { value: "review1024", isRotated: false },

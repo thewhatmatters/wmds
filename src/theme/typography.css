@@ -280,6 +280,8 @@
   font-size: var(--text-lead-size);
   font-weight: var(--text-lead-weight);
   line-height: var(--text-lead-leading);
+  /* No lone word on the last line (orphans); an explicit text-balance or text-wrap utility still wins. */
+  text-wrap: pretty;
 }
 
 @utility type-large {
@@ -287,6 +289,8 @@
   font-size: var(--text-large-size);
   font-weight: var(--text-large-weight);
   line-height: var(--text-large-leading);
+  /* No lone word on the last line (orphans); an explicit text-balance or text-wrap utility still wins. */
+  text-wrap: pretty;
 }
 
 @utility type-body {
@@ -294,6 +298,8 @@
   font-size: var(--text-body-size);
   font-weight: var(--text-body-weight);
   line-height: var(--text-body-leading);
+  /* No lone word on the last line (orphans); an explicit text-balance or text-wrap utility still wins. */
+  text-wrap: pretty;
 }
 
 @utility type-label {
@@ -329,6 +335,8 @@
   font-size: var(--text-reading-size);
   font-weight: var(--text-reading-weight);
   line-height: var(--text-reading-leading);
+  /* No lone word on the last line (orphans); an explicit text-balance or text-wrap utility still wins. */
+  text-wrap: pretty;
 }
 
 @utility type-eyebrow {
