@@ -138,7 +138,7 @@ export function MarketingHero() {
       />
       <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-16 text-center">
         <div className="flex w-full flex-col items-center gap-6">
-          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
+          <HeroIntro firstLine="We're a design and product studio based in Austin, Texas.">
             We help brands stand out{" "}
             <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
             {" "}with bold ideas, fresh approaches, and products people actually love to use.
@@ -188,7 +188,7 @@ function MarketingHero() {
       />
       <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-16 text-center">
         <div className="flex w-full flex-col items-center gap-6">
-          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
+          <HeroIntro firstLine="We're a design and product studio based in Austin, Texas.">
             We help brands stand out{" "}
             <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
             {" "}with bold ideas, fresh approaches, and products people actually love to use.
@@ -619,7 +619,7 @@ export function MarketingHeroTextSequence() {
         <div className="flex w-full flex-col items-center gap-6">
           <HeroIntro
             step="display"
-            lead={
+            firstLine={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 {"An "}
                 <span className="whitespace-nowrap">
@@ -677,7 +677,7 @@ function MarketingHeroTextSequenceView() {
         <div className="flex w-full flex-col items-center gap-6">
           <HeroIntro
             step="display"
-            lead={
+            firstLine={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 {"An "}
                 <span className="whitespace-nowrap">

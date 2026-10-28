@@ -113,7 +113,7 @@ describe("marketing hero intro show code", () => {
     const liveStart = source.indexOf("\nfunction MarketingHero()");
     const liveEnd = source.indexOf("export const MarketingHeroPattern");
     const live = source.slice(liveStart, liveEnd);
-    const leadProp = `<HeroIntro lead="${leadCopy}">`;
+    const leadProp = `<HeroIntro firstLine="${leadCopy}">`;
 
     expect(copy).toContain(leadProp);
     expect(live).toContain(leadProp);

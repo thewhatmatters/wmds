@@ -11,6 +11,7 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 **Capitals are tracked 0.08–0.12em (Eyebrow rule E3).**
 
+- **HeroIntro** `lead` is renamed **`firstLine`** (it's the heading's first line, not a lead paragraph). `lead` still works as a deprecated alias and warns in development. New optional **`description`**: a lead paragraph under the heading, `type-lead` in ink (Lead rules L7, L8). Story Show code updated: **Components/HeroIntro**, **Components/FooterReveal** and **Components/HeroTileStack** marketing hero patterns.
 - **Accordion** `size` (new): `ui` (default, 14px muted panel text) or `reading` (17px regular in ink) for FAQ answers and service descriptions (Body rules B7, B9). New unit test.
 - **IntakeConfirmation** body is `type-large` (regular), not `type-heading-2`: it's a paragraph (B4).
 - **Guides/PostPage** lead sits in ink (was muted) and is shorter, about 2 lines at 390 (B9, L8).
@@ -34,7 +35,7 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 ### Consumer actions
 
-Re-copy the four **Components/FooterReveal** patterns named above if you pasted them (and write your own headline in sentence case). In your own code, give uppercase text `tracking-[0.08em]` (or use `type-eyebrow`) instead of `tracking-wider`. Labels are slightly wider; check eyebrows and mono badges at 390. A **SectionCaption** that should stay in the heading outline needs `as="h2"`; a test that finds it with `getByRole("heading")` now needs `getByText`. If your app sets subtext in `type-large` and wants the old weight, set `--text-large-weight: 600`.
+Re-copy the four **Components/FooterReveal** patterns named above if you pasted them (and write your own headline in sentence case). In your own code, give uppercase text `tracking-[0.08em]` (or use `type-eyebrow`) instead of `tracking-wider`. Labels are slightly wider; check eyebrows and mono badges at 390. A **SectionCaption** that should stay in the heading outline needs `as="h2"`; a test that finds it with `getByRole("heading")` now needs `getByText`. If your app sets subtext in `type-large` and wants the old weight, set `--text-large-weight: 600`. **HeroIntro:** rename `lead=` to `firstLine=` (re-copy the FooterReveal and HeroTileStack hero patterns); `lead` keeps working until a later release.
 
 ## 0.4.29
 

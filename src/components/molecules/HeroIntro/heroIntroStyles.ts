@@ -39,3 +39,10 @@ export const heroIntroDisplayCopyClasses = [
 
 /** Display step lead. Wraps when the measure is short (390). No nowrap. */
 export const heroIntroDisplayLeadClasses = "block min-w-0";
+
+/**
+ * Optional lead paragraph under the heading: `type-lead` (18px phone to 21px, regular, 1.45) in ink, at the
+ * 42rem measure, centred under the heading on the same columns (Lead rules L7, L8).
+ */
+export const heroIntroDescriptionClasses =
+  "col-span-full mx-auto mt-6 min-w-0 max-w-[42rem] text-pretty text-center type-lead text-fg lg:col-start-4 lg:col-end-10";
