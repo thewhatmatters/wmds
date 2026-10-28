@@ -51,7 +51,11 @@ export interface ButtonProps
   > {
   /** Button label. */
   children: ReactNode;
-  /** Action role — primary, secondary, ghost, destructive, inverse, outline, or inverse-outline (on-brand hairline). Default: `primary`. */
+  /**
+   * Action role — primary, secondary, ghost, destructive, inverse, outline, or inverse-outline (on-brand hairline). Default: `primary`.
+   * On a page background the secondary level is `outline` (a 3:1 edge, Buttons U1/U4); the filled `secondary` pill
+   * sits near 1:1 against the page.
+   */
   role?: ButtonRole;
   /** `pill` (default) or `row` — flat full-width lines for detail / settings rows. */
   layout?: ButtonLayout;

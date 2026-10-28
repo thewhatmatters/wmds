@@ -240,4 +240,12 @@ export const Disabled: Story = {
     disabled: true,
     "aria-label": "Unavailable action",
   },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Reference only. Don't disable icon buttons (Buttons rule U6): an icon button has nowhere to show the reason. Hide the action while it isn't available, or keep it enabled and explain on press with a toast or inline message.",
+      },
+    },
+  },
 };

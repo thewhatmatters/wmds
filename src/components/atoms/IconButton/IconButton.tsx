@@ -54,6 +54,11 @@ export interface IconButtonProps
    * selected fill while `true`. Omit for a plain action. Not with `fab` or `inset`.
    */
   pressed?: boolean;
+  /**
+   * Don't disable an icon button in WhatMatters work (Buttons rule U6): it has nowhere to show why. Hide
+   * the action while it isn't available, or leave it enabled and explain on press (a toast or inline
+   * message). Kept for parity with Button; it stays focusable through `aria-disabled`.
+   */
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
   /**
