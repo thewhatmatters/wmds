@@ -18,7 +18,8 @@ export type TypographyRole =
   | "caption-tight"
   | "overline"
   | "eyebrow"
-  | "reading";
+  | "reading"
+  | "lead";
 
 /** Astryx semantic type names (Foundation reference). */
 export type AstryxTypeScale =
@@ -41,7 +42,8 @@ export type AstryxTypeScale =
   | "code"
   | "control"
   | "eyebrow"
-  | "reading";
+  | "reading"
+  | "lead";
 
 export type TypographyTracking = "tight" | "normal" | "wider";
 
@@ -232,6 +234,18 @@ export const typographyStyles: TypographyStyle[] = [
     usedIn: ["IndexList captions", "Filter panel title", "SectionCaption"],
   },
   {
+    role: "lead",
+    label: "Lead",
+    description:
+      "The one paragraph under a page's H1 that sums the page up — 18px on phones to 21px, regular weight (WMDS extension). One per page, text-fg, at the 42rem measure; section intros stay on body size",
+    astryxType: "lead",
+    className: "type-lead text-fg",
+    tracking: "normal",
+    trackingClass: "tracking-normal",
+    sample: "We design, build and run what your customers check before they visit.",
+    usedIn: ["Hero subhead", "Page lead"],
+  },
+  {
     role: "reading",
     label: "Reading",
     description:
@@ -271,6 +285,7 @@ export const astryxTypeScale: Array<{
   { type: "code", utility: "type-code", size: "0.875rem", weight: "400", leading: "1.43" },
   { type: "control", utility: "type-control", size: "0.875rem", weight: "500", leading: "1" },
   { type: "eyebrow", utility: "type-eyebrow", size: "0.75rem mono, uppercase", weight: "400", leading: "1.33" },
+  { type: "lead", utility: "type-lead", size: "clamp(1.125rem → 1.3125rem)", weight: "400", leading: "1.45" },
   { type: "reading", utility: "type-reading", size: "1.0625rem", weight: "400", leading: "1.65" },
 ];
 

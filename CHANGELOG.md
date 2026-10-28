@@ -20,6 +20,7 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **PageHeader** `as` (new): `h1` / `h2` / `h3`, so the title's level follows the page outline (Headings H1). Defaults are unchanged (`app` → `h1`, `page` → `h2`).
 - New interaction test **Internal/Interactions/Heading levels**.
 - **Every display step** (`type-display-hero`, `-xl`, `-1`, `-2`, `-3`) sets `overflow-wrap: anywhere` (Display rule D5, WCAG 1.4.10): a long word breaks instead of widening its flex or grid track and scrolling a 320px page sideways. `type-display-hero` and `-xl` used `break-word`, which still overflowed inside flex and grid. Normal copy sets as before. New interaction test **Internal/Interactions/Display type**.
+- **`type-lead`** (new, `typographyClass("lead")`): the one paragraph under a page's H1 that sums the page up (Lead paragraph rule L7). 18px on phones to 21px (`--text-lead-size`, about 1.25× the 17px reading body), regular weight, 1.45 leading; use it at the 42rem measure in `text-fg`. Nothing uses it yet, so nothing changes until you adopt it.
 - **Foundations/Typography** docs: heading steps sit two apart on the 1.2× ramp (≥ 1.25× between levels, Headings H7); an eyebrow and its heading are one spacing unit (H4, E5). The ramp is unchanged.
 - **FooterReveal** sample headline is sentence case, "We build WhatMatters" (was Title Case; Headings H6). Show code changed in **Components/FooterReveal → Marketing page pattern**, **Marketing hero pattern**, **Marketing hero with gallery intro** and **Sequenced marketing hero**.
 
