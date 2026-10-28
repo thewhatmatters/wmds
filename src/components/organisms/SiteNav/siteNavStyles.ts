@@ -134,7 +134,8 @@ export const siteNavMiddleHugResponsiveClasses =
  * IconButton paints `inline-flex`. `md:!hidden` beats a later non-important
  * `.inline-flex`. The class is not `hidden`, so an app's `.hidden` does not match.
  */
-export const siteNavMobileTriggerClasses = "md:!hidden";
+/** The "☰ Menu" / "✕ Close" button: phones only, at least 44px tall (N7). */
+export const siteNavMobileTriggerClasses = "min-h-11 md:!hidden";
 
 /**
  * Brand — layout only when wordmark **Button**; icon brands use **IconButton** (circular).
@@ -246,11 +247,31 @@ export const siteNavMenuReadRowClasses = "flex flex-col gap-3 md:flex-row md:gap
 export const siteNavMenuReadThumbClasses =
   "aspect-[16/10] w-full shrink-0 md:aspect-auto md:size-16";
 
-/** Mobile sheet body — stacked links. */
-export const siteNavMobileListClasses = "flex flex-col gap-1";
+/**
+ * Phone menu panel (Header rule N8): fixed under the bar (`top` is set inline to the bar's bottom), full
+ * width and the rest of the height, on the page surface; its own scroll if the rows run long. The
+ * links sit on the page margins; the main action pins to the bottom.
+ */
+export const siteNavMobilePanelClasses =
+  "fixed inset-x-0 bottom-0 z-[60] flex flex-col overflow-y-auto overscroll-contain bg-body px-[var(--grid-margin)] pt-2 pb-[max(var(--grid-margin),env(safe-area-inset-bottom))] md:hidden!";
 
-/** Mobile link row — full-width ghost **Button** anchor; current page uses the selected fill. */
+/** The menu's rows, stacked. */
+export const siteNavMobileListClasses = "flex flex-col";
+
+/**
+ * Phone menu row (Header rule N5): full width, 56px. The current page is marked by weight and the
+ * selected fill, not colour alone (N2), with `aria-current="page"`.
+ */
 export const siteNavMobileLinkClasses = cn(
-  "w-full justify-start! text-muted! hover:text-fg!",
-  "aria-[current=page]:bg-fill-selected! aria-[current=page]:text-fg!",
+  "min-h-14! w-full justify-start! text-fg! type-large!",
+  "aria-[current=page]:bg-fill-selected! aria-[current=page]:font-semibold!",
 );
+
+/** The menu's main action, pinned to the bottom of the panel, full width. */
+export const siteNavMobileActionClasses = "mt-auto flex flex-col gap-2 pt-6 [&>*]:w-full";
+
+/**
+ * The bar's own actions beside the Menu button. They hide under 360px so the button keeps its word
+ * (Header rule N7); the open menu carries the main action instead.
+ */
+export const siteNavEndActionsClasses = "contents max-[359px]:hidden!";

@@ -12,6 +12,37 @@ function isTabbable(node: HTMLElement): boolean {
   return node.offsetParent !== null && getComputedStyle(node).visibility !== "hidden";
 }
 
+/** The tabbable controls inside `container`, in DOM order. */
+export function tabbablesIn(container: HTMLElement): HTMLElement[] {
+  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(isTabbable);
+}
+
+/**
+ * Mark everything inert except `keep` and their ancestors — returns cleanup. Unlike `inertPageBehind`,
+ * this works when the surface lives inside the page (a header whose bar stays live above its own menu):
+ * at every level from each kept element up to `body`, the siblings that hold no kept element go inert.
+ */
+export function inertAllBut(keep: HTMLElement[]): () => void {
+  if (typeof document === "undefined") return () => undefined;
+  const holdsKept = (node: Element) => keep.some((element) => node === element || node.contains(element));
+  const marked = new Set<HTMLElement>();
+  for (const element of keep) {
+    for (let node: HTMLElement | null = element; node != null && node !== document.body; node = node.parentElement) {
+      const parent = node.parentElement;
+      if (parent == null) break;
+      for (const sibling of Array.from(parent.children)) {
+        if (!(sibling instanceof HTMLElement) || holdsKept(sibling) || sibling.hasAttribute("inert")) continue;
+        if (["SCRIPT", "STYLE", "LINK"].includes(sibling.tagName)) continue;
+        sibling.setAttribute("inert", "");
+        marked.add(sibling);
+      }
+    }
+  }
+  return () => {
+    for (const node of marked) node.removeAttribute("inert");
+  };
+}
+
 /** Tab cycle within a modal surface — returns cleanup. */
 export function trapFocus(container: HTMLElement): () => void {
   function handleKeyDown(event: KeyboardEvent) {

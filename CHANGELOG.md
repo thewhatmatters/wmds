@@ -7,6 +7,26 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.31
+
+**SiteNav's phone menu follows the Header rule: a "Menu" button that becomes "Close", a full-height panel under the bar, and a link tap closes it.**
+
+- **SiteNav** `mobile` menu (below `md`), rebuilt to Header and mobile menu rules N5–N8:
+  - The trigger is a **Button** with an icon and a visible word, "☰ Menu", that becomes "✕ Close" in the same place (QA #28). The word is the accessible name (was an icon-only button named "Open menu" / "Close menu"). At least 44px tall.
+  - The menu opens as a full-height panel **under the bar**, not a side **Sheet**. The bar stays live, so Close sits where Menu was. The panel is a dialog: focus moves to its first link, Tab cycles through the bar and the panel, the page behind is inert and doesn't scroll, Escape or Close closes it, and focus returns to Menu. It closes when the window widens past `md`.
+  - **Tapping any link in the menu closes it** (QA #25; it used to stay open over the page).
+  - **SiteNav.MobileLink** rows are 56px and full width. The current page is marked by weight and the selected fill plus `aria-current="page"`, not colour alone.
+  - `mobileAction` (new): the main action, pinned to the bottom of the open menu.
+  - With `mobile`, the bar's `end` actions hide under 360px so Menu keeps its word; `mobileAction` carries the main button there.
+  - `mobileTitle` is now a string (the dialog's accessible name).
+  - New interaction tests **Internal/Interactions/SiteNav → phone menu…** (390) and **phone menu at 320** (N7).
+- `lib/dialogOverlay` exports `tabbablesIn` and `inertAllBut` (internal helpers, also used by SiteNav).
+- **ChatDock**: its 40rem chat column is documented as the text-only exception to Container width W5.
+
+### Consumer actions
+
+If you pass `mobile` to **SiteNav**, also pass `mobileAction` (usually the same **Button** as your bar CTA) so phones under 360px still reach it. Tests that find the trigger by `aria-label="Open menu"` now find it by its text, `getByRole("button", { name: "Menu" })`, and the open menu is a `dialog` named by `mobileTitle` (default "Menu"). `mobileTitle` must be a string.
+
 ## 0.4.30
 
 **Capitals are tracked 0.08–0.12em (Eyebrow rule E3).**

@@ -106,34 +106,112 @@ export const PinnedScrollPadding: Story = {
 };
 
 export const MobileMenuTrigger: Story = {
-  name: "mobile menu trigger names its state and controls the sheet",
+  name: "phone menu: Menu becomes Close, focus moves in and cycles, a link tap or Escape closes it",
+  globals: { viewport: { value: "mobile", isRotated: false } },
   render: () => (
-    <SiteNav
-      placement="inline"
-      state="expanded"
-      start={<SiteNav.Brand href="#home" aria-label="WhatMatters" icon={<Sparkles />} />}
-      mobile={<SiteNav.MobileLink href="#product">Product</SiteNav.MobileLink>}
-    />
+    <div>
+      <SiteNav
+        placement="inline"
+        state="expanded"
+        start={<SiteNav.Brand href="#home" aria-label="WhatMatters" icon={<Sparkles />} />}
+        end={<Button size="sm" render={<a href="#sketch" />}>Get my free sketch</Button>}
+        mobile={
+          <>
+            <SiteNav.MobileLink href="#services">Services</SiteNav.MobileLink>
+            <SiteNav.MobileLink href="#work" current>
+              Work
+            </SiteNav.MobileLink>
+          </>
+        }
+        mobileAction={<Button render={<a href="#sketch" />}>Get my free sketch</Button>}
+      />
+      <main>
+        <a href="#page">Page link</a>
+      </main>
+    </div>
   ),
   play: async ({ canvasElement }) => {
-    // The trigger is display:none from `md` up, which empties its computed name — read aria-label.
-    const trigger = canvasElement.querySelector<HTMLButtonElement>('button[aria-haspopup="dialog"]');
-    if (trigger == null) throw new Error("mobile menu trigger not rendered");
-    await expect(trigger).toHaveAttribute("aria-label", "Open menu");
+    await expect(window.innerWidth).toBeLessThanOrEqual(400);
+    const trigger = within(canvasElement).getByRole("button", { name: "Menu" });
+    await expect(trigger.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
+    // N7 / QA #28: the visible word is the name, and it changes.
+    await expect(trigger).toHaveTextContent("Menu");
+    await expect(trigger).not.toHaveAttribute("aria-label");
     await expect(trigger).toHaveAttribute("aria-expanded", "false");
-    await expect(trigger).toHaveAttribute("aria-haspopup", "dialog");
     await expect(trigger).not.toHaveAttribute("aria-controls");
 
     trigger.click();
     const dialog = await within(document.body).findByRole("dialog", { name: "Menu" });
-    await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "true"));
-    await expect(trigger).toHaveAttribute("aria-label", "Close menu");
+    await waitFor(() => expect(trigger).toHaveTextContent("Close"));
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
     await expect(trigger).toHaveAttribute("aria-controls", dialog.id);
+    // N6: focus moves to the first link; the page behind is inert and doesn't scroll.
+    const services = within(dialog).getByRole("link", { name: "Services" });
+    await waitFor(() => expect(services).toHaveFocus());
+    await expect(canvasElement.querySelector("main")?.closest("[inert]")).not.toBeNull();
+    await expect(document.body.style.overflow).toBe("hidden");
+    // N2: the current page is marked by more than colour.
+    const work = within(dialog).getByRole("link", { name: "Work" });
+    await expect(work).toHaveAttribute("aria-current", "page");
+    await expect(Number(getComputedStyle(work).fontWeight)).toBeGreaterThanOrEqual(600);
+    // N5: rows are at least 56px tall.
+    await expect(services.getBoundingClientRect().height).toBeGreaterThanOrEqual(56);
+    // N8: the main action sits in the menu.
+    await expect(within(dialog).getByRole("link", { name: "Get my free sketch" })).toBeInTheDocument();
 
+    // Tab cycles through the panel and back to the bar's Close button, never into the page.
+    for (let i = 0; i < 6; i++) {
+      await userEvent.tab();
+      const active = document.activeElement;
+      await expect(dialog.contains(active) || canvasElement.querySelector("header")?.contains(active)).toBe(true);
+    }
+
+    // Escape closes and returns focus to the Menu button.
     await userEvent.keyboard("{Escape}");
-    await waitFor(() => expect(trigger).toHaveAttribute("aria-label", "Open menu"));
+    await waitFor(() => expect(trigger).toHaveTextContent("Menu"));
+    await waitFor(() => expect(trigger).toHaveFocus());
     await expect(trigger).not.toHaveAttribute("aria-controls");
-    // Let the exit animation finish so the a11y check doesn't read a half-faded panel.
-    await waitFor(() => expect(dialog).not.toBeInTheDocument());
+    await expect(canvasElement.querySelector("[inert]")).toBeNull();
+
+    // N6 / QA #25: tapping a link closes the menu. (The test frame mustn't navigate, so the click's
+    // default is stopped at the document; the menu closes on the click itself.)
+    const stayHere = (event: MouseEvent) => event.preventDefault();
+    document.addEventListener("click", stayHere);
+    trigger.click();
+    const reopened = await within(document.body).findByRole("dialog", { name: "Menu" });
+    await userEvent.click(within(reopened).getByRole("link", { name: "Services" }));
+    await waitFor(() => expect(within(document.body).queryByRole("dialog", { name: "Menu" })).toBeNull());
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    document.removeEventListener("click", stayHere);
+  },
+};
+
+export const MobileMenuAt320: Story = {
+  name: "phone menu at 320: the bar's main button hides first, the Menu word stays (N7)",
+  globals: { viewport: { value: "narrow320", isRotated: false } },
+  parameters: {
+    viewport: {
+      options: {
+        narrow320: { name: "320", styles: { width: "320px", height: "640px" }, type: "mobile" as const },
+      },
+    },
+  },
+  render: () => (
+    <SiteNav
+      placement="inline"
+      state="expanded"
+      start={<SiteNav.Brand href="#home">WhatMatters</SiteNav.Brand>}
+      end={<Button size="sm" render={<a href="#sketch" />}>Get my free sketch</Button>}
+      mobile={<SiteNav.MobileLink href="#services">Services</SiteNav.MobileLink>}
+      mobileAction={<Button render={<a href="#sketch" />}>Get my free sketch</Button>}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    await expect(window.innerWidth).toBeLessThanOrEqual(330);
+    const trigger = within(canvasElement).getByRole("button", { name: "Menu" });
+    await expect(trigger).toBeVisible();
+    await expect(trigger.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth);
+    await expect(within(canvasElement).queryByRole("link", { name: "Get my free sketch" })).toBeNull();
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
   },
 };
