@@ -161,4 +161,8 @@ export const ErrorsOnContinue: Story = {
       </IntakeModal>
     );
   },
+  // Axe runs after play: let the modal finish fading in first, or it reads half-faded text as low contrast.
+  play: async () => {
+    await new Promise((resolve) => setTimeout(resolve, 800));
+  },
 };
