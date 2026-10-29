@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Badge } from "../Badge/Badge";
+import { Select } from "../../molecules/Select/Select";
+import { usStateOptions } from "../../molecules/Select/usStateOptions";
 import { Input, inputStatuses } from "./Input";
 import { InputValidationMorphDemo } from "./InputValidationMorph";
 
@@ -54,13 +56,14 @@ const meta = {
 | **Validation** | \`status\` + \`message\` — tinted status band (\`messagePosition\` top or bottom) |
 | **Status only** | \`status\` without \`message\` — border + trailing icon |
 | **Loading** | \`loading\` — trailing spinner |
-| **End badge** | \`endBadge={<Badge>Required</Badge>}\` — trailing inset inside the pill |
+| **End badge** | \`endBadge={<Badge size="sm">Optional</Badge>}\` — the form's exception, inside the pill; read with the field; never on autofill fields |
 | **Monospace** | \`mono\` — \`type-code\` face for a read-only key or id |
 
 ## Best practices
 
 - **Do** use \`status\` + \`message\` for validation feedback — not label asterisks.
-- **Do** mark required fields with \`endBadge={<Badge size="sm">Required</Badge>}\` + native \`required\`.
+- **Do** mark the exception: in a mostly-required form badge the optional fields "Optional"; in a mostly-optional form badge the required ones "Required". Required fields also carry \`required\` or \`aria-required\`.
+- **Don't** put a badge on an autofill field (name, email, tel, password, address, organization): autofill paints over it. Say it in the label: "Company (optional)". \`npx wmds-check\` fails it (\`badge-on-autofill\`).
 - **Do** give every field a visible \`label\`. Hide it (\`aria-label\`) only when the field sits alone with its button.
 - **Do** put examples and formats in \`description\`, not a placeholder. Placeholders belong to search fields only.
 - **Don't** restyle the shell with \`className\` — hero search with inset button → **Search** molecule.
@@ -180,24 +183,63 @@ export const Loading: Story = {
 };
 
 export const RequiredEndBadge: Story = {
-  name: "Pattern — required (end badge)",
+  name: "Pattern — optional (end badge)",
   args: {
-    label: "Email",
-    type: "email",
-    required: true,
-    endBadge: <Badge size="sm">Required</Badge>,
+    label: "Your website",
+    type: "url",
+    autoComplete: "url",
+    description: "So we can see what you have now.",
+    endBadge: <Badge size="sm">Optional</Badge>,
+  },
+};
+
+export const EndBadgeLongValue: Story = {
+  name: "Pattern — end badge with a long value",
+  args: {
+    label: "Your website",
+    type: "url",
+    autoComplete: "url",
+    defaultValue: "https://www.northwind-bakery-and-coffee-roasters.example/locations/east-austin",
+    endBadge: <Badge size="sm">Optional</Badge>,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "The field keeps room for the badge, so a long value stops before it instead of running under it.",
+      },
+    },
   },
 };
 
 export const EndBadgeWithError: Story = {
   name: "Pattern — end badge + validation",
   args: {
-    label: "Email",
-    defaultValue: "sarah@",
-    required: true,
-    endBadge: <Badge size="sm">Required</Badge>,
+    label: "Your website",
+    type: "url",
+    autoComplete: "url",
+    defaultValue: "northwind",
+    endBadge: <Badge size="sm">Optional</Badge>,
     status: "error",
-    message: "Enter an email address like name@example.com.",
+    message: "Enter a website address like example.com.",
+  },
+};
+
+export const EndBadgeWithStatusIcon: Story = {
+  name: "Pattern — end badge + status icon",
+  args: {
+    label: "Your website",
+    type: "url",
+    autoComplete: "url",
+    defaultValue: "https://northwind.example",
+    endBadge: <Badge size="sm">Optional</Badge>,
+    status: "success",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "The status icon comes first, then the badge.",
+      },
+    },
   },
 };
 
@@ -230,4 +272,29 @@ export const ValidationMotion: Story = {
     },
   },
   render: () => <InputValidationMorphDemo />,
+};
+
+export const FieldWidths: Story = {
+  name: "Pattern — field widths",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A field's width hints at the answer (Form layout L7). `width` in characters for fixed-length answers only: ZIP `5ch`, year `4ch`, phone `10ch`, a US state `2ch` on **Select**. Free-form answers (names, emails, addresses) stay full width. Short related fields share one row, like city, state and ZIP (L1).",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex w-full max-w-xl flex-col gap-6">
+      <Input label="Street address" autoComplete="street-address" />
+      <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-start gap-3">
+        <Input label="City" autoComplete="address-level2" />
+        <Select label="State" options={usStateOptions} width="2ch" name="state" autoComplete="address-level1" placeholder="—" />
+        <Input label="ZIP code" width="5ch" inputMode="numeric" autoComplete="postal-code" />
+      </div>
+      <Input label="Phone" width="10ch" type="tel" autoComplete="tel-national" description="Include the area code." />
+      <Input label="Year founded" width="4ch" inputMode="numeric" />
+      <Input label="ZIP code" width="5ch" inputMode="numeric" defaultValue="7870" status="error" message="Enter a 5-digit ZIP code." />
+    </div>
+  ),
 };

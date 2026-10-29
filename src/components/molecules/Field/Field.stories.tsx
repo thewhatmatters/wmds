@@ -48,19 +48,20 @@ const meta = {
 | Pattern | When |
 |---------|------|
 | **Vertical + single control** | Prefer **\`Input label\`** for simple stacks — **Field** optional |
-| **Horizontal** | \`orientation="horizontal"\` — label beside control (settings rows, compact forms) |
+| **Horizontal** | \`orientation="horizontal"\` — label beside control from \`lg\` (1024); stacks below it. Dense app settings only, never marketing or contact forms |
 | **Multi-control** | One label for several controls (date range, address rows) |
 | **Validation** | Keep \`status\` + \`message\` on **Input** / **TextArea** — not on **Field** |
 
 ## Anatomy
 
 - **Label** — \`typographyClass("ui-label")\`; wires \`htmlFor\` to a single child automatically
-- **Description** — \`typographyClass("caption")\` below control(s)
+- **Description** — \`typographyClass("caption")\` between the label and the control(s): the hint is read before typing (Labels and placeholders F8)
+- **Counter** — \`counter\`, the one helper below the control, next to what it counts ("67 / 400")
 - **Control slot** — bare child — omit child \`label\` when **Field** owns it
 
 ## Best practices
 
-- **Do** use **Field** for horizontal label beside control.
+- **Do** use \`orientation="horizontal"\` only for dense app settings. Marketing and contact forms keep the label above the field.
 - **Do** use bare children with **Field** \`label\` — not both **Field** and **Input** \`label\`.
 - **Do** keep validation on the atom (\`status\`, \`message\`, \`loading\`).
 - **Don't** require **Field** for every labeled input — **Input label** is fine for vertical forms.

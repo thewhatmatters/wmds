@@ -53,6 +53,7 @@ export function StepProgress({
       aria-valuemax={safeSteps}
       aria-valuenow={safeStep}
       aria-valuetext={text}
+      aria-label={text}
       data-step={safeStep}
       data-steps={safeSteps}
     >

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.33 · Pattern — pill group
+// @thewhatmatters/wmds@0.4.34 · Pattern — pill group
 // Storybook: Components/PillGroup → Pattern — pill group (?path=/story/components-pillgroup--pill-group-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -9,7 +9,7 @@ export function BudgetPills() {
   const [value, setValue] = useState<string | null>(null);
 
   return (
-    <PillGroup aria-label="Budget" value={value} onValueChange={setValue}>
+    <PillGroup label="What's your budget?" value={value} onValueChange={setValue}>
       <PillGroup.Item value="under-10">{"<$10k"}</PillGroup.Item>
       <PillGroup.Item value="10-25">$10–25k</PillGroup.Item>
       <PillGroup.Item value="25-50">$25–50k</PillGroup.Item>

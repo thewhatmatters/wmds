@@ -17,7 +17,7 @@ export { searchSizes } from "./searchStyles";
 export type SearchLayoutClassName = string;
 
 export interface SearchProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "width"> {
   size?: SearchSize;
   /**
    * The field's name, read by screen readers (Labels and placeholders F7, F10). It may stay visually

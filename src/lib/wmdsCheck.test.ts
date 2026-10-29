@@ -1,8 +1,9 @@
 import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
+import { autofillTokens } from "../components/atoms/Input/autofillFields";
 
 const script = path.resolve(__dirname, "../../bin/wmds-check.mjs");
 const app = mkdtempSync(path.join(tmpdir(), "wmds-check-"));
@@ -225,6 +226,49 @@ export function ServicesCard({ onPick }: { onPick: (value: string) => void }) {
 .y { --color-on-field: #ffffff; --color-field: color-mix(in srgb, white 50%, black); }`,
       });
       expect(result.findings).toEqual([]);
+    });
+  });
+
+  describe("badge-on-autofill", () => {
+    it("fails a badge inside an autofill field", () => {
+      const result = check({
+        "form.tsx": `import { Badge, Input } from "@thewhatmatters/wmds";
+export function Form() {
+  return (
+    <>
+      <Input label="Email" type="email" autoComplete="email" endBadge={<Badge size="sm">Optional</Badge>} />
+      <Input
+        label="Postcode"
+        autoComplete="shipping postal-code"
+        endBadge={<Badge size="sm">Required</Badge>}
+      />
+    </>
+  );
+}`,
+      });
+      expect(result.rules).toEqual(["badge-on-autofill", "badge-on-autofill"]);
+      expect(result.findings.map((finding) => finding.line)).toEqual([5, 6]);
+    });
+
+    it("passes a badge on a non-autofill field, and an autofill field with the word in its label", () => {
+      const result = check({
+        "form.tsx": `import { Badge, Input } from "@thewhatmatters/wmds";
+export function Form() {
+  return (
+    <>
+      <Input label="Your website" type="url" autoComplete="url" endBadge={<Badge size="sm">Optional</Badge>} />
+      <Input label="Company (optional)" autoComplete="organization" />
+    </>
+  );
+}`,
+      });
+      expect(result.findings).toEqual([]);
+    });
+
+    it("keeps the same autofill list as Input", () => {
+      const source = readFileSync(path.resolve(__dirname, "../../bin/wmds-check.mjs"), "utf8");
+      const list = source.match(/const autofillTokens = \[([\s\S]*?)\];/)?.[1] ?? "";
+      expect([...list.matchAll(/"([^"]+)"/g)].map((match) => match[1])).toEqual([...autofillTokens]);
     });
   });
 

@@ -30,7 +30,7 @@ export const intakeModalCenteredContentClasses =
 
 /** Pinned under the scrolling step on every width, including mobile. */
 export const intakeModalFooterClasses = cn(
-  "flex shrink-0 items-center justify-between gap-3 border-t border-border bg-body px-4 py-4 md:px-8",
+  "flex shrink-0 items-center justify-start gap-3 border-t border-border bg-body px-4 py-4 md:px-8",
   "pb-[max(1rem,env(safe-area-inset-bottom))]",
   motionTransition("fast"),
 );

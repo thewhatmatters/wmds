@@ -26,9 +26,17 @@ export type FieldLayoutClassName = string;
 export interface FieldProps {
   /** Visible label — omit when children are self-labeled. */
   label?: string;
-  /** Neutral helper below the control(s). */
+  /** Neutral hint between the label and the control(s) (Labels and placeholders F8): read before typing. */
   description?: string;
-  /** Stack (default) or label beside control. */
+  /**
+   * A character counter ("67 / 400"), the one helper that sits below the control, next to what it counts
+   * (as GOV.UK places it). Read with the control, like the hint.
+   */
+  counter?: string;
+  /**
+   * Stack (default) or label beside control. `horizontal` applies from `lg` (1024) up and stacks below
+   * it. For dense app settings only, never marketing or contact forms (Form layout L8).
+   */
   orientation?: FieldOrientation;
   /** Explicit control id — auto-wired for a single child when omitted. */
   htmlFor?: string;
@@ -73,6 +81,7 @@ function assertFieldPattern(props: Pick<FieldProps, "label" | "children">) {
 export function Field({
   label,
   description,
+  counter,
   orientation = "vertical",
   htmlFor,
   disabled = false,
@@ -88,7 +97,10 @@ export function Field({
     htmlFor ??
     (singleChild != null ? (singleChild.props as { id?: string }).id : undefined);
   const controlId = childId ?? (singleChild != null ? `${fieldId}-control` : undefined);
-  const descriptionId = description != null ? `${fieldId}-description` : undefined;
+  const hintId = description != null ? `${fieldId}-description` : undefined;
+  const counterId = counter != null ? `${fieldId}-counter` : undefined;
+  /** Hint, then counter: what the control's accessible description reads. */
+  const descriptionId = [hintId, counterId].filter(Boolean).join(" ") || undefined;
   const legendId = label != null ? `${fieldId}-legend` : undefined;
 
   // The description must reach the control itself: `aria-describedby` on a wrapper <div> is ignored.
@@ -103,20 +115,27 @@ export function Field({
 
   const descriptionNode =
     description != null ? (
-      <p id={descriptionId} className={fieldDescriptionClasses}>
+      <p id={hintId} className={fieldDescriptionClasses}>
         {description}
       </p>
     ) : null;
+  const counterNode =
+    counter != null ? (
+      <p id={counterId} className={fieldDescriptionClasses} data-field-counter="">
+        {counter}
+      </p>
+    ) : null;
 
-  if (label == null && description == null) {
+  if (label == null && description == null && counter == null) {
     return <div className={cn("w-full", className)}>{children}</div>;
   }
 
   if (label == null) {
     return (
       <div className={cn(fieldVerticalStackClasses, className)}>
-        {childCount > 1 ? children : (wiredChild ?? children)}
         {descriptionNode}
+        {childCount > 1 ? children : (wiredChild ?? children)}
+        {counterNode}
       </div>
     );
   }
@@ -132,8 +151,9 @@ export function Field({
         <span id={legendId} className={fieldLabelClassesFor(disabled)}>
           {label}
         </span>
-        {controlStack}
         {descriptionNode}
+        {controlStack}
+        {counterNode}
       </div>
     );
   }
@@ -148,8 +168,9 @@ export function Field({
           {label}
         </label>
         <div className={fieldHorizontalControlColumnClasses}>
-          {controlStack}
           {descriptionNode}
+          {controlStack}
+          {counterNode}
         </div>
       </div>
     );
@@ -160,8 +181,9 @@ export function Field({
       <label htmlFor={controlId} className={fieldLabelClassesFor(disabled)}>
         {label}
       </label>
-      {controlStack}
       {descriptionNode}
+      {controlStack}
+      {counterNode}
     </div>
   );
 }

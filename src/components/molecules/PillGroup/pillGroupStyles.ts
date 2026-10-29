@@ -1,3 +1,4 @@
+import { typographyClass } from "../../../lib/typography";
 import { badgeBaseClasses, badgeMutedClasses, badgeSolidClasses } from "../../atoms/Badge/badgeStyles";
 import { cn } from "../../../lib/cn";
 
@@ -24,3 +25,8 @@ export const pillGroupSelectedClasses = cn(
   pillGroupShapeClasses,
   "border border-transparent bg-brand text-on-brand",
 );
+
+/** Question above the pills (Dropdowns C2, C9). */
+export const pillGroupFieldClasses = "flex flex-col gap-2";
+
+export const pillGroupLabelClasses = typographyClass("ui-label");

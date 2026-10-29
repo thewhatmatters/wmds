@@ -6,6 +6,12 @@ import { Button } from "../components/atoms/Button/Button";
 import { ConfettiProvider } from "../components/organisms/Confetti/Confetti";
 import { IntakeConfirmation } from "../components/organisms/IntakeConfirmation/IntakeConfirmation";
 import { IntakeModal } from "../components/organisms/IntakeModal/IntakeModal";
+import {
+  IntakeForm,
+  intakeAboutEmpty,
+  isIntakeAboutValid,
+  type IntakeAboutValues,
+} from "../components/molecules/IntakeForm/IntakeForm";
 
 /**
  * Browser interaction tests — `npm run test:interactions`.
@@ -75,13 +81,14 @@ export const Keyboard: Story = {
       expect(close).toHaveFocus();
     });
 
-    const continueButton = within(dialog).getByRole("button", { name: "Continue" });
-    continueButton.focus();
+    // Continue comes first in the footer and Back last (Buttons U8), so the trap wraps from Back.
+    const backButton = within(dialog).getByRole("button", { name: "Back" });
+    backButton.focus();
     await userEvent.tab();
     expect(close).toHaveFocus();
 
     await userEvent.tab({ shift: true });
-    expect(continueButton).toHaveFocus();
+    expect(backButton).toHaveFocus();
 
     await userEvent.keyboard("{Escape}");
     await waitFor(() => {
@@ -128,5 +135,54 @@ export const ReducedMotion: Story = {
     });
     expect(pieces().length).toBe(0);
     expect(canvas.getByRole("heading", { name: "You're booked" })).toBeInTheDocument();
+  },
+};
+
+function AboutYouStep() {
+  const [values, setValues] = useState<IntakeAboutValues>(intakeAboutEmpty);
+  const [submitCount, setSubmitCount] = useState(0);
+  return (
+    <IntakeModal
+      open
+      onOpenChange={() => undefined}
+      step={2}
+      steps={4}
+      onBack={() => undefined}
+      onContinue={() => {
+        if (!isIntakeAboutValid(values)) setSubmitCount((count) => count + 1);
+      }}
+    >
+      <h2 className="type-heading-1 text-fg tracking-tight">About you</h2>
+      <IntakeForm values={values} onChange={setValues} submitCount={submitCount} />
+    </IntakeModal>
+  );
+}
+
+export const ContinueShowsErrors: Story = {
+  name: "Continue comes first, stays enabled, and shows errors on press (Buttons U6, U8; V5)",
+  render: () => <AboutYouStep />,
+  play: async () => {
+    const dialog = await waitFor(() => portal().getByRole("dialog"));
+    const footer = dialog.querySelector("footer") as HTMLElement;
+    const [first, second] = [...footer.querySelectorAll("button")];
+    await expect(first).toHaveAccessibleName("Continue");
+    await expect(first).toBeEnabled();
+    await expect(second).toHaveAccessibleName("Back");
+
+    // Nothing filled: three errors, so the summary appears and takes focus.
+    await userEvent.click(first);
+    const summary = await waitFor(() => within(dialog).getByRole("heading", { name: "There's a problem" }));
+    await waitFor(() => expect(summary.closest("[tabindex]")).toHaveFocus());
+    await expect(within(dialog).getAllByRole("link")).toHaveLength(3);
+
+    // Fill all but the email: one error, so focus goes straight to the email field.
+    await userEvent.type(within(dialog).getByRole("textbox", { name: "Name" }), "Jordan Lee");
+    await userEvent.type(
+      within(dialog).getByRole("textbox", { name: "What should feel different when this work is done?" }),
+      "A calmer site.",
+    );
+    await userEvent.click(first);
+    await waitFor(() => expect(within(dialog).getByRole("textbox", { name: "Email" })).toHaveFocus());
+    await expect(within(dialog).queryByRole("heading", { name: "There's a problem" })).toBeNull();
   },
 };

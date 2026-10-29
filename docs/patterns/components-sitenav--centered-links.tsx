@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.33 · Pattern — centered links
+// @thewhatmatters/wmds@0.4.34 · Pattern — centered links
 // Storybook: Components/SiteNav → Pattern — centered links (?path=/story/components-sitenav--centered-links)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

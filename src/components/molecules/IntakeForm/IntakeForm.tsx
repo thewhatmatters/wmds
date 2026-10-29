@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
+import { Badge } from "../../atoms/Badge/Badge";
 import { Input } from "../../atoms/Input/Input";
 import { TextArea } from "../../atoms/TextArea/TextArea";
 import { cn } from "../../../lib/cn";
+import { ErrorSummary } from "../ErrorSummary/ErrorSummary";
 import { Field } from "../Field/Field";
 import { intakeDetailsMax, intakeFormClasses } from "./intakeFormStyles";
 
@@ -33,16 +35,22 @@ export interface IntakeFormProps {
   /** Character ceiling for project details. Default 400. */
   detailsMax?: number;
   /**
-   * Shows the optional Company field. Default `true`. Left out, the form closes up and
+   * Shows the optional Company field. Default `false` (Required and optional Q9: ask less). Left out, the form closes up and
    * `values.company` keeps its value (empty), so `isIntakeAboutValid` and the app's submit code are
    * unchanged.
    */
   company?: boolean;
   /**
-   * Shows the optional Link field. Default `true`. Left out, the form closes up and `values.url`
+   * Shows the optional website field ("Your website", with an Optional badge). Default `true`. Left out, the form closes up and `values.url`
    * keeps its value (empty, which is valid).
    */
   link?: boolean;
+  /**
+   * How many times Continue was pressed on this step (the caller counts; Buttons U6: Continue stays
+   * enabled). From 1 on, every field shows its error. Two or more errors put an **ErrorSummary** at the
+   * top and focus it; one error focuses its field (Errors and validation V5). Default 0.
+   */
+  submitCount?: number;
   className?: IntakeFormLayoutClassName;
 }
 
@@ -78,6 +86,23 @@ export function isIntakeAboutValid(
   );
 }
 
+const characters = (count: number) => `${count} character${count === 1 ? "" : "s"}`;
+
+/** Form layout L9: what the counter says. People may type past the limit; the counter tells them by how much. */
+export function intakeCounterText(length: number, max: number): string {
+  return length > max ? `You have ${characters(length - max)} too many` : `${characters(max - length)} left`;
+}
+
+/** The counter's words once typing pauses, so a screen reader hears it now and then, not on every keystroke. */
+function useSettledText(text: string, delayMs = 1000): string {
+  const [settled, setSettled] = useState(text);
+  useEffect(() => {
+    const timer = setTimeout(() => setSettled(text), delayMs);
+    return () => clearTimeout(timer);
+  }, [text, delayMs]);
+  return settled;
+}
+
 function intakeFieldError(
   field: IntakeTouchedField,
   values: IntakeAboutValues,
@@ -102,7 +127,8 @@ function intakeFieldError(
     return "Tell us a bit about the project.";
   }
   if (values.details.length > detailsMax) {
-    return `Keep project details to ${detailsMax} characters.`;
+    // One message, not two: the band repeats the counter's own words (Form layout L9).
+    return intakeCounterText(values.details.length, detailsMax);
   }
   return undefined;
 }
@@ -110,25 +136,31 @@ function intakeFieldError(
 /**
  * About-you step — **Field** rows for name, email, company, link, and project details.
  * Required fields show **Input** / **TextArea** `status` + `message` on blur when invalid.
- * Company and link stay optional; `company={false}` and `link={false}` leave them out (the short
- * form: name, email, details). The details description is the character counter.
+ * Name, email and details are required (`aria-required`); the website is optional and says so with a
+ * badge. Company is off by default (`company` shows it, labelled "Company (optional)"); `link={false}`
+ * leaves the website out (the short form: name, email, details). Hints sit above their fields; the details
+ * counter sits below the box, next to what it counts.
  */
 export function IntakeForm({
   values,
   onChange,
   detailsMax = intakeDetailsMax,
-  company = true,
+  company = false,
   link = true,
+  submitCount = 0,
   className,
 }: IntakeFormProps) {
   const [touched, setTouched] = useState<Partial<Record<IntakeTouchedField, boolean>>>({});
+  const baseId = useId();
+  const fieldId = (field: IntakeTouchedField) => `${baseId}-${field}`;
+  const submitted = submitCount > 0;
 
   function markTouched(field: IntakeTouchedField) {
     setTouched((current) => (current[field] ? current : { ...current, [field]: true }));
   }
 
   function errorFor(field: IntakeTouchedField): string | undefined {
-    if (!touched[field]) {
+    if (!touched[field] && !submitted) {
       return undefined;
     }
     return intakeFieldError(field, values, detailsMax);
@@ -138,12 +170,38 @@ export function IntakeForm({
   const emailError = errorFor("email");
   const urlError = errorFor("url");
   const detailsError = errorFor("details");
+  const counterText = intakeCounterText(values.details.length, detailsMax);
+  const announcedCounter = useSettledText(counterText);
+
+  // After Continue: the errors in field order (the website only when it's shown).
+  const summaryErrors = submitted
+    ? (
+        [
+          ["name", nameError],
+          ["email", emailError],
+          ...(link ? ([["url", urlError]] as const) : []),
+          ["details", detailsError],
+        ] as const
+      )
+        .filter(([, message]) => message != null)
+        .map(([field, message]) => ({ field: fieldId(field), message: message as string }))
+    : [];
+  const singleErrorField = summaryErrors.length === 1 ? summaryErrors[0].field : undefined;
+  useEffect(() => {
+    // One error: focus goes straight to its field (two or more: ErrorSummary takes focus itself).
+    if (submitCount > 0 && singleErrorField != null) document.getElementById(singleErrorField)?.focus();
+    // Only on each press, not while people fix the field.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submitCount]);
 
   return (
     <div className={cn(intakeFormClasses, className)}>
+      {summaryErrors.length >= 2 ? <ErrorSummary key={submitCount} errors={summaryErrors} /> : null}
       <Field label="Name">
         <Input
+          id={fieldId("name")}
           aria-label="Name"
+          aria-required
           autoComplete="name"
           value={values.name}
           status={nameError != null ? "error" : undefined}
@@ -154,7 +212,9 @@ export function IntakeForm({
       </Field>
       <Field label="Email">
         <Input
+          id={fieldId("email")}
           aria-label="Email"
+          aria-required
           type="email"
           autoComplete="email"
           value={values.email}
@@ -165,9 +225,10 @@ export function IntakeForm({
         />
       </Field>
       {company ? (
-        <Field label="Company" description="Optional">
+        // An autofill field: the word goes in the label, not a badge (Q8).
+        <Field label="Company (optional)" description="So we can read up on you first.">
           <Input
-            aria-label="Company"
+            aria-label="Company (optional)"
             autoComplete="organization"
             value={values.company}
             onChange={(event) => onChange({ ...values, company: event.target.value })}
@@ -175,9 +236,11 @@ export function IntakeForm({
         </Field>
       ) : null}
       {link ? (
-        <Field label="Link" description="Optional">
+        <Field label="Your website" description="So we can see what you have now.">
           <Input
-            aria-label="Link"
+            id={fieldId("url")}
+            aria-label="Your website"
+            endBadge={<Badge size="sm">Optional</Badge>}
             type="url"
             inputMode="url"
             autoComplete="url"
@@ -192,12 +255,15 @@ export function IntakeForm({
       {/* Labels and placeholders: the question is the label (a label can be a question, as on GOV.UK question pages). */}
       <Field
         label="What should feel different when this work is done?"
-        description={detailsError == null ? `${values.details.length} / ${detailsMax}` : undefined}
+        // The counter line steps aside while the error band says the same words.
+        counter={detailsError == null ? counterText : undefined}
       >
+        {/* L9: no maxLength, so nothing pasted is cut; the counter and the error say how much to trim. */}
         <TextArea
+          id={fieldId("details")}
           aria-label="What should feel different when this work is done?"
+          aria-required
           rows={5}
-          maxLength={detailsMax}
           value={values.details}
           status={detailsError != null ? "error" : undefined}
           message={detailsError}
@@ -205,6 +271,9 @@ export function IntakeForm({
           onChange={(event) => onChange({ ...values, details: event.target.value })}
         />
       </Field>
+      <p className="sr-only" aria-live="polite" data-intake-counter-live="">
+        {announcedCounter}
+      </p>
     </div>
   );
 }

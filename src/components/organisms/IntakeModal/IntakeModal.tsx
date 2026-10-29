@@ -44,6 +44,9 @@ export interface IntakeModalProps {
   onBack?: () => void;
   onContinue?: () => void;
   backDisabled?: boolean;
+  /**
+   * Avoid (Buttons U6): keep Continue enabled and show errors on press instead (IntakeForm `submitCount`).
+   */
   continueDisabled?: boolean;
   continueLabel?: string;
   /**
@@ -145,14 +148,7 @@ export function IntakeModal({
           </div>
           {hideFooter ? null : (
             <footer className={intakeModalFooterClasses}>
-              <Button
-                role="secondary"
-                type="button"
-                disabled={backDisabled}
-                onClick={onBack}
-              >
-                Back
-              </Button>
+              {/* Buttons U8: the primary comes first; Back is a quieter text button after it. */}
               {hideContinue ? null : (
                 <Button
                   role="primary"
@@ -163,6 +159,14 @@ export function IntakeModal({
                   {continueLabel}
                 </Button>
               )}
+              <Button
+                role="ghost"
+                type="button"
+                disabled={backDisabled}
+                onClick={onBack}
+              >
+                Back
+              </Button>
             </footer>
           )}
         </motion.div>

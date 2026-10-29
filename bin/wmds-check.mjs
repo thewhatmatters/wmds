@@ -22,6 +22,9 @@
  *                             (Errors and validation V10; a status-only success tick is fine)
  *   missing-label     error  a WMDS Input, TextArea, Select or Search with no label, aria-label or
  *                             aria-labelledby (Labels and placeholders F7; a spread {...props} is trusted)
+ *   badge-on-autofill error  an Input with endBadge on an autofill field (autoComplete name, email, tel,
+ *                             password, address, organization…; Required and optional Q8): autofill paints
+ *                             over the badge, so say "(optional)" in the label
  *   brand-contrast    error  a brand-kit pair in the app's CSS under WCAG AA 4.5:1: --color-on-X (and
  *                             --color-on-X-muted) on --color-X, for primary, brand-surface and field,
  *                             when both are hex values in the same rule
@@ -54,6 +57,15 @@ try {
 } catch {
   // Not installed: the pattern rules are skipped.
 }
+
+// Required and optional Q8: autocomplete tokens browsers fill (same list as autofillFields.ts).
+const autofillTokens = [
+  "name", "honorific-prefix", "given-name", "additional-name", "family-name", "honorific-suffix", "nickname",
+  "email", "username", "new-password", "current-password", "one-time-code", "organization", "organization-title",
+  "street-address", "address-line1", "address-line2", "address-line3", "address-level1", "address-level2",
+  "address-level3", "address-level4", "country", "country-name", "postal-code",
+  "tel", "tel-country-code", "tel-national", "tel-area-code", "tel-local", "tel-extension",
+];
 
 const skipDirs = new Set(["node_modules", ".next", "dist", "build", "out", ".git", "coverage", "storybook-static"]);
 const files = [];
@@ -262,6 +274,18 @@ for (const file of files) {
       if (ignored(lines, line - 1, "missing-label")) continue;
       report(file, line, "missing-label", "error", `<${match[1]}> has no label — add label (or aria-label when it sits alone with its button)`);
     }
+  }
+
+  // Q8: no badge inside an autofill field. Keep this list in step with src/components/atoms/Input/autofillFields.ts.
+  for (const match of source.matchAll(/<Input(?=[\s/>])/g)) {
+    const element = elementFrom(match.index);
+    if (!/\bendBadge=/.test(element)) continue;
+    const autoComplete = element.match(/\bautoComplete=(?:"([^"]*)"|\{\s*["']([^"']*)["']\s*\})/);
+    const value = autoComplete?.[1] ?? autoComplete?.[2];
+    if (value == null || !value.toLowerCase().split(/\s+/).some((token) => autofillTokens.includes(token))) continue;
+    const line = source.slice(0, match.index).split("\n").length;
+    if (ignored(lines, line - 1, "badge-on-autofill")) continue;
+    report(file, line, "badge-on-autofill", "error", `endBadge on autoComplete="${value}" — autofill covers it; put "(optional)" in the label`);
   }
 
   // V10: an error or warning status always says what's wrong.

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor } from "storybook/test";
+import { Badge } from "../components/atoms/Badge/Badge";
 import { Checkbox } from "../components/atoms/Checkbox/Checkbox";
 import { Input } from "../components/atoms/Input/Input";
 import { Switch } from "../components/atoms/Switch/Switch";
@@ -10,6 +11,8 @@ import { Field } from "../components/molecules/Field/Field";
 import { PromptBar } from "../components/molecules/PromptBar/PromptBar";
 import { RadioGroup } from "../components/molecules/RadioGroup/RadioGroup";
 import { Search } from "../components/molecules/Search/Search";
+import { Select } from "../components/molecules/Select/Select";
+import { usStateOptions } from "../components/molecules/Select/usStateOptions";
 import { SegmentedControl } from "../components/molecules/SegmentedControl/SegmentedControl";
 
 /**
@@ -281,5 +284,142 @@ export const PromptBarFocusRings: Story = {
     await userEvent.tab();
     await expect(button).toHaveFocus();
     await waitFor(() => expect(ringed(button)).toBe(true));
+  },
+};
+
+const longWebsite = "https://www.northwind-bakery-and-coffee-roasters.example/locations/east-austin";
+
+export const InputEndBadgeRoomAndReadOut: Story = {
+  name: "Input — the badge keeps its room, comes after the status icon, and is read with the field (Required and optional Q8)",
+  parameters: { viewport: { defaultViewport: "mobile1" } },
+  render: () => (
+    <div className="flex w-[358px] flex-col gap-6">
+      <Input label="Your website" type="url" defaultValue={longWebsite} endBadge={<Badge size="sm">Optional</Badge>} />
+      <Input
+        label="Your site"
+        type="url"
+        defaultValue="https://northwind.example"
+        status="success"
+        endBadge={<Badge size="sm">Optional</Badge>}
+      />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const field = canvas.getByRole("textbox", { name: "Your website" });
+    await expect(field).toHaveAccessibleDescription("Optional");
+    const badge = document.getElementById(`${field.id}-badge`) as HTMLElement;
+    // The text box ends before the badge starts, so a long value never runs under it.
+    const box = field.getBoundingClientRect();
+    const textEnd = box.right - parseFloat(getComputedStyle(field).paddingRight);
+    await expect(textEnd).toBeLessThanOrEqual(badge.getBoundingClientRect().left);
+
+    const ticked = canvas.getByRole("textbox", { name: "Your site" });
+    const tickedBadge = document.getElementById(`${ticked.id}-badge`) as HTMLElement;
+    const icon = tickedBadge.previousElementSibling as HTMLElement;
+    await expect(icon).not.toBeNull();
+    await expect(icon.getBoundingClientRect().right).toBeLessThanOrEqual(tickedBadge.getBoundingClientRect().left);
+    const iconLeft = icon.getBoundingClientRect().left;
+    const ticketTextEnd = ticked.getBoundingClientRect().right - parseFloat(getComputedStyle(ticked).paddingRight);
+    await expect(ticketTextEnd).toBeLessThanOrEqual(iconLeft);
+  },
+};
+
+export const FieldWidthsFit: Story = {
+  name: "Input and Select — short widths fit their answers and hold at phone width (Form layout L7)",
+  render: () => (
+    <div className="w-[358px]">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-start gap-3">
+        <Input label="City" defaultValue="Austin" />
+        <Select label="State" options={usStateOptions} width="2ch" name="state" autoComplete="address-level1" defaultValue="WY" />
+        <Input label="ZIP code" width="5ch" defaultValue="78702" />
+      </div>
+    </div>
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    const zip = canvas.getByRole("textbox", { name: "ZIP code" }) as HTMLInputElement;
+    await expect(zip.scrollWidth).toBeLessThanOrEqual(zip.clientWidth);
+    await expect(zip.getBoundingClientRect().width).toBeLessThan(110);
+
+    // A form Select (name + autoComplete) is the browser's own select (Dropdowns C8).
+    const state = canvas.getByRole("combobox", { name: "State" }) as HTMLSelectElement;
+    await expect(state.tagName).toBe("SELECT");
+    await expect(state.value).toBe("WY");
+    await expect(state.getBoundingClientRect().width).toBeLessThan(90);
+
+    // The row fits a phone: nothing spills past the 358px column.
+    const row = canvasElement.querySelector(".grid") as HTMLElement;
+    await expect(row.scrollWidth).toBeLessThanOrEqual(row.clientWidth);
+
+    // Autofill sets the select's value; React state follows.
+    await expect(state.getAttribute("autocomplete")).toBe("address-level1");
+    await expect(state.name).toBe("state");
+    state.value = "TX";
+    state.dispatchEvent(new Event("change", { bubbles: true }));
+    await waitFor(() => expect(state.value).toBe("TX"));
+    // Typing jumps: the select is a real select, so its options are real options.
+    await expect(state.options.length).toBe(52);
+  },
+};
+
+export const SelectNativeAndListbox: Story = {
+  name: "Select — native in forms, listbox in toolbars; the hint sits above (Dropdowns C8, Labels F8)",
+  render: () => (
+    <div className="flex w-80 flex-col gap-6">
+      <Select label="State" description="Where the business is." options={usStateOptions} name="state" required />
+      <Select label="Period" options={[{ value: "week", label: "This week" }, { value: "month", label: "This month" }]} defaultValue="week" />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const state = canvas.getByLabelText("State") as HTMLSelectElement;
+    await expect(state.tagName).toBe("SELECT");
+    await expect(state.required).toBe(true);
+    await expect(state).toHaveAccessibleDescription("Where the business is.");
+    const hint = canvas.getByText("Where the business is.");
+    await expect(hint.compareDocumentPosition(state) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    await userEvent.selectOptions(state, "TX");
+    await expect(state.value).toBe("TX");
+
+    const period = canvas.getByRole("combobox", { name: "Period" });
+    await expect(period.tagName).toBe("BUTTON");
+  },
+};
+
+const channels = (color: string) => {
+  const values = color.match(/[\d.]+/g)!.map(Number);
+  return color.startsWith("color(") ? values.slice(0, 3).map((value) => value * 255) : values.slice(0, 3);
+};
+const luminance = (color: string) => {
+  const [r, g, b] = channels(color).map((value) => {
+    const c = value / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const ratio = (a: string, b: string) => {
+  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+};
+
+export const CheckboxRadioBoxes: Story = {
+  name: "Checkbox and Radio — 24px boxes whose border clears 3:1 (Dropdowns C3, C4)",
+  render: () => (
+    <div className="flex flex-col gap-4 bg-body p-4">
+      <CheckboxGroup label="Topics" values={[]} onValuesChange={() => undefined}>
+        <CheckboxGroup.Item value="design" label="Design" />
+      </CheckboxGroup>
+      <RadioGroup label="Plan" value="" onValueChange={() => undefined}>
+        <RadioGroup.Item value="basic" label="Basic" />
+      </RadioGroup>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const page = getComputedStyle(canvasElement.querySelector(".bg-body") as HTMLElement).backgroundColor;
+    for (const input of canvasElement.querySelectorAll<HTMLInputElement>("input[type=checkbox], input[type=radio]")) {
+      const box = [...(input.parentElement?.querySelectorAll<HTMLElement>("span, div") ?? [])].find(
+        (element) => parseFloat(getComputedStyle(element).borderTopWidth) > 0,
+      ) as HTMLElement;
+      await expect(box.offsetWidth).toBeGreaterThanOrEqual(24);
+      await expect(ratio(getComputedStyle(box).borderTopColor, page)).toBeGreaterThanOrEqual(3);
+    }
   },
 };
