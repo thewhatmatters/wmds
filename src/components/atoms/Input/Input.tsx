@@ -299,6 +299,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         messageId={messageId}
         size={size}
         messagePosition={messagePosition}
+        // Under a short field the band runs past it, so its far corner rounds too.
+        className={
+          width === "full" ? undefined : messagePosition === "bottom" ? "rounded-tr-[1.375rem]" : "rounded-br-[1.375rem]"
+        }
       />
     ) : null;
 
