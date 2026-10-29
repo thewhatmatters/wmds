@@ -66,7 +66,7 @@ function handleSkipClick(onSkip: (() => void) | undefined, event: MouseEvent<HTM
 }
 
 /**
- * Same **TextLink** CalEmbed uses after the frame. Place it in **Card.Footer**
+ * Same **TextLink** CalEmbed uses above the frame. Place it in **Card.Header** (above the calendar, T8)
  * and pass `skip={false}` (or `skip={<CalEmbed.Skip />}`) so the in-body link is omitted.
  */
 export function CalEmbedSkip({

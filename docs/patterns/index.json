@@ -219,11 +219,11 @@
       "source": "src/components/molecules/FloatingActionButton/FloatingActionButton.stories.tsx"
     },
     {
-      "id": "components-calembed--pattern-skip-in-footer",
+      "id": "components-calembed--pattern-skip-above",
       "title": "Components/CalEmbed",
-      "name": "Pattern — skip in footer",
-      "file": "patterns/components-calembed--pattern-skip-in-footer.tsx",
-      "storybook": "?path=/story/components-calembed--pattern-skip-in-footer",
+      "name": "Pattern — skip above the calendar",
+      "file": "patterns/components-calembed--pattern-skip-above.tsx",
+      "storybook": "?path=/story/components-calembed--pattern-skip-above",
       "source": "src/components/molecules/CalEmbed/CalEmbed.stories.tsx"
     },
     {
