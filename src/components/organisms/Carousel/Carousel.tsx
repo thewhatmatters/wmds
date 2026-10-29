@@ -22,6 +22,7 @@ import {
   useMotionValue,
   useMotionValueEvent,
   useReducedMotionConfig,
+  useSpring,
   useTransform,
 } from "motion/react";
 import { Pause, Play } from "lucide-react";
@@ -274,6 +275,12 @@ function CarouselRoot({
   const cursorRef = useRef<HTMLDivElement>(null);
   /** Last position and time, for `--carousel-velocity`. */
   const pace = useRef({ position: 0, time: 0, reset: undefined as number | undefined });
+  /** The raw pace, and a Motion spring that smooths it so items lean without jitter. */
+  const velocity = useMotionValue(0);
+  const smoothVelocity = useSpring(velocity, { stiffness: 170, damping: 26, mass: 1 });
+  useMotionValueEvent(smoothVelocity, "change", (value) => {
+    rootRef.current?.style.setProperty("--carousel-velocity", (Math.abs(value) < 0.001 ? 0 : value).toFixed(3));
+  });
 
   /** The position being driven, in px from the row's start. Past either end while the row is overscrolled. */
   const drive = useMotionValue(0);
@@ -525,8 +532,8 @@ function CarouselRoot({
 
   /**
    * `--carousel-velocity` on the root: how fast and which way the row is moving, -1 to 1 (1 is about 1.5px a
-   * millisecond toward the end). Items can lean or skew with it; it eases back to 0 when the row stops. Always
-   * 0 under reduced motion.
+   * millisecond toward the end), smoothed by a Motion spring. Items can lean or skew with it straight from the
+   * variable (no CSS transition needed); it eases back to 0 when the row stops. Always 0 under reduced motion.
    */
   function trackVelocity() {
     const root = rootRef.current;
@@ -537,13 +544,12 @@ function CarouselRoot({
     const elapsed = now - state.time;
     // A wrap jumps a whole set: not movement.
     if (elapsed > 0 && elapsed < 200 && Math.abs(position - state.position) < 400) {
-      const velocity = carouselClamp((position - state.position) / elapsed / 1.5, -1, 1);
-      root.style.setProperty("--carousel-velocity", velocity.toFixed(3));
+      velocity.set(carouselClamp((position - state.position) / elapsed / 1.5, -1, 1));
     }
     state.position = position;
     state.time = now;
     window.clearTimeout(state.reset);
-    state.reset = window.setTimeout(() => root.style.setProperty("--carousel-velocity", "0"), 120);
+    state.reset = window.setTimeout(() => velocity.set(0), 120);
   }
 
   /** `loop`: past one full set, step back by a set, invisibly (the copy looks the same). Not mid-drag or mid-glide. */

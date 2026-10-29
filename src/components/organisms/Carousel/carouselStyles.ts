@@ -43,7 +43,9 @@ export const carouselViewportClasses = cn(
   "-mt-2 -mb-6 overflow-x-auto overflow-y-hidden overscroll-x-contain pt-2 pb-6 outline-none",
   "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
   "scroll-pl-[var(--carousel-bleed-left,0px)] scroll-pr-[var(--carousel-bleed-right,0px)]",
-  "data-[overflowing=true]:cursor-grab data-[dragging]:cursor-grabbing data-[dragging]:select-none",
+  "data-[overflowing=true]:cursor-grab data-[dragging]:cursor-grabbing",
+  // A row you can drag doesn't select text: a press-and-drag would otherwise paint selection over the items.
+  "data-[overflowing=true]:select-none",
 );
 
 /** Rest on item edges — off while the pointer or an animation is moving the row. */
