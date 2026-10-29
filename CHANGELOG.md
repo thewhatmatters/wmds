@@ -9,28 +9,34 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 ## 0.4.34
 
-**Required and optional fields: mark the exception, read the badge with the field, never on autofill.**
+**Required and optional fields: mark the exception, read the badge with the field, never on autofill. Field width and form layout: widths that hint at the answer, a State select, side labels only on wide screens, and counters that don't cut text.**
 
 - **Field** `description` sits **between the label and the control** (was below; Labels and placeholders F8), so every hint is read before typing. New **`counter`** prop: a character counter, the one helper that stays below the control. Both join the control's accessible description (hint first). New test **fieldHintOrder.test.ts**.
 - **IntakeForm**: hints above their fields; the details counter ("67 / 400") uses `counter`, below the box. Company's hint is "So we can read up on you first."
-- **Input** \`endBadge\` (Required and optional Q8):
+- **Input** `endBadge` (Required and optional Q8):
   - Screen readers hear the badge as part of the field's description, after the hint.
   - With a status icon, the icon comes first, then the badge (it used to be the badge, then the icon).
   - The field keeps room for the badge, so a long value stops before it. A new interaction test checks this at phone width.
-  - Input warns in the console when \`endBadge\` sits on an autofill field (\`autoComplete\` name, email, tel, password, address or organization fields).
-- **wmds-check** \`badge-on-autofill\` (new, error): fails an Input with \`endBadge\` on an autofill field. Put "(optional)" in the label there.
+  - Input warns in the console when `endBadge` sits on an autofill field (`autoComplete` name, email, tel, password, address or organization fields).
+- **wmds-check** `badge-on-autofill` (new, error): fails an Input with `endBadge` on an autofill field. Put "(optional)" in the label there.
 - **IntakeForm** (Q2, Q7, Q9):
-  - Name, email and project details carry \`aria-required\`.
+  - Name, email and project details carry `aria-required`.
   - The website field is now labelled "Your website", with an "Optional" badge and a stated use ("So we can see what you have now.").
-  - **Company is off by default** (\`company\` turns it on). It's labelled "Company (optional)", since it's an autofill field.
+  - **Company is off by default** (`company` turns it on). It's labelled "Company (optional)", since it's an autofill field.
+- **Field width** (Form layout L7): **Input** and **Select** take `width` in characters (`2ch`, `4ch`, `5ch`, `10ch`, `20ch`; default `full`) for fixed-length answers, never wider than their container. The label and hint keep their own width. A short field with an error message widens to hold the message. Story **Components/Input → Pattern — field widths** (city, state and ZIP share a row).
+- **State select** (L7): `usStateOptions` (new export) lists the 50 states and DC as two-letter abbreviations. **Select** takes `name` and `autoComplete`: it keeps a hidden native `<select>` in step, so the value submits with a plain form and the browser can autofill it (`autoComplete="address-level1"`). Story **Components/Select → Pattern — US state**.
+- **Field** `orientation="horizontal"` (L8) puts the label beside the control only from `lg` (1024) and stacks below it. Use it for dense app settings only, never marketing or contact forms.
+- **IntakeForm counter** (L9): no `maxLength`, so a long paste stays whole. The counter says "N characters left" or "You have N characters too many". A screen reader hears it once typing pauses, not on every keystroke. Over the limit, the field's error reads "Shorten your answer to 400 characters or fewer." and the step stays blocked. `intakeCounterText` is exported. Story **Pattern — over the character limit**.
 - **Stories:** the Input badge stories use a website field with "Optional", not an email field. They add "Pattern — end badge with a long value" and "Pattern — end badge + status icon". The validation morph demo drops its badge from the email field.
 
 ### Consumer actions
 
-- Run \`npx wmds-check\`, and move any badge on a name, email, phone, password, address or company field into its label ("Business email (optional)").
+- Run `npx wmds-check`, and move any badge on a name, email, phone, password, address or company field into its label ("Business email (optional)").
 - Mark the exception: in a mostly-required form, badge the optional fields "Optional".
-- \`IntakeForm\` no longer shows Company unless you pass \`company\`. The website field's accessible name changed from "Link" to "Your website".
+- `IntakeForm` no longer shows Company unless you pass `company`. The website field's accessible name changed from "Link" to "Your website".
 
+- Give ZIP, phone, year and state fields a `width`, and use `usStateOptions` for a State select with `autoComplete="address-level1"`. Remove `maxLength` from text people write, and show a counter instead.
+- `Field orientation="horizontal"` now stacks below 1024px. If you relied on side labels on tablets, that changes.
 - If a **Field** `description` is a character counter, pass it as `counter` so it stays below the control.
 
 ## 0.4.33

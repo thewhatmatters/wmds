@@ -41,6 +41,9 @@ import {
   type InputStatus,
 } from "./inputShellStyles";
 import { isAutofillField } from "./autofillFields";
+import { fieldWidthStyle, type FieldWidth } from "./fieldWidth";
+
+export { fieldWidths, type FieldWidth } from "./fieldWidth";
 
 export type { InputMessagePosition, InputSize, InputStatus } from "./inputShellStyles";
 export { inputMessagePositions, inputSizes, inputStatuses } from "./inputShellStyles";
@@ -49,7 +52,7 @@ export { inputMessagePositions, inputSizes, inputStatuses } from "./inputShellSt
 export type InputLayoutClassName = string;
 
 export interface InputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "size"> {
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "width"> {
   size?: InputSize;
   /**
    * Optional visible label — omit for bare inputs. No label asterisk; use `endBadge` for Required.
@@ -78,6 +81,11 @@ export interface InputProps
    * organization): autofill paints over it, so put "(optional)" in the label there.
    */
   endBadge?: ReactElement;
+  /**
+   * Field width in characters for fixed-length answers (ZIP `5ch`, year `4ch`, phone `10ch`); default
+   * `full`. Free-form answers stay full width (Form layout L7). The label and hint keep their own width.
+   */
+  width?: FieldWidth;
   /** Inside a parent pill (Search, CopyField) — no outer shell; the parent owns border and focus ring. */
   inline?: boolean;
   className?: InputLayoutClassName;
@@ -115,6 +123,28 @@ function assertInputPattern(
   }
 }
 
+/** Rem of shell around the characters, per size: side padding, insets for icons and badge, and the border. */
+const inputSidePaddingRem: Record<InputSize, number> = { sm: 0.625, md: 0.75, lg: 1 };
+const inputLeadingIconRem: Record<InputSize, number> = { sm: 2, md: 2.5, lg: 2.75 };
+const inputTrailingRem: Record<string, number> = {
+  [inputStatusGapClasses.sm]: 2,
+  [inputStatusGapClasses.md]: 2.5,
+  [inputStatusGapClasses.lg]: 2.75,
+  [inputEndBadgeGapClasses.sm]: 4.5,
+  [inputEndBadgeGapClasses.md]: 5,
+  [inputEndBadgeGapClasses.lg]: 6,
+  [inputEndBadgeAndStatusGapClasses.sm]: 6.5,
+  [inputEndBadgeAndStatusGapClasses.md]: 7,
+  [inputEndBadgeAndStatusGapClasses.lg]: 8,
+};
+
+function inputWidthChrome(size: InputSize, leadingIcon: boolean, trailingPadding: string | false): string {
+  const side = inputSidePaddingRem[size];
+  const start = leadingIcon ? inputLeadingIconRem[size] : side;
+  const end = trailingPadding === false ? side : (inputTrailingRem[trailingPadding] ?? side);
+  return `${start + end}rem + 2px`;
+}
+
 function resolveTrailingPadding(
   size: InputSize,
   hasEndBadge: boolean,
@@ -147,6 +177,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     loading = false,
     icon,
     endBadge,
+    width = "full",
     mono = false,
     inline = false,
     className,
@@ -274,8 +305,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   // One tree whether or not a message shows (top slot, field, bottom slot), so React keeps the same
   // <input> when a status appears: what people typed and the focus survive (Errors and validation V4).
   const withMessage = hasMessage && status != null;
+  const widthStyle = inline ? undefined : fieldWidthStyle(width, inputWidthChrome(size, showLeadingIcon, trailingPadding));
   const control = (
     <div
+      style={
+        // A message needs room to read: a short field widens to hold it while it shows.
+        widthStyle != null && withMessage ? { ...widthStyle, minWidth: "min(100%, 18rem)" } : widthStyle
+      }
       className={
         withMessage
           ? inputCompoundShellClassesFor(size, status)

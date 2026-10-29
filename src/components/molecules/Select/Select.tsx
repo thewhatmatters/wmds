@@ -20,6 +20,7 @@ import {
   selectTriggerPlaceholderClasses,
   type SelectSize,
 } from "./selectStyles";
+import { fieldWidthStyle, type FieldWidth } from "../../atoms/Input/fieldWidth";
 
 export type { SelectSize } from "./selectStyles";
 export { selectSizes } from "./selectStyles";
@@ -49,6 +50,16 @@ export interface SelectProps {
   className?: SelectLayoutClassName;
   id?: string;
   "aria-label"?: string;
+  /**
+   * Trigger width in characters for short fixed answers (a US state `2ch`); default `full` (Form layout L7).
+   */
+  width?: FieldWidth;
+  /**
+   * Form name. With `name` or `autoComplete`, Select keeps a hidden native `<select>` in step, so the value
+   * submits with a plain form and the browser can autofill it (e.g. `autoComplete="address-level1"`).
+   */
+  name?: string;
+  autoComplete?: string;
   /** Extra ids that describe the trigger (Field passes its description here); joined with `description`. */
   "aria-describedby"?: string;
 }
@@ -63,6 +74,13 @@ function assertSelectA11y(
     console.warn("[WMDS Select] `options` must not be empty.");
   }
 }
+
+/** Shell around the characters, per size: side padding, the caret and its gap, and the border. */
+const selectWidthChrome: Record<SelectSize, string> = {
+  sm: "2.75rem + 2px",
+  md: "3rem + 2px",
+  lg: "3.5rem + 2px",
+};
 
 function findOptionLabel(options: SelectOption[], value: string | undefined): string | undefined {
   if (value == null) {
@@ -87,6 +105,9 @@ export function Select({
   disabled = false,
   size = "md",
   className,
+  width = "full",
+  name,
+  autoComplete,
   id: idProp,
   "aria-label": ariaLabel,
   "aria-describedby": ariaDescribedBy,
@@ -106,11 +127,15 @@ export function Select({
 
   const selectedLabel = findOptionLabel(options, value);
 
-  function selectValue(nextValue: string) {
+  function commitValue(nextValue: string) {
     if (!isControlled) {
       setUncontrolledValue(nextValue);
     }
     onValueChange?.(nextValue);
+  }
+
+  function selectValue(nextValue: string) {
+    commitValue(nextValue);
     menu.close({ returnFocus: true });
   }
 
@@ -127,7 +152,32 @@ export function Select({
   });
 
   const control = (
-    <div {...menu.rootProps} className={cn(selectRootClasses, className)}>
+    <div
+      {...menu.rootProps}
+      style={fieldWidthStyle(width, selectWidthChrome[size])}
+      className={cn(selectRootClasses, className)}
+    >
+      {name != null || autoComplete != null ? (
+        // Autofill and plain-form mirror: hidden from people and assistive tech, kept in step both ways.
+        <select
+          aria-hidden
+          tabIndex={-1}
+          name={name}
+          autoComplete={autoComplete}
+          disabled={disabled}
+          value={value ?? ""}
+          onChange={(event) => commitValue(event.target.value)}
+          className="sr-only"
+          data-select-mirror=""
+        >
+          <option value="" />
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      ) : null}
       <div
         ref={shellRef}
         className={cn(selectShellClasses[size], disabled && selectShellDisabledClasses)}

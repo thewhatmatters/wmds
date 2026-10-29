@@ -28,3 +28,14 @@ describe("Field hint and counter (Labels and placeholders F8)", () => {
     );
   });
 });
+
+describe("Field side labels (Form layout L8)", () => {
+  it("stacks below lg and sets the label beside the control only from lg", async () => {
+    const { fieldHorizontalStackClasses, fieldHorizontalLabelColumnClasses } = await import("./fieldStyles");
+    const stack = fieldHorizontalStackClasses.split(" ");
+    expect(stack).toContain("flex-col");
+    expect(stack).toContain("lg:flex-row");
+    expect(stack.filter((token) => /^(?:sm|md):/.test(token))).toEqual([]);
+    expect(fieldHorizontalLabelColumnClasses.split(" ").every((token) => token.startsWith("lg:"))).toBe(true);
+  });
+});

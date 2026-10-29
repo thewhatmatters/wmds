@@ -11,6 +11,8 @@ import { Field } from "../components/molecules/Field/Field";
 import { PromptBar } from "../components/molecules/PromptBar/PromptBar";
 import { RadioGroup } from "../components/molecules/RadioGroup/RadioGroup";
 import { Search } from "../components/molecules/Search/Search";
+import { Select } from "../components/molecules/Select/Select";
+import { usStateOptions } from "../components/molecules/Select/usStateOptions";
 import { SegmentedControl } from "../components/molecules/SegmentedControl/SegmentedControl";
 
 /**
@@ -319,5 +321,41 @@ export const InputEndBadgeRoomAndReadOut: Story = {
     const iconLeft = icon.getBoundingClientRect().left;
     const ticketTextEnd = ticked.getBoundingClientRect().right - parseFloat(getComputedStyle(ticked).paddingRight);
     await expect(ticketTextEnd).toBeLessThanOrEqual(iconLeft);
+  },
+};
+
+export const FieldWidthsFit: Story = {
+  name: "Input and Select — short widths fit their answers and hold at phone width (Form layout L7)",
+  render: () => (
+    <div className="w-[358px]">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-start gap-3">
+        <Input label="City" defaultValue="Austin" />
+        <Select label="State" options={usStateOptions} width="2ch" name="state" autoComplete="address-level1" defaultValue="WY" />
+        <Input label="ZIP code" width="5ch" defaultValue="78702" />
+      </div>
+    </div>
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    const zip = canvas.getByRole("textbox", { name: "ZIP code" }) as HTMLInputElement;
+    await expect(zip.scrollWidth).toBeLessThanOrEqual(zip.clientWidth);
+    await expect(zip.getBoundingClientRect().width).toBeLessThan(110);
+
+    const state = canvas.getByRole("combobox", { name: "State" });
+    const shown = state.querySelector("span") as HTMLElement;
+    await expect(shown.textContent).toBe("WY");
+    await expect(shown.scrollWidth).toBeLessThanOrEqual(shown.clientWidth);
+    await expect(state.getBoundingClientRect().width).toBeLessThan(90);
+
+    // The row fits a phone: nothing spills past the 358px column.
+    const row = canvasElement.querySelector(".grid") as HTMLElement;
+    await expect(row.scrollWidth).toBeLessThanOrEqual(row.clientWidth);
+
+    // Autofill fills the hidden native select; the visible trigger follows it.
+    const mirror = canvasElement.querySelector("select[data-select-mirror]") as HTMLSelectElement;
+    await expect(mirror.getAttribute("autocomplete")).toBe("address-level1");
+    await expect(mirror.value).toBe("WY");
+    mirror.value = "TX";
+    mirror.dispatchEvent(new Event("change", { bubbles: true }));
+    await waitFor(() => expect(shown.textContent).toBe("TX"));
   },
 };

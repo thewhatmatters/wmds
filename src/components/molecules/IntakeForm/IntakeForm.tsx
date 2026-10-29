@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "../../atoms/Badge/Badge";
 import { Input } from "../../atoms/Input/Input";
 import { TextArea } from "../../atoms/TextArea/TextArea";
@@ -79,6 +79,23 @@ export function isIntakeAboutValid(
   );
 }
 
+const characters = (count: number) => `${count} character${count === 1 ? "" : "s"}`;
+
+/** Form layout L9: what the counter says. People may type past the limit; the counter tells them by how much. */
+export function intakeCounterText(length: number, max: number): string {
+  return length > max ? `You have ${characters(length - max)} too many` : `${characters(max - length)} left`;
+}
+
+/** The counter's words once typing pauses, so a screen reader hears it now and then, not on every keystroke. */
+function useSettledText(text: string, delayMs = 1000): string {
+  const [settled, setSettled] = useState(text);
+  useEffect(() => {
+    const timer = setTimeout(() => setSettled(text), delayMs);
+    return () => clearTimeout(timer);
+  }, [text, delayMs]);
+  return settled;
+}
+
 function intakeFieldError(
   field: IntakeTouchedField,
   values: IntakeAboutValues,
@@ -103,7 +120,7 @@ function intakeFieldError(
     return "Tell us a bit about the project.";
   }
   if (values.details.length > detailsMax) {
-    return `Keep project details to ${detailsMax} characters.`;
+    return `Shorten your answer to ${detailsMax} characters or fewer.`;
   }
   return undefined;
 }
@@ -141,6 +158,8 @@ export function IntakeForm({
   const emailError = errorFor("email");
   const urlError = errorFor("url");
   const detailsError = errorFor("details");
+  const counterText = intakeCounterText(values.details.length, detailsMax);
+  const announcedCounter = useSettledText(counterText);
 
   return (
     <div className={cn(intakeFormClasses, className)}>
@@ -199,13 +218,13 @@ export function IntakeForm({
       {/* Labels and placeholders: the question is the label (a label can be a question, as on GOV.UK question pages). */}
       <Field
         label="What should feel different when this work is done?"
-        counter={detailsError == null ? `${values.details.length} / ${detailsMax}` : undefined}
+        counter={counterText}
       >
+        {/* L9: no maxLength, so nothing pasted is cut; the counter and the error say how much to trim. */}
         <TextArea
           aria-label="What should feel different when this work is done?"
           aria-required
           rows={5}
-          maxLength={detailsMax}
           value={values.details}
           status={detailsError != null ? "error" : undefined}
           message={detailsError}
@@ -213,6 +232,9 @@ export function IntakeForm({
           onChange={(event) => onChange({ ...values, details: event.target.value })}
         />
       </Field>
+      <p className="sr-only" aria-live="polite" data-intake-counter-live="">
+        {announcedCounter}
+      </p>
     </div>
   );
 }

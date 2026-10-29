@@ -4,6 +4,7 @@ import { Apple, Banana, Citrus, ChevronDown } from "lucide-react";
 import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
 import { Dropdown } from "../Dropdown/Dropdown";
 import { Select, selectSizes, type SelectOption } from "./Select";
+import { usStateOptions } from "./usStateOptions";
 
 const fruitOptions: SelectOption[] = [
   { value: "apple", label: "Apple" },
@@ -201,6 +202,36 @@ export const WithLabel: Story = {
         />
       </div>
     );
+  },
+};
+
+export const UsState: Story = {
+  name: "Pattern — US state",
+  render: function UsStateRender() {
+    const [value, setValue] = useState<string>();
+
+    return (
+      <div className="mx-auto w-full max-w-xs px-8 py-6">
+        <Select
+          label="State"
+          options={usStateOptions}
+          width="2ch"
+          name="state"
+          autoComplete="address-level1"
+          placeholder="—"
+          value={value}
+          onValueChange={setValue}
+        />
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`usStateOptions` lists the 50 states and DC as two-letter abbreviations. `width=\"2ch\"` sizes the trigger to fit them (Form layout L7), and `autoComplete=\"address-level1\"` with a `name` lets the browser autofill it.",
+      },
+    },
   },
 };
 

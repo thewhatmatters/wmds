@@ -2,7 +2,7 @@
 import { createElement } from "react";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   IntakeForm,
   intakeAboutEmpty,
@@ -178,8 +178,9 @@ describe("IntakeForm blur errors", () => {
     expect(container.querySelector('input[aria-label="Your website"]')).toBeNull();
     const fields = container.querySelectorAll("input, textarea");
     expect([...fields].map((field) => field.getAttribute("aria-label"))).toEqual(["Name", "Email", "What should feel different when this work is done?"]);
-    // Three rows, no empty slots between them.
-    expect(container.firstElementChild?.children).toHaveLength(3);
+    // Three rows, no empty slots between them (plus the counter's screen-reader line).
+    const rows = [...(container.firstElementChild?.children ?? [])].filter((row) => !row.hasAttribute("data-intake-counter-live"));
+    expect(rows).toHaveLength(3);
 
     const name = container.querySelector('input[aria-label="Name"]');
     if (!(name instanceof HTMLInputElement)) throw new Error("Name is missing");
@@ -190,4 +191,41 @@ describe("IntakeForm blur errors", () => {
     });
     expect(changes.at(-1)).toMatchObject({ name: "Ada", company: "Northwind", url: "https://northwind.example" });
   });
+
+  it("lets people type past the limit: no maxLength, the counter says by how much, and the error blocks the step (Form layout L9)", () => {
+    vi.useFakeTimers();
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+    const long = "x".repeat(intakeDetailsMax + 12);
+    const values = { ...intakeAboutEmpty, name: "Jordan", email: "jordan@example.com", details: long };
+    act(() => {
+      root?.render(createElement(IntakeForm, { values, onChange: () => {} }));
+    });
+    const details = container.querySelector("textarea");
+    expect(details?.hasAttribute("maxlength")).toBe(false);
+    expect(details?.value).toHaveLength(intakeDetailsMax + 12);
+    expect(container.textContent).toContain("You have 12 characters too many");
+    expect(isIntakeAboutValid(values)).toBe(false);
+
+    act(() => {
+      details?.focus();
+      details?.blur();
+    });
+    expect(container.textContent).toContain(`Shorten your answer to ${intakeDetailsMax} characters or fewer.`);
+
+    // The live line catches up once typing pauses, not on every keystroke.
+    const live = container.querySelector("[data-intake-counter-live]");
+    expect(live?.getAttribute("aria-live")).toBe("polite");
+    act(() => {
+      root?.render(createElement(IntakeForm, { values: { ...values, details: "x".repeat(intakeDetailsMax - 1) }, onChange: () => {} }));
+    });
+    expect(live?.textContent).toBe("You have 12 characters too many");
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+    expect(live?.textContent).toBe("1 character left");
+    vi.useRealTimers();
+  });
 });
+

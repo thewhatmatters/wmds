@@ -33,7 +33,10 @@ export interface FieldProps {
    * (as GOV.UK places it). Read with the control, like the hint.
    */
   counter?: string;
-  /** Stack (default) or label beside control. */
+  /**
+   * Stack (default) or label beside control. `horizontal` applies from `lg` (1024) up and stacks below
+   * it. For dense app settings only, never marketing or contact forms (Form layout L8).
+   */
   orientation?: FieldOrientation;
   /** Explicit control id — auto-wired for a single child when omitted. */
   htmlFor?: string;

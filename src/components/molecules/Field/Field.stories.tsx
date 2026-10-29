@@ -48,7 +48,7 @@ const meta = {
 | Pattern | When |
 |---------|------|
 | **Vertical + single control** | Prefer **\`Input label\`** for simple stacks — **Field** optional |
-| **Horizontal** | \`orientation="horizontal"\` — label beside control (settings rows, compact forms) |
+| **Horizontal** | \`orientation="horizontal"\` — label beside control from \`lg\` (1024); stacks below it. Dense app settings only, never marketing or contact forms |
 | **Multi-control** | One label for several controls (date range, address rows) |
 | **Validation** | Keep \`status\` + \`message\` on **Input** / **TextArea** — not on **Field** |
 
@@ -61,7 +61,7 @@ const meta = {
 
 ## Best practices
 
-- **Do** use **Field** for horizontal label beside control.
+- **Do** use \`orientation="horizontal"\` only for dense app settings. Marketing and contact forms keep the label above the field.
 - **Do** use bare children with **Field** \`label\` — not both **Field** and **Input** \`label\`.
 - **Do** keep validation on the atom (\`status\`, \`message\`, \`loading\`).
 - **Don't** require **Field** for every labeled input — **Input label** is fine for vertical forms.

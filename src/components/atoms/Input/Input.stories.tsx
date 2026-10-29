@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Badge } from "../Badge/Badge";
+import { Select } from "../../molecules/Select/Select";
+import { usStateOptions } from "../../molecules/Select/usStateOptions";
 import { Input, inputStatuses } from "./Input";
 import { InputValidationMorphDemo } from "./InputValidationMorph";
 
@@ -270,4 +272,29 @@ export const ValidationMotion: Story = {
     },
   },
   render: () => <InputValidationMorphDemo />,
+};
+
+export const FieldWidths: Story = {
+  name: "Pattern — field widths",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A field's width hints at the answer (Form layout L7). `width` in characters for fixed-length answers only: ZIP `5ch`, year `4ch`, phone `10ch`, a US state `2ch` on **Select**. Free-form answers (names, emails, addresses) stay full width. Short related fields share one row, like city, state and ZIP (L1).",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex w-full max-w-xl flex-col gap-6">
+      <Input label="Street address" autoComplete="street-address" />
+      <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-start gap-3">
+        <Input label="City" autoComplete="address-level2" />
+        <Select label="State" options={usStateOptions} width="2ch" name="state" autoComplete="address-level1" placeholder="—" />
+        <Input label="ZIP code" width="5ch" inputMode="numeric" autoComplete="postal-code" />
+      </div>
+      <Input label="Phone" width="10ch" type="tel" autoComplete="tel-national" description="Include the area code." />
+      <Input label="Year founded" width="4ch" inputMode="numeric" />
+      <Input label="ZIP code" width="5ch" inputMode="numeric" defaultValue="7870" status="error" message="Enter a 5-digit ZIP code." />
+    </div>
+  ),
 };
