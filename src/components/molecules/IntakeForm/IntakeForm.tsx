@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { Badge } from "../../atoms/Badge/Badge";
 import { Input } from "../../atoms/Input/Input";
 import { TextArea } from "../../atoms/TextArea/TextArea";
 import { cn } from "../../../lib/cn";
+import { ErrorSummary } from "../ErrorSummary/ErrorSummary";
 import { Field } from "../Field/Field";
 import { intakeDetailsMax, intakeFormClasses } from "./intakeFormStyles";
 
@@ -44,6 +45,12 @@ export interface IntakeFormProps {
    * keeps its value (empty, which is valid).
    */
   link?: boolean;
+  /**
+   * How many times Continue was pressed on this step (the caller counts; Buttons U6: Continue stays
+   * enabled). From 1 on, every field shows its error. Two or more errors put an **ErrorSummary** at the
+   * top and focus it; one error focuses its field (Errors and validation V5). Default 0.
+   */
+  submitCount?: number;
   className?: IntakeFormLayoutClassName;
 }
 
@@ -140,16 +147,20 @@ export function IntakeForm({
   detailsMax = intakeDetailsMax,
   company = false,
   link = true,
+  submitCount = 0,
   className,
 }: IntakeFormProps) {
   const [touched, setTouched] = useState<Partial<Record<IntakeTouchedField, boolean>>>({});
+  const baseId = useId();
+  const fieldId = (field: IntakeTouchedField) => `${baseId}-${field}`;
+  const submitted = submitCount > 0;
 
   function markTouched(field: IntakeTouchedField) {
     setTouched((current) => (current[field] ? current : { ...current, [field]: true }));
   }
 
   function errorFor(field: IntakeTouchedField): string | undefined {
-    if (!touched[field]) {
+    if (!touched[field] && !submitted) {
       return undefined;
     }
     return intakeFieldError(field, values, detailsMax);
@@ -162,10 +173,33 @@ export function IntakeForm({
   const counterText = intakeCounterText(values.details.length, detailsMax);
   const announcedCounter = useSettledText(counterText);
 
+  // After Continue: the errors in field order (the website only when it's shown).
+  const summaryErrors = submitted
+    ? (
+        [
+          ["name", nameError],
+          ["email", emailError],
+          ...(link ? ([["url", urlError]] as const) : []),
+          ["details", detailsError],
+        ] as const
+      )
+        .filter(([, message]) => message != null)
+        .map(([field, message]) => ({ field: fieldId(field), message: message as string }))
+    : [];
+  const singleErrorField = summaryErrors.length === 1 ? summaryErrors[0].field : undefined;
+  useEffect(() => {
+    // One error: focus goes straight to its field (two or more: ErrorSummary takes focus itself).
+    if (submitCount > 0 && singleErrorField != null) document.getElementById(singleErrorField)?.focus();
+    // Only on each press, not while people fix the field.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submitCount]);
+
   return (
     <div className={cn(intakeFormClasses, className)}>
+      {summaryErrors.length >= 2 ? <ErrorSummary key={submitCount} errors={summaryErrors} /> : null}
       <Field label="Name">
         <Input
+          id={fieldId("name")}
           aria-label="Name"
           aria-required
           autoComplete="name"
@@ -178,6 +212,7 @@ export function IntakeForm({
       </Field>
       <Field label="Email">
         <Input
+          id={fieldId("email")}
           aria-label="Email"
           aria-required
           type="email"
@@ -203,6 +238,7 @@ export function IntakeForm({
       {link ? (
         <Field label="Your website" description="So we can see what you have now.">
           <Input
+            id={fieldId("url")}
             aria-label="Your website"
             endBadge={<Badge size="sm">Optional</Badge>}
             type="url"
@@ -224,6 +260,7 @@ export function IntakeForm({
       >
         {/* L9: no maxLength, so nothing pasted is cut; the counter and the error say how much to trim. */}
         <TextArea
+          id={fieldId("details")}
           aria-label="What should feel different when this work is done?"
           aria-required
           rows={5}

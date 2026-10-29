@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "../../atoms/Button/Button";
 import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySource";
+import { IntakeForm, intakeAboutEmpty, isIntakeAboutValid, type IntakeAboutValues } from "../../molecules/IntakeForm/IntakeForm";
 import { IntakeModal } from "./IntakeModal";
 
 const meta = {
@@ -23,7 +24,7 @@ Full-screen intake shell. Open it from any **Start a project** action.
 | **Wordmark** | Typographic **WM** mark and **WhatMatters**. There is no separate logo asset. |
 | **Close** | **IconButton** with Lucide **X**. Accessible name **Close**. |
 | **Progress** | **StepProgress** under the header. Label reads **Step N of 4**. |
-| **Footer** | **Back** is **Button** \`role="secondary"\`. **Continue** is **Button** \`role="primary"\`. Pass \`hideContinue\` on the calendar step so Continue is not rendered. The footer stays pinned while the step body scrolls. Confirmation (\`hideFooter\`) centers in the body. |
+| **Footer** | **Continue** (**Button** \`role="primary"\`) comes first, on the left; **Back** follows as a quieter \`role="ghost"\` button (Buttons U8). Pass \`hideContinue\` on the calendar step so Continue is not rendered. The footer stays pinned while the step body scrolls. Confirmation (\`hideFooter\`) centers in the body. |
 | **Overlay** | Portal, \`aria-modal\`, focus trap, Escape, scroll lock. |
 
 ## Anatomy
@@ -33,7 +34,7 @@ IntakeModal
 ├── header — WM + WhatMatters | IconButton close
 ├── StepProgress
 ├── body — step children
-└── footer — Back + Continue
+└── footer — Continue + Back
 \`\`\`
 
 The shell owns the close glyph. Do not restyle it with utilities.
@@ -41,7 +42,7 @@ The shell owns the close glyph. Do not restyle it with utilities.
 ## Best practices
 
 - **Do** open this from a **Button** labeled Start a project.
-- **Do** keep step validation in the caller and pass \`continueDisabled\`.
+- **Do** keep Continue enabled and validate on press: count presses and pass them to **IntakeForm** \`submitCount\`, which shows every error, an **ErrorSummary** for two or more, and focuses the right place (Buttons U6, Errors and validation V5). Avoid \`continueDisabled\`.
 - **Do** set \`hideFooter\` and \`showProgress={false}\` on the confirmation surface.
 - **Don't** put **SiteNav** in the header.
 - **Don't** add a scrim. The shell is the page.
@@ -125,3 +126,39 @@ export function StartAProjectShell() {
 for (const story of [IntakeModalPattern]) {
   story.parameters = { ...story.parameters, a11y: { test: "todo" } };
 }
+
+export const ErrorsOnContinue: Story = {
+  name: "Pattern — errors on Continue",
+  args: {
+    open: true,
+    onOpenChange: () => undefined,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Continue stays enabled. Pressed with gaps, every field shows its error, an ErrorSummary lists two or more and takes focus, and one error sends focus to its field.",
+      },
+    },
+  },
+  render: function ErrorsOnContinueRender() {
+    const [values, setValues] = useState<IntakeAboutValues>(intakeAboutEmpty);
+    const [submitCount, setSubmitCount] = useState(0);
+
+    return (
+      <IntakeModal
+        open
+        onOpenChange={() => undefined}
+        step={2}
+        steps={4}
+        onBack={() => undefined}
+        onContinue={() => {
+          if (!isIntakeAboutValid(values)) setSubmitCount((count) => count + 1);
+        }}
+      >
+        <h2 className="type-heading-1 text-fg tracking-tight">About you</h2>
+        <IntakeForm values={values} onChange={setValues} submitCount={submitCount} />
+      </IntakeModal>
+    );
+  },
+};
