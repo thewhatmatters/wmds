@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.30 · Pattern — resource detail
+// @thewhatmatters/wmds@0.4.31 · Pattern — resource detail
 // Storybook: Guides/Resource detail → Pattern — resource detail (?path=/story/guides-resource-detail--detail)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -249,7 +249,7 @@ export function ResourceDetailPage({ item, breadcrumb, renderLink, renderImage, 
   return (
     <main className="grid-page bg-body">
       {overlay}
-      <article aria-labelledby={headingId} className="band py-6 sm:py-10 lg:py-14">
+      <article aria-labelledby={headingId} className="band py-6 md:py-10 lg:py-14">
         <Breadcrumb
           items={breadcrumb}
           variant="mono"

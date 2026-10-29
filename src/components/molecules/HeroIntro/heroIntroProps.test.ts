@@ -1,6 +1,7 @@
 /** @vitest-environment happy-dom */
 import { act, createElement } from "react";
 import { createRoot } from "react-dom/client";
+import { renderToString } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { HeroIntro, type HeroIntroProps } from "./HeroIntro";
 
@@ -44,5 +45,29 @@ describe("HeroIntro firstLine, lead alias and description (0.4.30)", () => {
     const { host, done } = render({ firstLine: "A studio in Austin." });
     expect(host.querySelector("p")).toBeNull();
     done();
+  });
+
+  it("renders an actions row under the heading, left on phones and centred from md (R2)", () => {
+    const html = renderToString(
+      createElement(HeroIntro, {
+        firstLine: "A design studio in Austin.",
+        actions: createElement("a", { href: "/start" }, "Start a project"),
+      }),
+    );
+    expect(html).toMatch(/<\/h1><div class="[^"]*md:justify-center[^"]*" data-slot="actions"><a href="\/start">Start a project<\/a><\/div>/);
+  });
+
+  it("renders no actions row without actions", () => {
+    expect(renderToString(createElement(HeroIntro, { firstLine: "A design studio in Austin." }))).not.toContain('data-slot="actions"');
+  });
+
+  it("spaces heading → lead → actions 24 / 32 on the page grid's 24px row gap (Spacing S2)", () => {
+    const html = renderToString(
+      createElement(HeroIntro, { firstLine: "A", description: "Lead.", actions: createElement("a", { href: "/" }, "Go") }),
+    );
+    const lead = html.match(/<p class="([^"]+)"/)?.[1] ?? "";
+    const actions = html.match(/<div class="([^"]+)" data-slot="actions"/)?.[1] ?? "";
+    expect(lead).not.toMatch(/(^|\s)mt-/);
+    expect(actions).toMatch(/(^|\s)mt-2(\s|$)/);
   });
 });

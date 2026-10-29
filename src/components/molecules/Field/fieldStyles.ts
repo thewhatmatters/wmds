@@ -14,7 +14,7 @@ export const fieldHorizontalStackClasses = "flex w-full items-start gap-4";
 
 /** Left label column — fixed band; control column flexes. */
 export const fieldHorizontalLabelColumnClasses =
-  "w-[7.5rem] shrink-0 pt-2.5 sm:w-32";
+  "w-[7.5rem] shrink-0 pt-2.5 md:w-32";
 
 /** Right control column in horizontal layout. */
 export const fieldHorizontalControlColumnClasses =

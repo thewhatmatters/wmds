@@ -1,10 +1,11 @@
 import { NavigationMenu } from "@base-ui/react/navigation-menu";
-import { ChevronDown, Menu as MenuIcon } from "lucide-react";
+import { ChevronDown, Menu as MenuIcon, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   Children,
   createContext,
   isValidElement,
+  useCallback,
   useContext,
   useEffect,
   useId,
@@ -27,12 +28,12 @@ import {
 } from "../../molecules/Card/Card";
 import { Dropdown } from "../../molecules/Dropdown/Dropdown";
 import { textOf, useOverflowMenu } from "../../molecules/Dropdown/useOverflowMenu";
-import { Sheet } from "../Sheet/Sheet";
 import {
   siteNavBarBaseClasses,
   siteNavBarCompactLayoutClasses,
   siteNavBarStateClasses,
   siteNavBrandClasses,
+  siteNavWordmarkBrandClasses,
   siteNavContainerClasses,
   siteNavEndClasses,
   siteNavExpandedHeightClasses,
@@ -56,7 +57,10 @@ import {
   siteNavMiddleClasses,
   siteNavMiddleHugClasses,
   siteNavMiddleHugResponsiveClasses,
+  siteNavMobileActionClasses,
   siteNavMobileLinkClasses,
+  siteNavMobilePanelClasses,
+  siteNavEndActionsClasses,
   siteNavMiddleResponsiveClasses,
   siteNavMobileListClasses,
   siteNavMobileTriggerClasses,
@@ -79,6 +83,7 @@ import {
   type SiteNavState,
 } from "./siteNavStyles";
 import { useSiteNavCollapse } from "./useSiteNavCollapse";
+import { useSiteNavMobileMenu } from "./useSiteNavMobileMenu";
 
 export type { SiteNavCompactLayout, SiteNavPlacement, SiteNavState } from "./siteNavStyles";
 export {
@@ -100,15 +105,22 @@ export interface SiteNavProps {
   start?: ReactNode;
   /** Center slot — **SiteNav.Links** (links + mega menus). Hidden below `md` when `mobile` is set. */
   middle?: ReactNode;
-  /** Trailing slot — login link + primary CTA (**Button** `size="sm"`). */
+  /**
+   * Trailing slot — login link + primary CTA (**Button** `size="sm"`). With `mobile`, it gives way when it
+   * doesn't fit beside the Menu button (Header rule N7); the menu's `mobileAction` carries the CTA.
+   */
   end?: ReactNode;
   /**
-   * Mobile menu body (below `md`) — rendered inside a **Sheet** opened from a **Menu** IconButton
-   * appended to `end`. Compose **SiteNav.MobileLink** rows or a **NavList**.
+   * Phone menu (below `md`): **SiteNav.MobileLink** rows (or a **NavList**) in a full-height panel under
+   * the bar, opened by a "☰ Menu" button that becomes "✕ Close" in the same place. The panel is a
+   * dialog: focus moves to its first link and cycles through the bar and the panel, Escape or Close
+   * closes it, tapping any link closes it, focus returns to the Menu button, and the page doesn't scroll.
    */
   mobile?: ReactNode;
-  /** Sheet title for the mobile menu. Default: `"Menu"`. */
-  mobileTitle?: ReactNode;
+  /** The main action at the bottom of the open menu — usually the same **Button** as in `end`. */
+  mobileAction?: ReactNode;
+  /** The menu dialog's accessible name. Default: `"Menu"`. */
+  mobileTitle?: string;
   /**
    * Scroll distance (px) that reveals the compact pill. Omit to use half the scrollport
    * height (`siteNavDefaultCollapseRatio` — 50% of the window or `scrollContainer`).
@@ -178,11 +190,66 @@ function usePinnedScrollPadding(pinned: boolean, scrollContainer?: RefObject<HTM
   }, [pinned, scrollContainer]);
 }
 
+/**
+ * Below `md`, the bar's own actions give way when brand + actions + Menu don't fit (Header rule N7: the
+ * main button hides first, never the Menu word); the open menu carries the action instead. Measured,
+ * not a fixed width, so a short CTA stays as long as it fits. Remembers the width it needed, so it
+ * comes back once there is room again.
+ */
+/**
+ * The width the bar's slots need: their margin boxes plus the gaps between them. Not `scrollWidth`, which
+ * counts the brand's and Menu button's deliberate pull past the content edges as overflow.
+ */
+function slotsWidth(row: HTMLElement): number {
+  const slots = [...row.children].filter((slot) => getComputedStyle(slot).display !== "none");
+  const gap = Number.parseFloat(getComputedStyle(row).columnGap) || 0;
+  const boxes = slots.reduce((sum, slot) => {
+    const style = getComputedStyle(slot);
+    return sum + slot.getBoundingClientRect().width + Number.parseFloat(style.marginLeft) + Number.parseFloat(style.marginRight);
+  }, 0);
+  return boxes + gap * Math.max(0, slots.length - 1);
+}
+
+function useBarTight(rowRef: RefObject<HTMLDivElement | null>, enabled: boolean, layoutKey: string): boolean {
+  const [tight, setTight] = useState(false);
+  const neededRef = useRef(0);
+  useEffect(() => {
+    const row = rowRef.current;
+    if (!enabled || row == null || typeof ResizeObserver === "undefined") return undefined;
+    const wide = window.matchMedia("(min-width: 768px)");
+    const check = () => {
+      if (wide.matches) {
+        setTight(false);
+        return;
+      }
+      setTight((was) => {
+        const needed = slotsWidth(row);
+        if (!was && needed > row.clientWidth + 1) {
+          neededRef.current = needed;
+          return true;
+        }
+        if (was && row.clientWidth >= neededRef.current) return false;
+        return was;
+      });
+    };
+    const observer = new ResizeObserver(check);
+    observer.observe(row);
+    wide.addEventListener("change", check);
+    check();
+    return () => {
+      observer.disconnect();
+      wide.removeEventListener("change", check);
+    };
+  }, [rowRef, enabled, layoutKey]);
+  return tight;
+}
+
 function SiteNavRoot({
   start,
   middle,
   end,
   mobile,
+  mobileAction,
   mobileTitle = "Menu",
   collapseAt,
   state: controlledState,
@@ -204,6 +271,19 @@ function SiteNavRoot({
   });
   const [mobileOpen, setMobileOpen] = useState(false);
   const mobileSheetId = useId();
+  const headerRef = useRef<HTMLElement | null>(null);
+  const mobilePanelRef = useRef<HTMLDivElement | null>(null);
+  const mobileTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
+  const slotsRowRef = useRef<HTMLDivElement | null>(null);
+  const barTight = useBarTight(slotsRowRef, mobile != null && end != null, compact ? "compact" : "expanded");
+  const mobilePanelTop = useSiteNavMobileMenu({
+    open: mobileOpen,
+    onClose: closeMobile,
+    barRef: headerRef,
+    panelRef: mobilePanelRef,
+    triggerRef: mobileTriggerRef,
+  });
   const [menuOpen, setMenuOpen] = useState(false);
   /** Compact hug is scroll-only — mega open must not change expanded chrome. */
   const hugCluster = compact && compactLayout === "hug";
@@ -225,24 +305,27 @@ function SiteNavRoot({
   const hasMiddle = middle != null;
   const hasEnd = end != null || hasMobile;
 
+  // The word stays visible and is the name (Header rule N7, QA #28): "☰ Menu" closed, "✕ Close" open.
   const mobileTrigger = hasMobile ? (
-    <IconButton
-      icon={<MenuIcon strokeWidth={2} />}
-      aria-label={mobileOpen ? "Close menu" : "Open menu"}
-      title=""
-      size="sm"
+    <Button
+      ref={mobileTriggerRef}
+      role="ghost"
+      size="md"
+      icon={mobileOpen ? <X strokeWidth={2} /> : <MenuIcon strokeWidth={2} />}
       className={siteNavMobileTriggerClasses}
       aria-haspopup="dialog"
       aria-expanded={mobileOpen}
-      /* The sheet only exists while open — never point at a missing id. */
+      /* The panel only exists while open — never point at a missing id. */
       aria-controls={mobileOpen ? mobileSheetId : undefined}
       onClick={() => setMobileOpen((open) => !open)}
-    />
+    >
+      {mobileOpen ? "Close" : "Menu"}
+    </Button>
   ) : null;
 
   function renderSlots(useHugCluster: boolean) {
     return (
-      <div className={slotsLayoutClass(hasStart, hasMiddle, hasEnd, useHugCluster)}>
+      <div ref={slotsRowRef} className={slotsLayoutClass(hasStart, hasMiddle, hasEnd, useHugCluster)}>
         {hasStart ? <div className={siteNavStartClasses}>{start}</div> : null}
         {hasMiddle ? (
           <div
@@ -261,7 +344,13 @@ function SiteNavRoot({
         ) : null}
         {hasEnd ? (
           <div className={siteNavEndClasses}>
-            {end}
+            {end != null && hasMobile ? (
+              <div className={siteNavEndActionsClasses} data-tight={barTight ? "" : undefined} data-menu-open={mobileOpen ? "" : undefined}>
+                {end}
+              </div>
+            ) : (
+              end
+            )}
             {mobileTrigger}
           </div>
         ) : null}
@@ -319,6 +408,7 @@ function SiteNavRoot({
                 className={cn(pageCompactRootClass, !hasScrollContainer && className)}
               >
                 <header
+                  ref={headerRef}
                   aria-label={ariaLabel}
                   data-state="compact"
                   data-menu={menuOpen ? "open" : "closed"}
@@ -336,6 +426,7 @@ function SiteNavRoot({
 
           {!compact ? (
             <header
+              ref={headerRef}
               aria-label={ariaLabel}
               data-state="expanded"
               data-menu={menuOpen ? "open" : "closed"}
@@ -349,6 +440,7 @@ function SiteNavRoot({
         </>
       ) : (
         <header
+          ref={headerRef}
           aria-label={ariaLabel}
           data-state={state}
           data-menu={menuOpen ? "open" : "closed"}
@@ -379,13 +471,27 @@ function SiteNavRoot({
         </header>
       )}
 
-      {hasMobile ? (
-        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-          <Sheet.Content id={mobileSheetId} side="end" title={mobileTitle}>
-            <div className={siteNavMobileListClasses}>{mobile}</div>
-          </Sheet.Content>
-        </Sheet>
-      ) : null}
+      {hasMobile && mobileOpen && typeof document !== "undefined"
+        ? createPortal(
+            <div
+              ref={mobilePanelRef}
+              id={mobileSheetId}
+              role="dialog"
+              aria-modal="true"
+              aria-label={mobileTitle}
+              className={siteNavMobilePanelClasses}
+              style={{ top: mobilePanelTop }}
+              // Tapping any link in the menu closes it (Header rule N6, QA #25); the link still navigates.
+              onClick={(event) => {
+                if ((event.target as HTMLElement).closest("a[href]") != null) closeMobile();
+              }}
+            >
+              <div className={siteNavMobileListClasses}>{mobile}</div>
+              {mobileAction != null ? <div className={siteNavMobileActionClasses}>{mobileAction}</div> : null}
+            </div>,
+            document.body,
+          )
+        : null}
     </SiteNavContext.Provider>
   );
 }
@@ -428,7 +534,7 @@ function SiteNavBrand({ href, icon, children, "aria-label": ariaLabel }: SiteNav
       size="sm"
       render={<a href={href} />}
       aria-label={ariaLabel}
-      className={siteNavBrandClasses}
+      className={siteNavWordmarkBrandClasses}
     >
       {children}
     </Button>

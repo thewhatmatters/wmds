@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest";
 import { HeroIntro } from "./HeroIntro";
 import { heroIntroLeadClasses, heroIntroRestClasses } from "./heroIntroStyles";
 
-const leadCopy = "A design studio in Austin, Texas.";
+const leadCopy = "A design studio in Austin.";
 
 describe("HeroIntro", () => {
   it("puts the lead on its own line and the rest on the next line", async () => {

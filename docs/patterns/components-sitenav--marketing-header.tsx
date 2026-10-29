@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.30 · Pattern — marketing header
+// @thewhatmatters/wmds@0.4.31 · Pattern — marketing header
 // Storybook: Components/SiteNav → Pattern — marketing header (?path=/story/components-sitenav--marketing-header)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -73,6 +73,7 @@ export function MarketingHeader() {
             <SiteNav.MobileLink href="/blog">Blog</SiteNav.MobileLink>
           </>
         }
+        mobileAction={<Button role="primary" render={<a href="/start" />}>Get started</Button>}
       />
       <main className="grid-page">{/* page content — no pt-16; SiteNav is in flow */}</main>
     </>

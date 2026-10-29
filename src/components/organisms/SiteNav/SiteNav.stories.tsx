@@ -215,6 +215,7 @@ ${indentSiteNavResourcesMenuCopySource(12)}
             <SiteNav.MobileLink href="/blog">Blog</SiteNav.MobileLink>
           </>
         }
+        mobileAction={<Button role="primary" render={<a href="/start" />}>Get started</Button>}
       />
       <main className="grid-page">{/* page content — no pt-16; SiteNav is in flow */}</main>
     </>
@@ -233,6 +234,7 @@ ${indentSiteNavResourcesMenuCopySource(12)}
           middle={<PrimaryLinks />}
           end={<EndActions />}
           mobile={<MobileLinks />}
+          mobileAction={<Button role="primary" render={<a href="#start" />}>Get started</Button>}
         />
       )}
     />
@@ -361,6 +363,7 @@ function CompactHugSpecimen() {
         middle={<PrimaryLinks />}
         end={<EndActions />}
         mobile={<MobileLinks />}
+          mobileAction={<Button role="primary" render={<a href="#start" />}>Get started</Button>}
       />
     </div>
   );
@@ -489,6 +492,7 @@ export const MobileMenu: Story = {
             </Button>
           }
           mobile={<MobileLinks />}
+          mobileAction={<Button role="primary" render={<a href="#start" />}>Get started</Button>}
         />
       )}
     />

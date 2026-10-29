@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.30",
+  "version": "0.4.31",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -600,6 +600,14 @@
       "name": "Pattern — two-line intro",
       "file": "patterns/components-herointro--two-line-intro.tsx",
       "storybook": "?path=/story/components-herointro--two-line-intro",
+      "source": "src/components/molecules/HeroIntro/HeroIntro.stories.tsx"
+    },
+    {
+      "id": "components-herointro--with-actions",
+      "title": "Components/HeroIntro",
+      "name": "Pattern — with description and actions",
+      "file": "patterns/components-herointro--with-actions.tsx",
+      "storybook": "?path=/story/components-herointro--with-actions",
       "source": "src/components/molecules/HeroIntro/HeroIntro.stories.tsx"
     },
     {

@@ -66,7 +66,7 @@ export const carouselTrackClasses = cn(
 
 export const carouselItemClasses = cn(
   "min-w-0 shrink-0 grow-0 snap-start",
-  "basis-[calc(var(--carousel-item)*1cqw)] sm:basis-[calc(var(--carousel-item-sm)*1cqw)]",
+  "basis-[calc(var(--carousel-item)*1cqw)] md:basis-[calc(var(--carousel-item-sm)*1cqw)]",
   "md:basis-[calc(var(--carousel-item-md)*1cqw)] lg:basis-[calc(var(--carousel-item-lg)*1cqw)]",
 );
 
@@ -78,8 +78,8 @@ export const carouselProgressClasses =
   "group/carousel-progress relative flex h-11 w-full cursor-pointer touch-none select-none items-center data-[overflowing=false]:invisible";
 
 export const carouselProgressPlacementClasses: Record<Exclude<CarouselProgressPlacement, "none">, string> = {
-  center: "self-center sm:w-60",
-  start: "self-start sm:w-60",
+  center: "self-center md:w-60",
+  start: "self-start md:w-60",
   full: "",
 };
 

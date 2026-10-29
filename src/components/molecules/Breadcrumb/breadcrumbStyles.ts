@@ -12,7 +12,7 @@ export const breadcrumbVariants = ["sans", "mono"] as const;
 /** `sans` (default) — body type. `mono` — `type-eyebrow` caps, for editorial pages beside **SectionCaption**. */
 export type BreadcrumbVariant = (typeof breadcrumbVariants)[number];
 
-export const breadcrumbListClasses = "m-0 flex min-w-0 list-none flex-wrap items-center gap-x-1.5 gap-y-1 p-0 sm:gap-x-2";
+export const breadcrumbListClasses = "m-0 flex min-w-0 list-none flex-wrap items-center gap-x-1.5 gap-y-1 p-0 md:gap-x-2";
 
 export const breadcrumbVariantClasses: Record<BreadcrumbVariant, string> = {
   sans: cn(typographyClass("body"), "text-muted"),
@@ -22,7 +22,7 @@ export const breadcrumbVariantClasses: Record<BreadcrumbVariant, string> = {
 export const breadcrumbItemClasses = "inline-flex min-w-0 items-center";
 
 /** Long labels truncate; the full label stays in the accessible name and the `title`. */
-const breadcrumbLabelClasses = "block max-w-[10rem] truncate sm:max-w-[16rem] lg:max-w-[24rem]";
+const breadcrumbLabelClasses = "block max-w-[10rem] truncate md:max-w-[16rem] lg:max-w-[24rem]";
 
 /**
  * A link crumb — muted, darkening with an underline on hover, the focus ring. `py-0.5 -my-0.5` makes

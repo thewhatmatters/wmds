@@ -312,7 +312,7 @@ export function MarketingHeroPage() {
         />
         <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-16 text-center">
           <div className="flex w-full flex-col items-center gap-6">
-          <HeroIntro firstLine="A design studio in Austin, Texas.">
+          <HeroIntro firstLine="A design studio in Austin.">
             We help brands stand out{" "}
             <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
             .
@@ -378,7 +378,7 @@ function MarketingHeroCanvas() {
         />
         <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-16 text-center">
           <div className="flex w-full flex-col items-center gap-6">
-          <HeroIntro firstLine="A design studio in Austin, Texas.">
+          <HeroIntro firstLine="A design studio in Austin.">
             We help brands stand out{" "}
             <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
             .
@@ -640,7 +640,7 @@ export function RuledGridFooter() {
 export function FooterRevealRuledNav() {
   return (
     <nav aria-label="Footer">
-      <ul className="m-0 flex list-none flex-col items-center gap-3 whitespace-nowrap p-0 font-sans text-[length:var(--font-size-4xl)] leading-none sm:text-[4rem]">
+      <ul className="m-0 flex list-none flex-col items-center gap-3 whitespace-nowrap p-0 font-sans text-[length:var(--font-size-4xl)] leading-none md:text-[4rem]">
         <li>
           <TextLink href="/services" className="!text-brand">Services</TextLink>
         </li>

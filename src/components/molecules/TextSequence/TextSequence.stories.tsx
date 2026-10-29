@@ -34,7 +34,7 @@ export function HeroLine() {
 
 function ShapesGallery() {
   return (
-    <div className="grid w-full grid-cols-1 items-start gap-10 sm:grid-cols-2">
+    <div className="grid w-full grid-cols-1 items-start gap-10 md:grid-cols-2">
       <figure className="flex flex-col items-center gap-3">
         <p className="type-display-3 text-center text-fg">
           <TextSequence emphasis="none" idle stagger={0.05}>
@@ -72,7 +72,7 @@ import { TextSequence } from "@thewhatmatters/wmds";
 
 export function ShapeGallery() {
   return (
-    <div className="grid w-full grid-cols-1 items-start gap-10 sm:grid-cols-2">
+    <div className="grid w-full grid-cols-1 items-start gap-10 md:grid-cols-2">
       <figure className="flex flex-col items-center gap-3">
         <p className="type-display-3 text-center text-fg">
           <TextSequence emphasis="none" idle stagger={0.05}>

@@ -46,8 +46,17 @@ export const heroIntroDisplayLeadClasses = "block min-w-0";
  * Optional lead paragraph under the heading: `type-lead` (18px phone to 21px, regular, 1.45) in ink, at the
  * 42rem measure, centred under the heading on the same columns (Lead rules L7, L8).
  */
+/** Heading → lead is the page grid's 24px row gap (no extra margin; Spacing S2). */
 export const heroIntroDescriptionClasses =
-  "col-span-full mt-6 min-w-0 text-pretty text-left type-lead text-fg md:mx-auto md:max-w-[42rem] md:text-center lg:col-start-4 lg:col-end-10";
+  "col-span-full min-w-0 text-pretty text-left type-lead text-fg md:mx-auto md:max-w-[42rem] md:text-center lg:col-start-4 lg:col-end-10";
 
 /** The description under the display step: the same 6-column measure, left on phones, centred from `md`. */
 export const heroIntroDisplayDescriptionClasses = heroIntroDescriptionClasses;
+
+/**
+ * The CTA row under the heading (or the description): one primary and an optional secondary (Hero rule R2).
+ * Left on phones and centred from `md`, like the heading. 32px below the text above it: the grid's 24px row
+ * gap plus 8.
+ */
+export const heroIntroActionsClasses =
+  "col-span-full mt-2 flex min-w-0 flex-wrap items-center justify-start gap-3 md:justify-center";

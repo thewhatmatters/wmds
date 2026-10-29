@@ -346,7 +346,7 @@ export function ResourceDetailPage({ item, breadcrumb, renderLink, renderImage, 
   return (
     <main className="grid-page bg-body">
       {overlay}
-      <article aria-labelledby={headingId} className="band py-6 sm:py-10 lg:py-14">
+      <article aria-labelledby={headingId} className="band py-6 md:py-10 lg:py-14">
         <Breadcrumb
           items={breadcrumb}
           variant="mono"

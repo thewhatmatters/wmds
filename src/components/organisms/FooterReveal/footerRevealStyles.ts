@@ -160,7 +160,7 @@ export const footerRevealRuledLinksClasses =
  */
 export const footerRevealRuledLinkListClasses =
   "m-0 flex list-none flex-col items-center gap-3 whitespace-nowrap p-0 font-sans " +
-  "text-[length:var(--font-size-4xl)] leading-none sm:text-[4rem]";
+  "text-[length:var(--font-size-4xl)] leading-none md:text-[4rem]";
 
 /**
  * Brand ink on these three footer links. **TextLink** sets `text-fg` on the

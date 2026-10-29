@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "../../../lib/cn";
 import {
+  heroIntroActionsClasses,
   heroIntroCopyClasses,
   heroIntroDescriptionClasses,
   heroIntroDisplayDescriptionClasses,
@@ -37,6 +38,11 @@ export interface HeroIntroProps {
    */
   description?: ReactNode;
   /**
+   * Optional CTA row under the heading (and the description): one primary **Button** and an optional
+   * secondary, usually `role="outline"` (Hero rule R2). Left on phones, centred from `md`.
+   */
+  actions?: ReactNode;
+  /**
    * `large` — `type-display-2` at normal weight, columns 4–9 from `lg`. The default hero.
    * `display` — the same size, full width of the page grid. The sequenced hero.
    * Both match the computed font-size and line-height of **ScrollHorizontal.Intro**.
@@ -48,10 +54,11 @@ export interface HeroIntroProps {
 
 /**
  * Marketing hero heading. `firstLine` is the first line. `children`, when passed, is the next line.
- * `description`, when passed, is a lead paragraph under the heading. The component owns the break.
+ * `description`, when passed, is a lead paragraph under the heading, and `actions` the CTA row under that.
+ * The component owns the break.
  * This is the page `h1`.
  */
-export function HeroIntro({ firstLine, lead, children, description, step = "large", className }: HeroIntroProps) {
+export function HeroIntro({ firstLine, lead, children, description, actions, step = "large", className }: HeroIntroProps) {
   if (lead !== undefined && firstLine === undefined && typeof process !== "undefined" && process.env?.NODE_ENV !== "production") {
     console.warn("[WMDS HeroIntro] `lead` is renamed to `firstLine` (0.4.30); `lead` still works for now.");
   }
@@ -65,6 +72,11 @@ export function HeroIntro({ firstLine, lead, children, description, step = "larg
         {rest ? <span className={heroIntroRestClasses}>{children}</span> : null}
       </h1>
       {description != null ? <p className={display ? heroIntroDisplayDescriptionClasses : heroIntroDescriptionClasses}>{description}</p> : null}
+      {actions != null ? (
+        <div className={heroIntroActionsClasses} data-slot="actions">
+          {actions}
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.30 · Pattern — marketing hero
+// @thewhatmatters/wmds@0.4.31 · Pattern — marketing hero
 // Storybook: Components/HeroTileStack → Pattern — marketing hero (?path=/story/components-herotilestack--marketing-hero-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -52,7 +52,7 @@ export function MarketingHero() {
       />
       <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-16 text-center">
         <div className="flex w-full flex-col items-center gap-6">
-          <HeroIntro firstLine="A design studio in Austin, Texas.">
+          <HeroIntro firstLine="A design studio in Austin.">
             We help brands stand out{" "}
             <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
             .

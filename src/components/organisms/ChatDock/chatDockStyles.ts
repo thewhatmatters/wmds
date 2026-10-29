@@ -27,6 +27,10 @@ export const chatDockRootRaisedClasses = "max-md:z-[60]";
 
 
 /** The dock's column — the page grid narrowed to the composer width. */
+/**
+ * The chat column: a narrower `grid-page` (40rem). This is the text-only exception to Container width W5
+ * (narrower containers are for text-only reading; Product Designer, 2026-10-28).
+ */
 export const chatDockGridClasses = "grid-page [--grid-max:40rem]";
 
 /** The dock: suggestion pills, the window behind the composer, and the composer. */

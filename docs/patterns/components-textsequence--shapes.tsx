@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.30 · Shapes
+// @thewhatmatters/wmds@0.4.31 · Shapes
 // Storybook: Components/TextSequence → Shapes (?path=/story/components-textsequence--shapes)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -6,7 +6,7 @@ import { TextSequence } from "@thewhatmatters/wmds";
 
 export function ShapeGallery() {
   return (
-    <div className="grid w-full grid-cols-1 items-start gap-10 sm:grid-cols-2">
+    <div className="grid w-full grid-cols-1 items-start gap-10 md:grid-cols-2">
       <figure className="flex flex-col items-center gap-3">
         <p className="type-display-3 text-center text-fg">
           <TextSequence emphasis="none" idle stagger={0.05}>

@@ -68,7 +68,7 @@ export const Usage: Story = {
 
 export const Catalog: Story = {
   render: () => (
-    <ul className="m-0 grid list-none grid-cols-3 gap-3 p-0 sm:grid-cols-4 md:grid-cols-5">
+    <ul className="m-0 grid list-none grid-cols-3 gap-3 p-0 md:grid-cols-4 md:grid-cols-5">
       {sampleIcons.map(({ Icon, label }) => (
         <li
           key={label}

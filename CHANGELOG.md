@@ -7,6 +7,29 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.31
+
+**SiteNav's phone menu follows the Header rule: a "Menu" button that becomes "Close", a full-height panel under the bar, and a link tap closes it.**
+
+- **HeroIntro** `actions` (new): the CTA row under the heading and description, one primary and an optional secondary (Hero rule R2); left on phones, centred from `md`. New story **Pattern — with description and actions**. Story copy is shorter, so the intro holds 3 lines at 390: "A design studio in Austin. / We help brands stand out online." (**HeroIntro**, **HeroTileStack**, **FooterReveal** stories).
+- **SiteNav** `mobile` menu (below `md`), rebuilt to Header and mobile menu rules N5–N8:
+  - The trigger is a **Button** with an icon and a visible word, "☰ Menu", that becomes "✕ Close" in the same place (QA #28). The word is the accessible name (was an icon-only button named "Open menu" / "Close menu"). At least 44px tall.
+  - The menu opens as a full-height panel **under the bar**, not a side **Sheet**. The bar stays live, so Close sits where Menu was. The panel is a dialog: focus moves to its first link, Tab cycles through the bar and the panel, the page behind is inert and doesn't scroll, Escape or Close closes it, and focus returns to Menu. It closes when the window widens past `md`.
+  - **Tapping any link in the menu closes it** (QA #25; it used to stay open over the page).
+  - **SiteNav.MobileLink** rows are 56px and full width. The current page is marked by weight and the selected fill plus `aria-current="page"`, not colour alone.
+  - `mobileAction` (new): the main action, pinned to the bottom of the open menu.
+  - With `mobile`, the bar's `end` actions give way when brand + actions + Menu don't fit (measured, not a fixed width), so Menu keeps its word; `mobileAction` carries the main button there. Below `md` the actions and Menu sit at the trailing edge.
+  - `mobileTitle` is now a string (the dialog's accessible name).
+  - New interaction tests **Internal/Interactions/SiteNav → phone menu…** (390), **phone menu at 320** (N7) and **phone bar: trailing edge**.
+- **SiteNav** full bar: a wordmark **SiteNav.Brand** and the Menu button pull their own 16px padding past the edges, so the wordmark and the Menu word line up with the content edges (hit areas unchanged; the compact pill keeps its padding). The bar's give-way check measures the slots' margin boxes instead of `scrollWidth`, so that pull doesn't hide a CTA that fits: "Get my free sketch" stays in the bar from 390 (N9). The Menu/Close button is quiet in both states (ghost hover and press fill only). While the phone menu is open, the bar's actions hide, so the menu's own action is the one CTA on screen. New interaction test **phone bar: wordmark and Menu word sit on the content edges**.
+- **Breakpoints rule P5:** every `sm:` (640px) variant in WMDS moves to `md:` (768px): **Field** label column, **TileGrid** `--tile-grid-cols-sm` (now from `md`), **Breadcrumb** gap and label width, **FooterReveal** wordmark size, **Carousel** `--carousel-item-sm` and caption width, the Post page / Resource detail / Filter panel / Profile typography guides, and story Show code. Layout changes only between 640 and 767px, where these now keep their phone layout. New unit test: no `sm:` and no one-off `min-[…]` / `max-[…]` breakpoints anywhere in `src`.
+- `lib/dialogOverlay` exports `tabbablesIn` and `inertAllBut` (internal helpers, also used by SiteNav).
+- **ChatDock**: its 40rem chat column is documented as the text-only exception to Container width W5.
+
+### Consumer actions
+
+If you pass `mobile` to **SiteNav**, also pass `mobileAction` (usually the same **Button** as your bar CTA) so small phones still reach it when the bar is too tight for it. Keep the bar's CTA label short (about 12 characters) so it fits beside Menu at 390. Tests that find the trigger by `aria-label="Open menu"` now find it by its text, `getByRole("button", { name: "Menu" })`, and the open menu is a `dialog` named by `mobileTitle` (default "Menu"). `mobileTitle` must be a string. Re-copy any **Pattern** whose Show code used `sm:` (the generated `docs/patterns` show which changed). `--tile-grid-cols-sm` and `--carousel-item-sm` keep their names but now apply from 768px.
+
 ## 0.4.30
 
 **Capitals are tracked 0.08–0.12em (Eyebrow rule E3).**

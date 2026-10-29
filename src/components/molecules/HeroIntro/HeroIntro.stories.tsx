@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Badge } from "../../atoms/Badge/Badge";
+import { Button } from "../../atoms/Button/Button";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { HeroIntro } from "./HeroIntro";
 
-const lead = "A design studio in Austin, Texas.";
+const lead = "A design studio in Austin.";
 
 const meta = {
   title: "Components/HeroIntro",
@@ -25,7 +26,7 @@ Intro under a marketing headline: left on phones, centred from \`md\` (Headings 
 
 Both steps are an \`h1\` on \`type-display-2\` at normal weight, the same font-size and line-height as **ScrollHorizontal.Intro**. \`step="large"\` (default) is columns 4–9 from \`lg\`. \`step="display"\` is full width of the page grid — the sequenced hero.
 
-\`lead\` wraps when the measure is shorter than the line, including from \`md\`. Children always start on the next line. Both lines use \`text-wrap: balance\`, so a wrapped line is not a single word. Keep “Austin, Texas” together with a non-breaking space.
+\`lead\` wraps when the measure is shorter than the line, including from \`md\`. Children always start on the next line. Both lines use \`text-wrap: balance\`, so a wrapped line is not a single word.
 
 Paste it inside **Components/HeroTileStack → Pattern — marketing hero**.
 
@@ -61,7 +62,7 @@ import { Badge, HeroIntro } from "@thewhatmatters/wmds";
 
 export function MarketingHeroIntro() {
   return (
-    <HeroIntro firstLine="A design studio in Austin, Texas.">
+    <HeroIntro firstLine="A design studio in Austin.">
       We help brands stand out{" "}
       <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
       .
@@ -77,7 +78,7 @@ export const TwoLineIntro: Story = {
       docs: {
         description: {
           story:
-            "firstLine is the Austin sentence and wraps inside the measure, including from md. Austin, and Texas stay together with a non-breaking space. The rest, including the inline online Badge, always starts on the next line. type-display-2 at normal weight, the same font-size as the gallery statement, with text-wrap balance. Left on phones, centred from md; columns 2–11 from lg.",
+            "firstLine is the Austin sentence and wraps inside the measure, including from md. The rest, including the inline online Badge, always starts on the next line. type-display-2 at normal weight, the same font-size as the gallery statement, with text-wrap balance. Left on phones, centred from md; columns 2–11 from lg.",
         },
       },
     },
@@ -96,6 +97,58 @@ export const TwoLineIntro: Story = {
         online
       </Badge>
       .
+    </HeroIntro>
+  ),
+};
+
+export const WithActions: Story = {
+  name: "Pattern — with description and actions",
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "The hero's job in one place (Hero rule R2): the heading, a one-sentence lead, and one primary action with an optional secondary. The actions row is left on phones and centred from md, like the heading.",
+        },
+      },
+    },
+    `
+import { Button, HeroIntro } from "@thewhatmatters/wmds";
+
+export function MarketingHeroWithActions() {
+  return (
+    <HeroIntro
+      firstLine="A design studio in Austin."
+      description="Websites, video and social for small businesses, live in two weeks."
+      actions={
+        <>
+          <Button role="primary" size="lg" render={<a href="/start" />}>Get my free sketch</Button>
+          <Button role="outline" size="lg" render={<a href="/work" />}>See our work</Button>
+        </>
+      }
+    >
+      We help brands stand out online.
+    </HeroIntro>
+  );
+}
+`.trim(),
+  ),
+  render: () => (
+    <HeroIntro
+      firstLine={lead}
+      description="Websites, video and social for small businesses, live in two weeks."
+      actions={
+        <>
+          <Button role="primary" size="lg" render={<a href="/start" />}>
+            Get my free sketch
+          </Button>
+          <Button role="outline" size="lg" render={<a href="/work" />}>
+            See our work
+          </Button>
+        </>
+      }
+    >
+      We help brands stand out online.
     </HeroIntro>
   ),
 };

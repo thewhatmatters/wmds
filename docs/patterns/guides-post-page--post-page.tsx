@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.30 · Pattern — post page
+// @thewhatmatters/wmds@0.4.31 · Pattern — post page
 // Storybook: Guides/Post page → Pattern — post page (?path=/story/guides-post-page--post-page)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -200,8 +200,8 @@ export function PostPage({
   return (
     <main className="grid-page bg-body">
       {overlay}
-      <article className="band py-6 sm:py-10 lg:py-14">
-        <header className="col-span-full mb-4 flex flex-col gap-3 sm:mb-8 lg:col-span-10">
+      <article className="band py-6 md:py-10 lg:py-14">
+        <header className="col-span-full mb-4 flex flex-col gap-3 md:mb-8 lg:col-span-10">
           <Breadcrumb
             items={post.breadcrumb}
             variant="mono"
