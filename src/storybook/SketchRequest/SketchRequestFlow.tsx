@@ -12,7 +12,7 @@ import {
 } from "../../components/molecules/IntakeForm/IntakeForm";
 import { IntakeHoneypot } from "../../components/molecules/IntakeForm/IntakeHoneypot";
 import { ConfettiProvider } from "../../components/organisms/Confetti/Confetti";
-import { IntakeConfirmation, intakeConfirmationReplyTime } from "../../components/organisms/IntakeConfirmation/IntakeConfirmation";
+import { IntakeConfirmation, intakeConfirmationReplyWithin } from "../../components/organisms/IntakeConfirmation/IntakeConfirmation";
 import { IntakeModal } from "../../components/organisms/IntakeModal/IntakeModal";
 import { useIntakeUrlState } from "../../components/organisms/IntakeModal/useIntakeUrlState";
 
@@ -88,7 +88,7 @@ export function SketchRequestFlow({ failFirstSend = false }: { failFirstSend?: b
             ) : null}
             <IntakeForm values={values} onChange={setValues} submitCount={submitCount} />
             <IntakeHoneypot value={honeypot} onChange={setHoneypot} />
-            <p className="type-caption text-muted">{intakeConfirmationReplyTime}</p>
+            <p className="type-caption text-muted">We reply {intakeConfirmationReplyWithin}.</p>
           </>
         ) : step === "booking" ? (
           <>
@@ -99,6 +99,7 @@ export function SketchRequestFlow({ failFirstSend = false }: { failFirstSend?: b
         ) : (
           <IntakeConfirmation
             variant="emailed"
+            email={values.email}
             summary={values.details}
             contact={
               <>

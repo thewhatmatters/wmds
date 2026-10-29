@@ -75,21 +75,22 @@ export const Keyboard: Story = {
     expect(dialog).toHaveAttribute("aria-modal", "true");
     await expect(dialog).toHaveAccessibleName("Start a project");
     expect(within(dialog).getByRole("progressbar")).toHaveAttribute("aria-valuetext", "Step 1 of 2");
-    expect(within(dialog).getByRole("button", { name: "Back" })).toHaveAttribute("aria-disabled", "true");
+    // Step 1 has nowhere to go back to, so there's no Back.
+    expect(within(dialog).queryByRole("button", { name: "Back" })).toBeNull();
 
     const close = within(dialog).getByRole("button", { name: "Close" });
     await waitFor(() => {
       expect(close).toHaveFocus();
     });
 
-    // Continue comes first in the footer and Back last (Buttons U8), so the trap wraps from Back.
-    const backButton = within(dialog).getByRole("button", { name: "Back" });
-    backButton.focus();
+    // On step 1 Continue is the footer's last control, so the trap wraps from it.
+    const lastButton = within(dialog).getByRole("button", { name: "Continue" });
+    lastButton.focus();
     await userEvent.tab();
     expect(close).toHaveFocus();
 
     await userEvent.tab({ shift: true });
-    expect(backButton).toHaveFocus();
+    expect(lastButton).toHaveFocus();
 
     await userEvent.keyboard("{Escape}");
     await waitFor(() => {
@@ -231,7 +232,7 @@ export const SketchRequestSteps: Story = {
     await userEvent.click(await waitFor(() => within(dialog).getByRole("link", { name: "Skip, just email me" })));
 
     // Confirmation: what we got, when we reply, how to reach us.
-    await waitFor(() => expect(within(dialog).getByText("We reply within one business day.")).toBeInTheDocument());
+    await waitFor(() => expect(within(dialog).getByText(/within one business day with a few times that fit\./)).toBeInTheDocument());
     await expect(within(dialog).getByText("A new site before spring.")).toBeInTheDocument();
     await expect(within(dialog).getByRole("link", { name: "hello@whatmatters.studio" })).toBeInTheDocument();
 

@@ -17,7 +17,8 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
   - New **useIntakeUrlState**: keeps `?sketch` in the URL while the modal is open. The link can be shared, a refresh reopens it, and Back closes it.
 - **CalEmbed** (T8): the "Skip, just email me" link sits **above** the calendar, so on a phone it's visible without scrolling past the month. With no embed (not set up, or it failed), the email route shows inside the empty state straight away.
 - **CalEmbed stories:** "Pattern — skip in footer" is replaced by **Pattern — skip above the calendar** (`CalEmbed.Skip` in `Card.Header`). The pasted pattern id changes, so `wmds-check` reports `pattern-removed` for copies of the old one: move the skip above the calendar.
-- **IntakeConfirmation** (T2, T3): new `replyTime` (default "We reply within one business day." on `emailed`; `null` leaves it out), `summary` (what we got) and `contact` (phone, email, hours).
+- **IntakeConfirmation** (T2, T3): one "what happens next and when" sentence: `email` and `replyWithin` (default "within one business day") give "We'll email you at {email} within one business day with a few times that fit."; the booked variant names `bookingTime` in it. `summary` shows as "You told us: “…”". Then `contact`, then Done. New export `intakeConfirmationReplyWithin`.
+- **IntakeModal**: no Back on step 1; the WM mark and wordmark take the ink in dark mode (navy on near-black failed 3:1).
 - **IntakeHoneypot** and `isIntakeHoneypotFilled` (new, T4): a spam trap people never see or reach (`aria-hidden`, `tabindex="-1"`, no autofill). Drop requests where it's filled, on the server, with rate limits. No CAPTCHA.
 - Stories **Components/IntakeModal → Pattern — sketch request** (details → optional booking → confirmation; "Send my request"; reply time under the form; contact details on the confirmation) and **Pattern — send failed** (answers kept, Try again, email route; T5, T6). Interaction tests cover the URL, the discard question, both steps, Back keeping answers, the skip above the calendar, the failure and the honeypot.
 
@@ -27,7 +28,7 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - Pass `hasAnswers` while the visitor has typed something, and keep answers in your state.
 - Open the modal with `useIntakeUrlState`, and give the form its own page too (see wmds-patterns Contact — Sketch Page).
 - Add **IntakeHoneypot** and check it on the server.
-- On the confirmation, pass `summary` and `contact`. Change `replyTime` if one business day isn't true for you.
+- On the confirmation, pass `summary` and `contact`. Pass `email` so the sentence names it, and change `replyWithin` if one business day isn't true for you.
 - If you placed `CalEmbed.Skip` after the calendar (for example in `Card.Footer`), move it to `Card.Header`, above the calendar.
 
 ## 0.4.34

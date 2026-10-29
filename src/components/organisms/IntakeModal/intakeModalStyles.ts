@@ -10,12 +10,12 @@ export const intakeModalHeaderClasses =
 
 export const intakeModalBrandClasses = "flex items-center gap-2";
 
-/** Typographic WM mark — there is no separate logo asset. */
+/** Typographic WM mark — there is no separate logo asset. In dark mode it takes the ink: navy on near-black fails 3:1. */
 export const intakeModalMarkClasses =
-  "font-sans text-[length:var(--font-size-xl)] font-bold leading-none tracking-[-0.04em] text-brand";
+  "font-sans text-[length:var(--font-size-xl)] font-bold leading-none tracking-[-0.04em] text-brand in-data-[theme=dark]:text-fg";
 
 export const intakeModalWordmarkClasses =
-  "font-sans text-[length:var(--font-size-lg)] font-medium leading-none tracking-normal text-brand";
+  "font-sans text-[length:var(--font-size-lg)] font-medium leading-none tracking-normal text-brand in-data-[theme=dark]:text-fg";
 
 export const intakeModalProgressClasses = "mx-auto w-full max-w-3xl shrink-0 px-4 py-4 md:px-8";
 

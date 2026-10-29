@@ -806,7 +806,7 @@ export {
 export {
   IntakeConfirmation,
   intakeConfirmationCopy,
-  intakeConfirmationReplyTime,
+  intakeConfirmationReplyWithin,
   intakeConfirmationVariants,
   intakeConfettiColors,
   type IntakeConfirmationLayoutClassName,

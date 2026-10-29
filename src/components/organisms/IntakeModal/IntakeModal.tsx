@@ -206,14 +206,17 @@ export function IntakeModal({
                   {continueLabel}
                 </Button>
               )}
-              <Button
-                role="ghost"
-                type="button"
-                disabled={backDisabled}
-                onClick={onBack}
-              >
-                Back
-              </Button>
+              {/* Step 1 has nowhere to go back to, so no Back there. */}
+              {step > 1 ? (
+                <Button
+                  role="ghost"
+                  type="button"
+                  disabled={backDisabled}
+                  onClick={onBack}
+                >
+                  Back
+                </Button>
+              ) : null}
             </footer>
           )}
         </motion.div>
