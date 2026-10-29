@@ -11,6 +11,8 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 **Required and optional fields: mark the exception, read the badge with the field, never on autofill.**
 
+- **Field** `description` sits **between the label and the control** (was below; Labels and placeholders F8), so every hint is read before typing. New **`counter`** prop: a character counter, the one helper that stays below the control. Both join the control's accessible description (hint first). New test **fieldHintOrder.test.ts**.
+- **IntakeForm**: hints above their fields; the details counter ("67 / 400") uses `counter`, below the box. Company's hint is "So we can read up on you first."
 - **Input** \`endBadge\` (Required and optional Q8):
   - Screen readers hear the badge as part of the field's description, after the hint.
   - With a status icon, the icon comes first, then the badge (it used to be the badge, then the icon).
@@ -28,6 +30,8 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - Run \`npx wmds-check\`, and move any badge on a name, email, phone, password, address or company field into its label ("Business email (optional)").
 - Mark the exception: in a mostly-required form, badge the optional fields "Optional".
 - \`IntakeForm\` no longer shows Company unless you pass \`company\`. The website field's accessible name changed from "Link" to "Your website".
+
+- If a **Field** `description` is a character counter, pass it as `counter` so it stays below the control.
 
 ## 0.4.33
 

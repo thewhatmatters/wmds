@@ -55,7 +55,8 @@ const meta = {
 ## Anatomy
 
 - **Label** — \`typographyClass("ui-label")\`; wires \`htmlFor\` to a single child automatically
-- **Description** — \`typographyClass("caption")\` below control(s)
+- **Description** — \`typographyClass("caption")\` between the label and the control(s): the hint is read before typing (Labels and placeholders F8)
+- **Counter** — \`counter\`, the one helper below the control, next to what it counts ("67 / 400")
 - **Control slot** — bare child — omit child \`label\` when **Field** owns it
 
 ## Best practices

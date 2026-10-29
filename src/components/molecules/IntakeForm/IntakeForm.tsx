@@ -113,7 +113,8 @@ function intakeFieldError(
  * Required fields show **Input** / **TextArea** `status` + `message` on blur when invalid.
  * Name, email and details are required (`aria-required`); the website is optional and says so with a
  * badge. Company is off by default (`company` shows it, labelled "Company (optional)"); `link={false}`
- * leaves the website out (the short form: name, email, details). The details description is the character counter.
+ * leaves the website out (the short form: name, email, details). Hints sit above their fields; the details
+ * counter sits below the box, next to what it counts.
  */
 export function IntakeForm({
   values,
@@ -170,7 +171,7 @@ export function IntakeForm({
       </Field>
       {company ? (
         // An autofill field: the word goes in the label, not a badge (Q8).
-        <Field label="Company (optional)" description="So we can read up on you before we reply.">
+        <Field label="Company (optional)" description="So we can read up on you first.">
           <Input
             aria-label="Company (optional)"
             autoComplete="organization"
@@ -198,7 +199,7 @@ export function IntakeForm({
       {/* Labels and placeholders: the question is the label (a label can be a question, as on GOV.UK question pages). */}
       <Field
         label="What should feel different when this work is done?"
-        description={detailsError == null ? `${values.details.length} / ${detailsMax}` : undefined}
+        counter={detailsError == null ? `${values.details.length} / ${detailsMax}` : undefined}
       >
         <TextArea
           aria-label="What should feel different when this work is done?"
