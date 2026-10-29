@@ -7,6 +7,30 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.35
+
+**Contact and booking forms: two steps, booking after the request, a way out above the calendar, and nothing lost on close.**
+
+- **IntakeModal** (Contact and booking forms T7, T9):
+  - Two steps by default (`steps` was 4): details, then the optional booking. The confirmation isn't counted.
+  - New `hasAnswers`: with typed answers, Close and Escape ask "Discard your answers?" (Keep editing, focused / Discard).
+  - New **useIntakeUrlState**: keeps `?sketch` in the URL while the modal is open. The link can be shared, a refresh reopens it, and Back closes it.
+- **CalEmbed** (T8): the "Skip, just email me" link sits **above** the calendar, so on a phone it's visible without scrolling past the month. With no embed (not set up, or it failed), the email route shows inside the empty state straight away.
+- **CalEmbed stories:** "Pattern — skip in footer" is replaced by **Pattern — skip above the calendar** (`CalEmbed.Skip` in `Card.Header`). The pasted pattern id changes, so `wmds-check` reports `pattern-removed` for copies of the old one: move the skip above the calendar.
+- **IntakeConfirmation** (T2, T3): one "what happens next and when" sentence: `email` and `replyWithin` (default "within one business day") give "We'll email you at {email} within one business day with a few times that fit."; the booked variant names `bookingTime` in it. `summary` shows as "You told us: “…”". Then `contact`, then Done. New export `intakeConfirmationReplyWithin`.
+- **IntakeModal**: no Back on step 1; the WM mark and wordmark take the ink in dark mode (navy on near-black failed 3:1).
+- **IntakeHoneypot** and `isIntakeHoneypotFilled` (new, T4): a spam trap people never see or reach (`aria-hidden`, `tabindex="-1"`, no autofill). Drop requests where it's filled, on the server, with rate limits. No CAPTCHA.
+- Stories **Components/IntakeModal → Pattern — sketch request** (details → optional booking → confirmation; "Send my request"; reply time under the form; contact details on the confirmation) and **Pattern — send failed** (answers kept, Try again, email route; T5, T6). Interaction tests cover the URL, the discard question, both steps, Back keeping answers, the skip above the calendar, the failure and the honeypot.
+
+### Consumer actions
+
+- Pass `steps={2}` or drop `steps`, and move the booking after the details are sent.
+- Pass `hasAnswers` while the visitor has typed something, and keep answers in your state.
+- Open the modal with `useIntakeUrlState`, and give the form its own page too (see wmds-patterns Contact — Sketch Page).
+- Add **IntakeHoneypot** and check it on the server.
+- On the confirmation, pass `summary` and `contact`. Pass `email` so the sentence names it, and change `replyWithin` if one business day isn't true for you.
+- If you placed `CalEmbed.Skip` after the calendar (for example in `Card.Footer`), move it to `Card.Header`, above the calendar.
+
 ## 0.4.34
 
 **Required and optional fields: mark the exception, read the badge with the field, never on autofill. Field width and form layout: widths that hint at the answer, a State select, side labels only on wide screens, and counters that don't cut text. Dropdowns, radios and checkboxes: a native Select for forms, bigger boxes with visible borders, and errors on Continue.**

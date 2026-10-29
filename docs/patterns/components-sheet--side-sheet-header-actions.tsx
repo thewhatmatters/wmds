@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.34 · Pattern — side sheet header actions
+// @thewhatmatters/wmds@0.4.35 · Pattern — side sheet header actions
 // Storybook: Components/Sheet → Pattern — side sheet header actions (?path=/story/components-sheet--side-sheet-header-actions)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

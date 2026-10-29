@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useId, useRef, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -10,6 +10,7 @@ import { StepProgress } from "../../molecules/StepProgress/StepProgress";
 import { cn } from "../../../lib/cn";
 import { useOverlayLifecycle } from "../../../lib/dialogOverlay";
 import { motionTransitionProp } from "../../../lib/motion";
+import { typographyClass } from "../../../lib/typography";
 import {
   intakeModalBodyClasses,
   intakeModalBrandClasses,
@@ -31,7 +32,10 @@ export interface IntakeModalProps {
   onOpenChange: (open: boolean) => void;
   /** Current step, 1-based. Shown when `showProgress` is set. */
   step?: number;
-  /** Segment count. Default 4. */
+  /**
+   * Segment count. Default 2: details, then the optional booking; the confirmation isn't counted
+   * (Contact and booking forms T7: at most 3 steps, and only when a later step depends on earlier ones).
+   */
   steps?: number;
   /** Accessible name. Default `Start a project`. */
   title?: string;
@@ -54,6 +58,12 @@ export interface IntakeModalProps {
    * (the Close button still closes). Default `true`.
    */
   dismissOnEscape?: boolean;
+  /**
+   * The visitor has typed answers. Close and Escape then ask "Discard your answers?" before closing
+   * (Contact and booking forms T9). Keep the answers in the caller's state, so an accidental close
+   * that's undone, or reopening, finds them still there.
+   */
+  hasAnswers?: boolean;
   children?: ReactNode;
   className?: IntakeModalLayoutClassName;
 }
@@ -67,7 +77,7 @@ export function IntakeModal({
   open,
   onOpenChange,
   step = 1,
-  steps = 4,
+  steps = 2,
   title = "Start a project",
   showProgress = true,
   hideFooter = false,
@@ -78,19 +88,39 @@ export function IntakeModal({
   continueDisabled = false,
   continueLabel = "Continue",
   dismissOnEscape = true,
+  hasAnswers = false,
   children,
   className,
 }: IntakeModalProps) {
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
 
+  const confirmTitleId = useId();
+  const keepEditingRef = useRef<HTMLButtonElement>(null);
+  const [confirming, setConfirming] = useState(false);
+
   const close = useCallback(() => {
+    setConfirming(false);
     onOpenChange(false);
   }, [onOpenChange]);
 
+  // With typed answers, closing asks first.
+  const requestClose = useCallback(() => {
+    if (hasAnswers) setConfirming(true);
+    else close();
+  }, [hasAnswers, close]);
+
+  useEffect(() => {
+    if (confirming) keepEditingRef.current?.focus();
+  }, [confirming]);
+
+  useEffect(() => {
+    if (!open) setConfirming(false);
+  }, [open]);
+
   useOverlayLifecycle(panelRef, {
     open,
-    onClose: close,
+    onClose: requestClose,
     closeOnEscape: dismissOnEscape,
     initialFocus: '[aria-label="Close"]',
   });
@@ -129,7 +159,7 @@ export function IntakeModal({
               aria-label="Close"
               role="ghost"
               size="md"
-              onClick={close}
+              onClick={requestClose}
             />
           </header>
           {showProgress ? (
@@ -146,7 +176,24 @@ export function IntakeModal({
               {children}
             </div>
           </div>
-          {hideFooter ? null : (
+          {confirming ? (
+            <footer
+              className={cn(intakeModalFooterClasses, "flex-wrap")}
+              role="alertdialog"
+              aria-labelledby={confirmTitleId}
+              data-intake-discard=""
+            >
+              <p id={confirmTitleId} className={cn(typographyClass("ui-label"), "basis-full text-fg md:basis-auto")}>
+                Discard your answers?
+              </p>
+              <Button ref={keepEditingRef} role="primary" type="button" onClick={() => setConfirming(false)}>
+                Keep editing
+              </Button>
+              <Button role="ghost" type="button" onClick={close}>
+                Discard
+              </Button>
+            </footer>
+          ) : hideFooter ? null : (
             <footer className={intakeModalFooterClasses}>
               {/* Buttons U8: the primary comes first; Back is a quieter text button after it. */}
               {hideContinue ? null : (
@@ -159,14 +206,17 @@ export function IntakeModal({
                   {continueLabel}
                 </Button>
               )}
-              <Button
-                role="ghost"
-                type="button"
-                disabled={backDisabled}
-                onClick={onBack}
-              >
-                Back
-              </Button>
+              {/* Step 1 has nowhere to go back to, so no Back there. */}
+              {step > 1 ? (
+                <Button
+                  role="ghost"
+                  type="button"
+                  disabled={backDisabled}
+                  onClick={onBack}
+                >
+                  Back
+                </Button>
+              ) : null}
             </footer>
           )}
         </motion.div>

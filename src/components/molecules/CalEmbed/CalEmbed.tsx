@@ -14,7 +14,7 @@ export type CalEmbedLayoutClassName = string;
 export const calEmbedSkipHref = "#email";
 export const calEmbedSkipLabel = "Skip, just email me";
 export const calEmbedEmptyTitle = "Booking isn’t available right now";
-export const calEmbedEmptyDescription = "Skip this step and we’ll follow up by email.";
+export const calEmbedEmptyDescription = "We’ll follow up by email with a few times instead.";
 
 export interface CalEmbedSkipProps {
   /** Skip destination. Default `#email`. */
@@ -38,10 +38,10 @@ export interface CalEmbedProps {
   /** Empty-state supporting line. Default points visitors at the skip. */
   emptyDescription?: ReactNode;
   /**
-   * Skip slot. Omit to render the default **TextLink** after the frame.
-   * Pass `false` or **CalEmbed.Skip** when you place the skip yourself
-   * (typically **Card.Footer**). CalEmbed does not render an in-body skip
-   * when this slot is used.
+   * Skip slot. Omit to render the default **TextLink** above the frame (or inside the empty state).
+   * Pass `false` or **CalEmbed.Skip** when you place the skip yourself. Keep it visible without
+   * scrolling past the calendar at 390 (T8): above the frame or in a pinned footer, not after a month
+   * grid. CalEmbed does not render an in-body skip when this slot is used.
    */
   skip?: ReactNode | false;
   /** Skip destination when the in-body skip is shown. Default `#email`. */
@@ -66,7 +66,7 @@ function handleSkipClick(onSkip: (() => void) | undefined, event: MouseEvent<HTM
 }
 
 /**
- * Same **TextLink** CalEmbed uses after the frame. Place it in **Card.Footer**
+ * Same **TextLink** CalEmbed uses above the frame. Place it in **Card.Header** (above the calendar, T8)
  * and pass `skip={false}` (or `skip={<CalEmbed.Skip />}`) so the in-body link is omitted.
  */
 export function CalEmbedSkip({
@@ -102,21 +102,25 @@ function CalEmbedRoot({
   onSkip,
   className,
 }: CalEmbedProps) {
+  const embedded = hasEmbed(children);
+  const inBodySkip = skip === undefined ? <CalEmbedSkip skipHref={skipHref} skipLabel={skipLabel} onSkip={onSkip} /> : null;
   return (
     <div className={cn(calEmbedClasses, className)} data-cal-embed="">
+      {/* Contact and booking forms T8: the way out sits above the calendar, so on a phone it's seen
+          without scrolling past the whole month. */}
+      {embedded ? inBodySkip : null}
       <div className={calEmbedFrameClasses}>
-        {hasEmbed(children) ? (
+        {embedded ? (
           children
         ) : (
+          // No embed (not set up, or it failed): the email route shows at once, inside the message.
           <div className={calEmbedEmptyClasses} data-cal-embed-empty="">
             <p className={typographyClass("subheading")}>{emptyTitle}</p>
             <p className={cn(typographyClass("caption"), "text-muted")}>{emptyDescription}</p>
+            {inBodySkip}
           </div>
         )}
       </div>
-      {skip === undefined ? (
-        <CalEmbedSkip skipHref={skipHref} skipLabel={skipLabel} onSkip={onSkip} />
-      ) : null}
     </div>
   );
 }

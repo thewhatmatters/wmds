@@ -395,6 +395,11 @@ export {
   type IntakeFormProps,
 } from "./components/molecules/IntakeForm/IntakeForm";
 export {
+  IntakeHoneypot,
+  isIntakeHoneypotFilled,
+  type IntakeHoneypotProps,
+} from "./components/molecules/IntakeForm/IntakeHoneypot";
+export {
   LinkTile,
   linkTileLoadingRatio,
   type LinkTileLayoutClassName,
@@ -801,6 +806,7 @@ export {
 export {
   IntakeConfirmation,
   intakeConfirmationCopy,
+  intakeConfirmationReplyWithin,
   intakeConfirmationVariants,
   intakeConfettiColors,
   type IntakeConfirmationLayoutClassName,
@@ -812,6 +818,7 @@ export {
   type IntakeModalLayoutClassName,
   type IntakeModalProps,
 } from "./components/organisms/IntakeModal/IntakeModal";
+export { useIntakeUrlState } from "./components/organisms/IntakeModal/useIntakeUrlState";
 export {
   ScrollHorizontal,
   type ScrollHorizontalIntroAction,

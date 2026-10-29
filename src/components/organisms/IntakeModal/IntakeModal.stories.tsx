@@ -4,6 +4,7 @@ import { Button } from "../../atoms/Button/Button";
 import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySource";
 import { IntakeForm, intakeAboutEmpty, isIntakeAboutValid, type IntakeAboutValues } from "../../molecules/IntakeForm/IntakeForm";
 import { IntakeModal } from "./IntakeModal";
+import { SketchRequestFlow } from "../../../storybook/SketchRequest/SketchRequestFlow";
 
 const meta = {
   title: "Components/IntakeModal",
@@ -23,7 +24,9 @@ Full-screen intake shell. Open it from any **Start a project** action.
 |-------|----------|
 | **Wordmark** | Typographic **WM** mark and **WhatMatters**. There is no separate logo asset. |
 | **Close** | **IconButton** with Lucide **X**. Accessible name **Close**. |
-| **Progress** | **StepProgress** under the header. Label reads **Step N of 4**. |
+| **Progress** | **StepProgress** under the header. Two steps by default (**Step 1 of 2** details, **Step 2 of 2** the optional booking); the confirmation isn't counted. At most 3 steps, and only when a later step depends on earlier answers (Contact and booking forms T7). |
+| **Close** with answers | \`hasAnswers\` makes Close and Escape ask "Discard your answers?" (Keep editing / Discard) (T9). |
+| **URL** | **useIntakeUrlState**("sketch") keeps \`?sketch\` in the URL while it's open: shareable, survives a refresh, Back closes it. The same form also lives on its own page; the modal is a shortcut (T9). |
 | **Footer** | **Continue** (**Button** \`role="primary"\`) comes first, on the left; **Back** follows as a quieter \`role="ghost"\` button (Buttons U8). Pass \`hideContinue\` on the calendar step so Continue is not rendered. The footer stays pinned while the step body scrolls. Confirmation (\`hideFooter\`) centers in the body. |
 | **Overlay** | Portal, \`aria-modal\`, focus trap, Escape, scroll lock. |
 
@@ -73,7 +76,7 @@ export const IntakeModalPattern: Story = {
           open={open}
           onOpenChange={setOpen}
           step={1}
-          steps={4}
+          steps={2}
           backDisabled
           onBack={() => undefined}
           onContinue={() => undefined}
@@ -102,7 +105,7 @@ export function StartAProjectShell() {
         open={open}
         onOpenChange={setOpen}
         step={1}
-        steps={4}
+        steps={2}
         backDisabled
         onBack={() => undefined}
         onContinue={() => undefined}
@@ -150,7 +153,7 @@ export const ErrorsOnContinue: Story = {
         open
         onOpenChange={() => undefined}
         step={2}
-        steps={4}
+        steps={2}
         onBack={() => undefined}
         onContinue={() => {
           if (!isIntakeAboutValid(values)) setSubmitCount((count) => count + 1);
@@ -165,4 +168,39 @@ export const ErrorsOnContinue: Story = {
   play: async () => {
     await new Promise((resolve) => setTimeout(resolve, 800));
   },
+};
+
+export const SketchRequest: Story = {
+  name: "Pattern — sketch request (details, optional booking, confirmation)",
+  args: { open: false, onOpenChange: () => undefined },
+  parameters: {
+    docs: {
+      description: {
+        story: [
+          "Contact and booking forms (T1–T9).",
+          "- **Steps:** details on one step, then an optional booking (Step 2 of 2), then the confirmation. Back keeps every answer.",
+          "- **Send:** the button says what happens (\"Send my request\") and the reply time sits under the form. The request is sent before the booking step, so skipping the calendar loses nothing.",
+          "- **Booking:** \"Skip, just email me\" sits above the calendar, so it's visible at 390 without scrolling past the month.",
+          "- **Confirmation:** what we got, when we reply, and how to reach us, on its own screen (never a toast alone).",
+          "- **Spam:** **IntakeHoneypot** (hidden from everyone, bots fill it) plus server-side checks. No CAPTCHA.",
+          "- **Page and modal:** the form also lives on its own page (\`/sketch\`); this modal is a shortcut from the nav and hero. **useIntakeUrlState** puts \`?sketch\` in the URL, so the link can be shared, a refresh reopens it and Back closes it. With typed answers, closing asks \"Discard your answers?\" (\`hasAnswers\`).",
+        ].join("\n"),
+      },
+    },
+  },
+  render: () => <SketchRequestFlow />,
+};
+
+export const SendFailed: Story = {
+  name: "Pattern — send failed",
+  args: { open: false, onOpenChange: () => undefined },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A failed send keeps every answer, says what happened, and offers Try again (the same button) and another route (email) (T6). Press Send my request with the form filled to see it; the second press goes through.",
+      },
+    },
+  },
+  render: () => <SketchRequestFlow failFirstSend />,
 };
