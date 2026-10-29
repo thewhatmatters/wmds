@@ -262,9 +262,10 @@ export const PhoneBarEdges: Story = {
           <SiteNav.Link href="#services">Services</SiteNav.Link>
         </SiteNav.Links>
       }
-      end={<Button size="sm" render={<a href="#sketch" />}>Get my free sketch</Button>}
+      // A short label, so the fit doesn't hang on the machine's fonts (CI's Linux fonts set wider than macOS).
+      end={<Button size="sm" render={<a href="#sketch" />}>Free sketch</Button>}
       mobile={<SiteNav.MobileLink href="#services">Services</SiteNav.MobileLink>}
-      mobileAction={<Button render={<a href="#sketch" />}>Get my free sketch</Button>}
+      mobileAction={<Button render={<a href="#sketch" />}>Free sketch</Button>}
     />
   ),
   play: async ({ canvasElement }) => {
@@ -287,8 +288,8 @@ export const PhoneBarEdges: Story = {
     await expect(Math.abs(ink(brand).left - contentLeft)).toBeLessThanOrEqual(2);
     await expect(Math.abs(ink(trigger).right - contentRight)).toBeLessThanOrEqual(2);
     await expect(trigger.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
-    // That pull isn't counted as overflow: the main button still fits at 390 and stays in the bar (N9).
-    await expect(within(canvasElement).getByRole("link", { name: "Get my free sketch" })).toBeVisible();
+    // That pull isn't counted as overflow: a main button that fits stays in the bar (N9).
+    await expect(within(canvasElement).getByRole("link", { name: "Free sketch" })).toBeVisible();
     await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
     // Open, the menu's own action is the one CTA on screen; the bar's copy hides.
     await userEvent.click(trigger);
