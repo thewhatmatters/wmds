@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.34 · Pattern — side sheet URL deep link
+// @thewhatmatters/wmds@0.4.35 · Pattern — side sheet URL deep link
 // Storybook: Components/Sheet → Pattern — side sheet URL deep link (?path=/story/components-sheet--side-sheet-url-deep-link)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

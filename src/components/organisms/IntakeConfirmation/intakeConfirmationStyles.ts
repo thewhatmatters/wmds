@@ -18,6 +18,9 @@ export const intakeConfirmationVariants = ["booked", "emailed"] as const;
 
 export type IntakeConfirmationVariant = (typeof intakeConfirmationVariants)[number];
 
+/** T2, T3: when the reply comes. Keep it true for your team. */
+export const intakeConfirmationReplyTime = "We reply within one business day.";
+
 export const intakeConfirmationCopy: Record<
   IntakeConfirmationVariant,
   { badge: string; title: string; body: string }

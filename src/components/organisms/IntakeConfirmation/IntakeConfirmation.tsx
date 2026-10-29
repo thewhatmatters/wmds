@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
 import { TextLink } from "../../atoms/TextLink/TextLink";
@@ -11,6 +13,7 @@ import {
   intakeConfirmationClasses,
   intakeConfirmationCopy,
   intakeConfirmationMetaClasses,
+  intakeConfirmationReplyTime,
   intakeConfirmationTitleClasses,
   intakeConfettiColors,
   type IntakeConfirmationVariant,
@@ -18,6 +21,7 @@ import {
 
 export {
   intakeConfirmationCopy,
+  intakeConfirmationReplyTime,
   intakeConfirmationVariants,
   intakeConfettiColors,
   type IntakeConfirmationVariant,
@@ -45,6 +49,15 @@ export interface IntakeConfirmationProps {
   icsHref?: string;
   /** Label for the `.ics` action. Default `Download .ics`. */
   icsLabel?: string;
+  /**
+   * When we'll reply (Contact and booking forms T3). Default "We reply within one business day." on
+   * `emailed`; pass `null` to leave it out. Never promise what you don't keep.
+   */
+  replyTime?: string | null;
+  /** What we got: a short recap of their request (e.g. "A new site before spring"). */
+  summary?: ReactNode;
+  /** How to reach us meanwhile: phone, email, hours (T1, T3). */
+  contact?: ReactNode;
   className?: IntakeConfirmationLayoutClassName;
 }
 
@@ -64,9 +77,13 @@ export function IntakeConfirmation({
   googleCalendarLabel = "Add to Google Calendar",
   icsHref,
   icsLabel = "Download .ics",
+  replyTime,
+  summary,
+  contact,
   className,
 }: IntakeConfirmationProps) {
   const copy = intakeConfirmationCopy[variant];
+  const reply = replyTime === undefined ? (variant === "emailed" ? intakeConfirmationReplyTime : null) : replyTime;
   const hasActions =
     bookingTime != null ||
     videoHref != null ||
@@ -94,6 +111,8 @@ export function IntakeConfirmation({
       </Badge>
       <h2 className={intakeConfirmationTitleClasses}>{copy.title}</h2>
       <p className={intakeConfirmationBodyClasses}>{copy.body}</p>
+      {summary != null ? <p className={intakeConfirmationMetaClasses}>{summary}</p> : null}
+      {reply != null ? <p className={intakeConfirmationBodyClasses}>{reply}</p> : null}
       {hasActions ? (
         <div className={intakeConfirmationActionsClasses}>
           {bookingTime != null ? (
@@ -116,6 +135,7 @@ export function IntakeConfirmation({
           ) : null}
         </div>
       ) : null}
+      {contact != null ? <div className={intakeConfirmationMetaClasses}>{contact}</div> : null}
       {onDone != null ? (
         <Button role="primary" type="button" onClick={onDone}>
           Done

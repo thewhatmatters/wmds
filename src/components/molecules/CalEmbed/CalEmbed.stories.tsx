@@ -33,7 +33,8 @@ CalEmbed.Skip — TextLink (after the frame by default, or Card.Footer)
 ## Best practices
 
 - **Do** keep the skip link even after the embed script is mounted.
-- **Do** put **CalEmbed.Skip** in **Card.Footer** when the embed is in **Card.Body**.
+- **Do** keep the skip visible without scrolling past the calendar at 390 (Contact and booking forms T8): the in-body skip sits above the frame, and with no embed it sits inside the empty state. If you place **CalEmbed.Skip** yourself, put it above the calendar or in a pinned footer, never after a month grid.
+- **Do** keep booking optional and after the details are sent.
 - **Do** theme Cal.com from the tokens above. Do not introduce a new color role.
 - **Don't** render both the in-body skip and **CalEmbed.Skip**.
 - **Don't** build a second calendar component.

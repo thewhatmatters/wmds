@@ -7,6 +7,28 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.35
+
+**Contact and booking forms: two steps, booking after the request, a way out above the calendar, and nothing lost on close.**
+
+- **IntakeModal** (Contact and booking forms T7, T9):
+  - Two steps by default (`steps` was 4): details, then the optional booking. The confirmation isn't counted.
+  - New `hasAnswers`: with typed answers, Close and Escape ask "Discard your answers?" (Keep editing, focused / Discard).
+  - New **useIntakeUrlState**: keeps `?sketch` in the URL while the modal is open. The link can be shared, a refresh reopens it, and Back closes it.
+- **CalEmbed** (T8): the "Skip, just email me" link sits **above** the calendar, so on a phone it's visible without scrolling past the month. With no embed (not set up, or it failed), the email route shows inside the empty state straight away.
+- **IntakeConfirmation** (T2, T3): new `replyTime` (default "We reply within one business day." on `emailed`; `null` leaves it out), `summary` (what we got) and `contact` (phone, email, hours).
+- **IntakeHoneypot** and `isIntakeHoneypotFilled` (new, T4): a spam trap people never see or reach (`aria-hidden`, `tabindex="-1"`, no autofill). Drop requests where it's filled, on the server, with rate limits. No CAPTCHA.
+- Stories **Components/IntakeModal → Pattern — sketch request** (details → optional booking → confirmation; "Send my request"; reply time under the form; contact details on the confirmation) and **Pattern — send failed** (answers kept, Try again, email route; T5, T6). Interaction tests cover the URL, the discard question, both steps, Back keeping answers, the skip above the calendar, the failure and the honeypot.
+
+### Consumer actions
+
+- Pass `steps={2}` or drop `steps`, and move the booking after the details are sent.
+- Pass `hasAnswers` while the visitor has typed something, and keep answers in your state.
+- Open the modal with `useIntakeUrlState`, and give the form its own page too (see wmds-patterns Contact — Sketch Page).
+- Add **IntakeHoneypot** and check it on the server.
+- On the confirmation, pass `summary` and `contact`. Change `replyTime` if one business day isn't true for you.
+- If you placed `CalEmbed.Skip` after the calendar, move it above.
+
 ## 0.4.34
 
 **Required and optional fields: mark the exception, read the badge with the field, never on autofill. Field width and form layout: widths that hint at the answer, a State select, side labels only on wide screens, and counters that don't cut text. Dropdowns, radios and checkboxes: a native Select for forms, bigger boxes with visible borders, and errors on Continue.**

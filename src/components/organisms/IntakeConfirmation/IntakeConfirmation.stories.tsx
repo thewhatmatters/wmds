@@ -41,7 +41,8 @@ ConfettiProvider
 
 ## Best practices
 
-- **Do** mount the confirmation only after the booking or the skip succeeds.
+- **Do** mount the confirmation only after the booking or the skip succeeds, on its own screen (never a toast alone), and send a confirmation email too (T3).
+- **Do** say what we got (\`summary\`), when we'll reply (\`replyTime\`, default "We reply within one business day." on \`emailed\`; keep it true), and how to reach us (\`contact\`).
 - **Do** keep one provider at the root.
 - **Do** pass booking slots only when you have real URLs — reuse **TextLink** / **Button**, do not invent a second confirmation style.
 - **Don't** call \`fire()\` from Continue, Confirm, or the skip link.

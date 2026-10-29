@@ -33,7 +33,8 @@ describe("CalEmbed caption", () => {
     expect(text).toContain(calEmbedEmptyTitle);
     expect(text).not.toContain("--color-");
     expect(text).not.toContain("Cal.com");
-    expect(container.querySelector("[data-cal-embed] [data-cal-embed-skip]")).not.toBeNull();
+    // The email route shows at once, inside the empty state (T8).
+    expect(container.querySelector("[data-cal-embed-empty] [data-cal-embed-skip]")).not.toBeNull();
   });
 
   it("renders the mounted embed instead of the empty state", () => {
@@ -47,6 +48,10 @@ describe("CalEmbed caption", () => {
 
     expect(container.querySelector("[data-testid=cal]")).not.toBeNull();
     expect(container.querySelector("[data-cal-embed-empty]")).toBeNull();
+    // T8: the skip comes before the calendar in the page, so it's seen without scrolling past it.
+    const skip = container.querySelector("[data-cal-embed-skip]") as Element;
+    const cal = container.querySelector("[data-testid=cal]") as Element;
+    expect(skip.compareDocumentPosition(cal) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it("omits the in-body skip when the Skip slot is used", () => {
