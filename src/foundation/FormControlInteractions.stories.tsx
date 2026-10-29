@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor } from "storybook/test";
+import { Badge } from "../components/atoms/Badge/Badge";
 import { Checkbox } from "../components/atoms/Checkbox/Checkbox";
 import { Input } from "../components/atoms/Input/Input";
 import { Switch } from "../components/atoms/Switch/Switch";
@@ -281,5 +282,42 @@ export const PromptBarFocusRings: Story = {
     await userEvent.tab();
     await expect(button).toHaveFocus();
     await waitFor(() => expect(ringed(button)).toBe(true));
+  },
+};
+
+const longWebsite = "https://www.northwind-bakery-and-coffee-roasters.example/locations/east-austin";
+
+export const InputEndBadgeRoomAndReadOut: Story = {
+  name: "Input — the badge keeps its room, comes after the status icon, and is read with the field (Required and optional Q8)",
+  parameters: { viewport: { defaultViewport: "mobile1" } },
+  render: () => (
+    <div className="flex w-[358px] flex-col gap-6">
+      <Input label="Your website" type="url" defaultValue={longWebsite} endBadge={<Badge size="sm">Optional</Badge>} />
+      <Input
+        label="Your site"
+        type="url"
+        defaultValue="https://northwind.example"
+        status="success"
+        endBadge={<Badge size="sm">Optional</Badge>}
+      />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const field = canvas.getByRole("textbox", { name: "Your website" });
+    await expect(field).toHaveAccessibleDescription("Optional");
+    const badge = document.getElementById(`${field.id}-badge`) as HTMLElement;
+    // The text box ends before the badge starts, so a long value never runs under it.
+    const box = field.getBoundingClientRect();
+    const textEnd = box.right - parseFloat(getComputedStyle(field).paddingRight);
+    await expect(textEnd).toBeLessThanOrEqual(badge.getBoundingClientRect().left);
+
+    const ticked = canvas.getByRole("textbox", { name: "Your site" });
+    const tickedBadge = document.getElementById(`${ticked.id}-badge`) as HTMLElement;
+    const icon = tickedBadge.previousElementSibling as HTMLElement;
+    await expect(icon).not.toBeNull();
+    await expect(icon.getBoundingClientRect().right).toBeLessThanOrEqual(tickedBadge.getBoundingClientRect().left);
+    const iconLeft = icon.getBoundingClientRect().left;
+    const ticketTextEnd = ticked.getBoundingClientRect().right - parseFloat(getComputedStyle(ticked).paddingRight);
+    await expect(ticketTextEnd).toBeLessThanOrEqual(iconLeft);
   },
 };

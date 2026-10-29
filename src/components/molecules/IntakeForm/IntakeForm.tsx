@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Badge } from "../../atoms/Badge/Badge";
 import { Input } from "../../atoms/Input/Input";
 import { TextArea } from "../../atoms/TextArea/TextArea";
 import { cn } from "../../../lib/cn";
@@ -33,13 +34,13 @@ export interface IntakeFormProps {
   /** Character ceiling for project details. Default 400. */
   detailsMax?: number;
   /**
-   * Shows the optional Company field. Default `true`. Left out, the form closes up and
+   * Shows the optional Company field. Default `false` (Required and optional Q9: ask less). Left out, the form closes up and
    * `values.company` keeps its value (empty), so `isIntakeAboutValid` and the app's submit code are
    * unchanged.
    */
   company?: boolean;
   /**
-   * Shows the optional Link field. Default `true`. Left out, the form closes up and `values.url`
+   * Shows the optional website field ("Your website", with an Optional badge). Default `true`. Left out, the form closes up and `values.url`
    * keeps its value (empty, which is valid).
    */
   link?: boolean;
@@ -110,14 +111,15 @@ function intakeFieldError(
 /**
  * About-you step — **Field** rows for name, email, company, link, and project details.
  * Required fields show **Input** / **TextArea** `status` + `message` on blur when invalid.
- * Company and link stay optional; `company={false}` and `link={false}` leave them out (the short
- * form: name, email, details). The details description is the character counter.
+ * Name, email and details are required (`aria-required`); the website is optional and says so with a
+ * badge. Company is off by default (`company` shows it, labelled "Company (optional)"); `link={false}`
+ * leaves the website out (the short form: name, email, details). The details description is the character counter.
  */
 export function IntakeForm({
   values,
   onChange,
   detailsMax = intakeDetailsMax,
-  company = true,
+  company = false,
   link = true,
   className,
 }: IntakeFormProps) {
@@ -144,6 +146,7 @@ export function IntakeForm({
       <Field label="Name">
         <Input
           aria-label="Name"
+          aria-required
           autoComplete="name"
           value={values.name}
           status={nameError != null ? "error" : undefined}
@@ -155,6 +158,7 @@ export function IntakeForm({
       <Field label="Email">
         <Input
           aria-label="Email"
+          aria-required
           type="email"
           autoComplete="email"
           value={values.email}
@@ -165,9 +169,10 @@ export function IntakeForm({
         />
       </Field>
       {company ? (
-        <Field label="Company" description="Optional">
+        // An autofill field: the word goes in the label, not a badge (Q8).
+        <Field label="Company (optional)" description="So we can read up on you before we reply.">
           <Input
-            aria-label="Company"
+            aria-label="Company (optional)"
             autoComplete="organization"
             value={values.company}
             onChange={(event) => onChange({ ...values, company: event.target.value })}
@@ -175,9 +180,10 @@ export function IntakeForm({
         </Field>
       ) : null}
       {link ? (
-        <Field label="Link" description="Optional">
+        <Field label="Your website" description="So we can see what you have now.">
           <Input
-            aria-label="Link"
+            aria-label="Your website"
+            endBadge={<Badge size="sm">Optional</Badge>}
             type="url"
             inputMode="url"
             autoComplete="url"
@@ -196,6 +202,7 @@ export function IntakeForm({
       >
         <TextArea
           aria-label="What should feel different when this work is done?"
+          aria-required
           rows={5}
           maxLength={detailsMax}
           value={values.details}

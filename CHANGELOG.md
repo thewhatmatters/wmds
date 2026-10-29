@@ -7,6 +7,28 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.34
+
+**Required and optional fields: mark the exception, read the badge with the field, never on autofill.**
+
+- **Input** \`endBadge\` (Required and optional Q8):
+  - Screen readers hear the badge as part of the field's description, after the hint.
+  - With a status icon, the icon comes first, then the badge (it used to be the badge, then the icon).
+  - The field keeps room for the badge, so a long value stops before it. A new interaction test checks this at phone width.
+  - Input warns in the console when \`endBadge\` sits on an autofill field (\`autoComplete\` name, email, tel, password, address or organization fields).
+- **wmds-check** \`badge-on-autofill\` (new, error): fails an Input with \`endBadge\` on an autofill field. Put "(optional)" in the label there.
+- **IntakeForm** (Q2, Q7, Q9):
+  - Name, email and project details carry \`aria-required\`.
+  - The website field is now labelled "Your website", with an "Optional" badge and a stated use ("So we can see what you have now.").
+  - **Company is off by default** (\`company\` turns it on). It's labelled "Company (optional)", since it's an autofill field.
+- **Stories:** the Input badge stories use a website field with "Optional", not an email field. They add "Pattern — end badge with a long value" and "Pattern — end badge + status icon". The validation morph demo drops its badge from the email field.
+
+### Consumer actions
+
+- Run \`npx wmds-check\`, and move any badge on a name, email, phone, password, address or company field into its label ("Business email (optional)").
+- Mark the exception: in a mostly-required form, badge the optional fields "Optional".
+- \`IntakeForm\` no longer shows Company unless you pass \`company\`. The website field's accessible name changed from "Link" to "Your website".
+
 ## 0.4.33
 
 **Cards can take their own tone, and a Carousel can drift on its own with a Pause button and a follow cursor.**

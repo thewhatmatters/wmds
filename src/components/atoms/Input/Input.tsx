@@ -40,6 +40,7 @@ import {
   type InputSize,
   type InputStatus,
 } from "./inputShellStyles";
+import { isAutofillField } from "./autofillFields";
 
 export type { InputMessagePosition, InputSize, InputStatus } from "./inputShellStyles";
 export { inputMessagePositions, inputSizes, inputStatuses } from "./inputShellStyles";
@@ -70,8 +71,11 @@ export interface InputProps
   /** Monospace value — `type-code` instead of the sans face. For a read-only key or id. */
   mono?: boolean;
   /**
-   * Trailing inset inside the shell — pass {@link Badge} (e.g. Required).
-   * Atoms cannot import Badge; compose at call site. Combinable with `status` / `loading`.
+   * Trailing inset inside the shell — pass {@link Badge} ("Optional" or "Required", whichever is the
+   * exception in the form). Atoms cannot import Badge; compose at call site. Combinable with
+   * `status` / `loading`: the status icon comes first, then the badge. Screen readers hear it as part
+   * of the field's description. Not on autofill fields (name, email, tel, password, address,
+   * organization): autofill paints over it, so put "(optional)" in the label there.
    */
   endBadge?: ReactElement;
   /** Inside a parent pill (Search, CopyField) — no outer shell; the parent owns border and focus ring. */
@@ -84,6 +88,14 @@ function assertInputA11y(
 ) {
   if (props.label == null && props["aria-label"] == null && props["aria-labelledby"] == null) {
     console.warn("[WMDS Input] Provide `label`, `aria-label`, or `aria-labelledby`.");
+  }
+}
+
+function assertEndBadge(hasEndBadge: boolean, autoComplete: string | undefined) {
+  if (hasEndBadge && isAutofillField(autoComplete)) {
+    console.warn(
+      `[WMDS Input] No \`endBadge\` on an autofill field (autocomplete="${autoComplete}"): put "(optional)" in the label.`,
+    );
   }
 }
 
@@ -153,14 +165,17 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 
   const hasMessage = message != null && message.length > 0 && status != null;
   const hasEndBadge = endBadge != null;
+  assertEndBadge(hasEndBadge, rest.autoComplete);
   const showTrailingStatusIcon = !hasMessage && (loading || status != null);
   const showLeadingIcon = icon != null;
   const trailingPadding = resolveTrailingPadding(size, hasEndBadge, showTrailingStatusIcon);
   // Labels and placeholders F8: the hint sits between the label and the field and stays when a message shows.
   const descriptionId = description != null ? `${controlId}-description` : undefined;
   const messageId = hasMessage ? `${controlId}-message` : undefined;
+  // Required and optional Q8: the badge is read with the field, after the hint.
+  const badgeId = hasEndBadge ? `${controlId}-badge` : undefined;
   const describedBy =
-    [ariaDescribedBy, descriptionId, messageId].filter(Boolean).join(" ") || undefined;
+    [ariaDescribedBy, descriptionId, badgeId, messageId].filter(Boolean).join(" ") || undefined;
 
   const inputRow = (
     <>
@@ -227,15 +242,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
             inputTrailingInsetPositionClasses[size],
           )}
         >
-          {hasEndBadge ? (
-            <span className={inputEndBadgeWrapperClasses}>{endBadge}</span>
-          ) : null}
+          {/* Q8: the status icon first, then the badge. */}
           {showTrailingStatusIcon ? (
             <InputTrailingAffordance
               size={size}
               status={loading ? undefined : status}
               loading={loading}
             />
+          ) : null}
+          {hasEndBadge ? (
+            <span id={badgeId} className={inputEndBadgeWrapperClasses}>
+              {endBadge}
+            </span>
           ) : null}
         </span>
       ) : null}

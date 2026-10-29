@@ -1,6 +1,5 @@
 import { useId, useState } from "react";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
-import { Badge } from "../Badge/Badge";
 import { Button } from "../Button/Button";
 import { cn } from "../../../lib/cn";
 import { motionTransitionProp } from "../../../lib/motion";
@@ -11,8 +10,6 @@ import {
   inputAttachedInputClasses,
   inputCompoundShellClassesFor,
   inputCompoundShellFocusRingClasses,
-  inputEndBadgeGapClasses,
-  inputEndBadgeWrapperClasses,
   inputFieldStackClasses,
   inputShellClasses,
   inputShellTransitionClasses,
@@ -21,8 +18,6 @@ import {
   inputSoloFocusRingColorClasses,
   inputSoloRadiusClasses,
   inputStatusShellClasses,
-  inputTrailingInsetClasses,
-  inputTrailingInsetPositionClasses,
 } from "./inputShellStyles";
 
 /** Medium-tier band reveal — structural spatial change (Astryx). */
@@ -70,6 +65,8 @@ export function InputValidationMorphDemo() {
               <input
                 id={controlId}
                 type="email"
+                autoComplete="email"
+                aria-required
                 value={value}
                 aria-invalid={showError || undefined}
                 aria-describedby={showError ? messageId : undefined}
@@ -83,20 +80,9 @@ export function InputValidationMorphDemo() {
                 className={cn(
                   inputAttachedFieldClasses,
                   inputSizeClasses.md,
-                  inputEndBadgeGapClasses.md,
                   inputAttachedInputClasses,
                 )}
               />
-              <span
-                className={cn(
-                  inputTrailingInsetClasses,
-                  inputTrailingInsetPositionClasses.md,
-                )}
-              >
-                <span className={inputEndBadgeWrapperClasses}>
-                  <Badge size="sm">Required</Badge>
-                </span>
-              </span>
             </div>
             <AnimatePresence initial={false}>
               {showError ? (

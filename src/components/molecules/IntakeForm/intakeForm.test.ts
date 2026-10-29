@@ -76,18 +76,18 @@ describe("IntakeForm blur errors", () => {
     const onChange = (next: typeof values) => {
       values = next;
       act(() => {
-        root?.render(createElement(IntakeForm, { values, onChange }));
+        root?.render(createElement(IntakeForm, { values, onChange, company: true }));
       });
     };
 
     act(() => {
-      root?.render(createElement(IntakeForm, { values, onChange }));
+      root?.render(createElement(IntakeForm, { values, onChange, company: true }));
     });
 
     const name = container.querySelector('input[aria-label="Name"]');
     const email = container.querySelector('input[aria-label="Email"]');
-    const company = container.querySelector('input[aria-label="Company"]');
-    const link = container.querySelector('input[aria-label="Link"]');
+    const company = container.querySelector('input[aria-label="Company (optional)"]');
+    const link = container.querySelector('input[aria-label="Your website"]');
     const details = container.querySelector('textarea[aria-label="What should feel different when this work is done?"]');
     if (
       !(name instanceof HTMLInputElement) ||
@@ -118,7 +118,7 @@ describe("IntakeForm blur errors", () => {
       company.blur();
     });
     expect(container.textContent).not.toContain("Enter your company");
-    expect(container.querySelector('input[aria-label="Company"]')?.getAttribute("aria-invalid")).toBeNull();
+    expect(container.querySelector('input[aria-label="Company (optional)"]')?.getAttribute("aria-invalid")).toBeNull();
 
     act(() => {
       details.focus();
@@ -131,7 +131,29 @@ describe("IntakeForm blur errors", () => {
       link.blur();
     });
     expect(container.textContent).not.toContain("Enter a website address like example.com.");
-    expect(container.querySelector('input[aria-label="Link"]')?.getAttribute("aria-invalid")).toBeNull();
+    expect(container.querySelector('input[aria-label="Your website"]')?.getAttribute("aria-invalid")).toBeNull();
+  });
+
+  it("marks the exception: required fields in code, the website with an Optional badge read with it (Q2, Q4, Q7)", () => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+    act(() => {
+      root?.render(createElement(IntakeForm, { values: intakeAboutEmpty, onChange: () => {} }));
+    });
+    const fields = [...container.querySelectorAll("input, textarea")];
+    expect(fields.map((field) => field.getAttribute("aria-label"))).toEqual([
+      "Name",
+      "Email",
+      "Your website",
+      "What should feel different when this work is done?",
+    ]);
+    expect(fields.map((field) => field.getAttribute("aria-required"))).toEqual(["true", "true", null, "true"]);
+    const website = fields[2];
+    const describedBy = website.getAttribute("aria-describedby")?.split(" ") ?? [];
+    const read = describedBy.map((id) => document.getElementById(id)?.textContent).join(" ");
+    expect(read).toContain("Optional");
+    expect(container.textContent).not.toMatch(/\*/);
   });
 
   it("leaves out company and link, closing up, and keeps their values", () => {
@@ -152,8 +174,8 @@ describe("IntakeForm blur errors", () => {
       );
     });
 
-    expect(container.querySelector('input[aria-label="Company"]')).toBeNull();
-    expect(container.querySelector('input[aria-label="Link"]')).toBeNull();
+    expect(container.querySelector('input[aria-label="Company (optional)"]')).toBeNull();
+    expect(container.querySelector('input[aria-label="Your website"]')).toBeNull();
     const fields = container.querySelectorAll("input, textarea");
     expect([...fields].map((field) => field.getAttribute("aria-label"))).toEqual(["Name", "Email", "What should feel different when this work is done?"]);
     // Three rows, no empty slots between them.
