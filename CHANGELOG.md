@@ -7,6 +7,21 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.33
+
+**Cards can take their own tone, and a Carousel can drift on its own with a Pause button and a follow cursor.**
+
+- **Card** `tone` (new): `inverse`, `field` or `light`, the same scopes **Band** uses, so a card can stand apart from its section (testimonials, offers). Everything inside re-skins. New export `cardTones` / `CardTone`.
+- **`[data-theme="light"]`** now scopes the light palette (colors.css and stateColors.css), so a light card or block works inside a dark or toned section.
+- **Carousel** `autoplay` (new): drifts the row slowly back and forth (`true` or `{ speed }` in px a second). It holds on hover, on focus inside the row, during a drag or a scrub, off screen and in a hidden tab, and never runs under reduced motion. A **Pause** / **Play** button sits beside the scrubber (WCAG 2.2.2).
+- **Carousel** `cursor` (new): a decorative badge that follows a mouse over the row (fine pointers that can hover), e.g. a hand icon that says "drag me".
+- **Carousel** reads reduced motion through Motion's config, so a `MotionConfig reducedMotion` around it is respected (no change under the default `user`).
+- New tests: **cardTone.test.ts**, and Carousel interaction tests **autoplay drifts, holds on hover and focus, and pauses** and **autoplay never runs under reduced motion**. New stories **Card → Reference — tones** and **Carousel → Reference — autoplay with a follow cursor**.
+
+### Consumer actions
+
+If your brand stylesheet sets colours on `:root` only, also list `[data-theme="light"]` (`:root, [data-theme="light"] { … }`) so a `tone="light"` card picks them up.
+
 ## 0.4.32
 
 **Errors and validation: an error summary, errors announced as errors, no lost typing, and no iOS zoom. Labels and placeholders: every field named, the hint above the field, and inset buttons you can tap and see focused.**

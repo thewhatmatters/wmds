@@ -2,7 +2,8 @@
  * Interaction state colors — derived from base roles in colors.css.
  * Overlay tints follow Astryx; primary/destructive use color-mix for hover/active.
  */
-:root {
+:root,
+[data-theme="light"] {
   --color-ghost-foreground: var(--color-text-accent);
 
   /*

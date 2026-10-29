@@ -12,7 +12,8 @@ function ruleBody(selector: string): string {
 
 describe("color-scheme", () => {
   it("follows the theme, so native scrollbars, controls and autofill match", () => {
-    expect(ruleBody(":root")).toContain("color-scheme: light;");
+    // The light palette is `:root` and `[data-theme="light"]` (a scoped light card or block).
+    expect(ruleBody(':root,\n[data-theme="light"]')).toContain("color-scheme: light;");
     expect(ruleBody('[data-theme="dark"]')).toContain("color-scheme: dark;");
   });
 });

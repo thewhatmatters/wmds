@@ -46,6 +46,11 @@ export interface CompositionAuditReport {
 /** Approved shell affordances — keep reasons in sync with Storybook Anatomy. */
 export const compositionShellExceptions: CompositionShellException[] = [
   {
+    file: "components/organisms/Carousel/Carousel.tsx",
+    ruleId: "lucide-import",
+    reason: "Carousel owns the Pause / Play glyphs on its autoplay control (IconButton): moving content must be stoppable (WCAG 2.2.2).",
+  },
+  {
     file: "components/molecules/Accordion/Accordion.tsx",
     ruleId: "lucide-import",
     reason: "Accordion owns the built-in disclosure chevron (ButtonIcon inside the molecule shell).",

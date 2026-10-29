@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.32 · Pattern — pinned height
+// @thewhatmatters/wmds@0.4.33 · Pattern — pinned height
 // Storybook: Components/Card/Card → Pattern — pinned height (?path=/story/components-card-card--pinned-height)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

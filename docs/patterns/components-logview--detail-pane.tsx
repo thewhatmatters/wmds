@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.32 · Pattern — detail pane
+// @thewhatmatters/wmds@0.4.33 · Pattern — detail pane
 // Storybook: Components/LogView → Pattern — detail pane (?path=/story/components-logview--detail-pane)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

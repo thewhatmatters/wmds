@@ -101,3 +101,25 @@ export const carouselProgressThumbClasses = cn(
 /** The "1 of 6" line under the row. Like the scrubber, it keeps its space when every item fits. */
 export const carouselCounterClasses =
   cn(typographyClass("caption"), "mt-2 self-center text-muted tabular-nums data-[overflowing=false]:invisible");
+
+/** The scrubber and the drift's Pause button in one row (`autoplay`), placed like the scrubber alone. */
+export const carouselControlsClasses: Record<CarouselProgressPlacement, string> = {
+  center: "flex items-center gap-2 self-center",
+  start: "flex items-center gap-2 self-start",
+  full: "flex w-full items-center gap-2",
+  none: "flex items-center self-center",
+};
+
+/** The scrubber's width inside the controls row. */
+export const carouselProgressInControlsClasses: Record<Exclude<CarouselProgressPlacement, "none">, string> = {
+  center: "w-48 md:w-60",
+  start: "w-48 md:w-60",
+  full: "min-w-0 flex-1",
+};
+
+/**
+ * The follow badge (`cursor`): centred on the pointer, above the row, never in the way of a click. It fades
+ * in over the row and shrinks a little while the row is dragged.
+ */
+export const carouselCursorClasses =
+  "pointer-events-none absolute left-0 top-0 z-10 flex size-14 items-center justify-center rounded-full bg-fg text-body opacity-0 shadow-soft-sm transition-[opacity,scale] duration-fast ease-standard data-[shown]:opacity-100 data-[dragging]:scale-90 [&_svg]:size-6";
