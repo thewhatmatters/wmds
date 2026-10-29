@@ -15,10 +15,11 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **`[data-theme="light"]`** now scopes the light palette (colors.css and stateColors.css), so a light card or block works inside a dark or toned section.
 - **Carousel** `autoplay` (new): drifts the row slowly back and forth (`true` or `{ speed }` in px a second). It holds on hover, on focus inside the row, during a drag or a scrub, off screen and in a hidden tab, and never runs under reduced motion. A **Pause** / **Play** button sits beside the scrubber (WCAG 2.2.2).
 - **Carousel** `loop` (new): the items repeat seamlessly. A copy follows the last item (hidden from assistive tech, `inert`), and the row wraps back as it passes one full set, so it never ends; with `autoplay` it drifts one way. No scrubber or counter with a loop.
+- **Carousel** sets **`--carousel-velocity`** on its root while the row moves: -1 to 1, which way and how fast, easing back to 0 when it stops (always 0 under reduced motion). Items can lean or skew with it, e.g. `rotate-[calc(var(--carousel-velocity,0)*8deg)]`.
 - **Carousel**: a mouse drag no longer leaves the item text selected (the selection the press started is cleared once it becomes a drag).
 - **Carousel** `cursor` (new): a decorative badge that follows a mouse over the row (fine pointers that can hover), e.g. a hand icon that says "drag me".
 - **Carousel** reads reduced motion through Motion's config, so a `MotionConfig reducedMotion` around it is respected (no change under the default `user`).
-- New tests: **cardTone.test.ts**, and Carousel interaction tests **autoplay drifts, holds on hover and focus, and pauses**, **autoplay never runs under reduced motion** and **loop repeats the items seamlessly and wraps back**. New stories **Card → Reference — tones** and **Carousel → Reference — autoplay with a follow cursor**.
+- New tests: **cardTone.test.ts**, and Carousel interaction tests **autoplay drifts, holds on hover and focus, and pauses**, **autoplay never runs under reduced motion** , **loop repeats the items seamlessly and wraps back** and **--carousel-velocity follows the row's movement and settles to 0**. New stories **Card → Reference — tones** and **Carousel → Reference — autoplay with a follow cursor**.
 
 ### Consumer actions
 

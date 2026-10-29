@@ -545,3 +545,35 @@ export const AutoplayLoop: Story = {
     await expect(wrapped).toBe(true);
   },
 };
+
+export const Velocity: Story = {
+  name: "--carousel-velocity follows the row's movement and settles to 0",
+  render: () => (
+    <MotionConfig reducedMotion="never">
+      <div className="w-[56rem]">
+        {/* Snap off, so a programmatic scroll stays where it's put. */}
+        <Carousel aria-label="Velocity row" itemWidth={40} snap={false}>
+          {tiles.map((tile) => (
+            <Carousel.Item key={tile.id}>
+              <img className="aspect-[4/3] w-full object-cover" src={tile.src} alt={tile.alt} />
+            </Carousel.Item>
+          ))}
+        </Carousel>
+      </div>
+    </MotionConfig>
+  ),
+  play: async ({ canvasElement }) => {
+    const row = within(canvasElement).getByRole("region", { name: "Velocity row" });
+    const root = canvasElement.querySelector<HTMLElement>("[data-carousel]")!;
+    const read = () => Number(root.style.getPropertyValue("--carousel-velocity") || 0);
+    let peak = 0;
+    for (let step = 1; step <= 8; step++) {
+      row.scrollLeft = step * 30;
+      await new Promise((resolve) => setTimeout(resolve, 16));
+      peak = Math.max(peak, read());
+    }
+    // Moving toward the end reads positive.
+    await expect(peak).toBeGreaterThan(0.2);
+    await waitFor(() => expect(read()).toBe(0), { timeout: 1000 });
+  },
+};
