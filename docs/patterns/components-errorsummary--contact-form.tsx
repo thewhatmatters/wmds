@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.32 · Pattern — form with an error summary
+// @thewhatmatters/wmds@0.4.33 · Pattern — form with an error summary
 // Storybook: Components/ErrorSummary → Pattern — form with an error summary (?path=/story/components-errorsummary--contact-form)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -285,7 +285,9 @@ export {
   type CardShape,
   type CardTerminalHeight,
   type CardTerminalState,
+  type CardTone,
   type CardVariant,
+  cardTones,
 } from "./components/molecules/Card/Card";
 export {
   ChatQa,

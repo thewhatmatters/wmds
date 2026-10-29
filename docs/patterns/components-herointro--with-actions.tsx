@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.32 · Pattern — with description and actions
+// @thewhatmatters/wmds@0.4.33 · Pattern — with description and actions
 // Storybook: Components/HeroIntro → Pattern — with description and actions (?path=/story/components-herointro--with-actions)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

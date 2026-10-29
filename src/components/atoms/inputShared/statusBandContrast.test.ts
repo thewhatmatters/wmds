@@ -12,7 +12,7 @@ const block = (selector: string) => css.slice(css.indexOf(selector)).split("}")[
 const token = (scope: string, name: string) => block(scope).match(new RegExp(`--color-${name}:\\s*(#[0-9a-f]{6,8})`, "i"))?.[1] ?? "";
 
 describe("status band contrast (V7)", () => {
-  for (const [theme, scope, page] of [["light", ":root {", "#f8f8f8"], ["dark", '[data-theme="dark"] {', "#1b1b1b"]] as const) {
+  for (const [theme, scope, page] of [["light", ':root,\n[data-theme="light"] {', "#f8f8f8"], ["dark", '[data-theme="dark"] {', "#1b1b1b"]] as const) {
     for (const tone of ["error", "warning", "success"] as const) {
       it(`${theme} ${tone}: message on its band ≥ 4.5:1`, () => {
         const ink = token(scope, tone);

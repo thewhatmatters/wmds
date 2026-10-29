@@ -993,3 +993,25 @@ export function TerminalFrames() {
 for (const story of [HeaderSlots, PinnedHeight]) {
   story.parameters = { ...story.parameters, a11y: { test: "todo" } };
 }
+
+export const Tones: Story = {
+  name: "Reference — tones",
+  render: () => (
+    <div data-tone="inverse" data-theme="dark" className="grid gap-4 bg-body p-6 md:grid-cols-3">
+      {(["inverse", "field", "light"] as const).map((tone) => (
+        <Card key={tone} tone={tone} padding="md">
+          <p className="type-body text-fg">tone=&quot;{tone}&quot;</p>
+          <p className="type-supporting text-muted">Everything inside re-skins.</p>
+        </Card>
+      ))}
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`tone` gives a card its own colour pair, the same scopes **Band** uses: `inverse` (brand surface), `field` (flat, the saturated colour) and `light` (the light palette, e.g. a paper card on a dark section). Shown on an inverse section.",
+      },
+    },
+  },
+};

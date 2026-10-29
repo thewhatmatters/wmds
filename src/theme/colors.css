@@ -8,7 +8,8 @@
  * Status roles: error | success | warning (+ *-muted, on-*).
  * Brand actions: primary / on-primary (WhatMatters — separate from accent).
  */
-:root {
+:root,
+[data-theme="light"] {
   /* Native UI (scrollbars, form controls, autofill) follows the theme. */
   color-scheme: light;
 
