@@ -23,9 +23,9 @@ export const searchInlineInputClasses: Record<SearchSize, string> = {
 };
 
 /** Lock inset action height to the inner track — not the full 44px shell. */
-/** The inset action: 32px to look at, a 44px tap area on touch screens (F10). */
+/** The inset action: 32px to look at, a 44px tap area on touch screens (F10). Its focus ring hugs the button (no offset, as in PromptBar), so it never runs over the pill's edge. */
 export const searchInsetButtonClasses =
-  "relative h-8 min-h-8 max-h-8 shrink-0 self-center py-0 leading-none pointer-coarse:after:absolute pointer-coarse:after:-inset-1.5 pointer-coarse:after:content-['']";
+  "relative focus-visible:!ring-offset-0 h-8 min-h-8 max-h-8 shrink-0 self-center py-0 leading-none pointer-coarse:after:absolute pointer-coarse:after:-inset-1.5 pointer-coarse:after:content-['']";
 
 export const searchButtonSizeClasses: Record<SearchSize, "xs" | "sm"> = {
   sm: "xs",

@@ -189,12 +189,13 @@ export function IntakeForm({
           />
         </Field>
       ) : null}
+      {/* Labels and placeholders: the question is the label (a label can be a question, as on GOV.UK question pages). */}
       <Field
-        label="Project details"
+        label="What should feel different when this work is done?"
         description={detailsError == null ? `${values.details.length} / ${detailsMax}` : undefined}
       >
         <TextArea
-          aria-label="Project details"
+          aria-label="What should feel different when this work is done?"
           rows={5}
           maxLength={detailsMax}
           value={values.details}

@@ -15,7 +15,7 @@ const meta = {
         component: `
 ## Usage
 
-About-you step. **Field** wraps **Input** and **TextArea**. Project details shows a character counter in the field description (\`12 / 400\`). The counter is not a **TextArea** prop.
+About-you step. **Field** wraps **Input** and **TextArea**. The project question (“What should feel different when this work is done?”, the label itself) shows a character counter in the field description (\`12 / 400\`). The counter is not a **TextArea** prop.
 
 \`isIntakeAboutValid\` is true when name, email, and details are present, details stay within the counter, and an optional link is empty or a valid http(s) URL. Company and link are optional.
 
@@ -31,7 +31,7 @@ IntakeForm
 ├── Field — Email / Input
 ├── Field — Company / Input (optional; company={false} leaves it out)
 ├── Field — Link / Input (optional URL; link={false} leaves it out)
-└── Field — Project details / TextArea + counter
+└── Field — "What should feel different when this work is done?" / TextArea + counter
 \`\`\`
 
 ## Best practices

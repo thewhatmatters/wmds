@@ -88,7 +88,7 @@ describe("IntakeForm blur errors", () => {
     const email = container.querySelector('input[aria-label="Email"]');
     const company = container.querySelector('input[aria-label="Company"]');
     const link = container.querySelector('input[aria-label="Link"]');
-    const details = container.querySelector('textarea[aria-label="Project details"]');
+    const details = container.querySelector('textarea[aria-label="What should feel different when this work is done?"]');
     if (
       !(name instanceof HTMLInputElement) ||
       !(email instanceof HTMLInputElement) ||
@@ -155,7 +155,7 @@ describe("IntakeForm blur errors", () => {
     expect(container.querySelector('input[aria-label="Company"]')).toBeNull();
     expect(container.querySelector('input[aria-label="Link"]')).toBeNull();
     const fields = container.querySelectorAll("input, textarea");
-    expect([...fields].map((field) => field.getAttribute("aria-label"))).toEqual(["Name", "Email", "Project details"]);
+    expect([...fields].map((field) => field.getAttribute("aria-label"))).toEqual(["Name", "Email", "What should feel different when this work is done?"]);
     // Three rows, no empty slots between them.
     expect(container.firstElementChild?.children).toHaveLength(3);
 
