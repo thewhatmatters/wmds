@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.31 · Pattern — bottom sheet
+// @thewhatmatters/wmds@0.4.32 · Pattern — bottom sheet
 // Storybook: Components/Sheet → Pattern — bottom sheet (?path=/story/components-sheet--bottom-sheet)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -30,8 +30,8 @@ export function FilterSheet() {
           }
         >
           <div className="flex flex-col gap-4 pb-4">
-            <Input label="Minimum occupancy %" placeholder="80" />
-            <Input label="Market" placeholder="All markets" />
+            <Input label="Minimum occupancy %" />
+            <Input label="Market" />
           </div>
         </Sheet.Content>
       </Sheet>

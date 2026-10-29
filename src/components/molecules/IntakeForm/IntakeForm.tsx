@@ -87,15 +87,16 @@ function intakeFieldError(
     return values.name.trim().length === 0 ? "Enter your name." : undefined;
   }
   if (field === "email") {
+    // Errors and validation V1: an empty field gets an instruction, a broken rule a description.
     if (values.email.trim().length === 0) {
-      return "Please enter a valid email address.";
+      return "Enter your email address.";
     }
     return emailPattern.test(values.email.trim())
       ? undefined
-      : "Please enter a valid email address.";
+      : "Enter an email address like name@example.com.";
   }
   if (field === "url") {
-    return isIntakeUrlValid(values.url) ? undefined : "Please enter a valid URL.";
+    return isIntakeUrlValid(values.url) ? undefined : "Enter a website address like example.com.";
   }
   if (values.details.trim().length === 0) {
     return "Tell us a bit about the project.";
@@ -180,7 +181,6 @@ export function IntakeForm({
             type="url"
             inputMode="url"
             autoComplete="url"
-            placeholder="https://"
             value={values.url}
             status={urlError != null ? "error" : undefined}
             message={urlError}
@@ -189,16 +189,16 @@ export function IntakeForm({
           />
         </Field>
       ) : null}
+      {/* Labels and placeholders: the question is the label (a label can be a question, as on GOV.UK question pages). */}
       <Field
-        label="Project details"
+        label="What should feel different when this work is done?"
         description={detailsError == null ? `${values.details.length} / ${detailsMax}` : undefined}
       >
         <TextArea
-          aria-label="Project details"
+          aria-label="What should feel different when this work is done?"
           rows={5}
           maxLength={detailsMax}
           value={values.details}
-          placeholder="What should feel different when this work is done?"
           status={detailsError != null ? "error" : undefined}
           message={detailsError}
           onBlur={() => markTouched("details")}

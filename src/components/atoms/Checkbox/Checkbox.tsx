@@ -8,7 +8,7 @@ import {
 } from "react";
 import { Check, Loader2 } from "lucide-react";
 import { cn } from "../../../lib/cn";
-import { InputStatusBanner } from "../inputShared/InputStatusBanner";
+import { InputStatusBanner, warnStatusWithoutMessage } from "../inputShared/InputStatusBanner";
 import {
   checkboxBoxClassesFor,
   checkboxCheckIconSizeClasses,
@@ -105,6 +105,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
   },
   ref,
 ) {
+  warnStatusWithoutMessage("Checkbox", status, message);
   const generatedId = useId();
   const controlId = idProp ?? generatedId;
   assertCheckboxPattern({ status, message });

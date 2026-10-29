@@ -18,6 +18,10 @@
  *                             content, data, handlers, and exports may change
  *   pattern-stale     warn   a pasted pattern's header names an older package version
  *   pattern-removed   error  a pasted pattern's id no longer ships
+ *   status-without-message error  a WMDS field with status="error" or "warning" and no message
+ *                             (Errors and validation V10; a status-only success tick is fine)
+ *   missing-label     error  a WMDS Input, TextArea, Select or Search with no label, aria-label or
+ *                             aria-labelledby (Labels and placeholders F7; a spread {...props} is trusted)
  *   brand-contrast    error  a brand-kit pair in the app's CSS under WCAG AA 4.5:1: --color-on-X (and
  *                             --color-on-X-muted) on --color-X, for primary, brand-surface and field,
  *                             when both are hex values in the same rule
@@ -234,6 +238,40 @@ for (const file of files) {
       report(file, n, "raw-motion", "warn", "numeric Motion duration — use motionTransitionProp()");
     }
   });
+
+  // Reads a JSX element whole from its "<" (it may span lines), counting braces so `=>` and `{…}`
+  // values don't end it early.
+  const elementFrom = (start) => {
+    let depth = 0;
+    let end = start + 1;
+    for (; end < source.length; end++) {
+      const char = source[end];
+      if (char === "{") depth++;
+      else if (char === "}") depth--;
+      else if (char === ">" && depth === 0 && source[end - 1] !== "=") break;
+    }
+    return source.slice(start, end + 1);
+  };
+
+  // F7: every field has a name. A hidden one (aria-label) is the app's call; none at all fails.
+  if (/from\s+["']@thewhatmatters\/wmds["']/.test(source)) {
+    for (const match of source.matchAll(/<(Input|TextArea|Select|Search)(?=[\s/>])/g)) {
+      const element = elementFrom(match.index);
+      if (/\b(label|aria-label|aria-labelledby)=|\{\s*\.\.\./.test(element)) continue;
+      const line = source.slice(0, match.index).split("\n").length;
+      if (ignored(lines, line - 1, "missing-label")) continue;
+      report(file, line, "missing-label", "error", `<${match[1]}> has no label — add label (or aria-label when it sits alone with its button)`);
+    }
+  }
+
+  // V10: an error or warning status always says what's wrong.
+  for (const match of source.matchAll(/\bstatus=(?:"(error|warning)"|\{\s*["'](error|warning)["']\s*\})/g)) {
+    const element = elementFrom(source.lastIndexOf("<", match.index));
+    if (!/^<[A-Z]/.test(element) || /\bmessage=/.test(element)) continue;
+    const line = source.slice(0, match.index).split("\n").length;
+    if (ignored(lines, line - 1, "status-without-message")) continue;
+    report(file, line, "status-without-message", "error", `status="${match[1] ?? match[2]}" with no message — say what's wrong and how to fix it`);
+  }
 
   // Pasted patterns.
   // The header is the file's first comment line. A "use client" / "use server" directive or blank

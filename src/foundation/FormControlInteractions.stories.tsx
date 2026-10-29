@@ -7,7 +7,9 @@ import { Switch } from "../components/atoms/Switch/Switch";
 import { TextArea } from "../components/atoms/TextArea/TextArea";
 import { CheckboxGroup } from "../components/molecules/CheckboxGroup/CheckboxGroup";
 import { Field } from "../components/molecules/Field/Field";
+import { PromptBar } from "../components/molecules/PromptBar/PromptBar";
 import { RadioGroup } from "../components/molecules/RadioGroup/RadioGroup";
+import { Search } from "../components/molecules/Search/Search";
 import { SegmentedControl } from "../components/molecules/SegmentedControl/SegmentedControl";
 
 /**
@@ -180,7 +182,7 @@ export const SegmentedControlSwitch: Story = {
 
 export const TextAreaSoloFocusRing: Story = {
   name: "TextArea — solo focus ring",
-  render: () => <TextArea label="Project details" placeholder="Tell us about the project" />,
+  render: () => <TextArea label="Project details" />,
   play: async ({ canvas }) => {
     const field = canvas.getByRole("textbox", { name: /project details/i });
     const shell = field.parentElement as HTMLElement;
@@ -213,5 +215,71 @@ export const FieldDescription: Story = {
     const email = canvas.getByRole("textbox", { name: "Email" });
     expect(email).toHaveAccessibleDescription("Work address preferred. We only use it to reply.");
     expect(canvas.getByRole("textbox", { name: "Team" })).toHaveAccessibleDescription("Shown on your profile.");
+  },
+};
+
+const ringed = (element: Element) => getComputedStyle(element).boxShadow !== "none";
+
+export const InputHintAboveWithError: Story = {
+  name: "Input — the hint sits above the field and stays with an error (Labels F8)",
+  render: () => (
+    <div className="w-80">
+      <Input
+        label="Phone"
+        type="tel"
+        description="Include the area code."
+        status="error"
+        message="Enter a phone number with its area code."
+      />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const field = canvas.getByRole("textbox", { name: "Phone" });
+    const hint = canvas.getByText("Include the area code.");
+    await expect(hint).toBeVisible();
+    await expect(hint.compareDocumentPosition(field) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    await expect(field).toHaveAccessibleDescription(/^Include the area code\. .*Enter a phone number with its area code\.$/);
+  },
+};
+
+export const SearchFocusRings: Story = {
+  name: "Search — the pill rings for the field, the button rings for itself (Labels F10)",
+  render: () => (
+    <div className="w-96">
+      <Search label="Search the docs" actionLabel="Search" />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const field = canvas.getByLabelText("Search the docs");
+    const button = canvas.getByRole("button", { name: "Search" });
+    const shell = field.closest("div:has(> button)") as HTMLElement;
+
+    await userEvent.tab();
+    await expect(field).toHaveFocus();
+    await waitFor(() => expect(ringed(shell)).toBe(true));
+
+    await userEvent.tab();
+    await expect(button).toHaveFocus();
+    await waitFor(() => expect(ringed(shell)).toBe(false));
+    await waitFor(() => expect(ringed(button)).toBe(true));
+  },
+};
+
+export const PromptBarFocusRings: Story = {
+  name: "PromptBar — the send button shows its own focus ring (Labels F10)",
+  render: () => (
+    <div className="w-96">
+      <PromptBar aria-label="Message" defaultValue="Hello" sendLabel="Send" />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const field = canvas.getByRole("textbox", { name: "Message" });
+    const button = canvas.getByRole("button", { name: "Send" });
+
+    await userEvent.tab();
+    await expect(field).toHaveFocus();
+    await userEvent.tab();
+    await expect(button).toHaveFocus();
+    await waitFor(() => expect(ringed(button)).toBe(true));
   },
 };

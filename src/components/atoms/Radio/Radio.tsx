@@ -6,7 +6,7 @@ import {
   type InputHTMLAttributes,
 } from "react";
 import { cn } from "../../../lib/cn";
-import { InputStatusBanner } from "../inputShared/InputStatusBanner";
+import { InputStatusBanner, warnStatusWithoutMessage } from "../inputShared/InputStatusBanner";
 import {
   radioCircleClassesFor,
   radioDescriptionClasses,
@@ -81,6 +81,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
   },
   ref,
 ) {
+  warnStatusWithoutMessage("Radio", status, message);
   const generatedId = useId();
   const controlId = idProp ?? generatedId;
   assertRadioPattern({ status, message });

@@ -191,7 +191,7 @@ export const SharedShell: Story = {
     <div className="mx-auto flex w-full max-w-sm flex-col gap-6 px-8 py-6">
       <div className="flex flex-col gap-1.5">
         <span className={labelClasses}>Input — bare</span>
-        <Input placeholder="Enter text" aria-label="Example text" />
+        <Input aria-label="Example text" />
       </div>
       <div className="flex flex-col gap-1.5">
         <span className={labelClasses}>Select — bare</span>
@@ -239,7 +239,7 @@ export const SizeScale: Story = {
             <tr key={size} className="border-b border-border last:border-b-0">
               <td className={cn(captionClasses, "py-3 pr-4 align-top font-mono")}>{size}</td>
               <td className="py-3 pr-4 align-top">
-                <Input size={size} placeholder="Text" aria-label={`Input ${size}`} />
+                <Input size={size} aria-label={`Input ${size}`} />
               </td>
               <td className="py-3 align-top">
                 <Select
@@ -272,12 +272,10 @@ export const OptionalLabel: Story = {
       <Input
         label="Email"
         type="email"
-        placeholder="you@example.com"
         description="We'll never share this."
       />
       <TextArea
         label="Market notes"
-        placeholder="Add context for admins…"
         description="Optional — same label stack as Input."
         rows={3}
       />
@@ -304,7 +302,7 @@ export const HorizontalField: Story = {
   render: () => (
     <div className="mx-auto flex w-full max-w-md flex-col gap-5 px-8 py-6">
       <Field label="ZIP code" description="5-digit US ZIP." orientation="horizontal">
-        <Input placeholder="97201" aria-label="ZIP code" />
+        <Input aria-label="ZIP code" />
       </Field>
       <Field label="Reporting period" orientation="horizontal">
         <Select

@@ -7,6 +7,28 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.32
+
+**Errors and validation: an error summary, errors announced as errors, no lost typing, and no iOS zoom. Labels and placeholders: every field named, the hint above the field, and inset buttons you can tap and see focused.**
+
+- **ErrorSummary** (new): "There's a problem" at the top of a form after a failed submit, one link per error in the field's own words. It takes focus when it appears, and each link moves focus to its field (V5). Story **Components/ErrorSummary → Pattern — form with an error summary**; interaction test **Internal/Interactions/ErrorSummary**.
+- **Input, TextArea, Checkbox, Radio, Switch, CheckboxGroup, RadioGroup**: the status band reads a visually hidden "Error:" or "Warning:" before the message, so screen readers hear what kind of message it is (V6).
+- **Status without a message** (V10): those components warn in the console when `status="error"` or `"warning"` has no `message`. **wmds-check** `status-without-message` (new, error) catches it in app code. A status-only success tick is fine.
+- **Input** keeps the same `<input>` when a status appears. It used to swap its wrapper and remount the field, which dropped focus and, in an uncontrolled field, **what people had typed** (V4).
+- **No iOS zoom:** Input, TextArea and Search (`sm` and `md`) and PromptBar set 16px text on touch screens (`pointer: coarse`), so Safari doesn't zoom the page when a field gets focus. Fine pointers keep 12px / 14px.
+- **IntakeForm** default messages follow V1: "Enter your email address." for an empty field, "Enter an email address like name@example.com." and "Enter a website address like example.com." for a broken rule (were "Please enter a valid email address." / "…URL.").
+- Unit test: every status band's message clears 4.5:1 on its band in light and dark (V7: 4.62–6.97:1 measured).
+- **A success tick only** (V8): a status-only `success` on Input or TextArea shows the tick and keeps the normal border (it also turned the border green).
+- **The hint sits above the field** (Labels F8): Input and TextArea render `description` between the label and the field, and keep it when a status message shows (it used to sit below and hide behind the message). Story **Components/Input → Pattern — hint with an error**.
+- **Label required** (F7): **wmds-check** `missing-label` (new, error) fails an Input, TextArea, Select or Search with no `label`, `aria-label` or `aria-labelledby`. Hide a label (`aria-label`) only on a field alone with its button: search, a one-field newsletter.
+- **Search** takes a `label` prop: the field's name for screen readers, which may stay hidden (F10). It warns in the console when there's no label at all.
+- **Inset buttons** (F10) in Search, PromptBar and CopyField get a 44px tap area on touch screens, and show their own focus ring. The pill's ring now marks only the field (Search used to ring the whole pill for the button too; PromptBar and CopyField hid the button's ring).
+- **No placeholders in forms** (F9): IntakeForm drops its placeholders ("https://", "What should feel different…"), and the stories no longer put examples in placeholders. Search keeps one, naming the action.
+
+### Consumer actions
+
+None required. Fix any `status="error"` / `"warning"` without a `message` that `npx wmds-check` reports; say what's wrong and how to fix it. After a failed submit, add **ErrorSummary** at the top of the form (copy the Pattern). On phones and tablets, field text is now 16px. Give every field a `label` (fix what `npx wmds-check` reports as `missing-label`); pass `label` to Search; move examples and formats out of placeholders into `description`. If you style around the hint, it now renders above the field.
+
 ## 0.4.31
 
 **SiteNav's phone menu follows the Header rule: a "Menu" button that becomes "Close", a full-height panel under the bar, and a link tap closes it.**

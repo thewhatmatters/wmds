@@ -227,4 +227,76 @@ export function ServicesCard({ onPick }: { onPick: (value: string) => void }) {
       expect(result.findings).toEqual([]);
     });
   });
+
+  describe("missing-label", () => {
+    it("fails a WMDS field with no label, across lines", () => {
+      const result = check({
+        "form.tsx": `import { Input, Search } from "@thewhatmatters/wmds";
+export function Form() {
+  return (
+    <>
+      <Input
+        type="email"
+        onChange={(event) => console.log(event.target.value)}
+      />
+      <Search actionLabel="Search" />
+    </>
+  );
+}`,
+      });
+      expect(result.rules).toEqual(["missing-label", "missing-label"]);
+      expect(result.findings.map((finding) => finding.line)).toEqual([5, 9]);
+    });
+
+    it("passes a visible label, a hidden one, a labelledby and a spread", () => {
+      const result = check({
+        "form.tsx": `import { Input, Search, TextArea } from "@thewhatmatters/wmds";
+export function Form(props) {
+  return (
+    <>
+      <Input label="Email" type="email" />
+      <Search label="Search the docs" actionLabel="Search" />
+      <TextArea aria-labelledby="notes-heading" />
+      <Input {...props} />
+    </>
+  );
+}`,
+      });
+      expect(result.findings).toEqual([]);
+    });
+  });
+
+  describe("status-without-message", () => {
+    it("fails an error or warning status with no message, across lines", () => {
+      const result = check({
+        "form.tsx": `import { Input } from "@thewhatmatters/wmds";
+export function Form() {
+  return (
+    <Input
+      label="Email"
+      status="error"
+      onChange={(event) => console.log(event.target.value)}
+    />
+  );
+}`,
+      });
+      expect(result.rules).toEqual(["status-without-message"]);
+      expect(result.findings[0]).toMatchObject({ line: 6, severity: "error" });
+    });
+
+    it("passes a status with a message, and a status-only success tick", () => {
+      const result = check({
+        "form.tsx": `import { Input } from "@thewhatmatters/wmds";
+export function Form() {
+  return (
+    <>
+      <Input label="Email" status="error" message="Enter an email address, like name@example.com" />
+      <Input label="Website" status="success" />
+    </>
+  );
+}`,
+      });
+      expect(result.findings).toEqual([]);
+    });
+  });
 });

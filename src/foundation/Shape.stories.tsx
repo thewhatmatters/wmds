@@ -75,7 +75,7 @@ export function ShapeKnobsSpecimen() {
         <IconButton aria-label="Add" icon={<Plus />} role="secondary" />
         <Badge>New</Badge>
       </div>
-      <Input label="Email" placeholder="you@example.com" />
+      <Input label="Email" />
       <Select
         label="Party size"
         options={[

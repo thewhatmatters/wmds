@@ -170,8 +170,8 @@ export const NotificationPreferences: Story = {
             }
           >
             <div className="flex flex-col gap-4 pb-4">
-              <Input label="Market" placeholder="All markets" />
-              <Input label="Region" placeholder="All regions" />
+              <Input label="Market" />
+              <Input label="Region" />
             </div>
           </Sheet.Content>
         </Sheet>
@@ -307,8 +307,8 @@ export function NotificationPreferencesPage() {
           }
         >
           <div className="flex flex-col gap-4 pb-4">
-            <Input label="Market" placeholder="All markets" />
-            <Input label="Region" placeholder="All regions" />
+            <Input label="Market" />
+            <Input label="Region" />
           </div>
         </Sheet.Content>
       </Sheet>

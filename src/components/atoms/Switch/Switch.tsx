@@ -9,7 +9,7 @@ import { Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 import { cn } from "../../../lib/cn";
 import { motionTransitionProp } from "../../../lib/motion";
-import { InputStatusBanner } from "../inputShared/InputStatusBanner";
+import { InputStatusBanner, warnStatusWithoutMessage } from "../inputShared/InputStatusBanner";
 import {
   switchDescriptionClasses,
   switchDescriptionRowClasses,
@@ -91,6 +91,7 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
   },
   ref,
 ) {
+  warnStatusWithoutMessage("Switch", status, message);
   const generatedId = useId();
   const controlId = idProp ?? generatedId;
   assertSwitchPattern({ status, message });

@@ -96,8 +96,8 @@ export const BottomSheet: Story = {
             }
           >
             <div className="flex flex-col gap-4 pb-4">
-              <Input label="Minimum occupancy %" placeholder="80" />
-              <Input label="Market" placeholder="All markets" />
+              <Input label="Minimum occupancy %" />
+              <Input label="Market" />
             </div>
           </Sheet.Content>
         </Sheet>
@@ -133,8 +133,8 @@ export function FilterSheet() {
           }
         >
           <div className="flex flex-col gap-4 pb-4">
-            <Input label="Minimum occupancy %" placeholder="80" />
-            <Input label="Market" placeholder="All markets" />
+            <Input label="Minimum occupancy %" />
+            <Input label="Market" />
           </div>
         </Sheet.Content>
       </Sheet>
@@ -246,7 +246,6 @@ export const BottomSheetScroll: Story = {
                 <Input
                   key={index}
                   label={`Filter ${index + 1}`}
-                  placeholder={`Value ${index + 1}`}
                 />
               ))}
             </div>
@@ -502,7 +501,7 @@ export const SideSheetLongScroll: Story = {
           >
             <div className="flex flex-col gap-3 pb-4">
               {Array.from({ length: 24 }, (_, index) => (
-                <Input key={index} label={`Reviewer note ${index + 1}`} placeholder="Add a note" />
+                <Input key={index} label={`Reviewer note ${index + 1}`} />
               ))}
             </div>
           </Sheet.Content>
@@ -649,7 +648,7 @@ export const SideSheetMobile: Story = {
         >
           <div className="flex flex-col gap-3 pb-4">
             {Array.from({ length: 16 }, (_, index) => (
-              <Input key={index} label={`Reviewer note ${index + 1}`} placeholder="Add a note" />
+              <Input key={index} label={`Reviewer note ${index + 1}`} />
             ))}
           </div>
         </Sheet.Content>
