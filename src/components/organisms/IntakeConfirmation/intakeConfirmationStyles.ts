@@ -38,8 +38,9 @@ export const intakeConfirmationCopy: Record<
   },
 };
 
+/** Left on phones, where the next-step sentence with an email runs 3 lines; centred from md (Headings H8). */
 export const intakeConfirmationClasses = cn(
-  "flex w-full max-w-3xl flex-col items-center gap-8 text-center",
+  "flex w-full max-w-3xl flex-col items-start gap-8 text-left md:items-center md:text-center",
 );
 
 /** Existing display-2 — the confirmation headline, larger than the step titles. */
@@ -54,4 +55,4 @@ export const intakeConfirmationMetaClasses = "type-body text-balance text-muted"
 
 /** Optional booking actions — **TextLink** / **Button** stack, same center column. */
 export const intakeConfirmationActionsClasses =
-  "flex w-full max-w-md flex-col items-center gap-3";
+  "flex w-full max-w-md flex-col items-start gap-3 md:items-center";
