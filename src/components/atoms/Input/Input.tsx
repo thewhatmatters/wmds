@@ -156,7 +156,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const showTrailingStatusIcon = !hasMessage && (loading || status != null);
   const showLeadingIcon = icon != null;
   const trailingPadding = resolveTrailingPadding(size, hasEndBadge, showTrailingStatusIcon);
-  const descriptionId = description != null && !hasMessage ? `${controlId}-description` : undefined;
+  // Labels and placeholders F8: the hint sits between the label and the field and stays when a message shows.
+  const descriptionId = description != null ? `${controlId}-description` : undefined;
   const messageId = hasMessage ? `${controlId}-message` : undefined;
   const describedBy =
     [ariaDescribedBy, descriptionId, messageId].filter(Boolean).join(" ") || undefined;
@@ -205,12 +206,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
                       inputSizeClasses[size],
                       showLeadingIcon && inputIconGapClasses[size],
                       trailingPadding,
-                      status != null
+                      // Errors and validation V8: a status-only success is the tick alone, on the plain shell.
+                      status != null && status !== "success"
                         ? cn("border", inputStatusShellClasses[status])
                         : inputShellClasses[size],
                       inputSoloRadiusClasses[size],
                       inputSoloFocusRingBaseClasses,
-                      status != null
+                      status != null && status !== "success"
                         ? inputSoloFocusRingColorClasses[status]
                         : inputSoloFocusRingColorClasses.default,
                       className,
@@ -290,12 +292,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           {label}
         </label>
       ) : null}
-      {control}
       {descriptionId != null ? (
         <p id={descriptionId} className={typographyClass("caption")}>
           {description}
         </p>
       ) : null}
+      {control}
     </div>
   );
 });

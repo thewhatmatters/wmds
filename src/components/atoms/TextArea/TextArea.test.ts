@@ -18,10 +18,11 @@ describe("TextArea accessible description", () => {
     expect(markup).toContain('<p id="notes-description"');
   });
 
-  it("points aria-describedby at the validation message instead of the description", () => {
+  it("keeps the hint above the field and adds the validation message (Labels F8)", () => {
     const markup = html({ id: "notes", label: "Notes", description: "Hint", status: "error", message: "Too short" });
-    expect(idsOf(markup, "aria-describedby")).toEqual(["notes-message"]);
+    expect(idsOf(markup, "aria-describedby")).toEqual(["notes-description", "notes-message"]);
     expect(markup).toContain('id="notes-message"');
+    expect(markup.indexOf('id="notes-description"')).toBeLessThan(markup.indexOf("<textarea"));
   });
 
   it("keeps a caller aria-describedby and adds the description", () => {

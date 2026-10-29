@@ -5,5 +5,5 @@
 import { Field, Input } from "@thewhatmatters/wmds";
 
 <Field label="ZIP code" description="5-digit US ZIP." orientation="horizontal">
-  <Input placeholder="97201" aria-label="ZIP code" />
+  <Input aria-label="ZIP code" />
 </Field>

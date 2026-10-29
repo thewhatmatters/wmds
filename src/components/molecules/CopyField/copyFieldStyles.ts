@@ -30,7 +30,8 @@ export const copyFieldValueClasses = "h-9 min-h-9 w-full min-w-0 flex-1 truncate
  * Trailing seat — PromptBar's send control. `shrink-0` holds the button's width.
  * The shell owns the focus ring, so the button drops its own.
  */
-export const copyFieldButtonClasses = cn(promptBarSendClasses, "shrink-0");
+// The status button clips its morph with overflow-hidden, which would also clip the touch layer.
+export const copyFieldButtonClasses = cn(promptBarSendClasses, "shrink-0 pointer-coarse:overflow-visible");
 
 /**
  * Blocked-clipboard hint. Supporting type, color inherited (same reason as the label).

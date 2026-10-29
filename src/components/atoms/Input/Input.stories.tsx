@@ -33,7 +33,6 @@ const meta = {
     size: { control: false },
   },
   args: {
-    placeholder: "Enter text",
     size: "md",
     disabled: false,
     loading: false,
@@ -49,8 +48,8 @@ const meta = {
 
 | Pattern | Props |
 |---------|--------|
-| **Bare** | \`placeholder\` + \`aria-label\` — Find pill, toolbar search |
-| **With label** | \`label\`, optional \`description\` |
+| **With label** | \`label\`, optional \`description\` (the hint, above the field, kept with a status message) |
+| **Hidden label** | \`aria-label\` — only for a field alone with its button (search, a one-field newsletter) |
 | **Rich label** | \`label\` with inline markup (\`<strong>\`) — still the field's accessible name |
 | **Validation** | \`status\` + \`message\` — tinted status band (\`messagePosition\` top or bottom) |
 | **Status only** | \`status\` without \`message\` — border + trailing icon |
@@ -62,8 +61,8 @@ const meta = {
 
 - **Do** use \`status\` + \`message\` for validation feedback — not label asterisks.
 - **Do** mark required fields with \`endBadge={<Badge size="sm">Required</Badge>}\` + native \`required\`.
-- **Do** use bare \`Input\` when placeholder + context is enough (ZIP or search field).
-- **Do** set \`aria-label\` when \`label\` is omitted.
+- **Do** give every field a visible \`label\`. Hide it (\`aria-label\`) only when the field sits alone with its button.
+- **Do** put examples and formats in \`description\`, not a placeholder. Placeholders belong to search fields only.
 - **Don't** restyle the shell with \`className\` — hero search with inset button → **Search** molecule.
         `.trim(),
       },
@@ -77,7 +76,6 @@ type Story = StoryObj<typeof meta>;
 export const Bare: Story = {
   name: "Pattern — bare",
   args: {
-    placeholder: "ZIP or city",
     "aria-label": "Location",
   },
 };
@@ -87,7 +85,7 @@ export const WithLabel: Story = {
   args: {
     label: "Email",
     type: "email",
-    placeholder: "you@example.com",
+    autoComplete: "email",
     description: "We'll never share your email.",
   },
 };
@@ -100,7 +98,6 @@ export const RichLabel: Story = {
         Type <strong>@sarah-lee</strong> to confirm
       </>
     ),
-    placeholder: "@sarah-lee",
     autoComplete: "off",
   },
   parameters: {
@@ -120,6 +117,27 @@ export const ErrorMessage: Story = {
     defaultValue: "sarah@",
     status: "error",
     message: "Enter an email address like name@example.com.",
+  },
+};
+
+export const HintWithError: Story = {
+  name: "Pattern — hint with an error",
+  args: {
+    label: "Phone",
+    type: "tel",
+    autoComplete: "tel",
+    description: "Include the area code, like 512 555 0134.",
+    defaultValue: "555 0134",
+    status: "error",
+    message: "Enter a phone number with its area code.",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The hint sits between the label and the field and stays when a message shows, so the example is still there while someone fixes the error. Examples and formats go here, never in a placeholder.",
+      },
+    },
   },
 };
 
@@ -166,7 +184,6 @@ export const RequiredEndBadge: Story = {
   args: {
     label: "Email",
     type: "email",
-    placeholder: "you@example.com",
     required: true,
     endBadge: <Badge size="sm">Required</Badge>,
   },
@@ -198,7 +215,6 @@ export const Disabled: Story = {
   name: "Pattern — disabled",
   args: {
     label: "Disabled field",
-    placeholder: "Enter a value",
     disabled: true,
   },
 };

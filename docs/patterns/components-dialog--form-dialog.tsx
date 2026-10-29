@@ -31,8 +31,8 @@ export function InviteDialog() {
           }
         >
           <div className="flex flex-col gap-4 pb-2">
-            <Input label="Email address" placeholder="name@company.com" />
-            <Input label="Role" placeholder="Editor" />
+            <Input label="Email address" />
+            <Input label="Role" />
           </div>
         </Dialog.Content>
       </Dialog>

@@ -32,7 +32,6 @@ const meta = {
     size: { control: false },
   },
   args: {
-    placeholder: "Enter details…",
     size: "md",
     rows: 4,
     resize: "vertical",
@@ -50,8 +49,7 @@ const meta = {
 
 | Pattern | Props |
 |---------|--------|
-| **Bare** | \`placeholder\` + \`aria-label\` |
-| **With label** | \`label\`, optional \`description\` |
+| **With label** | \`label\`, optional \`description\` (the hint, above the field, kept with a status message) |
 | **Validation** | \`status\` + \`message\` — tinted status band (\`messagePosition\` top or bottom) |
 | **Status only** | \`status\` without \`message\` — border + top-trailing icon |
 | **Live status** | \`liveStatus\` — "Saving…" / "Saved" announced politely (\`role="status"\`, \`aria-live="polite"\`) |
@@ -85,7 +83,6 @@ type Story = StoryObj<typeof meta>;
 export const Bare: Story = {
   name: "Pattern — bare",
   args: {
-    placeholder: "Describe the issue…",
     "aria-label": "Issue description",
   },
 };
@@ -94,7 +91,6 @@ export const WithLabel: Story = {
   name: "Pattern — with label",
   args: {
     label: "Notes",
-    placeholder: "Add context for the team…",
     description: "Visible to admins on this market record.",
   },
 };
@@ -168,9 +164,9 @@ export const Sizes: Story = {
   },
   render: () => (
     <div className="flex w-full flex-col gap-6">
-      <TextArea size="sm" label="Small" placeholder="Short note…" rows={3} />
-      <TextArea size="md" label="Medium" placeholder="Default body copy…" rows={4} />
-      <TextArea size="lg" label="Large" placeholder="Longer form copy…" rows={4} />
+      <TextArea size="sm" label="Small" rows={3} />
+      <TextArea size="md" label="Medium" rows={4} />
+      <TextArea size="lg" label="Large" rows={4} />
     </div>
   ),
 };
@@ -179,7 +175,6 @@ export const ResizeNone: Story = {
   name: "Pattern — fixed height",
   args: {
     label: "Fixed height",
-    placeholder: "Resize disabled for dashboard tiles.",
     resize: "none",
     rows: 5,
   },

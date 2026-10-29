@@ -181,7 +181,6 @@ export function IntakeForm({
             type="url"
             inputMode="url"
             autoComplete="url"
-            placeholder="https://"
             value={values.url}
             status={urlError != null ? "error" : undefined}
             message={urlError}
@@ -199,7 +198,6 @@ export function IntakeForm({
           rows={5}
           maxLength={detailsMax}
           value={values.details}
-          placeholder="What should feel different when this work is done?"
           status={detailsError != null ? "error" : undefined}
           message={detailsError}
           onBlur={() => markTouched("details")}

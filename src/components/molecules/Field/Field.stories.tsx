@@ -79,14 +79,14 @@ export const HorizontalInput: Story = {
   name: "Pattern — horizontal input",
   render: (args) => (
     <Field {...args} label="ZIP code" description="5-digit US ZIP.">
-      <Input placeholder="97201" aria-label="ZIP code" />
+      <Input aria-label="ZIP code" />
     </Field>
   ),
   parameters: storyCopySource(`
 import { Field, Input } from "@thewhatmatters/wmds";
 
 <Field label="ZIP code" description="5-digit US ZIP." orientation="horizontal">
-  <Input placeholder="97201" aria-label="ZIP code" />
+  <Input aria-label="ZIP code" />
 </Field>
 `),
 };
@@ -99,14 +99,14 @@ export const HorizontalTextArea: Story = {
       description="Visible to admins only."
       orientation="horizontal"
     >
-      <TextArea placeholder="Add context…" aria-label="Notes" rows={3} />
+      <TextArea aria-label="Notes" rows={3} />
     </Field>
   ),
   parameters: storyCopySource(`
 import { Field, TextArea } from "@thewhatmatters/wmds";
 
 <Field label="Notes" description="Visible to admins only." orientation="horizontal">
-  <TextArea placeholder="Add context…" aria-label="Notes" rows={3} />
+  <TextArea aria-label="Notes" rows={3} />
 </Field>
 `),
 };
@@ -116,7 +116,7 @@ export const MultiControl: Story = {
   render: () => (
     <Field label="Location" description="City or ZIP — search updates the map.">
       <Search placeholder="ZIP or city" aria-label="Location" actionLabel="GO" />
-      <Input placeholder="Unit / suite (optional)" aria-label="Unit or suite" />
+      <Input aria-label="Unit or suite" />
     </Field>
   ),
   parameters: storyCopySource(`
@@ -124,7 +124,7 @@ import { Field, Input, Search } from "@thewhatmatters/wmds";
 
 <Field label="Location" description="City or ZIP — search updates the map.">
   <Search placeholder="ZIP or city" aria-label="Location" actionLabel="GO" />
-  <Input placeholder="Unit / suite (optional)" aria-label="Unit or suite" />
+  <Input aria-label="Unit or suite" />
 </Field>
 `),
 };
@@ -184,10 +184,9 @@ export const CompareVertical: Story = {
       <Input
         label="Email"
         description="We'll never share this."
-        placeholder="you@example.com"
       />
       <Field label="Email" description="We'll never share this.">
-        <Input placeholder="you@example.com" aria-label="Email" />
+        <Input aria-label="Email" />
       </Field>
     </div>
   ),
@@ -198,20 +197,20 @@ export const HorizontalForm: Story = {
   render: () => (
     <form className="flex flex-col gap-5">
       <Field label="First name" orientation="horizontal">
-        <Input placeholder="Jane" aria-label="First name" />
+        <Input aria-label="First name" />
       </Field>
       <Field label="Last name" orientation="horizontal">
-        <Input placeholder="Diaz" aria-label="Last name" />
+        <Input aria-label="Last name" />
       </Field>
       <Field label="Work email" orientation="horizontal">
-        <Input type="email" placeholder="you@company.com" aria-label="Work email" />
+        <Input type="email" aria-label="Work email" />
       </Field>
       <Field
         label="Location"
         description="ZIP or city for market lookup."
         orientation="horizontal"
       >
-        <Input placeholder="ZIP or city" aria-label="Location" icon={<MapPin strokeWidth={2} />} />
+        <Input aria-label="Location" icon={<MapPin strokeWidth={2} />} />
       </Field>
     </form>
   ),

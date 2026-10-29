@@ -30,8 +30,8 @@ export function FilterSheet() {
           }
         >
           <div className="flex flex-col gap-4 pb-4">
-            <Input label="Minimum occupancy %" placeholder="80" />
-            <Input label="Market" placeholder="All markets" />
+            <Input label="Minimum occupancy %" />
+            <Input label="Market" />
           </div>
         </Sheet.Content>
       </Sheet>

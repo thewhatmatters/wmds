@@ -245,7 +245,9 @@ describe("CopyField", () => {
     expect(view.field.className).toContain("min-w-0");
     expect(view.button.className).toContain("shrink-0");
     expect(view.field.className).not.toContain("absolute");
-    expect(view.button.className).not.toContain("absolute");
+    // Only its touch-target layer (after:) is absolute; the button itself sits in the flex row.
+    expect(view.button.className.split(" ")).not.toContain("absolute");
+    expect(view.button.className).toContain("pointer-coarse:after:absolute");
     expect(view.field.value).toBe(longKey);
 
     const label = view.container.querySelector("label");

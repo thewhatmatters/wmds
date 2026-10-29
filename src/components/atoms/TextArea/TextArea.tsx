@@ -121,7 +121,8 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
 
   const hasMessage = message != null && message.length > 0 && status != null;
   const showTrailingStatusIcon = !hasMessage && (loading || status != null);
-  const descriptionId = description != null && !hasMessage ? `${controlId}-description` : undefined;
+  // Labels and placeholders F8: the hint sits between the label and the field and stays when a message shows.
+  const descriptionId = description != null ? `${controlId}-description` : undefined;
   const messageId = hasMessage ? `${controlId}-message` : undefined;
   const describedBy =
     [ariaDescribedBy, descriptionId, messageId].filter(Boolean).join(" ") || undefined;
@@ -183,7 +184,8 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
   );
 
   const soloShell = (
-    <div className={cn(textareaSoloShellClassesFor(size, status, resize), className)}>
+    // Errors and validation V8: a status-only success is the tick alone, on the plain shell.
+    <div className={cn(textareaSoloShellClassesFor(size, status === "success" ? undefined : status, resize), className)}>
       {fieldBody}
     </div>
   );
@@ -237,12 +239,12 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
           {label}
         </label>
       ) : null}
-      {control}
       {descriptionId != null ? (
         <p id={descriptionId} className={typographyClass("caption")}>
           {description}
         </p>
       ) : null}
+      {control}
       {liveStatus != null ? (
         <p role="status" aria-live="polite" id={`${controlId}-live-status`} className={typographyClass("caption")}>
           {liveStatus}

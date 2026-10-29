@@ -5,5 +5,5 @@
 import { Field, TextArea } from "@thewhatmatters/wmds";
 
 <Field label="Notes" description="Visible to admins only." orientation="horizontal">
-  <TextArea placeholder="Add context…" aria-label="Notes" rows={3} />
+  <TextArea aria-label="Notes" rows={3} />
 </Field>
