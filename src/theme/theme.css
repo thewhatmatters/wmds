@@ -193,9 +193,11 @@
 /**
  * Ruled footer field. Light and soft themes use `bg-body`.
  * Brand navy on the dark body is under 3:1, so the dark theme keeps the
- * light on-brand surface and brand ink.
+ * light on-brand surface, and its brand ink stays the deep navy (`--color-brand-surface`):
+ * the lifted dark brand is for dark grounds, not white.
  */
 [data-theme="dark"] .footer-reveal-ruled-field {
+  --color-brand: var(--color-brand-surface);
   background-color: var(--color-on-brand);
   color: var(--color-brand);
 }
