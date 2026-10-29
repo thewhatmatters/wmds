@@ -36,12 +36,14 @@ describe("colour tokens", () => {
     expect(contrastRatio(brand, token(DARK, "background-body"))).toBeGreaterThanOrEqual(3);
     expect(contrastRatio(brand, token(DARK, "background-surface"))).toBeGreaterThanOrEqual(3);
     expect(contrastRatio(token(DARK, "on-brand"), brand)).toBeGreaterThanOrEqual(4.5);
-    // Inverse bands keep the deep navy in dark.
-    expect(token(DARK, "brand-surface")).toBe("#011272");
+    // Inverse bands keep the deep navy in dark: the surface is set once on :root, not per theme,
+    // so a client's own --color-brand-surface still wins inside an inverse band (it carries data-theme="dark").
+    expect(token(LIGHT, "brand-surface")).toBe("#011272");
+    expect(block(colors, DARK)).not.toContain("--color-brand-surface:");
   });
 
-  it("inverts the primary on band tones, so a primary Button never matches its band", () => {
-    const tones = block(colors, '[data-tone="inverse"],\n[data-tone="field"] {');
+  it("inverts the primary on a field band, so a primary Button never matches the band", () => {
+    const tones = block(colors, '[data-tone="field"] {');
     expect(tones).toContain("--color-primary: var(--tone-fg);");
     expect(tones).toContain("--color-on-primary: var(--tone-bg);");
     expect(tones).toMatch(/--color-primary-hover: color-mix\([^;]*var\(--tone-fg\)/);

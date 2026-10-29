@@ -12,11 +12,12 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 **Colour fixes from building every component in light and dark: fills that vanished, the navy on the dark body, invalid hovers, and a primary Button on a band.**
 
 - **`--color-accent-muted`** (and `--color-secondary`, which reads it): `#ebebeb` light (was the body's `#f8f8f8`), `#363636` dark (was the surface's `#262626`). The selected NavList pill, empty StepProgress segments, secondary Badges and Buttons, the AppShell avatar, Chips, and the Dropdown and Select item hover now show on the body and the surface.
-- **`--color-brand` in dark** is `#5566e0`, the navy's hue lifted (was `#011272`, 1.09:1 on the dark body): 3.58:1 on the body, 3.14:1 on the surface, white on it 4.81:1. The PromptBar send button, the selected SelectableCard border, the filled StepProgress segment, FooterReveal, TextSequence and TextSequenceShape marks now read in dark. **`--color-brand-surface` stays `#011272` in dark**, so `tone="inverse"` bands keep the deep navy.
+- **`--color-brand` in dark** is `#5566e0`, the navy's hue lifted (was `#011272`, 1.09:1 on the dark body): 3.58:1 on the body, 3.14:1 on the surface, white on it 4.81:1. The PromptBar send button, the selected SelectableCard border, the filled StepProgress segment, FooterReveal, TextSequence and TextSequenceShape marks now read in dark. **`--color-brand-surface` defaults to `#011272` itself** (it was `var(--color-brand)`), so `tone="inverse"` bands keep the deep navy in dark, and a client's own brand surface still wins.
 - **Dark status hovers:** `--color-{error,success,warning,info}-hover` mixed `108%` with white, which is invalid, so the browser dropped them. They're `88%` with white now, the same lift as the primary.
-- **Primary on band tones:** inside `tone="field"` and `tone="inverse"`, `--color-primary` inverts to the band's ink with the band colour as its label (Randy, 2026-10-29). A primary Button on a field band was the band's own colour, and the slate primary on the navy was 1.69:1.
+- **Primary on a field band:** inside `tone="field"`, `--color-primary` inverts to the field's ink with the field colour as its label (Randy, 2026-10-29). A primary Button on a field band was the band's own colour, since the field defaults to the primary. Inverse bands are unchanged (they take the dark, or the client's dark, primary).
 - **Type scale metadata:** `astryxTypeScale` lists display line heights 1.05 / 1.1 / 1.15, matching typography.css (it said 1.15 / 1.2 / 1.24).
-- Tests: no `color-mix` above 100%; the secondary fill separates from body and surface in both themes; the dark brand's contrast; the band primary inversion; the type metadata matches the CSS.
+- **FooterReveal.Ruled** in dark keeps the deep navy ink on its white field.
+- Tests: no `color-mix` above 100%; the secondary fill separates from body and surface in both themes; the dark brand's contrast; the field primary inversion; the type metadata matches the CSS.
 
 ### Consumer actions
 
