@@ -122,6 +122,12 @@ interface CarouselBaseProps {
    */
   autoplay?: boolean | { speed?: number };
   /**
+   * Repeat the items seamlessly: a copy follows the last one, and the row wraps back to the start as it passes
+   * one full set, so it never ends. With `autoplay` it drifts one way only. The scrubber and counter are
+   * hidden (a loop has no end to measure against). Needs enough items to fill the row at least once.
+   */
+  loop?: boolean;
+  /**
    * A badge that follows a mouse pointer over the row, e.g. a hand icon, to say "drag me". Decorative and
    * hidden from assistive tech; only on devices with a fine pointer that can hover.
    */
@@ -141,6 +147,8 @@ export interface CarouselItemProps {
 
 interface CarouselItemContextValue {
   label: string;
+  /** A `loop` copy: hidden from assistive tech and out of the tab order; the originals carry the content. */
+  clone?: boolean;
 }
 
 const CarouselItemContext = createContext<CarouselItemContextValue | null>(null);
@@ -159,6 +167,8 @@ interface CarouselMetrics {
   offsets: number[];
   /** `1` left to right, `-1` right to left. */
   direction: 1 | -1;
+  /** `loop`: the width of one set of items, where the copy starts. `0` without `loop`. */
+  loopWidth: number;
 }
 
 interface CarouselDragState {
@@ -228,6 +238,7 @@ function CarouselRoot({
   activeIndex,
   labels,
   autoplay = false,
+  loop = false,
   cursor,
   children,
   className,
@@ -239,7 +250,7 @@ function CarouselRoot({
   const trackRef = useRef<HTMLDivElement>(null);
   const progressTrackRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
-  const metrics = useRef<CarouselMetrics>({ max: 0, points: [0], offsets: [], direction: 1 });
+  const metrics = useRef<CarouselMetrics>({ max: 0, points: [0], offsets: [], direction: 1, loopWidth: 0 });
   const animation = useRef<ReturnType<typeof animate> | null>(null);
   /** Where an animated move is heading — a second key press steps on from there. */
   const target = useRef<number | null>(null);
@@ -401,7 +412,8 @@ function CarouselRoot({
     const view = viewport.clientWidth;
     const content = viewport.scrollWidth;
     const max = carouselMaxScroll(view, content);
-    const items = Array.from(track.querySelectorAll<HTMLElement>(":scope > [data-carousel-item]"));
+    const items = Array.from(track.querySelectorAll<HTMLElement>(":scope > [data-carousel-item]:not([data-carousel-clone])"));
+    const firstClone = track.querySelector<HTMLElement>(":scope > [data-carousel-clone]");
     const first = items[0]?.getBoundingClientRect();
     const offsets =
       first == null
@@ -410,7 +422,13 @@ function CarouselRoot({
             const rect = item.getBoundingClientRect();
             return direction === 1 ? rect.left - first.left : first.right - rect.right;
           });
-    metrics.current = { max, direction, points: carouselSnapPoints(offsets, max), offsets };
+    const loopWidth =
+      firstClone == null || first == null
+        ? 0
+        : direction === 1
+          ? firstClone.getBoundingClientRect().left - first.left
+          : first.right - firstClone.getBoundingClientRect().right;
+    metrics.current = { max, direction, points: carouselSnapPoints(offsets, max), offsets, loopWidth };
 
     const progressTrack = progressTrackRef.current;
     if (progressTrack) {
@@ -478,7 +496,10 @@ function CarouselRoot({
         // The visitor scrolled the row since the last frame: carry on from where they left it.
         if (Math.abs(readPosition() - position) > 2) position = readPosition();
         position += heading * driftSpeed * seconds;
-        if (position >= max) {
+        const { loopWidth } = metrics.current;
+        if (loop && loopWidth > 0) {
+          if (position >= loopWidth) position -= loopWidth;
+        } else if (position >= max) {
           position = max;
           heading = -1;
         } else if (position <= 0) {
@@ -498,7 +519,20 @@ function CarouselRoot({
     };
     // setMoving reads only refs.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [drifting, driftSpeed, readPosition, writePosition]);
+  }, [drifting, driftSpeed, loop, readPosition, writePosition]);
+
+  /** `loop`: past one full set, step back by a set, invisibly (the copy looks the same). Not mid-drag or mid-glide. */
+  function handleScroll() {
+    const { loopWidth } = metrics.current;
+    if (loop && loopWidth > 0 && drag.current == null && scrub.current == null && animation.current == null) {
+      const position = readPosition();
+      if (position >= loopWidth) {
+        writePosition(position - loopWidth);
+        return;
+      }
+    }
+    syncProgress();
+  }
 
   function handleRootPointerEnter(event: PointerEvent<HTMLDivElement>) {
     if (event.pointerType === "mouse") hold.current.hover = true;
@@ -576,6 +610,8 @@ function CarouselRoot({
       // Capture only once it is a drag: capturing on press would take the click from a link inside an item.
       capturePointer(event.currentTarget, event.pointerId);
       event.currentTarget.dataset.dragging = "";
+      // The press may have started a text selection inside an item; a drag isn't a selection.
+      window.getSelection()?.removeAllRanges();
       setMoving(true);
     }
     drive.set(state.startPosition - metrics.current.direction * (event.clientX - state.startX));
@@ -700,6 +736,9 @@ function CarouselRoot({
   const overflowState = overflowing == null ? undefined : String(overflowing);
   /** The Pause / Play button: only while the row could drift (motion allowed, something to scroll). */
   const showDriftControl = driftSpeed > 0 && !reduce && overflowing === true;
+  /** A loop has no end, so no scrubber and no counter. */
+  const progressShown: CarouselProgressPlacement = loop ? "none" : progress;
+  const counterShown = counter && !loop;
 
   return (
     <div
@@ -729,7 +768,7 @@ function CarouselRoot({
             fade && carouselViewportFadeClasses,
           )}
           style={{ "--scroll-fade-s": "0px" } as CSSProperties}
-          onScroll={syncProgress}
+          onScroll={handleScroll}
           onKeyDown={handleKeyDown}
           onPointerDown={handlePointerDown}
           onPointerMove={(event) => {
@@ -755,13 +794,20 @@ function CarouselRoot({
                   {child}
                 </CarouselItemSlot>
               ))}
+              {loop
+                ? items.map((child, index) => (
+                    <CarouselItemSlot key={`loop-${index}`} label={itemLabel(index + 1, items.length)} clone>
+                      {child}
+                    </CarouselItemSlot>
+                  ))
+                : null}
             </motion.div>
           </div>
         </div>
       </div>
-      {progress !== "none" || showDriftControl ? (
-        <div className={showDriftControl ? carouselControlsClasses[progress] : "contents"}>
-      {progress !== "none" ? (
+      {progressShown !== "none" || showDriftControl ? (
+        <div className={showDriftControl ? carouselControlsClasses[progressShown] : "contents"}>
+      {progressShown !== "none" ? (
         // Hidden from assistive tech and not a tab stop: the row takes the same keys, and a
         // second control for one position would say everything twice.
         <div
@@ -770,7 +816,7 @@ function CarouselRoot({
           data-overflowing={overflowState}
           className={cn(
             carouselProgressClasses,
-            showDriftControl ? carouselProgressInControlsClasses[progress] : carouselProgressPlacementClasses[progress],
+            showDriftControl ? carouselProgressInControlsClasses[progressShown] : carouselProgressPlacementClasses[progressShown],
           )}
           onPointerDown={handleProgressPointerDown}
           onPointerMove={handleProgressPointerMove}
@@ -799,7 +845,7 @@ function CarouselRoot({
           {cursor}
         </div>
       ) : null}
-      {counter ? (
+      {counterShown ? (
         // Always in the tree so a screen reader catches the change; the row's items already say
         // their place, so this is the one spoken update while the visitor moves.
         <p
@@ -819,15 +865,23 @@ function CarouselRoot({
 /** px a second: slow enough to read a quote as it passes. */
 const defaultDriftSpeed = 24;
 
-function CarouselItemSlot({ label, children }: { label: string; children: ReactNode }) {
-  const value = useMemo(() => ({ label }), [label]);
+function CarouselItemSlot({ label, clone = false, children }: { label: string; clone?: boolean; children: ReactNode }) {
+  const value = useMemo(() => ({ label, clone }), [label, clone]);
   return <CarouselItemContext.Provider value={value}>{children}</CarouselItemContext.Provider>;
 }
 
 function CarouselItem({ children, className }: CarouselItemProps) {
   const context = useContext(CarouselItemContext);
   return (
-    <div role="group" aria-label={context?.label} data-carousel-item="" className={cn(carouselItemClasses, className)}>
+    <div
+      role={context?.clone ? undefined : "group"}
+      aria-label={context?.clone ? undefined : context?.label}
+      aria-hidden={context?.clone ? true : undefined}
+      inert={context?.clone ? true : undefined}
+      data-carousel-item=""
+      data-carousel-clone={context?.clone ? "" : undefined}
+      className={cn(carouselItemClasses, className)}
+    >
       {children}
     </div>
   );

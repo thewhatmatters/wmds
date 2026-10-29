@@ -112,8 +112,9 @@ export const carouselControlsClasses: Record<CarouselProgressPlacement, string> 
 
 /** The scrubber's width inside the controls row. */
 export const carouselProgressInControlsClasses: Record<Exclude<CarouselProgressPlacement, "none">, string> = {
-  center: "w-48 md:w-60",
-  start: "w-48 md:w-60",
+  // Important: the scrubber's own `w-full` comes later in the sheet and would collapse it in the row.
+  center: "!w-48 md:!w-60",
+  start: "!w-48 md:!w-60",
   full: "min-w-0 flex-1",
 };
 

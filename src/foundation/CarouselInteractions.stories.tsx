@@ -504,3 +504,44 @@ export const AutoplayReducedMotion: Story = {
     await expect(canvas.queryByRole("button", { name: "Pause" })).toBeNull();
   },
 };
+
+export const AutoplayLoop: Story = {
+  name: "loop repeats the items seamlessly and wraps back",
+  render: () => (
+    <MotionConfig reducedMotion="never">
+      <div className="w-[56rem]">
+        <Carousel aria-label="Client quotes" itemWidth={40} autoplay={{ speed: 900 }} loop>
+          {tiles.map((tile) => (
+            <Carousel.Item key={tile.id}>
+              <img className="aspect-[4/3] w-full object-cover" src={tile.src} alt={tile.alt} />
+            </Carousel.Item>
+          ))}
+        </Carousel>
+      </div>
+    </MotionConfig>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const row = canvas.getByRole("region", { name: "Client quotes" });
+    // The copy is hidden from assistive tech and out of the tab order; only the originals are named items.
+    const clones = canvasElement.querySelectorAll("[data-carousel-clone]");
+    await expect(clones).toHaveLength(tiles.length);
+    for (const clone of clones) {
+      await expect(clone.getAttribute("aria-hidden")).toBe("true");
+      await expect(clone.hasAttribute("inert")).toBe(true);
+    }
+    await expect(canvas.getAllByRole("group")).toHaveLength(tiles.length);
+    // A loop has no end: no scrubber.
+    await expect(canvasElement.querySelector("[data-carousel-progress]")).toBeNull();
+    // It drifts one way and wraps back past one set: the position drops at least once.
+    let wrapped = false;
+    let last = row.scrollLeft;
+    const start = performance.now();
+    while (!wrapped && performance.now() - start < 5000) {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      if (row.scrollLeft < last - 50) wrapped = true;
+      last = row.scrollLeft;
+    }
+    await expect(wrapped).toBe(true);
+  },
+};
