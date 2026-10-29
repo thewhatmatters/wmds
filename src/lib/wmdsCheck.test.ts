@@ -227,4 +227,38 @@ export function ServicesCard({ onPick }: { onPick: (value: string) => void }) {
       expect(result.findings).toEqual([]);
     });
   });
+
+  describe("status-without-message", () => {
+    it("fails an error or warning status with no message, across lines", () => {
+      const result = check({
+        "form.tsx": `import { Input } from "@thewhatmatters/wmds";
+export function Form() {
+  return (
+    <Input
+      label="Email"
+      status="error"
+      onChange={(event) => console.log(event.target.value)}
+    />
+  );
+}`,
+      });
+      expect(result.rules).toEqual(["status-without-message"]);
+      expect(result.findings[0]).toMatchObject({ line: 6, severity: "error" });
+    });
+
+    it("passes a status with a message, and a status-only success tick", () => {
+      const result = check({
+        "form.tsx": `import { Input } from "@thewhatmatters/wmds";
+export function Form() {
+  return (
+    <>
+      <Input label="Email" status="error" message="Enter an email address, like name@example.com" />
+      <Input label="Website" status="success" />
+    </>
+  );
+}`,
+      });
+      expect(result.findings).toEqual([]);
+    });
+  });
 });

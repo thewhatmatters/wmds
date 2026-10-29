@@ -1,7 +1,7 @@
 import { forwardRef, useId, type TextareaHTMLAttributes } from "react";
 import { cn } from "../../../lib/cn";
 import { typographyClass } from "../../../lib/typography";
-import { InputStatusBanner } from "../inputShared/InputStatusBanner";
+import { InputStatusBanner, warnStatusWithoutMessage } from "../inputShared/InputStatusBanner";
 import { InputTrailingAffordance } from "../inputShared/InputTrailingAffordance";
 import {
   inputAttachedFieldClasses,
@@ -113,6 +113,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
   },
   ref,
 ) {
+  warnStatusWithoutMessage("TextArea", status, message);
   const generatedId = useId();
   const controlId = idProp ?? generatedId;
   assertTextAreaA11y({ label, "aria-label": rest["aria-label"], "aria-labelledby": rest["aria-labelledby"] });

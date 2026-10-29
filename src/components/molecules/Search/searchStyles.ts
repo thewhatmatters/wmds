@@ -17,8 +17,8 @@ export const searchShellClasses: Record<SearchSize, string> = {
 
 /** Inline input track — shorter than solo Input md so the inset button can breathe. */
 export const searchInlineInputClasses: Record<SearchSize, string> = {
-  sm: "h-7 min-h-0 px-2.5 text-xs leading-none",
-  md: "h-8 min-h-0 pl-4 pr-1 text-sm leading-none",
+  sm: "h-7 min-h-0 px-2.5 text-xs pointer-coarse:text-base leading-none",
+  md: "h-8 min-h-0 pl-4 pr-1 text-sm pointer-coarse:text-base leading-none",
 };
 
 /** Lock inset action height to the inner track — not the full 44px shell. */

@@ -35,7 +35,7 @@ export const promptBarEndSlotClasses = "flex shrink-0 items-end gap-2";
  * Grows with the text, stops at three lines (`max-h`), then scrolls.
  */
 export const promptBarFieldClasses =
-  "min-h-9 min-w-0 flex-1 overflow-y-auto py-2 type-body [field-sizing:content] " +
+  "min-h-9 min-w-0 flex-1 overflow-y-auto py-2 type-body pointer-coarse:text-base [field-sizing:content] " +
   "max-h-[4.75rem]";
 
 /**

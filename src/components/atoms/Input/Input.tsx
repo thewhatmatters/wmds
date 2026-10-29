@@ -7,7 +7,7 @@ import {
 } from "react";
 import { cn } from "../../../lib/cn";
 import { typographyClass } from "../../../lib/typography";
-import { InputStatusBanner } from "../inputShared/InputStatusBanner";
+import { InputStatusBanner, warnStatusWithoutMessage } from "../inputShared/InputStatusBanner";
 import { InputTrailingAffordance } from "../inputShared/InputTrailingAffordance";
 import {
   inputAttachedFieldClasses,
@@ -145,6 +145,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   },
   ref,
 ) {
+  warnStatusWithoutMessage("Input", status, message);
   const generatedId = useId();
   const controlId = idProp ?? generatedId;
   assertInputA11y({ label, "aria-label": rest["aria-label"], "aria-labelledby": rest["aria-labelledby"] });
@@ -250,24 +251,30 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       />
     ) : null;
 
-  const control =
-    hasMessage && status != null ? (
-      <div className={inputCompoundShellClassesFor(size, status)}>
-        {messagePosition === "top" ? statusBanner : null}
-        <div className={inputCompoundInnerFieldClassesFor(size, status, messagePosition)}>
-          {inputRow}
-        </div>
-        {messagePosition === "bottom" ? statusBanner : null}
-      </div>
-    ) : (
+  // One tree whether or not a message shows (top slot, field, bottom slot), so React keeps the same
+  // <input> when a status appears: what people typed and the focus survive (Errors and validation V4).
+  const withMessage = hasMessage && status != null;
+  const control = (
+    <div
+      className={
+        withMessage
+          ? inputCompoundShellClassesFor(size, status)
+          : cn(inline ? "relative flex min-w-0 flex-1 items-center" : inputControlStackClasses)
+      }
+    >
+      {withMessage && messagePosition === "top" ? statusBanner : null}
       <div
-        className={cn(
-          inline ? "relative flex min-w-0 flex-1 items-center" : inputControlStackClasses,
-        )}
+        className={
+          withMessage
+            ? inputCompoundInnerFieldClassesFor(size, status, messagePosition)
+            : "relative flex w-full items-center"
+        }
       >
-        <div className="relative flex w-full items-center">{inputRow}</div>
+        {inputRow}
       </div>
-    );
+      {withMessage && messagePosition === "bottom" ? statusBanner : null}
+    </div>
+  );
 
   if (inline || (label == null && description == null)) {
     return control;

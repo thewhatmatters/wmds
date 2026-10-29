@@ -7,6 +7,21 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.32
+
+**Errors and validation: an error summary, errors announced as errors, no lost typing, and no iOS zoom.**
+
+- **ErrorSummary** (new): "There's a problem" at the top of a form after a failed submit, one link per error in the field's own words. It takes focus when it appears, and each link moves focus to its field (V5). Story **Components/ErrorSummary → Pattern — form with an error summary**; interaction test **Internal/Interactions/ErrorSummary**.
+- **Input, TextArea, Checkbox, Radio, Switch, CheckboxGroup, RadioGroup**: the status band reads a visually hidden "Error:" or "Warning:" before the message, so screen readers hear what kind of message it is (V6).
+- **Status without a message** (V10): those components warn in the console when `status="error"` or `"warning"` has no `message`. **wmds-check** `status-without-message` (new, error) catches it in app code. A status-only success tick is fine.
+- **Input** keeps the same `<input>` when a status appears. It used to swap its wrapper and remount the field, which dropped focus and, in an uncontrolled field, **what people had typed** (V4).
+- **No iOS zoom:** Input, TextArea and Search (`sm` and `md`) and PromptBar set 16px text on touch screens (`pointer: coarse`), so Safari doesn't zoom the page when a field gets focus. Fine pointers keep 12px / 14px.
+- Unit test: every status band's message clears 4.5:1 on its band in light and dark (V7: 4.62–6.97:1 measured).
+
+### Consumer actions
+
+None required. Fix any `status="error"` / `"warning"` without a `message` that `npx wmds-check` reports; say what's wrong and how to fix it. After a failed submit, add **ErrorSummary** at the top of the form (copy the Pattern). On phones and tablets, field text is now 16px.
+
 ## 0.4.31
 
 **SiteNav's phone menu follows the Header rule: a "Menu" button that becomes "Close", a full-height panel under the bar, and a link tap closes it.**

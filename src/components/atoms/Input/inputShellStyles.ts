@@ -60,8 +60,8 @@ export const inputCompoundInnerFocusRingClasses = inputCompoundShellFocusRingCla
 export const inputCompoundFocusRingClasses = inputCompoundShellFocusRingClasses;
 
 export const inputSizeClasses: Record<InputSize, string> = {
-  sm: "h-8 px-2.5 text-xs leading-none",
-  md: "h-11 px-3 text-sm leading-none",
+  sm: "h-8 px-2.5 text-xs pointer-coarse:text-base leading-none",
+  md: "h-11 px-3 text-sm pointer-coarse:text-base leading-none",
   lg: "min-h-12 px-4 text-base leading-none",
 };
 

@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.31",
+  "version": "0.4.32",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -513,6 +513,14 @@
       "file": "patterns/components-displaycontrols--theme-switch.tsx",
       "storybook": "?path=/story/components-displaycontrols--theme-switch",
       "source": "src/components/molecules/DisplayControls/DisplayControls.stories.tsx"
+    },
+    {
+      "id": "components-errorsummary--contact-form",
+      "title": "Components/ErrorSummary",
+      "name": "Pattern — form with an error summary",
+      "file": "patterns/components-errorsummary--contact-form.tsx",
+      "storybook": "?path=/story/components-errorsummary--contact-form",
+      "source": "src/components/molecules/ErrorSummary/ErrorSummary.stories.tsx"
     },
     {
       "id": "components-field--horizontal-input",

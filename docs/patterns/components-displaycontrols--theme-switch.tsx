@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.31 · Pattern — theme switch
+// @thewhatmatters/wmds@0.4.32 · Pattern — theme switch
 // Storybook: Components/DisplayControls → Pattern — theme switch (?path=/story/components-displaycontrols--theme-switch)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

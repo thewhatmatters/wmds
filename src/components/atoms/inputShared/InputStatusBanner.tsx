@@ -21,6 +21,19 @@ function BannerIcon({ status }: { status: InputStatus }) {
   return <CheckCircle2 className={className} strokeWidth={strokeWidth} aria-hidden />;
 }
 
+/** Read before the message by screen readers (V6). Success has its tick and needs no prefix. */
+const statusPrefix: Record<InputStatus, string | null> = { error: "Error:", warning: "Warning:", success: null };
+
+/**
+ * Errors and validation V10: an error or a warning always says what's wrong. Warns in the console when a
+ * field has `status="error"` or `"warning"` and no `message`; a status-only success tick is fine.
+ */
+export function warnStatusWithoutMessage(component: string, status: InputStatus | undefined, message: unknown) {
+  if ((status === "error" || status === "warning") && (message == null || message === "")) {
+    console.warn(`[WMDS ${component}] \`status="${status}"\` needs a \`message\` that says what's wrong and how to fix it.`);
+  }
+}
+
 /** Tinted validation band — shared by **Input** and **TextArea** (ADR-0006). */
 export function InputStatusBanner({
   status,
@@ -51,7 +64,11 @@ export function InputStatusBanner({
       role={status === "error" ? "alert" : "status"}
     >
       <BannerIcon status={status} />
-      <span>{message}</span>
+      <span>
+        {/* Errors and validation V6: the message is announced with its kind, not by colour or icon alone. */}
+        {statusPrefix[status] != null ? <span className="sr-only">{statusPrefix[status]} </span> : null}
+        {message}
+      </span>
     </p>
   );
 }

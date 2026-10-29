@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.31 · Pattern — secondary action
+// @thewhatmatters/wmds@0.4.32 · Pattern — secondary action
 // Storybook: Components/Button/Button → Pattern — secondary action (?path=/story/components-button-button--secondary-action)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

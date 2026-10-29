@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.31",
+  "version": "0.4.32",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -349,6 +349,19 @@
         "docs": "?path=/docs/components-dropdown--docs"
       },
       "patterns": []
+    },
+    {
+      "name": "ErrorSummary",
+      "tier": "molecule",
+      "category": "Form controls",
+      "summary": "\"There's a problem\" at the top of a form after a failed submit: one link per error that focuses its field.",
+      "storybook": {
+        "title": "Components/ErrorSummary",
+        "docs": "?path=/docs/components-errorsummary--docs"
+      },
+      "patterns": [
+        "components-errorsummary--contact-form"
+      ]
     },
     {
       "name": "Field",
