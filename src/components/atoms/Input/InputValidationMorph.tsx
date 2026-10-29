@@ -110,7 +110,7 @@ export function InputValidationMorphDemo() {
                 >
                   <InputStatusBanner
                     status="error"
-                    message="Please enter a valid email address."
+                    message="Enter an email address like name@example.com."
                     messageId={messageId}
                     size="md"
                     messagePosition="bottom"

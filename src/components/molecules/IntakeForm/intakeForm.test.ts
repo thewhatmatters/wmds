@@ -111,7 +111,7 @@ describe("IntakeForm blur errors", () => {
       email.blur();
       email.dispatchEvent(new FocusEvent("blur", { bubbles: true }));
     });
-    expect(container.textContent).toContain("Please enter a valid email address.");
+    expect(container.textContent).toContain("Enter your email address.");
 
     act(() => {
       company.focus();
@@ -130,7 +130,7 @@ describe("IntakeForm blur errors", () => {
       link.focus();
       link.blur();
     });
-    expect(container.textContent).not.toContain("Please enter a valid URL.");
+    expect(container.textContent).not.toContain("Enter a website address like example.com.");
     expect(container.querySelector('input[aria-label="Link"]')?.getAttribute("aria-invalid")).toBeNull();
   });
 

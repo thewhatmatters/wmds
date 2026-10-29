@@ -138,7 +138,7 @@ export const WithValidation: Story = {
         defaultValue="not-an-email"
         aria-label="Email"
         status="error"
-        message="Enter a valid email address."
+        message="Enter an email address like name@example.com."
       />
     </Field>
   ),

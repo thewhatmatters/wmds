@@ -119,7 +119,7 @@ export const ErrorMessage: Story = {
     label: "Email",
     defaultValue: "sarah@",
     status: "error",
-    message: "Please enter a valid email address.",
+    message: "Enter an email address like name@example.com.",
   },
 };
 
@@ -180,7 +180,7 @@ export const EndBadgeWithError: Story = {
     required: true,
     endBadge: <Badge size="sm">Required</Badge>,
     status: "error",
-    message: "Please enter a valid email address.",
+    message: "Enter an email address like name@example.com.",
   },
 };
 

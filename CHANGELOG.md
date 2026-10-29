@@ -16,6 +16,7 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Status without a message** (V10): those components warn in the console when `status="error"` or `"warning"` has no `message`. **wmds-check** `status-without-message` (new, error) catches it in app code. A status-only success tick is fine.
 - **Input** keeps the same `<input>` when a status appears. It used to swap its wrapper and remount the field, which dropped focus and, in an uncontrolled field, **what people had typed** (V4).
 - **No iOS zoom:** Input, TextArea and Search (`sm` and `md`) and PromptBar set 16px text on touch screens (`pointer: coarse`), so Safari doesn't zoom the page when a field gets focus. Fine pointers keep 12px / 14px.
+- **IntakeForm** default messages follow V1: "Enter your email address." for an empty field, "Enter an email address like name@example.com." and "Enter a website address like example.com." for a broken rule (were "Please enter a valid email address." / "…URL.").
 - Unit test: every status band's message clears 4.5:1 on its band in light and dark (V7: 4.62–6.97:1 measured).
 
 ### Consumer actions
