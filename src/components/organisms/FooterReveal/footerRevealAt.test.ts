@@ -79,7 +79,8 @@ describe("footer reveal shell", () => {
   it("keeps white on brand navy well above AA", () => {
     const css = readFileSync(new URL("../../../theme/colors.css", import.meta.url), "utf8");
     const brands = [...css.matchAll(/--color-brand:\s*(#[0-9a-fA-F]{6})/g)].map((match) => match[1]);
-    expect(brands).toEqual(["#011272", "#011272"]);
+    // Light: the navy. Dark: the same hue lifted so marks and fills read on the dark body.
+    expect(brands).toEqual(["#011272", "#5566e0"]);
     const onBrand = css.match(/--color-on-brand:\s*(#[0-9a-fA-F]{6})/)?.[1];
     expect(onBrand).toBe("#ffffff");
     const ratio = contrastRatio(onBrand!, brands[0]!);
@@ -90,6 +91,9 @@ describe("footer reveal shell", () => {
     expect(contrastRatio(outline, "#262626")).toBeGreaterThan(4.5);
     expect(contrastRatio(outline, "#1b1b1b")).toBeGreaterThan(4.5);
     expect(contrastRatio("#011272", "#1b1b1b")).toBeLessThan(3);
+    expect(contrastRatio(onBrand!, brands[1]!)).toBeGreaterThan(4.5);
+    expect(contrastRatio(brands[1]!, "#1b1b1b")).toBeGreaterThan(3);
+    expect(contrastRatio(brands[1]!, "#262626")).toBeGreaterThan(3);
     const wordmark = mixHex("#ffffff", "#011272", 0.4);
     expect(contrastRatio(wordmark, "#011272")).toBeGreaterThan(2.5);
     expect(footerRevealSocialLinkClasses).toContain("type-heading-1");

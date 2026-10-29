@@ -44,7 +44,7 @@
 [data-theme="dark"] {
   --color-ghost-foreground: var(--color-text-primary);
 
-  /* Dark lifts toward white on hover (12%) — percentages above 100% are invalid color-mix */
+  /* Dark lifts toward white on hover (12%). color-mix percentages must stay within 0–100%. */
   --color-primary-hover: color-mix(in oklch, var(--color-primary) 88%, white);
   --color-primary-active: color-mix(in oklch, var(--color-primary) 92%, black);
 
@@ -54,16 +54,16 @@
   --color-ghost-hover: var(--color-overlay-hover);
   --color-ghost-active: var(--color-overlay-pressed);
 
-  --color-error-hover: color-mix(in oklch, var(--color-error) 108%, white);
+  --color-error-hover: color-mix(in oklch, var(--color-error) 88%, white);
   --color-error-active: color-mix(in oklch, var(--color-error) 88%, black);
 
-  --color-success-hover: color-mix(in oklch, var(--color-success) 108%, white);
+  --color-success-hover: color-mix(in oklch, var(--color-success) 88%, white);
   --color-success-active: color-mix(in oklch, var(--color-success) 88%, black);
 
-  --color-warning-hover: color-mix(in oklch, var(--color-warning) 108%, white);
+  --color-warning-hover: color-mix(in oklch, var(--color-warning) 88%, white);
   --color-warning-active: color-mix(in oklch, var(--color-warning) 88%, black);
 
-  --color-info-hover: color-mix(in oklch, var(--color-info) 108%, white);
+  --color-info-hover: color-mix(in oklch, var(--color-info) 88%, white);
   --color-info-active: color-mix(in oklch, var(--color-info) 88%, black);
 
   --color-on-brand-hover: color-mix(in srgb, var(--color-on-brand) 88%, var(--color-brand));

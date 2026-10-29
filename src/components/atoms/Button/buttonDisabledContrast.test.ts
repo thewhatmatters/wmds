@@ -15,11 +15,11 @@ const opacity = Number(styles.match(/aria-disabled:opacity-(\d+)/)?.[1]) / 100;
 const themes = {
   light: {
     page: "#f8f8f8",
-    roles: { primary: ["#fafafa", "#39485c"], secondary: ["#171717", "#f8f8f8"], ghost: ["#262626", null], destructive: ["#ffffff", "#a50c25"], inverse: ["#011272", "#ffffff"], outline: ["#171717", null] },
+    roles: { primary: ["#fafafa", "#39485c"], secondary: ["#171717", "#ebebeb"], ghost: ["#262626", null], destructive: ["#ffffff", "#a50c25"], inverse: ["#011272", "#ffffff"], outline: ["#171717", null] },
   },
   dark: {
     page: "#1b1b1b",
-    roles: { primary: ["#fafaf8", "#5a6d85"], secondary: ["#fafafa", "#262626"], ghost: ["#ebebeb", null], destructive: ["#171717", "#ffc6c1"], inverse: ["#011272", "#ffffff"], outline: ["#fafafa", null] },
+    roles: { primary: ["#fafaf8", "#5a6d85"], secondary: ["#fafafa", "#363636"], ghost: ["#ebebeb", null], destructive: ["#171717", "#ffc6c1"], inverse: ["#5566e0", "#ffffff"], outline: ["#fafafa", null] },
   },
   /** The inverse roles on the brand field (navy in both themes). */
   brandField: { page: "#011272", roles: { "inverse-outline": ["#ffffff", null] } },

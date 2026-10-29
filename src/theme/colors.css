@@ -28,7 +28,12 @@
 
   /* Accent (neutral UI chrome — not brand) */
   --color-accent: #262626;
-  --color-accent-muted: #f8f8f8;
+  /*
+   * `--color-secondary` (selected pills, empty progress segments, secondary badges, item hover).
+   * It must differ from both the body (#f8f8f8) and the surface (#fff), or those fills vanish:
+   * #ebebeb is 1.12:1 on the body and 1.19:1 on the surface.
+   */
+  --color-accent-muted: #ebebeb;
   --color-on-accent: #ffffff;
 
   /* Overlays & neutral fills */
@@ -189,7 +194,8 @@
   --color-text-accent: #ebebeb;
 
   --color-accent: #ebebeb;
-  --color-accent-muted: #262626;
+  /* Off the body (#1b1b1b, 1.43:1) and the surface (#262626, 1.26:1), so fills and item hover show on both. */
+  --color-accent-muted: #363636;
   --color-on-accent: #171717;
 
   --color-neutral: #ffffff1a;
@@ -226,16 +232,18 @@
   --color-on-primary: #fafaf8;
 
   /*
-   * The field stays #011272. That navy on #1b1b1b is 1.09:1 and on #262626 is 1.04:1,
-   * so it cannot be the hand outline. `--color-brand-outline` is 45% navy / 55% white
-   * (about #8d94c0): 5.1:1 on #262626 and 5.8:1 on #1b1b1b.
+   * #011272 on #1b1b1b is 1.09:1, so the dark brand is the same navy hue lifted to #5566e0:
+   * 3.58:1 on the body and 3.14:1 on the surface (marks, borders, fills), and white on it is 4.81:1
+   * (send button, selected pill). Inverse bands keep the deep navy: `--color-brand-surface` below.
    */
-  --color-brand: #011272;
+  --color-brand: #5566e0;
   --color-on-brand: #ffffff;
   --color-brand-outline: color-mix(in srgb, var(--color-brand) 45%, white);
   --color-brand-soft: color-mix(in srgb, var(--color-on-brand) 40%, var(--color-brand));
   /* The navy disappears on dark surfaces, so the tint lifts it: 28% of the outline mix (about #3d3f49 on #1b1b1b). */
   --color-brand-tint: color-mix(in srgb, var(--color-brand-outline) 28%, transparent);
+  /* A dark section stays dark: the lifted brand would pull the muted ink under 4.5:1. */
+  --color-brand-surface: #011272;
 
   /*
    * Derived from --color-primary: lift the brand toward white so the ring stays
@@ -367,6 +375,15 @@
   --color-secondary-active: var(--color-overlay-pressed);
   --color-ghost-hover: var(--color-overlay-hover);
   --color-ghost-active: var(--color-overlay-pressed);
+
+  /*
+   * The primary inverts on a band: the band's ink as the fill, the band colour as the label (Randy, 2026-10-29).
+   * The field defaults to the primary itself, and the slate primary on the navy is 1.69:1, so either would vanish.
+   */
+  --color-primary: var(--tone-fg);
+  --color-on-primary: var(--tone-bg);
+  --color-primary-hover: color-mix(in srgb, var(--tone-fg) 88%, var(--tone-bg));
+  --color-primary-active: color-mix(in srgb, var(--tone-fg) 80%, var(--tone-bg));
 
   --color-border: color-mix(in srgb, var(--tone-fg) 16%, transparent);
   --color-border-emphasized: color-mix(in srgb, var(--tone-fg) 32%, transparent);

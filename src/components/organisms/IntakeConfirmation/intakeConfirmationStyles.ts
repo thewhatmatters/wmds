@@ -1,7 +1,7 @@
 import { cn } from "../../../lib/cn";
 
 /**
- * Brand colors for the intake burst. `--color-brand` is #011272 in both themes.
+ * Brand colors for the intake burst. `--color-brand` is #011272 (light) and #5566e0 (dark).
  * Passed to the existing Confetti `colors` option — not a second palette token.
  */
 export const intakeConfettiColors = [
