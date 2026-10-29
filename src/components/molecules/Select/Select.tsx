@@ -9,6 +9,8 @@ import {
   selectDisabledLabelClasses,
   selectFieldStackClasses,
   selectLabelClasses,
+  selectNativeCaretClasses,
+  selectNativeClasses,
   selectRootClasses,
   selectShellClasses,
   selectShellDisabledClasses,
@@ -55,11 +57,18 @@ export interface SelectProps {
    */
   width?: FieldWidth;
   /**
-   * Form name. With `name` or `autoComplete`, Select keeps a hidden native `<select>` in step, so the value
-   * submits with a plain form and the browser can autofill it (e.g. `autoComplete="address-level1"`).
+   * The browser's own `<select>` in the WMDS shell (Dropdowns C8): the phone's picker, type-to-jump,
+   * autofill, and plain form submit. Default: on when `name` or `autoComplete` is set (a form field),
+   * off otherwise (toolbars, filters, menus with icons or counts keep the custom listbox). Native options
+   * show text only, so `start` / `end` are dropped.
    */
+  native?: boolean;
+  /** Form name (turns native mode on by default). */
   name?: string;
+  /** e.g. `address-level1` for a State select (turns native mode on by default). */
   autoComplete?: string;
+  /** Required in a form: sets `required` on the native select, `aria-required` on the listbox trigger. */
+  required?: boolean;
   /** Extra ids that describe the trigger (Field passes its description here); joined with `description`. */
   "aria-describedby"?: string;
 }
@@ -106,8 +115,10 @@ export function Select({
   size = "md",
   className,
   width = "full",
+  native: nativeProp,
   name,
   autoComplete,
+  required,
   id: idProp,
   "aria-label": ariaLabel,
   "aria-describedby": ariaDescribedBy,
@@ -151,33 +162,46 @@ export function Select({
     },
   });
 
-  const control = (
-    <div
-      {...menu.rootProps}
-      style={fieldWidthStyle(width, selectWidthChrome[size])}
-      className={cn(selectRootClasses, className)}
-    >
-      {name != null || autoComplete != null ? (
-        // Autofill and plain-form mirror: hidden from people and assistive tech, kept in step both ways.
+  const native = nativeProp ?? (name != null || autoComplete != null);
+  if (native && options.some((option) => option.start != null || option.end != null)) {
+    console.warn("[WMDS Select] Native options show text only: `start` / `end` are dropped. Pass `native={false}` to keep them.");
+  }
+
+  const nativeControl = (
+    <div style={fieldWidthStyle(width, selectWidthChrome[size])} className={cn(selectRootClasses, className)}>
+      <div className={cn(selectShellClasses[size], disabled && selectShellDisabledClasses)}>
         <select
-          aria-hidden
-          tabIndex={-1}
+          id={controlId}
           name={name}
           autoComplete={autoComplete}
+          required={required}
           disabled={disabled}
+          aria-label={label == null ? ariaLabel : undefined}
+          aria-describedby={describedBy}
           value={value ?? ""}
           onChange={(event) => commitValue(event.target.value)}
-          className="sr-only"
-          data-select-mirror=""
+          className={cn(selectNativeClasses[size], (value == null || value === "") && selectTriggerPlaceholderClasses)}
         >
-          <option value="" />
+          <option value="">{placeholder}</option>
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
           ))}
         </select>
-      ) : null}
+        <span className={cn(selectTriggerCaretSlotClasses[size], selectNativeCaretClasses[size])} aria-hidden>
+          <ChevronDown strokeWidth={2} />
+        </span>
+      </div>
+    </div>
+  );
+
+  const control = native ? nativeControl : (
+    <div
+      {...menu.rootProps}
+      style={fieldWidthStyle(width, selectWidthChrome[size])}
+      className={cn(selectRootClasses, className)}
+    >
       <div
         ref={shellRef}
         className={cn(selectShellClasses[size], disabled && selectShellDisabledClasses)}
@@ -192,6 +216,7 @@ export function Select({
           aria-label={label == null ? ariaLabel : undefined}
           aria-labelledby={label != null ? `${controlId}-label` : undefined}
           aria-describedby={describedBy}
+          aria-required={required || undefined}
           aria-haspopup="listbox"
           {...menu.triggerProps}
           onClick={() => {
@@ -265,12 +290,13 @@ export function Select({
           {label}
         </label>
       ) : null}
-      {control}
+      {/* Labels and placeholders F8: the hint sits between the label and the trigger. */}
       {description != null ? (
         <p id={descriptionId} className={selectDescriptionClasses}>
           {description}
         </p>
       ) : null}
+      {control}
     </div>
   );
 }

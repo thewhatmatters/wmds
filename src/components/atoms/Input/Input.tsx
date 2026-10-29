@@ -41,7 +41,7 @@ import {
   type InputStatus,
 } from "./inputShellStyles";
 import { isAutofillField } from "./autofillFields";
-import { fieldWidthStyle, type FieldWidth } from "./fieldWidth";
+import { fieldWidthBandStyle, fieldWidthStyle, type FieldWidth } from "./fieldWidth";
 
 export { fieldWidths, type FieldWidth } from "./fieldWidth";
 
@@ -305,13 +305,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   // One tree whether or not a message shows (top slot, field, bottom slot), so React keeps the same
   // <input> when a status appears: what people typed and the focus survive (Errors and validation V4).
   const withMessage = hasMessage && status != null;
-  const widthStyle = inline ? undefined : fieldWidthStyle(width, inputWidthChrome(size, showLeadingIcon, trailingPadding));
+  const widthChrome = inputWidthChrome(size, showLeadingIcon, trailingPadding);
+  const widthStyle = inline ? undefined : fieldWidthStyle(width, widthChrome);
   const control = (
     <div
-      style={
-        // A message needs room to read: a short field widens to hold it while it shows.
-        widthStyle != null && withMessage ? { ...widthStyle, minWidth: "min(100%, 18rem)" } : widthStyle
-      }
+      // With a message the shell takes the band's width and the field inside keeps its own.
+      style={withMessage && !inline ? fieldWidthBandStyle(width, widthChrome) : widthStyle}
       className={
         withMessage
           ? inputCompoundShellClassesFor(size, status)
@@ -320,6 +319,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     >
       {withMessage && messagePosition === "top" ? statusBanner : null}
       <div
+        style={withMessage ? widthStyle : undefined}
         className={
           withMessage
             ? inputCompoundInnerFieldClassesFor(size, status, messagePosition)

@@ -212,7 +212,13 @@ describe("IntakeForm blur errors", () => {
       details?.focus();
       details?.blur();
     });
-    expect(container.textContent).toContain(`Shorten your answer to ${intakeDetailsMax} characters or fewer.`);
+    // The band says the counter's words, once: the counter line hides while the band shows.
+    const shown = [...container.querySelectorAll("p, span")].filter(
+      (node) => node.textContent === "You have 12 characters too many" && !node.hasAttribute("data-intake-counter-live"),
+    );
+    expect(shown.length).toBeLessThanOrEqual(1);
+    expect(container.querySelector('[role="alert"], [id$="-message"]')?.textContent).toContain("You have 12 characters too many");
+    expect(container.querySelector("[data-field-counter]")).toBeNull();
 
     // The live line catches up once typing pauses, not on every keystroke.
     const live = container.querySelector("[data-intake-counter-live]");

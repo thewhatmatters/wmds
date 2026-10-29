@@ -340,22 +340,46 @@ export const FieldWidthsFit: Story = {
     await expect(zip.scrollWidth).toBeLessThanOrEqual(zip.clientWidth);
     await expect(zip.getBoundingClientRect().width).toBeLessThan(110);
 
-    const state = canvas.getByRole("combobox", { name: "State" });
-    const shown = state.querySelector("span") as HTMLElement;
-    await expect(shown.textContent).toBe("WY");
-    await expect(shown.scrollWidth).toBeLessThanOrEqual(shown.clientWidth);
+    // A form Select (name + autoComplete) is the browser's own select (Dropdowns C8).
+    const state = canvas.getByRole("combobox", { name: "State" }) as HTMLSelectElement;
+    await expect(state.tagName).toBe("SELECT");
+    await expect(state.value).toBe("WY");
     await expect(state.getBoundingClientRect().width).toBeLessThan(90);
 
     // The row fits a phone: nothing spills past the 358px column.
     const row = canvasElement.querySelector(".grid") as HTMLElement;
     await expect(row.scrollWidth).toBeLessThanOrEqual(row.clientWidth);
 
-    // Autofill fills the hidden native select; the visible trigger follows it.
-    const mirror = canvasElement.querySelector("select[data-select-mirror]") as HTMLSelectElement;
-    await expect(mirror.getAttribute("autocomplete")).toBe("address-level1");
-    await expect(mirror.value).toBe("WY");
-    mirror.value = "TX";
-    mirror.dispatchEvent(new Event("change", { bubbles: true }));
-    await waitFor(() => expect(shown.textContent).toBe("TX"));
+    // Autofill sets the select's value; React state follows.
+    await expect(state.getAttribute("autocomplete")).toBe("address-level1");
+    await expect(state.name).toBe("state");
+    state.value = "TX";
+    state.dispatchEvent(new Event("change", { bubbles: true }));
+    await waitFor(() => expect(state.value).toBe("TX"));
+    // Typing jumps: the select is a real select, so its options are real options.
+    await expect(state.options.length).toBe(52);
+  },
+};
+
+export const SelectNativeAndListbox: Story = {
+  name: "Select — native in forms, listbox in toolbars; the hint sits above (Dropdowns C8, Labels F8)",
+  render: () => (
+    <div className="flex w-80 flex-col gap-6">
+      <Select label="State" description="Where the business is." options={usStateOptions} name="state" required />
+      <Select label="Period" options={[{ value: "week", label: "This week" }, { value: "month", label: "This month" }]} defaultValue="week" />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const state = canvas.getByLabelText("State") as HTMLSelectElement;
+    await expect(state.tagName).toBe("SELECT");
+    await expect(state.required).toBe(true);
+    await expect(state).toHaveAccessibleDescription("Where the business is.");
+    const hint = canvas.getByText("Where the business is.");
+    await expect(hint.compareDocumentPosition(state) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    await userEvent.selectOptions(state, "TX");
+    await expect(state.value).toBe("TX");
+
+    const period = canvas.getByRole("combobox", { name: "Period" });
+    await expect(period.tagName).toBe("BUTTON");
   },
 };

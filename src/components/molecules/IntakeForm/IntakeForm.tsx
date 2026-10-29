@@ -120,7 +120,8 @@ function intakeFieldError(
     return "Tell us a bit about the project.";
   }
   if (values.details.length > detailsMax) {
-    return `Shorten your answer to ${detailsMax} characters or fewer.`;
+    // One message, not two: the band repeats the counter's own words (Form layout L9).
+    return intakeCounterText(values.details.length, detailsMax);
   }
   return undefined;
 }
@@ -218,7 +219,8 @@ export function IntakeForm({
       {/* Labels and placeholders: the question is the label (a label can be a question, as on GOV.UK question pages). */}
       <Field
         label="What should feel different when this work is done?"
-        counter={counterText}
+        // The counter line steps aside while the error band says the same words.
+        counter={detailsError == null ? counterText : undefined}
       >
         {/* L9: no maxLength, so nothing pasted is cut; the counter and the error say how much to trim. */}
         <TextArea
