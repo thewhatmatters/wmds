@@ -14,19 +14,21 @@ export type CheckboxSize = (typeof checkboxSizes)[number];
 
 /** Row rhythm — aligns with cluster sm (28px) / md (36px) tiers. */
 export const checkboxRowSizeClasses: Record<CheckboxSize, string> = {
-  sm: "min-h-7 gap-2",
-  md: "min-h-9 gap-2.5",
+  // Dropdowns C3: on touch screens every row is a 44px target (the whole label is clickable).
+  sm: "min-h-7 gap-2 pointer-coarse:min-h-11",
+  md: "min-h-9 gap-2.5 pointer-coarse:min-h-11",
 };
 
 /** Touch target wrapper — centers the visual box ([Astryx CheckboxInput](https://astryx.atmeta.com/components/CheckboxInput)). */
 export const checkboxHitTargetSizeClasses: Record<CheckboxSize, string> = {
-  sm: "size-7",
+  sm: "size-7 pointer-coarse:size-9",
   md: "size-9",
 };
 
 export const checkboxBoxSizeClasses: Record<CheckboxSize, string> = {
-  sm: "size-[18px] rounded",
-  md: "size-[22px] rounded-md",
+  // C3: the box is at least 24px wherever it's tapped; sm stays 18px for dense mouse UI.
+  sm: "size-[18px] rounded pointer-coarse:size-6",
+  md: "size-6 rounded-md",
 };
 
 export const checkboxCheckIconSizeClasses: Record<CheckboxSize, string> = {
@@ -46,7 +48,8 @@ export const checkboxBoxBaseClasses = cn(
 );
 
 export const checkboxBoxUncheckedClasses =
-  "border-border-emphasized bg-surface group-hover/checkbox:border-border-emphasized group-hover/checkbox:bg-body";
+  // C4: the empty box's border clears 3:1 on the page (WCAG 1.4.11), like Input's.
+  "border-border-control bg-surface group-hover/checkbox:border-border-control group-hover/checkbox:bg-body";
 
 export const checkboxBoxCheckedClasses =
   "border-primary bg-primary text-primary-foreground group-hover/checkbox:border-primary group-hover/checkbox:bg-primary";

@@ -56,6 +56,8 @@ Connected **segmented control** — one track, sliding inset thumb, mutually exc
 
 ## Best practices
 
+- **Do** use it only to switch views or modes (chart / table, light / dark). Never to answer a question in a form: use **RadioGroup** or **PillGroup** (Dropdowns C9).
+- **Do** give it a visible label or a heading that names what it switches.
 - **Do** keep segments to **2–4** short labels — truncate long copy.
 - **Do** use \`layout="stretch"\` when the control should fill a header slot evenly.
 - **Do** use stable string \`value\` props — labels are display only.

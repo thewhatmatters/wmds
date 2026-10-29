@@ -65,6 +65,8 @@ Input-matched **pill trigger** + floating **listbox** panel — rounded menu, in
 
 ## Best practices
 
+- **Do** use a dropdown for 7 or more answers, alphabetical unless they have a natural order. Up to 6: **RadioGroup** or **CheckboxGroup**. Never a dropdown for yes/no (Dropdowns C7).
+- **Do** let form Selects be native (the default with \`name\` or \`autoComplete\`, or pass \`native\`): the phone's own picker, type-to-jump, and autofill (C8). Keep the custom listbox for toolbars, filters and menus with icons or counts.
 - **Do** use \`size="sm"\` beside **Chip sm** / **IconButton xs** in Card headers.
 - **Do** pass stable \`value\` strings — \`label\` is trigger copy; \`start\` / \`end\` are menu-only.
 - **Do** read **Components/Dropdown** for row anatomy before custom menus.
@@ -186,17 +188,29 @@ export const Bare: Story = {
   },
 };
 
+/** Seven or more answers, alphabetical: a dropdown (Dropdowns C7). Up to six would be radios. */
+const industryOptions: SelectOption[] = [
+  "Construction",
+  "Education",
+  "Health",
+  "Home services",
+  "Hospitality",
+  "Professional services",
+  "Restaurants",
+  "Retail",
+].map((label) => ({ value: label.toLowerCase().replace(/ /g, "-"), label }));
+
 export const WithLabel: Story = {
   name: "Pattern — with label",
   render: function WithLabelRender() {
-    const [value, setValue] = useState("banana");
+    const [value, setValue] = useState<string>();
 
     return (
       <div className="mx-auto w-full max-w-xs px-8 py-6">
         <Select
-          label="Favorite fruit"
-          description="Choose one from the list."
-          options={fruitOptions}
+          label="Industry"
+          description="The closest fit is fine."
+          options={industryOptions}
           value={value}
           onValueChange={setValue}
         />

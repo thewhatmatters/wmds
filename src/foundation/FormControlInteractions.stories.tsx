@@ -383,3 +383,43 @@ export const SelectNativeAndListbox: Story = {
     await expect(period.tagName).toBe("BUTTON");
   },
 };
+
+const channels = (color: string) => {
+  const values = color.match(/[\d.]+/g)!.map(Number);
+  return color.startsWith("color(") ? values.slice(0, 3).map((value) => value * 255) : values.slice(0, 3);
+};
+const luminance = (color: string) => {
+  const [r, g, b] = channels(color).map((value) => {
+    const c = value / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const ratio = (a: string, b: string) => {
+  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+};
+
+export const CheckboxRadioBoxes: Story = {
+  name: "Checkbox and Radio — 24px boxes whose border clears 3:1 (Dropdowns C3, C4)",
+  render: () => (
+    <div className="flex flex-col gap-4 bg-body p-4">
+      <CheckboxGroup label="Topics" values={[]} onValuesChange={() => undefined}>
+        <CheckboxGroup.Item value="design" label="Design" />
+      </CheckboxGroup>
+      <RadioGroup label="Plan" value="" onValueChange={() => undefined}>
+        <RadioGroup.Item value="basic" label="Basic" />
+      </RadioGroup>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const page = getComputedStyle(canvasElement.querySelector(".bg-body") as HTMLElement).backgroundColor;
+    for (const input of canvasElement.querySelectorAll<HTMLInputElement>("input[type=checkbox], input[type=radio]")) {
+      const box = [...(input.parentElement?.querySelectorAll<HTMLElement>("span, div") ?? [])].find(
+        (element) => parseFloat(getComputedStyle(element).borderTopWidth) > 0,
+      ) as HTMLElement;
+      await expect(box.offsetWidth).toBeGreaterThanOrEqual(24);
+      await expect(ratio(getComputedStyle(box).borderTopColor, page)).toBeGreaterThanOrEqual(3);
+    }
+  },
+};

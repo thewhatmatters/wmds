@@ -66,6 +66,7 @@ Checked cards show **Badge** \`iconOnly\` with a Lucide check. The shell owns th
 
 ## Best practices
 
+- **Do** use **SelectableCard** for several choices that each need a line of detail; short single answers are **PillGroup** or **RadioGroup** (Dropdowns C9). Put the question above the grid as a visible heading or legend.
 - **Do** require at least one card before Continue.
 - **Do** keep **SegmentedControl** on \`layout="hug"\`.
 - **Don't** stretch the toggle across the grid.

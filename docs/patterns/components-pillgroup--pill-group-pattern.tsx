@@ -9,7 +9,7 @@ export function BudgetPills() {
   const [value, setValue] = useState<string | null>(null);
 
   return (
-    <PillGroup aria-label="Budget" value={value} onValueChange={setValue}>
+    <PillGroup label="What's your budget?" value={value} onValueChange={setValue}>
       <PillGroup.Item value="under-10">{"<$10k"}</PillGroup.Item>
       <PillGroup.Item value="10-25">$10–25k</PillGroup.Item>
       <PillGroup.Item value="25-50">$25–50k</PillGroup.Item>

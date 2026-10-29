@@ -67,7 +67,7 @@ Instant on/off — pill track + sliding thumb for settings and preferences.
 
 ## Best practices
 
-- **Do** use **Switch** for immediate settings — **Checkbox** for forms, consent, and multi-select lists.
+- **Do** use **Switch** only for settings that apply the moment they flip. Never in a form with a submit button: use a **Checkbox** there (Dropdowns C9). Forms, consent and multi-select lists are Checkbox.
 - **Do** use \`layout="settings"\` in Card settings panels — label left, control right.
 - **Do** use \`status\` + \`message\` for validation — not label asterisks.
 - **Don't** use for mutually exclusive options — **RadioGroup** or **SegmentedControl**.

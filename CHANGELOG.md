@@ -9,7 +9,7 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 
 ## 0.4.34
 
-**Required and optional fields: mark the exception, read the badge with the field, never on autofill. Field width and form layout: widths that hint at the answer, a State select, side labels only on wide screens, and counters that don't cut text.**
+**Required and optional fields: mark the exception, read the badge with the field, never on autofill. Field width and form layout: widths that hint at the answer, a State select, side labels only on wide screens, and counters that don't cut text. Dropdowns, radios and checkboxes: a native Select for forms, bigger boxes with visible borders, and errors on Continue.**
 
 - **Field** `description` sits **between the label and the control** (was below; Labels and placeholders F8), so every hint is read before typing. New **`counter`** prop: a character counter, the one helper that stays below the control. Both join the control's accessible description (hint first). New test **fieldHintOrder.test.ts**.
 - **IntakeForm**: hints above their fields; the details counter ("67 / 400") uses `counter`, below the box. Company's hint is "So we can read up on you first."
@@ -23,10 +23,21 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
   - Name, email and project details carry `aria-required`.
   - The website field is now labelled "Your website", with an "Optional" badge and a stated use ("So we can see what you have now.").
   - **Company is off by default** (`company` turns it on). It's labelled "Company (optional)", since it's an autofill field.
-- **Field width** (Form layout L7): **Input** and **Select** take `width` in characters (`2ch`, `4ch`, `5ch`, `10ch`, `20ch`; default `full`) for fixed-length answers, never wider than their container. The label and hint keep their own width. A short field with an error message widens to hold the message. Story **Components/Input → Pattern — field widths** (city, state and ZIP share a row).
-- **State select** (L7): `usStateOptions` (new export) lists the 50 states and DC as two-letter abbreviations. **Select** takes `name` and `autoComplete`: it keeps a hidden native `<select>` in step, so the value submits with a plain form and the browser can autofill it (`autoComplete="address-level1"`). Story **Components/Select → Pattern — US state**.
+- **Field width** (Form layout L7): **Input** and **Select** take `width` in characters (`2ch`, `4ch`, `5ch`, `10ch`, `20ch`; default `full`) for fixed-length answers, never wider than their container. The label and hint keep their own width. A short field keeps its width when an error shows; the status band under it is at least 18rem wide, so the message reads on one or two lines. Story **Components/Input → Pattern — field widths** (city, state and ZIP share a row).
+- **State select** (L7): `usStateOptions` (new export) lists the 50 states and DC as two-letter abbreviations. Story **Components/Select → Pattern — US state**.
+- **Select `native`** (Dropdowns C8): the browser's own `<select>` in the WMDS shell, with the same chevron, sizes and focus ring, and 16px text on touch. The phone opens its own picker, typing jumps to an option, the browser can autofill it (`autoComplete="address-level1"`), and it submits with a plain form. It's the default when a Select has `name` or `autoComplete`. The custom listbox stays for toolbars, filters and menus with icons or counts (native options are text only). New `required` prop.
+- **Select** `description` sits above the trigger (Labels F8), like Input, TextArea and Field.
 - **Field** `orientation="horizontal"` (L8) puts the label beside the control only from `lg` (1024) and stacks below it. Use it for dense app settings only, never marketing or contact forms.
-- **IntakeForm counter** (L9): no `maxLength`, so a long paste stays whole. The counter says "N characters left" or "You have N characters too many". A screen reader hears it once typing pauses, not on every keystroke. Over the limit, the field's error reads "Shorten your answer to 400 characters or fewer." and the step stays blocked. `intakeCounterText` is exported. Story **Pattern — over the character limit**.
+- **IntakeForm counter** (L9): no `maxLength`, so a long paste stays whole. The counter says "N characters left" or "You have N characters too many". A screen reader hears it once typing pauses, not on every keystroke. Over the limit, the error band repeats the counter's words ("You have 7 characters too many"), and the counter line hides while the band shows: one message, not two. `intakeCounterText` is exported. Story **Pattern — over the character limit**.
+- **IntakeModal footer** (Buttons U6, U8): Continue comes first and stays enabled; Back follows as a `ghost` button. **IntakeForm `submitCount`** (new): the caller counts Continue presses. From the first press, every field shows its error. Two or more errors put an **ErrorSummary** at the top and focus it; one error focuses its field (V5, closes gap #49). `continueDisabled` is now discouraged. Story **Components/IntakeModal → Pattern — errors on Continue**.
+- **Select**'s empty-choice text ("Select…") uses `text-muted`, which clears 4.5:1. It was `text-disabled`, which failed axe.
+- **StepProgress** names its progressbar ("Step 1 of 4"), fixing a known axe violation.
+- **Checkbox and Radio** (Dropdowns C3, C4):
+  - The box is 24px (`md`; `sm` grows to 24px on touch screens).
+  - Rows are 44px tall on touch screens.
+  - The empty box's border uses `border-control`, which clears 3:1 (it was 1.3:1).
+- **PillGroup** `label` (new): a visible question above the pills that names the group (C2, C9). `aria-label` is now optional, for a question shown as a heading right above.
+- **Docs** (C7, C9): when to use Select, Switch, SegmentedControl, PillGroup and SelectableCard. The Select "with label" story now has 8 alphabetical options, and the PillGroup story starts with nothing selected.
 - **Stories:** the Input badge stories use a website field with "Optional", not an email field. They add "Pattern — end badge with a long value" and "Pattern — end badge + status icon". The validation morph demo drops its badge from the email field.
 
 ### Consumer actions
@@ -36,6 +47,9 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - `IntakeForm` no longer shows Company unless you pass `company`. The website field's accessible name changed from "Link" to "Your website".
 
 - Give ZIP, phone, year and state fields a `width`, and use `usStateOptions` for a State select with `autoComplete="address-level1"`. Remove `maxLength` from text people write, and show a counter instead.
+- Form Selects with `name` or `autoComplete` are now native; pass `native={false}` to keep the custom listbox (needed for options with `start`/`end`).
+- IntakeModal: stop passing `continueDisabled`. Count Continue presses into IntakeForm's `submitCount` instead, and note that Back is now a ghost button after Continue.
+- Give **PillGroup** a `label` (the question).
 - `Field orientation="horizontal"` now stacks below 1024px. If you relied on side labels on tablets, that changes.
 - If a **Field** `description` is a character counter, pass it as `counter` so it stays below the control.
 
