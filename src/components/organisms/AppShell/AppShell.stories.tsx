@@ -624,6 +624,10 @@ export const PhonePicker: Story = {
   play: async ({ canvas }) => {
     const button = canvas.getByRole("button", { name: "Portal: Dashboard" });
     expect(button).toHaveTextContent("Dashboard");
+    // The chevron is a plain glyph on the ghost button, not a filled square.
+    const chevron = button.querySelector("svg.lucide-chevron-down");
+    expect(chevron).not.toBeNull();
+    expect(getComputedStyle(chevron!.parentElement!).backgroundColor).toBe(getComputedStyle(button).backgroundColor);
     // The h1 is still the page's heading, visually hidden below lg.
     const heading = canvas.getByRole("heading", { level: 1, name: "Dashboard" });
     expect(heading.className).toContain("max-lg:sr-only");

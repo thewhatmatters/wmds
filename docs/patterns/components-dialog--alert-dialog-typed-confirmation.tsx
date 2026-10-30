@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.38 · Pattern — alert dialog (typed confirmation delete)
+// @thewhatmatters/wmds@0.4.39 · Pattern — alert dialog (typed confirmation delete)
 // Storybook: Components/Dialog → Pattern — alert dialog (typed confirmation delete) (?path=/story/components-dialog--alert-dialog-typed-confirmation)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
