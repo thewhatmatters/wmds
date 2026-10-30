@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.39 · Pattern — overflowing list
+// @thewhatmatters/wmds@0.4.40 · Pattern — overflowing list
 // Storybook: Foundations/Scroll fade → Pattern — overflowing list (?path=/story/foundations-scroll-fade--overflowing-list)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

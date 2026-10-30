@@ -395,12 +395,15 @@ function AppShellRoot({
           aria-expanded={menuOpen}
           aria-haspopup="dialog"
           aria-keyshortcuts="Control+B Meta+B"
-          className={cn(appShellToggleMobileClasses, "min-w-0 max-w-full")}
+          // Button's label span may shrink, so the name truncates and the chevron stays on its line.
+          className={cn(appShellToggleMobileClasses, "min-w-0 max-w-full [&>span:last-child]:min-w-0")}
           onClick={() => setMenuOpen(true)}
         >
-          <span className="min-w-0 truncate">{title}</span>
-          {/* A plain chevron, not `endIcon` (that's the filled square of a menu trigger). */}
-          <ChevronDown strokeWidth={2} aria-hidden="true" className="size-4 shrink-0 text-muted" />
+          <span className="flex min-w-0 items-center gap-1">
+            <span className="min-w-0 truncate">{title}</span>
+            {/* A plain chevron, not `endIcon` (that's the filled square of a menu trigger). */}
+            <ChevronDown strokeWidth={2} aria-hidden="true" className="size-4 shrink-0 text-muted" />
+          </span>
         </Button>
       ) : menuButton === "label" ? (
         <Button

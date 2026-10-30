@@ -61,6 +61,7 @@ export interface PortalDashboardProps {
   defaultAsideOpen?: boolean;
   asideMode?: AppShellAsideMode;
   menuButton?: AppShellMenuButton;
+  title?: string;
 }
 
 export function PortalDashboard({
@@ -68,6 +69,7 @@ export function PortalDashboard({
   defaultAsideOpen = false,
   asideMode,
   menuButton,
+  title = "Dashboard",
 }: PortalDashboardProps) {
   const [activeId, setActiveId] = useState("dashboard");
   const [asideOpen, setAsideOpen] = useState(defaultAsideOpen);
@@ -75,7 +77,7 @@ export function PortalDashboard({
 
   return (
     <AppShell
-      title="Dashboard"
+      title={title}
       defaultSidebarOpen={defaultSidebarOpen}
       asideOpen={asideOpen}
       onAsideOpenChange={setAsideOpen}
@@ -620,16 +622,22 @@ export const PhonePicker: Story = {
       },
     },
   },
-  render: () => <PortalDashboard menuButton="picker" />,
+  render: () => <PortalDashboard menuButton="picker" title="Campaign performance — Stir in strength" />,
   play: async ({ canvas }) => {
-    const button = canvas.getByRole("button", { name: "Portal: Dashboard" });
-    expect(button).toHaveTextContent("Dashboard");
+    const button = canvas.getByRole("button", { name: "Portal: Campaign performance — Stir in strength" });
+    expect(button).toHaveTextContent("Campaign performance");
     // The chevron is a plain glyph on the ghost button, not a filled square.
     const chevron = button.querySelector("svg.lucide-chevron-down");
     expect(chevron).not.toBeNull();
     expect(getComputedStyle(chevron!.parentElement!).backgroundColor).toBe(getComputedStyle(button).backgroundColor);
+    // One line: the chevron sits beside the name, and the button keeps its single-row height.
+    const name = chevron!.previousElementSibling as HTMLElement;
+    expect(Math.abs(chevron!.getBoundingClientRect().top + chevron!.getBoundingClientRect().height / 2 - (name.getBoundingClientRect().top + name.getBoundingClientRect().height / 2))).toBeLessThan(4);
+    expect(button.scrollWidth).toBeLessThanOrEqual(button.clientWidth + 1);
+    // A long name ends in an ellipsis instead of pushing the chevron off.
+    expect(name.scrollWidth).toBeGreaterThan(name.clientWidth);
     // The h1 is still the page's heading, visually hidden below lg.
-    const heading = canvas.getByRole("heading", { level: 1, name: "Dashboard" });
+    const heading = canvas.getByRole("heading", { level: 1, name: "Campaign performance — Stir in strength" });
     expect(heading.className).toContain("max-lg:sr-only");
     await userEvent.click(button);
     await settleOverlay();

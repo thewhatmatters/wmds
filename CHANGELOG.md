@@ -7,6 +7,16 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.40
+
+**AppShell: the phone page picker stays on one line.**
+
+- **AppShell** `menuButton="picker"`: a long page name wrapped the chevron onto a second line, because Button's label couldn't shrink. The name now ends in an ellipsis and the chevron stays beside it. The story uses a long title and its test checks both.
+
+### Consumer actions
+
+- None.
+
 ## 0.4.39
 
 **AppShell: the phone page picker's chevron is a plain glyph.**
