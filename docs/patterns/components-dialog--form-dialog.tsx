@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.28 · Pattern — form dialog
+// @thewhatmatters/wmds@0.4.40 · Pattern — form dialog
 // Storybook: Components/Dialog → Pattern — form dialog (?path=/story/components-dialog--form-dialog)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -31,8 +31,8 @@ export function InviteDialog() {
           }
         >
           <div className="flex flex-col gap-4 pb-2">
-            <Input label="Email address" placeholder="name@company.com" />
-            <Input label="Role" placeholder="Editor" />
+            <Input label="Email address" />
+            <Input label="Role" />
           </div>
         </Dialog.Content>
       </Dialog>

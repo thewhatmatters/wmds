@@ -138,10 +138,10 @@ export function MarketingHero() {
       />
       <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-16 text-center">
         <div className="flex w-full flex-col items-center gap-6">
-          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
+          <HeroIntro firstLine="A design studio in Austin.">
             We help brands stand out{" "}
             <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
-            {" "}with bold ideas, fresh approaches, and products people actually love to use.
+            .
           </HeroIntro>
             <div className="w-full px-[var(--grid-margin)]">
             <HeroTileStack tiles={tiles} />
@@ -188,10 +188,10 @@ function MarketingHero() {
       />
       <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-16 text-center">
         <div className="flex w-full flex-col items-center gap-6">
-          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
+          <HeroIntro firstLine="A design studio in Austin.">
             We help brands stand out{" "}
             <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
-            {" "}with bold ideas, fresh approaches, and products people actually love to use.
+            .
           </HeroIntro>
             <div className="w-full px-[var(--grid-margin)]">
             <HeroTileStack tiles={heroTiles} />
@@ -207,7 +207,7 @@ function MarketingHero() {
   );
 }
 
-const heroIntroLeadCopy = "We're a design and product studio based in Austin, Texas.";
+const heroIntroLeadCopy = "A design studio in Austin.";
 
 function expectHeroIntroLines(root: ParentNode) {
   const intro = root.querySelector("section h1");
@@ -230,7 +230,9 @@ function expectHeroIntroLines(root: ParentNode) {
   expect(restBox.top).toBeGreaterThanOrEqual(leadBox.bottom - 1);
   const lineHeight = Number.parseFloat(getComputedStyle(lead).lineHeight);
   expect(lineHeight).toBeGreaterThan(0);
-  expect(leadBox.height).toBeGreaterThan(lineHeight * 1.25);
+  // From lg the heading spans columns 2–11, so the 12-word intro's first line holds one line (G8, H8);
+  // narrower, it may wrap.
+  if (window.innerWidth >= 1024) expect(leadBox.height).toBeLessThanOrEqual(lineHeight * 1.25);
   expect(leadBox.left).toBeGreaterThanOrEqual(introBox.left - 1);
   expect(leadBox.right).toBeLessThanOrEqual(introBox.right + 1);
   expect(leadBox.right).toBeLessThanOrEqual(window.innerWidth + 1);
@@ -247,7 +249,7 @@ export const MarketingHeroPattern: Story = {
       docs: {
         description: {
           story:
-            "SiteNav sits above the hero in normal flow. The hero section is min-h-[calc(100svh-var(--site-nav-height))], shrink-0, and justify-center-safe, so the nav plus the hero fill the viewport when the copy fits. When the copy is taller than that minimum, the section grows and the content starts below the nav with the section's top padding. HeroIntro is the page h1. It leads the hero on type-display-2 at normal weight, with text-wrap balance, the same font-size and line-height as the gallery statement. There is no display-1 We Are WhatMatters headline. The intro is HeroIntro. Pass the first sentence as lead (We're a design and product studio based in Austin, Texas.). The lead wraps inside its measure, including from md, so the display-2 line does not clip. children is the rest of the copy and always starts on the next line. Both lines stay on type-display-2 at normal weight, centered, with text-wrap balance — the same font-size as the gallery statement. Austin, and Texas stay together with a non-breaking space. Do not insert a br in the copy. HeroIntro sits on grid-page (max-width --grid-max, the same margin, column gap, and column count as the guides) with py-0 so the page block pad does not stack on the hero gap. From lg, where the grid is 12 columns, it occupies columns 4–9 (lg:col-start-4 lg:col-end-10), 6 of 12 columns, centered, and those edges line up with guide columns 4 and 9. md is 8 columns, so that span does not start at md. Below lg the paragraph is full width of that page grid, inside --grid-margin. The copy is: We're a design and product studio based in Austin, Texas. We help brands stand out online with bold ideas, fresh approaches, and products people actually love to use. online is one inline md Badge with a round Avatar — the one sanctioned decorative use. The globe file in public/hero-badges/ is a playful placeholder. The badge is not clickable, alt is empty so the sentence still reads in order, and the image is not announced. The tile fan is the last element in the hero. ScrollHorizontal follows that section with expandLast. Each card is a solid token-color placeholder and the label is the accessible name only. The heading is sr-only while that window is pinned, and visible above the row when motion is reduced. A 400svh track translates the project row from the first card centered to the last on the same scroll distance as a 300svh gallery, then the last tile grows until it fills the viewport and the radius reaches 0. That full-bleed tile scrolls away on its own. The gallery section ends on that tile, so the next block meets its bottom edge. prefers-reduced-motion keeps a native horizontal scroller, then the last tile as a static full-viewport section. The section's py-16 is the space under the tiles. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
+            "SiteNav sits above the hero in normal flow. The hero section is min-h-[calc(100svh-var(--site-nav-height))], shrink-0, and justify-center-safe, so the nav plus the hero fill the viewport when the copy fits. When the copy is taller than that minimum, the section grows and the content starts below the nav with the section's top padding. HeroIntro is the page h1. It leads the hero on type-display-2 at normal weight, with text-wrap balance, the same font-size and line-height as the gallery statement. There is no display-1 We Are WhatMatters headline. The intro is HeroIntro. Pass the first sentence as lead (A design studio in Austin.). The lead wraps inside its measure, including from md, so the display-2 line does not clip. children is the rest of the copy and always starts on the next line. Both lines stay on type-display-2 at normal weight, centered, with text-wrap balance — the same font-size as the gallery statement. Do not insert a br in the copy. HeroIntro sits on grid-page (max-width --grid-max, the same margin, column gap, and column count as the guides) with py-0 so the page block pad does not stack on the hero gap. From lg, where the grid is 12 columns, it occupies columns 4–9 (lg:col-start-4 lg:col-end-10), 6 of 12 columns, centered, and those edges line up with guide columns 4 and 9. md is 8 columns, so that span does not start at md. Below lg the paragraph is full width of that page grid, inside --grid-margin. The copy is: A design studio in Austin. We help brands stand out online. online is one inline md Badge with a round Avatar — the one sanctioned decorative use. The globe file in public/hero-badges/ is a playful placeholder. The badge is not clickable, alt is empty so the sentence still reads in order, and the image is not announced. The tile fan is the last element in the hero. ScrollHorizontal follows that section with expandLast. Each card is a solid token-color placeholder and the label is the accessible name only. The heading is sr-only while that window is pinned, and visible above the row when motion is reduced. A 400svh track translates the project row from the first card centered to the last on the same scroll distance as a 300svh gallery, then the last tile grows until it fills the viewport and the radius reaches 0. That full-bleed tile scrolls away on its own. The gallery section ends on that tile, so the next block meets its bottom edge. prefers-reduced-motion keeps a native horizontal scroller, then the last tile as a static full-viewport section. The section's py-16 is the space under the tiles. Move a fine pointer over the tiles — cards shift left and right away from it and tilt slightly. A quick vertical move adds a small springy lift that settles when the pointer slows. They spring back when the pointer leaves. A coarse pointer tap scatters once from that point, then returns. Reduced motion keeps the resting fan.",
         },
       },
     },
@@ -366,11 +368,12 @@ export const GuidesCoverPrecedingHero: Story = {
 
     const intro = expectHeroIntroLines(canvasElement);
     const introBox = intro.getBoundingClientRect();
-    const columnFour = columns[3]!.getBoundingClientRect();
-    const columnNine = columns[8]!.getBoundingClientRect();
-    expect(Math.abs(introBox.left - columnFour.left)).toBeLessThanOrEqual(1);
-    expect(Math.abs(introBox.right - columnNine.right)).toBeLessThanOrEqual(1);
-    expect(getComputedStyle(intro).gridColumn).toBe("4 / 10");
+    // The heading spans columns 2–11 from lg (G8: a heading may run wider than body text).
+    const columnTwo = columns[1]!.getBoundingClientRect();
+    const columnEleven = columns[10]!.getBoundingClientRect();
+    expect(Math.abs(introBox.left - columnTwo.left)).toBeLessThanOrEqual(1);
+    expect(Math.abs(introBox.right - columnEleven.right)).toBeLessThanOrEqual(1);
+    expect(getComputedStyle(intro).gridColumn).toBe("2 / 12");
 
     const heroRect = hero.getBoundingClientRect();
     const columnRect = columns[0]!.getBoundingClientRect();
@@ -476,11 +479,12 @@ export const GuidesCoverEmptyPage: Story = {
 
     const intro = expectHeroIntroLines(canvasElement);
     const introBox = intro.getBoundingClientRect();
-    const columnFour = columns[3]!.getBoundingClientRect();
-    const columnNine = columns[8]!.getBoundingClientRect();
-    expect(Math.abs(introBox.left - columnFour.left)).toBeLessThanOrEqual(1);
-    expect(Math.abs(introBox.right - columnNine.right)).toBeLessThanOrEqual(1);
-    expect(getComputedStyle(intro).gridColumn).toBe("4 / 10");
+    // The heading spans columns 2–11 from lg (G8: a heading may run wider than body text).
+    const columnTwo = columns[1]!.getBoundingClientRect();
+    const columnEleven = columns[10]!.getBoundingClientRect();
+    expect(Math.abs(introBox.left - columnTwo.left)).toBeLessThanOrEqual(1);
+    expect(Math.abs(introBox.right - columnEleven.right)).toBeLessThanOrEqual(1);
+    expect(getComputedStyle(intro).gridColumn).toBe("2 / 12");
 
     const columnRect = columns[0]!.getBoundingClientRect();
     expect(columnRect.top).toBeLessThanOrEqual(heroRect.top);
@@ -534,7 +538,7 @@ export const IntroLeadBelowMd: Story = {
 };
 
 export const IntroLeadAt1024: Story = {
-  name: "Intro lead wraps at 1024",
+  name: "Intro first line holds one line at 1024",
   tags: ["test", "!dev", "!autodocs"],
   globals: {
     viewport: { value: "review1024", isRotated: false },
@@ -619,7 +623,7 @@ export function MarketingHeroTextSequence() {
         <div className="flex w-full flex-col items-center gap-6">
           <HeroIntro
             step="display"
-            lead={
+            firstLine={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 {"An "}
                 <span className="whitespace-nowrap">
@@ -677,7 +681,7 @@ function MarketingHeroTextSequenceView() {
         <div className="flex w-full flex-col items-center gap-6">
           <HeroIntro
             step="display"
-            lead={
+            firstLine={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 {"An "}
                 <span className="whitespace-nowrap">

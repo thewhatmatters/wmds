@@ -138,7 +138,7 @@ const categories = [
 export const EdgeAndSizeControls: Story = {
   name: "Reference — edge and size controls",
   render: () => (
-    <div className="grid w-full max-w-2xl gap-6 sm:grid-cols-2">
+    <div className="grid w-full max-w-2xl gap-6 md:grid-cols-2">
       <div className="overflow-hidden rounded-lg border border-border bg-card">
         <p className={`${typographyClass("ui-label")} border-b border-border px-4 py-3 text-fg`}>
           End edge only

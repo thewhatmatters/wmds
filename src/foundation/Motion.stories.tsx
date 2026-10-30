@@ -155,7 +155,6 @@ export const FocusRingFade: Story = {
     <input
       type="text"
       aria-label="Focus ring specimen"
-      placeholder="Tab to focus — ring fades in"
       className={`h-11 w-full max-w-xs rounded-lg border border-border bg-surface px-3 text-sm text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body ${focusRingTransitionClasses}`}
     />
   ),

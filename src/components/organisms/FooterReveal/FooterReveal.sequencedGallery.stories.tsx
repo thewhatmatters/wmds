@@ -29,10 +29,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
+  { label: "Contra", href: "https://contra.com/thewhatmatters" },
   { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
+  { label: "X", href: "https://x.com/thewhatmatters", ariaLabel: "WhatMatters on X" },
 ] as const;
 
 const tiles = [
@@ -57,10 +57,10 @@ import { Sparkles } from "lucide-react";
 import { Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence, footerRevealFieldClasses } from "@thewhatmatters/wmds";
 
 const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
+  { label: "Contra", href: "https://contra.com/thewhatmatters" },
   { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
+  { label: "X", href: "https://x.com/thewhatmatters", ariaLabel: "WhatMatters on X" },
 ] as const;
 
 const tiles = [
@@ -112,7 +112,7 @@ export function SequencedMarketingHeroPage() {
           <div className="flex w-full flex-col items-center gap-6">
           <HeroIntro
             step="display"
-            lead={
+            firstLine={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 {"An "}
                 <span className="whitespace-nowrap">
@@ -156,7 +156,7 @@ export function SequencedMarketingHeroPage() {
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
         <FooterReveal.Brand
-          headline="We Build WhatMatters"
+          headline="We build WhatMatters"
           ctaLabel="Start a project"
           onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
@@ -174,7 +174,7 @@ const marketingHeroRuledCopySource = marketingHeroWithGalleryIntroCopySource
   .replace(
     `      <FooterReveal.Footer className={footerRevealRuledFieldClasses}>
         <FooterReveal.Brand
-          headline="We Build WhatMatters"
+          headline="We build WhatMatters"
           ctaLabel="Start a project"
           onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
@@ -198,10 +198,10 @@ const marketingHeroRuledCopySource = marketingHeroWithGalleryIntroCopySource
   )
   .replace(
     `const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
+  { label: "Contra", href: "https://contra.com/thewhatmatters" },
   { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
+  { label: "X", href: "https://x.com/thewhatmatters", ariaLabel: "WhatMatters on X" },
 ] as const;
 
 `,
@@ -243,7 +243,7 @@ function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
           <div className="flex w-full flex-col items-center gap-6">
           <HeroIntro
             step="display"
-            lead={
+            firstLine={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 {"An "}
                 <span className="whitespace-nowrap">
@@ -290,7 +290,7 @@ function SequencedGalleryHeroPage({ ruled = false }: { ruled?: boolean } = {}) {
           <FooterReveal.Ruled {...footerRevealRuledSample} />
         ) : (
           <FooterReveal.Brand
-            headline="We Build WhatMatters"
+            headline="We build WhatMatters"
             ctaLabel="Start a project"
             onCtaClick={openProjectModal}
             wordmark="WHATMATTERS"
@@ -542,7 +542,7 @@ export const MarketingHeroRuledPattern: Story = {
     );
     expect(navLinks).toEqual(["Services", "Resources", "About"]);
     expect(canvasElement.textContent).not.toContain("WHATMATTERS");
-    expect(canvasElement.textContent).not.toContain("We Build WhatMatters");
+    expect(canvasElement.textContent).not.toContain("We build WhatMatters");
     expect(canvasElement.textContent).not.toContain("Selected work");
   },
 };

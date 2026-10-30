@@ -22,7 +22,7 @@ export type ButtonSize = "xs" | "sm" | "md" | "lg";
 export type IconButtonSize = ButtonSize;
 
 /** All action buttons are pills by default — `layout="row"` for flat full-width detail lines. */
-export const buttonPillClass = "rounded-full";
+export const buttonPillClass = "rounded-[var(--radius-control)]";
 
 export const buttonLayouts = ["pill", "row", "nav"] as const;
 
@@ -51,8 +51,9 @@ export const buttonBaseClasses =
   pressScaleClass +
   " " +
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-body " +
-  "disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50 " +
-  "aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none aria-disabled:opacity-50 " +
+  // Disabled (Buttons rule U6): 70% keeps every role's label at 3:1 or more on its own fill.
+  "disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-70 " +
+  "aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none aria-disabled:opacity-70 " +
   "no-underline";
 
 export const buttonRoleClasses: Record<ButtonRole, string> = {
@@ -64,7 +65,7 @@ export const buttonRoleClasses: Record<ButtonRole, string> = {
     "bg-transparent text-ghost-foreground hover:bg-ghost-hover active:bg-ghost-active",
   destructive:
     "bg-error text-on-error hover:bg-error-hover active:bg-error-active",
-  /** Light pill on the navy field. Brand ink stays #011272 on white in both themes. */
+  /** Light pill on the navy field. Brand ink on white: #011272 (light), #5566e0 (dark, 4.81:1). */
   inverse: "bg-on-brand text-brand shadow-raised hover:bg-on-brand-hover active:bg-on-brand-hover",
   /** Hairline outline, transparent fill. Gallery intro action. */
   outline: "border border-fg bg-transparent text-fg hover:bg-ghost-hover active:bg-ghost-active",
@@ -91,7 +92,7 @@ export const buttonAlignClasses: Record<ButtonAlign, string> = {
  * Size is `--font-size-sm` (12px) — small, still a control label.
  */
 export const buttonMonoLabelClasses =
-  "!font-mono !text-[length:var(--font-size-sm)] !font-normal !uppercase !leading-none !tracking-[0.14em]";
+  "!font-mono !text-[length:var(--font-size-sm)] !font-normal !uppercase !leading-none !tracking-[0.12em]";
 
 /** Trailing new-tab glyph on an `external` link button — the icon **TextLink** `external` shows. */
 export const buttonExternalIconClasses = "-ml-0.5 size-[0.85em] shrink-0 stroke-current";
@@ -137,7 +138,8 @@ export const buttonRowBaseClasses =
   "transition-[color,background-color,outline-color] " +
   motionTransition("fast") +
   " focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring " +
-  "disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50";
+  "disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-70 " +
+  "aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none aria-disabled:opacity-70";
 
 export const buttonRowLayoutClasses =
   "h-auto min-h-0 rounded-md px-1.5 py-1 text-left font-normal " +
@@ -151,7 +153,7 @@ export const buttonRowWidthClasses: Record<ButtonWidth, string> = {
 
 /** Inset nav row — **NavList** rows (icon + label + optional count as children). */
 export const buttonNavLayoutClasses =
-  "h-auto min-h-0 w-full justify-start gap-2.5 rounded-xl px-2.5 py-2 text-left " +
+  "h-auto min-h-0 w-full justify-start gap-2.5 rounded-[var(--radius-control-box)] px-2.5 py-2 text-left " +
   "text-sm font-normal leading-[var(--line-height-sm)] " +
   "focus-visible:ring-inset focus-visible:ring-offset-0";
 
@@ -160,3 +162,6 @@ export function buttonNavStateClasses(selected: boolean): string {
     ? "bg-secondary text-secondary-foreground"
     : "bg-transparent text-muted hover:bg-ghost-hover hover:text-fg";
 }
+
+/** The reason beside a disabled button (Buttons rule U6): supporting type, muted ink (9.8:1). */
+export const buttonDisabledReasonClasses = "type-supporting text-muted";

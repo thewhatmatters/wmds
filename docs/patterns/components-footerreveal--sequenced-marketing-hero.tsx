@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.28 · Pattern — marketing hero with sequenced gallery
+// @thewhatmatters/wmds@0.4.40 · Pattern — marketing hero with sequenced gallery
 // Storybook: Components/FooterReveal → Pattern — marketing hero with sequenced gallery (?path=/story/components-footerreveal--sequenced-marketing-hero)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -12,10 +12,10 @@ import { Sparkles } from "lucide-react";
 import { Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence, footerRevealFieldClasses } from "@thewhatmatters/wmds";
 
 const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
+  { label: "Contra", href: "https://contra.com/thewhatmatters" },
   { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
+  { label: "X", href: "https://x.com/thewhatmatters", ariaLabel: "WhatMatters on X" },
 ] as const;
 
 const tiles = [
@@ -67,7 +67,7 @@ export function SequencedMarketingHeroPage() {
           <div className="flex w-full flex-col items-center gap-6">
           <HeroIntro
             step="display"
-            lead={
+            firstLine={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 {"An "}
                 <span className="whitespace-nowrap">
@@ -111,7 +111,7 @@ export function SequencedMarketingHeroPage() {
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
         <FooterReveal.Brand
-          headline="We Build WhatMatters"
+          headline="We build WhatMatters"
           ctaLabel="Start a project"
           onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"

@@ -8,7 +8,8 @@
  * Status roles: error | success | warning (+ *-muted, on-*).
  * Brand actions: primary / on-primary (WhatMatters — separate from accent).
  */
-:root {
+:root,
+[data-theme="light"] {
   /* Native UI (scrollbars, form controls, autofill) follows the theme. */
   color-scheme: light;
 
@@ -27,7 +28,12 @@
 
   /* Accent (neutral UI chrome — not brand) */
   --color-accent: #262626;
-  --color-accent-muted: #f8f8f8;
+  /*
+   * `--color-secondary` (selected pills, empty progress segments, secondary badges, item hover).
+   * It must differ from both the body (#f8f8f8) and the surface (#fff), or those fills vanish:
+   * #ebebeb is 1.12:1 on the body and 1.19:1 on the surface.
+   */
+  --color-accent-muted: #ebebeb;
   --color-on-accent: #ffffff;
 
   /* Overlays & neutral fills */
@@ -105,6 +111,24 @@
    */
   --color-brand-tint: color-mix(in srgb, var(--color-brand) 10%, transparent);
 
+  /*
+   * Brand kit colour roles (apps may set these on :root, like --color-primary; CONSUMING.md → Brand kit).
+   * Read by **Band** `tone` (the `[data-tone]` scopes at the end of this file). Two pairs only, so every
+   * on-colour stays checkable: `npx wmds-check` fails a pair under 4.5:1.
+   * - brand surface: a dark section in the brand's own colour (`tone="inverse"`). Default: the navy.
+   * - field: a saturated section colour (`tone="field"`). Default: the primary.
+   * `*-muted` is the secondary text step on that colour; it must clear 4.5:1 too.
+   */
+  /* The navy itself, not var(--color-brand): the dark brand is lifted for dark grounds, and a dark section stays deep. */
+  --color-brand-surface: #011272;
+  --color-on-brand-surface: var(--color-on-brand);
+  --color-field: var(--color-primary);
+  --color-on-field: var(--color-on-primary);
+  /*
+   * The muted steps (`--color-on-brand-surface-muted`, `--color-on-field-muted`) are optional and read
+   * with fallbacks in the tone scopes below, so they follow their pair wherever it's set.
+   */
+
   /* Derived from --color-primary — 62% clears WCAG 3:1 on white and #f8f8f8 */
   --color-focus-ring: color-mix(in srgb, var(--color-primary) 62%, transparent);
 
@@ -171,7 +195,8 @@
   --color-text-accent: #ebebeb;
 
   --color-accent: #ebebeb;
-  --color-accent-muted: #262626;
+  /* Off the body (#1b1b1b, 1.43:1) and the surface (#262626, 1.26:1), so fills and item hover show on both. */
+  --color-accent-muted: #363636;
   --color-on-accent: #171717;
 
   --color-neutral: #ffffff1a;
@@ -208,11 +233,11 @@
   --color-on-primary: #fafaf8;
 
   /*
-   * The field stays #011272. That navy on #1b1b1b is 1.09:1 and on #262626 is 1.04:1,
-   * so it cannot be the hand outline. `--color-brand-outline` is 45% navy / 55% white
-   * (about #8d94c0): 5.1:1 on #262626 and 5.8:1 on #1b1b1b.
+   * #011272 on #1b1b1b is 1.09:1, so the dark brand is the same navy hue lifted to #5566e0:
+   * 3.58:1 on the body and 3.14:1 on the surface (marks, borders, fills), and white on it is 4.81:1
+   * (send button, selected pill). Inverse bands keep the deep navy (`--color-brand-surface` is #011272 on :root).
    */
-  --color-brand: #011272;
+  --color-brand: #5566e0;
   --color-on-brand: #ffffff;
   --color-brand-outline: color-mix(in srgb, var(--color-brand) 45%, white);
   --color-brand-soft: color-mix(in srgb, var(--color-on-brand) 40%, var(--color-brand));
@@ -293,4 +318,83 @@
   --color-elevation-surface: rgb(255 250 244 / 90%);
 
   --color-skeleton: color-mix(in srgb, var(--color-text-primary) 8%, var(--color-background-muted));
+}
+
+/**
+ * Band tones — `[data-tone]` remaps the surface, text, border and fill roles to a brand-kit pair,
+ * the way `[data-theme]` swaps the palette, so every component inside re-skins. Set by **Band**.
+ * `inverse` also carries `data-theme="dark"`, so status, chart, shadow and focus roles take their dark
+ * values, and this block (later in the file) overrides the surfaces and text on the same element.
+ * Status colours are not remapped on `field`: keep validation messages off a field band.
+ */
+[data-tone="inverse"] {
+  --tone-bg: var(--color-brand-surface);
+  --tone-fg: var(--color-on-brand-surface);
+  /* Default: 72% of the ink on the surface (on the navy, about #b8bdd8, 8.7:1). */
+  --tone-muted: var(
+    --color-on-brand-surface-muted,
+    color-mix(in srgb, var(--color-on-brand-surface) 72%, var(--color-brand-surface))
+  );
+  /* Cards lift 6% toward the ink; the muted step keeps its contrast on the light side. */
+  --tone-raised: color-mix(in srgb, var(--tone-fg) 6%, var(--tone-bg));
+}
+
+[data-tone="field"] {
+  --tone-bg: var(--color-field);
+  --tone-fg: var(--color-on-field);
+  /* Default: the ink itself, since a lighter step on a mid-tone field would fall under 4.5:1. */
+  --tone-muted: var(--color-on-field-muted, var(--color-on-field));
+  /* A tinted card would pull a mid-tone field under 4.5:1, so cards sit flat on the field. */
+  --tone-raised: var(--tone-bg);  /*
+   * The field defaults to the primary, so a primary Button would vanish into it. On a field the primary
+   * inverts: the field's ink as the fill, the field colour as the label (Randy, 2026-10-29).
+   * Inverse bands keep the primary: they carry data-theme="dark", so it takes the dark (or client's dark) value.
+   */
+  --color-primary: var(--tone-fg);
+  --color-on-primary: var(--tone-bg);
+  --color-primary-hover: color-mix(in srgb, var(--tone-fg) 88%, var(--tone-bg));
+  --color-primary-active: color-mix(in srgb, var(--tone-fg) 80%, var(--tone-bg));
+}
+
+[data-tone="inverse"],
+[data-tone="field"] {
+  --color-background-body: var(--tone-bg);
+  --color-background-surface: var(--tone-raised);
+  --color-background-card: var(--tone-raised);
+  --color-background-popover: var(--tone-raised);
+  --color-background-muted: var(--tone-bg);
+
+  --color-text-primary: var(--tone-fg);
+  --color-text-secondary: var(--tone-muted);
+  --color-text-disabled: color-mix(in srgb, var(--tone-fg) 45%, var(--tone-bg));
+  --color-text-accent: var(--tone-fg);
+
+  --color-accent: var(--tone-fg);
+  --color-accent-muted: color-mix(in srgb, var(--tone-fg) 10%, var(--tone-bg));
+  --color-on-accent: var(--tone-bg);
+
+  --color-neutral: color-mix(in srgb, var(--tone-fg) 10%, transparent);
+  --color-overlay-hover: color-mix(in srgb, var(--tone-fg) 8%, transparent);
+  --color-overlay-pressed: color-mix(in srgb, var(--tone-fg) 14%, transparent);
+  /* stateColors.css derives these on :root; derive them again here so they follow the tone. */
+  --color-ghost-foreground: var(--tone-fg);
+  --color-secondary-hover: var(--color-overlay-hover);
+  --color-secondary-active: var(--color-overlay-pressed);
+  --color-ghost-hover: var(--color-overlay-hover);
+  --color-ghost-active: var(--color-overlay-pressed);
+
+  --color-border: color-mix(in srgb, var(--tone-fg) 16%, transparent);
+  --color-border-emphasized: color-mix(in srgb, var(--tone-fg) 32%, transparent);
+  /* Control edges need 3:1; the muted text step clears 4.5:1. */
+  --color-border-control: var(--tone-muted);
+  --color-fill-selected: color-mix(in srgb, var(--tone-fg) 14%, var(--tone-bg));
+  --color-elevation-edge: color-mix(in srgb, var(--tone-fg) 16%, transparent);
+  --color-elevation-surface: var(--tone-raised);
+
+  --color-skeleton: color-mix(in srgb, var(--tone-fg) 12%, var(--tone-bg));
+  /* The ink itself: a primary-tinted ring can vanish on a saturated field. */
+  --color-focus-ring: var(--tone-fg);
+
+  background-color: var(--color-background-body);
+  color: var(--color-text-primary);
 }

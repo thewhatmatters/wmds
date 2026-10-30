@@ -31,9 +31,9 @@ export type TextAreaResize = (typeof textareaResizes)[number];
 
 /** Multiline shell — element radius (Astryx `--radius-element` / 12px), not pill. */
 export const textareaSoloRadiusClasses: Record<InputSize, string> = {
-  sm: "rounded-xl",
-  md: "rounded-xl",
-  lg: "rounded-xl",
+  sm: "rounded-[var(--radius-control-box)]",
+  md: "rounded-[var(--radius-control-box)]",
+  lg: "rounded-[var(--radius-control-box)]",
 };
 
 export const textareaResizeClasses: Record<TextAreaResize, string> = {
@@ -49,8 +49,8 @@ export const textareaMinHeightClasses: Record<InputSize, string> = {
 };
 
 export const textareaFixedPaddingClasses: Record<InputSize, string> = {
-  sm: "px-2.5 py-2 text-xs leading-normal",
-  md: "px-3 py-2.5 text-sm leading-normal",
+  sm: "px-2.5 py-2 text-xs pointer-coarse:text-base leading-normal",
+  md: "px-3 py-2.5 text-sm pointer-coarse:text-base leading-normal",
   lg: "px-4 py-3 text-base leading-normal",
 };
 

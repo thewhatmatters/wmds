@@ -2,7 +2,7 @@
 import { createElement } from "react";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   IntakeForm,
   intakeAboutEmpty,
@@ -76,19 +76,19 @@ describe("IntakeForm blur errors", () => {
     const onChange = (next: typeof values) => {
       values = next;
       act(() => {
-        root?.render(createElement(IntakeForm, { values, onChange }));
+        root?.render(createElement(IntakeForm, { values, onChange, company: true }));
       });
     };
 
     act(() => {
-      root?.render(createElement(IntakeForm, { values, onChange }));
+      root?.render(createElement(IntakeForm, { values, onChange, company: true }));
     });
 
     const name = container.querySelector('input[aria-label="Name"]');
     const email = container.querySelector('input[aria-label="Email"]');
-    const company = container.querySelector('input[aria-label="Company"]');
-    const link = container.querySelector('input[aria-label="Link"]');
-    const details = container.querySelector('textarea[aria-label="Project details"]');
+    const company = container.querySelector('input[aria-label="Company (optional)"]');
+    const link = container.querySelector('input[aria-label="Your website"]');
+    const details = container.querySelector('textarea[aria-label="What should feel different when this work is done?"]');
     if (
       !(name instanceof HTMLInputElement) ||
       !(email instanceof HTMLInputElement) ||
@@ -111,14 +111,14 @@ describe("IntakeForm blur errors", () => {
       email.blur();
       email.dispatchEvent(new FocusEvent("blur", { bubbles: true }));
     });
-    expect(container.textContent).toContain("Please enter a valid email address.");
+    expect(container.textContent).toContain("Enter your email address.");
 
     act(() => {
       company.focus();
       company.blur();
     });
     expect(container.textContent).not.toContain("Enter your company");
-    expect(container.querySelector('input[aria-label="Company"]')?.getAttribute("aria-invalid")).toBeNull();
+    expect(container.querySelector('input[aria-label="Company (optional)"]')?.getAttribute("aria-invalid")).toBeNull();
 
     act(() => {
       details.focus();
@@ -130,8 +130,30 @@ describe("IntakeForm blur errors", () => {
       link.focus();
       link.blur();
     });
-    expect(container.textContent).not.toContain("Please enter a valid URL.");
-    expect(container.querySelector('input[aria-label="Link"]')?.getAttribute("aria-invalid")).toBeNull();
+    expect(container.textContent).not.toContain("Enter a website address like example.com.");
+    expect(container.querySelector('input[aria-label="Your website"]')?.getAttribute("aria-invalid")).toBeNull();
+  });
+
+  it("marks the exception: required fields in code, the website with an Optional badge read with it (Q2, Q4, Q7)", () => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+    act(() => {
+      root?.render(createElement(IntakeForm, { values: intakeAboutEmpty, onChange: () => {} }));
+    });
+    const fields = [...container.querySelectorAll("input, textarea")];
+    expect(fields.map((field) => field.getAttribute("aria-label"))).toEqual([
+      "Name",
+      "Email",
+      "Your website",
+      "What should feel different when this work is done?",
+    ]);
+    expect(fields.map((field) => field.getAttribute("aria-required"))).toEqual(["true", "true", null, "true"]);
+    const website = fields[2];
+    const describedBy = website.getAttribute("aria-describedby")?.split(" ") ?? [];
+    const read = describedBy.map((id) => document.getElementById(id)?.textContent).join(" ");
+    expect(read).toContain("Optional");
+    expect(container.textContent).not.toMatch(/\*/);
   });
 
   it("leaves out company and link, closing up, and keeps their values", () => {
@@ -152,12 +174,13 @@ describe("IntakeForm blur errors", () => {
       );
     });
 
-    expect(container.querySelector('input[aria-label="Company"]')).toBeNull();
-    expect(container.querySelector('input[aria-label="Link"]')).toBeNull();
+    expect(container.querySelector('input[aria-label="Company (optional)"]')).toBeNull();
+    expect(container.querySelector('input[aria-label="Your website"]')).toBeNull();
     const fields = container.querySelectorAll("input, textarea");
-    expect([...fields].map((field) => field.getAttribute("aria-label"))).toEqual(["Name", "Email", "Project details"]);
-    // Three rows, no empty slots between them.
-    expect(container.firstElementChild?.children).toHaveLength(3);
+    expect([...fields].map((field) => field.getAttribute("aria-label"))).toEqual(["Name", "Email", "What should feel different when this work is done?"]);
+    // Three rows, no empty slots between them (plus the counter's screen-reader line).
+    const rows = [...(container.firstElementChild?.children ?? [])].filter((row) => !row.hasAttribute("data-intake-counter-live"));
+    expect(rows).toHaveLength(3);
 
     const name = container.querySelector('input[aria-label="Name"]');
     if (!(name instanceof HTMLInputElement)) throw new Error("Name is missing");
@@ -168,4 +191,47 @@ describe("IntakeForm blur errors", () => {
     });
     expect(changes.at(-1)).toMatchObject({ name: "Ada", company: "Northwind", url: "https://northwind.example" });
   });
+
+  it("lets people type past the limit: no maxLength, the counter says by how much, and the error blocks the step (Form layout L9)", () => {
+    vi.useFakeTimers();
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+    const long = "x".repeat(intakeDetailsMax + 12);
+    const values = { ...intakeAboutEmpty, name: "Jordan", email: "jordan@example.com", details: long };
+    act(() => {
+      root?.render(createElement(IntakeForm, { values, onChange: () => {} }));
+    });
+    const details = container.querySelector("textarea");
+    expect(details?.hasAttribute("maxlength")).toBe(false);
+    expect(details?.value).toHaveLength(intakeDetailsMax + 12);
+    expect(container.textContent).toContain("You have 12 characters too many");
+    expect(isIntakeAboutValid(values)).toBe(false);
+
+    act(() => {
+      details?.focus();
+      details?.blur();
+    });
+    // The band says the counter's words, once: the counter line hides while the band shows.
+    const shown = [...container.querySelectorAll("p, span")].filter(
+      (node) => node.textContent === "You have 12 characters too many" && !node.hasAttribute("data-intake-counter-live"),
+    );
+    expect(shown.length).toBeLessThanOrEqual(1);
+    expect(container.querySelector('[role="alert"], [id$="-message"]')?.textContent).toContain("You have 12 characters too many");
+    expect(container.querySelector("[data-field-counter]")).toBeNull();
+
+    // The live line catches up once typing pauses, not on every keystroke.
+    const live = container.querySelector("[data-intake-counter-live]");
+    expect(live?.getAttribute("aria-live")).toBe("polite");
+    act(() => {
+      root?.render(createElement(IntakeForm, { values: { ...values, details: "x".repeat(intakeDetailsMax - 1) }, onChange: () => {} }));
+    });
+    expect(live?.textContent).toBe("You have 12 characters too many");
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+    expect(live?.textContent).toBe("1 character left");
+    vi.useRealTimers();
+  });
 });
+

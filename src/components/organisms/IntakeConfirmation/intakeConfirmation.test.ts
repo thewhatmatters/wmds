@@ -2,6 +2,7 @@
 import { createElement } from "react";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
+import { renderToString } from "react-dom/server";
 import { afterEach, describe, expect, it } from "vitest";
 import { ConfettiProvider } from "../Confetti/Confetti";
 import { IntakeConfirmation } from "./IntakeConfirmation";
@@ -61,3 +62,25 @@ describe("IntakeConfirmation booking slots", () => {
     expect(ics?.hasAttribute("download")).toBe(true);
   });
 });
+
+describe("IntakeConfirmation next step (T3)", () => {
+  const render = (props: Record<string, unknown>) =>
+    renderToString(createElement(ConfettiProvider, null, createElement(IntakeConfirmation, props as never)));
+
+  it("says what happens next and when in one sentence, with the email", () => {
+    const html = render({ variant: "emailed", email: "maria@cinderandsotol.com" });
+    expect(html).toContain("We&#x27;ll email you at maria@cinderandsotol.com within one business day with a few times that fit.");
+    expect(html).not.toContain("We reply within one business day.");
+  });
+
+  it("names the booked time in the sentence instead", () => {
+    const html = render({ variant: "booked", bookingTime: "Thu, Oct 9 · 10:00am CT" });
+    expect(html).toContain("We&#x27;ll see you on Thu, Oct 9 · 10:00am CT");
+  });
+
+  it("labels the recap", () => {
+    const html = render({ variant: "emailed", summary: "A new site before spring." });
+    expect(html).toMatch(/You told us: <q>A new site before spring\.<\/q>/);
+  });
+});
+

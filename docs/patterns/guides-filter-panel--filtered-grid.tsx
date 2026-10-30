@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.28 · Pattern — filtered grid
+// @thewhatmatters/wmds@0.4.40 · Pattern — filtered grid
 // Storybook: Guides/Filter panel → Pattern — filtered grid (?path=/story/guides-filter-panel--filtered-grid)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -32,7 +32,7 @@ export interface FilteredResource {
   title: string;
   /** Where the tile goes — the resource's page in the app, for example /resources/type-scale. */
   href: string;
-  /** Only for a tile that links straight to another site: it opens a new tab. */
+  /** Only for a tile that links straight to another site: it shows the external mark. */
   external?: boolean;
   /** The preview. */
   image: ResourceImage;
@@ -112,8 +112,8 @@ export function FilteredGrid({
     >
       <main className="grid-page bg-body">
         {overlay}
-        <div className="band py-6 sm:py-10 lg:py-14">
-          <header className="col-span-full mb-4 flex items-end justify-between gap-4 sm:mb-8">
+        <div className="band py-6 md:py-10 lg:py-14">
+          <header className="col-span-full mb-4 flex items-end justify-between gap-4 md:mb-8">
             <h1 className="type-display-2 text-fg">
               {title} {loading ? null : <span className="tabular-nums text-muted">{shown.length}</span>}
             </h1>

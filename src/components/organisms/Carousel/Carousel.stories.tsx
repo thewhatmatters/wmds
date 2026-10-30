@@ -447,3 +447,17 @@ export const ExternalCounter: Story = {
     },
   },
 };
+
+export const AutoplayCursor: Story = {
+  name: "Reference — autoplay with a follow cursor",
+  args: { autoplay: true, cursor: <span className="type-label">Drag</span> },
+  render: (args) => <ImageRow {...args} images={manyImages} />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`autoplay` drifts the row slowly back and forth. It holds while a pointer is over the row or anything in it has focus, while it's off screen, and never runs under reduced motion; the Pause button beside the scrubber stops it (WCAG 2.2.2). `cursor` is a decorative badge that follows a mouse over the row.",
+      },
+    },
+  },
+};

@@ -32,7 +32,7 @@ type Story = StoryObj<typeof meta>;
 
 function CategoricalGrid() {
   return (
-    <div className="grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+    <div className="grid max-w-3xl grid-cols-2 gap-3 md:grid-cols-3 md:grid-cols-4">
       {categoricalSwatches.map(({ slot, token, utility }) => (
         <div key={slot} className="flex flex-col gap-1.5">
           <div className={`h-20 rounded-lg border border-border ${utility}`} aria-hidden />

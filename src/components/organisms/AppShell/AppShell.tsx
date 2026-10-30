@@ -12,15 +12,20 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
-import { PanelLeft } from "lucide-react";
+import { ChevronDown, PanelLeft } from "lucide-react";
+import { Button } from "../../atoms/Button/Button";
 import { IconButton } from "../../atoms/IconButton/IconButton";
 import { Kbd } from "../../atoms/Kbd/Kbd";
 import { Tooltip } from "../../atoms/Tooltip/Tooltip";
 import { PageHeader } from "../../molecules/PageHeader/PageHeader";
+import { pageHeaderTitleClasses } from "../../molecules/PageHeader/pageHeaderStyles";
 import { cn } from "../../../lib/cn";
+import { OverlayPanelHeader } from "../Dialog/OverlayPanelHeader";
+import { overlayPanelBodyScrollClasses, overlayPanelSectionStackClasses } from "../Dialog/dialogStyles";
 import { Panel } from "../Panel/Panel";
 import { Sheet } from "../Sheet/Sheet";
 import {
+  appShellAsideDockedClasses,
   appShellBrandClasses,
   appShellCanvasClasses,
   appShellMainClasses,
@@ -59,6 +64,12 @@ const DEFAULT_LABELS: AppShellLabels = {
   skipToContent: "Skip to content",
 };
 
+export const appShellAsideModes = ["overlay", "docked"] as const;
+export type AppShellAsideMode = (typeof appShellAsideModes)[number];
+
+export const appShellMenuButtons = ["icon", "label", "picker"] as const;
+export type AppShellMenuButton = (typeof appShellMenuButtons)[number];
+
 export interface AppShellProps {
   /** Page title — the `h1` in the title bar. */
   title: string;
@@ -79,11 +90,25 @@ export interface AppShellProps {
   sidebarOpen?: boolean;
   defaultSidebarOpen?: boolean;
   onSidebarOpenChange?: (open: boolean) => void;
+  /**
+   * `overlay` (default): the aside is a non-blocking **Panel** over the page.
+   * `docked`: from `lg` it sits beside the page, which narrows to make room, for controls you use while
+   * watching the page change (a font panel). Below `lg` it's the overlay **Panel** either way.
+   */
+  asideMode?: AppShellAsideMode;
   /** Aside open — controlled. */
   asideOpen?: boolean;
   defaultAsideOpen?: boolean;
   onAsideOpenChange?: (open: boolean) => void;
   labels?: Partial<AppShellLabels>;
+  /**
+   * The phone menu button (below `lg`): `icon` (default); `label`, the icon plus `labels.menu` as visible
+   * text ("Patterns"), when the glyph alone wouldn't say what the menu holds; or `picker`, the icon plus the
+   * current page (`title`) and a chevron, standing in for the title on phones, when the menu is a list of
+   * pages and the button should say which one you're on ("Hero — Feature Center ▾"). With `picker` the
+   * `h1` stays in the page for screen readers but is only visible from `lg`.
+   */
+  menuButton?: AppShellMenuButton;
   /** Page content. **AppShell.Brand**, **Sidebar**, **Header**, and **Aside** children fill their slots instead. */
   children?: ReactNode;
   className?: AppShellLayoutClassName;
@@ -205,6 +230,8 @@ function AppShellRoot({
   asideOpen: asideOpenProp,
   defaultAsideOpen = false,
   onAsideOpenChange,
+  asideMode = "overlay",
+  menuButton = "icon",
   labels: labelsProp,
   children,
   className,
@@ -230,6 +257,8 @@ function AppShellRoot({
     onAsideOpenChange,
   );
   const [menuOpen, setMenuOpen] = useState(false);
+  // False on the server and the first paint, so a docked aside starts as the overlay until the query runs.
+  const [isDesktop, setIsDesktop] = useState(false);
 
   const sidebarId = useId();
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -257,7 +286,9 @@ function AppShellRoot({
   // Close the phone menu when the viewport grows past `lg`.
   useEffect(() => {
     const query = window.matchMedia(DESKTOP_QUERY);
+    setIsDesktop(query.matches);
     function handleChange(event: MediaQueryListEvent) {
+      setIsDesktop(event.matches);
       if (event.matches) setMenuOpen(false);
     }
     query.addEventListener("change", handleChange);
@@ -297,6 +328,31 @@ function AppShellRoot({
     if (target.closest("nav a[href], nav button") != null) setMenuOpen(false);
   }
 
+  const docked = hasAside && asideMode === "docked" && isDesktop;
+  const asideId = `${sidebarId}-aside`;
+  const asideRef = useRef<HTMLElement>(null);
+  const asideReturnFocusRef = useRef<HTMLElement | null>(null);
+
+  // Docked: remember what opened the aside, and give focus back there when it closes from inside.
+  useEffect(() => {
+    if (!docked) return;
+    if (asideOpen) {
+      asideReturnFocusRef.current = document.activeElement as HTMLElement | null;
+    } else {
+      asideReturnFocusRef.current = null;
+    }
+  }, [asideOpen, docked]);
+
+  function closeDockedAside() {
+    const returnTo = asideReturnFocusRef.current;
+    const focusInside = asideRef.current?.contains(document.activeElement) ?? false;
+    setAsideOpen(false);
+    if (focusInside) {
+      if (returnTo?.isConnected) returnTo.focus();
+      else document.getElementById(`${sidebarId}-main`)?.focus();
+    }
+  }
+
   const desktopLabel = sidebarOpen ? labels.collapse : labels.expand;
   const mainId = `${sidebarId}-main`;
   const brandRow = brand != null ? <div className={appShellBrandClasses}>{brand}</div> : null;
@@ -330,17 +386,51 @@ function AppShellRoot({
           </span>
         </Tooltip.Content>
       </Tooltip>
-      <IconButton
-        role="ghost"
-        size="sm"
-        icon={<PanelLeft strokeWidth={2} />}
-        aria-label={labels.menu}
-        aria-expanded={menuOpen}
-        aria-haspopup="dialog"
-        aria-keyshortcuts="Control+B Meta+B"
-        className={appShellToggleMobileClasses}
-        onClick={() => setMenuOpen(true)}
-      />
+      {menuButton === "picker" ? (
+        <Button
+          role="ghost"
+          size="sm"
+          icon={<PanelLeft strokeWidth={2} />}
+          aria-label={`${labels.menu}: ${title}`}
+          aria-expanded={menuOpen}
+          aria-haspopup="dialog"
+          aria-keyshortcuts="Control+B Meta+B"
+          // Button's label span may shrink, so the name truncates and the chevron stays on its line.
+          className={cn(appShellToggleMobileClasses, "min-w-0 max-w-full [&>span:last-child]:min-w-0")}
+          onClick={() => setMenuOpen(true)}
+        >
+          <span className="flex min-w-0 items-center gap-1">
+            <span className="min-w-0 truncate">{title}</span>
+            {/* A plain chevron, not `endIcon` (that's the filled square of a menu trigger). */}
+            <ChevronDown strokeWidth={2} aria-hidden="true" className="size-4 shrink-0 text-muted" />
+          </span>
+        </Button>
+      ) : menuButton === "label" ? (
+        <Button
+          role="ghost"
+          size="sm"
+          icon={<PanelLeft strokeWidth={2} />}
+          aria-expanded={menuOpen}
+          aria-haspopup="dialog"
+          aria-keyshortcuts="Control+B Meta+B"
+          className={cn(appShellToggleMobileClasses, "shrink-0")}
+          onClick={() => setMenuOpen(true)}
+        >
+          {labels.menu}
+        </Button>
+      ) : (
+        <IconButton
+          role="ghost"
+          size="sm"
+          icon={<PanelLeft strokeWidth={2} />}
+          aria-label={labels.menu}
+          aria-expanded={menuOpen}
+          aria-haspopup="dialog"
+          aria-keyshortcuts="Control+B Meta+B"
+          className={appShellToggleMobileClasses}
+          onClick={() => setMenuOpen(true)}
+        />
+      )}
     </Tooltip.Provider>
   ) : null;
 
@@ -372,11 +462,53 @@ function AppShellRoot({
 
         <div className={appShellCanvasClasses}>
           <div className={appShellSurfaceClasses}>
-            <PageHeader variant="app" title={title} aria-label={title} start={toggle} end={header} />
+            {menuButton === "picker" ? (
+              // The picker names the page below lg, so the h1 is visible only from lg (screen readers always get it).
+              <PageHeader
+                variant="app"
+                aria-label={title}
+                start={
+                  <>
+                    {toggle}
+                    <h1 className={cn(pageHeaderTitleClasses.app, "max-lg:sr-only")}>{title}</h1>
+                  </>
+                }
+                end={header}
+              />
+            ) : (
+              <PageHeader variant="app" title={title} aria-label={title} start={toggle} end={header} />
+            )}
             <main id={mainId} tabIndex={-1} className={appShellMainClasses}>
               {slots.content}
             </main>
           </div>
+          {docked && asideOpen ? (
+            <aside
+              ref={asideRef}
+              id={asideId}
+              aria-labelledby={`${asideId}-title`}
+              className={appShellAsideDockedClasses}
+              onKeyDown={(event) => {
+                if (event.key === "Escape" && !event.defaultPrevented) {
+                  event.preventDefault();
+                  closeDockedAside();
+                }
+              }}
+            >
+              <div className={overlayPanelSectionStackClasses}>
+                <OverlayPanelHeader
+                  titleId={`${asideId}-title`}
+                  descriptionId={`${asideId}-description`}
+                  title={asideTitle ?? slots.aside?.title ?? labels.aside}
+                  description={asideDescription ?? slots.aside?.description}
+                  closeLabel="Close panel"
+                  onClose={closeDockedAside}
+                  delineated
+                />
+                <div className={cn(overlayPanelBodyScrollClasses, "pb-4")}>{aside}</div>
+              </div>
+            </aside>
+          ) : null}
         </div>
 
         {hasSidebar ? (
@@ -392,7 +524,7 @@ function AppShellRoot({
           </Sheet>
         ) : null}
 
-        {hasAside ? (
+        {hasAside && !docked ? (
           <Panel open={asideOpen} onOpenChange={setAsideOpen}>
             <Panel.Content
               side="end"
@@ -410,7 +542,8 @@ function AppShellRoot({
 
 /**
  * App chrome — a sidebar on the page background and the page as an inset, raised surface with a
- * title bar. Below `lg` the sidebar is a start **Sheet**; the optional aside is a non-blocking **Panel**.
+ * title bar. Below `lg` the sidebar is a start **Sheet**; the optional aside is a non-blocking **Panel**,
+ * or with `asideMode="docked"`, from `lg`, a column beside the page.
  */
 export const AppShell = Object.assign(AppShellRoot, {
   Brand: AppShellBrand,

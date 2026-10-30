@@ -37,9 +37,9 @@ export const OpensFromTileAndReturnsFocus: Story = {
 
     expect(within(dialog).getByText("3 of 9")).toBeInTheDocument();
     expect(within(dialog).getByRole("heading", { level: 2, name: "Contrast checker" })).toBeInTheDocument();
-    const visit = within(dialog).getByRole("link", { name: "Visit contrast.example (opens in a new tab)" });
+    const visit = within(dialog).getByRole("link", { name: "Visit contrast.example" });
     expect(visit).toHaveAttribute("href", "https://contrast.example");
-    expect(visit).toHaveAttribute("target", "_blank");
+    expect(visit).not.toHaveAttribute("target");
     expect(within(dialog).getByText("Source")).toBeInTheDocument();
 
     await userEvent.keyboard("{Escape}");
@@ -61,8 +61,8 @@ export const MovesBetweenResources: Story = {
     const previous = within(dialog).getByRole("button", { name: "Previous resource" });
     const next = within(dialog).getByRole("button", { name: "Next resource" });
     // The first resource has nothing before it.
-    expect(previous).toBeDisabled();
-    expect(next).toBeEnabled();
+    expect(previous).toHaveAttribute("aria-disabled", "true");
+    expect(next).not.toHaveAttribute("aria-disabled");
 
     await userEvent.click(next);
     await waitFor(() => {
@@ -73,7 +73,7 @@ export const MovesBetweenResources: Story = {
     expect(video).not.toBeNull();
     expect(video).toHaveAttribute("controls");
     expect(video).not.toHaveAttribute("autoplay");
-    expect(previous).toBeEnabled();
+    expect(previous).not.toHaveAttribute("aria-disabled");
 
     await userEvent.keyboard("{ArrowRight}");
     await waitFor(() => {
@@ -100,8 +100,8 @@ export const LastResource: Story = {
   render: () => <ResourceDetailOverGrid startAt="landing-archive" />,
   play: async () => {
     const dialog = await waitFor(() => body().getByRole("dialog", { name: "Landing page archive" }));
-    expect(within(dialog).getByRole("button", { name: "Next resource" })).toBeDisabled();
-    expect(within(dialog).getByRole("button", { name: "Previous resource" })).toBeEnabled();
+    expect(within(dialog).getByRole("button", { name: "Next resource" })).toHaveAttribute("aria-disabled", "true");
+    expect(within(dialog).getByRole("button", { name: "Previous resource" })).not.toHaveAttribute("aria-disabled");
     expect(within(dialog).getByText("9 of 9")).toBeInTheDocument();
     await userEvent.keyboard("{Escape}");
     await waitFor(() => {
@@ -120,7 +120,7 @@ export const PageForm: Story = {
     const path = canvas.getByRole("navigation");
     expect(within(path).getByRole("link", { name: "Resources" })).toBeInTheDocument();
     expect(within(path).getByText("Contrast checker")).toHaveAttribute("aria-current", "page");
-    expect(canvas.getByRole("link", { name: "Visit contrast.example (opens in a new tab)" })).toBeInTheDocument();
+    expect(canvas.getByRole("link", { name: "Visit contrast.example" })).toBeInTheDocument();
     expect(canvas.getByText("Made by")).toBeInTheDocument();
     expect(canvas.queryByRole("button", { name: "Next resource" })).toBeNull();
   },

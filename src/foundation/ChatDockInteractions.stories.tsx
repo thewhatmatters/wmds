@@ -779,7 +779,7 @@ export const GateKeysAndSteps: Story = {
     const third = within(gate).getByRole("checkbox", { name: "Mobile apps" });
     expect(within(gate).getByText("1 of 2")).toBeInTheDocument();
     const next = within(gate).getByRole("button", { name: "Next" });
-    expect(next).toBeDisabled();
+    expect(next).toHaveAttribute("aria-disabled", "true");
 
     await userEvent.keyboard("1");
     expect(first).toBeChecked();
@@ -796,20 +796,20 @@ export const GateKeysAndSteps: Story = {
     await userEvent.keyboard("3");
     expect(third).not.toBeChecked();
 
-    expect(next).toBeEnabled();
+    expect(next).not.toHaveAttribute("aria-disabled");
     await userEvent.click(within(gate).getByRole("button", { name: "Next step" }));
     await waitFor(() => {
       expect(within(gate).getByText("2 of 2")).toBeInTheDocument();
       expect(within(gate).getByText("Thanks — that's everything.")).toBeInTheDocument();
     });
     // The last step: the header's next is off, and without onNext there is no primary action.
-    expect(within(gate).getByRole("button", { name: "Next step" })).toBeDisabled();
+    expect(within(gate).getByRole("button", { name: "Next step" })).toHaveAttribute("aria-disabled", "true");
     expect(within(gate).queryByRole("button", { name: "Next" })).toBeNull();
     await userEvent.click(within(gate).getByRole("button", { name: "Previous step" }));
     await waitFor(() => {
       expect(within(gate).getByRole("checkbox", { name: "Brand identity" })).toBeInTheDocument();
     });
-    expect(within(gate).getByRole("button", { name: "Previous step" })).toBeDisabled();
+    expect(within(gate).getByRole("button", { name: "Previous step" })).toHaveAttribute("aria-disabled", "true");
     await waitForWindowSettled(canvasElement);
   },
 };
@@ -1013,8 +1013,8 @@ export const GatePendingAndError: Story = {
     // Pending: announced, the gate busy, its controls off.
     expect(within(gate).getByRole("status")).toHaveTextContent("Sending…");
     expect(gate).toHaveAttribute("aria-busy", "true");
-    expect(within(gate).getByRole("button", { name: "Cancel" })).toBeDisabled();
-    expect(within(gate).getByRole("button", { name: "Send" })).toBeDisabled();
+    expect(within(gate).getByRole("button", { name: "Cancel" })).toHaveAttribute("aria-disabled", "true");
+    expect(within(gate).getByRole("button", { name: "Send" })).toHaveAttribute("aria-disabled", "true");
 
     // It fails: the gate stays, says so, and offers Try again.
     sendResults[0]?.reject();

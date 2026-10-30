@@ -25,7 +25,7 @@ A blog post page — a display title, a metadata panel, and the article. Copy **
 | Author, categories | **Badge** \`emphasis="outline"\` \`mono\` | Categories are links (\`render={<a href />}\`) to the filtered blog |
 | Copy for LLM | **Button** \`icon\` + \`status\` (**Pattern — copy button**) | The Copy glyph turns into the check; the result is announced |
 | View as Markdown | **Button** \`render={<a href />}\` | Same-site link |
-| Share | **Button** \`external\` | New tab, safe \`rel\`, spoken "opens in a new tab" |
+| Share | **Button** \`external\` | External icon, same tab (Links K9) |
 | Article | **Prose** | Plain elements from the markdown, at \`type-reading\` on a 40rem measure |
 
 ## Anatomy
@@ -280,8 +280,8 @@ export function PostPage({
   return (
     <main className="grid-page bg-body">
       {overlay}
-      <article className="band py-6 sm:py-10 lg:py-14">
-        <header className="col-span-full mb-4 flex flex-col gap-3 sm:mb-8 lg:col-span-10">
+      <article className="band py-6 md:py-10 lg:py-14">
+        <header className="col-span-full mb-4 flex flex-col gap-3 md:mb-8 lg:col-span-10">
           <Breadcrumb
             items={post.breadcrumb}
             variant="mono"

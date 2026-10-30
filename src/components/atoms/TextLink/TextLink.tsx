@@ -32,8 +32,16 @@ export interface TextLinkProps
    * and weight. For headline-size text and list titles.
    */
   variant?: TextLinkVariant;
-  /** Opens in a new tab and appends the external-destination icon. */
+  /**
+   * Marks a link that leaves the site: appends the external-destination icon. Opens in the same tab unless
+   * `newTab` is set (Links rule K9).
+   */
   external?: boolean;
+  /**
+   * Opt-in: open in a new tab. Adds "(opens in a new tab)" to the accessible name and `rel="noopener noreferrer"`.
+   * Use it only when leaving the page would lose the reader's work.
+   */
+  newTab?: boolean;
   /** Layout-only: margin or placement. */
   className?: TextLinkLayoutClassName;
 }
@@ -45,11 +53,12 @@ export function TextLink({
   children,
   variant = "prose",
   external = false,
+  newTab = false,
   className,
   rel,
   ...anchorProps
 }: TextLinkProps) {
-  const safeRel = external && rel == null ? "noopener noreferrer" : rel;
+  const safeRel = newTab && rel == null ? "noopener noreferrer" : rel;
 
   if (href == null && render == null) {
     console.warn("[WMDS TextLink] Pass `href`, or `render` with a link that carries it.");
@@ -61,18 +70,14 @@ export function TextLink({
     props: {
       ...anchorProps,
       ...(href != null ? { href } : null),
-      ...(external ? { target: "_blank" } : null),
+      ...(newTab ? { target: "_blank" } : null),
       ...(safeRel != null ? { rel: safeRel } : null),
       className: cn(textLinkVariantClasses[variant], className),
       children: (
         <>
           {children}
-          {external ? (
-            <>
-              <SquareArrowOutUpRight className={textLinkExternalIconClasses} strokeWidth={2} aria-hidden />
-              <span className="sr-only"> (opens in a new tab)</span>
-            </>
-          ) : null}
+          {external ? <SquareArrowOutUpRight className={textLinkExternalIconClasses} strokeWidth={2} aria-hidden /> : null}
+          {newTab ? <span className="sr-only"> (opens in a new tab)</span> : null}
         </>
       ),
     },

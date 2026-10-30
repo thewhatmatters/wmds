@@ -1,7 +1,7 @@
 import { typographyClass } from "../../../lib/typography";
 
 export const logViewRootClasses =
-  "flex min-h-0 flex-col overflow-hidden rounded-xl border border-border bg-surface";
+  "flex min-h-0 flex-col overflow-hidden rounded-[var(--radius-surface-md)] border border-border bg-surface";
 
 export const logViewToolbarClasses =
   "flex h-9 shrink-0 items-center gap-2 border-b border-border px-3";

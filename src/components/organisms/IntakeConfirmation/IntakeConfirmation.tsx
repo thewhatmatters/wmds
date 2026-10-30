@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
 import { TextLink } from "../../atoms/TextLink/TextLink";
@@ -11,6 +13,7 @@ import {
   intakeConfirmationClasses,
   intakeConfirmationCopy,
   intakeConfirmationMetaClasses,
+  intakeConfirmationReplyWithin,
   intakeConfirmationTitleClasses,
   intakeConfettiColors,
   type IntakeConfirmationVariant,
@@ -18,6 +21,7 @@ import {
 
 export {
   intakeConfirmationCopy,
+  intakeConfirmationReplyWithin,
   intakeConfirmationVariants,
   intakeConfettiColors,
   type IntakeConfirmationVariant,
@@ -45,6 +49,17 @@ export interface IntakeConfirmationProps {
   icsHref?: string;
   /** Label for the `.ics` action. Default `Download .ics`. */
   icsLabel?: string;
+  /** Where we'll reply (`emailed`): "We'll email you at {email} …". */
+  email?: string;
+  /**
+   * When we'll reply (Contact and booking forms T3), part of the one "what happens next" sentence. Default
+   * "within one business day". Never promise what you don't keep.
+   */
+  replyWithin?: string;
+  /** What we got: a short recap of their request, shown as "You told us: “…”" (e.g. "A new site before spring"). */
+  summary?: ReactNode;
+  /** How to reach us meanwhile: phone, email, hours (T1, T3). */
+  contact?: ReactNode;
   className?: IntakeConfirmationLayoutClassName;
 }
 
@@ -64,11 +79,21 @@ export function IntakeConfirmation({
   googleCalendarLabel = "Add to Google Calendar",
   icsHref,
   icsLabel = "Download .ics",
+  email,
+  replyWithin = intakeConfirmationReplyWithin,
+  summary,
+  contact,
   className,
 }: IntakeConfirmationProps) {
   const copy = intakeConfirmationCopy[variant];
+  /** T3: what happens next and when, in one sentence. */
+  const nextStep =
+    variant === "emailed"
+      ? `We'll email you${email ? ` at ${email}` : ""} ${replyWithin} with a few times that fit.`
+      : bookingTime != null
+        ? `We'll see you on ${bookingTime}, and we'll email a short note before so you know what to bring.`
+        : copy.body;
   const hasActions =
-    bookingTime != null ||
     videoHref != null ||
     googleCalendarHref != null ||
     icsHref != null;
@@ -93,12 +118,14 @@ export function IntakeConfirmation({
         {copy.badge}
       </Badge>
       <h2 className={intakeConfirmationTitleClasses}>{copy.title}</h2>
-      <p className={intakeConfirmationBodyClasses}>{copy.body}</p>
+      <p className={intakeConfirmationBodyClasses}>{nextStep}</p>
+      {summary != null ? (
+        <p className={intakeConfirmationMetaClasses} data-intake-summary="">
+          You told us: <q>{summary}</q>
+        </p>
+      ) : null}
       {hasActions ? (
         <div className={intakeConfirmationActionsClasses}>
-          {bookingTime != null ? (
-            <p className={intakeConfirmationMetaClasses}>{bookingTime}</p>
-          ) : null}
           {videoHref != null ? (
             <TextLink href={videoHref} external>
               {videoLabel}
@@ -116,6 +143,7 @@ export function IntakeConfirmation({
           ) : null}
         </div>
       ) : null}
+      {contact != null ? <div className={intakeConfirmationMetaClasses}>{contact}</div> : null}
       {onDone != null ? (
         <Button role="primary" type="button" onClick={onDone}>
           Done

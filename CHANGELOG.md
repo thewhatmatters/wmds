@@ -7,10 +7,257 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.40
+
+**AppShell: the phone page picker stays on one line.**
+
+- **AppShell** `menuButton="picker"`: a long page name wrapped the chevron onto a second line, because Button's label couldn't shrink. The name now ends in an ellipsis and the chevron stays beside it. The story uses a long title and its test checks both.
+
+### Consumer actions
+
+- None.
+
+## 0.4.39
+
+**AppShell: the phone page picker's chevron is a plain glyph.**
+
+- **AppShell** `menuButton="picker"`: the chevron after the page name was a filled square (Button `endIcon`, which is a menu trigger's square); it's a plain muted chevron now.
+
+### Consumer actions
+
+- None.
+
+## 0.4.38
+
+**AppShell: a page picker on the phone menu button.**
+
+- **AppShell** `menuButton="picker"` (new): below `lg` the menu button shows the icon, the current page (`title`, truncating) and a chevron, standing in for the title, so a long page name isn't cut to one word ("Hero — Feature Center ▾"). Its name is `labels.menu: title`. The `h1` stays in the page for screen readers and is visible from `lg`.
+- Story **AppShell → State — phone, page picker**, with an interaction test.
+
+### Consumer actions
+
+- None.
+
+## 0.4.37
+
+**AppShell: a docked aside you can use while watching the page, a labelled phone menu button, and titles that end in an ellipsis.**
+
+- **AppShell** `asideMode` (new): `overlay` (default, unchanged) or `docked`. Docked, from `lg`, the aside is a raised column beside the page (320px), and the page narrows to make room instead of being covered: for controls you use while watching the page change, like a font panel. It's a `complementary` landmark named by its title; Close or Escape from inside returns focus to the button that opened it. Below `lg` it's the overlay **Panel** either way. New exports `appShellAsideModes`, `AppShellAsideMode`.
+- **AppShell** `menuButton` (new): `icon` (default, unchanged) or `label`, the icon plus `labels.menu` as visible text on the phone menu button (Header rule N7), for when the glyph alone doesn't say what the menu holds. New exports `appShellMenuButtons`, `AppShellMenuButton`.
+- **PageHeader** `variant="app"`: a long title ends in an ellipsis on one line instead of wrapping out of the 56px band.
+- Stories **AppShell → State — aside docked** and **State — phone, labelled menu**, with interaction tests (the page narrows, no dialog, focus returns on Close and Escape; the labelled button opens the menu).
+
+### Consumer actions
+
+- None.
+
+## 0.4.36
+
+**Colour fixes from building every component in light and dark: fills that vanished, the navy on the dark body, invalid hovers, and a primary Button on a band.**
+
+- **`--color-accent-muted`** (and `--color-secondary`, which reads it): `#ebebeb` light (was the body's `#f8f8f8`), `#363636` dark (was the surface's `#262626`). The selected NavList pill, empty StepProgress segments, secondary Badges and Buttons, the AppShell avatar, Chips, and the Dropdown and Select item hover now show on the body and the surface.
+- **`--color-brand` in dark** is `#5566e0`, the navy's hue lifted (was `#011272`, 1.09:1 on the dark body): 3.58:1 on the body, 3.14:1 on the surface, white on it 4.81:1. The PromptBar send button, the selected SelectableCard border, the filled StepProgress segment, FooterReveal, TextSequence and TextSequenceShape marks now read in dark. **`--color-brand-surface` defaults to `#011272` itself** (it was `var(--color-brand)`), so `tone="inverse"` bands keep the deep navy in dark, and a client's own brand surface still wins.
+- **Dark status hovers:** `--color-{error,success,warning,info}-hover` mixed `108%` with white, which is invalid, so the browser dropped them. They're `88%` with white now, the same lift as the primary.
+- **Primary on a field band:** inside `tone="field"`, `--color-primary` inverts to the field's ink with the field colour as its label (Randy, 2026-10-29). A primary Button on a field band was the band's own colour, since the field defaults to the primary. Inverse bands are unchanged (they take the dark, or the client's dark, primary).
+- **Type scale metadata:** `astryxTypeScale` lists display line heights 1.05 / 1.1 / 1.15, matching typography.css (it said 1.15 / 1.2 / 1.24).
+- **FooterReveal.Ruled** in dark keeps the deep navy ink on its white field.
+- Tests: no `color-mix` above 100%; the secondary fill separates from body and surface in both themes; the dark brand's contrast; the field primary inversion; the type metadata matches the CSS.
+
+### Consumer actions
+
+- None required. Look at dark mode where you use `bg-brand` / `text-brand` as a large field: it's the lighter `#5566e0` now. Use `--color-brand-surface` (or a `tone="inverse"` Band) for a deep navy section in dark.
+- If your brand stylesheet sets `--color-brand` for dark, keep it at 3:1 or more on `--color-background-body` and white at 4.5:1 or more on it.
+
+## 0.4.35
+
+**Contact and booking forms: two steps, booking after the request, a way out above the calendar, and nothing lost on close.**
+
+- **IntakeModal** (Contact and booking forms T7, T9):
+  - Two steps by default (`steps` was 4): details, then the optional booking. The confirmation isn't counted.
+  - New `hasAnswers`: with typed answers, Close and Escape ask "Discard your answers?" (Keep editing, focused / Discard).
+  - New **useIntakeUrlState**: keeps `?sketch` in the URL while the modal is open. The link can be shared, a refresh reopens it, and Back closes it.
+- **CalEmbed** (T8): the "Skip, just email me" link sits **above** the calendar, so on a phone it's visible without scrolling past the month. With no embed (not set up, or it failed), the email route shows inside the empty state straight away.
+- **CalEmbed stories:** "Pattern — skip in footer" is replaced by **Pattern — skip above the calendar** (`CalEmbed.Skip` in `Card.Header`). The pasted pattern id changes, so `wmds-check` reports `pattern-removed` for copies of the old one: move the skip above the calendar.
+- **IntakeConfirmation** (T2, T3): one "what happens next and when" sentence: `email` and `replyWithin` (default "within one business day") give "We'll email you at {email} within one business day with a few times that fit."; the booked variant names `bookingTime` in it. `summary` shows as "You told us: “…”". Then `contact`, then Done. New export `intakeConfirmationReplyWithin`.
+- **IntakeModal**: no Back on step 1; the WM mark and wordmark take the ink in dark mode (navy on near-black failed 3:1).
+- **IntakeHoneypot** and `isIntakeHoneypotFilled` (new, T4): a spam trap people never see or reach (`aria-hidden`, `tabindex="-1"`, no autofill). Drop requests where it's filled, on the server, with rate limits. No CAPTCHA.
+- Stories **Components/IntakeModal → Pattern — sketch request** (details → optional booking → confirmation; "Send my request"; reply time under the form; contact details on the confirmation) and **Pattern — send failed** (answers kept, Try again, email route; T5, T6). Interaction tests cover the URL, the discard question, both steps, Back keeping answers, the skip above the calendar, the failure and the honeypot.
+
+### Consumer actions
+
+- Pass `steps={2}` or drop `steps`, and move the booking after the details are sent.
+- Pass `hasAnswers` while the visitor has typed something, and keep answers in your state.
+- Open the modal with `useIntakeUrlState`, and give the form its own page too (see wmds-patterns Contact — Sketch Page).
+- Add **IntakeHoneypot** and check it on the server.
+- On the confirmation, pass `summary` and `contact`. Pass `email` so the sentence names it, and change `replyWithin` if one business day isn't true for you.
+- If you placed `CalEmbed.Skip` after the calendar (for example in `Card.Footer`), move it to `Card.Header`, above the calendar.
+
+## 0.4.34
+
+**Required and optional fields: mark the exception, read the badge with the field, never on autofill. Field width and form layout: widths that hint at the answer, a State select, side labels only on wide screens, and counters that don't cut text. Dropdowns, radios and checkboxes: a native Select for forms, bigger boxes with visible borders, and errors on Continue.**
+
+- **Field** `description` sits **between the label and the control** (was below; Labels and placeholders F8), so every hint is read before typing. New **`counter`** prop: a character counter, the one helper that stays below the control. Both join the control's accessible description (hint first). New test **fieldHintOrder.test.ts**.
+- **IntakeForm**: hints above their fields; the details counter ("67 / 400") uses `counter`, below the box. Company's hint is "So we can read up on you first."
+- **Input** `endBadge` (Required and optional Q8):
+  - Screen readers hear the badge as part of the field's description, after the hint.
+  - With a status icon, the icon comes first, then the badge (it used to be the badge, then the icon).
+  - The field keeps room for the badge, so a long value stops before it. A new interaction test checks this at phone width.
+  - Input warns in the console when `endBadge` sits on an autofill field (`autoComplete` name, email, tel, password, address or organization fields).
+- **wmds-check** `badge-on-autofill` (new, error): fails an Input with `endBadge` on an autofill field. Put "(optional)" in the label there.
+- **IntakeForm** (Q2, Q7, Q9):
+  - Name, email and project details carry `aria-required`.
+  - The website field is now labelled "Your website", with an "Optional" badge and a stated use ("So we can see what you have now.").
+  - **Company is off by default** (`company` turns it on). It's labelled "Company (optional)", since it's an autofill field.
+- **Field width** (Form layout L7): **Input** and **Select** take `width` in characters (`2ch`, `4ch`, `5ch`, `10ch`, `20ch`; default `full`) for fixed-length answers, never wider than their container. The label and hint keep their own width. A short field keeps its width when an error shows; the status band under it is at least 18rem wide, so the message reads on one or two lines. Story **Components/Input → Pattern — field widths** (city, state and ZIP share a row).
+- **State select** (L7): `usStateOptions` (new export) lists the 50 states and DC as two-letter abbreviations. Story **Components/Select → Pattern — US state**.
+- **Select `native`** (Dropdowns C8): the browser's own `<select>` in the WMDS shell, with the same chevron, sizes and focus ring, and 16px text on touch. The phone opens its own picker, typing jumps to an option, the browser can autofill it (`autoComplete="address-level1"`), and it submits with a plain form. It's the default when a Select has `name` or `autoComplete`. The custom listbox stays for toolbars, filters and menus with icons or counts (native options are text only). New `required` prop.
+- **Select** `description` sits above the trigger (Labels F8), like Input, TextArea and Field.
+- **Field** `orientation="horizontal"` (L8) puts the label beside the control only from `lg` (1024) and stacks below it. Use it for dense app settings only, never marketing or contact forms.
+- **IntakeForm counter** (L9): no `maxLength`, so a long paste stays whole. The counter says "N characters left" or "You have N characters too many". A screen reader hears it once typing pauses, not on every keystroke. Over the limit, the error band repeats the counter's words ("You have 7 characters too many"), and the counter line hides while the band shows: one message, not two. `intakeCounterText` is exported. Story **Pattern — over the character limit**.
+- **IntakeModal footer** (Buttons U6, U8): Continue comes first and stays enabled; Back follows as a `ghost` button. **IntakeForm `submitCount`** (new): the caller counts Continue presses. From the first press, every field shows its error. Two or more errors put an **ErrorSummary** at the top and focus it; one error focuses its field (V5, closes gap #49). `continueDisabled` is now discouraged. Story **Components/IntakeModal → Pattern — errors on Continue**.
+- **Select**'s empty-choice text ("Select…") uses `text-muted`, which clears 4.5:1. It was `text-disabled`, which failed axe.
+- **StepProgress** names its progressbar ("Step 1 of 4"), fixing a known axe violation.
+- **Checkbox and Radio** (Dropdowns C3, C4):
+  - The box is 24px (`md`; `sm` grows to 24px on touch screens).
+  - Rows are 44px tall on touch screens.
+  - The empty box's border uses `border-control`, which clears 3:1 (it was 1.3:1).
+- **PillGroup** `label` (new): a visible question above the pills that names the group (C2, C9). `aria-label` is now optional, for a question shown as a heading right above.
+- **Docs** (C7, C9): when to use Select, Switch, SegmentedControl, PillGroup and SelectableCard. The Select "with label" story now has 8 alphabetical options, and the PillGroup story starts with nothing selected.
+- **Stories:** the Input badge stories use a website field with "Optional", not an email field. They add "Pattern — end badge with a long value" and "Pattern — end badge + status icon". The validation morph demo drops its badge from the email field.
+
+### Consumer actions
+
+- Run `npx wmds-check`, and move any badge on a name, email, phone, password, address or company field into its label ("Business email (optional)").
+- Mark the exception: in a mostly-required form, badge the optional fields "Optional".
+- `IntakeForm` no longer shows Company unless you pass `company`. The website field's accessible name changed from "Link" to "Your website".
+
+- Give ZIP, phone, year and state fields a `width`, and use `usStateOptions` for a State select with `autoComplete="address-level1"`. Remove `maxLength` from text people write, and show a counter instead.
+- Form Selects with `name` or `autoComplete` are now native; pass `native={false}` to keep the custom listbox (needed for options with `start`/`end`).
+- IntakeModal: stop passing `continueDisabled`. Count Continue presses into IntakeForm's `submitCount` instead, and note that Back is now a ghost button after Continue.
+- Give **PillGroup** a `label` (the question).
+- `Field orientation="horizontal"` now stacks below 1024px. If you relied on side labels on tablets, that changes.
+- If a **Field** `description` is a character counter, pass it as `counter` so it stays below the control.
+
+## 0.4.33
+
+**Cards can take their own tone, and a Carousel can drift on its own with a Pause button and a follow cursor.**
+
+- **Card** `tone` (new): `inverse`, `field` or `light`, the same scopes **Band** uses, so a card can stand apart from its section (testimonials, offers). Everything inside re-skins. New export `cardTones` / `CardTone`.
+- **`[data-theme="light"]`** now scopes the light palette (colors.css and stateColors.css), so a light card or block works inside a dark or toned section.
+- **Carousel** `autoplay` (new): drifts the row slowly back and forth (`true` or `{ speed }` in px a second). It holds on hover, on focus inside the row, during a drag or a scrub, off screen and in a hidden tab, and never runs under reduced motion. A **Pause** / **Play** button sits beside the scrubber (WCAG 2.2.2).
+- **Carousel** `loop` (new): the items repeat seamlessly. A copy follows the last item (hidden from assistive tech, `inert`), and the row wraps back as it passes one full set, so it never ends; with `autoplay` it drifts one way. No scrubber or counter with a loop.
+- **Carousel** sets **`--carousel-velocity`** on its root while the row moves: -1 to 1, which way and how fast, smoothed by a Motion spring and easing back to 0 when it stops (always 0 under reduced motion). Use it straight, without a CSS transition. Items can lean or skew with it, e.g. `rotate-[calc(var(--carousel-velocity,0)*8deg)]`.
+- **Carousel**: a row you can drag no longer selects text (`select-none` while it overflows), so a press-and-drag doesn't paint selection over the items.
+- **Carousel** `cursor` (new): a decorative badge that follows a mouse over the row (fine pointers that can hover), e.g. a hand icon that says "drag me".
+- **Carousel** reads reduced motion through Motion's config, so a `MotionConfig reducedMotion` around it is respected (no change under the default `user`).
+- New tests: **cardTone.test.ts**, and Carousel interaction tests **autoplay drifts, holds on hover and focus, and pauses**, **autoplay never runs under reduced motion** , **loop repeats the items seamlessly and wraps back** and **--carousel-velocity follows the row's movement and settles to 0**. New stories **Card → Reference — tones** and **Carousel → Reference — autoplay with a follow cursor**.
+
+### Consumer actions
+
+If your brand stylesheet sets colours on `:root` only, also list `[data-theme="light"]` (`:root, [data-theme="light"] { … }`) so a `tone="light"` card picks them up.
+
+## 0.4.32
+
+**Errors and validation: an error summary, errors announced as errors, no lost typing, and no iOS zoom. Labels and placeholders: every field named, the hint above the field, and inset buttons you can tap and see focused.**
+
+- **ErrorSummary** (new): "There's a problem" at the top of a form after a failed submit, one link per error in the field's own words. It takes focus when it appears, and each link moves focus to its field (V5). Story **Components/ErrorSummary → Pattern — form with an error summary**; interaction test **Internal/Interactions/ErrorSummary**.
+- **Input, TextArea, Checkbox, Radio, Switch, CheckboxGroup, RadioGroup**: the status band reads a visually hidden "Error:" or "Warning:" before the message, so screen readers hear what kind of message it is (V6).
+- **Status without a message** (V10): those components warn in the console when `status="error"` or `"warning"` has no `message`. **wmds-check** `status-without-message` (new, error) catches it in app code. A status-only success tick is fine.
+- **Input** keeps the same `<input>` when a status appears. It used to swap its wrapper and remount the field, which dropped focus and, in an uncontrolled field, **what people had typed** (V4).
+- **No iOS zoom:** Input, TextArea and Search (`sm` and `md`) and PromptBar set 16px text on touch screens (`pointer: coarse`), so Safari doesn't zoom the page when a field gets focus. Fine pointers keep 12px / 14px.
+- **IntakeForm** default messages follow V1: "Enter your email address." for an empty field, "Enter an email address like name@example.com." and "Enter a website address like example.com." for a broken rule (were "Please enter a valid email address." / "…URL.").
+- Unit test: every status band's message clears 4.5:1 on its band in light and dark (V7: 4.62–6.97:1 measured).
+- **A success tick only** (V8): a status-only `success` on Input or TextArea shows the tick and keeps the normal border (it also turned the border green).
+- **The hint sits above the field** (Labels F8): Input and TextArea render `description` between the label and the field, and keep it when a status message shows (it used to sit below and hide behind the message). Story **Components/Input → Pattern — hint with an error**.
+- **Label required** (F7): **wmds-check** `missing-label` (new, error) fails an Input, TextArea, Select or Search with no `label`, `aria-label` or `aria-labelledby`. Hide a label (`aria-label`) only on a field alone with its button: search, a one-field newsletter.
+- **Search** takes a `label` prop: the field's name for screen readers, which may stay hidden (F10). It warns in the console when there's no label at all.
+- **Inset buttons** (F10) in Search, PromptBar and CopyField get a 44px tap area on touch screens, and show their own focus ring. The pill's ring now marks only the field (Search used to ring the whole pill for the button too; PromptBar and CopyField hid the button's ring).
+- **No placeholders in forms** (F9): IntakeForm drops its placeholders ("https://", "What should feel different…"), and the stories no longer put examples in placeholders. Search keeps one, naming the action.
+
+### Consumer actions
+
+None required. Fix any `status="error"` / `"warning"` without a `message` that `npx wmds-check` reports; say what's wrong and how to fix it. After a failed submit, add **ErrorSummary** at the top of the form (copy the Pattern). On phones and tablets, field text is now 16px. Give every field a `label` (fix what `npx wmds-check` reports as `missing-label`); pass `label` to Search; move examples and formats out of placeholders into `description`. If you style around the hint, it now renders above the field.
+
+## 0.4.31
+
+**SiteNav's phone menu follows the Header rule: a "Menu" button that becomes "Close", a full-height panel under the bar, and a link tap closes it.**
+
+- **HeroIntro** `actions` (new): the CTA row under the heading and description, one primary and an optional secondary (Hero rule R2); left on phones, centred from `md`. New story **Pattern — with description and actions**. Story copy is shorter, so the intro holds 3 lines at 390: "A design studio in Austin. / We help brands stand out online." (**HeroIntro**, **HeroTileStack**, **FooterReveal** stories).
+- **SiteNav** `mobile` menu (below `md`), rebuilt to Header and mobile menu rules N5–N8:
+  - The trigger is a **Button** with an icon and a visible word, "☰ Menu", that becomes "✕ Close" in the same place (QA #28). The word is the accessible name (was an icon-only button named "Open menu" / "Close menu"). At least 44px tall.
+  - The menu opens as a full-height panel **under the bar**, not a side **Sheet**. The bar stays live, so Close sits where Menu was. The panel is a dialog: focus moves to its first link, Tab cycles through the bar and the panel, the page behind is inert and doesn't scroll, Escape or Close closes it, and focus returns to Menu. It closes when the window widens past `md`.
+  - **Tapping any link in the menu closes it** (QA #25; it used to stay open over the page).
+  - **SiteNav.MobileLink** rows are 56px and full width. The current page is marked by weight and the selected fill plus `aria-current="page"`, not colour alone.
+  - `mobileAction` (new): the main action, pinned to the bottom of the open menu.
+  - With `mobile`, the bar's `end` actions give way when brand + actions + Menu don't fit (measured, not a fixed width), so Menu keeps its word; `mobileAction` carries the main button there. Below `md` the actions and Menu sit at the trailing edge.
+  - `mobileTitle` is now a string (the dialog's accessible name).
+  - New interaction tests **Internal/Interactions/SiteNav → phone menu…** (390), **phone menu at 320** (N7) and **phone bar: trailing edge**.
+- **SiteNav** full bar: a wordmark **SiteNav.Brand** and the Menu button pull their own 16px padding past the edges, so the wordmark and the Menu word line up with the content edges (hit areas unchanged; the compact pill keeps its padding). The bar's give-way check measures the slots' margin boxes instead of `scrollWidth`, so that pull doesn't hide a CTA that fits: "Get my free sketch" stays in the bar from 390 (N9). The Menu/Close button is quiet in both states (ghost hover and press fill only). While the phone menu is open, the bar's actions hide, so the menu's own action is the one CTA on screen. New interaction test **phone bar: wordmark and Menu word sit on the content edges**.
+- **Breakpoints rule P5:** every `sm:` (640px) variant in WMDS moves to `md:` (768px): **Field** label column, **TileGrid** `--tile-grid-cols-sm` (now from `md`), **Breadcrumb** gap and label width, **FooterReveal** wordmark size, **Carousel** `--carousel-item-sm` and caption width, the Post page / Resource detail / Filter panel / Profile typography guides, and story Show code. Layout changes only between 640 and 767px, where these now keep their phone layout. New unit test: no `sm:` and no one-off `min-[…]` / `max-[…]` breakpoints anywhere in `src`.
+- `lib/dialogOverlay` exports `tabbablesIn` and `inertAllBut` (internal helpers, also used by SiteNav).
+- **ChatDock**: its 40rem chat column is documented as the text-only exception to Container width W5.
+
+### Consumer actions
+
+If you pass `mobile` to **SiteNav**, also pass `mobileAction` (usually the same **Button** as your bar CTA) so small phones still reach it when the bar is too tight for it. Keep the bar's CTA label short (about 12 characters) so it fits beside Menu at 390. Tests that find the trigger by `aria-label="Open menu"` now find it by its text, `getByRole("button", { name: "Menu" })`, and the open menu is a `dialog` named by `mobileTitle` (default "Menu"). `mobileTitle` must be a string. Re-copy any **Pattern** whose Show code used `sm:` (the generated `docs/patterns` show which changed). `--tile-grid-cols-sm` and `--carousel-item-sm` keep their names but now apply from 768px.
+
+## 0.4.30
+
+**Capitals are tracked 0.08–0.12em (Eyebrow rule E3).**
+
+- **HeroIntro** is left-aligned on phones, where it runs 3+ lines, and centred from `md` (Headings H8). The default step's heading now spans columns 2–11 from `lg` (was 4–9), so a 12-word intro holds 2 lines; `description` keeps the 6-column measure (4–9). Story copy is 12 words or fewer ("A design studio in Austin, Texas. / We help brands stand out online.") across **HeroIntro**, **HeroTileStack** and **FooterReveal** stories.
+- **`type-lead`, `type-large`, `type-body` and `type-reading`** set `text-wrap: pretty`, so a lone word doesn't end a paragraph.
+- **HeroIntro** `lead` is renamed **`firstLine`** (it's the heading's first line, not a lead paragraph). `lead` still works as a deprecated alias and warns in development. New optional **`description`**: a lead paragraph under the heading, `type-lead` in ink (Lead rules L7, L8). Story Show code updated: **Components/HeroIntro**, **Components/FooterReveal** and **Components/HeroTileStack** marketing hero patterns.
+- **Accordion** `size` (new): `ui` (default, 14px muted panel text) or `reading` (17px regular in ink) for FAQ answers and service descriptions (Body rules B7, B9). New unit test.
+- **IntakeConfirmation** body is `type-large` (regular), not `type-heading-2`: it's a paragraph (B4).
+- **Guides/PostPage** lead sits in ink (was muted) and is shorter, about 2 lines at 390 (B9, L8).
+- **Foundations/Typography** docs: `type-body` 14px is for app UI; marketing paragraphs use `type-large` or `type-reading` (B7); `type-reading` 1.65 is the long-form exception (B1).
+- **`type-large` is regular weight (was semibold; Body rule B4, Randy 2026-10-26: "regular or lighter when it's 1.5rem and below").** `--text-large-weight` is a documented knob for a face that needs more weight.
+- **`type-eyebrow`** tracking is **0.08em** (was 0.05em): `--text-eyebrow-tracking`. Affects **SectionCaption**, **IndexList** captions, **DescriptionList** `variant="mono"`, **FilterPanel** titles and anything on `typographyClass("eyebrow")`.
+- **`typographyClass("overline")`** tracks 0.08em (was `tracking-wider`, 0.05em).
+- **Badge** `mono` and **Button** `mono` track 0.12em (was 0.14em).
+- Story Show code updated: **Components/FooterReveal → Marketing page pattern** (its column labels).
+- New unit test: every uppercase class string in WMDS tracks 0.08–0.12em.
+- **SectionCaption** `as` defaults to **`p`** (was `h2`): a caption in capitals is an eyebrow, not a heading (Headings H6, Eyebrow E6). It still names a region through `id` + `aria-labelledby`. **FilterPanel**'s "/ Filters" title and the post page's "/ Metadata" follow.
+- **PageHeader** `as` (new): `h1` / `h2` / `h3`, so the title's level follows the page outline (Headings H1). Defaults are unchanged (`app` → `h1`, `page` → `h2`).
+- New interaction test **Internal/Interactions/Heading levels**.
+- **Every display step** (`type-display-hero`, `-xl`, `-1`, `-2`, `-3`) sets `overflow-wrap: anywhere` (Display rule D5, WCAG 1.4.10): a long word breaks instead of widening its flex or grid track and scrolling a 320px page sideways. `type-display-hero` and `-xl` used `break-word`, which still overflowed inside flex and grid. Normal copy sets as before. New interaction test **Internal/Interactions/Display type**.
+- **`type-lead`** (new, `typographyClass("lead")`): the one paragraph under a page's H1 that sums the page up (Lead paragraph rule L7). 18px on phones to 21px (`--text-lead-size`, about 1.25× the 17px reading body), regular weight, 1.45 leading; use it at the 42rem measure in `text-fg`. Nothing uses it yet, so nothing changes until you adopt it.
+- **Button** and **IconButton** `disabled` stays in the tab order (Buttons rule U6): it sets `aria-disabled` instead of native `disabled`, ignores clicks, Enter and Space (a disabled submit button no longer submits its form, including on Enter in a field), and shows no hover or press feedback. Disabled dims to **70%** (was 50%), so every role's label keeps 3:1 against its fill in light and dark (unit test). **Button** `disabledReason` (new) shows why beside the button (`type-supporting`, muted) and is read with it through `aria-describedby`. `pressScaleClass` skips `aria-disabled`. Story **Components/Button/Button → Reference — disabled**; new interaction test **Internal/Interactions/Button disabled**.
+- **Band** `spacing="lg"` is **64px on phones** and 96px from `md` (was 96px everywhere; Spacing rule S8). `md` stays 48px. A hero or closing band on a phone loses 32px above and below.
+- **Button**, **LinkTile** and **SiteNav** menu links follow the same rule: `external` keeps the same tab (with the external icon on Button and LinkTile), and new **`newTab`** opts in to a new tab and the spoken hint. **PostPage** share links and **ResourceDetail** "Visit" now stay in the tab. **Minor behaviour change.**
+- **TextLink** `external` opens in the **same tab** (was a new tab; Links K9). It still shows the external icon. New **`newTab`** opt-in sets `target="_blank"`, `rel="noopener noreferrer"` and adds "(opens in a new tab)" to the accessible name. **Minor behaviour change.**
+- **FooterReveal** social links open in the same tab (were a new tab for `https`; K9) and are at least 24px wide (K6). `FooterRevealSocialLink` gains an optional **`ariaLabel`**. **FooterRevealRuled**'s email link no longer opens a new tab. Story hrefs are real-looking, and the X link is named "WhatMatters on X".
+- **IconButton** docs: don't disable icon buttons (U6). Hide the action, or keep it enabled and explain on press. No reason slot was added.
+- **Button** `role` docs: on a page background the secondary level is `outline` (U1/U4). The filled `secondary` pill doesn't reach 3:1 against the page (logged as a gap; no visual change in this release).
+- **SiteNav** docs record the **K7 navigation exception**: nav links have no underline; hover shows the ghost pill and darker ink, and the focus ring stays.
+- **Breadcrumb** link crumbs are 24px tall targets (were 20px; Links rule K6, WCAG 2.5.8). Padding plus an equal negative margin, so the row does not move; the focus ring is 2px taller. New interaction test **Internal/Interactions/Link targets**.
+- **Display type (Rule 3, D1/D2):** `type-display-1` leading **1.05** (was 1.15) and tracking **−0.03em** (was −0.04em); `type-display-2` **1.1** (was 1.2), new `--text-display-2-tracking` **−0.02em**; `type-display-3` **1.15** (was 1.24), new `--text-display-3-tracking` **−0.01em**; `type-display-hero` tracking **−0.03em** (was −0.04em). `--font-display-tracking` still overrides every step for a caps face. New unit test.
+- **FooterReveal** headline is `type-heading-1` (was `type-display-1`): the fitted wordmark is the footer's one display moment (D9). The wordmark stays hidden from screen readers and is exempt from D1/D2 as a logo graphic.
+- **Foundations/Typography** docs: heading steps sit two apart on the 1.2× ramp (≥ 1.25× between levels, Headings H7); an eyebrow and its heading are one spacing unit (H4, E5). The ramp is unchanged.
+- **FooterReveal** sample headline is sentence case, "We build WhatMatters" (was Title Case; Headings H6). Show code changed in **Components/FooterReveal → Marketing page pattern**, **Marketing hero pattern**, **Marketing hero with gallery intro** and **Sequenced marketing hero**.
+
+### Consumer actions
+
+Re-copy the four **Components/FooterReveal** patterns named above if you pasted them (and write your own headline in sentence case). In your own code, give uppercase text `tracking-[0.08em]` (or use `type-eyebrow`) instead of `tracking-wider`. Labels are slightly wider; check eyebrows and mono badges at 390. A **SectionCaption** that should stay in the heading outline needs `as="h2"`; a test that finds it with `getByRole("heading")` now needs `getByText`. If your app sets subtext in `type-large` and wants the old weight, set `--text-large-weight: 600`. **HeroIntro:** rename `lead=` to `firstLine=` (re-copy the FooterReveal and HeroTileStack hero patterns); `lead` keeps working until a later release. **Disabled buttons are now focusable** (`aria-disabled`): a test that used `toBeDisabled()` on a WMDS Button or IconButton needs `toHaveAttribute("aria-disabled", "true")`, and code that read `button.disabled` reads `aria-disabled`. Prefer an enabled button plus an error on submit; when you keep one disabled, pass `disabledReason`.
+
+If a **TextLink**, **Button**, **LinkTile** or **SiteNav** menu link with `external` must keep opening a new tab, add `newTab`. Give a one-letter FooterReveal social label an `ariaLabel`.
+
+## 0.4.29
+
+**SiteNav's phone menu button says what it does.**
+
+- **SiteNav** mobile menu trigger says what it does: its label is "Close menu" while the sheet is open ("Open menu" when closed), it sets `aria-haspopup="dialog"`, and `aria-controls` points at the sheet's dialog while it is open (omitted when closed, since the sheet is unmounted). **Sheet.Content** takes `id` (new), set on the `role="dialog"` panel. New interaction test **Internal/Interactions/SiteNav → mobile menu trigger names its state and controls the sheet**.
+
+### Consumer actions
+
+None.
+
 ## 0.4.28
 
 **AlertDialog takes a body, Input takes a rich label, and dialogs get a roomier edge.**
 
+- **InlinePill** (new): a pill that sits inside running text and scales with it (em-sized), with an optional picture on its left held in the pill's padding so it never parts from its word. `useInlinePillsPopIn()` pops the pictures in one after another when the text scrolls into view, on the WMDS motion tokens; nothing under reduced motion. Not a control: `Chip` and `Badge` stay UI-sized. Story **Components/InlinePill**, with a 390px long-word test.
 - **AlertDialog** `children` (new) — content between the description and the actions, such as a typed-confirmation **Input**. It renders outside the description `<p>`, so `aria-describedby` still names the description alone. Cancel still takes initial focus. Without `children` the markup is unchanged.
 - **Input** `label` is now `ReactNode` (was `string`), so a label can read "Type **@handle** to confirm". The `<label htmlFor>` association is unchanged, and the whole label is the field's accessible name. A string label behaves as before.
 - **Pattern — alert dialog (typed confirmation delete)** is new on **Components/Dialog**: Delete stays off until the typed value matches the handle (a leading `@`, case, and surrounding spaces are ignored), and the field clears on reopen. **Pattern — rich label** is new on **Components/Input**.
@@ -43,9 +290,18 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Theme** sets `color-scheme` (new): `light` on `:root` and `dark` under `[data-theme="dark"]`, so native scrollbars, form controls, and autofill follow the theme instead of staying light in dark mode.
 - **`docs/exports.json`** now lists all 41 lib helpers `src/index.ts` exports (was 12). Nothing was added to or removed from the package. `npm run validate:manifest` now also fails when `src/index.ts` exports a lib helper the manifest does not list.
 
+- **Brand kit (new).** A client's brand is now a short `brand.css` of allow-listed knobs (**CONSUMING.md → Brand kit**):
+  - **Type:** `--font-display` (every `type-display-*` step; unset follows `--font-family-heading`), `--font-display-weight`, `--font-display-tracking`, `--font-display-case`, and a `--font-serif` slot. `--font-family-heading` is now allow-listed too. With none set, type renders as before.
+  - **New display steps:** `type-display-hero` (fluid to 16vw, `--text-display-hero-size` knob) and `type-display-xl` (44px → 136px), both with tight leading and safe word breaks on phones.
+  - **Section colours:** `--color-brand-surface` / `--color-on-brand-surface` (default: the navy) and `--color-field` / `--color-on-field` (default: the primary), each with an optional `-muted` step.
+  - **Band (new component):** `tone` `default` / `inverse` / `field` sets `data-tone`, which remaps surface, text, border, fill and focus roles so every component inside re-skins. It holds its own `grid-page`; inside a `grid-page` it bleeds to the viewport edges (no horizontal scrollbar) and keeps the page's columns. `spacing` `md` / `lg` / `none`. New stories **Components/Band → Pattern — page in bands** and **Foundations/Brand kit → Theme a client** (the offer-sheet values with a contrast table); new interaction tests **Internal/Interactions/Band**.
+  - **wmds-check** `brand-contrast` (new, error): fails an on-colour or muted step under 4.5:1 on its colour, for primary, brand surface and field, when both are hex in the same CSS rule. It now reads the app's `.css` files.
+  - **TextSequence** word masks reach 0.08em above and to the sides of each word, so tall caps on tight display leading and outline strokes aren't clipped. Layout is unchanged.
+- **Design knobs for shape (new).** `--radius-control` (default pill) and `--radius-surface` (default 16px) reshape every control and surface. Set them on `:root`, or on a wrapper with Tailwind (`[--radius-control:4px]`), for rectangular buttons, inputs, selects, chips, badges and tabs, and squarer cards and menus. Avatars, dots, spinners, radios, switches and progress bars stay round. Defaults are unchanged: every component renders as before. **CONSUMING.md → Design knobs**; new story **Foundations/Shape → Design knobs — rectangular controls**; new interaction test **Internal/Interactions/Shape**.
+
 ### Consumer actions
 
-None. To ask for a typed confirmation, pass an **Input** as `children` of **AlertDialog** and set `confirmDisabled` until the value matches. Copy **Components/Dialog → Pattern — alert dialog (typed confirmation delete)**. A **Dialog** or **AlertDialog** is 16px wider on each side's content inset and 16px taller (8px top, 8px bottom); check the narrowest phone width. No `className` change is needed.
+None. To ask for a typed confirmation, pass an **Input** as `children` of **AlertDialog** and set `confirmDisabled` until the value matches. Copy **Components/Dialog → Pattern — alert dialog (typed confirmation delete)**. A **Dialog** or **AlertDialog** is 16px wider on each side's content inset and 16px taller (8px top, 8px bottom); check the narrowest phone width. No `className` change is needed. `npx wmds-check` now reads your `.css` files: if `brand-contrast` fails on an existing `--color-on-primary`, pick an ink that clears 4.5:1 (or mark a deliberate exception with `/* wmds-check-ignore brand-contrast <reason> */` on the line above). To carry a client's type and section colours, see **CONSUMING.md → Brand kit** and replace hand-rolled section colours with **Band** `tone`.
 
 ## 0.4.27
 

@@ -22,7 +22,7 @@ export const tabItemSizeClasses: Record<TabSize, string> = {
 };
 
 export const tabItemClasses = cn(
-  "relative z-10 inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full",
+  "relative z-10 inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-[var(--radius-control)]",
   typographyClass("ui-label"),
   "font-normal text-muted transition-colors hover:bg-ghost-hover hover:text-fg",
   motionTransition("fast"),

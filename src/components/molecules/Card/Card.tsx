@@ -84,7 +84,25 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
   /** Overrides automatic headerless detection. Normally omitted: Body without Header gets a 2px top inset. */
   headerless?: boolean;
   as?: "div" | "article" | "section";
+  /**
+   * The card's own colour pair, so a card can stand apart from its section (testimonials, offers):
+   * `inverse` (the brand surface, dark roles), `field` (the saturated field colour, flat), or `light` (the
+   * light palette, e.g. a paper card on a dark or toned section). Default: the section's own colours.
+   * Everything inside re-skins, as in **Band** `tone`.
+   */
+  tone?: CardTone;
   className?: CardLayoutClassName;
+}
+
+export const cardTones = ["default", "inverse", "field", "light"] as const;
+export type CardTone = (typeof cardTones)[number];
+
+/** `data-tone` / `data-theme` for a card tone (the same scopes Band uses; `light` is the light palette). */
+function cardToneAttributes(tone: CardTone): { "data-tone"?: string; "data-theme"?: string } {
+  if (tone === "inverse") return { "data-tone": "inverse", "data-theme": "dark" };
+  if (tone === "field") return { "data-tone": "field" };
+  if (tone === "light") return { "data-theme": "light" };
+  return {};
 }
 
 export interface CardSectionProps extends HTMLAttributes<HTMLElement> {
@@ -135,6 +153,7 @@ function CardRoot({
   bodyTerminal,
   headerless,
   as: Component = "div",
+  tone = "default",
   className,
   children,
   ...props
@@ -190,6 +209,7 @@ function CardRoot({
           data-variant={variant}
           data-padding={padding}
           data-layout={isLayout ? "shell" : undefined}
+          {...cardToneAttributes(tone)}
           {...props}
         >
           {children}

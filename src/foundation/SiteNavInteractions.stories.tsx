@@ -104,3 +104,198 @@ export const PinnedScrollPadding: Story = {
     expect(document.documentElement.style.scrollPaddingTop).toContain("--site-nav-height");
   },
 };
+
+export const MobileMenuTrigger: Story = {
+  name: "phone menu: Menu becomes Close, focus moves in and cycles, a link tap or Escape closes it",
+  globals: { viewport: { value: "mobile", isRotated: false } },
+  render: () => (
+    <div>
+      <SiteNav
+        placement="inline"
+        state="expanded"
+        start={<SiteNav.Brand href="#home" aria-label="WhatMatters" icon={<Sparkles />} />}
+        end={<Button size="sm" render={<a href="#sketch" />}>Get my free sketch</Button>}
+        mobile={
+          <>
+            <SiteNav.MobileLink href="#services">Services</SiteNav.MobileLink>
+            <SiteNav.MobileLink href="#work" current>
+              Work
+            </SiteNav.MobileLink>
+          </>
+        }
+        mobileAction={<Button render={<a href="#sketch" />}>Get my free sketch</Button>}
+      />
+      <main>
+        <a href="#page">Page link</a>
+      </main>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    await expect(window.innerWidth).toBeLessThanOrEqual(400);
+    // The bar never runs off the screen (N7: its main button gives way first when it can't fit).
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+    const trigger = within(canvasElement).getByRole("button", { name: "Menu" });
+    await expect(trigger.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
+    // N7 / QA #28: the visible word is the name, and it changes.
+    await expect(trigger).toHaveTextContent("Menu");
+    await expect(trigger).not.toHaveAttribute("aria-label");
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(trigger).not.toHaveAttribute("aria-controls");
+
+    trigger.click();
+    const dialog = await within(document.body).findByRole("dialog", { name: "Menu" });
+    await waitFor(() => expect(trigger).toHaveTextContent("Close"));
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await expect(trigger).toHaveAttribute("aria-controls", dialog.id);
+    // N6: focus moves to the first link; the page behind is inert and doesn't scroll.
+    const services = within(dialog).getByRole("link", { name: "Services" });
+    await waitFor(() => expect(services).toHaveFocus());
+    await expect(canvasElement.querySelector("main")?.closest("[inert]")).not.toBeNull();
+    await expect(document.body.style.overflow).toBe("hidden");
+    // N2: the current page is marked by more than colour.
+    const work = within(dialog).getByRole("link", { name: "Work" });
+    await expect(work).toHaveAttribute("aria-current", "page");
+    await expect(Number(getComputedStyle(work).fontWeight)).toBeGreaterThanOrEqual(600);
+    // N5: rows are at least 56px tall.
+    await expect(services.getBoundingClientRect().height).toBeGreaterThanOrEqual(56);
+    // N8: the main action sits in the menu.
+    await expect(within(dialog).getByRole("link", { name: "Get my free sketch" })).toBeInTheDocument();
+
+    // Tab cycles through the panel and back to the bar's Close button, never into the page.
+    for (let i = 0; i < 6; i++) {
+      await userEvent.tab();
+      const active = document.activeElement;
+      await expect(dialog.contains(active) || canvasElement.querySelector("header")?.contains(active)).toBe(true);
+    }
+
+    // Escape closes and returns focus to the Menu button.
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(trigger).toHaveTextContent("Menu"));
+    await waitFor(() => expect(trigger).toHaveFocus());
+    await expect(trigger).not.toHaveAttribute("aria-controls");
+    await expect(canvasElement.querySelector("[inert]")).toBeNull();
+
+    // N6 / QA #25: tapping a link closes the menu. (The test frame mustn't navigate, so the click's
+    // default is stopped at the document; the menu closes on the click itself.)
+    const stayHere = (event: MouseEvent) => event.preventDefault();
+    document.addEventListener("click", stayHere);
+    trigger.click();
+    const reopened = await within(document.body).findByRole("dialog", { name: "Menu" });
+    await userEvent.click(within(reopened).getByRole("link", { name: "Services" }));
+    await waitFor(() => expect(within(document.body).queryByRole("dialog", { name: "Menu" })).toBeNull());
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    document.removeEventListener("click", stayHere);
+  },
+};
+
+export const MobileMenuAt320: Story = {
+  name: "phone menu at 320: the bar's main button hides first, the Menu word stays (N7)",
+  globals: { viewport: { value: "narrow320", isRotated: false } },
+  parameters: {
+    viewport: {
+      options: {
+        narrow320: { name: "320", styles: { width: "320px", height: "640px" }, type: "mobile" as const },
+      },
+    },
+  },
+  render: () => (
+    <SiteNav
+      placement="inline"
+      state="expanded"
+      start={<SiteNav.Brand href="#home">WhatMatters</SiteNav.Brand>}
+      end={<Button size="sm" render={<a href="#sketch" />}>Get my free sketch</Button>}
+      mobile={<SiteNav.MobileLink href="#services">Services</SiteNav.MobileLink>}
+      mobileAction={<Button render={<a href="#sketch" />}>Get my free sketch</Button>}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    await expect(window.innerWidth).toBeLessThanOrEqual(330);
+    const trigger = within(canvasElement).getByRole("button", { name: "Menu" });
+    await expect(trigger).toBeVisible();
+    await expect(trigger.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth);
+    await expect(within(canvasElement).queryByRole("link", { name: "Get my free sketch" })).toBeNull();
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+  },
+};
+
+export const MobileMenuTrailingEdge: Story = {
+  name: "phone bar: the actions and Menu sit at the trailing edge",
+  globals: { viewport: { value: "mobile", isRotated: false } },
+  render: () => (
+    <SiteNav
+      placement="inline"
+      state="expanded"
+      start={<SiteNav.Brand href="#home">WhatMatters</SiteNav.Brand>}
+      middle={
+        <SiteNav.Links>
+          <SiteNav.Link href="#services">Services</SiteNav.Link>
+        </SiteNav.Links>
+      }
+      end={<Button size="sm" render={<a href="#sketch" />}>Book</Button>}
+      mobile={<SiteNav.MobileLink href="#services">Services</SiteNav.MobileLink>}
+      mobileAction={<Button render={<a href="#sketch" />}>Book</Button>}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const header = within(canvasElement).getByRole("banner");
+    const trigger = within(canvasElement).getByRole("button", { name: "Menu" });
+    const book = within(canvasElement).getByRole("link", { name: "Book" });
+    const edge = header.querySelector("[data-state]")!.getBoundingClientRect().right;
+    // The Menu button ends near the bar's inner edge, and the short CTA still fits beside it.
+    await expect(edge - trigger.getBoundingClientRect().right).toBeLessThanOrEqual(32);
+    await expect(book).toBeVisible();
+  },
+};
+
+export const PhoneBarEdges: Story = {
+  name: "phone bar: wordmark and Menu word sit on the content edges; a CTA that fits stays",
+  globals: { viewport: { value: "mobile", isRotated: false } },
+  // Page chrome, full width, as on a phone (the inline specimen sits inset inside its own frame).
+  parameters: { layout: "fullscreen", wmdsLayout: "fullscreen" },
+  render: () => (
+    <SiteNav
+      placement="fixed"
+      state="expanded"
+      start={<SiteNav.Brand href="#home">WhatMatters</SiteNav.Brand>}
+      middle={
+        <SiteNav.Links>
+          <SiteNav.Link href="#services">Services</SiteNav.Link>
+        </SiteNav.Links>
+      }
+      // A short label, so the fit doesn't hang on the machine's fonts (CI's Linux fonts set wider than macOS).
+      end={<Button size="sm" render={<a href="#sketch" />}>Free sketch</Button>}
+      mobile={<SiteNav.MobileLink href="#services">Services</SiteNav.MobileLink>}
+      mobileAction={<Button render={<a href="#sketch" />}>Free sketch</Button>}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    await expect(window.innerWidth).toBeGreaterThanOrEqual(390);
+    const header = within(canvasElement).getByRole("banner");
+    const bar = header.querySelector<HTMLElement>("[data-state=expanded]")!;
+    const style = getComputedStyle(bar);
+    const box = bar.getBoundingClientRect();
+    const contentLeft = box.left + Number.parseFloat(style.borderLeftWidth) + Number.parseFloat(style.paddingLeft);
+    const contentRight = box.right - Number.parseFloat(style.borderRightWidth) - Number.parseFloat(style.paddingRight);
+    const ink = (el: Element) => {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const rects = [...range.getClientRects()];
+      return { left: Math.min(...rects.map((r) => r.left)), right: Math.max(...rects.map((r) => r.right)) };
+    };
+    const brand = within(canvasElement).getByRole("link", { name: "WhatMatters" });
+    const trigger = within(canvasElement).getByRole("button", { name: "Menu" });
+    // The full bar pulls the brand's and the Menu button's own padding past the edges (N9 alignment).
+    await expect(Math.abs(ink(brand).left - contentLeft)).toBeLessThanOrEqual(2);
+    await expect(Math.abs(ink(trigger).right - contentRight)).toBeLessThanOrEqual(2);
+    await expect(trigger.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
+    // That pull isn't counted as overflow: a main button that fits stays in the bar (N9).
+    await expect(within(canvasElement).getByRole("link", { name: "Free sketch" })).toBeVisible();
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+    // Open, the menu's own action is the one CTA on screen; the bar's copy hides.
+    await userEvent.click(trigger);
+    await waitFor(() => expect(document.querySelectorAll("a[href='#sketch']:not([hidden])").length).toBeGreaterThan(0));
+    const visible = [...document.querySelectorAll<HTMLElement>("a[href='#sketch']")].filter((a) => a.getClientRects().length > 0);
+    await expect(visible).toHaveLength(1);
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Close" }));
+  },
+};

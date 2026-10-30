@@ -8,7 +8,10 @@ import { focusRingTransitionClasses } from "../../../lib/motion";
  */
 export const promptBarShellClasses =
   "flex w-full items-end gap-2 rounded-[1.625rem] border border-border-control bg-surface p-2 " +
-  "focus-within:outline-none focus-within:ring-2 focus-within:ring-inset focus-within:ring-focus-ring " +
+  // Labels and placeholders F10: the pill's ring is the field's; the send button shows its own.
+  // CopyField shares this shell with an <input>, so both field kinds light it.
+  "has-[textarea:focus-visible]:outline-none has-[textarea:focus-visible]:ring-2 has-[textarea:focus-visible]:ring-inset has-[textarea:focus-visible]:ring-focus-ring " +
+  "has-[input:focus-visible]:outline-none has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-inset has-[input:focus-visible]:ring-focus-ring " +
   focusRingTransitionClasses;
 
 /**
@@ -35,14 +38,15 @@ export const promptBarEndSlotClasses = "flex shrink-0 items-end gap-2";
  * Grows with the text, stops at three lines (`max-h`), then scrolls.
  */
 export const promptBarFieldClasses =
-  "min-h-9 min-w-0 flex-1 overflow-y-auto py-2 type-body [field-sizing:content] " +
+  "min-h-9 min-w-0 flex-1 overflow-y-auto py-2 type-body pointer-coarse:text-base [field-sizing:content] " +
   "max-h-[4.75rem]";
 
 /**
- * No focus ring on the circle. IconButton's ring-offset would sit on the pill border.
+ * The send circle shows its own ring, hugging it (no offset, which would sit on the pill border), and
+ * takes a 44px tap area on touch screens (F10).
  */
 export const promptBarSendClasses =
-  "focus-visible:!ring-0 focus-visible:!ring-offset-0 focus-visible:!shadow-none";
+  "relative focus-visible:!ring-offset-0 pointer-coarse:after:absolute pointer-coarse:after:-inset-1 pointer-coarse:after:content-['']";
 
 /** Enabled send — existing brand navy, not a new blue. */
 export const promptBarSendReadyClasses = "!bg-brand !text-on-brand hover:!bg-brand active:!bg-brand";

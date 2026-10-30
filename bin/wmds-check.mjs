@@ -18,6 +18,16 @@
  *                             content, data, handlers, and exports may change
  *   pattern-stale     warn   a pasted pattern's header names an older package version
  *   pattern-removed   error  a pasted pattern's id no longer ships
+ *   status-without-message error  a WMDS field with status="error" or "warning" and no message
+ *                             (Errors and validation V10; a status-only success tick is fine)
+ *   missing-label     error  a WMDS Input, TextArea, Select or Search with no label, aria-label or
+ *                             aria-labelledby (Labels and placeholders F7; a spread {...props} is trusted)
+ *   badge-on-autofill error  an Input with endBadge on an autofill field (autoComplete name, email, tel,
+ *                             password, address, organization…; Required and optional Q8): autofill paints
+ *                             over the badge, so say "(optional)" in the label
+ *   brand-contrast    error  a brand-kit pair in the app's CSS under WCAG AA 4.5:1: --color-on-X (and
+ *                             --color-on-X-muted) on --color-X, for primary, brand-surface and field,
+ *                             when both are hex values in the same rule
  *
  * Silence one line with a trailing or preceding comment: `wmds-check-ignore raw-control <reason>`.
  * The checks are line-based heuristics, not a parser: they favor few false negatives, and every
@@ -48,8 +58,18 @@ try {
   // Not installed: the pattern rules are skipped.
 }
 
+// Required and optional Q8: autocomplete tokens browsers fill (same list as autofillFields.ts).
+const autofillTokens = [
+  "name", "honorific-prefix", "given-name", "additional-name", "family-name", "honorific-suffix", "nickname",
+  "email", "username", "new-password", "current-password", "one-time-code", "organization", "organization-title",
+  "street-address", "address-line1", "address-line2", "address-line3", "address-level1", "address-level2",
+  "address-level3", "address-level4", "country", "country-name", "postal-code",
+  "tel", "tel-country-code", "tel-national", "tel-area-code", "tel-local", "tel-extension",
+];
+
 const skipDirs = new Set(["node_modules", ".next", "dist", "build", "out", ".git", "coverage", "storybook-static"]);
 const files = [];
+const cssFiles = [];
 const walk = (dir) => {
   for (const name of readdirSync(dir)) {
     const file = path.join(dir, name);
@@ -57,6 +77,8 @@ const walk = (dir) => {
       if (!skipDirs.has(name)) walk(file);
     } else if (/\.(tsx|jsx|ts|js|mdx)$/.test(name) && !/\.(test|spec|stories)\./.test(name)) {
       files.push(file);
+    } else if (/\.css$/.test(name)) {
+      cssFiles.push(file);
     }
   }
 };
@@ -229,6 +251,52 @@ for (const file of files) {
     }
   });
 
+  // Reads a JSX element whole from its "<" (it may span lines), counting braces so `=>` and `{…}`
+  // values don't end it early.
+  const elementFrom = (start) => {
+    let depth = 0;
+    let end = start + 1;
+    for (; end < source.length; end++) {
+      const char = source[end];
+      if (char === "{") depth++;
+      else if (char === "}") depth--;
+      else if (char === ">" && depth === 0 && source[end - 1] !== "=") break;
+    }
+    return source.slice(start, end + 1);
+  };
+
+  // F7: every field has a name. A hidden one (aria-label) is the app's call; none at all fails.
+  if (/from\s+["']@thewhatmatters\/wmds["']/.test(source)) {
+    for (const match of source.matchAll(/<(Input|TextArea|Select|Search)(?=[\s/>])/g)) {
+      const element = elementFrom(match.index);
+      if (/\b(label|aria-label|aria-labelledby)=|\{\s*\.\.\./.test(element)) continue;
+      const line = source.slice(0, match.index).split("\n").length;
+      if (ignored(lines, line - 1, "missing-label")) continue;
+      report(file, line, "missing-label", "error", `<${match[1]}> has no label — add label (or aria-label when it sits alone with its button)`);
+    }
+  }
+
+  // Q8: no badge inside an autofill field. Keep this list in step with src/components/atoms/Input/autofillFields.ts.
+  for (const match of source.matchAll(/<Input(?=[\s/>])/g)) {
+    const element = elementFrom(match.index);
+    if (!/\bendBadge=/.test(element)) continue;
+    const autoComplete = element.match(/\bautoComplete=(?:"([^"]*)"|\{\s*["']([^"']*)["']\s*\})/);
+    const value = autoComplete?.[1] ?? autoComplete?.[2];
+    if (value == null || !value.toLowerCase().split(/\s+/).some((token) => autofillTokens.includes(token))) continue;
+    const line = source.slice(0, match.index).split("\n").length;
+    if (ignored(lines, line - 1, "badge-on-autofill")) continue;
+    report(file, line, "badge-on-autofill", "error", `endBadge on autoComplete="${value}" — autofill covers it; put "(optional)" in the label`);
+  }
+
+  // V10: an error or warning status always says what's wrong.
+  for (const match of source.matchAll(/\bstatus=(?:"(error|warning)"|\{\s*["'](error|warning)["']\s*\})/g)) {
+    const element = elementFrom(source.lastIndexOf("<", match.index));
+    if (!/^<[A-Z]/.test(element) || /\bmessage=/.test(element)) continue;
+    const line = source.slice(0, match.index).split("\n").length;
+    if (ignored(lines, line - 1, "status-without-message")) continue;
+    report(file, line, "status-without-message", "error", `status="${match[1] ?? match[2]}" with no message — say what's wrong and how to fix it`);
+  }
+
   // Pasted patterns.
   // The header is the file's first comment line. A "use client" / "use server" directive or blank
   // lines may come before it.
@@ -254,6 +322,47 @@ for (const file of files) {
           "warn",
           `markup or classes differ from docs/patterns/${id}.tsx (${firstDifference(shippedStructure, pastedStructure)}) — allowed edits are content, data, handlers, exports`,
         );
+      }
+    }
+  }
+}
+
+// Brand-kit contrast. Innermost rule blocks only, so a pair inside @media is read as its own rule.
+const brandPairs = ["primary", "brand-surface", "field"];
+const channel = (value) => {
+  const c = value / 255;
+  return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+};
+const luminance = (hex) => {
+  let digits = hex.slice(1);
+  if (digits.length === 3 || digits.length === 4) digits = [...digits].map((d) => d + d).join("");
+  if (digits.length === 8 && digits.slice(6) !== "ff") return null; // translucent: depends on what's behind
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(digits.slice(i, i + 2), 16));
+  return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+};
+const contrast = (a, b) => {
+  const [la, lb] = [luminance(a), luminance(b)];
+  if (la === null || lb === null) return null;
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+};
+for (const file of cssFiles) {
+  const source = readFileSync(file, "utf8");
+  const lines = source.split("\n");
+  for (const block of source.matchAll(/\{([^{}]*)\}/g)) {
+    const values = new Map();
+    for (const declaration of block[1].matchAll(/(--color-[\w-]+)\s*:\s*(#[0-9a-fA-F]{3,8})\b/g)) {
+      const index = block.index + 1 + declaration.index;
+      values.set(declaration[1], { hex: declaration[2].toLowerCase(), line: source.slice(0, index).split("\n").length });
+    }
+    for (const name of brandPairs) {
+      const background = values.get(`--color-${name}`);
+      if (!background) continue;
+      for (const ink of [`--color-on-${name}`, `--color-on-${name}-muted`]) {
+        const on = values.get(ink);
+        const ratio = on && contrast(on.hex, background.hex);
+        if (ratio && ratio < 4.5 && !ignored(lines, on.line - 1, "brand-contrast")) {
+          report(file, on.line, "brand-contrast", "error", `${ink} ${on.hex} on --color-${name} ${background.hex} is ${ratio.toFixed(2)}:1 — text needs 4.5:1`);
+        }
       }
     }
   }

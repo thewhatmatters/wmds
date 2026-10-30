@@ -2,6 +2,7 @@ import { useRender } from "@base-ui/react/use-render";
 import { SquareArrowOutUpRight } from "lucide-react";
 import {
   forwardRef,
+  useId,
   type ButtonHTMLAttributes,
   type ReactElement,
   type ReactNode,
@@ -14,6 +15,7 @@ import type { ButtonStatus } from "./buttonStatusStyles";
 import {
   buttonAlignClasses,
   buttonBaseClasses,
+  buttonDisabledReasonClasses,
   buttonEndIconSquareClasses,
   buttonExternalIconClasses,
   buttonOutlineQuietClasses,
@@ -49,7 +51,11 @@ export interface ButtonProps
   > {
   /** Button label. */
   children: ReactNode;
-  /** Action role — primary, secondary, ghost, destructive, inverse, outline, or inverse-outline (on-brand hairline). Default: `primary`. */
+  /**
+   * Action role — primary, secondary, ghost, destructive, inverse, outline, or inverse-outline (on-brand hairline). Default: `primary`.
+   * On a page background the secondary level is `outline` (a 3:1 edge, Buttons U1/U4); the filled `secondary` pill
+   * sits near 1:1 against the page.
+   */
   role?: ButtonRole;
   /** `pill` (default) or `row` — flat full-width lines for detail / settings rows. */
   layout?: ButtonLayout;
@@ -69,7 +75,16 @@ export interface ButtonProps
    */
   emphasis?: ButtonEmphasis;
   size?: ButtonSize;
+  /**
+   * Disabled (Buttons rule U6): stays in the tab order (`aria-disabled`), ignores presses, dims to 70%
+   * with no hover or press feedback. Prefer an enabled button that explains the error on submit.
+   */
   disabled?: boolean;
+  /**
+   * Why it's disabled, shown beside the button (`type-supporting`, muted) and read with it
+   * (`aria-describedby`). Renders only while `disabled`. Pill, row and nav layouts.
+   */
+  disabledReason?: ReactNode;
   type?: "button" | "submit" | "reset";
   /**
    * Async / submit morph — whole pill animates idle → loading → success → error.
@@ -104,11 +119,16 @@ export interface ButtonProps
    */
   render?: ReactElement;
   /**
-   * With `render={<a href />}` to another site: opens it in a new tab (`target="_blank"`, a safe
-   * `rel`), tells screen readers so, and shows the trailing external icon **TextLink** uses.
+   * With `render={<a href />}` to another site: shows the trailing external icon **TextLink** uses and
+   * opens in the same tab (Links K9). Add `newTab` to open a new tab.
    */
   external?: boolean;
-  /** `external` only — `false` drops the trailing icon; the spoken "opens in a new tab" stays. */
+  /**
+   * `external` only — opt in to a new tab (`target="_blank"`, a safe `rel`); adds "(opens in a new tab)"
+   * to the accessible name. Only when leaving would lose the reader's work.
+   */
+  newTab?: boolean;
+  /** `external` only — `false` drops the trailing icon. */
   externalIcon?: boolean;
   /** Layout-only: width, margin, flex placement. */
   className?: ButtonLayoutClassName;
@@ -187,6 +207,12 @@ interface ButtonPillProps
   "data-size": ButtonSize;
 }
 
+/** Swallows a press on a disabled button or link: no submit, no navigation, no handler. */
+function preventActivation(event: React.MouseEvent) {
+  event.preventDefault();
+  event.stopPropagation();
+}
+
 /** Nav row — a `<button>` by default, or the same chrome on `render` (an `<a>` or a router link). */
 const ButtonNav = forwardRef<HTMLButtonElement, ButtonPillProps>(function ButtonNav(
   { render, type, disabled, ...props },
@@ -196,14 +222,15 @@ const ButtonNav = forwardRef<HTMLButtonElement, ButtonPillProps>(function Button
     render,
     ref,
     defaultTagName: "button",
-    props: render
-      ? {
-          ...props,
-          "aria-disabled": disabled ? true : undefined,
-          "data-disabled": disabled ? "" : undefined,
-          tabIndex: disabled ? -1 : props.tabIndex,
-        }
-      : { ...props, type, disabled },
+    // Disabled stays in the tab order (Buttons rule U6): `aria-disabled` plus a click guard, never
+    // native `disabled`, which would drop keyboard focus and hide the reason from screen readers.
+    props: {
+      ...props,
+      ...(render ? null : { type }),
+      "aria-disabled": disabled ? true : undefined,
+      "data-disabled": disabled ? "" : undefined,
+      onClick: disabled ? preventActivation : props.onClick,
+    },
   });
 });
 
@@ -216,14 +243,15 @@ const ButtonPill = forwardRef<HTMLButtonElement, ButtonPillProps>(function Butto
     render,
     ref,
     defaultTagName: "button",
-    props: render
-      ? {
-          ...props,
-          "aria-disabled": disabled ? true : undefined,
-          "data-disabled": disabled ? "" : undefined,
-          tabIndex: disabled ? -1 : props.tabIndex,
-        }
-      : { ...props, type, disabled },
+    // Disabled stays in the tab order (Buttons rule U6): `aria-disabled` plus a click guard, never
+    // native `disabled`, which would drop keyboard focus and hide the reason from screen readers.
+    props: {
+      ...props,
+      ...(render ? null : { type }),
+      "aria-disabled": disabled ? true : undefined,
+      "data-disabled": disabled ? "" : undefined,
+      onClick: disabled ? preventActivation : props.onClick,
+    },
   });
 });
 
@@ -236,6 +264,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     emphasis,
     size = "md",
     disabled,
+    disabledReason,
     type = "button",
     status,
     statusLabels,
@@ -247,6 +276,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     selected = false,
     render,
     external = false,
+    newTab = false,
     externalIcon = true,
     className,
     onClick,
@@ -259,6 +289,21 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     ...buttonProps
   }, ref) {
   assertActionPattern({ status, icon, count, layout, render, endIcon, mono, width, align, emphasis, role, external });
+  const reasonId = useId();
+  const showReason = Boolean(disabled) && disabledReason != null && status == null;
+  const describedBy =
+    [buttonProps["aria-describedby"], showReason ? reasonId : undefined].filter(Boolean).join(" ") || undefined;
+  const withReason = (button: ReactElement) =>
+    showReason ? (
+      <>
+        {button}
+        <span id={reasonId} className={buttonDisabledReasonClasses} data-disabled-reason="">
+          {disabledReason}
+        </span>
+      </>
+    ) : (
+      button
+    );
 
   if (status != null) {
     return (
@@ -288,16 +333,18 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   }
 
   if (layout === "row") {
-    return (
+    return withReason(
       <button
         {...buttonProps}
         ref={ref}
         type={type}
-        disabled={disabled}
-        onClick={onClick}
+        aria-disabled={disabled || undefined}
+        data-disabled={disabled ? "" : undefined}
+        onClick={disabled ? preventActivation : onClick}
         aria-label={ariaLabel}
         aria-pressed={ariaPressed}
         aria-keyshortcuts={ariaKeyShortcuts}
+        aria-describedby={describedBy}
         id={id}
         name={name}
         form={form}
@@ -313,12 +360,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         data-width={width ?? "fill"}
       >
         {children}
-      </button>
+      </button>,
     );
   }
 
   if (layout === "nav") {
-    return (
+    return withReason(
       <ButtonNav
         {...buttonProps}
         ref={ref}
@@ -330,6 +377,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         aria-pressed={ariaPressed}
         aria-keyshortcuts={ariaKeyShortcuts}
         aria-current={selected ? "page" : undefined}
+        aria-describedby={describedBy}
         id={id}
         name={name}
         form={form}
@@ -345,13 +393,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         data-selected={selected ? "" : undefined}
       >
         {children}
-      </ButtonNav>
+      </ButtonNav>,
     );
   }
 
-  const opensNewTab = external && render != null;
+  const isExternal = external && render != null;
+  const opensNewTab = isExternal && newTab;
 
-  return (
+  return withReason(
     <ButtonPill
       {...buttonProps}
       {...(opensNewTab ? { target: "_blank", rel: "noopener noreferrer" } : null)}
@@ -363,6 +412,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       aria-label={ariaLabel}
       aria-pressed={ariaPressed}
       aria-keyshortcuts={ariaKeyShortcuts}
+      aria-describedby={describedBy}
       id={id}
       name={name}
       form={form}
@@ -381,14 +431,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       data-emphasis={role === "outline" ? (emphasis ?? "strong") : undefined}
       data-mono={mono ? "" : undefined}
       data-end-icon={endIcon ? "" : undefined}
-      data-external={opensNewTab ? "" : undefined}
+      data-external={isExternal ? "" : undefined}
     >
       {icon ? <ButtonIcon size={size}>{icon}</ButtonIcon> : null}
       <span className={mono ? buttonMonoLabelClasses : undefined}>
         {children}
         {opensNewTab ? <span className="sr-only"> (opens in a new tab)</span> : null}
       </span>
-      {opensNewTab && externalIcon ? (
+      {isExternal && externalIcon ? (
         <SquareArrowOutUpRight className={buttonExternalIconClasses} strokeWidth={2} aria-hidden />
       ) : null}
       {endIcon ? (
@@ -397,6 +447,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         </span>
       ) : null}
       {count != null ? <ButtonBadge value={count} /> : null}
-    </ButtonPill>
+    </ButtonPill>,
   );
 });

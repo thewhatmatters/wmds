@@ -25,6 +25,11 @@ export interface PageHeaderProps {
   title?: string;
   /** App canvas band, in-page section title, or compact toolbar row. */
   variant?: PageHeaderVariant;
+  /**
+   * The title's heading level, by its place in the page outline (Headings H1). Default: `h1` for
+   * `app`, `h2` for `page`. Ignored on `toolbar`, which has no heading.
+   */
+  as?: PageHeaderHeadingLevel;
   /** Leading slot — breadcrumb, back, **Badge**, filter **Chip** rail. */
   start?: ReactNode;
   /** Trailing slot — cluster controls (**SegmentedControl**, **Button**, **Avatar**, **MoreMenu**). */
@@ -33,6 +38,10 @@ export interface PageHeaderProps {
   "aria-label"?: string;
   className?: PageHeaderLayoutClassName;
 }
+
+export const pageHeaderHeadingLevels = ["h1", "h2", "h3"] as const;
+
+export type PageHeaderHeadingLevel = (typeof pageHeaderHeadingLevels)[number];
 
 const pageHeaderTitleTags: Record<PageHeaderVariant, ElementType> = {
   app: "h1",
@@ -43,12 +52,13 @@ const pageHeaderTitleTags: Record<PageHeaderVariant, ElementType> = {
 export function PageHeader({
   title,
   variant = "page",
+  as,
   start,
   end,
   "aria-label": ariaLabel,
   className,
 }: PageHeaderProps) {
-  const TitleTag = pageHeaderTitleTags[variant];
+  const TitleTag = variant === "toolbar" ? pageHeaderTitleTags.toolbar : (as ?? pageHeaderTitleTags[variant]);
   const hasTitle = title != null && title.length > 0;
   const labelledByTitle = hasTitle ? undefined : ariaLabel;
 

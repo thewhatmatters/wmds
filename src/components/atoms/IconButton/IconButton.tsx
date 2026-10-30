@@ -54,6 +54,11 @@ export interface IconButtonProps
    * selected fill while `true`. Omit for a plain action. Not with `fab` or `inset`.
    */
   pressed?: boolean;
+  /**
+   * Don't disable an icon button in WhatMatters work (Buttons rule U6): it has nowhere to show why. Hide
+   * the action while it isn't available, or leave it enabled and explain on press (a toast or inline
+   * message). Kept for parity with Button; it stays focusable through `aria-disabled`.
+   */
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
   /**
@@ -126,9 +131,13 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
   const isDisabled = disabled || loading;
   // Loading keeps the button focusable: native `disabled` would drop keyboard focus to <body>.
   // `aria-disabled` plus this guard block activation instead.
-  const isBusyDisabled = loading && !disabled;
+  // Disabled behaves the same way (Buttons rule U6): it stays in the tab order and ignores presses.
+  const isBusyDisabled = isDisabled;
   const guardedClick: React.MouseEventHandler<HTMLButtonElement> | undefined = isBusyDisabled
-    ? (event) => event.preventDefault()
+    ? (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+      }
     : onClick;
   const tooltip = title === undefined ? ariaLabel : title;
   const insetSize = inset ? (size as IconButtonInsetSize) : null;
@@ -186,7 +195,6 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
           "data-pattern": fab ? "fab" : inset ? "inset" : "icon",
           "data-loading": loading || undefined,
           title: tooltip === "" ? undefined : tooltip,
-          tabIndex: disabled ? -1 : buttonProps.tabIndex,
           onClick: guardedClick,
           onKeyDown,
           id,
@@ -199,8 +207,8 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
           ...buttonProps,
           className: classNameMerged,
           type,
-          disabled,
           "aria-disabled": isBusyDisabled || undefined,
+          "data-disabled": isDisabled ? "" : undefined,
           "aria-busy": loading || undefined,
           "aria-label": ariaLabel,
           "aria-current": ariaCurrent,

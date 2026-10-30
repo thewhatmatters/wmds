@@ -316,6 +316,68 @@ Browse [lucide.dev/icons](https://lucide.dev/icons/).
 
 ## Customization
 
+### Design knobs (shape)
+
+A site whose design isn't WMDS's default shape (rectangular buttons instead of pills, squarer cards) changes it with **design knobs**: allow-listed CSS variables that every component reads. Don't restyle components with `className`. A knob reshapes every component inside the element it's set on, and keeps focus rings, hit areas and nested radii consistent.
+
+| Knob | Default | Reshapes |
+|------|---------|----------|
+| `--radius-control` | pill | Button, IconButton, Input, Search, Select, Chip, PillGroup, Badge, SegmentedControl, Tab, the compact SiteNav bar. Multi-line controls (TextArea, NavList rows) use 12px or the knob, whichever is smaller. |
+| `--radius-surface` | `16px` | Card layout shells and occupants, Dropdown menus, Toast, ChatQa, Carousel. Smaller surfaces scale with it: Stat, LogView and Skeleton at ¾ (12px), a padded Card at ½ (8px). |
+
+Avatars, status dots, spinners, radios, switches, progress bars and chart marks stay round.
+
+Set knobs for the whole app on `:root` in `brand.css` (below), or for one page or section with a Tailwind arbitrary property on a plain wrapper:
+
+```tsx
+<main className="grid-page [--radius-control:4px] [--radius-surface:6px]">…</main>
+```
+
+Derived radii (`--radius-control-inner`, `--radius-control-box`, `--radius-surface-md`, `--radius-surface-sm`, `--radius-card-shell`, `--radius-card-body`) follow the knobs; don't set them. See **Foundations → Shape → Design knobs — rectangular controls**.
+
+### Brand kit (type and section colours)
+
+A client's brand on WMDS is a short `brand.css` (imported after `styles.css`, unlayered) that sets **allow-listed** knobs. Each knob is read by every component that needs it; nothing else is overridable, so contrast and layout stay guaranteed.
+
+| Knob | Default | Reads it |
+|------|---------|----------|
+| `--font-family-heading` | Geist | `type-heading-*`, and every display step when `--font-display` is unset |
+| `--text-large-weight` | `400` (regular) | `type-large` subtext. Body and subtext at 1.5rem and below stay regular or lighter; raise it only for a face that reads too thin |
+| `--font-display` | unset (the heading face) | every `type-display-*` step (`hero`, `xl`, `1`, `2`, `3`) |
+| `--font-display-weight` | each step's own (700 / 600) | display steps: set `400` for a one-weight face, so nothing is faux-bolded |
+| `--font-display-tracking` | each step's own | display steps: `0` for a condensed face |
+| `--font-display-case` | unset | display steps: `uppercase` for a face set in capitals (the accessible name stays the written text) |
+| `--font-serif` | system serif | a slot: point `--font-display` or `--font-family-heading` at `var(--font-serif)` |
+| `--text-display-hero-size` | `clamp(3.5rem, 16vw, 16rem)` | `type-display-hero` (a condensed face carries more vw) |
+| `--color-brand-surface` / `--color-on-brand-surface` | the navy / white | **Band** `tone="inverse"` |
+| `--color-on-brand-surface-muted` | 72% of the ink on the surface | secondary text on `inverse` |
+| `--color-field` / `--color-on-field` | the primary pair | **Band** `tone="field"` |
+| `--color-on-field-muted` | the ink itself | secondary text on `field` |
+
+The font knobs also work on a section wrapper (`[--font-display:…]`); set the colour pairs on `:root` (and `[data-theme="dark"]` if they differ there). Load the face yourself (`next/font` or `@fontsource/*`).
+
+**Display steps:** `type-display-hero` (fluid to 16vw, 0.92 leading) and `type-display-xl` (44px → 136px, 0.9 leading) sit above `type-display-1`; every display step breaks a long word rather than overflow a phone (`overflow-wrap: anywhere`, also inside flex and grid). **TextSequence** word masks keep 0.08em headroom above and to the sides, so tall caps and outline strokes aren't clipped.
+
+**Contrast:** every on-colour and muted step needs **4.5:1** on its colour. `npx wmds-check` reads the app's CSS and fails a hex pair under that (`brand-contrast`, an error). Pairs it can't resolve (a `var()` or `color-mix`) aren't checked, so check those yourself.
+
+```css
+/* brand.css — the reference client (Foundations → Brand kit → Theme a client) */
+:root {
+  --font-display: "Anton", Impact, sans-serif;
+  --font-display-weight: 400;
+  --font-display-tracking: 0;
+  --font-display-case: uppercase;
+  --text-display-hero-size: clamp(4rem, 17.5vw, 18rem);
+  --color-brand-surface: #120d08;
+  --color-on-brand-surface: #f3e3c3;
+  --color-on-brand-surface-muted: #a89a80;
+  --color-field: #e2522b;
+  --color-on-field: #120d08;
+}
+```
+
+Sections then use **Band** `tone="inverse"` / `"field"`: it re-skins everything inside and bleeds full width on the page's own columns (**Components → Band**).
+
 ### Brand override (`--color-primary`)
 
 The **only** per-app color hook is the primary brand color. The WhatMatters default palette stays in **`src/theme/colors.css`**; an app overrides it by redefining the allowlisted tokens on `:root` (light) and `[data-theme="dark"]` (dark) in a stylesheet imported **after** `@thewhatmatters/wmds/styles.css`.
@@ -359,4 +421,4 @@ Rules:
 - Set both the light and the dark value. Leaving `[data-theme="dark"]` unset falls back to the WhatMatters dark primary, not to your light value.
 - Check contrast for `--color-on-primary` on your primary and for `--color-primary` on `--color-body` in both themes.
 
-**Not overridable per app:** brand navy (`--color-brand` `#011272`, `--color-on-brand`, `--color-brand-outline`, `--color-brand-soft`, `--color-on-brand-hover`), accent (`--color-accent*`, `--color-on-accent`), status (`--color-error*`, `--color-success*`, `--color-warning*`, `--color-info*`), chart series, typography (`--font-*`, `--line-height-*`, `type-*`), and grid (`--grid-*`, `--spacing`). Those roles are the shared WMDS contract — change them in `src/theme/`, rebuild, and bump the package. Do **not** fork component visuals with per-app utility overrides — extend WMDS via new variants/patterns in the design system repo.
+**Not overridable per app** (beyond the Brand kit and Design knobs above): brand navy (`--color-brand` `#011272`, `--color-on-brand`, `--color-brand-outline`, `--color-brand-soft`, `--color-on-brand-hover`), accent (`--color-accent*`, `--color-on-accent`), status (`--color-error*`, `--color-success*`, `--color-warning*`, `--color-info*`), chart series, typography (`--font-*`, `--line-height-*`, `type-*`, except the Brand kit knobs), and grid (`--grid-*`, `--spacing`). Those roles are the shared WMDS contract — change them in `src/theme/`, rebuild, and bump the package. Do **not** fork component visuals with per-app utility overrides — extend WMDS via new variants/patterns in the design system repo.

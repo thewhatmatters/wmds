@@ -85,8 +85,8 @@ export function FilteredIndex({
     >
       <main className="grid-page bg-body">
         {overlay}
-        <div className="band py-6 sm:py-10 lg:py-14">
-          <header className="col-span-full mb-4 flex items-end justify-between gap-4 sm:mb-8">
+        <div className="band py-6 md:py-10 lg:py-14">
+          <header className="col-span-full mb-4 flex items-end justify-between gap-4 md:mb-8">
             <h1 className="type-display-2 text-fg">
               {title} <span className="tabular-nums text-muted">{shown.length}</span>
             </h1>
@@ -219,8 +219,8 @@ export function FilteredGrid({
     >
       <main className="grid-page bg-body">
         {overlay}
-        <div className="band py-6 sm:py-10 lg:py-14">
-          <header className="col-span-full mb-4 flex items-end justify-between gap-4 sm:mb-8">
+        <div className="band py-6 md:py-10 lg:py-14">
+          <header className="col-span-full mb-4 flex items-end justify-between gap-4 md:mb-8">
             <h1 className="type-display-2 text-fg">
               {title} {loading ? null : <span className="tabular-nums text-muted">{shown.length}</span>}
             </h1>

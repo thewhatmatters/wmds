@@ -72,7 +72,7 @@ export const siteNavBarStateClasses: Record<SiteNavState, string> = {
     "w-full border border-transparent bg-transparent px-[var(--grid-margin)] shadow-none",
   ),
   compact: cn(
-    "box-border rounded-full border border-elevation-edge bg-elevation-surface p-1.5 shadow-soft-sm backdrop-blur-md",
+    "box-border rounded-[var(--radius-control)] border border-elevation-edge bg-elevation-surface p-1.5 shadow-soft-sm backdrop-blur-md",
     "supports-[backdrop-filter]:bg-elevation-surface",
   ),
 };
@@ -111,12 +111,15 @@ export const siteNavSlotsClasses = {
   endOnly: "flex w-full items-center justify-end",
 } as const;
 
-export const siteNavStartClasses = "flex shrink-0 items-center gap-2";
+/** Phone touch tier: below `md`, links and buttons in the start and end slots are at least 44px. */
+const siteNavTouchTierClasses = "max-md:[&_a]:min-h-11 max-md:[&_button]:min-h-11 max-md:[&_button]:min-w-11";
+export const siteNavStartClasses = `flex shrink-0 items-center gap-2 ${siteNavTouchTierClasses}`;
 export const siteNavMiddleClasses =
   "flex min-w-0 flex-1 items-center justify-center";
 /** Compact hug middle — content-sized; can shrink only when the pill hits `max-w-full`. */
 export const siteNavMiddleHugClasses = "flex min-w-0 max-w-full items-center justify-center";
-export const siteNavEndClasses = "flex shrink-0 flex-nowrap items-center gap-2";
+/** `max-md:ml-auto`: with the links hidden on phones, the actions and Menu still sit at the trailing edge. */
+export const siteNavEndClasses = `flex shrink-0 flex-nowrap items-center gap-2 max-md:ml-auto ${siteNavTouchTierClasses}`;
 
 /**
  * Middle slot when a `mobile` menu is supplied. Shown from `md`.
@@ -132,12 +135,22 @@ export const siteNavMiddleHugResponsiveClasses =
  * IconButton paints `inline-flex`. `md:!hidden` beats a later non-important
  * `.inline-flex`. The class is not `hidden`, so an app's `.hidden` does not match.
  */
-export const siteNavMobileTriggerClasses = "md:!hidden";
+/**
+ * The "☰ Menu" / "✕ Close" button: phones only, at least 44px tall (N7). Quiet in both states: no fill at
+ * rest or open, the ghost hover/press fill only. In the full bar its 16px padding is pulled past the
+ * trailing edge, so the word lines up with the content edge; the compact pill keeps its padding.
+ */
+export const siteNavMobileTriggerClasses = "min-h-11 !px-4 md:!hidden in-data-[state=expanded]:-mr-4";
 
 /**
  * Brand — layout only when wordmark **Button**; icon brands use **IconButton** (circular).
  */
 export const siteNavBrandClasses = "text-fg!";
+/**
+ * A wordmark brand in the full bar: its 16px pill padding is pulled past the leading edge, so the wordmark
+ * starts on the content edge like the page below it (the hit area stays). The compact pill keeps its padding.
+ */
+export const siteNavWordmarkBrandClasses = "text-fg! in-data-[state=expanded]:-ml-4";
 
 /** Links cluster — full middle track width for overflow measure; cluster centered inside. */
 export const siteNavLinksRootClasses =
@@ -244,11 +257,32 @@ export const siteNavMenuReadRowClasses = "flex flex-col gap-3 md:flex-row md:gap
 export const siteNavMenuReadThumbClasses =
   "aspect-[16/10] w-full shrink-0 md:aspect-auto md:size-16";
 
-/** Mobile sheet body — stacked links. */
-export const siteNavMobileListClasses = "flex flex-col gap-1";
+/**
+ * Phone menu panel (Header rule N8): fixed under the bar (`top` is set inline to the bar's bottom), full
+ * width and the rest of the height, on the page surface; its own scroll if the rows run long. The
+ * links sit on the page margins; the main action pins to the bottom.
+ */
+export const siteNavMobilePanelClasses =
+  "fixed inset-x-0 bottom-0 z-[60] flex flex-col overflow-y-auto overscroll-contain bg-body px-[var(--grid-margin)] pt-2 pb-[max(var(--grid-margin),env(safe-area-inset-bottom))] md:hidden!";
 
-/** Mobile link row — full-width ghost **Button** anchor; current page uses the selected fill. */
+/** The menu's rows, stacked. */
+export const siteNavMobileListClasses = "flex flex-col";
+
+/**
+ * Phone menu row (Header rule N5): full width, 56px. The current page is marked by weight and the
+ * selected fill, not colour alone (N2), with `aria-current="page"`.
+ */
 export const siteNavMobileLinkClasses = cn(
-  "w-full justify-start! text-muted! hover:text-fg!",
-  "aria-[current=page]:bg-fill-selected! aria-[current=page]:text-fg!",
+  "min-h-14! w-full justify-start! text-fg! type-large!",
+  "aria-[current=page]:bg-fill-selected! aria-[current=page]:font-semibold!",
 );
+
+/** The menu's main action, pinned to the bottom of the panel, full width. */
+export const siteNavMobileActionClasses = "mt-auto flex flex-col gap-2 pt-6 [&_a]:w-full [&_button]:w-full";
+
+/**
+ * The bar's own actions beside the Menu button. When brand + actions + Menu don't fit (`data-tight`,
+ * measured), they hide so the button keeps its word (Header rule N7); the open menu carries the main
+ * action instead. While the phone menu is open they hide too: the menu's own action is the one CTA on screen.
+ */
+export const siteNavEndActionsClasses = "contents data-[tight]:hidden! max-md:data-[menu-open]:hidden!";

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.28 · Pattern — intake modal
+// @thewhatmatters/wmds@0.4.40 · Pattern — intake modal
 // Storybook: Components/IntakeModal → Pattern — intake modal (?path=/story/components-intakemodal--intake-modal-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -17,7 +17,7 @@ export function StartAProjectShell() {
         open={open}
         onOpenChange={setOpen}
         step={1}
-        steps={4}
+        steps={2}
         backDisabled
         onBack={() => undefined}
         onContinue={() => undefined}

@@ -54,6 +54,8 @@ export interface SheetProps {
 }
 
 export interface SheetContentProps {
+  /** Id on the dialog panel — point a trigger's `aria-controls` at it. */
+  id?: string;
   /** Edge attachment — default `bottom`. Side sheets are full viewport height. */
   side?: SheetSide;
   /** Cross-axis size — width (`end` / `start`) or max-height (`bottom`). */
@@ -71,12 +73,14 @@ export interface SheetContentProps {
 }
 
 function SheetPortal({
+  id,
   side,
   size,
   "aria-labelledby": ariaLabelledBy,
   "aria-describedby": ariaDescribedBy,
   children,
 }: {
+  id?: string;
   side: SheetSide;
   size: SheetSize;
   "aria-labelledby"?: string;
@@ -146,6 +150,7 @@ function SheetPortal({
               overlayPanelChromeClasses,
               "relative z-[1]",
             )}
+            id={id}
             role="dialog"
             aria-modal="true"
             aria-labelledby={ariaLabelledBy}
@@ -227,6 +232,7 @@ function SheetTrigger({
 }
 
 function SheetContent({
+  id,
   side = "bottom",
   size = "md",
   title,
@@ -247,6 +253,7 @@ function SheetContent({
 
   return (
     <SheetPortal
+      id={id}
       side={side}
       size={size}
       aria-labelledby={hasTitle ? titleId : undefined}

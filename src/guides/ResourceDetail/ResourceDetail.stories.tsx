@@ -29,7 +29,7 @@ It is a **Dialog**, not a **Sheet** or a **Panel**: the detail is centered and a
 | Media | \`img\` (or the app's image component through \`renderImage\`), or one \`video\` with controls | Whole, never cropped; the video does not play by itself |
 | Eyebrow, title, note, date | \`type-eyebrow\`, \`type-heading-1\`, \`type-reading\`, \`time\` | The dialog is named by the title |
 | Metadata | **DescriptionList** \`variant="mono"\` \`rule="dotted"\` | Category, Tags (**Badge** outline mono), Source, then the app's \`rows\` |
-| Visit | **Button** \`role="primary"\` \`external\` | Opens the resource in a new tab and says so |
+| Visit | **Button** \`role="primary"\` \`external\` | External icon; opens the resource in the same tab (Links K9) |
 | Previous, next, close | **IconButton** \`size="sm"\` in the Dialog's \`headerEnd\`; the Dialog's close | Left and Right also move; Escape closes |
 | Path | **Breadcrumb** \`variant="mono"\` \`separator="slash"\` | The page form only |
 
@@ -346,7 +346,7 @@ export function ResourceDetailPage({ item, breadcrumb, renderLink, renderImage, 
   return (
     <main className="grid-page bg-body">
       {overlay}
-      <article aria-labelledby={headingId} className="band py-6 sm:py-10 lg:py-14">
+      <article aria-labelledby={headingId} className="band py-6 md:py-10 lg:py-14">
         <Breadcrumb
           items={breadcrumb}
           variant="mono"

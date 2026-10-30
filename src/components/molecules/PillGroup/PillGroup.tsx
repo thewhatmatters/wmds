@@ -7,6 +7,8 @@ import {
 import { cn } from "../../../lib/cn";
 import {
   pillGroupClasses,
+  pillGroupFieldClasses,
+  pillGroupLabelClasses,
   pillGroupIdleClasses,
   pillGroupMutedClasses,
   pillGroupSelectedClasses,
@@ -36,8 +38,12 @@ function usePillGroupContext(component: string): PillGroupContextValue {
 }
 
 export interface PillGroupProps {
-  /** Accessible name for the radio group. */
-  "aria-label": string;
+  /**
+   * The question, shown above the pills and naming the group (Dropdowns C2, C9). Prefer it to `aria-label`.
+   */
+  label?: ReactNode;
+  /** Accessible name when the question is visible elsewhere (a heading right above). */
+  "aria-label"?: string;
   value: string | null;
   onValueChange: (value: string) => void;
   children: ReactNode;
@@ -63,6 +69,7 @@ function pillSurface(selected: boolean, emphasis: PillGroupEmphasis): string {
 }
 
 function PillGroupRoot({
+  label,
   "aria-label": ariaLabel,
   value,
   onValueChange,
@@ -70,16 +77,34 @@ function PillGroupRoot({
   className,
 }: PillGroupProps) {
   const name = useId();
+  const labelId = `${name}-label`;
+  if (label == null && ariaLabel == null) {
+    console.warn("[WMDS PillGroup] Provide `label` (the question) or `aria-label`.");
+  }
+
+  const group = (
+    <div
+      role="radiogroup"
+      aria-label={label == null ? ariaLabel : undefined}
+      aria-labelledby={label != null ? labelId : undefined}
+      className={cn(pillGroupClasses, label == null && className)}
+    >
+      {children}
+    </div>
+  );
 
   return (
     <PillGroupContext.Provider value={{ name, value, onValueChange }}>
-      <div
-        role="radiogroup"
-        aria-label={ariaLabel}
-        className={cn(pillGroupClasses, className)}
-      >
-        {children}
-      </div>
+      {label != null ? (
+        <div className={cn(pillGroupFieldClasses, className)}>
+          <span id={labelId} className={pillGroupLabelClasses}>
+            {label}
+          </span>
+          {group}
+        </div>
+      ) : (
+        group
+      )}
     </PillGroupContext.Provider>
   );
 }

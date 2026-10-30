@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.28 · Pattern — editorial
+// @thewhatmatters/wmds@0.4.40 · Pattern — editorial
 // Storybook: Components/Breadcrumb → Pattern — editorial (?path=/story/components-breadcrumb--editorial)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

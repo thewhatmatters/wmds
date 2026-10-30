@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { MotionConfig } from "motion/react";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 import { Card } from "../components/molecules/Card/Card";
 import { cardLayoutBodyOccupantRadiusClasses } from "../components/molecules/Card/cardStyles";
@@ -426,5 +427,153 @@ export const ScrubberContrast: Story = {
       expect(contrast(thumbTone, trackTone)).toBeGreaterThanOrEqual(3);
       expect(contrast(thumbTone, luminance(page))).toBeGreaterThanOrEqual(3);
     }
+  },
+};
+
+function DriftHarness() {
+  return (
+    // Motion on, whatever the test browser's own setting: the drift is what's under test.
+    <MotionConfig reducedMotion="never">
+      <div className="w-[56rem]">
+        <Carousel aria-label="Client quotes" itemWidth={40} autoplay={{ speed: 240 }} cursor={<span>drag</span>}>
+          {tiles.map((tile) => (
+            <Carousel.Item key={tile.id}>
+              <img className="aspect-[4/3] w-full object-cover" src={tile.src} alt={tile.alt} />
+            </Carousel.Item>
+          ))}
+        </Carousel>
+      </div>
+    </MotionConfig>
+  );
+}
+
+export const Autoplay: Story = {
+  name: "autoplay drifts, holds on hover and focus, and pauses",
+  render: () => <DriftHarness />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const row = canvas.getByRole("region", { name: "Client quotes" });
+    // It drifts on its own.
+    await waitFor(() => expect(row.scrollLeft).toBeGreaterThan(40), { timeout: 3000 });
+
+    // A pointer over the row holds it.
+    await userEvent.hover(row);
+    const held = row.scrollLeft;
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    await expect(Math.abs(row.scrollLeft - held)).toBeLessThanOrEqual(2);
+    await userEvent.unhover(row);
+    await waitFor(() => expect(Math.abs(row.scrollLeft - held)).toBeGreaterThan(20), { timeout: 3000 });
+
+    // The Pause button stops it (WCAG 2.2.2), and says Play while it's stopped.
+    const pause = canvas.getByRole("button", { name: "Pause" });
+    await userEvent.click(pause);
+    await userEvent.unhover(row);
+    // Focus on the button holds the drift too; move focus away to check the pause itself holds it.
+    pause.blur();
+    const stopped = row.scrollLeft;
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    await expect(Math.abs(row.scrollLeft - stopped)).toBeLessThanOrEqual(2);
+    await expect(canvas.getByRole("button", { name: "Play" })).toBeInTheDocument();
+
+    // The follow badge is decorative.
+    const badge = canvasElement.querySelector("[data-carousel-cursor]");
+    await expect(badge?.getAttribute("aria-hidden")).toBe("true");
+  },
+};
+
+export const AutoplayReducedMotion: Story = {
+  name: "autoplay never runs under reduced motion",
+  render: () => (
+    <MotionConfig reducedMotion="always">
+      <div className="w-[56rem]">
+        <Carousel aria-label="Client quotes" itemWidth={40} autoplay>
+          {tiles.map((tile) => (
+            <Carousel.Item key={tile.id}>
+              <img className="aspect-[4/3] w-full object-cover" src={tile.src} alt={tile.alt} />
+            </Carousel.Item>
+          ))}
+        </Carousel>
+      </div>
+    </MotionConfig>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const row = canvas.getByRole("region", { name: "Client quotes" });
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    await expect(row.scrollLeft).toBe(0);
+    await expect(canvas.queryByRole("button", { name: "Pause" })).toBeNull();
+  },
+};
+
+export const AutoplayLoop: Story = {
+  name: "loop repeats the items seamlessly and wraps back",
+  render: () => (
+    <MotionConfig reducedMotion="never">
+      <div className="w-[56rem]">
+        <Carousel aria-label="Client quotes" itemWidth={40} autoplay={{ speed: 900 }} loop>
+          {tiles.map((tile) => (
+            <Carousel.Item key={tile.id}>
+              <img className="aspect-[4/3] w-full object-cover" src={tile.src} alt={tile.alt} />
+            </Carousel.Item>
+          ))}
+        </Carousel>
+      </div>
+    </MotionConfig>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const row = canvas.getByRole("region", { name: "Client quotes" });
+    // The copy is hidden from assistive tech and out of the tab order; only the originals are named items.
+    const clones = canvasElement.querySelectorAll("[data-carousel-clone]");
+    await expect(clones).toHaveLength(tiles.length);
+    for (const clone of clones) {
+      await expect(clone.getAttribute("aria-hidden")).toBe("true");
+      await expect(clone.hasAttribute("inert")).toBe(true);
+    }
+    await expect(canvas.getAllByRole("group")).toHaveLength(tiles.length);
+    // A loop has no end: no scrubber.
+    await expect(canvasElement.querySelector("[data-carousel-progress]")).toBeNull();
+    // It drifts one way and wraps back past one set: the position drops at least once.
+    let wrapped = false;
+    let last = row.scrollLeft;
+    const start = performance.now();
+    while (!wrapped && performance.now() - start < 5000) {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      if (row.scrollLeft < last - 50) wrapped = true;
+      last = row.scrollLeft;
+    }
+    await expect(wrapped).toBe(true);
+  },
+};
+
+export const Velocity: Story = {
+  name: "--carousel-velocity follows the row's movement and settles to 0",
+  render: () => (
+    <MotionConfig reducedMotion="never">
+      <div className="w-[56rem]">
+        {/* Snap off, so a programmatic scroll stays where it's put. */}
+        <Carousel aria-label="Velocity row" itemWidth={40} snap={false}>
+          {tiles.map((tile) => (
+            <Carousel.Item key={tile.id}>
+              <img className="aspect-[4/3] w-full object-cover" src={tile.src} alt={tile.alt} />
+            </Carousel.Item>
+          ))}
+        </Carousel>
+      </div>
+    </MotionConfig>
+  ),
+  play: async ({ canvasElement }) => {
+    const row = within(canvasElement).getByRole("region", { name: "Velocity row" });
+    const root = canvasElement.querySelector<HTMLElement>("[data-carousel]")!;
+    const read = () => Number(root.style.getPropertyValue("--carousel-velocity") || 0);
+    let peak = 0;
+    for (let step = 1; step <= 8; step++) {
+      row.scrollLeft = step * 30;
+      await new Promise((resolve) => setTimeout(resolve, 16));
+      peak = Math.max(peak, read());
+    }
+    // Moving toward the end reads positive.
+    await expect(peak).toBeGreaterThan(0.2);
+    await waitFor(() => expect(read()).toBe(0), { timeout: 1000 });
   },
 };

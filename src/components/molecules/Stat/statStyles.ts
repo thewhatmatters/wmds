@@ -16,7 +16,7 @@ export const statGroupColumns = [2, 3, 4] as const;
 export type StatGroupColumns = (typeof statGroupColumns)[number];
 
 /** Bordered metric tile — insights row and hero KPI. */
-export const statShellClasses = "flex min-w-0 flex-col rounded-xl border border-border bg-surface";
+export const statShellClasses = "flex min-w-0 flex-col rounded-[var(--radius-surface-md)] border border-border bg-surface";
 
 export const statShellSizeClasses: Record<StatSize, string> = {
   sm: "gap-2 p-4",

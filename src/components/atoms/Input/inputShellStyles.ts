@@ -60,8 +60,8 @@ export const inputCompoundInnerFocusRingClasses = inputCompoundShellFocusRingCla
 export const inputCompoundFocusRingClasses = inputCompoundShellFocusRingClasses;
 
 export const inputSizeClasses: Record<InputSize, string> = {
-  sm: "h-8 px-2.5 text-xs leading-none",
-  md: "h-11 px-3 text-sm leading-none",
+  sm: "h-8 px-2.5 text-xs pointer-coarse:text-base leading-none",
+  md: "h-11 px-3 text-sm pointer-coarse:text-base leading-none",
   lg: "min-h-12 px-4 text-base leading-none",
 };
 
@@ -77,9 +77,9 @@ export const inputShellClasses: Record<InputSize, string> = {
 
 /** Solo shell — pill only. */
 export const inputSoloRadiusClasses: Record<InputSize, string> = {
-  sm: "rounded-full",
-  md: "rounded-full",
-  lg: "rounded-full",
+  sm: "rounded-[var(--radius-control)]",
+  md: "rounded-[var(--radius-control)]",
+  lg: "rounded-[var(--radius-control)]",
 };
 
 export const inputStatusShellClasses: Record<InputStatus, string> = {
@@ -90,9 +90,9 @@ export const inputStatusShellClasses: Record<InputStatus, string> = {
 
 /** Compound outer radius — capsule around the pill + message band. */
 export const inputCompoundOuterRadiusClasses: Record<InputSize, string> = {
-  sm: "rounded-2xl",
-  md: "rounded-[1.375rem]",
-  lg: "rounded-[1.5rem]",
+  sm: "rounded-[min(var(--radius-control),1rem)]",
+  md: "rounded-[min(var(--radius-control),1.375rem)]",
+  lg: "rounded-[min(var(--radius-control),1.5rem)]",
 };
 
 /** Banner tucks under the pill equator (~half field height). */
@@ -203,7 +203,7 @@ export const inputCompoundOuterPaddingClasses: Record<InputSize, string> = {
 
 /** @deprecated Use {@link inputCompoundInnerFieldClassesFor}. */
 export const inputCompoundInnerClasses =
-  "relative flex w-full items-center rounded-full border border-border-control bg-surface";
+  "relative flex w-full items-center rounded-[var(--radius-control)] border border-border-control bg-surface";
 
 /** @deprecated Use {@link inputStatusShellClasses}. */
 export const inputCompoundInnerBorderClasses: Record<InputStatus, string> = inputStatusShellClasses;

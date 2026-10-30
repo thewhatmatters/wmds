@@ -41,7 +41,8 @@ ConfettiProvider
 
 ## Best practices
 
-- **Do** mount the confirmation only after the booking or the skip succeeds.
+- **Do** mount the confirmation only after the booking or the skip succeeds, on its own screen (never a toast alone), and send a confirmation email too (T3).
+- **Do** say what happens next and when in one sentence (\`email\` and \`replyWithin\`, default "within one business day"; keep it true), what we got (\`summary\`, shown as "You told us: “…”"), and how to reach us (\`contact\`).
 - **Do** keep one provider at the root.
 - **Do** pass booking slots only when you have real URLs — reuse **TextLink** / **Button**, do not invent a second confirmation style.
 - **Don't** call \`fire()\` from Continue, Confirm, or the skip link.
@@ -98,7 +99,13 @@ export const EmailedPattern: Story = {
   },
   render: () => (
     <ConfettiProvider>
-      <IntakeConfirmation variant="emailed" onDone={() => undefined} />
+      <IntakeConfirmation
+        variant="emailed"
+        email="maria@cinderandsotol.com"
+        summary="A new site before spring."
+        contact="Prefer to talk? (512) 555-0148 · Mon–Fri, 9–5"
+        onDone={() => undefined}
+      />
     </ConfettiProvider>
   ),
   parameters: storyCopySource(`
@@ -107,7 +114,13 @@ import { ConfettiProvider, IntakeConfirmation } from "@thewhatmatters/wmds";
 export function Emailed() {
   return (
     <ConfettiProvider>
-      <IntakeConfirmation variant="emailed" onDone={() => undefined} />
+      <IntakeConfirmation
+        variant="emailed"
+        email="maria@cinderandsotol.com"
+        summary="A new site before spring."
+        contact="Prefer to talk? (512) 555-0148 · Mon–Fri, 9–5"
+        onDone={() => undefined}
+      />
     </ConfettiProvider>
   );
 }

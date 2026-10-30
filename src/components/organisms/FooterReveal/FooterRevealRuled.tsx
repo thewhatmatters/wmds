@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef } from "react";
 import { TextLink } from "../../atoms/TextLink/TextLink";
 import { cn } from "../../../lib/cn";
-import { footerRevealExternalLinkProps, footerRevealWordmarkFontSize } from "./footerRevealStyles";
+import { footerRevealWordmarkFontSize } from "./footerRevealStyles";
 import {
   footerRevealRuledContactClasses,
   footerRevealRuledCopyrightClasses,
@@ -199,7 +199,6 @@ export function FooterRevealRuled({
             <a
               href={emailLink}
               className={footerRevealRuledEmailClasses}
-              {...footerRevealExternalLinkProps(emailLink)}
             >
               {email}
             </a>

@@ -15,7 +15,7 @@ const meta = {
         component: `
 ## Usage
 
-About-you step. **Field** wraps **Input** and **TextArea**. Project details shows a character counter in the field description (\`12 / 400\`). The counter is not a **TextArea** prop.
+About-you step. **Field** wraps **Input** and **TextArea**. The project question (“What should feel different when this work is done?”, the label itself) shows a counter below the field ("388 characters left", or "You have 12 characters too many"). There's no \`maxLength\`: people can type or paste past the limit, the counter says by how much, a screen reader hears it once typing pauses, and the field's error blocks the step until it's trimmed (Form layout L9).
 
 \`isIntakeAboutValid\` is true when name, email, and details are present, details stay within the counter, and an optional link is empty or a valid http(s) URL. Company and link are optional.
 
@@ -31,7 +31,7 @@ IntakeForm
 ├── Field — Email / Input
 ├── Field — Company / Input (optional; company={false} leaves it out)
 ├── Field — Link / Input (optional URL; link={false} leaves it out)
-└── Field — Project details / TextArea + counter
+└── Field — "What should feel different when this work is done?" / TextArea + counter
 \`\`\`
 
 ## Best practices
@@ -120,3 +120,34 @@ export function AboutYouShort() {
   ),
 };
 
+
+export const OverTheLimit: Story = {
+  name: "Pattern — over the character limit",
+  args: {
+    values: intakeAboutEmpty,
+    onChange: () => undefined,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "No `maxLength`: a long paste stays whole. The counter says how many characters to trim, and the field's error blocks the step until it's done (Form layout L9).",
+      },
+    },
+  },
+  render: function OverTheLimitRender() {
+    const [values, setValues] = useState<IntakeAboutValues>({
+      ...intakeAboutEmpty,
+      name: "Jordan Lee",
+      email: "jordan@northwind.com",
+      details:
+        "We need a calmer site and a brand that can stretch past the launch. ".repeat(6).trim(),
+    });
+
+    return (
+      <div className="w-full max-w-xl">
+        <IntakeForm values={values} onChange={setValues} detailsMax={400} />
+      </div>
+    );
+  },
+};

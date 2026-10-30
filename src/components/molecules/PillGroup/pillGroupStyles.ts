@@ -1,3 +1,4 @@
+import { typographyClass } from "../../../lib/typography";
 import { badgeBaseClasses, badgeMutedClasses, badgeSolidClasses } from "../../atoms/Badge/badgeStyles";
 import { cn } from "../../../lib/cn";
 
@@ -6,7 +7,7 @@ export const pillGroupClasses = "flex flex-wrap gap-2";
 
 export const pillGroupShapeClasses = cn(
   badgeBaseClasses,
-  "min-h-11 cursor-pointer rounded-full px-4",
+  "min-h-11 cursor-pointer rounded-[var(--radius-control)] px-4",
   "peer-focus-visible:ring-2 peer-focus-visible:ring-focus-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-body",
 );
 
@@ -24,3 +25,8 @@ export const pillGroupSelectedClasses = cn(
   pillGroupShapeClasses,
   "border border-transparent bg-brand text-on-brand",
 );
+
+/** Question above the pills (Dropdowns C2, C9). */
+export const pillGroupFieldClasses = "flex flex-col gap-2";
+
+export const pillGroupLabelClasses = typographyClass("ui-label");

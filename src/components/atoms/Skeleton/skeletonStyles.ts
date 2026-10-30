@@ -9,7 +9,7 @@ export const skeletonRadiusClasses: Record<SkeletonRadius, string> = {
   none: "rounded-none",
   inner: "rounded-sm",
   element: "rounded-lg",
-  container: "rounded-xl",
+  container: "rounded-[var(--radius-surface-md)]",
   full: "rounded-full",
 };
 

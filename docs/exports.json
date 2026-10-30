@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.28",
+  "version": "0.4.40",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -82,6 +82,19 @@
       ]
     },
     {
+      "name": "Band",
+      "tier": "atom",
+      "category": "Layout",
+      "summary": "Full-bleed page section in a brand tone (inverse, field) on the page's own columns.",
+      "storybook": {
+        "title": "Components/Band",
+        "docs": "?path=/docs/components-band--docs"
+      },
+      "patterns": [
+        "components-band--page-in-bands"
+      ]
+    },
+    {
       "name": "Breadcrumb",
       "tier": "molecule",
       "category": "Navigation",
@@ -134,7 +147,7 @@
         "docs": "?path=/docs/components-calembed--docs"
       },
       "patterns": [
-        "components-calembed--pattern-skip-in-footer"
+        "components-calembed--pattern-skip-above"
       ]
     },
     {
@@ -338,6 +351,19 @@
       "patterns": []
     },
     {
+      "name": "ErrorSummary",
+      "tier": "molecule",
+      "category": "Form controls",
+      "summary": "\"There's a problem\" at the top of a form after a failed submit: one link per error that focuses its field.",
+      "storybook": {
+        "title": "Components/ErrorSummary",
+        "docs": "?path=/docs/components-errorsummary--docs"
+      },
+      "patterns": [
+        "components-errorsummary--contact-form"
+      ]
+    },
+    {
       "name": "Field",
       "tier": "molecule",
       "category": "Form controls",
@@ -406,7 +432,8 @@
         "docs": "?path=/docs/components-herointro--docs"
       },
       "patterns": [
-        "components-herointro--two-line-intro"
+        "components-herointro--two-line-intro",
+        "components-herointro--with-actions"
       ]
     },
     {
@@ -447,6 +474,17 @@
       "patterns": [
         "components-indexlist--post-index"
       ]
+    },
+    {
+      "name": "InlinePill",
+      "tier": "atom",
+      "category": "Content",
+      "summary": "A key word inside running text in a soft pill that scales with the text, with an optional picture that can pop in on scroll.",
+      "storybook": {
+        "title": "Components/InlinePill",
+        "docs": "?path=/docs/components-inlinepill--docs"
+      },
+      "patterns": []
     },
     {
       "name": "Input",

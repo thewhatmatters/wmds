@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.28",
+  "version": "0.4.40",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -49,6 +49,14 @@
       "file": "patterns/components-badge--with-avatar.tsx",
       "storybook": "?path=/story/components-badge--with-avatar",
       "source": "src/components/atoms/Badge/Badge.stories.tsx"
+    },
+    {
+      "id": "components-band--page-in-bands",
+      "title": "Components/Band",
+      "name": "Pattern — page in bands",
+      "file": "patterns/components-band--page-in-bands.tsx",
+      "storybook": "?path=/story/components-band--page-in-bands",
+      "source": "src/components/atoms/Band/Band.stories.tsx"
     },
     {
       "id": "components-breadcrumb--editorial",
@@ -211,11 +219,11 @@
       "source": "src/components/molecules/FloatingActionButton/FloatingActionButton.stories.tsx"
     },
     {
-      "id": "components-calembed--pattern-skip-in-footer",
+      "id": "components-calembed--pattern-skip-above",
       "title": "Components/CalEmbed",
-      "name": "Pattern — skip in footer",
-      "file": "patterns/components-calembed--pattern-skip-in-footer.tsx",
-      "storybook": "?path=/story/components-calembed--pattern-skip-in-footer",
+      "name": "Pattern — skip above the calendar",
+      "file": "patterns/components-calembed--pattern-skip-above.tsx",
+      "storybook": "?path=/story/components-calembed--pattern-skip-above",
       "source": "src/components/molecules/CalEmbed/CalEmbed.stories.tsx"
     },
     {
@@ -507,6 +515,14 @@
       "source": "src/components/molecules/DisplayControls/DisplayControls.stories.tsx"
     },
     {
+      "id": "components-errorsummary--contact-form",
+      "title": "Components/ErrorSummary",
+      "name": "Pattern — form with an error summary",
+      "file": "patterns/components-errorsummary--contact-form.tsx",
+      "storybook": "?path=/story/components-errorsummary--contact-form",
+      "source": "src/components/molecules/ErrorSummary/ErrorSummary.stories.tsx"
+    },
+    {
       "id": "components-field--horizontal-input",
       "title": "Components/Field",
       "name": "Pattern — horizontal input",
@@ -592,6 +608,14 @@
       "name": "Pattern — two-line intro",
       "file": "patterns/components-herointro--two-line-intro.tsx",
       "storybook": "?path=/story/components-herointro--two-line-intro",
+      "source": "src/components/molecules/HeroIntro/HeroIntro.stories.tsx"
+    },
+    {
+      "id": "components-herointro--with-actions",
+      "title": "Components/HeroIntro",
+      "name": "Pattern — with description and actions",
+      "file": "patterns/components-herointro--with-actions.tsx",
+      "storybook": "?path=/story/components-herointro--with-actions",
       "source": "src/components/molecules/HeroIntro/HeroIntro.stories.tsx"
     },
     {

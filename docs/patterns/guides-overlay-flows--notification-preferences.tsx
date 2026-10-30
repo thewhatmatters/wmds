@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.28 · Pattern — notification preferences
+// @thewhatmatters/wmds@0.4.40 · Pattern — notification preferences
 // Storybook: Guides/Overlay flows → Pattern — notification preferences (?path=/story/guides-overlay-flows--notification-preferences)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -130,8 +130,8 @@ export function NotificationPreferencesPage() {
           }
         >
           <div className="flex flex-col gap-4 pb-4">
-            <Input label="Market" placeholder="All markets" />
-            <Input label="Region" placeholder="All regions" />
+            <Input label="Market" />
+            <Input label="Region" />
           </div>
         </Sheet.Content>
       </Sheet>

@@ -29,7 +29,9 @@ export const MetadataPanel: Story = {
   play: async ({ canvas, canvasElement }) => {
     // The caption names the panel; its "/" is decoration.
     const panel = canvas.getByRole("complementary", { name: "Metadata" });
-    const caption = within(panel).getByRole("heading", { level: 2, name: "Metadata" });
+    // The caption is a plain eyebrow (Headings H6, Eyebrow E6) that still names the region.
+    const caption = within(panel).getByText("Metadata", { exact: false });
+    expect(caption.tagName).toBe("P");
     expect(caption.textContent).toBe("/ Metadata");
 
     // dl > div > dt + dd
@@ -48,9 +50,9 @@ export const MetadataPanel: Story = {
     expect(within(panel).getByRole("link", { name: "Guides" })).toHaveAttribute("href", "#guides");
     expect(within(panel).queryByRole("link", { name: "Randy Lee" })).toBeNull();
 
-    // Share links open a new tab and say so.
-    const share = within(panel).getByRole("link", { name: "LinkedIn (opens in a new tab)" });
-    expect(share).toHaveAttribute("target", "_blank");
+    // Share links stay in the tab (Links K9).
+    const share = within(panel).getByRole("link", { name: "LinkedIn" });
+    expect(share).not.toHaveAttribute("target");
     expect(share.getAttribute("href")).toContain(encodeURIComponent(samplePost.url));
 
     // Copy for LLM copies the markdown and confirms.

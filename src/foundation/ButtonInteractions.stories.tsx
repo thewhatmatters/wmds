@@ -123,10 +123,10 @@ export const CopyFails: Story = {
 };
 
 export const ExternalLink: Story = {
-  name: "an external link button opens a new tab and says so",
+  name: "an external link button stays in the tab; newTab opts in and says so",
   render: () => (
     <div className="flex gap-2">
-      <Button role="secondary" size="sm" external render={<a href="https://www.linkedin.com/" />}>
+      <Button role="secondary" size="sm" external newTab render={<a href="https://www.linkedin.com/" />}>
         LinkedIn
       </Button>
       <Button role="secondary" size="sm" external externalIcon={false} render={<a href="https://x.com/" />}>
@@ -140,8 +140,9 @@ export const ExternalLink: Story = {
     expect(linkedin).toHaveAttribute("rel", "noopener noreferrer");
     expect(linkedin.querySelector("svg")).not.toBeNull();
 
-    const x = canvas.getByRole("link", { name: "Twitter/X (opens in a new tab)" });
-    expect(x).toHaveAttribute("target", "_blank");
+    // Links K9: `external` alone keeps the same tab.
+    const x = canvas.getByRole("link", { name: "Twitter/X" });
+    expect(x).not.toHaveAttribute("target");
     expect(x.querySelector("svg")).toBeNull();
   },
 };

@@ -14,18 +14,20 @@ export type RadioSize = (typeof radioSizes)[number];
 
 /** Row rhythm — aligns with cluster sm (28px) / md (36px) tiers. */
 export const radioRowSizeClasses: Record<RadioSize, string> = {
-  sm: "min-h-7 gap-2",
-  md: "min-h-9 gap-2.5",
+  // Dropdowns C3: on touch screens every row is a 44px target (the whole label is clickable).
+  sm: "min-h-7 gap-2 pointer-coarse:min-h-11",
+  md: "min-h-9 gap-2.5 pointer-coarse:min-h-11",
 };
 
 export const radioHitTargetSizeClasses: Record<RadioSize, string> = {
-  sm: "size-7",
+  sm: "size-7 pointer-coarse:size-9",
   md: "size-9",
 };
 
 export const radioCircleSizeClasses: Record<RadioSize, string> = {
-  sm: "size-[18px] rounded-full",
-  md: "size-[22px] rounded-full",
+  // C3: the box is at least 24px wherever it's tapped; sm stays 18px for dense mouse UI.
+  sm: "size-[18px] rounded-full pointer-coarse:size-6",
+  md: "size-6 rounded-full",
 };
 
 export const radioDotSizeClasses: Record<RadioSize, string> = {
@@ -40,7 +42,8 @@ export const radioCircleBaseClasses = cn(
 );
 
 export const radioCircleUncheckedClasses =
-  "border-border-emphasized bg-surface group-hover/radio:border-border-emphasized group-hover/radio:bg-body";
+  // C4: the empty box's border clears 3:1 on the page (WCAG 1.4.11), like Input's.
+  "border-border-control bg-surface group-hover/radio:border-border-control group-hover/radio:bg-body";
 
 export const radioCircleCheckedClasses =
   "border-primary bg-primary group-hover/radio:border-primary group-hover/radio:bg-primary";

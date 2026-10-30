@@ -8,7 +8,7 @@ import { TileGrid } from "./TileGrid";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-const tile = (id: string, external = false) =>
+const tile = (id: string, external = false, newTab = false) =>
   createElement(
     TileGrid.Item,
     { key: id },
@@ -17,6 +17,7 @@ const tile = (id: string, external = false) =>
       href: `https://${id}.example`,
       meta: `${id}.example`,
       external,
+      newTab,
       media: createElement("img", { src: `/${id}.png`, alt: `${id} home page`, width: 800, height: 600 }),
     }),
   );
@@ -61,8 +62,16 @@ describe("TileGrid on the server", () => {
 });
 
 describe("LinkTile on the server", () => {
-  it("is one link named by its title, its meta, then the new-tab hint", () => {
+  it("marks another site and keeps the same tab (Links K9)", () => {
     const html = renderToString(tile("a", true));
+    expect(html.match(/<a /g)).toHaveLength(1);
+    expect(html).toContain("data-external");
+    expect(html).not.toContain("target=");
+    expect(html).not.toContain("opens in a new tab");
+  });
+
+  it("with newTab, is one link named by its title, its meta, then the new-tab hint", () => {
+    const html = renderToString(tile("a", true, true));
     expect(html.match(/<a /g)).toHaveLength(1);
     expect(html).toContain('target="_blank"');
     expect(html).toContain('rel="noopener noreferrer"');

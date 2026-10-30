@@ -1,8 +1,9 @@
 import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
+import { autofillTokens } from "../components/atoms/Input/autofillFields";
 
 const script = path.resolve(__dirname, "../../bin/wmds-check.mjs");
 const app = mkdtempSync(path.join(tmpdir(), "wmds-check-"));
@@ -177,6 +178,169 @@ export function ServicesCard({ onPick }: { onPick: (value: string) => void }) {
       expect(drifted.findings[0]).toMatchObject({ line: 2 });
       const stale = check({ "services.tsx": `"use client";\n${shipped.replace("wmds@9.9.9", "wmds@9.9.8")}` });
       expect(stale.rules).toEqual(["pattern-stale"]);
+    });
+  });
+
+  describe("brand-contrast", () => {
+    // The reference client from the offer sheet ("Theme a client" story).
+    const brand = `:root {
+  --color-primary: #b33a1c;
+  --color-on-primary: #fff6ea;
+  --color-brand-surface: #120d08;
+  --color-on-brand-surface: #f3e3c3;
+  --color-on-brand-surface-muted: #a89a80;
+  --color-field: #e2522b;
+  --color-on-field: #120d08;
+}
+[data-theme="dark"] {
+  --color-primary: #e86a3e;
+  --color-on-primary: #120d08;
+}`;
+
+    it("passes brand-kit pairs that clear 4.5:1", () => {
+      const result = check({ "brand.css": brand });
+      expect(result.findings).toEqual([]);
+    });
+
+    it("fails an on-colour or muted step under 4.5:1, on its own line", () => {
+      const result = check({
+        "brand.css": brand.replace("--color-on-brand-surface-muted: #a89a80", "--color-on-brand-surface-muted: #5c5346"),
+      });
+      expect(result.rules).toEqual(["brand-contrast"]);
+      expect(result.findings[0]).toMatchObject({ file: path.join("src", "brand.css"), line: 6, severity: "error" });
+      expect(result.status).toBe(1);
+    });
+
+    it("reads each rule on its own, including inside @media", () => {
+      const result = check({
+        "brand.css": `@media (prefers-color-scheme: dark) {\n  :root { --color-field: #e2522b; --color-on-field: #ffffff; }\n}`,
+      });
+      expect(result.rules).toEqual(["brand-contrast"]);
+      expect(result.findings[0]).toMatchObject({ line: 2 });
+    });
+
+    it("skips pairs it cannot resolve: a var(), a mix, or one side in another rule", () => {
+      const result = check({
+        "brand.css": `:root { --color-field: var(--color-primary); --color-on-field: #ffffff; }
+.x { --color-field: #ffffff; }
+.y { --color-on-field: #ffffff; --color-field: color-mix(in srgb, white 50%, black); }`,
+      });
+      expect(result.findings).toEqual([]);
+    });
+  });
+
+  describe("badge-on-autofill", () => {
+    it("fails a badge inside an autofill field", () => {
+      const result = check({
+        "form.tsx": `import { Badge, Input } from "@thewhatmatters/wmds";
+export function Form() {
+  return (
+    <>
+      <Input label="Email" type="email" autoComplete="email" endBadge={<Badge size="sm">Optional</Badge>} />
+      <Input
+        label="Postcode"
+        autoComplete="shipping postal-code"
+        endBadge={<Badge size="sm">Required</Badge>}
+      />
+    </>
+  );
+}`,
+      });
+      expect(result.rules).toEqual(["badge-on-autofill", "badge-on-autofill"]);
+      expect(result.findings.map((finding) => finding.line)).toEqual([5, 6]);
+    });
+
+    it("passes a badge on a non-autofill field, and an autofill field with the word in its label", () => {
+      const result = check({
+        "form.tsx": `import { Badge, Input } from "@thewhatmatters/wmds";
+export function Form() {
+  return (
+    <>
+      <Input label="Your website" type="url" autoComplete="url" endBadge={<Badge size="sm">Optional</Badge>} />
+      <Input label="Company (optional)" autoComplete="organization" />
+    </>
+  );
+}`,
+      });
+      expect(result.findings).toEqual([]);
+    });
+
+    it("keeps the same autofill list as Input", () => {
+      const source = readFileSync(path.resolve(__dirname, "../../bin/wmds-check.mjs"), "utf8");
+      const list = source.match(/const autofillTokens = \[([\s\S]*?)\];/)?.[1] ?? "";
+      expect([...list.matchAll(/"([^"]+)"/g)].map((match) => match[1])).toEqual([...autofillTokens]);
+    });
+  });
+
+  describe("missing-label", () => {
+    it("fails a WMDS field with no label, across lines", () => {
+      const result = check({
+        "form.tsx": `import { Input, Search } from "@thewhatmatters/wmds";
+export function Form() {
+  return (
+    <>
+      <Input
+        type="email"
+        onChange={(event) => console.log(event.target.value)}
+      />
+      <Search actionLabel="Search" />
+    </>
+  );
+}`,
+      });
+      expect(result.rules).toEqual(["missing-label", "missing-label"]);
+      expect(result.findings.map((finding) => finding.line)).toEqual([5, 9]);
+    });
+
+    it("passes a visible label, a hidden one, a labelledby and a spread", () => {
+      const result = check({
+        "form.tsx": `import { Input, Search, TextArea } from "@thewhatmatters/wmds";
+export function Form(props) {
+  return (
+    <>
+      <Input label="Email" type="email" />
+      <Search label="Search the docs" actionLabel="Search" />
+      <TextArea aria-labelledby="notes-heading" />
+      <Input {...props} />
+    </>
+  );
+}`,
+      });
+      expect(result.findings).toEqual([]);
+    });
+  });
+
+  describe("status-without-message", () => {
+    it("fails an error or warning status with no message, across lines", () => {
+      const result = check({
+        "form.tsx": `import { Input } from "@thewhatmatters/wmds";
+export function Form() {
+  return (
+    <Input
+      label="Email"
+      status="error"
+      onChange={(event) => console.log(event.target.value)}
+    />
+  );
+}`,
+      });
+      expect(result.rules).toEqual(["status-without-message"]);
+      expect(result.findings[0]).toMatchObject({ line: 6, severity: "error" });
+    });
+
+    it("passes a status with a message, and a status-only success tick", () => {
+      const result = check({
+        "form.tsx": `import { Input } from "@thewhatmatters/wmds";
+export function Form() {
+  return (
+    <>
+      <Input label="Email" status="error" message="Enter an email address, like name@example.com" />
+      <Input label="Website" status="success" />
+    </>
+  );
+}`,
+      });
+      expect(result.findings).toEqual([]);
     });
   });
 });

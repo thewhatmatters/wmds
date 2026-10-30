@@ -20,7 +20,7 @@ export const cardOverflowClasses = "overflow-hidden";
 
 export const cardShapeClasses: Record<CardShape, string> = {
   flush: "rounded-none",
-  rounded: "rounded-lg",
+  rounded: "rounded-[var(--radius-surface-sm)]",
 };
 
 export const cardVariantClasses: Record<CardVariant, string> = {

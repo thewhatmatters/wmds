@@ -69,6 +69,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
 
   // Feedback & status
   { name: "Badge", category: "Feedback & status", title: "Components/Badge", description: "Compact semantic label in solid or muted fill, with count, icon, avatar, and status-pill patterns." },
+  { name: "InlinePill", category: "Content", title: "Components/InlinePill", description: "A key word inside running text in a soft pill that scales with the text, with an optional picture that can pop in on scroll." },
   { name: "Confetti", category: "Feedback & status", title: "Components/Confetti", description: "Celebratory burst after an async success, fired from a provider." },
   { name: "IntakeConfirmation", category: "Feedback & status", title: "Components/IntakeConfirmation", description: "Booked or emailed confirmation that ends the Start a project flow." },
   { name: "Skeleton", category: "Feedback & status", title: "Components/Skeleton", description: "Shimmering layout placeholders that mirror the resolved UI." },
@@ -81,6 +82,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "CheckboxGroup", category: "Form controls", title: "Components/Checkbox/CheckboxGroup", description: "Multi-select options with a group validation band." },
   { name: "Chip", category: "Form controls", title: "Components/Chip", description: "Filter and toggle pill: multi-select, single-select, removable, or read-only." },
   { name: "CopyField", category: "Form controls", title: "Components/CopyField", description: "Read-only monospace value with Copy key seated inside the pill." },
+  { name: "ErrorSummary", category: "Form controls", title: "Components/ErrorSummary", description: "\"There's a problem\" at the top of a form after a failed submit: one link per error that focuses its field." },
   { name: "Field", category: "Form controls", title: "Components/Field", description: "Label and layout wrapper, vertical or horizontal." },
   { name: "FilterPanel", category: "Form controls", title: "Components/FilterPanel", description: "Checkbox filters for an index page: a side rail from tablet up and the same groups in a bottom Sheet on phones." },
   { name: "Input", category: "Form controls", title: "Components/Input", description: "Pill text field with optional icon, end badge, status, and loading." },
@@ -96,6 +98,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
 
   // Layout
   { name: "AppShell", category: "Layout", title: "Components/AppShell", description: "App chrome: a sidebar on the page background, the page as an inset raised surface with a title bar, a phone Sheet menu, and an optional aside." },
+  { name: "Band", category: "Layout", title: "Components/Band", description: "Full-bleed page section in a brand tone (inverse, field) on the page's own columns." },
   { name: "DisplayControls", category: "Layout", title: "Components/DisplayControls", description: "Grid visibility and theme mode controls, including a theme-only appearance switch." },
   { name: "PageHeader", category: "Layout", title: "Components/PageHeader", description: "Page chrome row: app band, section heading, or toolbar." },
   { name: "TileGrid", category: "Layout", title: "Components/TileGrid", description: "A grid of tiles that pack as masonry or sit in equal rows, in reading order either way." },

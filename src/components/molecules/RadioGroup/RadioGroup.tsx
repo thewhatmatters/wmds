@@ -1,6 +1,6 @@
 import { useId, useMemo, type ReactNode } from "react";
 import { cn } from "../../../lib/cn";
-import { InputStatusBanner } from "../../atoms/inputShared/InputStatusBanner";
+import { InputStatusBanner, warnStatusWithoutMessage } from "../../atoms/inputShared/InputStatusBanner";
 import type { InputSize, InputStatus } from "../../atoms/Input/inputShellStyles";
 import {
   radioGroupDescriptionClasses,
@@ -80,6 +80,7 @@ function RadioGroupRoot({
   const fieldId = useId();
   const groupName = useRadioGroupName(name);
   assertRadioGroupPattern({ status, message });
+  warnStatusWithoutMessage("RadioGroup", status, message);
 
   const legendId = label != null ? `${fieldId}-legend` : undefined;
   const descriptionId = description != null ? `${fieldId}-description` : undefined;

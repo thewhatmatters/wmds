@@ -7,16 +7,17 @@
 export const heroIntroPageClasses = "grid-page w-full !py-0";
 
 /**
- * Centered `h1` on `type-display-2` at normal weight — the same size and
+ * `h1` on `type-display-2` at normal weight — the same size and
  * leading as **ScrollHorizontal.Intro** and the sequenced hero. `!font-normal`
  * beats the display token's semibold. `text-balance` evens wrapped lines so a
  * last line is not a single word.
- * Columns 4–9 from `lg` (6 of 12). Full width of the page grid below `lg`.
- * The lead wraps inside that measure.
+ * Columns 2–11 from `lg` (10 of 12; a heading may run wider than body text, Grid G8), so a 12-word
+ * intro holds 2 lines. Full width of the page grid below `lg`. Left on phones, where it runs 3+ lines;
+ * centred from `md` (Headings H8).
  */
 export const heroIntroCopyClasses = [
   "type-display-2 !font-normal text-balance",
-  "col-span-full min-w-0 text-center text-muted lg:col-start-4 lg:col-end-10",
+  "col-span-full min-w-0 text-left text-muted md:text-center lg:col-start-2 lg:col-end-12",
 ].join(" ");
 
 /** First sentence. Wraps at every width, including the display-2 measure from `md`. */
@@ -31,11 +32,31 @@ export const heroIntroRestClasses = "block";
  * columns 4–9 are the default measure and are too narrow for this longer sentence.
  * `!font-normal` wins over the display token's semibold.
  * `text-balance` evens wrapped lines so a last line is not a single word.
+ * Left on phones, where it runs past 2 lines; centred from `md`, where it holds 2 (Headings H8).
  */
 export const heroIntroDisplayCopyClasses = [
   "type-display-2 !font-normal text-balance",
-  "col-span-full min-w-0 text-center text-muted",
+  "col-span-full min-w-0 text-left text-muted md:text-center",
 ].join(" ");
 
 /** Display step lead. Wraps when the measure is short (390). No nowrap. */
 export const heroIntroDisplayLeadClasses = "block min-w-0";
+
+/**
+ * Optional lead paragraph under the heading: `type-lead` (18px phone to 21px, regular, 1.45) in ink, at the
+ * 42rem measure, centred under the heading on the same columns (Lead rules L7, L8).
+ */
+/** Heading → lead is the page grid's 24px row gap (no extra margin; Spacing S2). */
+export const heroIntroDescriptionClasses =
+  "col-span-full min-w-0 text-pretty text-left type-lead text-fg md:mx-auto md:max-w-[42rem] md:text-center lg:col-start-4 lg:col-end-10";
+
+/** The description under the display step: the same 6-column measure, left on phones, centred from `md`. */
+export const heroIntroDisplayDescriptionClasses = heroIntroDescriptionClasses;
+
+/**
+ * The CTA row under the heading (or the description): one primary and an optional secondary (Hero rule R2).
+ * Left on phones and centred from `md`, like the heading. 32px below the text above it: the grid's 24px row
+ * gap plus 8.
+ */
+export const heroIntroActionsClasses =
+  "col-span-full mt-2 flex min-w-0 flex-wrap items-center justify-start gap-3 md:justify-center";

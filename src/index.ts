@@ -59,10 +59,12 @@ export {
   type IconButtonSize,
 } from "./components/atoms/IconButton/IconButton";
 export {
+  fieldWidths,
   Input,
   inputMessagePositions,
   inputSizes,
   inputStatuses,
+  type FieldWidth,
   type InputLayoutClassName,
   type InputMessagePosition,
   type InputProps,
@@ -80,6 +82,26 @@ export {
   useKbdChoiceKeys,
   type UseKbdChoiceKeysOptions,
 } from "./components/atoms/Kbd/useKbdChoiceKeys";
+export {
+  Band,
+  bandElements,
+  bandSpacings,
+  bandTones,
+  type BandElement,
+  type BandLayoutClassName,
+  type BandProps,
+  type BandSpacing,
+  type BandTone,
+} from "./components/atoms/Band/Band";
+export {
+  InlinePill,
+  inlinePillPopInKeyframes,
+  useInlinePillsPopIn,
+  type InlinePillLayoutClassName,
+  type InlinePillProps,
+  type InlinePillsPopIn,
+  type InlinePillsPopInState,
+} from "./components/atoms/InlinePill/InlinePill";
 export {
   Prose,
   proseElements,
@@ -205,10 +227,12 @@ export {
 } from "./components/molecules/Chip/Chip";
 export {
   Accordion,
+  accordionSizes,
   accordionVariants,
   type AccordionItemProps,
   type AccordionLayoutClassName,
   type AccordionProps,
+  type AccordionSize,
   type AccordionVariant,
 } from "./components/molecules/Accordion/Accordion";
 export {
@@ -263,7 +287,9 @@ export {
   type CardShape,
   type CardTerminalHeight,
   type CardTerminalState,
+  type CardTone,
   type CardVariant,
+  cardTones,
 } from "./components/molecules/Card/Card";
 export {
   ChatQa,
@@ -361,12 +387,18 @@ export {
   IntakeForm,
   intakeAboutEmpty,
   intakeDetailsMax,
+  intakeCounterText,
   isIntakeAboutValid,
   isIntakeUrlValid,
   type IntakeAboutValues,
   type IntakeFormLayoutClassName,
   type IntakeFormProps,
 } from "./components/molecules/IntakeForm/IntakeForm";
+export {
+  IntakeHoneypot,
+  isIntakeHoneypotFilled,
+  type IntakeHoneypotProps,
+} from "./components/molecules/IntakeForm/IntakeHoneypot";
 export {
   LinkTile,
   linkTileLoadingRatio,
@@ -394,7 +426,9 @@ export {
 export {
   PageHeader,
   pageHeaderAppBandHeightClasses,
+  pageHeaderHeadingLevels,
   pageHeaderVariants,
+  type PageHeaderHeadingLevel,
   type PageHeaderLayoutClassName,
   type PageHeaderProps,
   type PageHeaderVariant,
@@ -436,6 +470,7 @@ export {
   type SelectProps,
   type SelectSize,
 } from "./components/molecules/Select/Select";
+export { usStateOptions } from "./components/molecules/Select/usStateOptions";
 export {
   SelectableCard,
   type SelectableCardGroupProps,
@@ -533,8 +568,12 @@ export {
 } from "./components/molecules/TileGrid/TileGrid";
 export {
   AppShell,
+  appShellAsideModes,
+  appShellMenuButtons,
   useAppShell,
+  type AppShellAsideMode,
   type AppShellContextValue,
+  type AppShellMenuButton,
   type AppShellLabels,
   type AppShellLayoutClassName,
   type AppShellProps,
@@ -771,6 +810,7 @@ export {
 export {
   IntakeConfirmation,
   intakeConfirmationCopy,
+  intakeConfirmationReplyWithin,
   intakeConfirmationVariants,
   intakeConfettiColors,
   type IntakeConfirmationLayoutClassName,
@@ -782,6 +822,7 @@ export {
   type IntakeModalLayoutClassName,
   type IntakeModalProps,
 } from "./components/organisms/IntakeModal/IntakeModal";
+export { useIntakeUrlState } from "./components/organisms/IntakeModal/useIntakeUrlState";
 export {
   ScrollHorizontal,
   type ScrollHorizontalIntroAction,
@@ -905,4 +946,12 @@ export {
   type SheetParamValue,
   type UseSheetParamOptions,
   type UseSheetParamResult,
-} from "./lib/sheetParam";
+} from "./lib/sheetParam";export {
+  ErrorSummary,
+  errorSummaryHeadingLevels,
+  type ErrorSummaryHeadingLevel,
+  type ErrorSummaryItem,
+  type ErrorSummaryLayoutClassName,
+  type ErrorSummaryProps,
+} from "./components/molecules/ErrorSummary/ErrorSummary";
+

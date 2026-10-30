@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.28 · Pattern — resource tile
+// @thewhatmatters/wmds@0.4.40 · Pattern — resource tile
 // Storybook: Components/LinkTile → Pattern — resource tile (?path=/story/components-linktile--resource-tile)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -7,7 +7,7 @@ import { Badge, LinkTile } from "@thewhatmatters/wmds";
 export interface ResourceTileProps {
   title: string;
   href: string;
-  /** Another site: opens in a new tab. */
+  /** Another site: the external mark, same tab. */
   external?: boolean;
   /** One line under the title, for example the domain. */
   meta?: string;

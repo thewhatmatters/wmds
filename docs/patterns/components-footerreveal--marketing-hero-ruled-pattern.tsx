@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.28 · Pattern — marketing hero ruled grid
+// @thewhatmatters/wmds@0.4.40 · Pattern — marketing hero ruled grid
 // Storybook: Components/FooterReveal → Pattern — marketing hero ruled grid (?path=/story/components-footerreveal--marketing-hero-ruled-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -60,7 +60,7 @@ export function MarketingHeroRuledPage() {
           <div className="flex w-full flex-col items-center gap-6">
           <HeroIntro
             step="display"
-            lead={
+            firstLine={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 {"An "}
                 <span className="whitespace-nowrap">

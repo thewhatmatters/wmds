@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.28 · Pattern — tile grid
+// @thewhatmatters/wmds@0.4.40 · Pattern — tile grid
 // Storybook: Components/TileGrid → Pattern — tile grid (?path=/story/components-tilegrid--masonry)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -8,7 +8,7 @@ export interface ResourceTileItem {
   id: string;
   title: string;
   href: string;
-  /** Another site: the tile opens it in a new tab. */
+  /** Another site: the tile shows the external mark and stays in the tab. */
   external?: boolean;
   /** One line under the title, for example the domain. */
   meta?: string;

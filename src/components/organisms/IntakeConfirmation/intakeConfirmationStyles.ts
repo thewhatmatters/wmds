@@ -1,7 +1,7 @@
 import { cn } from "../../../lib/cn";
 
 /**
- * Brand colors for the intake burst. `--color-brand` is #011272 in both themes.
+ * Brand colors for the intake burst. `--color-brand` is #011272 (light) and #5566e0 (dark).
  * Passed to the existing Confetti `colors` option — not a second palette token.
  */
 export const intakeConfettiColors = [
@@ -17,6 +17,10 @@ export const intakeConfettiColors = [
 export const intakeConfirmationVariants = ["booked", "emailed"] as const;
 
 export type IntakeConfirmationVariant = (typeof intakeConfirmationVariants)[number];
+
+/** T2, T3: when the reply comes. Keep it true for your team. */
+/** When we reply, inside the confirmation's one "what happens next" sentence (T3). */
+export const intakeConfirmationReplyWithin = "within one business day";
 
 export const intakeConfirmationCopy: Record<
   IntakeConfirmationVariant,
@@ -34,19 +38,21 @@ export const intakeConfirmationCopy: Record<
   },
 };
 
+/** Left on phones, where the next-step sentence with an email runs 3 lines; centred from md (Headings H8). */
 export const intakeConfirmationClasses = cn(
-  "flex w-full max-w-3xl flex-col items-center gap-8 text-center",
+  "flex w-full max-w-3xl flex-col items-start gap-8 text-left md:items-center md:text-center",
 );
 
 /** Existing display-2 — the confirmation headline, larger than the step titles. */
 export const intakeConfirmationTitleClasses = "type-display-2 text-balance text-fg";
 
 /** Existing heading-2 — the confirmation sentence under the headline. */
-export const intakeConfirmationBodyClasses = "type-heading-2 max-w-2xl text-balance text-fg";
+/** A paragraph, so regular body text, not a heading style (Body rule B4). */
+export const intakeConfirmationBodyClasses = "type-large max-w-2xl text-balance text-fg";
 
 /** Booked time under the body — supporting muted type. */
 export const intakeConfirmationMetaClasses = "type-body text-balance text-muted";
 
 /** Optional booking actions — **TextLink** / **Button** stack, same center column. */
 export const intakeConfirmationActionsClasses =
-  "flex w-full max-w-md flex-col items-center gap-3";
+  "flex w-full max-w-md flex-col items-start gap-3 md:items-center";

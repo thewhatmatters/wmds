@@ -28,7 +28,9 @@ PillGroup — role="radiogroup"
 
 ## Best practices
 
-- **Do** use one group for a budget or similar single choice.
+- **Do** use **PillGroup** for one short answer: 2–6 short options, behaving as radios (Dropdowns C9). Several choices that each need a line of detail → **SelectableCard**.
+- **Do** give it a visible question with \`label\` ("What's your budget?"). Use \`aria-label\` only when the question is visible right above as a heading.
+- **Do** start with nothing selected when it asks a question (C5).
 - **Do** mark the uncertain option with \`emphasis="muted"\`.
 - **Don't** add a Badge emphasis for this pill. The muted surface already exists.
 - **Don't** use **SegmentedControl** when the options must wrap onto more than one line.
@@ -45,15 +47,15 @@ type Story = StoryObj<typeof PillGroup>;
 export const PillGroupPattern: Story = {
   name: "Pattern — pill group",
   args: {
-    "aria-label": "Budget",
-    value: "10-25",
+    label: "What's your budget?",
+    value: null,
     onValueChange: () => undefined,
   },
   render: function PillGroupPatternRender() {
-    const [value, setValue] = useState<string | null>("10-25");
+    const [value, setValue] = useState<string | null>(null);
 
     return (
-      <PillGroup aria-label="Budget" value={value} onValueChange={setValue}>
+      <PillGroup label="What's your budget?" value={value} onValueChange={setValue}>
         <PillGroup.Item value="under-10">{"<$10k"}</PillGroup.Item>
         <PillGroup.Item value="10-25">$10–25k</PillGroup.Item>
         <PillGroup.Item value="25-50">$25–50k</PillGroup.Item>
@@ -72,7 +74,7 @@ export function BudgetPills() {
   const [value, setValue] = useState<string | null>(null);
 
   return (
-    <PillGroup aria-label="Budget" value={value} onValueChange={setValue}>
+    <PillGroup label="What's your budget?" value={value} onValueChange={setValue}>
       <PillGroup.Item value="under-10">{"<$10k"}</PillGroup.Item>
       <PillGroup.Item value="10-25">$10–25k</PillGroup.Item>
       <PillGroup.Item value="25-50">$25–50k</PillGroup.Item>

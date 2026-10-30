@@ -36,7 +36,7 @@ A resource tile that is one link — a preview image with the resource's name an
 | Pattern | Props |
 |---------|--------|
 | **Resource tile** | \`title\` + \`href\` + \`media\` + \`meta\` |
-| **Another site** | \`external\` — new tab, safe \`rel\`, the trailing mark, spoken "(opens in a new tab)" |
+| **Another site** | \`external\` — the trailing mark, same tab (Links K9). \`newTab\` adds a new tab, a safe \`rel\` and a spoken "(opens in a new tab)" |
 | **Router link** | \`render={<Link href="/work" />}\` in place of \`href\` |
 | **Equal tiles** | \`ratio={4 / 3}\` — the frame's shape is fixed and the image is cropped to it |
 | **Tag** | \`tag={<Badge>Free</Badge>}\` — over the image's top-start corner |
@@ -56,7 +56,7 @@ a (the whole tile — one link, one focus ring)
         meta (one line)
 \`\`\`
 
-Screen readers hear the title, the meta line, the tag, then "opens in a new tab". The image's \`alt\` is not part of the link's name.
+Screen readers hear the title, the meta line, the tag, then "opens in a new tab" when \`newTab\` is set. The image's \`alt\` is not part of the link's name.
 
 By default the image keeps its own ratio: its \`width\` and \`height\` reserve the space, so the tile does not move when the image loads, and tiles in a grid vary in height. The hairline is drawn over the image, so a light image on the light page and a dark image on the dark page both keep an edge.
 
@@ -92,7 +92,7 @@ export const ResourceTile: Story = {
     {
       docs: {
         description: {
-          story: "An image at its own ratio, a tag over it, the name, and the domain. `external` opens a new tab and says so.",
+          story: "An image at its own ratio, a tag over it, the name, and the domain. `external` marks another site and keeps the same tab.",
         },
       },
     },
@@ -102,7 +102,7 @@ import { Badge, LinkTile } from "@thewhatmatters/wmds";
 export interface ResourceTileProps {
   title: string;
   href: string;
-  /** Another site: opens in a new tab. */
+  /** Another site: the external mark, same tab. */
   external?: boolean;
   /** One line under the title, for example the domain. */
   meta?: string;

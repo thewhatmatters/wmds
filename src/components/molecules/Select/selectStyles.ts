@@ -27,19 +27,19 @@ const selectShellFocusClasses = cn(
 /** Outer pill — owns border, elevation, height, and focus ring (Search shell pattern). */
 export const selectShellClasses: Record<SelectSize, string> = {
   sm: cn(
-    "relative flex w-full min-w-0 items-center rounded-full border border-border-control bg-surface shadow-raised",
+    "relative flex w-full min-w-0 items-center rounded-[var(--radius-control)] border border-border-control bg-surface shadow-raised",
     inputSoloRadiusClasses.sm,
     "h-8",
     selectShellFocusClasses,
   ),
   md: cn(
-    "relative flex w-full min-w-0 items-center rounded-full border border-border-control bg-surface shadow-raised",
+    "relative flex w-full min-w-0 items-center rounded-[var(--radius-control)] border border-border-control bg-surface shadow-raised",
     inputSoloRadiusClasses.md,
     "h-11",
     selectShellFocusClasses,
   ),
   lg: cn(
-    "relative flex w-full min-w-0 items-center rounded-full border border-border-control bg-surface shadow-raised",
+    "relative flex w-full min-w-0 items-center rounded-[var(--radius-control)] border border-border-control bg-surface shadow-raised",
     inputSoloRadiusClasses.lg,
     "min-h-12",
     selectShellFocusClasses,
@@ -69,7 +69,8 @@ export const selectTriggerInnerClasses: Record<SelectSize, string> = {
 
 export const selectTriggerLabelClasses = "min-w-0 flex-1 truncate";
 
-export const selectTriggerPlaceholderClasses = "text-disabled";
+/** The empty choice ("Select…"): muted, but readable at 4.5:1. `text-disabled` failed contrast. */
+export const selectTriggerPlaceholderClasses = "text-muted";
 
 /** Trailing caret column — fixed square; chevron SVG fills the slot. */
 export const selectTriggerCaretSlotClasses: Record<SelectSize, string> = {
@@ -93,3 +94,20 @@ export const selectDisabledLabelClasses = "opacity-50";
 export const selectLabelClasses = typographyClass("ui-label");
 
 export const selectDescriptionClasses = typographyClass("caption");
+
+/**
+ * Native mode (Dropdowns C8): the browser's own `<select>` fills the same shell. The phone opens its
+ * picker, typing jumps to an option, and autofill works. 16px text on touch so iOS doesn't zoom.
+ */
+export const selectNativeClasses: Record<SelectSize, string> = {
+  sm: "h-full w-full min-w-0 cursor-pointer appearance-none border-0 bg-transparent pl-2.5 pr-8 text-xs pointer-coarse:text-base leading-none font-sans text-fg outline-none focus:outline-none [&>option]:bg-surface [&>option]:text-fg",
+  md: "h-full w-full min-w-0 cursor-pointer appearance-none border-0 bg-transparent pl-3 pr-9 text-sm pointer-coarse:text-base leading-none font-sans text-fg outline-none focus:outline-none [&>option]:bg-surface [&>option]:text-fg",
+  lg: "h-full min-h-12 w-full min-w-0 cursor-pointer appearance-none border-0 bg-transparent pl-4 pr-10 text-base leading-none font-sans text-fg outline-none focus:outline-none [&>option]:bg-surface [&>option]:text-fg",
+};
+
+/** The chevron over the native select's right edge; clicks pass through to the select. */
+export const selectNativeCaretClasses: Record<SelectSize, string> = {
+  sm: "pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 [&>svg]:size-full [&>svg]:stroke-current",
+  md: "pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 [&>svg]:size-full [&>svg]:stroke-current",
+  lg: "pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 [&>svg]:size-full [&>svg]:stroke-current",
+};

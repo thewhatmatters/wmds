@@ -129,7 +129,7 @@ export const BrandFooter: Story = {
   ),
   play: async ({ canvasElement }) => {
     const headline = canvasElement.querySelector("h2");
-    expect(headline?.textContent).toBe("We Build WhatMatters");
+    expect(headline?.textContent).toBe("We build WhatMatters");
     const cta = [...canvasElement.querySelectorAll("button")].find(
       (node) => node.textContent === "Start a project",
     );
@@ -160,19 +160,16 @@ export const BrandFooter: Story = {
     expect(wordmark?.className).toContain("translate-y-[16%]");
     expect(wordmark?.className).not.toContain("-12vw");
 
-    const instagram = canvasElement.querySelector("a[href='https://www.instagram.com/thewhatmatters']");
-    expect(instagram?.getAttribute("target")).toBe("_blank");
-    expect(instagram?.getAttribute("rel")).toBe("noopener");
-    const linkedin = canvasElement.querySelector("a[href='https://www.linkedin.com/in/randymdaniel']");
-    expect(linkedin?.getAttribute("target")).toBe("_blank");
-    expect(linkedin?.getAttribute("rel")).toBe("noopener");
-
-    const contra = canvasElement.querySelector("a[href='#contra-TODO']");
-    const x = canvasElement.querySelector("a[href='#x-TODO']");
-    expect(contra?.textContent).toBe("Contra");
-    expect(contra?.hasAttribute("target")).toBe(false);
+    // Social links open in the same tab (Links K9); a one-letter label is a 24px+ target with a full name (K6).
+    for (const href of ["https://contra.com/thewhatmatters", "https://www.instagram.com/thewhatmatters", "https://www.linkedin.com/in/randymdaniel"]) {
+      expect(canvasElement.querySelector(`a[href='${href}']`)?.hasAttribute("target")).toBe(false);
+    }
+    const x = canvasElement.querySelector<HTMLElement>("a[href='https://x.com/thewhatmatters']");
     expect(x?.textContent).toBe("X");
+    expect(x?.getAttribute("aria-label")).toBe("WhatMatters on X");
     expect(x?.hasAttribute("target")).toBe(false);
+    expect(x?.offsetWidth).toBeGreaterThanOrEqual(24);
+    expect(x?.offsetHeight).toBeGreaterThanOrEqual(24);
 
     const root = canvasElement.querySelector<HTMLElement>("[data-footer-reveal='root']");
     if (!root) throw new Error("Footer reveal root is missing");

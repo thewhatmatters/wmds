@@ -28,6 +28,8 @@ import {
   accordionPanelContentFlushClasses,
   accordionPanelContentListClasses,
   accordionPanelInnerClasses,
+  accordionPanelSizeClasses,
+  type AccordionSize,
   accordionRootCapsuleClasses,
   accordionRootListClasses,
   accordionRootListInsetClasses,
@@ -40,8 +42,8 @@ import {
   type AccordionVariant,
 } from "./accordionStyles";
 
-export type { AccordionVariant } from "./accordionStyles";
-export { accordionVariants } from "./accordionStyles";
+export type { AccordionSize, AccordionVariant } from "./accordionStyles";
+export { accordionSizes, accordionVariants } from "./accordionStyles";
 
 /** Layout-only — not for row colors or panel styling overrides. */
 export type AccordionLayoutClassName = string;
@@ -49,11 +51,13 @@ export type AccordionLayoutClassName = string;
 interface AccordionContextValue {
   variant: AccordionVariant;
   flush: boolean;
+  size: AccordionSize;
 }
 
 const AccordionContext = createContext<AccordionContextValue>({
   variant: "plain",
   flush: false,
+  size: "ui",
 });
 
 export interface AccordionProps extends HTMLAttributes<HTMLDivElement> {
@@ -67,6 +71,11 @@ export interface AccordionProps extends HTMLAttributes<HTMLDivElement> {
    * accordion (a filter side panel). The hover band reaches 8px past each edge.
    */
   flush?: boolean;
+  /**
+   * Panel text: `ui` (default, 14px muted, app UI) or `reading` (17px regular in ink) for answers people read,
+   * such as an FAQ or a services list (Body rules B7, B9).
+   */
+  size?: AccordionSize;
   className?: AccordionLayoutClassName;
 }
 
@@ -91,12 +100,13 @@ function AccordionRoot({
   variant = "plain",
   inset = false,
   flush: flushProp = false,
+  size = "ui",
   className,
   children,
   ...props
 }: AccordionProps) {
   const flush = flushProp && variant === "plain";
-  const contextValue = useMemo(() => ({ variant, flush }), [variant, flush]);
+  const contextValue = useMemo(() => ({ variant, flush, size }), [variant, flush, size]);
 
   const rootClasses = (() => {
     if (variant === "list") {
@@ -115,6 +125,7 @@ function AccordionRoot({
         data-variant={variant}
         data-inset={inset ? "true" : undefined}
         data-flush={flush ? "true" : undefined}
+        data-size={size === "reading" ? "reading" : undefined}
         {...props}
       >
         {children}
@@ -149,7 +160,7 @@ function AccordionItem({
   onOpenChange,
   className,
 }: AccordionItemProps) {
-  const { variant, flush } = useContext(AccordionContext);
+  const { variant, flush, size } = useContext(AccordionContext);
   const panelId = useId();
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const isControlled = openProp !== undefined;
@@ -218,7 +229,7 @@ function AccordionItem({
       {expandable ? (
         <div className="motion-collapse" data-visible={open ? "true" : "false"}>
           <div id={panelId} className={accordionPanelInnerClasses}>
-            <div className={panelContentClasses}>{children}</div>
+            <div className={accordionPanelSizeClasses(panelContentClasses, size)}>{children}</div>
           </div>
         </div>
       ) : null}

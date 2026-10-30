@@ -1,7 +1,7 @@
 import { forwardRef, useId, type TextareaHTMLAttributes } from "react";
 import { cn } from "../../../lib/cn";
 import { typographyClass } from "../../../lib/typography";
-import { InputStatusBanner } from "../inputShared/InputStatusBanner";
+import { InputStatusBanner, warnStatusWithoutMessage } from "../inputShared/InputStatusBanner";
 import { InputTrailingAffordance } from "../inputShared/InputTrailingAffordance";
 import {
   inputAttachedFieldClasses,
@@ -113,6 +113,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
   },
   ref,
 ) {
+  warnStatusWithoutMessage("TextArea", status, message);
   const generatedId = useId();
   const controlId = idProp ?? generatedId;
   assertTextAreaA11y({ label, "aria-label": rest["aria-label"], "aria-labelledby": rest["aria-labelledby"] });
@@ -120,7 +121,8 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
 
   const hasMessage = message != null && message.length > 0 && status != null;
   const showTrailingStatusIcon = !hasMessage && (loading || status != null);
-  const descriptionId = description != null && !hasMessage ? `${controlId}-description` : undefined;
+  // Labels and placeholders F8: the hint sits between the label and the field and stays when a message shows.
+  const descriptionId = description != null ? `${controlId}-description` : undefined;
   const messageId = hasMessage ? `${controlId}-message` : undefined;
   const describedBy =
     [ariaDescribedBy, descriptionId, messageId].filter(Boolean).join(" ") || undefined;
@@ -182,7 +184,8 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
   );
 
   const soloShell = (
-    <div className={cn(textareaSoloShellClassesFor(size, status, resize), className)}>
+    // Errors and validation V8: a status-only success is the tick alone, on the plain shell.
+    <div className={cn(textareaSoloShellClassesFor(size, status === "success" ? undefined : status, resize), className)}>
       {fieldBody}
     </div>
   );
@@ -236,12 +239,12 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
           {label}
         </label>
       ) : null}
-      {control}
       {descriptionId != null ? (
         <p id={descriptionId} className={typographyClass("caption")}>
           {description}
         </p>
       ) : null}
+      {control}
       {liveStatus != null ? (
         <p role="status" aria-live="polite" id={`${controlId}-live-status`} className={typographyClass("caption")}>
           {liveStatus}

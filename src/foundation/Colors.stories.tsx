@@ -58,7 +58,7 @@ function SwatchGrid({
   tokens: ReadonlyArray<{ name: string; className: string }>;
 }) {
   return (
-    <div className="grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-3">
+    <div className="grid max-w-2xl grid-cols-2 gap-3 md:grid-cols-3">
       {tokens.map(({ name, className }) => (
         <div
           key={name}

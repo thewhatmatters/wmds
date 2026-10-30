@@ -1,8 +1,29 @@
 /**
  * WMDS shape tokens — shared component geometry.
- * Override on an experience wrapper only when that experience owns a documented shape mode.
+ *
+ * Design knobs (apps may set these; CONSUMING.md → Design knobs):
+ * - `--radius-control`: buttons, icon buttons, inputs, search, select, chips, pills, badges, segmented
+ *   controls, tabs, the compact SiteNav bar. Default is a pill. `4px` gives rectangular controls.
+ * - `--radius-surface`: cards, menus, toasts, and other raised surfaces.
+ * Set them on `:root` in the app's theme stylesheet, or on a page/section wrapper with an arbitrary
+ * property (`[--radius-control:4px]`); every component inside follows.
+ *
+ * The rest are derived; don't set them directly.
  */
 :root {
-  --radius-card-shell: 16px;
-  --radius-card-body: 14px;
+  --radius-control: 9999px;
+  --radius-surface: 16px;
+}
+
+/* Derived on every element so a knob set on a wrapper (not only :root) reaches what's inside it. */
+* {
+  /* A control nested in a control (segmented-control item in its track) sits 2px inside. */
+  --radius-control-inner: max(0px, calc(var(--radius-control) - 2px));
+  /* Multi-line controls (TextArea, NavList rows) are never pills: 12px by default, follow square knobs. */
+  --radius-control-box: min(var(--radius-control), 12px);
+  /* Smaller surfaces keep their proportion: 12px and 8px at the default 16px. */
+  --radius-surface-md: calc(var(--radius-surface) * 0.75);
+  --radius-surface-sm: calc(var(--radius-surface) * 0.5);
+  --radius-card-shell: var(--radius-surface);
+  --radius-card-body: max(0px, calc(var(--radius-surface) - 2px));
 }

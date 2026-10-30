@@ -6,7 +6,7 @@ export const chipSizes = ["sm", "md", "lg"] as const;
 export type ChipSize = (typeof chipSizes)[number];
 
 export const chipBaseClasses =
-  "inline-flex shrink-0 items-center justify-center rounded-full font-sans font-medium tracking-normal " +
+  "inline-flex shrink-0 items-center justify-center rounded-[var(--radius-control)] font-sans font-medium tracking-normal " +
   "transition-[background-color,box-shadow,color] " +
   motionTransition("fast");
 

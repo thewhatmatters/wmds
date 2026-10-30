@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.28 · Pattern — marketing hero text sequence
+// @thewhatmatters/wmds@0.4.40 · Pattern — marketing hero text sequence
 // Storybook: Components/HeroTileStack → Pattern — marketing hero text sequence (?path=/story/components-herotilestack--marketing-hero-text-sequence)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -57,7 +57,7 @@ export function MarketingHeroTextSequence() {
         <div className="flex w-full flex-col items-center gap-6">
           <HeroIntro
             step="display"
-            lead={
+            firstLine={
               <TextSequence idle emphasis="none" stagger={0.07}>
                 {"An "}
                 <span className="whitespace-nowrap">

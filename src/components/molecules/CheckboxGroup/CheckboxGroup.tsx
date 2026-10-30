@@ -1,6 +1,6 @@
 import { useId, useMemo, type ReactNode } from "react";
 import { cn } from "../../../lib/cn";
-import { InputStatusBanner } from "../../atoms/inputShared/InputStatusBanner";
+import { InputStatusBanner, warnStatusWithoutMessage } from "../../atoms/inputShared/InputStatusBanner";
 import type { InputSize, InputStatus } from "../../atoms/Input/inputShellStyles";
 import {
   checkboxGroupDescriptionClasses,
@@ -78,6 +78,7 @@ function CheckboxGroupRoot({
 }: CheckboxGroupProps) {
   const fieldId = useId();
   assertCheckboxGroupPattern({ status, message, values, onValuesChange });
+  warnStatusWithoutMessage("CheckboxGroup", status, message);
 
   const legendId = label != null ? `${fieldId}-legend` : undefined;
   const descriptionId = description != null ? `${fieldId}-description` : undefined;

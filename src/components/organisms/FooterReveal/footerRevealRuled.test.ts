@@ -51,7 +51,7 @@ describe("ruled footer contract", () => {
     expect(footerRevealRuledLinkListClasses).toContain("flex-col");
     expect(footerRevealRuledLinkListClasses).toContain("font-sans");
     expect(footerRevealRuledLinkListClasses).toContain("text-[length:var(--font-size-4xl)]");
-    expect(footerRevealRuledLinkListClasses).toContain("sm:text-[4rem]");
+    expect(footerRevealRuledLinkListClasses).toContain("md:text-[4rem]");
     expect(footerRevealRuledLinkListClasses).not.toContain("font-mono");
     expect(footerRevealRuledLinkListClasses).not.toContain("uppercase");
     expect(footerRevealRuledLinkListClasses).not.toContain("var(--font-size-6xl)");

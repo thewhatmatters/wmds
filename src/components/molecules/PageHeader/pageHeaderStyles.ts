@@ -27,7 +27,8 @@ export const pageHeaderStartClasses = "flex min-w-0 items-center gap-3";
 export const pageHeaderEndClasses = "flex shrink-0 items-center gap-2";
 
 export const pageHeaderTitleClasses: Record<PageHeaderVariant, string> = {
-  app: cn(typographyClass("section-heading"), "text-fg"),
+  /* The app band is a fixed 56px, so a long title ends in an ellipsis rather than wrapping out of it. */
+  app: cn(typographyClass("section-heading"), "min-w-0 truncate text-fg"),
   page: cn(typographyClass("section-heading"), "text-fg"),
   toolbar: cn(typographyClass("ui-label"), "font-medium text-fg"),
 };

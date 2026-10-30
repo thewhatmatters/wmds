@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.28 · Marketing hero with gallery intro
+// @thewhatmatters/wmds@0.4.40 · Marketing hero with gallery intro
 // Storybook: Components/FooterReveal → Marketing hero with gallery intro (?path=/story/components-footerreveal--marketing-hero-with-gallery-intro)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -12,10 +12,10 @@ import { Sparkles } from "lucide-react";
 import { Badge, Button, FooterReveal, GridOverlay, HeroIntro, HeroTileStack, RiveHand, ScrollHorizontal, SiteNav, TextSequence, footerRevealFieldClasses } from "@thewhatmatters/wmds";
 
 const socialLinks = [
-  { label: "Contra", href: "#contra-TODO" },
+  { label: "Contra", href: "https://contra.com/thewhatmatters" },
   { label: "Instagram", href: "https://www.instagram.com/thewhatmatters" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/randymdaniel" },
-  { label: "X", href: "#x-TODO" },
+  { label: "X", href: "https://x.com/thewhatmatters", ariaLabel: "WhatMatters on X" },
 ] as const;
 
 const tiles = [
@@ -65,10 +65,10 @@ export function MarketingHeroWithGalleryIntroPage() {
         />
         <section className="flex min-h-[calc(100svh-var(--site-nav-height))] w-full shrink-0 flex-col items-center justify-center-safe overflow-x-clip overflow-y-visible bg-body py-16 text-center">
           <div className="flex w-full flex-col items-center gap-6">
-          <HeroIntro lead="We're a design and product studio based in Austin, Texas.">
+          <HeroIntro firstLine="A design studio in Austin.">
             We help brands stand out{" "}
             <Badge variant="info" size="md" emphasis="muted" className="align-middle" avatar={{ src: "/hero-badges/globe.svg", alt: "" }}>online</Badge>
-            {" "}with bold ideas, fresh approaches, and products people actually love to use.
+            .
           </HeroIntro>
             <div className="w-full px-[var(--grid-margin)]">
             <HeroTileStack tiles={tiles} />
@@ -102,7 +102,7 @@ export function MarketingHeroWithGalleryIntroPage() {
       </FooterReveal.Content>
       <FooterReveal.Footer className={footerRevealFieldClasses}>
         <FooterReveal.Brand
-          headline="We Build WhatMatters"
+          headline="We build WhatMatters"
           ctaLabel="Start a project"
           onCtaClick={openProjectModal}
           wordmark="WHATMATTERS"
