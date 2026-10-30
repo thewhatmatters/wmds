@@ -7,6 +7,23 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.36
+
+**Colour fixes from building every component in light and dark: fills that vanished, the navy on the dark body, invalid hovers, and a primary Button on a band.**
+
+- **`--color-accent-muted`** (and `--color-secondary`, which reads it): `#ebebeb` light (was the body's `#f8f8f8`), `#363636` dark (was the surface's `#262626`). The selected NavList pill, empty StepProgress segments, secondary Badges and Buttons, the AppShell avatar, Chips, and the Dropdown and Select item hover now show on the body and the surface.
+- **`--color-brand` in dark** is `#5566e0`, the navy's hue lifted (was `#011272`, 1.09:1 on the dark body): 3.58:1 on the body, 3.14:1 on the surface, white on it 4.81:1. The PromptBar send button, the selected SelectableCard border, the filled StepProgress segment, FooterReveal, TextSequence and TextSequenceShape marks now read in dark. **`--color-brand-surface` defaults to `#011272` itself** (it was `var(--color-brand)`), so `tone="inverse"` bands keep the deep navy in dark, and a client's own brand surface still wins.
+- **Dark status hovers:** `--color-{error,success,warning,info}-hover` mixed `108%` with white, which is invalid, so the browser dropped them. They're `88%` with white now, the same lift as the primary.
+- **Primary on a field band:** inside `tone="field"`, `--color-primary` inverts to the field's ink with the field colour as its label (Randy, 2026-10-29). A primary Button on a field band was the band's own colour, since the field defaults to the primary. Inverse bands are unchanged (they take the dark, or the client's dark, primary).
+- **Type scale metadata:** `astryxTypeScale` lists display line heights 1.05 / 1.1 / 1.15, matching typography.css (it said 1.15 / 1.2 / 1.24).
+- **FooterReveal.Ruled** in dark keeps the deep navy ink on its white field.
+- Tests: no `color-mix` above 100%; the secondary fill separates from body and surface in both themes; the dark brand's contrast; the field primary inversion; the type metadata matches the CSS.
+
+### Consumer actions
+
+- None required. Look at dark mode where you use `bg-brand` / `text-brand` as a large field: it's the lighter `#5566e0` now. Use `--color-brand-surface` (or a `tone="inverse"` Band) for a deep navy section in dark.
+- If your brand stylesheet sets `--color-brand` for dark, keep it at 3:1 or more on `--color-background-body` and white at 4.5:1 or more on it.
+
 ## 0.4.35
 
 **Contact and booking forms: two steps, booking after the request, a way out above the calendar, and nothing lost on close.**

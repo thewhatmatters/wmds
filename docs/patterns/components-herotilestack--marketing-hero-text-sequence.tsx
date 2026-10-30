@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.35 · Pattern — marketing hero text sequence
+// @thewhatmatters/wmds@0.4.36 · Pattern — marketing hero text sequence
 // Storybook: Components/HeroTileStack → Pattern — marketing hero text sequence (?path=/story/components-herotilestack--marketing-hero-text-sequence)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

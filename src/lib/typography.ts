@@ -268,9 +268,9 @@ export const astryxTypeScale: Array<{
 }> = [
   { type: "display-hero", utility: "type-display-hero", size: "clamp(3.5rem → 16rem), 16vw", weight: "700", leading: "0.92" },
   { type: "display-xl", utility: "type-display-xl", size: "clamp(2.75rem → 8.5rem), 9vw", weight: "700", leading: "0.9" },
-  { type: "display-1", utility: "type-display-1", size: "clamp(2.5rem → 5rem)", weight: "700", leading: "1.15" },
-  { type: "display-2", utility: "type-display-2", size: "clamp(2rem → 3.15rem)", weight: "600", leading: "1.2" },
-  { type: "display-3", utility: "type-display-3", size: "clamp(1.5rem → 2.1875rem)", weight: "600", leading: "1.24" },
+  { type: "display-1", utility: "type-display-1", size: "clamp(2.5rem → 5rem)", weight: "700", leading: "1.05" },
+  { type: "display-2", utility: "type-display-2", size: "clamp(2rem → 3.15rem)", weight: "600", leading: "1.1" },
+  { type: "display-3", utility: "type-display-3", size: "clamp(1.5rem → 2.1875rem)", weight: "600", leading: "1.15" },
   { type: "heading-1", utility: "type-heading-1", size: "1.5rem", weight: "600", leading: "1.33" },
   { type: "heading-2", utility: "type-heading-2", size: "1.25rem", weight: "600", leading: "1.4" },
   { type: "heading-3", utility: "type-heading-3", size: "1.0625rem", weight: "600", leading: "1.41" },

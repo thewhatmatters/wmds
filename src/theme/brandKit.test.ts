@@ -18,7 +18,8 @@ describe("brand kit", () => {
 
   it("defaults are wired the way the contrast test assumes", () => {
     const colors = css("colors.css");
-    expect(colors).toContain("--color-brand-surface: var(--color-brand);");
+    // The navy itself (not var(--color-brand), which is lifted in dark), set once on :root.
+    expect(colors).toContain("--color-brand-surface: #011272;");
     expect(colors).toContain("--color-on-brand-surface: var(--color-on-brand);");
     expect(colors.replace(/\s+/g, " ")).toContain(
       "--color-on-brand-surface-muted, color-mix(in srgb, var(--color-on-brand-surface) 72%, var(--color-brand-surface))",
