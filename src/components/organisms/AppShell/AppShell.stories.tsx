@@ -64,6 +64,7 @@ export interface PortalDashboardProps {
   menuButton?: AppShellMenuButton;
   title?: string;
   toolbar?: ReactNode;
+  asideFooter?: ReactNode;
 }
 
 export function PortalDashboard({
@@ -73,6 +74,7 @@ export function PortalDashboard({
   menuButton,
   title = "Dashboard",
   toolbar,
+  asideFooter,
 }: PortalDashboardProps) {
   const [activeId, setActiveId] = useState("dashboard");
   const [asideOpen, setAsideOpen] = useState(defaultAsideOpen);
@@ -86,6 +88,7 @@ export function PortalDashboard({
       onAsideOpenChange={setAsideOpen}
       asideMode={asideMode}
       toolbar={toolbar}
+      asideFooter={asideFooter}
       menuButton={menuButton}
       labels={menuButton === "label" || menuButton === "picker" ? { menu: "Portal" } : undefined}
       asideTitle="Stir in strength"
@@ -559,7 +562,7 @@ export const AsideInset: Story = {
     docs: {
       description: {
         story:
-          "`asideMode=\"inset\"`: from `lg` the aside is a raised card floating inside the page surface, under the title bar and the `toolbar` band, 12px from the end and bottom edges; the page narrows beside it and is never covered. Its header is the title bar's 56px band. Put the button that opens it at the end of the toolbar, right above it. Below `lg` it's the overlay **Panel**.",
+          "`asideMode=\"inset\"`: from `lg` the aside is a raised card floating inside the page surface, under the title bar and the `toolbar` band, 12px from the end and bottom edges; the page narrows beside it and is never covered. Its header is the title bar's 56px band, and `asideFooter` stays pinned under the scrolling body. Put the button that opens it at the end of the toolbar, right above it. Below `lg` it's the overlay **Panel**.",
       },
     },
   },
@@ -567,6 +570,12 @@ export const AsideInset: Story = {
     <PortalDashboard
       asideMode="inset"
       toolbar={<div className="flex items-center justify-end px-4 py-3"><span className="type-label">View toolbar</span></div>}
+      asideFooter={
+        <div className="flex w-full flex-col gap-3">
+          <Button role="secondary" width="fill">Copy link</Button>
+          <Button role="secondary" width="fill">Archive campaign</Button>
+        </div>
+      }
     />
   ),
   play: async ({ canvas }) => {
@@ -588,6 +597,12 @@ export const AsideInset: Story = {
     const heading = aside.querySelector("h2") as HTMLElement;
     const header = heading.closest("[role='presentation']") as HTMLElement;
     expect(header.offsetHeight).toBe(56);
+    // asideFooter is pinned: outside the scrolling body, inside the card's bottom edge.
+    const archive = canvas.getByRole("button", { name: "Archive campaign" });
+    const footer = archive.closest("footer") as HTMLElement;
+    expect(aside.contains(footer)).toBe(true);
+    expect(footer.previousElementSibling?.className).toContain("overflow-y-auto");
+    expect(archive.getBoundingClientRect().bottom).toBeLessThanOrEqual(aside.getBoundingClientRect().bottom);
   },
 };
 

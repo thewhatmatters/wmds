@@ -21,7 +21,13 @@ import { PageHeader } from "../../molecules/PageHeader/PageHeader";
 import { pageHeaderTitleClasses } from "../../molecules/PageHeader/pageHeaderStyles";
 import { cn } from "../../../lib/cn";
 import { OverlayPanelHeader } from "../Dialog/OverlayPanelHeader";
-import { overlayPanelBodyScrollClasses, overlayPanelSectionStackClasses } from "../Dialog/dialogStyles";
+import {
+  overlayPanelBodyScrollClasses,
+  overlayPanelFooterDelineatedShellClasses,
+  overlayPanelFooterDelineatedInnerClasses,
+  overlayPanelFooterHairlineClasses,
+  overlayPanelSectionStackClasses,
+} from "../Dialog/dialogStyles";
 import { Panel } from "../Panel/Panel";
 import { Sheet } from "../Sheet/Sheet";
 import {
@@ -92,6 +98,8 @@ export interface AppShellProps {
   /** Title of the aside **Panel**. Defaults to `labels.aside`. */
   asideTitle?: ReactNode;
   asideDescription?: ReactNode;
+  /** Pinned under the aside's scrolling body (actions that must stay in view, such as Copy and Reset). The **Panel** `footer` in overlay mode. */
+  asideFooter?: ReactNode;
   /** Desktop sidebar expanded — controlled. */
   sidebarOpen?: boolean;
   defaultSidebarOpen?: boolean;
@@ -239,6 +247,7 @@ function AppShellRoot({
   aside: asideProp,
   asideTitle,
   asideDescription,
+  asideFooter,
   sidebarOpen: sidebarOpenProp,
   defaultSidebarOpen = true,
   onSidebarOpenChange,
@@ -389,7 +398,14 @@ function AppShellRoot({
                   delineated={!inset}
                   className={inset ? appShellAsideInsetHeaderClasses : undefined}
                 />
-                <div className={cn(overlayPanelBodyScrollClasses, "pb-4")}>{aside}</div>
+                <div className={cn(overlayPanelBodyScrollClasses, asideFooter == null && "pb-4")}>{aside}</div>
+                {asideFooter != null ? (
+                  // The same pinned footer as Panel: a hairline, then the actions, outside the scroll.
+                  <footer className={overlayPanelFooterDelineatedShellClasses}>
+                    <hr className={overlayPanelFooterHairlineClasses} aria-hidden="true" />
+                    <div className={overlayPanelFooterDelineatedInnerClasses}>{asideFooter}</div>
+                  </footer>
+                ) : null}
               </div>
             </aside>
     ) : null;
@@ -565,6 +581,7 @@ function AppShellRoot({
               side="end"
               title={asideTitle ?? slots.aside?.title ?? labels.aside}
               description={asideDescription ?? slots.aside?.description}
+              footer={asideFooter}
             >
               {aside}
             </Panel.Content>
