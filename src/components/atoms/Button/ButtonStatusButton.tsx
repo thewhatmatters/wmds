@@ -8,6 +8,7 @@ import {
 import { motion } from "motion/react";
 import { cn } from "../../../lib/cn";
 import { ButtonStatusIcon, ButtonStatusLabel } from "./ButtonStatusContent";
+import { buttonIconSizeClasses } from "./buttonStyles";
 import {
   getStatusPaint,
   getStatusShellClass,
@@ -51,6 +52,8 @@ export interface ButtonStatusButtonProps
   children: ReactNode;
 }
 
+const buttonStatusOrder = ["idle", "loading", "success", "error"] as const;
+
 export const ButtonStatusButton = forwardRef<
   HTMLButtonElement,
   ButtonStatusButtonProps
@@ -87,7 +90,6 @@ export const ButtonStatusButton = forwardRef<
       {...(buttonProps as unknown as ComponentProps<typeof motion.button>)}
       ref={ref}
       type={type}
-      layout
       disabled={disabled}
       aria-disabled={isBusyDisabled || undefined}
       aria-busy={status === "loading" || undefined}
@@ -104,7 +106,6 @@ export const ButtonStatusButton = forwardRef<
         buttonBaseClasses,
         "justify-center",
         buttonStatusSizeClasses[size],
-        (status !== "idle" || icon != null) && buttonStatusIconGapClasses[size],
         buttonPillClass,
         getStatusShellClass(status, role),
         "overflow-hidden",
@@ -124,8 +125,33 @@ export const ButtonStatusButton = forwardRef<
       name={name}
       form={form}
     >
-      <ButtonStatusIcon status={status} size={size} icon={icon} />
-      <ButtonStatusLabel label={label} />
+      {/* Loading states Y8: the button keeps one width through idle, loading, success and error. Hidden
+          copies of every state size one grid cell; the live state sits on top of them. */}
+      <span className="inline-grid items-center justify-items-center">
+        {buttonStatusOrder.map((each) => (
+          <span
+            key={each}
+            aria-hidden
+            className={cn(
+              "invisible col-start-1 row-start-1 inline-flex items-center whitespace-nowrap",
+              (each !== "idle" || icon != null) && buttonStatusIconGapClasses[size],
+            )}
+          >
+            {each !== "idle" || icon != null ? <span className={cn("shrink-0", buttonIconSizeClasses[size])} /> : null}
+            {/* Generated text: sizes the cell without adding words to the button's text. */}
+            <span data-label={labels[each]} className="before:content-[attr(data-label)]" />
+          </span>
+        ))}
+        <span
+          className={cn(
+            "col-start-1 row-start-1 inline-flex items-center",
+            (status !== "idle" || icon != null) && buttonStatusIconGapClasses[size],
+          )}
+        >
+          <ButtonStatusIcon status={status} size={size} icon={icon} />
+          <ButtonStatusLabel label={label} />
+        </span>
+      </span>
     </motion.button>
   );
 });

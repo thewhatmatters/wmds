@@ -1027,6 +1027,7 @@
   ],
   "lib": [
     "cn",
+    "useDelayedLoading",
     "buttonSizeForCluster",
     "iconButtonSizeForCluster",
     "clusterComponentSizeMap",

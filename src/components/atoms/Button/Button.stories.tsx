@@ -62,6 +62,7 @@ Pill-shaped by default (\`layout="pill"\`). **Row layout** is flat full-width �
 ## Best practices
 
 - **Do** copy a named story below — don't mix \`status\` with \`count\`, \`endIcon\`, or \`mono\`.
+- **Do** use \`status\` for every send, with real words (\`statusLabels={{ loading: "Sending…" }}\`). The pill keeps one width through every state, stays focusable, and ignores repeat presses while loading (Loading states Y8). In a form, success hands over to the confirmation screen and doesn't return to idle; errors go to the **ErrorSummary**.
 - **Do** use \`status\` for form submit and async feedback; with \`icon\`, the status glyph morphs out of the icon. \`status\` sits on the pill's live region, so its labels are announced.
 - **Do** set \`external\` on a link to another site, and \`newTab\` only when leaving would lose the reader's work — never hand-write \`target\`, \`rel\`, or "(opens in a new tab)".
 - **Do** use \`count\` only for numeric notification badges on nav actions.
