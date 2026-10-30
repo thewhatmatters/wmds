@@ -19,8 +19,17 @@ export const appShellSidebarBodyClasses = "min-h-0 flex-1 overflow-y-auto";
 /** Pinned under the scrolling nav — the same 16px inset as the brand row. */
 export const appShellSidebarFooterClasses = "box-border shrink-0 px-4 py-3";
 
-/** 8px inset around the raised surface. */
-export const appShellCanvasClasses = "flex min-h-0 min-w-0 flex-1 p-2";
+/** 8px inset around the raised surface (and a docked aside beside it, 8px apart). */
+export const appShellCanvasClasses = "flex min-h-0 min-w-0 flex-1 gap-2 p-2";
+
+/**
+ * `asideMode="docked"` from `lg`: a second raised surface beside the page, which narrows to make room,
+ * so the page stays visible and usable while the aside is open (live controls, a font panel).
+ */
+export const appShellAsideDockedClasses = cn(
+  "flex min-h-0 w-80 shrink-0 flex-col overflow-hidden bg-surface shadow-soft-card",
+  cardLayoutShellShapeClasses.rounded,
+);
 
 /** Raised surface — the Card shell radius and the soft card shadow. */
 export const appShellSurfaceClasses = cn(

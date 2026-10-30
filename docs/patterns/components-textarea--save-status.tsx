@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.36 · Pattern — save status
+// @thewhatmatters/wmds@0.4.37 · Pattern — save status
 // Storybook: Components/TextArea → Pattern — save status (?path=/story/components-textarea--save-status)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

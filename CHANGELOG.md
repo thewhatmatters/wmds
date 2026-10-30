@@ -7,6 +7,19 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.37
+
+**AppShell: a docked aside you can use while watching the page, a labelled phone menu button, and titles that end in an ellipsis.**
+
+- **AppShell** `asideMode` (new): `overlay` (default, unchanged) or `docked`. Docked, from `lg`, the aside is a raised column beside the page (320px), and the page narrows to make room instead of being covered: for controls you use while watching the page change, like a font panel. It's a `complementary` landmark named by its title; Close or Escape from inside returns focus to the button that opened it. Below `lg` it's the overlay **Panel** either way. New exports `appShellAsideModes`, `AppShellAsideMode`.
+- **AppShell** `menuButton` (new): `icon` (default, unchanged) or `label`, the icon plus `labels.menu` as visible text on the phone menu button (Header rule N7), for when the glyph alone doesn't say what the menu holds. New exports `appShellMenuButtons`, `AppShellMenuButton`.
+- **PageHeader** `variant="app"`: a long title ends in an ellipsis on one line instead of wrapping out of the 56px band.
+- Stories **AppShell → State — aside docked** and **State — phone, labelled menu**, with interaction tests (the page narrows, no dialog, focus returns on Close and Escape; the labelled button opens the menu).
+
+### Consumer actions
+
+- None.
+
 ## 0.4.36
 
 **Colour fixes from building every component in light and dark: fills that vanished, the navy on the dark body, invalid hovers, and a primary Button on a band.**
