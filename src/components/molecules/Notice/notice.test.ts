@@ -67,6 +67,15 @@ describe("Notice", () => {
     }
   });
 
+  it("takes an explicit live role over the tone's", () => {
+    const urgent = mount({ tone: "warning", title: "T", live: "alert" });
+    expect(urgent.querySelector("[data-tone='warning']")?.getAttribute("role")).toBe("alert");
+    act(() => root?.unmount());
+    container?.remove();
+    const polite = mount({ tone: "error", title: "T", live: "status" });
+    expect(polite.querySelector("[data-tone='error']")?.getAttribute("role")).toBe("status");
+  });
+
   it("draws the tone icon, a replacement, or none", () => {
     expect(mount({ tone: "warning", title: "T" }).querySelector("svg")).not.toBeNull();
     act(() => root?.unmount());

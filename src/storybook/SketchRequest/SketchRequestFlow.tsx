@@ -11,6 +11,7 @@ import {
   type IntakeAboutValues,
 } from "../../components/molecules/IntakeForm/IntakeForm";
 import { IntakeHoneypot } from "../../components/molecules/IntakeForm/IntakeHoneypot";
+import { Notice } from "../../components/molecules/Notice/Notice";
 import { ConfettiProvider } from "../../components/organisms/Confetti/Confetti";
 import { IntakeConfirmation, intakeConfirmationReplyWithin } from "../../components/organisms/IntakeConfirmation/IntakeConfirmation";
 import { IntakeModal } from "../../components/organisms/IntakeModal/IntakeModal";
@@ -76,15 +77,11 @@ export function SketchRequestFlow({ failFirstSend = false }: { failFirstSend?: b
         {step === "details" ? (
           <>
             <h2 className="type-heading-1 tracking-tight text-fg">Tell us about your project</h2>
-            {/* No WMDS inline alert yet (gap #51): a plain role="alert" block for the story. */}
             {sendFailed ? (
-              <div role="alert" className="flex flex-col gap-2 rounded-[var(--radius-card-shell)] bg-error-muted p-4 text-error">
-                <p className="type-label">We couldn’t send your request.</p>
-                <p className="type-body">
-                  Your answers are still here. Press Send my request to try again, or email{" "}
-                  <TextLink href="mailto:hello@whatmatters.studio">hello@whatmatters.studio</TextLink>.
-                </p>
-              </div>
+              <Notice tone="error" title="We couldn’t send your request." live>
+                Your answers are still here. Press Send my request to try again, or email{" "}
+                <TextLink href="mailto:hello@whatmatters.studio">hello@whatmatters.studio</TextLink>.
+              </Notice>
             ) : null}
             <IntakeForm values={values} onChange={setValues} submitCount={submitCount} />
             <IntakeHoneypot value={honeypot} onChange={setHoneypot} />

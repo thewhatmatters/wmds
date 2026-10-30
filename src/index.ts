@@ -428,6 +428,7 @@ export {
   noticeStoragePrefix,
   noticeTones,
   type NoticeLayoutClassName,
+  type NoticeLiveRole,
   type NoticeProps,
   type NoticeTone,
 } from "./components/molecules/Notice/Notice";

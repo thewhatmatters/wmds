@@ -21,7 +21,7 @@ const meta = {
     title: { control: "text" },
     children: { control: "text" },
     dismissible: { control: "boolean" },
-    live: { control: "boolean" },
+    live: { control: "select", options: [false, true, "alert", "status"] },
   },
   args: {
     tone: "info",

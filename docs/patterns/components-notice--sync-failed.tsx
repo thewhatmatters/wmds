@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.28 · Pattern — sync failed
+// @thewhatmatters/wmds@0.4.41 · Pattern — sync failed
 // Storybook: Components/Notice → Pattern — sync failed (?path=/story/components-notice--sync-failed)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

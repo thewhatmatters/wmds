@@ -7,6 +7,18 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.41
+
+**Notice: an inline callout for page notes and failed sends.**
+
+- **Notice** (new) — an inline callout for closures, buyouts, "account not connected", "sync failed" and a form that couldn't send. `tone` = `neutral` \| `info` \| `success` \| `warning` \| `error`, with `title`, copy as `children`, and an `action` slot (a **TextLink**, a small **Button**, or a row of them). The fill is the tone mixed into the current surface, so it reads in dark mode and in toned sections. `live` announces a notice that appears after load (`alert` for `error`, `status` otherwise), or pass `live="alert"` / `live="status"` to choose. `dismissible` adds a Dismiss button that hands focus to the next control; `dismissKey` remembers the dismissal in `localStorage` (`wmds-notice:<key>`). See **ADR-0050**.
+- Patterns: **Components/Notice → Pattern — holiday closure**, **Pattern — private buyout**, **Pattern — account not connected**, **Pattern — sync failed**.
+- The sketch request story's failed-send message (IntakeModal) is now an error **Notice** instead of a hand-built red block.
+
+### Consumer actions
+
+- None. Apps with a hand-built `role="alert"` block can swap it for `<Notice tone="error" live>`.
+
 ## 0.4.40
 
 **AppShell: the phone page picker stays on one line.**

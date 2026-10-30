@@ -31,6 +31,9 @@ export type NoticeLayoutClassName = string;
 /** `localStorage` key prefix for a notice dismissed with `dismissKey`. */
 export const noticeStoragePrefix = "wmds-notice:";
 
+/** `alert` interrupts the screen reader; `status` waits for a pause. */
+export type NoticeLiveRole = "alert" | "status";
+
 export interface NoticeProps {
   /** Default `neutral`. `error` is for something that failed, not for emphasis. */
   tone?: NoticeTone;
@@ -59,9 +62,10 @@ export interface NoticeProps {
   dismissKey?: string;
   /**
    * Announce the notice when it appears after load (a sync failure, a form result). `error` uses
-   * `role="alert"`, the others `role="status"`. Leave off for a notice that is part of the page.
+   * `role="alert"`, the others `role="status"`; pass `"alert"` or `"status"` to choose the role
+   * yourself. Leave off for a notice that is part of the page.
    */
-  live?: boolean;
+  live?: boolean | NoticeLiveRole;
   id?: string;
   className?: NoticeLayoutClassName;
 }
@@ -172,7 +176,8 @@ export function Notice({
 
   if (dismissed) return null;
 
-  const role = live ? (tone === "error" ? "alert" : "status") : undefined;
+  const role =
+    live === true ? (tone === "error" ? "alert" : "status") : live === false ? undefined : live;
   const iconElement = icon === false ? null : (icon ?? noticeToneIcon(tone));
 
   return (
