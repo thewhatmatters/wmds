@@ -472,6 +472,13 @@ export {
   type SearchSize,
 } from "./components/molecules/Search/Search";
 export {
+  Combobox,
+  filterComboboxOptions,
+  type ComboboxLayoutClassName,
+  type ComboboxOption,
+  type ComboboxProps,
+} from "./components/molecules/Combobox/Combobox";
+export {
   Select,
   selectSizes,
   type SelectLayoutClassName,

@@ -7,7 +7,7 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
-## 0.4.41
+## 0.4.42
 
 **Notice: an inline callout for page notes and failed sends.**
 
@@ -18,6 +18,18 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 ### Consumer actions
 
 - None. Apps with a hand-built `role="alert"` block can swap it for `<Notice tone="error" live>`.
+
+## 0.4.41
+
+**Combobox: a searchable select for long lists.**
+
+- **Combobox** (new): the **Input** pill with a search icon over a **Dropdown** listbox that narrows as people type, for lists of 16 or more (Dropdowns C7): fonts, countries, industries. WAI-ARIA combobox with list autocomplete: focus stays in the field, ↓ / ↑ move, Enter picks, Escape closes and then clears, and a polite live region says how many results there are. Same `label`, `description`, `size`, `width`, `status` and `message` as **Input**; options take **Dropdown.Item** `start` / `end` slots and hidden `keywords`. It renders the first `maxResults` (50) matches, so a list of thousands stays quick, and says how many more there are. `allowCustom` keeps typed text that matches nothing; `name` adds a hidden input for forms. New exports `Combobox`, `filterComboboxOptions`, `ComboboxOption`, `ComboboxProps`.
+- **useDropdownMenu** (internal) `editable`: a text-field trigger keeps its characters, Space, Home and End.
+- Stories **Combobox → Default**, **Long list (1,800 options)**, **Validation**, with interaction tests (keyboard path, filtering, Escape twice, focus stays in the field, a pick leaves other controls alone).
+
+### Consumer actions
+
+- None. To replace an **Input** + `<datalist>`: `<Combobox label="Headings font" options={fonts} value={family} onValueChange={setFamily} />`.
 
 ## 0.4.40
 

@@ -66,6 +66,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "Breadcrumb owns its chevron separator (ButtonIcon) and the collapsed-path ellipsis passed to IconButton.",
   },
   {
+    file: "components/molecules/Combobox/Combobox.tsx",
+    ruleId: "lucide-import",
+    reason: "Combobox owns the leading search glyph that tells a searchable select from a Select (Input `icon`).",
+  },
+  {
     file: "components/molecules/Chip/Chip.tsx",
     ruleId: "lucide-import",
     reason: "Lucide glyph passed to IconButton inset for removable dismiss.",
