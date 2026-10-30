@@ -74,6 +74,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "IntakeConfirmation", category: "Feedback & status", title: "Components/IntakeConfirmation", description: "Booked or emailed confirmation that ends the Start a project flow." },
   { name: "Skeleton", category: "Feedback & status", title: "Components/Skeleton", description: "Shimmering layout placeholders that mirror the resolved UI." },
   { name: "Status", category: "Feedback & status", title: "Components/Status", description: "Task progress ring or semantic dot at a fixed scale." },
+  { name: "Progress", category: "Feedback & status", title: "Components/Progress", description: "Progress bar for long waits, uploads and exports: label, value, time left, Cancel and Retry." },
   { name: "StepProgress", category: "Feedback & status", title: "Components/StepProgress", description: "Segmented step indicator with a Step N of M label." },
 
   // Form controls

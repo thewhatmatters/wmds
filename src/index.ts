@@ -442,6 +442,13 @@ export {
   type PillGroupProps,
 } from "./components/molecules/PillGroup/PillGroup";
 export {
+  Progress,
+  progressSizes,
+  type ProgressLayoutClassName,
+  type ProgressProps,
+  type ProgressSize,
+} from "./components/molecules/Progress/Progress";
+export {
   PromptBar,
   promptBarPlaceholder,
   type PromptBarLayoutClassName,

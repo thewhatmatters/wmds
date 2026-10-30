@@ -819,6 +819,14 @@
       "source": "src/components/molecules/PillGroup/PillGroup.stories.tsx"
     },
     {
+      "id": "components-progress--upload-pattern",
+      "title": "Components/Progress",
+      "name": "Pattern — upload with a count",
+      "file": "patterns/components-progress--upload-pattern.tsx",
+      "storybook": "?path=/story/components-progress--upload-pattern",
+      "source": "src/components/molecules/Progress/Progress.stories.tsx"
+    },
+    {
       "id": "components-promptbar--pattern-prompt-bar",
       "title": "Components/PromptBar",
       "name": "Pattern — prompt bar",

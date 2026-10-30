@@ -11,6 +11,8 @@ bump: minor
 - **Button loading look** (Y8): keeps the role's own fill (a primary stays primary) with the spinner; the grey fill read as disabled. Default labels are a send ("Sending…", "Sent", "Try again"), and Button warns when `status="loading"` has no `statusLabels.loading`.
 - **Button `status`** (Y8): one width through idle, loading, success and error (no resize), so a "Sending…" label never moves the layout. Still `aria-live`, focusable, and repeat presses are ignored while loading. Docs: in forms, success hands over to the confirmation.
 
+- **Progress** (new, Y9): a progress bar for waits over 10 seconds, uploads and exports. Label, "3 of 12 files" or a percentage, time left, Cancel (required unless `cancellable={false}`), `status="error"` with `message` and Retry (`onRetry`). `role="progressbar"` with values and `aria-valuetext`; screen readers hear every 10% and "… complete", not every tick. Indeterminate only without a total; still under reduced motion. Stories: upload with a count, export percentage, no total, failed with retry, complete.
+
 ### Consumer actions
 
-None required. Wrap your own loading indicators in `useDelayedLoading`. Give send buttons real `statusLabels` ("Sending…").
+Button `status` defaults changed from "Processing / Success / Error" to "Sending… / Sent / Try again", and loading keeps the button's own fill: pass your own `statusLabels` (Button now warns when the loading label is missing). Wrap your own loading indicators in `useDelayedLoading`. Give send buttons real `statusLabels` ("Sending…").

@@ -71,3 +71,13 @@
     animation: none !important;
   }
 }
+
+/* Progress without a total: a segment drifting across the track (still under reduced motion). */
+@keyframes progress-drift {
+  0% {
+    inset-inline-start: -33%;
+  }
+  100% {
+    inset-inline-start: 100%;
+  }
+}
