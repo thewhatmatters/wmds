@@ -14,6 +14,7 @@ import {
   logViewTextClasses,
   logViewToolbarClasses,
 } from "./logViewStyles";
+import { emptySlot } from "../EmptyState/EmptyState";
 
 /** Layout-only — height and margin. Not for re-theming the log. */
 export type LogViewLayoutClassName = string;
@@ -137,7 +138,7 @@ export function LogView({
         {loading ? <Skeleton className={logViewSkeletonClasses} width="100%" height={96} radius="inner" /> : null}
         {!loading && count === 0 ? (
           <p className={logViewEmptyClasses} role="status">
-            {empty ?? labels.empty}
+            {emptySlot(empty ?? labels.empty)}
           </p>
         ) : null}
         {showLines
