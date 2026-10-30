@@ -26,6 +26,10 @@ import { Panel } from "../Panel/Panel";
 import { Sheet } from "../Sheet/Sheet";
 import {
   appShellAsideDockedClasses,
+  appShellAsideInsetClasses,
+  appShellAsideInsetHeaderClasses,
+  appShellInsetRowClasses,
+  appShellToolbarClasses,
   appShellBrandClasses,
   appShellCanvasClasses,
   appShellMainClasses,
@@ -64,7 +68,7 @@ const DEFAULT_LABELS: AppShellLabels = {
   skipToContent: "Skip to content",
 };
 
-export const appShellAsideModes = ["overlay", "docked"] as const;
+export const appShellAsideModes = ["overlay", "docked", "inset"] as const;
 export type AppShellAsideMode = (typeof appShellAsideModes)[number];
 
 export const appShellMenuButtons = ["icon", "label", "picker"] as const;
@@ -81,6 +85,8 @@ export interface AppShellProps {
   sidebarFooter?: ReactNode;
   /** Trailing title-bar controls — **Button**, **Avatar**, **MoreMenu** at one cluster tier. */
   header?: ReactNode;
+  /** Full-width band under the title bar (a view toolbar). With an inset aside it spans above both. */
+  toolbar?: ReactNode;
   /** Right slide-out content, in a non-blocking **Panel**. Omit it for no aside. */
   aside?: ReactNode;
   /** Title of the aside **Panel**. Defaults to `labels.aside`. */
@@ -94,6 +100,8 @@ export interface AppShellProps {
    * `overlay` (default): the aside is a non-blocking **Panel** over the page.
    * `docked`: from `lg` it sits beside the page, which narrows to make room, for controls you use while
    * watching the page change (a font panel). Below `lg` it's the overlay **Panel** either way.
+   * `inset`: from `lg` a raised card floating inside the page surface, under the title bar and `toolbar`,
+   * 12px from the end and bottom; the page body narrows beside it. Its header is the title bar's 56px band.
    */
   asideMode?: AppShellAsideMode;
   /** Aside open — controlled. */
@@ -136,6 +144,10 @@ function AppShellSidebarFooter({ children }: AppShellSlotProps) {
 }
 
 function AppShellHeader({ children }: AppShellSlotProps) {
+  return <>{children}</>;
+}
+
+function AppShellToolbar({ children }: AppShellSlotProps) {
   return <>{children}</>;
 }
 
@@ -196,6 +208,7 @@ function pickSlots(children: ReactNode) {
     sidebar?: ReactNode;
     sidebarFooter?: ReactNode;
     header?: ReactNode;
+    toolbar?: ReactNode;
     aside?: { title?: ReactNode; description?: ReactNode; children?: ReactNode };
     content: ReactNode[];
   } = { content: [] };
@@ -209,6 +222,7 @@ function pickSlots(children: ReactNode) {
     else if (child.type === AppShellSidebar) slots.sidebar = child.props.children;
     else if (child.type === AppShellSidebarFooter) slots.sidebarFooter = child.props.children;
     else if (child.type === AppShellHeader) slots.header = child.props.children;
+    else if (child.type === AppShellToolbar) slots.toolbar = child.props.children;
     else if (child.type === AppShellAside) slots.aside = child.props;
     else slots.content.push(child);
   });
@@ -221,6 +235,7 @@ function AppShellRoot({
   sidebar: sidebarProp,
   sidebarFooter: sidebarFooterProp,
   header: headerProp,
+  toolbar: toolbarProp,
   aside: asideProp,
   asideTitle,
   asideDescription,
@@ -242,6 +257,7 @@ function AppShellRoot({
   const sidebar = sidebarProp ?? slots.sidebar;
   const sidebarFooter = sidebarFooterProp ?? slots.sidebarFooter;
   const header = headerProp ?? slots.header;
+  const toolbar = toolbarProp ?? slots.toolbar;
   const aside = asideProp ?? slots.aside?.children;
   const hasSidebar = sidebar != null;
   const hasAside = aside != null;
@@ -328,7 +344,8 @@ function AppShellRoot({
     if (target.closest("nav a[href], nav button") != null) setMenuOpen(false);
   }
 
-  const docked = hasAside && asideMode === "docked" && isDesktop;
+  const docked = hasAside && (asideMode === "docked" || asideMode === "inset") && isDesktop;
+  const inset = docked && asideMode === "inset";
   const asideId = `${sidebarId}-aside`;
   const asideRef = useRef<HTMLElement>(null);
   const asideReturnFocusRef = useRef<HTMLElement | null>(null);
@@ -342,6 +359,36 @@ function AppShellRoot({
       asideReturnFocusRef.current = null;
     }
   }, [asideOpen, docked]);
+
+  const dockedAside =
+    docked && asideOpen ? (
+      <aside
+              ref={asideRef}
+              id={asideId}
+              aria-labelledby={`${asideId}-title`}
+              className={inset ? appShellAsideInsetClasses : appShellAsideDockedClasses}
+              onKeyDown={(event) => {
+                if (event.key === "Escape" && !event.defaultPrevented) {
+                  event.preventDefault();
+                  closeDockedAside();
+                }
+              }}
+            >
+              <div className={overlayPanelSectionStackClasses}>
+                <OverlayPanelHeader
+                  titleId={`${asideId}-title`}
+                  descriptionId={`${asideId}-description`}
+                  title={asideTitle ?? slots.aside?.title ?? labels.aside}
+                  description={asideDescription ?? slots.aside?.description}
+                  closeLabel="Close panel"
+                  onClose={closeDockedAside}
+                  delineated={!inset}
+                  className={inset ? appShellAsideInsetHeaderClasses : undefined}
+                />
+                <div className={cn(overlayPanelBodyScrollClasses, "pb-4")}>{aside}</div>
+              </div>
+            </aside>
+    ) : null;
 
   function closeDockedAside() {
     const returnTo = asideReturnFocusRef.current;
@@ -478,37 +525,21 @@ function AppShellRoot({
             ) : (
               <PageHeader variant="app" title={title} aria-label={title} start={toggle} end={header} />
             )}
-            <main id={mainId} tabIndex={-1} className={appShellMainClasses}>
-              {slots.content}
-            </main>
-          </div>
-          {docked && asideOpen ? (
-            <aside
-              ref={asideRef}
-              id={asideId}
-              aria-labelledby={`${asideId}-title`}
-              className={appShellAsideDockedClasses}
-              onKeyDown={(event) => {
-                if (event.key === "Escape" && !event.defaultPrevented) {
-                  event.preventDefault();
-                  closeDockedAside();
-                }
-              }}
-            >
-              <div className={overlayPanelSectionStackClasses}>
-                <OverlayPanelHeader
-                  titleId={`${asideId}-title`}
-                  descriptionId={`${asideId}-description`}
-                  title={asideTitle ?? slots.aside?.title ?? labels.aside}
-                  description={asideDescription ?? slots.aside?.description}
-                  closeLabel="Close panel"
-                  onClose={closeDockedAside}
-                  delineated
-                />
-                <div className={cn(overlayPanelBodyScrollClasses, "pb-4")}>{aside}</div>
+            {toolbar != null ? <div className={appShellToolbarClasses}>{toolbar}</div> : null}
+            {inset ? (
+              <div className={appShellInsetRowClasses}>
+                <main id={mainId} tabIndex={-1} className={appShellMainClasses}>
+                  {slots.content}
+                </main>
+                {dockedAside}
               </div>
-            </aside>
-          ) : null}
+            ) : (
+              <main id={mainId} tabIndex={-1} className={appShellMainClasses}>
+                {slots.content}
+              </main>
+            )}
+          </div>
+          {docked && !inset ? dockedAside : null}
         </div>
 
         {hasSidebar ? (
@@ -550,5 +581,6 @@ export const AppShell = Object.assign(AppShellRoot, {
   Sidebar: AppShellSidebar,
   SidebarFooter: AppShellSidebarFooter,
   Header: AppShellHeader,
+  Toolbar: AppShellToolbar,
   Aside: AppShellAside,
 });

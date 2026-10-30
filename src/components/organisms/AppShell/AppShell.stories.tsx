@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState, useSyncExternalStore } from "react";
 import { expect, userEvent, waitFor, within } from "storybook/test";
@@ -62,6 +63,7 @@ export interface PortalDashboardProps {
   asideMode?: AppShellAsideMode;
   menuButton?: AppShellMenuButton;
   title?: string;
+  toolbar?: ReactNode;
 }
 
 export function PortalDashboard({
@@ -70,6 +72,7 @@ export function PortalDashboard({
   asideMode,
   menuButton,
   title = "Dashboard",
+  toolbar,
 }: PortalDashboardProps) {
   const [activeId, setActiveId] = useState("dashboard");
   const [asideOpen, setAsideOpen] = useState(defaultAsideOpen);
@@ -82,6 +85,7 @@ export function PortalDashboard({
       asideOpen={asideOpen}
       onAsideOpenChange={setAsideOpen}
       asideMode={asideMode}
+      toolbar={toolbar}
       menuButton={menuButton}
       labels={menuButton === "label" || menuButton === "picker" ? { menu: "Portal" } : undefined}
       asideTitle="Stir in strength"
@@ -546,6 +550,44 @@ export const AsideOpen: Story = {
   render: () => <PortalDashboard defaultAsideOpen />,
   play: async () => {
     await settleOverlay();
+  },
+};
+
+export const AsideInset: Story = {
+  name: "State — aside inset, with a toolbar",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`asideMode=\"inset\"`: from `lg` the aside is a raised card floating inside the page surface, under the title bar and the `toolbar` band, 12px from the end and bottom edges; the page narrows beside it and is never covered. Its header is the title bar's 56px band. Put the button that opens it at the end of the toolbar, right above it. Below `lg` it's the overlay **Panel**.",
+      },
+    },
+  },
+  render: () => (
+    <PortalDashboard
+      asideMode="inset"
+      toolbar={<div className="flex items-center justify-end px-4 py-3"><span className="type-label">View toolbar</span></div>}
+    />
+  ),
+  play: async ({ canvas }) => {
+    const main = canvas.getByRole("main");
+    const fullWidth = main.offsetWidth;
+    await userEvent.click(canvas.getByRole("button", { name: "Details" }));
+    const aside = await canvas.findByRole("complementary", { name: "Stir in strength" });
+    expect(canvas.queryByRole("dialog")).toBeNull();
+    // Inside the page surface, under the toolbar band, beside the narrowed page.
+    const toolbar = canvas.getByText("View toolbar");
+    await waitFor(() => expect(main.offsetWidth).toBeLessThan(fullWidth - 200));
+    expect(aside.getBoundingClientRect().left).toBeGreaterThanOrEqual(main.getBoundingClientRect().right);
+    expect(aside.getBoundingClientRect().top).toBeGreaterThan(toolbar.getBoundingClientRect().bottom);
+    const surface = main.closest("[class*='shadow-soft-card']") as HTMLElement;
+    expect(surface.contains(aside)).toBe(true);
+    const gap = surface.getBoundingClientRect().right - aside.getBoundingClientRect().right;
+    expect(Math.round(gap)).toBe(12);
+    // The header is the title bar's 56px band.
+    const heading = aside.querySelector("h2") as HTMLElement;
+    const header = heading.closest("[role='presentation']") as HTMLElement;
+    expect(header.offsetHeight).toBe(56);
   },
 };
 
