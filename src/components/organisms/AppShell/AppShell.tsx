@@ -391,7 +391,6 @@ function AppShellRoot({
           role="ghost"
           size="sm"
           icon={<PanelLeft strokeWidth={2} />}
-          endIcon={<ChevronDown strokeWidth={2} />}
           aria-label={`${labels.menu}: ${title}`}
           aria-expanded={menuOpen}
           aria-haspopup="dialog"
@@ -400,6 +399,8 @@ function AppShellRoot({
           onClick={() => setMenuOpen(true)}
         >
           <span className="min-w-0 truncate">{title}</span>
+          {/* A plain chevron, not `endIcon` (that's the filled square of a menu trigger). */}
+          <ChevronDown strokeWidth={2} aria-hidden="true" className="size-4 shrink-0 text-muted" />
         </Button>
       ) : menuButton === "label" ? (
         <Button
