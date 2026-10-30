@@ -424,6 +424,15 @@ export {
   type NavListSectionProps,
 } from "./components/molecules/NavList/NavList";
 export {
+  Notice,
+  noticeStoragePrefix,
+  noticeTones,
+  type NoticeLayoutClassName,
+  type NoticeLiveRole,
+  type NoticeProps,
+  type NoticeTone,
+} from "./components/molecules/Notice/Notice";
+export {
   PageHeader,
   pageHeaderAppBandHeightClasses,
   pageHeaderHeadingLevels,
@@ -462,6 +471,13 @@ export {
   type SearchProps,
   type SearchSize,
 } from "./components/molecules/Search/Search";
+export {
+  Combobox,
+  filterComboboxOptions,
+  type ComboboxLayoutClassName,
+  type ComboboxOption,
+  type ComboboxProps,
+} from "./components/molecules/Combobox/Combobox";
 export {
   Select,
   selectSizes,

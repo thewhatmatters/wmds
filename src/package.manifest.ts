@@ -28,12 +28,69 @@ const atoms = [
   "Tooltip",
 ] as const;
 
-const molecules = ["Accordion", "Breadcrumb", "CalEmbed", "Card", "ChatQa", "CheckboxGroup", "Chip", "CopyField", "DescriptionList", "DisplayControls", "Dropdown", "ErrorSummary", "Field", "FloatingActionButton", "HeroIntro", "IndexList", "IntakeForm", "LinkTile", "LogView", "NavList", "PageHeader", "PillGroup", "PromptBar", "RadioGroup", "Search", "Select", "SelectableCard", "SegmentedControl", "Stat", "StepProgress", "TaskRows", "TextSequence", "TileGrid"] as const;
+const molecules = [
+  "Accordion",
+  "Breadcrumb",
+  "CalEmbed",
+  "Card",
+  "ChatQa",
+  "CheckboxGroup",
+  "Chip",
+  "Combobox",
+  "CopyField",
+  "DescriptionList",
+  "DisplayControls",
+  "Dropdown",
+  "ErrorSummary",
+  "Field",
+  "FloatingActionButton",
+  "HeroIntro",
+  "IndexList",
+  "IntakeForm",
+  "LinkTile",
+  "LogView",
+  "NavList",
+  "Notice",
+  "PageHeader",
+  "PillGroup",
+  "PromptBar",
+  "RadioGroup",
+  "Search",
+  "SegmentedControl",
+  "Select",
+  "SelectableCard",
+  "Stat",
+  "StepProgress",
+  "TaskRows",
+  "TextSequence",
+  "TileGrid",
+] as const;
 
-const organisms = ["AppShell", "Carousel", "Chart", "ChatDock", "Confetti", "Dialog", "FilterPanel", "FooterReveal", "HeroTileStack", "IntakeConfirmation", "IntakeModal", "MoreMenu", "Panel", "ScrollHorizontal", "Sheet", "SiteNav", "Tab", "Toast"] as const;
+const organisms = [
+  "AppShell",
+  "Carousel",
+  "Chart",
+  "ChatDock",
+  "Confetti",
+  "Dialog",
+  "FilterPanel",
+  "FooterReveal",
+  "HeroTileStack",
+  "IntakeConfirmation",
+  "IntakeModal",
+  "MoreMenu",
+  "Panel",
+  "ScrollHorizontal",
+  "Sheet",
+  "SiteNav",
+  "Tab",
+  "Toast",
+] as const;
 
 /** In the catalog before the atomic rebuild and not rebuilt yet. Move a name into its tier when it ships. */
-const planned = ["Pagination"] as const;
+const planned = [
+  "Pagination",
+] as const;
 
 export const packageManifest = {
   /** Every value src/index.ts exports from src/lib/. scripts/validate-manifest.mjs checks both directions. */

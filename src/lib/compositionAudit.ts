@@ -66,6 +66,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "Breadcrumb owns its chevron separator (ButtonIcon) and the collapsed-path ellipsis passed to IconButton.",
   },
   {
+    file: "components/molecules/Combobox/Combobox.tsx",
+    ruleId: "lucide-import",
+    reason: "Combobox owns the leading search glyph that tells a searchable select from a Select (Input `icon`).",
+  },
+  {
     file: "components/molecules/Chip/Chip.tsx",
     ruleId: "lucide-import",
     reason: "Lucide glyph passed to IconButton inset for removable dismiss.",
@@ -79,6 +84,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     file: "components/molecules/CopyField/CopyField.tsx",
     ruleId: "lucide-import",
     reason: "CopyField owns the copy glyph (Lucide Copy) passed to Button icon. The confirmation check is Button's status glyph.",
+  },
+  {
+    file: "components/molecules/Notice/Notice.tsx",
+    ruleId: "lucide-import",
+    reason: "Notice owns its tone glyphs (passed to Badge iconOnly, as in Toast) and the dismiss X (passed to IconButton).",
   },
   {
     file: "components/molecules/Dropdown/DropdownItem.tsx",
