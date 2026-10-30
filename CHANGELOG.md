@@ -5,7 +5,31 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Versions follow semver.** While the major version is `0`, a minor bump (`0.3.0`) can break an app and a patch bump (`0.2.1`) does not. Apps depend on `^0.2.0`, which accepts patches only.
 - **Every release has a Consumer actions section**: the exact steps an app takes when it moves to that version. It says **None** when there are none. Agents upgrading an app read every Consumer actions section between the old and new version, oldest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
-- **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
+- **How to add an entry** (contributors): don't edit this file on a feature branch. Add a release note as `changes/<topic>.md` (format in `changes/README.md`). The release step, `npm run release:prepare` on its own **Release 0.x.y** branch, folds every note into one new entry here and bumps the version once. `npm run check:changelog` checks this file and the notes.
+
+## 0.4.42
+
+**Notice: an inline callout for page notes and failed sends.**
+
+- **Notice** (new) — an inline callout for closures, buyouts, "account not connected", "sync failed" and a form that couldn't send. `tone` = `neutral` \| `info` \| `success` \| `warning` \| `error`, with `title`, copy as `children`, and an `action` slot (a **TextLink**, a small **Button**, or a row of them). The fill is the tone mixed into the current surface, so it reads in dark mode and in toned sections. `live` announces a notice that appears after load (`alert` for `error`, `status` otherwise), or pass `live="alert"` / `live="status"` to choose. `dismissible` adds a Dismiss button that hands focus to the next control; `dismissKey` remembers the dismissal in `localStorage` (`wmds-notice:<key>`). See **ADR-0050**.
+- Patterns: **Components/Notice → Pattern — holiday closure**, **Pattern — private buyout**, **Pattern — account not connected**, **Pattern — sync failed**.
+- The sketch request story's failed-send message (IntakeModal) is now an error **Notice** instead of a hand-built red block.
+
+### Consumer actions
+
+- None. Apps with a hand-built `role="alert"` block can swap it for `<Notice tone="error" live>`.
+
+## 0.4.41
+
+**Combobox: a searchable select for long lists.**
+
+- **Combobox** (new): the **Input** pill with a search icon over a **Dropdown** listbox that narrows as people type, for lists of 16 or more (Dropdowns C7): fonts, countries, industries. WAI-ARIA combobox with list autocomplete: focus stays in the field, ↓ / ↑ move, Enter picks, Escape closes and then clears, and a polite live region says how many results there are. Same `label`, `description`, `size`, `width`, `status` and `message` as **Input**; options take **Dropdown.Item** `start` / `end` slots and hidden `keywords`. It renders the first `maxResults` (50) matches, so a list of thousands stays quick, and says how many more there are. `allowCustom` keeps typed text that matches nothing; `name` adds a hidden input for forms. New exports `Combobox`, `filterComboboxOptions`, `ComboboxOption`, `ComboboxProps`.
+- **useDropdownMenu** (internal) `editable`: a text-field trigger keeps its characters, Space, Home and End.
+- Stories **Combobox → Default**, **Long list (1,800 options)**, **Validation**, with interaction tests (keyboard path, filtering, Escape twice, focus stays in the field, a pick leaves other controls alone).
+
+### Consumer actions
+
+- None. To replace an **Input** + `<datalist>`: `<Combobox label="Headings font" options={fonts} value={family} onValueChange={setFamily} />`.
 
 ## 0.4.40
 

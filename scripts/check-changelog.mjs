@@ -3,14 +3,22 @@
  * - an entry heading is not `## <semver>` or versions are not newest-first,
  * - an entry has no `### Consumer actions` section, or that section is empty,
  * - the top entry's version differs from package.json,
- * - a release tag (`--tag v1.2.3` or GITHUB_REF_NAME in a tag build) differs from package.json.
+ * - a release tag (`--tag v1.2.3` or GITHUB_REF_NAME in a tag build) differs from package.json,
+ * - a release note waiting in changes/*.md has no valid `bump`, no note, or no Consumer actions.
  */
 import { readFileSync } from "node:fs";
+import { readChangeNotes } from "./changeNotes.mjs";
 
 const fail = (message) => {
   console.error(`check-changelog: ${message}`);
   process.exit(1);
 };
+
+try {
+  readChangeNotes("changes");
+} catch (error) {
+  fail(error.message);
+}
 
 const pkg = JSON.parse(readFileSync("package.json", "utf8"));
 const changelog = readFileSync("CHANGELOG.md", "utf8");

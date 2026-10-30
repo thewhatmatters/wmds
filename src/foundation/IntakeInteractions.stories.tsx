@@ -217,6 +217,7 @@ export const SketchRequestSteps: Story = {
     );
     await userEvent.click(within(dialog).getByRole("button", { name: "Send my request" }));
     await waitFor(() => expect(within(dialog).getByRole("alert")).toHaveTextContent("We couldn’t send your request."));
+    await expect(within(dialog).getByRole("alert")).toHaveAttribute("data-tone", "error");
     await expect(name).toHaveValue("Maria Ortega");
 
     // Second press goes through: Step 2 of 2, the skip before the calendar.

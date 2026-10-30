@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.40",
+  "version": "0.4.42",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -265,6 +265,17 @@
       "storybook": {
         "title": "Components/Chip",
         "docs": "?path=/docs/components-chip--docs"
+      },
+      "patterns": []
+    },
+    {
+      "name": "Combobox",
+      "tier": "molecule",
+      "category": "Form controls",
+      "summary": "Searchable select: a field that narrows a long listbox as you type.",
+      "storybook": {
+        "title": "Components/Combobox",
+        "docs": "?path=/docs/components-combobox--docs"
       },
       "patterns": []
     },
@@ -607,6 +618,22 @@
       "patterns": [
         "components-navlist--app-sidebar",
         "components-navlist--side-nav-settings"
+      ]
+    },
+    {
+      "name": "Notice",
+      "tier": "molecule",
+      "category": "Feedback & status",
+      "summary": "Inline callout in five tones with a title, copy, an action, and an optional remembered dismiss.",
+      "storybook": {
+        "title": "Components/Notice",
+        "docs": "?path=/docs/components-notice--docs"
+      },
+      "patterns": [
+        "components-notice--account-not-connected",
+        "components-notice--holiday-closure",
+        "components-notice--private-buyout",
+        "components-notice--sync-failed"
       ]
     },
     {

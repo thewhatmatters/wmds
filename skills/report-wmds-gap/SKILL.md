@@ -51,7 +51,7 @@ Only when the user asks for it, or WMDS maintainers have agreed on the API in th
 1. `git clone https://github.com/thewhatmatters/wmds && cd wmds && npm install`. Read **`AGENTS.md`** in full, including **Guardrails**, and `docs/component-contracts.md` for the component you touch.
 2. **Extend the atom first.** A missing variant goes on the component that owns it (for example a Button size or role), not into a molecule or the app.
 3. **Storybook is the contract.** Update the component's story: Usage → Anatomy → Best practices → Examples, plus a **Pattern — …** story with Show code (`withStoryCopySource()`). A new component also needs `src/package.manifest.ts`, `src/index.ts`, a `src/storybook/componentCatalog.ts` entry, and a `Components/{Name}` title.
-4. **Changelog.** Add the change to the top entry of `CHANGELOG.md`, with the exact app steps under **Consumer actions** (or **None.**), naming any pattern whose Show code changed.
+4. **Release note.** Add `changes/<topic>.md` (format in `changes/README.md`): `bump: patch` or `minor`, what changed, and the exact app steps under **Consumer actions** (or **None.**), naming any pattern whose Show code changed. Don't edit `CHANGELOG.md` or the version; the release step does that.
 5. **Regenerate package docs:** `npm run docs:generate`.
 6. **Run the checks** CI runs: `npm run lint`, `npm run typecheck`, `npm run check:docs`, `npm run test:unit`, `npm run build`, `npm run check:pack`, `npm run test:interactions`.
 7. Open the PR against `main` and link the issue. Do not publish; releases go out from CI on a version tag.

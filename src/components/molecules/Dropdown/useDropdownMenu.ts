@@ -36,6 +36,11 @@ export interface DropdownMenuOptions {
   initialIndex?: number;
   /** `trigger` focus only: Enter or Space on the trigger chooses the active row. */
   onChoose?: (index: number) => void;
+  /**
+   * `trigger` focus only: the trigger is a text field (**Combobox**). Typed characters, Space, Home and
+   * End belong to the field, so there is no type-ahead and only ↓ / ↑ open the menu; Enter chooses.
+   */
+  editable?: boolean;
 }
 
 const typeAheadResetMs = 500;
@@ -55,6 +60,7 @@ export function useDropdownMenu({
   focus,
   initialIndex,
   onChoose,
+  editable = false,
 }: DropdownMenuOptions) {
   const menuId = useId();
   const rootRef = useRef<HTMLElement | null>(null);
@@ -167,6 +173,11 @@ export function useDropdownMenu({
     const isPrintable = key.length === 1 && key !== " " && !event.metaKey && !event.ctrlKey && !event.altKey;
     const onTrigger = triggerRef.current?.contains(event.target as Node) === true;
 
+    if (editable) {
+      handleEditableKeyDown(event, onTrigger);
+      return;
+    }
+
     if (!open) {
       if (!onTrigger) return;
       if (key === "ArrowDown" || key === "ArrowUp") {
@@ -219,6 +230,36 @@ export function useDropdownMenu({
           const match = matchTypeAhead(key);
           if (match != null) setActiveIndex(match);
         }
+    }
+  }
+
+  function handleEditableKeyDown(event: KeyboardEvent<HTMLElement>, onTrigger: boolean) {
+    const { key } = event;
+    if (!open) {
+      if (onTrigger && (key === "ArrowDown" || key === "ArrowUp")) {
+        event.preventDefault();
+        openMenu(key === "ArrowDown" ? "initial" : "last");
+      }
+      return;
+    }
+    switch (key) {
+      case "Escape":
+        event.preventDefault();
+        close({ returnFocus: true });
+        return;
+      case "Tab":
+        close();
+        return;
+      case "ArrowDown":
+      case "ArrowUp":
+        event.preventDefault();
+        setActiveIndex((current) => stepEnabled(rows, current, key === "ArrowDown" ? 1 : -1));
+        return;
+      case "Enter":
+        event.preventDefault();
+        if (rows.length > 0 && !rows[activeIndex]?.disabled) onChoose?.(activeIndex);
+        return;
+      default:
     }
   }
 
