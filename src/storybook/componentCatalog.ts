@@ -87,6 +87,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "FilterPanel", category: "Form controls", title: "Components/FilterPanel", description: "Checkbox filters for an index page: a side rail from tablet up and the same groups in a bottom Sheet on phones." },
   { name: "Input", category: "Form controls", title: "Components/Input", description: "Pill text field with optional icon, end badge, status, and loading." },
   { name: "IntakeForm", category: "Form controls", title: "Components/IntakeForm", description: "Contact details step of the Start a project flow." },
+  { name: "Combobox", category: "Form controls", title: "Components/Combobox", description: "Searchable select: a field that narrows a long listbox as you type." },
   { name: "PillGroup", category: "Form controls", title: "Components/PillGroup", description: "Wrapping radio pills for a single choice." },
   { name: "Radio", category: "Form controls", title: "Components/Radio/Radio", description: "Single option circle; compose inside RadioGroup." },
   { name: "RadioGroup", category: "Form controls", title: "Components/Radio/RadioGroup", description: "Mutually exclusive options with a group validation band." },
