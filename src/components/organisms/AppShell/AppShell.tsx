@@ -12,12 +12,13 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
-import { PanelLeft } from "lucide-react";
+import { ChevronDown, PanelLeft } from "lucide-react";
 import { Button } from "../../atoms/Button/Button";
 import { IconButton } from "../../atoms/IconButton/IconButton";
 import { Kbd } from "../../atoms/Kbd/Kbd";
 import { Tooltip } from "../../atoms/Tooltip/Tooltip";
 import { PageHeader } from "../../molecules/PageHeader/PageHeader";
+import { pageHeaderTitleClasses } from "../../molecules/PageHeader/pageHeaderStyles";
 import { cn } from "../../../lib/cn";
 import { OverlayPanelHeader } from "../Dialog/OverlayPanelHeader";
 import { overlayPanelBodyScrollClasses, overlayPanelSectionStackClasses } from "../Dialog/dialogStyles";
@@ -66,7 +67,7 @@ const DEFAULT_LABELS: AppShellLabels = {
 export const appShellAsideModes = ["overlay", "docked"] as const;
 export type AppShellAsideMode = (typeof appShellAsideModes)[number];
 
-export const appShellMenuButtons = ["icon", "label"] as const;
+export const appShellMenuButtons = ["icon", "label", "picker"] as const;
 export type AppShellMenuButton = (typeof appShellMenuButtons)[number];
 
 export interface AppShellProps {
@@ -101,8 +102,11 @@ export interface AppShellProps {
   onAsideOpenChange?: (open: boolean) => void;
   labels?: Partial<AppShellLabels>;
   /**
-   * The phone menu button (below `lg`): `icon` (default) or `label`, the icon plus `labels.menu` as visible
-   * text ("Patterns"), when the glyph alone wouldn't say what the menu holds.
+   * The phone menu button (below `lg`): `icon` (default); `label`, the icon plus `labels.menu` as visible
+   * text ("Patterns"), when the glyph alone wouldn't say what the menu holds; or `picker`, the icon plus the
+   * current page (`title`) and a chevron, standing in for the title on phones, when the menu is a list of
+   * pages and the button should say which one you're on ("Hero — Feature Center ▾"). With `picker` the
+   * `h1` stays in the page for screen readers but is only visible from `lg`.
    */
   menuButton?: AppShellMenuButton;
   /** Page content. **AppShell.Brand**, **Sidebar**, **Header**, and **Aside** children fill their slots instead. */
@@ -382,7 +386,22 @@ function AppShellRoot({
           </span>
         </Tooltip.Content>
       </Tooltip>
-      {menuButton === "label" ? (
+      {menuButton === "picker" ? (
+        <Button
+          role="ghost"
+          size="sm"
+          icon={<PanelLeft strokeWidth={2} />}
+          endIcon={<ChevronDown strokeWidth={2} />}
+          aria-label={`${labels.menu}: ${title}`}
+          aria-expanded={menuOpen}
+          aria-haspopup="dialog"
+          aria-keyshortcuts="Control+B Meta+B"
+          className={cn(appShellToggleMobileClasses, "min-w-0 max-w-full")}
+          onClick={() => setMenuOpen(true)}
+        >
+          <span className="min-w-0 truncate">{title}</span>
+        </Button>
+      ) : menuButton === "label" ? (
         <Button
           role="ghost"
           size="sm"
@@ -439,7 +458,22 @@ function AppShellRoot({
 
         <div className={appShellCanvasClasses}>
           <div className={appShellSurfaceClasses}>
-            <PageHeader variant="app" title={title} aria-label={title} start={toggle} end={header} />
+            {menuButton === "picker" ? (
+              // The picker names the page below lg, so the h1 is visible only from lg (screen readers always get it).
+              <PageHeader
+                variant="app"
+                aria-label={title}
+                start={
+                  <>
+                    {toggle}
+                    <h1 className={cn(pageHeaderTitleClasses.app, "max-lg:sr-only")}>{title}</h1>
+                  </>
+                }
+                end={header}
+              />
+            ) : (
+              <PageHeader variant="app" title={title} aria-label={title} start={toggle} end={header} />
+            )}
             <main id={mainId} tabIndex={-1} className={appShellMainClasses}>
               {slots.content}
             </main>

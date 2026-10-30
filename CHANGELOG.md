@@ -7,6 +7,17 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): add your change to the top entry. If that version is already on npm (`npm view @thewhatmatters/wmds versions`), start a new entry above it and bump `version` in `package.json` to match. `npm run check:changelog` enforces the format.
 
+## 0.4.38
+
+**AppShell: a page picker on the phone menu button.**
+
+- **AppShell** `menuButton="picker"` (new): below `lg` the menu button shows the icon, the current page (`title`, truncating) and a chevron, standing in for the title, so a long page name isn't cut to one word ("Hero — Feature Center ▾"). Its name is `labels.menu: title`. The `h1` stays in the page for screen readers and is visible from `lg`.
+- Story **AppShell → State — phone, page picker**, with an interaction test.
+
+### Consumer actions
+
+- None.
+
 ## 0.4.37
 
 **AppShell: a docked aside you can use while watching the page, a labelled phone menu button, and titles that end in an ellipsis.**
