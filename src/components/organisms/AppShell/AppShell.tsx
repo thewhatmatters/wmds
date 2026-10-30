@@ -275,6 +275,9 @@ function AppShellRoot({
   const [menuOpen, setMenuOpen] = useState(false);
   // False on the server and the first paint, so a docked aside starts as the overlay until the query runs.
   const [isDesktop, setIsDesktop] = useState(false);
+  // Docked and inset asides wait for the query: rendering the overlay Panel first would differ from the
+  // server HTML (a hydration mismatch) and flash an overlay before the aside settles beside the page.
+  const [mediaKnown, setMediaKnown] = useState(false);
 
   const sidebarId = useId();
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -303,6 +306,7 @@ function AppShellRoot({
   useEffect(() => {
     const query = window.matchMedia(DESKTOP_QUERY);
     setIsDesktop(query.matches);
+    setMediaKnown(true);
     function handleChange(event: MediaQueryListEvent) {
       setIsDesktop(event.matches);
       if (event.matches) setMenuOpen(false);
@@ -555,7 +559,7 @@ function AppShellRoot({
           </Sheet>
         ) : null}
 
-        {hasAside && !docked ? (
+        {hasAside && !docked && (asideMode === "overlay" || mediaKnown) ? (
           <Panel open={asideOpen} onOpenChange={setAsideOpen}>
             <Panel.Content
               side="end"
