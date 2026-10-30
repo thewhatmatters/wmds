@@ -112,6 +112,9 @@ export const ButtonStatusButton = forwardRef<
         buttonPillClass,
         getStatusShellClass(status, role),
         "overflow-hidden",
+        // Busy, not disabled: keep the full fill (Y8). aria-disabled would otherwise dim it to 70%, which reads
+        // as "can't press this" and drops the label under 4.5:1.
+        isBusyDisabled && "aria-disabled:!opacity-100",
         className,
       )}
       whileTap={isDisabled ? undefined : { scale: 0.98 }}

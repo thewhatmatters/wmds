@@ -598,6 +598,12 @@ export const StatusStates: Story = {
       <Button status="error">Send my request</Button>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    // Loading keeps the button's own fill at full strength: busy, not disabled (Y8).
+    const sending = canvasElement.querySelector<HTMLElement>('button[data-status="loading"]')!;
+    expect(sending).toHaveAttribute("aria-busy", "true");
+    expect(getComputedStyle(sending).opacity).toBe("1");
+  },
 };
 
 export const Sizes: Story = {
