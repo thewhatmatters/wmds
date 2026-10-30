@@ -354,7 +354,7 @@
       "name": "EmptyState",
       "tier": "molecule",
       "category": "Feedback & status",
-      "summary": "What takes a list's place when it's empty: first use, no results (with Clear filters), or done.",
+      "summary": "What takes a list’s place when it’s empty: first use, no results (with Clear filters), or done.",
       "storybook": {
         "title": "Components/EmptyState",
         "docs": "?path=/docs/components-emptystate--docs"

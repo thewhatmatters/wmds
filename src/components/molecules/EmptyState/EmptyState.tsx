@@ -21,14 +21,18 @@ export interface EmptyStateProps {
    *   "Projects you start show up here." / Start a project).
    * - `no-results`: a search or filter found nothing. Name the words or filters ("No work matches Restaurants
    *   and Video") and offer Clear filters (`onClearFilters`, required).
-   * - `done`: everything is handled ("You're all caught up"). A short positive line, no action.
+   * - `done`: everything is handled ("You’re all caught up"). A short positive line, no action.
    */
   kind?: EmptyStateKind;
-  /** The one line that says what's going on, in the feature's words. */
+  /** The one line that says what’s going on, in the feature’s words. */
   title: ReactNode;
   /** Optional: what shows up here, or why nothing matched. One sentence. */
   description?: ReactNode;
-  /** `first-use`: one way forward, a **Button** (secondary when the page already has a primary, U7). */
+  /**
+   * `first-use`: one way forward, a **Button**. `role="primary"` when the empty state is the page’s main
+   * content (nothing else on the page asks for an action); `secondary` only when the page already has a
+   * primary (Z3, U7).
+   */
   action?: ReactNode;
   /** `no-results`: clears the search and filters. */
   onClearFilters?: () => void;
@@ -41,7 +45,7 @@ export interface EmptyStateProps {
 }
 
 /**
- * Empty states (Rule 22): what takes a list's place when there's nothing in it. The page around it stays
+ * Empty states (Rule 22): what takes a list’s place when there’s nothing in it. The page around it stays
  * (heading, search, filters). Looks different from loading (Skeleton) and from an error.
  */
 export function EmptyState({

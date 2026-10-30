@@ -4,7 +4,7 @@ import { typographyClass } from "../../../lib/typography";
 export const emptyStateKinds = ["first-use", "no-results", "done"] as const;
 export type EmptyStateKind = (typeof emptyStateKinds)[number];
 
-/** Takes the list's place only: centred, compact, so the action shows without scrolling at 390 (Z9). */
+/** Takes the list’s place only: centred, compact, so the action shows without scrolling at 390 (Z9). */
 export const emptyStateClasses = "flex w-full flex-col items-center gap-2 px-4 py-8 text-center";
 /** 24px, only when it names the thing (Z9). No illustrations. */
 export const emptyStateIconClasses = "mb-1 inline-flex text-muted [&>svg]:size-6 [&>svg]:shrink-0 [&>svg]:stroke-current";
