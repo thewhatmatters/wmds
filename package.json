@@ -72,6 +72,7 @@
     "typecheck": "tsc -b",
     "check:pack": "node scripts/check-pack.mjs",
     "check:changelog": "node scripts/check-changelog.mjs",
+    "release:prepare": "node scripts/release-prepare.mjs",
     "docs:generate": "node scripts/generate-package-docs.mjs",
     "check:docs": "node scripts/generate-package-docs.mjs --check",
     "check:show-code": "node scripts/check-show-code.mjs"
