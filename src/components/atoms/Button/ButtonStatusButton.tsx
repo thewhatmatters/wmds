@@ -78,6 +78,9 @@ export const ButtonStatusButton = forwardRef<
     ...buttonProps
   }, ref) {
   const labels = resolveStatusLabels(children, statusLabels);
+  if (status === "loading" && statusLabels?.loading == null) {
+    console.warn('[WMDS Button] `status="loading"` without `statusLabels.loading`: say what is happening ("Saving…").');
+  }
   const label = labels[status];
   // Busy states keep the button focusable: native `disabled` would drop keyboard focus to <body>
   // mid-submit. `aria-disabled` plus the click guard below block activation instead.
