@@ -199,7 +199,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
             className={cn(
               checkboxCheckIconSizeClasses[size],
               checkboxMarkClasses,
-              "animate-spin",
+              "animate-spin motion-reduce:animate-none",
             )}
             strokeWidth={2}
           />

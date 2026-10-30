@@ -1,4 +1,5 @@
 import { CheckCircle2, CircleX, Loader2, TriangleAlert } from "lucide-react";
+import { useDelayedLoading } from "../../../lib/useDelayedLoading";
 import { cn } from "../../../lib/cn";
 import {
   inputSpinnerSizeClasses,
@@ -31,12 +32,15 @@ export function InputTrailingAffordance({
   status?: InputStatus;
   loading?: boolean;
 }) {
+  // Loading states Y7: the spinner waits 400ms (most checks finish sooner) and stays at least 400ms.
+  const spinnerShown = useDelayedLoading(loading === true);
   if (loading) {
+    if (!spinnerShown) return null;
     return (
       <Loader2
         className={cn(
           inputSpinnerSizeClasses[size],
-          "animate-spin stroke-current text-muted",
+          "animate-spin motion-reduce:animate-none stroke-current text-muted",
         )}
         strokeWidth={2}
         aria-hidden

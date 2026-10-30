@@ -57,6 +57,8 @@ export interface TextAreaProps
   liveStatus?: string;
   /** Trailing spinner — async validation. */
   loading?: boolean;
+  /** Read out while `loading` (Loading states Y4). Default "Checking…". */
+  loadingLabel?: string;
   /** Visible row count — default **4**. */
   rows?: number;
   /** Native resize — default **`vertical`**. */
@@ -102,6 +104,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
     liveStatus,
     messagePosition = "bottom",
     loading = false,
+    loadingLabel = "Checking…",
     rows = 4,
     resize = "vertical",
     inline = false,
@@ -136,6 +139,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
         rows={rows}
         disabled={disabled}
         aria-invalid={status === "error" || undefined}
+        aria-busy={loading || undefined}
         aria-describedby={describedBy}
         className={cn(inputDisabledClasses, textareaInlineClasses, className)}
       />
@@ -150,6 +154,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
       rows={rows}
       disabled={disabled}
       aria-invalid={status === "error" || undefined}
+        aria-busy={loading || undefined}
       aria-describedby={describedBy}
       className={cn(
         inputDisabledClasses,
@@ -180,6 +185,12 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
     <>
       {textareaElement}
       {trailingIcon}
+      {/* Loading states Y4: words with the spinner; the field itself carries aria-busy. */}
+      {loading ? (
+        <span role="status" className="sr-only">
+          {loadingLabel}
+        </span>
+      ) : null}
     </>
   );
 

@@ -69,6 +69,8 @@ export interface InputProps
   messagePosition?: InputMessagePosition;
   /** Trailing spinner — async validation. Combinable with `endBadge`. */
   loading?: boolean;
+  /** Read out while `loading` (Loading states Y4). Default "Checking…". */
+  loadingLabel?: string;
   /** Leading Lucide icon. */
   icon?: ReactElement;
   /** Monospace value — `type-code` instead of the sans face. For a read-only key or id. */
@@ -175,6 +177,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     message,
     messagePosition = "bottom",
     loading = false,
+    loadingLabel = "Checking…",
     icon,
     endBadge,
     width = "full",
@@ -228,6 +231,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         id={controlId}
         disabled={disabled}
         aria-invalid={status === "error" || undefined}
+        aria-busy={loading || undefined}
         aria-describedby={describedBy}
         className={cn(
           inputDisabledClasses,
@@ -266,6 +270,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
               ),
         )}
       />
+      {/* Loading states Y4: words with the spinner; the field itself carries aria-busy. */}
+      {loading ? (
+        <span role="status" className="sr-only">
+          {loadingLabel}
+        </span>
+      ) : null}
       {hasEndBadge || showTrailingStatusIcon ? (
         <span
           className={cn(

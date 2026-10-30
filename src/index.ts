@@ -919,6 +919,7 @@ export {
   type ClusterTier,
 } from "./lib/clusterScale";
 export { cn } from "./lib/cn";
+export { useDelayedLoading, type DelayedLoadingOptions } from "./lib/useDelayedLoading";
 export { GridOverlay, type GridOverlayProps } from "./lib/GridOverlay";
 export {
   GRID_ON_CLASS,

@@ -165,7 +165,7 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
             animate={{ x: resolvedChecked ? thumbOffset : 0 }}
             transition={thumbSlideTransition}
           >
-            <Loader2 className="size-full animate-spin text-fg" strokeWidth={2} />
+            <Loader2 className="size-full animate-spin motion-reduce:animate-none text-fg" strokeWidth={2} />
           </motion.span>
         ) : (
           <motion.span
