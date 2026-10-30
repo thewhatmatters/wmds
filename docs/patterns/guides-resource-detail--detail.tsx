@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.36 · Pattern — resource detail
+// @thewhatmatters/wmds@0.4.37 · Pattern — resource detail
 // Storybook: Guides/Resource detail → Pattern — resource detail (?path=/story/guides-resource-detail--detail)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

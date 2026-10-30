@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState, useSyncExternalStore } from "react";
-import { expect, userEvent, waitFor } from "storybook/test";
+import { expect, userEvent, waitFor, within } from "storybook/test";
 import { ChartColumn, Download, FileText, FolderOpen, LayoutDashboard, Megaphone, Settings, Users } from "lucide-react";
 import { Avatar } from "../../atoms/Avatar/Avatar";
 import { Badge } from "../../atoms/Badge/Badge";
@@ -19,7 +19,7 @@ import { Stat } from "../../molecules/Stat/Stat";
 import { TaskRows, type TaskRowsColumn } from "../../molecules/TaskRows/TaskRows";
 import { lockedViewportStory } from "../../../lib/viewports";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
-import { AppShell } from "./AppShell";
+import { AppShell, type AppShellAsideMode, type AppShellMenuButton } from "./AppShell";
 
 const sections: NavListSectionDef[] = [
   {
@@ -59,11 +59,15 @@ function themeServerSnapshot(): DisplayControlThemeMode {
 export interface PortalDashboardProps {
   defaultSidebarOpen?: boolean;
   defaultAsideOpen?: boolean;
+  asideMode?: AppShellAsideMode;
+  menuButton?: AppShellMenuButton;
 }
 
 export function PortalDashboard({
   defaultSidebarOpen = true,
   defaultAsideOpen = false,
+  asideMode,
+  menuButton,
 }: PortalDashboardProps) {
   const [activeId, setActiveId] = useState("dashboard");
   const [asideOpen, setAsideOpen] = useState(defaultAsideOpen);
@@ -75,6 +79,9 @@ export function PortalDashboard({
       defaultSidebarOpen={defaultSidebarOpen}
       asideOpen={asideOpen}
       onAsideOpenChange={setAsideOpen}
+      asideMode={asideMode}
+      menuButton={menuButton}
+      labels={menuButton === "label" ? { menu: "Portal" } : undefined}
       asideTitle="Stir in strength"
       asideDescription="Campaign details"
       brand={
@@ -194,7 +201,7 @@ App chrome for a signed-in product: a **sidebar** on the page background and the
 | Sidebar | \`sidebar\` / **AppShell.Sidebar** | **NavList** with \`className="w-full"\`, scrolls |
 | Sidebar footer | \`sidebarFooter\` / **AppShell.SidebarFooter** | Pinned under the nav — **DisplayControls** \`controls="theme"\` |
 | Title bar | \`title\`, \`header\` / **AppShell.Header** | **PageHeader** \`variant="app"\` — \`h1\`, the toggle, and trailing controls |
-| Aside | \`aside\` / **AppShell.Aside**, \`asideTitle\` | **Panel** \`side="end"\` — non-blocking |
+| Aside | \`aside\` / **AppShell.Aside**, \`asideTitle\`, \`asideMode\` | **Panel** \`side="end"\` — non-blocking; \`asideMode="docked"\`: a column beside the page from \`lg\` |
 | Page | \`children\` | Scrolls inside \`main\` |
 
 ## Anatomy
@@ -537,6 +544,66 @@ export const AsideOpen: Story = {
   render: () => <PortalDashboard defaultAsideOpen />,
   play: async () => {
     await settleOverlay();
+  },
+};
+
+export const AsideDocked: Story = {
+  name: "State — aside docked",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`asideMode=\"docked\"`: from `lg` the aside is a column beside the page, which narrows to make room, so you can watch the page while you use its controls. Escape or Close returns focus to the button that opened it. Below `lg` it's the overlay **Panel**.",
+      },
+    },
+  },
+  render: () => <PortalDashboard asideMode="docked" />,
+  play: async ({ canvas }) => {
+    const main = canvas.getByRole("main");
+    const fullWidth = main.offsetWidth;
+    const details = canvas.getByRole("button", { name: "Details" });
+    await userEvent.click(details);
+    const aside = await canvas.findByRole("complementary", { name: "Stir in strength" });
+    // Docked, not an overlay: no dialog, and the page narrowed beside it.
+    expect(canvas.queryByRole("dialog")).toBeNull();
+    await waitFor(() => expect(main.offsetWidth).toBeLessThan(fullWidth - 200));
+    expect(aside.getBoundingClientRect().left).toBeGreaterThanOrEqual(main.getBoundingClientRect().right);
+    // Escape from inside closes it and gives focus back to Details.
+    await userEvent.click(canvas.getByRole("button", { name: "Close panel" }));
+    await waitFor(() => expect(canvas.queryByRole("complementary", { name: "Stir in strength" })).toBeNull());
+    expect(details).toHaveFocus();
+    await userEvent.click(details);
+    const reopened = await canvas.findByRole("complementary", { name: "Stir in strength" });
+    reopened.querySelector<HTMLElement>("button")?.focus();
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(canvas.queryByRole("complementary")).toBeNull());
+    expect(details).toHaveFocus();
+    await userEvent.click(details);
+    await canvas.findByRole("complementary", { name: "Stir in strength" });
+  },
+};
+
+export const PhoneLabelledMenu: Story = {
+  name: "State — phone, labelled menu",
+  ...lockedViewportStory("mobile"),
+  parameters: {
+    ...lockedViewportStory("mobile").parameters,
+    docs: {
+      ...lockedViewportStory("mobile").parameters.docs,
+      description: {
+        story:
+          "`menuButton=\"label\"`: the phone menu button shows `labels.menu` beside the icon (here \"Portal\"), for when the glyph alone wouldn't say what the menu holds. A long title ends in an ellipsis instead of wrapping.",
+      },
+    },
+  },
+  render: () => <PortalDashboard menuButton="label" />,
+  play: async ({ canvas }) => {
+    const button = canvas.getByRole("button", { name: "Portal" });
+    expect(button).toHaveTextContent("Portal");
+    await userEvent.click(button);
+    await settleOverlay();
+    // The Sheet portals to the body, outside the story root.
+    expect(await within(document.body).findByRole("dialog", { name: "Portal" })).toBeVisible();
   },
 };
 

@@ -568,8 +568,12 @@ export {
 } from "./components/molecules/TileGrid/TileGrid";
 export {
   AppShell,
+  appShellAsideModes,
+  appShellMenuButtons,
   useAppShell,
+  type AppShellAsideMode,
   type AppShellContextValue,
+  type AppShellMenuButton,
   type AppShellLabels,
   type AppShellLayoutClassName,
   type AppShellProps,

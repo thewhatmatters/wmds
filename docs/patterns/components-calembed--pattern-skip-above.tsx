@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.36 · Pattern — skip above the calendar
+// @thewhatmatters/wmds@0.4.37 · Pattern — skip above the calendar
 // Storybook: Components/CalEmbed → Pattern — skip above the calendar (?path=/story/components-calembed--pattern-skip-above)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

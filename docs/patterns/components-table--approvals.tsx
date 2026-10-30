@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.36 · Pattern — approvals queue
+// @thewhatmatters/wmds@0.4.37 · Pattern — approvals queue
 // Storybook: Components/Table → Pattern — approvals queue (?path=/story/components-table--approvals)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
