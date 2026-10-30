@@ -4,7 +4,7 @@ The package publishes to npm from GitHub Actions only (`.github/workflows/releas
 
 ## Cut a release
 
-1. **Changelog.** The top entry of `CHANGELOG.md` is the version being released. It matches `version` in `package.json` and has a **Consumer actions** section. `npm run check:changelog` checks both.
+1. **Prepare the release on its own branch** (`lead-engineer/release-0.x.y`, review card **Release 0.x.y**) once the features it carries have merged: `npm run release:prepare` folds every `changes/*.md` into one new top entry of `CHANGELOG.md`, bumps `package.json` and `package-lock.json` once (the largest `bump` among the notes; pass `-- 0.x.y` to name it) and deletes the notes. Run `npm run docs:generate` and the checks. `npm run check:changelog` checks that the top entry matches `package.json` and has a **Consumer actions** section.
 2. **Merge to `main`** with CI green.
 3. **Tag the merge commit and push the tag:**
 
@@ -19,7 +19,7 @@ The package publishes to npm from GitHub Actions only (`.github/workflows/releas
 
 **Dry run:** Actions → **Release** → **Run workflow** (any branch). It runs the same checks and `npm publish --dry-run`, and uploads nothing. Every pull request also runs `check:pack` and a publish dry run in CI.
 
-**Next version:** after a release, the next change that apps can see starts a new top entry in `CHANGELOG.md` and bumps `package.json` (`npm version patch --no-git-tag-version`, or `minor` for a breaking change while the major version is `0`).
+**Between releases:** feature branches don't bump the version or edit `CHANGELOG.md`. Each adds `changes/<topic>.md` (see `changes/README.md`), so open branches don't conflict with each other.
 
 ## One-time npm setup (owner only)
 

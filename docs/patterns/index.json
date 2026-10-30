@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.40",
+  "version": "0.4.42",
   "patterns": [
     {
       "id": "components-accordion--flush",
@@ -777,6 +777,38 @@
       "file": "patterns/components-navlist--side-nav-settings.tsx",
       "storybook": "?path=/story/components-navlist--side-nav-settings",
       "source": "src/components/molecules/NavList/NavList.stories.tsx"
+    },
+    {
+      "id": "components-notice--account-not-connected",
+      "title": "Components/Notice",
+      "name": "Pattern — account not connected",
+      "file": "patterns/components-notice--account-not-connected.tsx",
+      "storybook": "?path=/story/components-notice--account-not-connected",
+      "source": "src/components/molecules/Notice/Notice.stories.tsx"
+    },
+    {
+      "id": "components-notice--holiday-closure",
+      "title": "Components/Notice",
+      "name": "Pattern — holiday closure",
+      "file": "patterns/components-notice--holiday-closure.tsx",
+      "storybook": "?path=/story/components-notice--holiday-closure",
+      "source": "src/components/molecules/Notice/Notice.stories.tsx"
+    },
+    {
+      "id": "components-notice--private-buyout",
+      "title": "Components/Notice",
+      "name": "Pattern — private buyout",
+      "file": "patterns/components-notice--private-buyout.tsx",
+      "storybook": "?path=/story/components-notice--private-buyout",
+      "source": "src/components/molecules/Notice/Notice.stories.tsx"
+    },
+    {
+      "id": "components-notice--sync-failed",
+      "title": "Components/Notice",
+      "name": "Pattern — sync failed",
+      "file": "patterns/components-notice--sync-failed.tsx",
+      "storybook": "?path=/story/components-notice--sync-failed",
+      "source": "src/components/molecules/Notice/Notice.stories.tsx"
     },
     {
       "id": "components-pageheader--app-header-pattern",

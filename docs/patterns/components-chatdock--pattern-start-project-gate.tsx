@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.40 · Pattern — start a project gate
+// @thewhatmatters/wmds@0.4.42 · Pattern — start a project gate
 // Storybook: Components/ChatDock → Pattern — start a project gate (?path=/story/components-chatdock--pattern-start-project-gate)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
