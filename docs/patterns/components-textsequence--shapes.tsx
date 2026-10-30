@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.37 · Shapes
+// @thewhatmatters/wmds@0.4.38 · Shapes
 // Storybook: Components/TextSequence → Shapes (?path=/story/components-textsequence--shapes)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -81,7 +81,7 @@ export function PortalDashboard({
       onAsideOpenChange={setAsideOpen}
       asideMode={asideMode}
       menuButton={menuButton}
-      labels={menuButton === "label" ? { menu: "Portal" } : undefined}
+      labels={menuButton === "label" || menuButton === "picker" ? { menu: "Portal" } : undefined}
       asideTitle="Stir in strength"
       asideDescription="Campaign details"
       brand={
@@ -603,6 +603,32 @@ export const PhoneLabelledMenu: Story = {
     await userEvent.click(button);
     await settleOverlay();
     // The Sheet portals to the body, outside the story root.
+    expect(await within(document.body).findByRole("dialog", { name: "Portal" })).toBeVisible();
+  },
+};
+
+export const PhonePicker: Story = {
+  name: "State — phone, page picker",
+  ...lockedViewportStory("mobile"),
+  parameters: {
+    ...lockedViewportStory("mobile").parameters,
+    docs: {
+      ...lockedViewportStory("mobile").parameters.docs,
+      description: {
+        story:
+          "`menuButton=\"picker\"`: on phones the menu button carries the current page (`title`) with a chevron, in place of the title, so a long name isn't cut to one word. The `h1` stays in the page for screen readers.",
+      },
+    },
+  },
+  render: () => <PortalDashboard menuButton="picker" />,
+  play: async ({ canvas }) => {
+    const button = canvas.getByRole("button", { name: "Portal: Dashboard" });
+    expect(button).toHaveTextContent("Dashboard");
+    // The h1 is still the page's heading, visually hidden below lg.
+    const heading = canvas.getByRole("heading", { level: 1, name: "Dashboard" });
+    expect(heading.className).toContain("max-lg:sr-only");
+    await userEvent.click(button);
+    await settleOverlay();
     expect(await within(document.body).findByRole("dialog", { name: "Portal" })).toBeVisible();
   },
 };

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.37 · Pattern — hero stat
+// @thewhatmatters/wmds@0.4.38 · Pattern — hero stat
 // Storybook: Components/Stat → Pattern — hero stat (?path=/story/components-stat--hero-stat)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
