@@ -86,6 +86,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "CopyField owns the copy glyph (Lucide Copy) passed to Button icon. The confirmation check is Button's status glyph.",
   },
   {
+    file: "components/molecules/Notice/Notice.tsx",
+    ruleId: "lucide-import",
+    reason: "Notice owns its tone glyphs (passed to Badge iconOnly, as in Toast) and the dismiss X (passed to IconButton).",
+  },
+  {
     file: "components/molecules/Dropdown/DropdownItem.tsx",
     ruleId: "lucide-import",
     reason: "Dropdown.Item owns the selected-state check in the end slot (listbox pattern).",
