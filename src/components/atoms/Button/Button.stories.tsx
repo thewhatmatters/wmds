@@ -51,7 +51,7 @@ const meta = {
 | **With icon** | \`icon\` (Lucide) + \`role\` |
 | **Outline mono** | \`role="outline"\` + \`mono\` + \`endIcon\` — hairline pill, mono uppercase label, accent arrow square |
 | **With count** | \`count\` + \`role\` (inbox / notifications) |
-| **Submit / async** | \`status\` + optional \`statusLabels\` |
+| **Form send / async** | \`status\` + optional \`statusLabels\` |
 | **Copy** | \`icon\` + \`status\` — the icon morphs into the check; hold with \`buttonStatusHoldMs\` |
 | **Link** | \`render={<a href />}\` — Button chrome on a real anchor (nav links, header CTAs) |
 | **External link** | \`render={<a href />}\` + \`external\` — the trailing external icon, same tab (Links K9). Add \`newTab\` for a new tab, a safe \`rel\` and a spoken "opens in a new tab" |
@@ -99,7 +99,7 @@ export function SubmitForm() {
 
   return (
     <Button status={status} onClick={() => setStatus(getNextButtonStatus(status))}>
-      Submit
+      Send my request
     </Button>
   );
 }
@@ -113,7 +113,7 @@ export function SubmitForm() {
         status={status}
         onClick={() => setStatus(getNextButtonStatus(status))}
       >
-        Submit
+        Send my request
       </Button>
     );
   },
@@ -592,10 +592,10 @@ export const StatusStates: Story = {
   },
   render: () => (
     <div className="flex flex-wrap items-center gap-3">
-      <Button status="idle">Submit</Button>
-      <Button status="loading">Submit</Button>
-      <Button status="success">Submit</Button>
-      <Button status="error">Submit</Button>
+      <Button status="idle">Send my request</Button>
+      <Button status="loading">Send my request</Button>
+      <Button status="success">Send my request</Button>
+      <Button status="error">Send my request</Button>
     </div>
   ),
 };
@@ -660,9 +660,9 @@ export const Disabled: Story = {
 
 export const TokenCheck: Story = {
   name: "Reference — primary token",
-  args: { role: "primary", children: "Submit" },
+  args: { role: "primary", children: "Send my request" },
   play: async ({ canvas }) => {
-    const button = canvas.getByRole("button", { name: /submit/i });
+    const button = canvas.getByRole("button", { name: /send my request/i });
     await expect(getComputedStyle(button).backgroundColor).toBe("rgb(57, 72, 92)");
   },
 };
