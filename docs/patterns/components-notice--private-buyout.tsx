@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.42 · Pattern — private buyout
+// @thewhatmatters/wmds@0.4.43 · Pattern — private buyout
 // Storybook: Components/Notice → Pattern — private buyout (?path=/story/components-notice--private-buyout)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.42 · Pattern — account not connected
+// @thewhatmatters/wmds@0.4.43 · Pattern — account not connected
 // Storybook: Components/Notice → Pattern — account not connected (?path=/story/components-notice--account-not-connected)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

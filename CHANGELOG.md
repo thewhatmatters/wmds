@@ -7,6 +7,20 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): don't edit this file on a feature branch. Add a release note as `changes/<topic>.md` (format in `changes/README.md`). The release step, `npm run release:prepare` on its own **Release 0.x.y** branch, folds every note into one new entry here and bumps the version once. `npm run check:changelog` checks this file and the notes.
 
+## 0.4.43
+
+**AppShell `asideMode="inset"` and a `toolbar` slot.** From `lg`, an inset aside is a raised card floating inside the page surface, under the title bar and the toolbar, 12px from the end and bottom edges (radius-surface-md, border, shadow-lg). The page narrows beside it and is never covered. Its header is the title bar's 56px band, with the title and description centred. The new `toolbar` prop / **AppShell.Toolbar** slot is a full-width band under the title bar; with an inset aside it spans above both. Below `lg` the aside is the overlay **Panel**, as in the other modes. New `asideFooter`: actions pinned under the aside's scrolling body (Copy, Reset), in every mode (the **Panel** `footer` in overlay). Fixed for docked and inset asides that start open: the server and the first paint no longer render the overlay **Panel** before the desktop query runs (it caused a hydration mismatch and a flash of the overlay). Story **Components/AppShell → State — aside inset, with a toolbar** (interaction test: inside the surface, under the toolbar, 12px gap, 56px header, page not covered, footer pinned).
+
+**Contributors: release notes as files, and releasing as its own step.**
+
+- Feature branches add a release note as `changes/<topic>.md` instead of editing `CHANGELOG.md` and the version, so two open branches no longer conflict. `npm run release:prepare` folds the notes into one entry and bumps the version once, on its own **Release 0.x.y** branch. `npm run check:changelog` also checks the notes. See `AGENTS.md` → **Releases**.
+- The **report-wmds-gap** skill's contributing steps say to add a `changes/` note.
+- `src/package.manifest.ts` lists one component per line, sorted.
+
+### Consumer actions
+
+None required. For a live-controls panel that should sit inside the page (the patterns gallery's Type panel), pass `asideMode="inset"`, move the view toolbar into `toolbar`, and put the button that opens the aside at the toolbar's end.
+
 ## 0.4.42
 
 **Notice: an inline callout for page notes and failed sends.**

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.42 · Pattern — row
+// @thewhatmatters/wmds@0.4.43 · Pattern — row
 // Storybook: Components/Button/Button → Pattern — row (?path=/story/components-button-button--row-layout)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

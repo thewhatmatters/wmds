@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.42 · Pattern — needs you
+// @thewhatmatters/wmds@0.4.43 · Pattern — needs you
 // Storybook: Components/TaskRows → Pattern — needs you (?path=/story/components-taskrows--needs-you-table)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
