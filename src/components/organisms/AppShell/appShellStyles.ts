@@ -51,3 +51,19 @@ export const appShellToggleDesktopClasses = "max-lg:!hidden";
 export const appShellToggleMobileClasses = "lg:!hidden";
 
 export const appShellSheetBodyClasses = "flex h-full min-h-0 flex-col";
+
+/** Full-width band under the title bar: a view toolbar for the page (and an inset aside below it). */
+export const appShellToolbarClasses = "shrink-0 border-b border-border";
+
+/** `asideMode="inset"`: the page body and the floating aside side by side, under the toolbar. */
+export const appShellInsetRowClasses = "flex min-h-0 flex-1";
+
+/**
+ * `asideMode="inset"` from `lg`: a raised card floating inside the page surface, 12px from its end and
+ * bottom edges; the page body narrows beside it, never covered.
+ */
+export const appShellAsideInsetClasses =
+  "mb-3 me-3 mt-3 flex min-h-0 w-80 shrink-0 flex-col overflow-hidden rounded-[var(--radius-surface-md)] border border-border bg-surface shadow-lg";
+
+/** Inset aside header: the title bar's 56px band, title and description centred in it. */
+export const appShellAsideInsetHeaderClasses = cn("box-border !items-center !py-0 border-b border-border", pageHeaderAppBandHeightClasses);
