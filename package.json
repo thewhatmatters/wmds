@@ -1,9 +1,28 @@
 {
   "name": "@thewhatmatters/wmds",
-  "description": "WhatMatters Design System — React components, Tailwind v4 theme, and Storybook patterns",
+  "description": "WhatMatters Design System — React components and a Tailwind v4 theme for marketing sites and apps: 70+ accessible components, a brand kit, copy-ready patterns, dark mode and a CI check (wmds-check).",
   "version": "0.4.43",
   "type": "module",
   "license": "MIT",
+  "keywords": [
+    "react",
+    "design-system",
+    "component-library",
+    "ui-components",
+    "tailwindcss",
+    "tailwind-v4",
+    "tailwind-theme",
+    "design-tokens",
+    "dark-mode",
+    "accessibility",
+    "marketing-site",
+    "landing-page",
+    "shadcn",
+    "registry",
+    "storybook",
+    "motion",
+    "typescript"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thewhatmatters/wmds.git"

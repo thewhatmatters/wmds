@@ -1,5 +1,46 @@
 # WMDS — WhatMatters Design System
 
+**React components and a Tailwind v4 theme for marketing sites and apps that look designed, not assembled.** MIT licensed.
+
+[npm](https://www.npmjs.com/package/@thewhatmatters/wmds) · Demo: _coming soon_ <!-- TODO demo link --> · Case study: _coming soon_ <!-- TODO case study link -->
+
+## Install
+
+```bash
+npm install @thewhatmatters/wmds react react-dom motion lucide-react
+```
+
+React 18 or 19. Add `@visx/visx` for **Chart**; **TextSequence** and **RiveHand** need the extra steps in [CONSUMING.md → Requirements](CONSUMING.md#requirements).
+
+## Quickstart
+
+```tsx
+import "@thewhatmatters/wmds/styles.css";
+import { Button, Input } from "@thewhatmatters/wmds";
+
+export function Signup() {
+  return (
+    <form>
+      <Input label="Work email" type="email" autoComplete="email" />
+      <Button type="submit">Get early access</Button>
+    </form>
+  );
+}
+```
+
+Dark mode is `data-theme="dark"` on any ancestor. A client's brand is a short `brand.css` imported after `styles.css` ([CONSUMING.md → Brand kit](CONSUMING.md#brand-kit-type-and-section-colours)).
+
+## What's included
+
+- **70+ components** — atoms, molecules and organisms, from Button and Input to SiteNav, AppShell, Carousel, Chart and IntakeModal. Full list under [Status](#status).
+- **Tailwind v4 theme** — colour roles with dark mode, a type scale, motion tiers, a page grid and Geist fonts, as one `styles.css` or a `theme.css` for your own Tailwind build.
+- **Brand kit** — an allow-listed set of CSS knobs (type, section colours, primary) that re-brands every component without forking it, with contrast kept in check.
+- **160+ copy-ready patterns** — every Storybook pattern's code ships in the package (`docs/patterns/`) and as a shadcn-style [`registry.json`](registry.json).
+- **`wmds-check`** — `npx wmds-check` audits an app in CI: raw controls and colours, missing labels, brand-kit contrast, and pasted patterns that drifted from the installed version.
+- **Agent docs and skills** — component contracts, an export manifest and three agent skills (`skills/`) so coding agents use WMDS the way it's meant to be used.
+
+## Developing WMDS
+
 Tailwind v4 theme + **pattern-first** Storybook catalog. **Storybook is canonical** — prescribed components and their patterns, not utility-class soup.
 
 ## Stack
@@ -45,9 +86,9 @@ npm run validate:composition  # molecules/organisms must compose atoms (CI)
 
 | Tier | Components |
 |------|------------|
-| Atoms | `Avatar`, `Badge`, `Button`, `Checkbox`, `IconButton`, `Input`, `Kbd`, `Radio`, `RiveHand`, `Skeleton`, `Status`, `Switch`, `TextArea`, `TextLink`, `Tooltip` |
-| Molecules | `Accordion`, `CalEmbed`, `Card`, `ChatQa`, `CheckboxGroup`, `Chip`, `DisplayControls`, `Dropdown`, `Field`, `FloatingActionButton`, `HeroIntro`, `IntakeForm`, `NavList`, `PageHeader`, `PillGroup`, `PromptBar`, `RadioGroup`, `Search`, `Select`, `SelectableCard`, `SegmentedControl`, `Stat`, `StepProgress`, `TaskRows`, `TextSequence` |
-| Organisms | `Carousel`, `Chart`, `Confetti`, `Dialog`, `FooterReveal`, `HeroTileStack`, `IntakeConfirmation`, `IntakeModal`, `MoreMenu`, `Panel`, `ScrollHorizontal`, `Sheet`, `SiteNav`, `Tab`, `Toast` |
+| Atoms | `Avatar`, `Badge`, `Band`, `Button`, `Checkbox`, `IconButton`, `InlinePill`, `Input`, `Kbd`, `Prose`, `Radio`, `RiveHand`, `SectionCaption`, `Skeleton`, `Status`, `Switch`, `Table`, `TextArea`, `TextLink`, `Tooltip` |
+| Molecules | `Accordion`, `Breadcrumb`, `CalEmbed`, `Card`, `ChatQa`, `CheckboxGroup`, `Chip`, `Combobox`, `CopyField`, `DescriptionList`, `DisplayControls`, `Dropdown`, `ErrorSummary`, `Field`, `FloatingActionButton`, `HeroIntro`, `IndexList`, `IntakeForm`, `LinkTile`, `LogView`, `NavList`, `Notice`, `PageHeader`, `PillGroup`, `PromptBar`, `RadioGroup`, `Search`, `SegmentedControl`, `Select`, `SelectableCard`, `Stat`, `StepProgress`, `TaskRows`, `TextSequence`, `TileGrid` |
+| Organisms | `AppShell`, `Carousel`, `Chart`, `ChatDock`, `Confetti`, `Dialog`, `FilterPanel`, `FooterReveal`, `HeroTileStack`, `IntakeConfirmation`, `IntakeModal`, `MoreMenu`, `Panel`, `ScrollHorizontal`, `Sheet`, `SiteNav`, `Tab`, `Toast` |
 | Planned, not built | `Pagination` |
 
 The list is `src/package.manifest.ts`. `npm run build` fails when it and `src/index.ts` disagree.
