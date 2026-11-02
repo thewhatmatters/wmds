@@ -10,7 +10,7 @@ export function SubmitForm() {
 
   return (
     <Button status={status} onClick={() => setStatus(getNextButtonStatus(status))}>
-      Submit
+      Send my request
     </Button>
   );
 }

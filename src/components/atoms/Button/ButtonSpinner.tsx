@@ -6,7 +6,7 @@ export function ButtonSpinner({ size }: { size: ButtonSize }) {
   return (
     <span
       className={cn(
-        "animate-spin shrink-0 rounded-full border-2 border-current border-r-transparent",
+        "animate-spin motion-reduce:animate-none shrink-0 rounded-full border-2 border-current border-r-transparent",
         buttonIconSizeClasses[size],
       )}
       aria-hidden

@@ -1,3 +1,4 @@
+import { useDelayedLoading } from "../../../lib/useDelayedLoading";
 import { useRender } from "@base-ui/react/use-render";
 import { forwardRef, type ButtonHTMLAttributes, type ReactElement } from "react";
 import { cn } from "../../../lib/cn";
@@ -129,6 +130,8 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
 
   const role = fab ? "primary" : (roleProp ?? "ghost");
   const isDisabled = disabled || loading;
+  // Loading states Y7: the spinner waits 400ms and stays at least 400ms; busy and blocked from the start.
+  const spinnerShown = useDelayedLoading(loading);
   // Loading keeps the button focusable: native `disabled` would drop keyboard focus to <body>.
   // `aria-disabled` plus this guard block activation instead.
   // Disabled behaves the same way (Buttons rule U6): it stays in the tab order and ignores presses.
@@ -156,7 +159,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
     className,
   );
 
-  const content = loading ? (
+  const content = spinnerShown ? (
     <ButtonSpinner size={inset ? "xs" : (size as IconButtonSize)} />
   ) : inset ? (
     <span

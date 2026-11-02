@@ -51,7 +51,7 @@ const meta = {
 | **With icon** | \`icon\` (Lucide) + \`role\` |
 | **Outline mono** | \`role="outline"\` + \`mono\` + \`endIcon\` — hairline pill, mono uppercase label, accent arrow square |
 | **With count** | \`count\` + \`role\` (inbox / notifications) |
-| **Submit / async** | \`status\` + optional \`statusLabels\` |
+| **Form send / async** | \`status\` + optional \`statusLabels\` |
 | **Copy** | \`icon\` + \`status\` — the icon morphs into the check; hold with \`buttonStatusHoldMs\` |
 | **Link** | \`render={<a href />}\` — Button chrome on a real anchor (nav links, header CTAs) |
 | **External link** | \`render={<a href />}\` + \`external\` — the trailing external icon, same tab (Links K9). Add \`newTab\` for a new tab, a safe \`rel\` and a spoken "opens in a new tab" |
@@ -62,6 +62,7 @@ Pill-shaped by default (\`layout="pill"\`). **Row layout** is flat full-width �
 ## Best practices
 
 - **Do** copy a named story below — don't mix \`status\` with \`count\`, \`endIcon\`, or \`mono\`.
+- **Do** use \`status\` for every send, with real words (\`statusLabels={{ loading: "Sending…" }}\`). The pill keeps one width through every state, stays focusable, and ignores repeat presses while loading (Loading states Y8). In a form, success hands over to the confirmation screen and doesn't return to idle; errors go to the **ErrorSummary**.
 - **Do** use \`status\` for form submit and async feedback; with \`icon\`, the status glyph morphs out of the icon. \`status\` sits on the pill's live region, so its labels are announced.
 - **Do** set \`external\` on a link to another site, and \`newTab\` only when leaving would lose the reader's work — never hand-write \`target\`, \`rel\`, or "(opens in a new tab)".
 - **Do** use \`count\` only for numeric notification badges on nav actions.
@@ -98,7 +99,7 @@ export function SubmitForm() {
 
   return (
     <Button status={status} onClick={() => setStatus(getNextButtonStatus(status))}>
-      Submit
+      Send my request
     </Button>
   );
 }
@@ -112,7 +113,7 @@ export function SubmitForm() {
         status={status}
         onClick={() => setStatus(getNextButtonStatus(status))}
       >
-        Submit
+        Send my request
       </Button>
     );
   },
@@ -591,12 +592,18 @@ export const StatusStates: Story = {
   },
   render: () => (
     <div className="flex flex-wrap items-center gap-3">
-      <Button status="idle">Submit</Button>
-      <Button status="loading">Submit</Button>
-      <Button status="success">Submit</Button>
-      <Button status="error">Submit</Button>
+      <Button status="idle">Send my request</Button>
+      <Button status="loading">Send my request</Button>
+      <Button status="success">Send my request</Button>
+      <Button status="error">Send my request</Button>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    // Loading keeps the button's own fill at full strength: busy, not disabled (Y8).
+    const sending = canvasElement.querySelector<HTMLElement>('button[data-status="loading"]')!;
+    expect(sending).toHaveAttribute("aria-busy", "true");
+    expect(getComputedStyle(sending).opacity).toBe("1");
+  },
 };
 
 export const Sizes: Story = {
@@ -659,9 +666,9 @@ export const Disabled: Story = {
 
 export const TokenCheck: Story = {
   name: "Reference — primary token",
-  args: { role: "primary", children: "Submit" },
+  args: { role: "primary", children: "Send my request" },
   play: async ({ canvas }) => {
-    const button = canvas.getByRole("button", { name: /submit/i });
+    const button = canvas.getByRole("button", { name: /send my request/i });
     await expect(getComputedStyle(button).backgroundColor).toBe("rgb(57, 72, 92)");
   },
 };

@@ -451,6 +451,13 @@ export {
   type PillGroupProps,
 } from "./components/molecules/PillGroup/PillGroup";
 export {
+  Progress,
+  progressSizes,
+  type ProgressLayoutClassName,
+  type ProgressProps,
+  type ProgressSize,
+} from "./components/molecules/Progress/Progress";
+export {
   PromptBar,
   promptBarPlaceholder,
   type PromptBarLayoutClassName,
@@ -935,6 +942,7 @@ export {
   type ClusterTier,
 } from "./lib/clusterScale";
 export { cn } from "./lib/cn";
+export { useDelayedLoading, type DelayedLoadingOptions } from "./lib/useDelayedLoading";
 export { GridOverlay, type GridOverlayProps } from "./lib/GridOverlay";
 export {
   GRID_ON_CLASS,

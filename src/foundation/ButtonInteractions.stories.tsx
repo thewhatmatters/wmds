@@ -183,3 +183,45 @@ export const LoadingKeepsFocus: Story = {
     expect(saveSpy).toHaveBeenCalledTimes(1);
   },
 };
+
+function SendButton({ onSend }: { onSend: () => void }) {
+  const [status, setStatus] = useState<ButtonStatus>("idle");
+  return (
+    <Button
+      role="primary"
+      status={status}
+      statusLabels={{ loading: "Sending…", success: "Sent", error: "Try again" }}
+      onClick={() => {
+        onSend();
+        setStatus("loading");
+        setTimeout(() => setStatus("success"), 600);
+      }}
+    >
+      Send
+    </Button>
+  );
+}
+
+export const SendKeepsWidth: Story = {
+  name: "Send: one width through every state, repeat presses ignored, the label announced (Loading states Y8)",
+  args: { onSend: fn() } as never,
+  render: (args) => <SendButton onSend={(args as unknown as { onSend: () => void }).onSend} />,
+  play: async ({ canvas, args }) => {
+    const button = canvas.getByRole("button", { name: "Send" });
+    const idleWidth = button.offsetWidth;
+    await expect(button).toHaveAttribute("aria-live", "polite");
+    await userEvent.click(button);
+    await waitFor(() => expect(button).toHaveAccessibleName("Sending…"));
+    await expect(button.offsetWidth).toBe(idleWidth);
+    await expect(button).toHaveAttribute("aria-busy", "true");
+    // Still focusable, and a second press while sending does nothing.
+    await expect(button).not.toBeDisabled();
+    button.focus();
+    await expect(button).toHaveFocus();
+    // Busy buttons take no pointer events; a keyboard or script press goes through the click guard.
+    button.click();
+    await expect((args as unknown as { onSend: ReturnType<typeof fn> }).onSend).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(button).toHaveAccessibleName("Sent"));
+    await expect(button.offsetWidth).toBe(idleWidth);
+  },
+};

@@ -53,6 +53,7 @@ const molecules = [
   "Notice",
   "PageHeader",
   "PillGroup",
+  "Progress",
   "PromptBar",
   "RadioGroup",
   "Search",
@@ -96,6 +97,7 @@ export const packageManifest = {
   /** Every value src/index.ts exports from src/lib/. scripts/validate-manifest.mjs checks both directions. */
   libExports: [
     { name: "cn", path: "./lib/cn" },
+    { name: "useDelayedLoading", path: "./lib/useDelayedLoading" },
     { name: "buttonSizeForCluster", path: "./lib/clusterScale", reexport: "buttonSizeForCluster" },
     { name: "iconButtonSizeForCluster", path: "./lib/clusterScale", reexport: "iconButtonSizeForCluster" },
     { name: "clusterComponentSizeMap", path: "./lib/clusterScale", reexport: "clusterComponentSizeMap" },

@@ -1,3 +1,4 @@
+import { useDelayedLoading } from "../../../lib/useDelayedLoading";
 import {
   forwardRef,
   useId,
@@ -103,6 +104,8 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
   // Loading keeps the input focusable: native `disabled` would drop keyboard focus to <body>
   // mid-toggle. `aria-disabled` plus the change guard below block toggling instead.
   const isBusyDisabled = loading && !disabled;
+  // Loading states Y7: the spinner waits 400ms and stays at least 400ms; busy and blocked from the start.
+  const spinnerShown = useDelayedLoading(loading);
   const hasMessage = message != null && message.length > 0 && status != null;
   const messageId = hasMessage ? `${controlId}-message` : undefined;
   const descriptionId =
@@ -159,13 +162,13 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
         className={switchHiddenInputClasses}
       />
       <span className={trackClasses} aria-hidden>
-        {loading ? (
+        {spinnerShown ? (
           <motion.span
             className={cn(switchThumbSizeClasses[size], "flex items-center justify-center")}
             animate={{ x: resolvedChecked ? thumbOffset : 0 }}
             transition={thumbSlideTransition}
           >
-            <Loader2 className="size-full animate-spin text-fg" strokeWidth={2} />
+            <Loader2 className="size-full animate-spin motion-reduce:animate-none text-fg" strokeWidth={2} />
           </motion.span>
         ) : (
           <motion.span

@@ -1,3 +1,4 @@
+import { useDelayedLoading } from "../../../lib/useDelayedLoading";
 import type { ReactNode } from "react";
 import { Badge } from "../../atoms/Badge/Badge";
 import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
@@ -156,6 +157,7 @@ function StatRoot({
   loading = false,
   className,
 }: StatProps) {
+  const skeletonShown = useDelayedLoading(loading);
   const trail = end != null || action != null;
 
   return (
@@ -166,7 +168,10 @@ function StatRoot({
     >
       <div className={cn(statContentClasses, size === "lg" && statContentLgClasses)}>
         {loading ? (
-          <StatLoadingContent size={size} />
+          // Loading states Y7: the skeleton keeps its room at once, and shows after 400ms.
+          <div className={cn("transition-opacity", skeletonShown ? "opacity-100" : "opacity-0")}>
+            <StatLoadingContent size={size} />
+          </div>
         ) : (
           <>
             <div className={statLabelRowClasses}>

@@ -678,6 +678,19 @@
       ]
     },
     {
+      "name": "Progress",
+      "tier": "molecule",
+      "category": "Feedback & status",
+      "summary": "Progress bar for long waits, uploads and exports: label, value, time left, Cancel and Retry.",
+      "storybook": {
+        "title": "Components/Progress",
+        "docs": "?path=/docs/components-progress--docs"
+      },
+      "patterns": [
+        "components-progress--upload-pattern"
+      ]
+    },
+    {
       "name": "PromptBar",
       "tier": "molecule",
       "category": "Chat",
@@ -1054,6 +1067,7 @@
   ],
   "lib": [
     "cn",
+    "useDelayedLoading",
     "buttonSizeForCluster",
     "iconButtonSizeForCluster",
     "clusterComponentSizeMap",

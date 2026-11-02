@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
 import { Check, Loader2, X } from "lucide-react";
-import { AnimatePresence, motion, useTime, useTransform } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion, useTime, useTransform } from "motion/react";
 import { cn } from "../../../lib/cn";
 import { buttonIconSizeClasses, type ButtonSize } from "./buttonStyles";
 import {
@@ -12,11 +12,13 @@ import type { ButtonStatus } from "./buttonStatusStyles";
 function StatusLoader({ size }: { size: ButtonSize }) {
   const time = useTime();
   const rotate = useTransform(time, [0, 1000], [0, 360], { clamp: false });
+  // Loading states Y6: under reduced motion the glyph stays still; the label carries the words.
+  const reduce = useReducedMotion();
 
   return (
     <motion.span
       className="inline-flex shrink-0"
-      style={{ rotate }}
+      style={reduce ? undefined : { rotate }}
       aria-hidden
     >
       <Loader2

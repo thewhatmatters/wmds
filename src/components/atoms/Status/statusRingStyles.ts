@@ -13,7 +13,7 @@ export const statusRingShellClasses =
 
 export const statusRingSvgClasses = "absolute inset-0";
 
-export const statusRingSvgActiveClasses = "animate-spin";
+export const statusRingSvgActiveClasses = "animate-spin motion-reduce:animate-none";
 
 export const statusRingTrackClasses = "stroke-border";
 
