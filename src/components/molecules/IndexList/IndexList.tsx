@@ -39,6 +39,7 @@ export {
   type IndexListSize,
   type IndexListTitleElement,
 } from "./indexListStyles";
+import { emptySlot } from "../EmptyState/EmptyState";
 
 /** Layout-only — width, margin, or grid placement. */
 export type IndexListLayoutClassName = string;
@@ -63,6 +64,11 @@ export interface IndexListProps {
   titleAs?: IndexListTitleElement;
   /** Shown in place of the rows when there are none — for example "No posts match these filters." */
   empty?: ReactNode;
+  /**
+   * The result count, read out when it changes (Empty states Z6): "12 projects", "0 projects match".
+   * Kept in a status line that's always there, so the change is announced.
+   */
+  resultsLabel?: string;
   /** Names the list for screen readers, for example "Posts". */
   "aria-label"?: string;
   "aria-labelledby"?: string;
@@ -108,6 +114,7 @@ function IndexListRoot({
   size = "lg",
   titleAs = "h2",
   empty,
+  resultsLabel,
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledBy,
   children,
@@ -136,8 +143,13 @@ function IndexListRoot({
           </ul>
         ) : empty != null ? (
           <div className={indexListEmptyClasses} data-index-list-empty="">
-            {empty}
+            {emptySlot(empty)}
           </div>
+        ) : null}
+        {resultsLabel != null ? (
+          <p role="status" className="sr-only">
+            {resultsLabel}
+          </p>
         ) : null}
       </div>
     </IndexListContext.Provider>

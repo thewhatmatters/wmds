@@ -56,7 +56,7 @@ const statusPaint: Record<Exclude<ButtonStatus, "idle">, StatusPaint> = {
 /** Non-animated shell utilities paired with `animate` paint. */
 export const statusShellClasses: Record<ButtonStatus, string> = {
   idle: "",
-  loading: "shadow-raised",
+  loading: "",
   success: "shadow-inset-highlight",
   error: "",
 };
@@ -72,6 +72,9 @@ export const roleIdleShellClasses: Record<ButtonRole, string> = {
 };
 
 export function getStatusPaint(status: ButtonStatus, role: ButtonRole): StatusPaint {
+  // Loading states Y8: while loading the button keeps its own fill (a primary stays primary) and adds the
+  // spinner; a grey fill read as disabled and lowered contrast.
+  if (status === "loading") return roleIdlePaint[role];
   return status === "idle" ? roleIdlePaint[role] : statusPaint[status];
 }
 

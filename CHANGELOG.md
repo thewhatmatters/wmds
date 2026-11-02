@@ -7,6 +7,30 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): don't edit this file on a feature branch. Add a release note as `changes/<topic>.md` (format in `changes/README.md`). The release step, `npm run release:prepare` on its own **Release 0.x.y** branch, folds every note into one new entry here and bumps the version once. `npm run check:changelog` checks this file and the notes.
 
+## 0.4.44
+
+**Empty states (Rule 22).**
+- **EmptyState** (new, Z7–Z9): what takes a list’s place when it’s empty. `kind="first-use"` (what shows up here + the main action), `"no-results"` (names the words or filters; Clear filters via `onClearFilters`, required), `"done"` (a short positive line, no action). Optional 24px icon, no illustrations; at most a quiet "Learn more". Warns on a `no-results` without `onClearFilters` and a `done` with an action. Docs give a sentence template for each kind.
+- **Every `empty` slot uses it** (Z7): a plain string in TileGrid, IndexList, TaskRows (table) or LogView `empty` renders an EmptyState (TaskRows’ "Nothing waiting" is a `done`). CalEmbed’s empty state is an EmptyState with the email route as its action.
+- **`resultsLabel`** on TileGrid and IndexList (new, Z6): the result count in a status line, read out when it changes ("0 projects match").
+- Story **Components/EmptyState → Pattern — filter to zero** (interaction test: the heading and filters stay, the empty state names the filters, the count is announced, Clear filters brings everything back).
+
+**Loading states (Rule 21).**
+- **`useDelayedLoading(loading, { delay, minDuration })`** (new, Y7): show an indicator only after 400ms, and keep it at least 400ms once shown. Input and TextArea use it for their spinner.
+- **Input / TextArea `loading`** (Y4): the field carries `aria-busy`, and a status line says what's happening (new `loadingLabel`, default "Checking…").
+- **Reduced motion** (Y6): every spinner holds still (Button, Input, TextArea, Checkbox, Switch, Status ring); the words carry the state.
+- **400ms timing everywhere WMDS loads** (Y7): Checkbox, Switch and IconButton spinners, and the LinkTile, Stat and LogView skeletons wait 400ms (room kept at once) and stay at least 400ms. Busy state and blocking start immediately.
+- **LinkTile `loading`** (Y4): busy with words for screen readers (new `loadingLabel`, default "Loading…"), no longer hidden.
+- **Button loading look** (Y8): keeps the role's own fill (a primary stays primary) with the spinner; the grey fill read as disabled. Default labels are a send ("Sending…", "Sent", "Try again"), and Button warns when `status="loading"` has no `statusLabels.loading`.
+- **Button `status`** (Y8): one width through idle, loading, success and error (no resize), so a "Sending…" label never moves the layout. Still `aria-live`, focusable, and repeat presses are ignored while loading. Docs: in forms, success hands over to the confirmation.
+
+- **Progress** (new, Y9): a progress bar for waits over 10 seconds, uploads and exports. Label, "3 of 12 files" or a percentage, time left, Cancel (required unless `cancellable={false}`), `status="error"` with `message` and Retry (`onRetry`). `role="progressbar"` with values and `aria-valuetext`; screen readers hear every 10% and "… complete", not every tick. Indeterminate only without a total; still under reduced motion. Stories: upload with a count, export percentage, no total, failed with retry, complete.
+
+### Consumer actions
+
+None required. Replace hand-built empty messages with **EmptyState**, pick the kind, and pass `resultsLabel` on filtered lists.
+Button `status` defaults changed from "Processing / Success / Error" to "Sending… / Sent / Try again", and loading keeps the button's own fill: pass your own `statusLabels` (Button now warns when the loading label is missing). Wrap your own loading indicators in `useDelayedLoading`. Give send buttons real `statusLabels` ("Sending…").
+
 ## 0.4.43
 
 **AppShell `asideMode="inset"` and a `toolbar` slot.** From `lg`, an inset aside is a raised card floating inside the page surface, under the title bar and the toolbar, 12px from the end and bottom edges (radius-surface-md, border, shadow-lg). The page narrows beside it and is never covered. Its header is the title bar's 56px band, with the title and description centred. The new `toolbar` prop / **AppShell.Toolbar** slot is a full-width band under the title bar; with an inset aside it spans above both. Below `lg` the aside is the overlay **Panel**, as in the other modes. New `asideFooter`: actions pinned under the aside's scrolling body (Copy, Reset), in every mode (the **Panel** `footer` in overlay). Fixed for docked and inset asides that start open: the server and the first paint no longer render the overlay **Panel** before the desktop query runs (it caused a hydration mismatch and a flash of the overlay). Story **Components/AppShell → State — aside inset, with a toolbar** (interaction test: inside the surface, under the toolbar, 12px gap, 56px header, page not covered, footer pinned).

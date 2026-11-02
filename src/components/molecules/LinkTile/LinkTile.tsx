@@ -1,3 +1,4 @@
+import { useDelayedLoading } from "../../../lib/useDelayedLoading";
 import { useRender } from "@base-ui/react/use-render";
 import { useId, type CSSProperties, type ReactElement, type ReactNode } from "react";
 import { SquareArrowOutUpRight } from "lucide-react";
@@ -60,8 +61,10 @@ export interface LinkTileProps {
   tag?: ReactNode;
   /** A mark before the title — **Avatar** `size="xsm"`, or a 20px favicon `<img alt="">`. */
   source?: ReactNode;
-  /** A placeholder in the tile's shape, built on **Skeleton** — not a link, and hidden from screen readers. */
+  /** A placeholder in the tile's shape, built on **Skeleton** — not a link; busy, with `loadingLabel` for screen readers. */
   loading?: boolean;
+  /** Read out while `loading` (Loading states Y4). Default "Loading…". */
+  loadingLabel?: string;
   className?: LinkTileLayoutClassName;
 }
 
@@ -102,8 +105,10 @@ export function LinkTile({
   tag,
   source,
   loading = false,
+  loadingLabel = "Loading…",
   className,
 }: LinkTileProps) {
+  const skeletonShown = useDelayedLoading(loading);
   const id = useId();
   const titleId = `${id}-title`;
   const metaId = `${id}-meta`;
@@ -112,7 +117,9 @@ export function LinkTile({
 
   if (loading) {
     return (
-      <div className={cn(linkTileLoadingRootClasses, className)} data-link-tile="" data-loading="" aria-hidden="true">
+      // Loading states Y4, Y7: busy with words for screen readers; the skeleton keeps its room and shows after 400ms.
+      <div className={cn(linkTileLoadingRootClasses, !skeletonShown && "[&>span]:opacity-0", className)} data-link-tile="" data-loading="" aria-busy="true">
+        <span className="sr-only">{loadingLabel}</span>
         <span className={linkTileFrameClasses} style={frameStyle(ratio ?? linkTileLoadingRatio)}>
           <Skeleton radius="none" />
         </span>

@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.43",
+  "version": "0.4.44",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -362,6 +362,17 @@
       "patterns": []
     },
     {
+      "name": "EmptyState",
+      "tier": "molecule",
+      "category": "Feedback & status",
+      "summary": "What takes a list’s place when it’s empty: first use, no results (with Clear filters), or done.",
+      "storybook": {
+        "title": "Components/EmptyState",
+        "docs": "?path=/docs/components-emptystate--docs"
+      },
+      "patterns": []
+    },
+    {
       "name": "ErrorSummary",
       "tier": "molecule",
       "category": "Form controls",
@@ -675,6 +686,19 @@
       },
       "patterns": [
         "components-pillgroup--pill-group-pattern"
+      ]
+    },
+    {
+      "name": "Progress",
+      "tier": "molecule",
+      "category": "Feedback & status",
+      "summary": "Progress bar for long waits, uploads and exports: label, value, time left, Cancel and Retry.",
+      "storybook": {
+        "title": "Components/Progress",
+        "docs": "?path=/docs/components-progress--docs"
+      },
+      "patterns": [
+        "components-progress--upload-pattern"
       ]
     },
     {
@@ -1054,6 +1078,7 @@
   ],
   "lib": [
     "cn",
+    "useDelayedLoading",
     "buttonSizeForCluster",
     "iconButtonSizeForCluster",
     "clusterComponentSizeMap",

@@ -1,3 +1,4 @@
+import { useDelayedLoading } from "../../../lib/useDelayedLoading";
 import {
   forwardRef,
   useCallback,
@@ -117,6 +118,8 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
   // Loading keeps the input focusable: native `disabled` would drop keyboard focus to <body>
   // mid-toggle. `aria-disabled` plus the change guard below block toggling instead.
   const isBusyDisabled = loading && !disabled;
+  // Loading states Y7: the spinner waits 400ms and stays at least 400ms; busy and blocked from the start.
+  const spinnerShown = useDelayedLoading(loading);
   const hasMessage = message != null && message.length > 0 && status != null;
   const messageId = hasMessage ? `${controlId}-message` : undefined;
   const descriptionId =
@@ -194,12 +197,12 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
         className={checkboxHiddenInputClasses}
       />
       <span className={boxClasses} aria-hidden>
-        {loading ? (
+        {spinnerShown ? (
           <Loader2
             className={cn(
               checkboxCheckIconSizeClasses[size],
               checkboxMarkClasses,
-              "animate-spin",
+              "animate-spin motion-reduce:animate-none",
             )}
             strokeWidth={2}
           />

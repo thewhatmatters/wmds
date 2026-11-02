@@ -13,11 +13,15 @@ export const buttonStatusCycle: ButtonStatus[] = ["idle", "loading", "success", 
  */
 export const buttonStatusHoldMs = 2000;
 
+/**
+ * Fallbacks for a send, the common use (Loading states Y8). Pass `statusLabels` in your own words
+ * ("Saving…", "Saved"): Button warns in development when `status` has no loading label of yours.
+ */
 export const defaultStatusLabels: Record<ButtonStatus, string> = {
-  idle: "Start",
-  loading: "Processing",
-  success: "Success",
-  error: "Error",
+  idle: "Send",
+  loading: "Sending…",
+  success: "Sent",
+  error: "Try again",
 };
 
 export function getNextButtonStatus(current: ButtonStatus): ButtonStatus {

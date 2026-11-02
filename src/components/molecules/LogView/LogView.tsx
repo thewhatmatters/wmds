@@ -1,3 +1,4 @@
+import { useDelayedLoading } from "../../../lib/useDelayedLoading";
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Button, buttonStatusHoldMs } from "../../atoms/Button/Button";
 import { Skeleton } from "../../atoms/Skeleton/Skeleton";
@@ -14,6 +15,7 @@ import {
   logViewTextClasses,
   logViewToolbarClasses,
 } from "./logViewStyles";
+import { emptySlot } from "../EmptyState/EmptyState";
 
 /** Layout-only — height and margin. Not for re-theming the log. */
 export type LogViewLayoutClassName = string;
@@ -69,6 +71,7 @@ export function LogView({
   className,
 }: LogViewProps) {
   const labels = { ...defaultLabels, ...labelsProp };
+  const skeletonShown = useDelayedLoading(loading);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
   const count = lines.length;
@@ -134,10 +137,15 @@ export function LogView({
         aria-label={label}
         aria-busy={loading || undefined}
       >
-        {loading ? <Skeleton className={logViewSkeletonClasses} width="100%" height={96} radius="inner" /> : null}
+        {loading ? (
+          // Loading states Y7: room kept at once; the skeleton shows after 400ms.
+          <div className={skeletonShown ? "opacity-100" : "opacity-0"}>
+            <Skeleton className={logViewSkeletonClasses} width="100%" height={96} radius="inner" />
+          </div>
+        ) : null}
         {!loading && count === 0 ? (
           <p className={logViewEmptyClasses} role="status">
-            {empty ?? labels.empty}
+            {emptySlot(empty ?? labels.empty)}
           </p>
         ) : null}
         {showLines

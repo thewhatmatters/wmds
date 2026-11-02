@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.43 · Pattern — submit / async
+// @thewhatmatters/wmds@0.4.44 · Pattern — submit / async
 // Storybook: Components/Button/Button → Pattern — submit / async (?path=/story/components-button-button--multi-state-badge)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
@@ -10,7 +10,7 @@ export function SubmitForm() {
 
   return (
     <Button status={status} onClick={() => setStatus(getNextButtonStatus(status))}>
-      Submit
+      Send my request
     </Button>
   );
 }
