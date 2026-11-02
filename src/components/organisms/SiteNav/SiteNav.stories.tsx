@@ -530,6 +530,53 @@ function StateToggleSpecimen() {
   );
 }
 
+export const OverMedia: Story = {
+  name: "State — over media",
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: {
+      description: {
+        story:
+          "`overMedia`: the page opens on a full-bleed picture (Hero — Stage with a backdrop). Expanded, the bar lays over the picture with no fill and the dark theme's light ink; the hero's top scrim keeps the links readable. Scrolled, the compact pill is the usual one.",
+      },
+    },
+  },
+  render: () => (
+    <div className="relative">
+      <SiteNav
+        placement="inline"
+        state="expanded"
+        overMedia
+        start={<SiteNav.Brand href="#home">Cinder &amp; Sotol</SiteNav.Brand>}
+        middle={
+          <SiteNav.Links>
+            <SiteNav.Link href="#menu">Menu</SiteNav.Link>
+            <SiteNav.Link href="#visit">Visit</SiteNav.Link>
+          </SiteNav.Links>
+        }
+        end={
+          <Button role="primary" size="sm" render={<a href="#book" />}>
+            Book a table
+          </Button>
+        }
+      />
+      {/* Stands in for the hero's picture: a dark field with a top scrim. */}
+      <div data-theme="dark" className="h-80 bg-[linear-gradient(to_bottom,#1b1b1b,#3a3330)]" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const header = canvasElement.querySelector<HTMLElement>("header[data-over-media]")!;
+    expect(header).not.toBeNull();
+    // Over the picture: out of flow, no fill, light ink.
+    expect(getComputedStyle(header).position).toBe("absolute");
+    expect(getComputedStyle(header).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+    expect(header.getAttribute("data-theme")).toBe("dark");
+    const link = header.querySelector<HTMLElement>("a[href='#menu']")!;
+    const [r, g, b] = getComputedStyle(link).color.match(/\d+/g)!.map(Number);
+    expect(Math.min(r, g, b)).toBeGreaterThan(160);
+  },
+};
+
 export const States: Story = {
   name: "Reference — states",
   parameters: {

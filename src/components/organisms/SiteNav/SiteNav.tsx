@@ -32,6 +32,7 @@ import {
   siteNavBarBaseClasses,
   siteNavBarCompactLayoutClasses,
   siteNavBarStateClasses,
+  siteNavOverMediaClasses,
   siteNavBrandClasses,
   siteNavWordmarkBrandClasses,
   siteNavContainerClasses,
@@ -135,6 +136,13 @@ export interface SiteNavProps {
   placement?: SiteNavPlacement;
   /** When set, compact pins sticky inside this scroller (page chrome) instead of `fixed` to the window. */
   scrollContainer?: RefObject<HTMLElement | null>;
+  /**
+   * The page opens on a full-bleed photo or video (Hero — Stage with a backdrop). While expanded, the bar
+   * lays over the top of the next section instead of taking room above it, with no fill and the dark
+   * theme's light ink, so the footage shows through. Once scrolled, the compact pill is the usual one.
+   * The hero carries a top scrim so the links stay readable on bright frames.
+   */
+  overMedia?: boolean;
   /** Accessible name for the `<header>`. Default: `"Site"`. */
   "aria-label"?: string;
   className?: SiteNavLayoutClassName;
@@ -256,6 +264,7 @@ function SiteNavRoot({
   onStateChange,
   compactLayout = "hug",
   placement = "fixed",
+  overMedia = false,
   scrollContainer,
   "aria-label": ariaLabel = "Site",
   className,
@@ -430,7 +439,9 @@ function SiteNavRoot({
               aria-label={ariaLabel}
               data-state="expanded"
               data-menu={menuOpen ? "open" : "closed"}
-              className={cn(siteNavRootFlowClasses, className)}
+              data-theme={overMedia ? "dark" : undefined}
+              data-over-media={overMedia ? "" : undefined}
+              className={cn(siteNavRootFlowClasses, overMedia && siteNavOverMediaClasses, className)}
             >
               <div ref={containerRef} className={siteNavContainerClasses}>
                 {expandedBar}
@@ -444,7 +455,9 @@ function SiteNavRoot({
           aria-label={ariaLabel}
           data-state={state}
           data-menu={menuOpen ? "open" : "closed"}
-          className={cn(siteNavRootInlineClasses, className)}
+          data-theme={overMedia && !compact ? "dark" : undefined}
+          data-over-media={overMedia && !compact ? "" : undefined}
+          className={cn(siteNavRootInlineClasses, overMedia && !compact && siteNavOverMediaClasses, className)}
         >
           <div
             ref={containerRef}
