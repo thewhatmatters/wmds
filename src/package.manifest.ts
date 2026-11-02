@@ -41,6 +41,7 @@ const molecules = [
   "DescriptionList",
   "DisplayControls",
   "Dropdown",
+  "EmptyState",
   "ErrorSummary",
   "Field",
   "FloatingActionButton",

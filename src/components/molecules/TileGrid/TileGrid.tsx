@@ -31,6 +31,7 @@ export {
   type TileGridColumns,
   type TileGridLayout,
 } from "./tileGridStyles";
+import { emptySlot } from "../EmptyState/EmptyState";
 
 /** Layout-only — width, margin, or grid placement. */
 export type TileGridLayoutClassName = string;
@@ -48,6 +49,11 @@ export interface TileGridProps {
   columns?: TileGridColumns;
   /** Shown in place of the tiles when there are none — for example "No resources match these filters." */
   empty?: ReactNode;
+  /**
+   * The result count, read out when it changes (Empty states Z6): "12 projects", "0 projects match".
+   * Kept in a status line that's always there, so the change is announced.
+   */
+  resultsLabel?: string;
   /** The tiles are placeholders for content on its way (`aria-busy`). */
   busy?: boolean;
   /** Names the list for screen readers, for example "Resources". */
@@ -73,6 +79,7 @@ function TileGridRoot({
   layout = "masonry",
   columns,
   empty,
+  resultsLabel,
   busy = false,
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledBy,
@@ -161,8 +168,13 @@ function TileGridRoot({
         </ul>
       ) : empty != null ? (
         <div className={tileGridEmptyClasses} data-tile-grid-empty="">
-          {empty}
+          {emptySlot(empty)}
         </div>
+      ) : null}
+      {resultsLabel != null ? (
+        <p role="status" className="sr-only">
+          {resultsLabel}
+        </p>
       ) : null}
     </div>
   );

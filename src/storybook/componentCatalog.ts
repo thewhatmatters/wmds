@@ -76,6 +76,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "Skeleton", category: "Feedback & status", title: "Components/Skeleton", description: "Shimmering layout placeholders that mirror the resolved UI." },
   { name: "Status", category: "Feedback & status", title: "Components/Status", description: "Task progress ring or semantic dot at a fixed scale." },
   { name: "Progress", category: "Feedback & status", title: "Components/Progress", description: "Progress bar for long waits, uploads and exports: label, value, time left, Cancel and Retry." },
+  { name: "EmptyState", category: "Feedback & status", title: "Components/EmptyState", description: "What takes a list’s place when it’s empty: first use, no results (with Clear filters), or done." },
   { name: "StepProgress", category: "Feedback & status", title: "Components/StepProgress", description: "Segmented step indicator with a Step N of M label." },
 
   // Form controls

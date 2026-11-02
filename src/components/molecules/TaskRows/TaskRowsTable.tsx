@@ -23,6 +23,7 @@ import {
   taskRowsTableTitleClasses,
   taskRowsTableWaitingClasses,
 } from "./taskRowsStyles";
+import { emptySlot } from "../EmptyState/EmptyState";
 
 export const taskRowsTableColumnIds = ["title", "waiting", "metric"] as const;
 
@@ -124,7 +125,7 @@ export function TaskRowsTable({
         <div role="row">
           <div role="cell">
             <p className={taskRowsTableEmptyClasses} role="status">
-              {empty}
+              {emptySlot(empty, "done")}
             </p>
           </div>
         </div>

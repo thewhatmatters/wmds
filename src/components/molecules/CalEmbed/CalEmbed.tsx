@@ -1,12 +1,12 @@
 import type { MouseEvent, ReactNode } from "react";
 import { TextLink } from "../../atoms/TextLink/TextLink";
 import { cn } from "../../../lib/cn";
-import { typographyClass } from "../../../lib/typography";
 import {
   calEmbedClasses,
   calEmbedEmptyClasses,
   calEmbedFrameClasses,
 } from "./calEmbedStyles";
+import { EmptyState } from "../EmptyState/EmptyState";
 
 /** Layout-only — width or margin. */
 export type CalEmbedLayoutClassName = string;
@@ -115,9 +115,7 @@ function CalEmbedRoot({
         ) : (
           // No embed (not set up, or it failed): the email route shows at once, inside the message.
           <div className={calEmbedEmptyClasses} data-cal-embed-empty="">
-            <p className={typographyClass("subheading")}>{emptyTitle}</p>
-            <p className={cn(typographyClass("caption"), "text-muted")}>{emptyDescription}</p>
-            {inBodySkip}
+            <EmptyState title={emptyTitle} description={emptyDescription} action={inBodySkip} />
           </div>
         )}
       </div>
