@@ -47,6 +47,12 @@ export const siteNavRootStickyClasses = cn(
   siteNavCompactViewportTopClasses,
 );
 export const siteNavRootInlineClasses = "relative z-50 w-full";
+/**
+ * `overMedia`, expanded: out of flow over the top of the next section (a full-bleed picture), so the picture
+ * runs under it. The `data-theme="dark"` on the same element gives the links their light ink. `bg-transparent`
+ * overrides the dark scope's page colour, which would otherwise paint the band.
+ */
+export const siteNavOverMediaClasses = "!absolute inset-x-0 top-0 !bg-transparent";
 
 /** @deprecated Use flow / fixed / sticky / inline class exports. */
 export const siteNavRootClasses: Record<SiteNavPlacement, string> = {
