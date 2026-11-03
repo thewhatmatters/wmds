@@ -20,7 +20,7 @@ import {
 /** Discrete ticks around the ring. Channels uses a fine meter; 72 keeps the gaps visible. */
 export const chartSegmentedRingSegmentDefault = 72;
 
-export const chartSegmentedRingSizes = ["sm", "md", "lg"] as const;
+export const chartSegmentedRingSizes = ["sm", "md", "lg", "fluid"] as const;
 
 export type ChartSegmentedRingSize = (typeof chartSegmentedRingSizes)[number];
 
@@ -44,10 +44,16 @@ export interface ChartSegmentedRingProps {
   centerValue?: ReactNode;
   /** Caption under `centerValue`. */
   centerLabel?: ReactNode;
-  /** sm 96px, md 160px, lg 192px. */
+  /**
+   * sm 96px, md 160px, lg 192px. `fluid` fills its container's width (square, so give the container a height
+   * cap such as `max-h-[70svh]` with `aspect-square`) and sizes the centre figure to the ring.
+   */
   size?: ChartSegmentedRingSize;
-  /** `initial` sweeps from empty on mount. Reduced motion stays on the final fill. */
-  animate?: ChartSegmentedBarAnimate;
+  /**
+   * `initial` sweeps from empty on mount, then jumps to new values. `always` also sweeps from the current fill
+   * to each new value (one gauge stepping through figures). Reduced motion stays on the final fill.
+   */
+  animate?: ChartSegmentedBarAnimate | "always";
   /** Accessible name. Defaults to the percent of capacity. */
   label?: string;
   /** Source not wired — empty track, muted label and reason in the hole. */
@@ -111,12 +117,16 @@ export function ChartSegmentedRing({
     const target = unavailable ? 0 : model.progress;
     if (!entered.current) {
       entered.current = true;
-      if (animate === "initial" && !shouldReduceMotion && !unavailable) {
+      if (animate !== "none" && !shouldReduceMotion && !unavailable) {
         spring.jump(0);
         setProgress(0);
         spring.set(target);
         return;
       }
+    }
+    if (animate === "always" && !shouldReduceMotion && !unavailable) {
+      spring.set(target);
+      return;
     }
     spring.jump(target);
     setProgress(target);

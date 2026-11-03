@@ -21,6 +21,8 @@ export const chartSegmentedRingSizeClasses = {
   sm: "size-24",
   md: "size-40",
   lg: "size-48",
+  /** Fills the container's width, square; the centre type reads the ring's width (container query units). */
+  fluid: "aspect-square w-full @container",
 } as const;
 
 export const chartSegmentedRingCenterClasses =
@@ -30,6 +32,8 @@ export const chartSegmentedRingValueClasses = {
   sm: `${typographyClass("subheading")} tabular-nums`,
   md: `${typographyClass("section-heading")} tabular-nums`,
   lg: "type-display-3 tabular-nums tracking-tight text-fg",
+  /** The display face and knobs, sized to the ring (18% of its width) instead of the viewport. */
+  fluid: "type-display-hero !text-[length:18cqi] !leading-none tabular-nums text-fg",
 } as const;
 
 export const chartSegmentedRingLabelClasses = typographyClass("caption");

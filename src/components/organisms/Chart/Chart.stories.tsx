@@ -273,7 +273,7 @@ Card.Header / Footer usually carry KPI copy; the chart mark sits in **Card.Body*
 - **Do** use \`chartFormatPercent(value, max)\` for headline percent copy.
 - **Do** pass \`label\` when \`role="meter"\` needs more context than a percent.
 - **Do** use \`Chart.SegmentedBar\` only for **capacity** — snapshot fill (\`value\` / \`max\`). Daily history → **Chart.Cartesian** + **Chart.Cartesian.Area** (ADR-0015).
-- **Do** use \`Chart.SegmentedRing\` for a radial capacity meter (channels total, weekly goal). Pair a breakdown with \`Chart.Legend variant="tabular"\`. \`unavailable\` replaces the center when the source is unwired — do not draw a zero. Values above \`max\` clamp the arc and mark overflow.
+- **Do** use \`Chart.SegmentedRing\` for a radial capacity meter (channels total, weekly goal). Pair a breakdown with \`Chart.Legend variant="tabular"\`. \`unavailable\` replaces the center when the source is unwired — do not draw a zero. Values above \`max\` clamp the arc and mark overflow. For one big gauge stepping through figures, use \`size="fluid"\` (fills its container, square) with \`animate="always"\` (sweeps from the last value to the next).
 - **Do** render \`Chart.SegmentedBar\` from the server. It draws CSS ticks before it has a width, then the measured SVG.
 - **Do** use \`Chart.RankedBars\` for ordered percentage comparisons; sort the data before passing it.
 - **Do** use \`Chart.UnitGrid\` only for honest part-to-whole composition, \`Chart.DistributionStrip\` for one metric across peers, and \`Chart.Heatmap\` when both axes are categorical.
