@@ -7,6 +7,22 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): don't edit this file on a feature branch. Add a release note as `changes/<topic>.md` (format in `changes/README.md`). The release step, `npm run release:prepare` on its own **Release 0.x.y** branch, folds every note into one new entry here and bumps the version once. `npm run check:changelog` checks this file and the notes.
 
+## 0.4.45
+
+**Chart.SegmentedRing: a screen-sized gauge that steps through figures.**
+
+- **Chart.SegmentedRing** `size="fluid"`: fills its container's width (square), with the centre figure in the display face at 18% of the ring's width, for a ring that carries a whole screen (Stats — Pinned Counter).
+- **Chart.SegmentedRing** `animate="always"`: sweeps from the current fill to each new value, so one gauge steps through several figures instead of jumping or emptying.
+
+**SiteNav `overMedia`: a transparent nav over a full-bleed photo or video.**
+
+- **SiteNav** `overMedia` (new): while expanded, the bar lays over the top of the next section instead of taking room above it, with no fill and the dark theme's light ink, so the footage shows through (Hero — Stage with a backdrop; Randy, 2026-11-01). Scrolled, the compact pill is the usual one. Story **SiteNav → State — over media**, with a test (out of flow, transparent, light ink).
+
+### Consumer actions
+
+- None. Existing sizes and `animate` values behave as before.
+- None. For a page that opens on a full-bleed picture or video, pass `overMedia` to the page's `SiteNav`.
+
 ## 0.4.44
 
 **Empty states (Rule 22).**
