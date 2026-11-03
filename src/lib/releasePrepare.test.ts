@@ -24,8 +24,13 @@ function scratch(changes: Record<string, string>) {
   return dir;
 }
 
+/**
+ * The scratch run never sees the CI tag: in a tag build GITHUB_REF_NAME is the real release (v0.4.45), which
+ * check-changelog would compare against the scratch version and fail (the v0.4.45 release run did).
+ */
+const { GITHUB_REF_TYPE: _refType, GITHUB_REF_NAME: _refName, ...untaggedEnv } = process.env;
 const run = (script: string, cwd: string, ...args: string[]) =>
-  spawnSync(process.execPath, [path.join(scripts, script), ...args], { cwd, encoding: "utf8" });
+  spawnSync(process.execPath, [path.join(scripts, script), ...args], { cwd, encoding: "utf8", env: untaggedEnv });
 
 const note = (bump: string, headline: string, action = "- None.") =>
   `---\nbump: ${bump}\n---\n**${headline}**\n\n- Detail.\n\n### Consumer actions\n\n${action}\n`;
