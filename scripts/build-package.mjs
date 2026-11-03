@@ -1,4 +1,4 @@
-import { copyFileSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { createRequire } from "node:module";
 import path from "node:path";
@@ -48,6 +48,10 @@ const fontFaces = fontPackages.map((name) => {
   for (const [, file] of css.matchAll(/url\(\.\/files\/([^)]+)\)/g)) {
     copyFileSync(path.join(path.dirname(cssPath), "files", file), path.join(dist, "files", file));
   }
+  // SIL OFL 1.1: the copyright notice and licence must travel with every copy of the font files.
+  const licence = path.join(path.dirname(cssPath), "LICENSE");
+  if (!existsSync(licence)) throw new Error(`build: ${name} has no LICENSE to ship with its fonts`);
+  copyFileSync(licence, path.join(dist, "files", `LICENSE-${name.split("/").pop()}.txt`));
   return css.trim();
 });
 writeFileSync(

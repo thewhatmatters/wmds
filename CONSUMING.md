@@ -172,7 +172,7 @@ Or theme only (if you configure Tailwind yourself):
 
 That entry brings the tokens, the fonts, the collapse utilities, and an `@source` for the package's built modules, so the app's Tailwind generates the utilities the components use.
 
-**Fonts ship in the package.** Geist Sans and Geist Mono are in `dist/files`, and both style entries reference them. Do not install `@fontsource-variable/*` or copy font files into `node_modules`.
+**Fonts ship in the package.** Geist Sans and Geist Mono are in `dist/files`, and both style entries reference them. Do not install `@fontsource-variable/*` or copy font files into `node_modules`. The fonts are under the SIL Open Font License 1.1; its text and the copyright notice sit beside them as `dist/files/LICENSE-geist.txt` and `dist/files/LICENSE-geist-mono.txt`.
 
 **Imports are per module.** The package builds one module per source file, so an app loads GSAP only when it imports **TextSequence** and Rive only when it imports **RiveHand**.
 

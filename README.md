@@ -104,3 +104,13 @@ The list is `src/package.manifest.ts`. `npm run build` fails when it and `src/in
 Paper may stay installed for mockups — it does **not** own tokens. Design follows Storybook.
 
 See **`CONSUMING.md`** for using WMDS in other apps.
+
+## Licences
+
+WMDS is [MIT](LICENSE). It ships or depends on work under other licences:
+
+| Part | Licence | Notes |
+|------|---------|-------|
+| Geist and Geist Mono fonts (`dist/files/*.woff2`) | [SIL Open Font License 1.1](https://openfontlicense.org) | © The Geist Project Authors. The licence and copyright notice ship beside the fonts as `dist/files/LICENSE-geist.txt` and `dist/files/LICENSE-geist-mono.txt`; keep them with the fonts if you copy them out. |
+| Rive hand art (`public/rive/interactive-icon-set.riv`) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | Silvia Sguotti and Gabriele Montinaro — see `public/rive/CREDITS.md`. |
+| `gsap`, `@gsap/react` (TextSequence only) | [GSAP Standard "No Charge" License](https://gsap.com/standard-license) | Free, commercial use included; not open source. Not bundled — installed as a dependency. |
