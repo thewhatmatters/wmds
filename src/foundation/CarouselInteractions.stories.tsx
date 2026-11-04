@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MotionConfig } from "motion/react";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
+import { Band } from "../components/atoms/Band/Band";
 import { Card } from "../components/molecules/Card/Card";
 import { cardLayoutBodyOccupantRadiusClasses } from "../components/molecules/Card/cardStyles";
 import { Carousel, type CarouselProgressPlacement } from "../components/organisms/Carousel/Carousel";
@@ -575,5 +576,52 @@ export const Velocity: Story = {
     // Moving toward the end reads positive.
     await expect(peak).toBeGreaterThan(0.2);
     await waitFor(() => expect(read()).toBe(0), { timeout: 1000 });
+  },
+};
+
+export const LoopContained: Story = {
+  name: "loop, bleed and follow cursor never widen the page",
+  parameters: { wmdsLayout: "fullscreen" },
+  render: () => (
+    <MotionConfig reducedMotion="never">
+      <Band aria-label="Quotes">
+        <div className="col-span-full">
+          <Carousel aria-label="Looping quotes" autoplay={{ speed: 900 }} loop bleed cursor={<span className="type-label">Drag</span>}>
+            {tiles.map((tile) => (
+              <Carousel.Item key={tile.id}>
+                <img className="aspect-[4/3] w-full object-cover" src={tile.src} alt={tile.alt} />
+              </Carousel.Item>
+            ))}
+          </Carousel>
+        </div>
+      </Band>
+    </MotionConfig>
+  ),
+  play: async ({ canvasElement }) => {
+    const page = canvasElement.ownerDocument.documentElement;
+    const row = within(canvasElement).getByRole("region", { name: "Looping quotes" });
+    await waitFor(() => expect(row.dataset.overflowing).toBe("true"));
+    // The copy of the items sits inside the scroller: the page never gets wider than the window
+    // while the row drifts and wraps.
+    const start = performance.now();
+    while (performance.now() - start < 1500) {
+      await expect(page.scrollWidth).toBeLessThanOrEqual(page.clientWidth);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    // The follow badge at the page's right edge is cut off rather than pushing the page wider,
+    // and it still centres on the pointer.
+    const box = row.getBoundingClientRect();
+    const move = (clientX: number) =>
+      row.dispatchEvent(
+        new PointerEvent("pointermove", { bubbles: true, pointerType: "mouse", clientX, clientY: box.top + box.height / 2 }),
+      );
+    move(box.left + box.width / 2);
+    const badge = canvasElement.querySelector<HTMLElement>("[data-carousel-cursor]");
+    await waitFor(() => expect(badge?.hasAttribute("data-shown")).toBe(true));
+    const placed = badge!.getBoundingClientRect();
+    await expect(Math.abs(placed.left + placed.width / 2 - (box.left + box.width / 2))).toBeLessThan(2);
+    move(page.clientWidth - 1);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    await expect(page.scrollWidth).toBeLessThanOrEqual(page.clientWidth);
   },
 };

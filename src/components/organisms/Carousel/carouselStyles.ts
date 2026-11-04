@@ -124,5 +124,11 @@ export const carouselProgressInControlsClasses: Record<Exclude<CarouselProgressP
  * The follow badge (`cursor`): centred on the pointer, above the row, never in the way of a click. It fades
  * in over the row and shrinks a little while the row is dragged.
  */
+/**
+ * Holds the follow badge over the row, bleed included. It clips sideways only, so a badge at the
+ * page edge is cut off instead of widening the page; above and below the row it stays whole.
+ */
+export const carouselCursorLayerClasses = "pointer-events-none absolute inset-0 z-10 overflow-x-clip";
+
 export const carouselCursorClasses =
   "pointer-events-none absolute left-0 top-0 z-10 flex size-14 items-center justify-center rounded-full bg-fg text-body opacity-0 shadow-soft-sm transition-[opacity,scale] duration-fast ease-standard data-[shown]:opacity-100 data-[dragging]:scale-90 [&_svg]:size-6";
