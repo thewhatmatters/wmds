@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.47 · Pattern — copied
+// @thewhatmatters/wmds@0.4.48 · Pattern — copied
 // Storybook: Components/CopyField → Pattern — copied (?path=/story/components-copyfield--copied)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

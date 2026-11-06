@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.47 · Pattern — app sidebar
+// @thewhatmatters/wmds@0.4.48 · Pattern — app sidebar
 // Storybook: Components/NavList → Pattern — app sidebar (?path=/story/components-navlist--app-sidebar)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
