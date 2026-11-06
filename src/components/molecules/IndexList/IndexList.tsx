@@ -118,13 +118,13 @@ export interface IndexListItemProps {
   /** Names the preview control. Default: "Preview: {title}". */
   previewLabel?: string;
   /**
-   * An arrow at the row's end, and the whole row is the link (one hit area, a quiet fill on hover and keyboard
-   * focus). `external` sets it too.
+   * The whole row is the link: one hit area, a quiet fill across the row on hover and keyboard focus. `arrow` sets
+   * it too.
    */
+  rowLink?: boolean;
+  /** An arrow at the row's end (→, or ↗ with `external`); the whole row is the link. */
   arrow?: boolean;
-  /**
-   * The row goes to another site: an out-arrow at the end, and the link opens in a new tab (said to screen readers).
-   */
+  /** The row goes to another site: the link opens in a new tab (said to screen readers), and its arrow, if any, is ↗. */
   external?: boolean;
   /**
    * Slot: the row's tags, a few WMDS `Badge`s (e.g. "Case study", "Guide"), at the row's end before its arrow (from
@@ -205,14 +205,15 @@ function IndexListItem({
   open: openProp,
   onOpenChange,
   previewLabel,
+  rowLink: rowLinkProp = false,
   arrow = false,
   external = false,
   tags,
   className,
 }: IndexListItemProps) {
   const { size, titleAs: Title, page } = useContext(IndexListContext);
-  const rowLink = arrow || external;
-  const hasEnd = page && (rowLink || tags != null);
+  const rowLink = rowLinkProp || arrow;
+  const hasEnd = page && (arrow || tags != null);
   const panelId = useId();
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
   const isControlled = openProp !== undefined;
@@ -254,7 +255,7 @@ function IndexListItem({
             onClick={toggle}
           />
         ) : null}
-        {rowLink && !page ? (
+        {arrow && !page ? (
           <span aria-hidden="true" className={cn(indexListArrowClasses, external ? indexListArrowNudgeExternalClasses : indexListArrowNudgeClasses)}>
             {external ? <ArrowUpRight className="size-5" strokeWidth={2} /> : <ArrowRight className="size-5" strokeWidth={2} />}
           </span>
@@ -263,7 +264,7 @@ function IndexListItem({
       {hasEnd ? (
         <div className={indexListPageEndClasses}>
           {tags != null ? <span className={indexListTagsClasses}>{tags}</span> : null}
-          {rowLink ? (
+          {arrow ? (
             <span aria-hidden="true" className={cn(indexListArrowClasses, external ? indexListArrowNudgeExternalClasses : indexListArrowNudgeClasses)}>
               {external ? <ArrowUpRight className="size-5" strokeWidth={2} /> : <ArrowRight className="size-5" strokeWidth={2} />}
             </span>

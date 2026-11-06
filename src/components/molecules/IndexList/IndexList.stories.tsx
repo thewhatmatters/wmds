@@ -191,7 +191,7 @@ export const PageGridRows: Story = {
     docs: {
       description: {
         story:
-          "`columns=\"page\"` puts the rows on the page grid like a table of posts: the date in the first two columns, the title across the width, and the end column with the row's `tags` (WMDS `Badge`s) and its arrow. `arrow` makes the whole row one link with a quiet fill on hover and focus; `external` shows an out-arrow and opens a new tab.",
+          "`columns=\"page\"` puts the rows on the page grid like a table of posts: the date in the first two columns, the title across the width, and the end column with the row's `tags` (WMDS `Badge`s) and its arrow. `rowLink` makes the whole row one link with a quiet fill on hover and focus; `arrow` adds an arrow at the end (↗ with `external`, which opens a new tab).",
       },
     },
   },
@@ -210,7 +210,7 @@ export const PageGridRows: Story = {
           href="#ads"
           meta={<time dateTime="2026-10-21">21 Oct</time>}
           tags={<Badge size="sm" emphasis="outline">Guide</Badge>}
-          arrow
+          rowLink
         />
         <IndexList.Item
           title="A field guide to fast menus, on another site"
@@ -218,6 +218,7 @@ export const PageGridRows: Story = {
           meta={<time dateTime="2026-10-14">14 Oct</time>}
           tags={<Badge size="sm" emphasis="outline">Elsewhere</Badge>}
           external
+          arrow
         />
       </IndexList>
     </div>
@@ -234,8 +235,10 @@ export const PageGridRows: Story = {
     // External: opens a new tab and says so.
     const external = canvas.getByRole("link", { name: /A field guide to fast menus.*opens in a new tab/ });
     await expect(external.getAttribute("target")).toBe("_blank");
-    // Arrows are decoration; tags are read.
-    for (const row of rows) await expect(row.querySelector("svg")?.closest("[aria-hidden='true']")).not.toBeNull();
+    // Arrows are decoration; a `rowLink` row has the fill but no arrow; tags are read.
+    for (const row of [rows[0], rows[2]]) await expect(row.querySelector("svg")?.closest("[aria-hidden='true']")).not.toBeNull();
+    await expect(rows[1].querySelector("svg")).toBeNull();
+    await expect(rows[1].hasAttribute("data-row-link")).toBe(true);
     await expect(canvas.getAllByText("Case study").length).toBeGreaterThan(0);
     // The row lights up with keyboard focus on its link (the same fill as on hover).
     await expect(getComputedStyle(rows[0], "::before").opacity).toBe("0");
