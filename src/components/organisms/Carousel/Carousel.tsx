@@ -45,6 +45,7 @@ import {
 } from "./carouselMath";
 import {
   carouselControlsClasses,
+  carouselDriftControlOnFocusClasses,
   carouselCounterClasses,
   carouselCursorClasses,
   carouselProgressInControlsClasses,
@@ -120,8 +121,10 @@ interface CarouselBaseProps {
    * `{ speed }` in px a second). It holds while a pointer is over the row, while anything in it has focus,
    * during a drag or a scrub, while the row is off screen or the tab hidden, and never runs under reduced
    * motion. A Pause button sits beside the scrubber (WCAG 2.2.2: moving content can be stopped).
+   * `pause: "on-focus"` keeps that button out of sight until it has keyboard focus (like a skip link), for a
+   * quiet strip such as a logo marquee; it is still the first stop when tabbing in, so the motion can be stopped.
    */
-  autoplay?: boolean | { speed?: number };
+  autoplay?: boolean | { speed?: number; pause?: "visible" | "on-focus" };
   /**
    * Repeat the items seamlessly: a copy follows the last one, and the row wraps back to the start as it passes
    * one full set, so it never ends. With `autoplay` it drifts one way only. The scrubber and counter are
@@ -270,6 +273,8 @@ function CarouselRoot({
   const moveToRef = useRef<(position: number, animated?: boolean) => void>(() => {});
   const driftSpeed = autoplay === false ? 0 : typeof autoplay === "object" ? (autoplay.speed ?? defaultDriftSpeed) : defaultDriftSpeed;
   const [driftPaused, setDriftPaused] = useState(false);
+  /** The Pause button shows only while focused (`autoplay.pause: "on-focus"`). */
+  const pauseOnFocus = typeof autoplay === "object" && autoplay.pause === "on-focus";
   /** Reasons the drift holds: a hover, focus inside the row, or the row off screen. */
   const hold = useRef({ hover: false, focus: false, offscreen: false });
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -838,7 +843,11 @@ function CarouselRoot({
         </div>
       </div>
       {progressShown !== "none" || showDriftControl ? (
-        <div className={showDriftControl ? carouselControlsClasses[progressShown] : "contents"}>
+        <div
+          className={
+            showDriftControl && !(pauseOnFocus && progressShown === "none") ? carouselControlsClasses[progressShown] : "contents"
+          }
+        >
       {progressShown !== "none" ? (
         // Hidden from assistive tech and not a tab stop: the row takes the same keys, and a
         // second control for one position would say everything twice.
@@ -861,14 +870,28 @@ function CarouselRoot({
         </div>
       ) : null}
       {showDriftControl ? (
-        <IconButton
-          role="ghost"
-          size="sm"
-          aria-label={driftPaused ? "Play" : "Pause"}
-          icon={driftPaused ? <Play strokeWidth={2} /> : <Pause strokeWidth={2} />}
-          onClick={() => setDriftPaused((paused) => !paused)}
-          data-carousel-drift-control=""
-        />
+        pauseOnFocus ? (
+          // Out of sight until the button inside has keyboard focus (the wrapper carries it: IconButton's size wins over sr-only).
+          <span className={carouselDriftControlOnFocusClasses}>
+            <IconButton
+              role="ghost"
+              size="sm"
+              aria-label={driftPaused ? "Play" : "Pause"}
+              icon={driftPaused ? <Play strokeWidth={2} /> : <Pause strokeWidth={2} />}
+              onClick={() => setDriftPaused((paused) => !paused)}
+              data-carousel-drift-control=""
+            />
+          </span>
+        ) : (
+          <IconButton
+            role="ghost"
+            size="sm"
+            aria-label={driftPaused ? "Play" : "Pause"}
+            icon={driftPaused ? <Play strokeWidth={2} /> : <Pause strokeWidth={2} />}
+            onClick={() => setDriftPaused((paused) => !paused)}
+            data-carousel-drift-control=""
+          />
+        )
       ) : null}
         </div>
       ) : null}
