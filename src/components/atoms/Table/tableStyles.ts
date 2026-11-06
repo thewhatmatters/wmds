@@ -14,7 +14,8 @@ export const tableClasses = `w-full min-w-max caption-bottom border-collapse has
 
 /** `rules="grid"`: a rule between every column and round the outside, so each cell is a ruled box (a pricing grid). */
 export const tableGridRulesClasses =
-  "border border-border [&_th]:border-x [&_th]:border-border [&_td]:border-x [&_td]:border-border " +
+  // Fits its box (equal columns that wrap) instead of growing to its content's width like a data table.
+  "!min-w-0 border border-border [&_th]:border-x [&_th]:border-border [&_td]:border-x [&_td]:border-border " +
   // Roomier cells, the same inset in every cell, so a column's content lines up from its header down.
   "[&_th]:px-6 [&_td]:px-6 [&_td]:py-4 lg:[&_th]:px-8 lg:[&_td]:px-8";
 

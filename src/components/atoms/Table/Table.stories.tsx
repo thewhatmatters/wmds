@@ -680,6 +680,9 @@ export const GridRules: Story = {
     const header = [...table.querySelectorAll("thead th")] as HTMLElement[];
     await expect(Math.abs(header[1].offsetWidth - header[2].offsetWidth)).toBeLessThanOrEqual(1);
     await expect(Math.abs(header[0].offsetWidth - header[1].offsetWidth)).toBeLessThanOrEqual(1);
+    // It fits its box: no sideways scroll in the region around it.
+    const region = canvas.getByRole("region", { name: "What each package includes" });
+    await expect(region.scrollWidth).toBeLessThanOrEqual(region.clientWidth);
     // The same inset in every cell, so a column lines up from its header down.
     const bodyCell = table.querySelector("tbody td") as HTMLElement;
     await expect(getComputedStyle(bodyCell).paddingLeft).toBe(getComputedStyle(header[1]).paddingLeft);
