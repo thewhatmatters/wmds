@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.45 · Pattern — log viewer
+// @thewhatmatters/wmds@0.4.46 · Pattern — log viewer
 // Storybook: Components/LogView → Pattern — log viewer (?path=/story/components-logview--log-viewer)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
