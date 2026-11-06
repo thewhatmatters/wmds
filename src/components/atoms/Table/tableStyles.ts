@@ -31,6 +31,15 @@ export const tableHeadClasses = `h-11 px-3 text-start align-middle font-normal w
 
 export const tableCellClasses = "px-3 py-3 align-middle";
 
+/**
+ * `stickyHeader` (with `rules="grid"`, which fits its box): the scroll box lets go of its overflow so the header row
+ * can stick to the page, and the whole header (every header row) pins to the top (below `--table-sticky-top`, e.g. a fixed nav's height),
+ * opaque so the rows slide under them.
+ */
+export const tableStickyHeaderScrollClasses = "!overflow-visible";
+export const tableStickyHeaderClasses =
+  "[&_thead]:sticky [&_thead]:top-[var(--table-sticky-top,0px)] [&_thead]:z-10 [&_thead]:bg-body [&_thead]:shadow-[0_1px_0_var(--color-border)]";
+
 /** A header cell that holds more than a label (a package's name, price and action): wraps, sits at the top, roomier. */
 export const tableHeadWrapClasses = "!h-auto !whitespace-normal !align-top py-6 lg:py-8";
 

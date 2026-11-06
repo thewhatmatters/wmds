@@ -14,6 +14,8 @@ import {
   tableRowClasses,
   tableScrollClasses,
   tableStickyClasses,
+  tableStickyHeaderClasses,
+  tableStickyHeaderScrollClasses,
   type TableAlign,
 } from "./tableStyles";
 
@@ -33,6 +35,13 @@ export interface TableProps {
    * cell is a ruled box. Pair it with a `colgroup` for equal columns (a pricing grid whose packages head the columns).
    */
   rules?: "rows" | "grid";
+  /**
+   * Pin the header row to the top of the page while the rows scroll under it, so a long comparison keeps its
+   * column heads in view (a pricing grid's packages). Needs `rules="grid"`: only a table that fits its box can let
+   * go of the sideways scroll that would otherwise trap the header. Offset it under a fixed nav with
+   * `--table-sticky-top` on a parent.
+   */
+  stickyHeader?: boolean;
   /** Layout-only — applies to the scroll box. */
   className?: TableLayoutClassName;
 }
@@ -74,16 +83,17 @@ export interface TableCaptionProps {
  * Semantic table in a horizontal-scroll box. The box is a focusable `region` named by the table's
  * label, so a keyboard can scroll it; the table never squeezes its columns below their content.
  */
-function Table({ children, "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, rules = "rows", className }: TableProps) {
+function Table({ children, "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, rules = "rows", stickyHeader, className }: TableProps) {
+  const pinHeader = stickyHeader === true && rules === "grid";
   return (
     <div
       role="region"
       tabIndex={0}
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
-      className={cn(tableScrollClasses, className)}
+      className={cn(tableScrollClasses, pinHeader && tableStickyHeaderScrollClasses, className)}
     >
-      <table className={cn(tableClasses, rules === "grid" && tableGridRulesClasses)} data-rules={rules}>
+      <table className={cn(tableClasses, rules === "grid" && tableGridRulesClasses, pinHeader && tableStickyHeaderClasses)} data-rules={rules}>
         {children}
       </table>
     </div>

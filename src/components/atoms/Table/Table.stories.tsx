@@ -692,6 +692,60 @@ export const GridRules: Story = {
   },
 };
 
+export const GridStickyHeader: Story = {
+  name: "Rules — grid, sticky header",
+  args: { children: null },
+  render: () => (
+    <Table aria-label="Long comparison" rules="grid" stickyHeader>
+      <colgroup>
+        <col />
+        <col />
+        <col />
+      </colgroup>
+      <TableHeader>
+        <TableRow>
+          <TableHead>
+            <span className="sr-only">Feature</span>
+          </TableHead>
+          <TableHead wrap>Starter site</TableHead>
+          <TableHead wrap>Business site</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {Array.from({ length: 40 }, (_, index) => (
+          <TableRow key={index}>
+            <TableHead scope="row">Feature {index + 1}</TableHead>
+            <TableCell>—</TableCell>
+            <TableCell>Included</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`stickyHeader` with `rules=\"grid\"`: the header row stays at the top of the page while the rows scroll under it, so every row's column is clear. Set `--table-sticky-top` on a parent to sit it under a fixed nav.",
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const head = canvasElement.querySelector("thead") as HTMLElement;
+    await expect(getComputedStyle(head).position).toBe("sticky");
+    // The scroll box lets go of its overflow, so the header sticks to the page, not the box.
+    const region = canvas.getByRole("region", { name: "Long comparison" });
+    await expect(getComputedStyle(region).overflowX).toBe("visible");
+    // Scrolled well past the table's top, the header is still at the top of the window.
+    const scroller = document.scrollingElement as HTMLElement;
+    scroller.scrollTop = head.getBoundingClientRect().top + scroller.scrollTop + 600;
+    await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
+    await expect(Math.round(head.getBoundingClientRect().top)).toBe(0);
+    scroller.scrollTop = 0;
+  },
+};
+
 export const Approvals: Story = {
   name: "Pattern — approvals queue",
   args: { children: null },
