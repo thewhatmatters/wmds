@@ -84,6 +84,14 @@ The **Sites** section is removed. Its pages (WhatMatters: Intake, Marketing land
 - Components keep their own **Pattern — …** stories; cross-component guidance stays under **Guides**.
 - `src/sites/` and the PitchKit interaction tests are deleted. The Intake and Confetti interaction tests now exercise **IntakeModal** and **IntakeConfirmation** directly.
 
+## Amendment — 2026-11-05: Start here for first visitors
+
+A first-visit audit found the site opened on maintainer docs (source paths, authoring rules, repo commands) with no install command. The public Storybook is the first thing a stranger sees, so it now opens on a page written for people using WMDS.
+
+- Sidebar order: **Start here → Guides → Foundations → Components → Contributing → Internal**.
+- **Start here** (`src/storybook/StartHere.mdx`): the pitch, one live pattern, install, the CSS import and the quickstart. Its pitch, install command and quickstart are read from `README.md` at build time (`src/storybook/readmeSnippets.ts`), so the site and npm never disagree.
+- **Getting started** becomes **Contributing** (`src/storybook/Contributing.mdx`), unchanged apart from its title and an opening pointer to Start here. Its story id changes from `getting-started--docs` to `contributing--docs`.
+
 ## Related
 
 - ADR-0002 — atomic filesystem and import tiers

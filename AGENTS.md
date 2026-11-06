@@ -6,7 +6,7 @@
 
 Long-form contracts for **FooterReveal**, **HeroTileStack**, **TextSequence**, **ScrollHorizontal**, **RiveHand**, **PromptBar**, **ChatDock**, and **AppShell** are in **`docs/component-contracts.md`**. Read that section before changing one of them.
 
-- **Storybook** is the canonical catalog — **Getting started → Guides → Foundations → Components** (ADR-0026, amended 2026-10-03). **Components** are A–Z (`Components/{Name}`); related exports share a family folder (`Components/{Family}/{Name}` — **Button**, **Card**, **Checkbox**, **Radio**). **Components → Overview** groups every export by category from **`src/storybook/componentCatalog.ts`**. **Guides** holds cross-component guidance. Product pages and flows (the WhatMatters site, PitchKit) live in their own apps, not in WMDS Storybook.
+- **Storybook** is the canonical catalog — **Start here → Guides → Foundations → Components → Contributing** (ADR-0026, amended 2026-10-03 and 2026-11-05). **Components** are A–Z (`Components/{Name}`); related exports share a family folder (`Components/{Family}/{Name}` — **Button**, **Card**, **Checkbox**, **Radio**). **Components → Overview** groups every export by category from **`src/storybook/componentCatalog.ts`**. **Guides** holds cross-component guidance. Product pages and flows (the WhatMatters site, PitchKit) live in their own apps, not in WMDS Storybook.
 - **Theme** lives in `src/theme/` — `colors.css` (semantic roles) + `theme.css` (Tailwind `@theme` bridge). Storybook is the source of truth, not Paper.
 - **Dark mode:** `[data-theme="dark"]` on `<html>` or any ancestor — same token names, swapped values in `colors.css`.
 - **Authoring (WMDS repo):** **Pattern-first** — ship **components + props + Storybook examples**, not utility recipes for apps. Tailwind utilities belong **inside** `*Styles.ts` / component files. See **ADR-0004**.
@@ -117,7 +117,7 @@ When adding a component: create its folder in the correct atomic tier, title its
 
 - **`src/guides/{Name}/`** — cross-component guidance, Storybook title **`Guides/{Name}`**. Storybook-only; never in `src/index.ts`.
 - A page that teaches a choice across components (charts, overlays, form controls) goes under **Guides**. Product pages and flows belong to the product's own app, not to WMDS Storybook — do not recreate a site here.
-- Storybook-only helpers (**`ExampleGridControls`**, **Getting started**, **Components → Overview**) live in **`src/storybook/`**.
+- Storybook-only helpers (**`ExampleGridControls`**, **Start here**, **Contributing**, **Components → Overview**) live in **`src/storybook/`**.
 - Page-level Guides pages start with `grid-page`, place content through `band` + responsive column spans, and mount **`ExampleGridControls`**.
 - Design with live grid values first. Once approved, freeze the selected `--grid-max` and `--grid-column-gap` values into the **Pattern** story’s `storyCopySource()`.
 - **Show code is the product contract.** Pattern `storyCopySource` must stay a literal mirror of the live canvas (layout, chrome, spacing, typography). Consuming apps copy Show code — not Storybook-only `*Example.tsx` / `*Styles.ts`.

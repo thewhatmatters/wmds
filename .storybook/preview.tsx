@@ -106,14 +106,14 @@ const preview: Preview = {
   parameters: {
     options: {
       /**
-       * Sidebar order (ADR-0026, amended 2026-10-03): Getting started → Guides →
-       * Foundations → Components → Internal. Components → Overview leads its section;
+       * Sidebar order (ADR-0026, amended 2026-10-03 and 2026-11-05): Start here → Guides →
+       * Foundations → Components → Contributing → Internal. Start here is what a first visitor sees. Components → Overview leads its section;
        * everything else is A–Z by path segment. Atomic tiers stay an implementation
        * detail of src/components.
        * Self-contained on purpose — Storybook evaluates this function on its own.
        */
       storySort: (a, b) => {
-        const sections = ["Getting started", "Guides", "Foundations", "Components", "Internal"];
+        const sections = ["Start here", "Guides", "Foundations", "Components", "Contributing", "Internal"];
         const pinned = { Components: "Overview" };
         const aParts = (a.title ?? "").split("/");
         const bParts = (b.title ?? "").split("/");
