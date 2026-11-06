@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.45 · Pattern — quiet title link
+// @thewhatmatters/wmds@0.4.46 · Pattern — quiet title link
 // Storybook: Components/TextLink → Pattern — quiet title link (?path=/story/components-textlink--quiet-title)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

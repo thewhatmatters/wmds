@@ -7,6 +7,16 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): don't edit this file on a feature branch. Add a release note as `changes/<topic>.md` (format in `changes/README.md`). The release step, `npm run release:prepare` on its own **Release 0.x.y** branch, folds every note into one new entry here and bumps the version once. `npm run check:changelog` checks this file and the notes.
 
+## 0.4.46
+
+**Carousel: a quiet Pause button for logo marquees.**
+
+- **Carousel** `autoplay={{ pause: "on-focus" }}` (new): the drift's Pause button stays out of sight until it has keyboard focus, like a skip link, so a logo strip shows no control (Logos — Marquee; Randy, 2026-11-05). It's still in the tab order and still stops the motion (WCAG 2.2.2); hover, focus, off-screen and reduced motion hold the drift as before. Default stays `"visible"`.
+
+### Consumer actions
+
+- None.
+
 ## 0.4.45
 
 **Chart.SegmentedRing: a screen-sized gauge that steps through figures.**
