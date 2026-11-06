@@ -618,6 +618,134 @@ export function RecentPosts({ posts, total }: { posts: PostRow[]; total: string 
   ),
 };
 
+export const GridRules: Story = {
+  name: "Rules — grid (a pricing grid)",
+  args: { children: null },
+  render: () => (
+    <Table aria-label="What each package includes" rules="grid">
+      <colgroup>
+        <col />
+        <col />
+        <col />
+      </colgroup>
+      <TableHeader>
+        <TableRow>
+          <TableHead>
+            <span className="sr-only">Feature</span>
+          </TableHead>
+          {["Starter site", "Business site"].map((name, index) => (
+            <TableHead key={name} wrap>
+              <span className="flex flex-col gap-4">
+                <span className="type-heading-3 text-fg">{name}</span>
+                <span className="type-display-3 tabular-nums text-fg">{index === 0 ? "$6,800" : "$12,400"}</span>
+                <Button role={index === 1 ? "primary" : "outline"} size="lg">
+                  Start a {name}
+                </Button>
+              </span>
+            </TableHead>
+          ))}
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow>
+          <TableHead scope="row">Pages</TableHead>
+          <TableCell>Up to 5</TableCell>
+          <TableCell>Up to 12</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableHead scope="row">Copy written for you</TableHead>
+          <TableCell>—</TableCell>
+          <TableCell>Included</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`rules=\"grid\"` rules every column and the outside, and a `colgroup` makes the columns equal, so the packages head the same columns as the rows under them. `wrap` on a header cell lets it hold a heading, a price and a button.",
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const table = canvas.getByRole("table");
+    await expect(table.getAttribute("data-rules")).toBe("grid");
+    // Every cell has a rule on its side, and the outside is ruled.
+    const cells = [...table.querySelectorAll("th, td")];
+    for (const cell of cells) await expect(getComputedStyle(cell).borderLeftWidth).toBe("1px");
+    await expect(getComputedStyle(table).borderTopWidth).toBe("1px");
+    // Equal columns: the colgroup turns on fixed layout.
+    const header = [...table.querySelectorAll("thead th")] as HTMLElement[];
+    await expect(Math.abs(header[1].offsetWidth - header[2].offsetWidth)).toBeLessThanOrEqual(1);
+    await expect(Math.abs(header[0].offsetWidth - header[1].offsetWidth)).toBeLessThanOrEqual(1);
+    // It fits its box: no sideways scroll in the region around it.
+    const region = canvas.getByRole("region", { name: "What each package includes" });
+    await expect(region.scrollWidth).toBeLessThanOrEqual(region.clientWidth);
+    // The same inset in every cell, so a column lines up from its header down.
+    const bodyCell = table.querySelector("tbody td") as HTMLElement;
+    await expect(getComputedStyle(bodyCell).paddingLeft).toBe(getComputedStyle(header[1]).paddingLeft);
+    // A wrap header holds its button and sits at the top.
+    await expect(getComputedStyle(header[1]).verticalAlign).toBe("top");
+    await expect(within(header[1]).getByRole("button", { name: "Start a Starter site" })).toBeInTheDocument();
+  },
+};
+
+export const GridStickyHeader: Story = {
+  name: "Rules — grid, sticky header",
+  args: { children: null },
+  render: () => (
+    <Table aria-label="Long comparison" rules="grid" stickyHeader>
+      <colgroup>
+        <col />
+        <col />
+        <col />
+      </colgroup>
+      <TableHeader>
+        <TableRow>
+          <TableHead>
+            <span className="sr-only">Feature</span>
+          </TableHead>
+          <TableHead wrap>Starter site</TableHead>
+          <TableHead wrap>Business site</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {Array.from({ length: 40 }, (_, index) => (
+          <TableRow key={index}>
+            <TableHead scope="row">Feature {index + 1}</TableHead>
+            <TableCell>—</TableCell>
+            <TableCell>Included</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`stickyHeader` with `rules=\"grid\"`: the header row stays at the top of the page while the rows scroll under it, so every row's column is clear. Set `--table-sticky-top` on a parent to sit it under a fixed nav.",
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const head = canvasElement.querySelector("thead") as HTMLElement;
+    await expect(getComputedStyle(head).position).toBe("sticky");
+    // The scroll box lets go of its overflow, so the header sticks to the page, not the box.
+    const region = canvas.getByRole("region", { name: "Long comparison" });
+    await expect(getComputedStyle(region).overflowX).toBe("visible");
+    // Scrolled well past the table's top, the header is still at the top of the window.
+    const scroller = document.scrollingElement as HTMLElement;
+    scroller.scrollTop = head.getBoundingClientRect().top + scroller.scrollTop + 600;
+    await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
+    await expect(Math.round(head.getBoundingClientRect().top)).toBe(0);
+    scroller.scrollTop = 0;
+  },
+};
+
 export const Approvals: Story = {
   name: "Pattern — approvals queue",
   args: { children: null },
