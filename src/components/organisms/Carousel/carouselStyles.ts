@@ -112,6 +112,9 @@ export const carouselControlsClasses: Record<CarouselProgressPlacement, string> 
   none: "flex items-center self-center",
 };
 
+/** `autoplay.pause: "on-focus"`: the Pause button is out of sight (but in the tab order) until it has keyboard focus. */
+export const carouselDriftControlOnFocusClasses = "sr-only has-[:focus-visible]:not-sr-only has-[:focus-visible]:self-center";
+
 /** The scrubber's width inside the controls row. */
 export const carouselProgressInControlsClasses: Record<Exclude<CarouselProgressPlacement, "none">, string> = {
   // Important: the scrubber's own `w-full` comes later in the sheet and would collapse it in the row.
