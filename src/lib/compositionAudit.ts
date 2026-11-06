@@ -123,7 +123,7 @@ export const compositionShellExceptions: CompositionShellException[] = [
   {
     file: "components/molecules/IndexList/IndexList.tsx",
     ruleId: "lucide-import",
-    reason: "IndexList owns the preview disclosure chevron (Lucide ChevronDown) passed to IconButton.",
+    reason: "IndexList owns the preview disclosure chevron (Lucide ChevronDown) passed to IconButton, and the row-link arrows (Lucide ArrowRight, ArrowUpRight).",
   },
   {
     file: "components/molecules/LinkTile/LinkTile.tsx",
