@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, userEvent, waitFor, within } from "storybook/test";
+import { Badge } from "../../atoms/Badge/Badge";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { IndexList, indexListSizes, indexListTitleElements } from "./IndexList";
 
@@ -179,6 +181,71 @@ export function PostIndex({ posts }: { posts: IndexPost[] }) {
 }
 `,
   ),
+};
+
+export const PageGridRows: Story = {
+  name: "Rows — page grid, tags and arrows",
+  args: { children: null },
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: {
+      description: {
+        story:
+          "`columns=\"page\"` puts the rows on the page grid like a table of posts: the date in the first two columns, the title across the width, and the end column with the row's `tags` (WMDS `Badge`s) and its arrow. `rowLink` makes the whole row one link with a quiet fill on hover and focus; `arrow` adds an arrow at the end (↗ with `external`, which opens a new tab).",
+      },
+    },
+  },
+  render: () => (
+    <div className="grid-page py-12">
+      <IndexList aria-label="Posts" size="sm" titleAs="h3" columns="page">
+        <IndexList.Item
+          title="Why the bakery's new site sells out by noon"
+          href="#bakery"
+          meta={<time dateTime="2026-10-29">29 Oct</time>}
+          tags={<Badge size="sm" emphasis="outline">Case study</Badge>}
+          arrow
+        />
+        <IndexList.Item
+          title="Five things to fix before you pay for ads"
+          href="#ads"
+          meta={<time dateTime="2026-10-21">21 Oct</time>}
+          tags={<Badge size="sm" emphasis="outline">Guide</Badge>}
+          rowLink
+        />
+        <IndexList.Item
+          title="A field guide to fast menus, on another site"
+          href="https://example.com/menus"
+          meta={<time dateTime="2026-10-14">14 Oct</time>}
+          tags={<Badge size="sm" emphasis="outline">Elsewhere</Badge>}
+          external
+          arrow
+        />
+      </IndexList>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const rows = [...canvasElement.querySelectorAll("li")] as HTMLElement[];
+    // On the page grid: every row's title starts on the same column, the end cells line up too.
+    const titleLefts = rows.map((row) => Math.round((row.querySelector("h3") as HTMLElement).getBoundingClientRect().left));
+    await expect(new Set(titleLefts).size).toBe(1);
+    // The whole row is the link: the title's link covers the row.
+    const link = canvas.getByRole("link", { name: "Why the bakery's new site sells out by noon" });
+    await expect(getComputedStyle(link, "::after").position).toBe("absolute");
+    // External: opens a new tab and says so.
+    const external = canvas.getByRole("link", { name: /A field guide to fast menus.*opens in a new tab/ });
+    await expect(external.getAttribute("target")).toBe("_blank");
+    // Arrows are decoration; a `rowLink` row has the fill but no arrow; tags are read.
+    for (const row of [rows[0], rows[2]]) await expect(row.querySelector("svg")?.closest("[aria-hidden='true']")).not.toBeNull();
+    await expect(rows[1].querySelector("svg")).toBeNull();
+    await expect(rows[1].hasAttribute("data-row-link")).toBe(true);
+    await expect(canvas.getAllByText("Case study").length).toBeGreaterThan(0);
+    // The row lights up with keyboard focus on its link (the same fill as on hover).
+    await expect(getComputedStyle(rows[0], "::before").opacity).toBe("0");
+    await userEvent.tab();
+    await expect(document.activeElement).toBe(link);
+    await waitFor(() => expect(getComputedStyle(rows[0], "::before").opacity).toBe("1"));
+  },
 };
 
 export const WithoutPreviews: Story = {
