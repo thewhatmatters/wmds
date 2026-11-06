@@ -12,6 +12,9 @@ export const tableScrollClasses =
 /** A table with a `colgroup` lays its columns out from the `col` widths, so a filled and an empty table match. */
 export const tableClasses = `w-full min-w-max caption-bottom border-collapse has-[colgroup]:table-fixed text-fg ${typographyClass("body")}`;
 
+/** `rules="grid"`: a rule between every column and round the outside, so each cell is a ruled box (a pricing grid). */
+export const tableGridRulesClasses = "border border-border [&_th]:border-x [&_th]:border-border [&_td]:border-x [&_td]:border-border";
+
 export const tableHeaderClasses = "[&_tr]:border-b [&_tr]:border-border";
 
 export const tableBodyClasses = "[&_tr:last-child]:border-b-0";
@@ -23,6 +26,9 @@ export const tableRowClasses = "border-b border-border transition-colors hover:b
 export const tableHeadClasses = `h-11 px-3 text-start align-middle font-normal whitespace-nowrap ${typographyClass("ui-label")}`;
 
 export const tableCellClasses = "px-3 py-3 align-middle";
+
+/** A header cell that holds more than a label (a package's name, price and action): wraps, sits at the top, roomier. */
+export const tableHeadWrapClasses = "!h-auto !whitespace-normal !align-top px-6 py-6 lg:px-8 lg:py-8";
 
 export const tableCaptionClasses = `mt-3 text-start ${typographyClass("body")} text-muted`;
 

@@ -618,6 +618,74 @@ export function RecentPosts({ posts, total }: { posts: PostRow[]; total: string 
   ),
 };
 
+export const GridRules: Story = {
+  name: "Rules — grid (a pricing grid)",
+  args: { children: null },
+  render: () => (
+    <Table aria-label="What each package includes" rules="grid">
+      <colgroup>
+        <col />
+        <col />
+        <col />
+      </colgroup>
+      <TableHeader>
+        <TableRow>
+          <TableHead>
+            <span className="sr-only">Feature</span>
+          </TableHead>
+          {["Starter site", "Business site"].map((name, index) => (
+            <TableHead key={name} wrap>
+              <span className="flex flex-col gap-4">
+                <span className="type-heading-3 text-fg">{name}</span>
+                <span className="type-display-3 tabular-nums text-fg">{index === 0 ? "$6,800" : "$12,400"}</span>
+                <Button role={index === 1 ? "primary" : "outline"} size="lg">
+                  Start a {name}
+                </Button>
+              </span>
+            </TableHead>
+          ))}
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow>
+          <TableHead scope="row">Pages</TableHead>
+          <TableCell>Up to 5</TableCell>
+          <TableCell>Up to 12</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableHead scope="row">Copy written for you</TableHead>
+          <TableCell>—</TableCell>
+          <TableCell>Included</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`rules=\"grid\"` rules every column and the outside, and a `colgroup` makes the columns equal, so the packages head the same columns as the rows under them. `wrap` on a header cell lets it hold a heading, a price and a button.",
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const table = canvas.getByRole("table");
+    await expect(table.getAttribute("data-rules")).toBe("grid");
+    // Every cell has a rule on its side, and the outside is ruled.
+    const cells = [...table.querySelectorAll("th, td")];
+    for (const cell of cells) await expect(getComputedStyle(cell).borderLeftWidth).toBe("1px");
+    await expect(getComputedStyle(table).borderTopWidth).toBe("1px");
+    // Equal columns: the colgroup turns on fixed layout.
+    const header = [...table.querySelectorAll("thead th")] as HTMLElement[];
+    await expect(Math.abs(header[1].offsetWidth - header[2].offsetWidth)).toBeLessThanOrEqual(1);
+    await expect(Math.abs(header[0].offsetWidth - header[1].offsetWidth)).toBeLessThanOrEqual(1);
+    // A wrap header holds its button and sits at the top.
+    await expect(getComputedStyle(header[1]).verticalAlign).toBe("top");
+    await expect(within(header[1]).getByRole("button", { name: "Start a Starter site" })).toBeInTheDocument();
+  },
+};
+
 export const Approvals: Story = {
   name: "Pattern — approvals queue",
   args: { children: null },
