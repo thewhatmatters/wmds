@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.46 · Pattern — upload with a count
+// @thewhatmatters/wmds@0.4.47 · Pattern — upload with a count
 // Storybook: Components/Progress → Pattern — upload with a count (?path=/story/components-progress--upload-pattern)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
