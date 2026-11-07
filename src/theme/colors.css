@@ -337,6 +337,9 @@
   );
   /* Cards lift 6% toward the ink; the muted step keeps its contrast on the light side. */
   --tone-raised: color-mix(in srgb, var(--tone-fg) 6%, var(--tone-bg));
+  /* The primary on this band: the ink by default; a brand kit can keep its own action colour here. */
+  --tone-action: var(--color-brand-surface-primary, var(--tone-fg));
+  --tone-on-action: var(--color-on-brand-surface-primary, var(--tone-bg));
 }
 
 [data-tone="field"] {
@@ -345,19 +348,25 @@
   /* Default: the ink itself, since a lighter step on a mid-tone field would fall under 4.5:1. */
   --tone-muted: var(--color-on-field-muted, var(--color-on-field));
   /* A tinted card would pull a mid-tone field under 4.5:1, so cards sit flat on the field. */
-  --tone-raised: var(--tone-bg);  /*
-   * The field defaults to the primary, so a primary Button would vanish into it. On a field the primary
-   * inverts: the field's ink as the fill, the field colour as the label (Randy, 2026-10-29).
-   * Inverse bands keep the primary: they carry data-theme="dark", so it takes the dark (or client's dark) value.
-   */
-  --color-primary: var(--tone-fg);
-  --color-on-primary: var(--tone-bg);
-  --color-primary-hover: color-mix(in srgb, var(--tone-fg) 88%, var(--tone-bg));
-  --color-primary-active: color-mix(in srgb, var(--tone-fg) 80%, var(--tone-bg));
+  --tone-raised: var(--tone-bg);
+  --tone-action: var(--tone-fg);
+  --tone-on-action: var(--tone-bg);
 }
 
 [data-tone="inverse"],
 [data-tone="field"] {
+  /*
+   * The primary inverts on a tone: the band's ink as the fill, the band colour as the label. On a field
+   * (which defaults to the primary) it would otherwise vanish (Randy, 2026-10-29); on an inverse band the
+   * dark slate primary (#5a6d85) sat at 2.98:1 on the navy and read as disabled (gap 4, 2026-11-06).
+   * Inverse bands read `--color-brand-surface-primary` / `--color-on-brand-surface-primary` first, so a
+   * brand whose action colour stands out on its dark surface can keep it. Hover and active step toward
+   * the band (stateColors.css, after its theme blocks); focus is the ink ring below; disabled is the
+   * Button's 70% opacity.
+   */
+  --color-primary: var(--tone-action);
+  --color-on-primary: var(--tone-on-action);
+
   --color-background-body: var(--tone-bg);
   --color-background-surface: var(--tone-raised);
   --color-background-card: var(--tone-raised);

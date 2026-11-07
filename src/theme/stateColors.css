@@ -72,3 +72,14 @@
   --color-warning-focus-ring: color-mix(in oklch, var(--color-warning) 50%, transparent);
   --color-success-focus-ring: color-mix(in oklch, var(--color-success) 50%, transparent);
 }
+
+/*
+ * Band tones: the primary's hover and active step toward the band. Here, after the theme blocks,
+ * because an inverse band also carries data-theme="dark", whose lift toward white would leave a white
+ * primary's hover identical to its rest state.
+ */
+[data-tone="inverse"],
+[data-tone="field"] {
+  --color-primary-hover: color-mix(in srgb, var(--tone-action) 88%, var(--tone-bg));
+  --color-primary-active: color-mix(in srgb, var(--tone-action) 80%, var(--tone-bg));
+}

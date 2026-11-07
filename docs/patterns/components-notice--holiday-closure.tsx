@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.45 · Pattern — holiday closure
+// @thewhatmatters/wmds@0.4.48 · Pattern — holiday closure
 // Storybook: Components/Notice → Pattern — holiday closure (?path=/story/components-notice--holiday-closure)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

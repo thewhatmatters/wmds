@@ -72,3 +72,46 @@ export const indexListPanelContentClasses = cn(typographyClass("body"), "text-mu
 
 /** Empty state — between the same rules as the rows. */
 export const indexListEmptyClasses = "border-y border-border py-8";
+
+/**
+ * `columns="page"`: the list sits on the WMDS page grid (subgrid) instead of its own tracks. The meta takes the
+ * first two columns from md (above the title on phones), the title the width, and a row's arrow the last column.
+ */
+export const indexListPageRootClasses = "col-span-full grid min-w-0 grid-cols-subgrid";
+export const indexListPageListClasses = "col-span-full grid grid-cols-subgrid";
+export const indexListPageCaptionsClasses = cn(
+  "col-span-full grid-cols-subgrid border-b border-border-emphasized pb-3 text-muted max-md:hidden md:grid",
+  typographyClass("eyebrow"),
+);
+export const indexListPageItemClasses = "col-span-full grid grid-cols-subgrid items-baseline border-b border-border py-4";
+export const indexListPageMetaClasses = cn(typographyClass("caption"), "col-span-full mb-1 tabular-nums md:col-span-2 md:mb-0");
+/** The title cell beside the meta; a row with an end cell (tags, arrow) leaves the last columns for it. */
+export const indexListPageTitleCellClasses = "col-span-full flex min-w-0 items-start gap-3 md:col-span-6 md:col-start-3 lg:col-span-10";
+export const indexListPageTitleCellEndClasses = "col-span-3 flex min-w-0 items-start gap-3 md:col-span-4 md:col-start-3 lg:col-span-7";
+/** The end cell: the row's tags (badges) then its arrow, flush to the end; one column on phones (arrow only), two from md, three from lg. */
+export const indexListPageEndClasses = "col-span-1 flex items-center justify-end gap-3 self-center md:col-span-2 lg:col-span-3";
+/** Tags sit in the end cell from md; on phones they join the meta line. */
+export const indexListTagsClasses = "flex-wrap justify-end gap-2 max-md:hidden md:flex";
+export const indexListTagsInMetaClasses = "ms-2 flex-wrap gap-2 align-middle max-md:inline-flex md:hidden";
+export const indexListPagePanelClasses = "col-span-full md:col-span-6 md:col-start-3 lg:col-span-10";
+
+/**
+ * A row that is one link (`arrow` or `external`): the title's link covers the whole row, and the row lights up under
+ * the pointer or keyboard focus with a quiet fill that bleeds a little past the text.
+ */
+export const indexListRowLinkClasses = cn(
+  "group/row relative isolate [&_a]:after:absolute [&_a]:after:inset-0 [&_a]:after:content-['']",
+  "before:pointer-events-none before:absolute before:inset-y-0 before:-inset-x-3 before:-z-10 before:rounded-md before:bg-ghost-hover before:opacity-0",
+  "has-[a:hover]:before:opacity-100 has-[a:focus-visible]:before:opacity-100",
+  motionTransition("fast"),
+  "before:transition-opacity",
+);
+/** The row's arrow at the end: decorative (the title says where it goes), nudged on hover. */
+export const indexListArrowClasses = cn(
+  "pointer-events-none flex shrink-0 justify-end self-center text-muted transition-transform",
+  motionTransition("fast"),
+);
+export const indexListArrowNudgeClasses = "group-has-[a:hover]/row:translate-x-1";
+export const indexListArrowNudgeExternalClasses = "group-has-[a:hover]/row:-translate-y-0.5 group-has-[a:hover]/row:translate-x-0.5";
+/** The preview control stays clickable over the row's link. */
+export const indexListToggleAboveRowClasses = "relative z-10";

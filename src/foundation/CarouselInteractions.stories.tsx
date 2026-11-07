@@ -546,6 +546,39 @@ export const AutoplayLoop: Story = {
   },
 };
 
+export const AutoplayPauseOnFocus: Story = {
+  name: "pause: on-focus keeps the Pause button out of sight until a keyboard user reaches it",
+  render: () => (
+    <MotionConfig reducedMotion="never">
+      <div className="w-[56rem]">
+        <button type="button">Before</button>
+        <Carousel aria-label="Client quotes" itemWidth={40} autoplay={{ speed: 60, pause: "on-focus" }} loop>
+          {tiles.map((tile) => (
+            <Carousel.Item key={tile.id}>
+              <img className="aspect-[4/3] w-full object-cover" src={tile.src} alt={tile.alt} />
+            </Carousel.Item>
+          ))}
+        </Carousel>
+      </div>
+    </MotionConfig>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const pause = canvas.getByRole("button", { name: "Pause" });
+    // Out of sight: its wrapper is clipped to a 1px box, so it takes no room under the row.
+    const box = pause.parentElement as HTMLElement;
+    await expect(box.getBoundingClientRect().width).toBeLessThanOrEqual(1);
+    // Still reachable from the keyboard (WCAG 2.2.2): Tab past the row lands on it, and it shows.
+    canvas.getByRole("button", { name: "Before" }).focus();
+    for (let step = 0; step < 4 && document.activeElement !== pause; step += 1) await userEvent.tab();
+    await expect(document.activeElement).toBe(pause);
+    await waitFor(() => expect(box.getBoundingClientRect().width).toBeGreaterThan(20));
+    // And it stops the drift.
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByRole("button", { name: "Play" })).toBeInTheDocument();
+  },
+};
+
 export const Velocity: Story = {
   name: "--carousel-velocity follows the row's movement and settles to 0",
   render: () => (

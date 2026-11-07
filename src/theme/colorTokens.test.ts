@@ -43,9 +43,23 @@ describe("colour tokens", () => {
   });
 
   it("inverts the primary on a field band, so a primary Button never matches the band", () => {
-    const tones = block(colors, '[data-tone="field"] {');
-    expect(tones).toContain("--color-primary: var(--tone-fg);");
-    expect(tones).toContain("--color-on-primary: var(--tone-bg);");
-    expect(tones).toMatch(/--color-primary-hover: color-mix\([^;]*var\(--tone-fg\)/);
+    const field = block(colors, '[data-tone="field"] {');
+    expect(field).toContain("--tone-action: var(--tone-fg);");
+    expect(field).toContain("--tone-on-action: var(--tone-bg);");
+    const tones = block(colors, '[data-tone="inverse"],\n[data-tone="field"] {');
+    expect(tones).toContain("--color-primary: var(--tone-action);");
+    expect(tones).toContain("--color-on-primary: var(--tone-on-action);");
+    // Hover and active follow the band after stateColors.css's theme blocks (an inverse band is also dark).
+    const states = state;
+    const toneStates = block(states, '[data-tone="inverse"],\n[data-tone="field"] {');
+    expect(states.lastIndexOf('[data-tone="inverse"]')).toBeGreaterThan(states.lastIndexOf('[data-theme="dark"]'));
+    expect(toneStates).toMatch(/--color-primary-hover: color-mix\([^;]*var\(--tone-action\)/);
+    expect(toneStates).toMatch(/--color-primary-active: color-mix\([^;]*var\(--tone-action\)/);
+  });
+
+  it("inverts the primary on an inverse band too, unless the brand kit sets its own (gap 4)", () => {
+    const inverse = block(colors, '[data-tone="inverse"] {');
+    expect(inverse).toContain("--tone-action: var(--color-brand-surface-primary, var(--tone-fg));");
+    expect(inverse).toContain("--tone-on-action: var(--color-on-brand-surface-primary, var(--tone-bg));");
   });
 });

@@ -8,11 +8,14 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
-import { ChevronDown } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ChevronDown } from "lucide-react";
 import { cn } from "../../../lib/cn";
 import { IconButton } from "../../atoms/IconButton/IconButton";
 import { TextLink } from "../../atoms/TextLink/TextLink";
 import {
+  indexListArrowClasses,
+  indexListArrowNudgeClasses,
+  indexListArrowNudgeExternalClasses,
   indexListCaptionsClasses,
   indexListChevronClasses,
   indexListChevronOpenClasses,
@@ -21,13 +24,26 @@ import {
   indexListListCaptionedClasses,
   indexListListClasses,
   indexListMetaClasses,
+  indexListPageCaptionsClasses,
+  indexListPageItemClasses,
+  indexListPageListClasses,
+  indexListPageMetaClasses,
+  indexListPagePanelClasses,
+  indexListPageRootClasses,
+  indexListPageEndClasses,
+  indexListPageTitleCellClasses,
+  indexListPageTitleCellEndClasses,
+  indexListTagsClasses,
+  indexListTagsInMetaClasses,
   indexListPanelClasses,
   indexListPanelContentClasses,
   indexListPanelInnerClasses,
   indexListRootClasses,
+  indexListRowLinkClasses,
   indexListTitleCellClasses,
   indexListTitleClasses,
   indexListTitleSizeClasses,
+  indexListToggleAboveRowClasses,
   indexListToggleAlignClasses,
   type IndexListSize,
   type IndexListTitleElement,
@@ -60,6 +76,12 @@ export interface IndexListProps {
   captions?: IndexListCaptions;
   /** Title scale: `lg` type-display-3 (default), `md` type-heading-1, `sm` type-heading-3. */
   size?: IndexListSize;
+  /**
+   * `tracks` (default): the list's own two tracks (meta and title). `page`: the rows sit on the WMDS page grid
+   * (place the list as a direct child of a `grid-page` or Band): meta in the first two columns from md, the title
+   * across the width, a row's arrow in the last column. Like a table of posts.
+   */
+  columns?: "tracks" | "page";
   /** The heading element around each title. Default: `h2`. */
   titleAs?: IndexListTitleElement;
   /** Shown in place of the rows when there are none — for example "No posts match these filters." */
@@ -95,15 +117,30 @@ export interface IndexListItemProps {
   onOpenChange?: (open: boolean) => void;
   /** Names the preview control. Default: "Preview: {title}". */
   previewLabel?: string;
+  /**
+   * The whole row is the link: one hit area, a quiet fill across the row on hover and keyboard focus. `arrow` sets
+   * it too.
+   */
+  rowLink?: boolean;
+  /** An arrow at the row's end (→, or ↗ with `external`); the whole row is the link. */
+  arrow?: boolean;
+  /** The row goes to another site: the link opens in a new tab (said to screen readers), and its arrow, if any, is ↗. */
+  external?: boolean;
+  /**
+   * Slot: the row's tags, a few WMDS `Badge`s (e.g. "Case study", "Guide"), at the row's end before its arrow (from
+   * md; on phones they join the meta line). Needs `columns="page"`.
+   */
+  tags?: ReactNode;
   className?: IndexListLayoutClassName;
 }
 
 interface IndexListContextValue {
   size: IndexListSize;
   titleAs: IndexListTitleElement;
+  page: boolean;
 }
 
-const IndexListContext = createContext<IndexListContextValue>({ size: "lg", titleAs: "h2" });
+const IndexListContext = createContext<IndexListContextValue>({ size: "lg", titleAs: "h2", page: false });
 
 /**
  * Editorial index — a ruled list where each row has a meta column, a large linked title, and an
@@ -113,6 +150,7 @@ function IndexListRoot({
   captions,
   size = "lg",
   titleAs = "h2",
+  columns = "tracks",
   empty,
   resultsLabel,
   "aria-label": ariaLabel,
@@ -121,15 +159,16 @@ function IndexListRoot({
   className,
 }: IndexListProps) {
   const hasRows = Children.toArray(children).length > 0;
-  const contextValue = useMemo(() => ({ size, titleAs }), [size, titleAs]);
+  const page = columns === "page";
+  const contextValue = useMemo(() => ({ size, titleAs, page }), [size, titleAs, page]);
 
   return (
     <IndexListContext.Provider value={contextValue}>
-      <div className={cn(indexListRootClasses, className)} data-size={size}>
+      <div className={cn(page ? indexListPageRootClasses : indexListRootClasses, className)} data-size={size} data-columns={columns}>
         {hasRows && captions != null ? (
-          <div className={indexListCaptionsClasses} aria-hidden="true" data-index-list-captions="">
-            <span>/ {captions.meta}</span>
-            <span className="@lg:col-start-2">/ {captions.title}</span>
+          <div className={page ? indexListPageCaptionsClasses : indexListCaptionsClasses} aria-hidden="true" data-index-list-captions="">
+            <span className={page ? "md:col-span-2" : undefined}>/ {captions.meta}</span>
+            <span className={page ? "md:col-span-6 md:col-start-3 lg:col-span-10" : "@lg:col-start-2"}>/ {captions.title}</span>
           </div>
         ) : null}
         {hasRows ? (
@@ -137,7 +176,7 @@ function IndexListRoot({
             role="list"
             aria-label={ariaLabel}
             aria-labelledby={ariaLabelledBy}
-            className={cn(indexListListClasses, captions != null && indexListListCaptionedClasses)}
+            className={cn(indexListListClasses, page && indexListPageListClasses, captions != null && indexListListCaptionedClasses)}
           >
             {children}
           </ul>
@@ -166,9 +205,15 @@ function IndexListItem({
   open: openProp,
   onOpenChange,
   previewLabel,
+  rowLink: rowLinkProp = false,
+  arrow = false,
+  external = false,
+  tags,
   className,
 }: IndexListItemProps) {
-  const { size, titleAs: Title } = useContext(IndexListContext);
+  const { size, titleAs: Title, page } = useContext(IndexListContext);
+  const rowLink = rowLinkProp || arrow;
+  const hasEnd = page && (arrow || tags != null);
   const panelId = useId();
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
   const isControlled = openProp !== undefined;
@@ -182,18 +227,26 @@ function IndexListItem({
   }
 
   return (
-    <li className={cn(indexListItemClasses, className)}>
-      {meta != null ? <div className={indexListMetaClasses}>{meta}</div> : null}
-      <div className={indexListTitleCellClasses}>
+    <li
+      className={cn(page ? indexListPageItemClasses : indexListItemClasses, rowLink && indexListRowLinkClasses, className)}
+      data-row-link={rowLink ? "" : undefined}
+    >
+      {meta != null ? (
+        <div className={page ? indexListPageMetaClasses : indexListMetaClasses}>
+          {meta}
+          {page && tags != null ? <span className={indexListTagsInMetaClasses}>{tags}</span> : null}
+        </div>
+      ) : null}
+      <div className={page ? (hasEnd ? indexListPageTitleCellEndClasses : indexListPageTitleCellClasses) : indexListTitleCellClasses}>
         <Title className={cn(indexListTitleClasses, indexListTitleSizeClasses[size])}>
-          <TextLink variant="quiet" href={href} render={render}>
+          <TextLink variant="quiet" href={href} render={render} newTab={external}>
             {title}
           </TextLink>
         </Title>
         {hasPreview ? (
           <IconButton
             size="md"
-            className={indexListToggleAlignClasses[size]}
+            className={cn(indexListToggleAlignClasses[size], rowLink && indexListToggleAboveRowClasses)}
             icon={<ChevronDown className={cn(indexListChevronClasses, open && indexListChevronOpenClasses)} />}
             aria-label={previewLabel ?? `Preview: ${title}`}
             title=""
@@ -202,9 +255,24 @@ function IndexListItem({
             onClick={toggle}
           />
         ) : null}
+        {arrow && !page ? (
+          <span aria-hidden="true" className={cn(indexListArrowClasses, external ? indexListArrowNudgeExternalClasses : indexListArrowNudgeClasses)}>
+            {external ? <ArrowUpRight className="size-5" strokeWidth={2} /> : <ArrowRight className="size-5" strokeWidth={2} />}
+          </span>
+        ) : null}
       </div>
+      {hasEnd ? (
+        <div className={indexListPageEndClasses}>
+          {tags != null ? <span className={indexListTagsClasses}>{tags}</span> : null}
+          {arrow ? (
+            <span aria-hidden="true" className={cn(indexListArrowClasses, external ? indexListArrowNudgeExternalClasses : indexListArrowNudgeClasses)}>
+              {external ? <ArrowUpRight className="size-5" strokeWidth={2} /> : <ArrowRight className="size-5" strokeWidth={2} />}
+            </span>
+          ) : null}
+        </div>
+      ) : null}
       {hasPreview ? (
-        <div className={cn("motion-collapse", indexListPanelClasses)} data-visible={open ? "true" : "false"}>
+        <div className={cn("motion-collapse", page ? indexListPagePanelClasses : indexListPanelClasses)} data-visible={open ? "true" : "false"}>
           <div id={panelId} className={indexListPanelInnerClasses}>
             <div className={indexListPanelContentClasses}>{preview}</div>
           </div>

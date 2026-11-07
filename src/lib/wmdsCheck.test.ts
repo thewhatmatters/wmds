@@ -211,6 +211,14 @@ export function ServicesCard({ onPick }: { onPick: (value: string) => void }) {
       expect(result.status).toBe(1);
     });
 
+    it("checks the inverse band's own primary pair", () => {
+      const result = check({
+        "brand.css": `:root {\n  --color-brand-surface-primary: #e86a3e;\n  --color-on-brand-surface-primary: #f3e3c3;\n}`,
+      });
+      expect(result.rules).toEqual(["brand-contrast"]);
+      expect(result.findings[0]).toMatchObject({ line: 3 });
+    });
+
     it("reads each rule on its own, including inside @media", () => {
       const result = check({
         "brand.css": `@media (prefers-color-scheme: dark) {\n  :root { --color-field: #e2522b; --color-on-field: #ffffff; }\n}`,

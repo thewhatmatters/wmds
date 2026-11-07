@@ -7,11 +7,15 @@ import {
   tableCellClasses,
   tableClasses,
   tableFooterClasses,
+  tableGridRulesClasses,
+  tableHeadWrapClasses,
   tableHeadClasses,
   tableHeaderClasses,
   tableRowClasses,
   tableScrollClasses,
   tableStickyClasses,
+  tableStickyHeaderClasses,
+  tableStickyHeaderScrollClasses,
   type TableAlign,
 } from "./tableStyles";
 
@@ -26,6 +30,18 @@ export interface TableProps {
   /** Names the scrolling region and the table. One of `aria-label` or `aria-labelledby` is required. */
   "aria-label"?: string;
   "aria-labelledby"?: string;
+  /**
+   * `rows` (default): a rule under each row. `grid`: rules between the columns and round the outside too, so every
+   * cell is a ruled box. Pair it with a `colgroup` for equal columns (a pricing grid whose packages head the columns).
+   */
+  rules?: "rows" | "grid";
+  /**
+   * Pin the header row to the top of the page while the rows scroll under it, so a long comparison keeps its
+   * column heads in view (a pricing grid's packages). Needs `rules="grid"`: only a table that fits its box can let
+   * go of the sideways scroll that would otherwise trap the header. Offset it under a fixed nav with
+   * `--table-sticky-top` on a parent.
+   */
+  stickyHeader?: boolean;
   /** Layout-only — applies to the scroll box. */
   className?: TableLayoutClassName;
 }
@@ -45,6 +61,8 @@ export interface TableHeadProps extends Omit<ThHTMLAttributes<HTMLTableCellEleme
   align?: TableAlign;
   /** Pin the column to the start edge while the table scrolls sideways. Set it on every cell of the column. */
   sticky?: boolean;
+  /** Content richer than a label (a heading, a price, a button): it wraps, sits at the top of the cell and gets more room. */
+  wrap?: boolean;
   className?: TableLayoutClassName;
 }
 
@@ -65,16 +83,17 @@ export interface TableCaptionProps {
  * Semantic table in a horizontal-scroll box. The box is a focusable `region` named by the table's
  * label, so a keyboard can scroll it; the table never squeezes its columns below their content.
  */
-function Table({ children, "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, className }: TableProps) {
+function Table({ children, "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, rules = "rows", stickyHeader, className }: TableProps) {
+  const pinHeader = stickyHeader === true && rules === "grid";
   return (
     <div
       role="region"
       tabIndex={0}
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
-      className={cn(tableScrollClasses, className)}
+      className={cn(tableScrollClasses, pinHeader && tableStickyHeaderScrollClasses, className)}
     >
-      <table className={tableClasses}>
+      <table className={cn(tableClasses, rules === "grid" && tableGridRulesClasses, pinHeader && tableStickyHeaderClasses)} data-rules={rules}>
         {children}
       </table>
     </div>
@@ -101,9 +120,9 @@ function TableRow({ children, className, ...rest }: TableRowProps) {
   );
 }
 
-function TableHead({ align = "start", sticky, scope = "col", className, children, ...rest }: TableHeadProps) {
+function TableHead({ align = "start", sticky, wrap, scope = "col", className, children, ...rest }: TableHeadProps) {
   return (
-    <th {...rest} scope={scope} className={cn(tableHeadClasses, tableAlignClasses[align], sticky && tableStickyClasses, className)}>
+    <th {...rest} scope={scope} className={cn(tableHeadClasses, tableAlignClasses[align], sticky && tableStickyClasses, wrap && tableHeadWrapClasses, className)}>
       {children}
     </th>
   );
