@@ -29,7 +29,10 @@ Dark mode is `data-theme="dark"` on any ancestor. A client's brand is a short `b
 
 A page built from WMDS bands, type and buttons. Open **Show code** to copy it:
 
-<Canvas of={BandStories.PageInBands} />
+{/* The hero's type scales with the window (16vw), but this canvas is narrower than the window, so cap it here (the brand-kit knob) or a wide window breaks "Smoke" mid-word. Show code is unchanged. */}
+<div style={{ "--text-display-hero-size": "clamp(3.5rem, 12vw, 9.5rem)" }}>
+  <Canvas of={BandStories.PageInBands} />
+</div>
 
 ## Where next
 
