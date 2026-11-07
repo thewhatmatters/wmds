@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { Band } from "../components/atoms/Band/Band";
 import { Button } from "../components/atoms/Button/Button";
+import { Checkbox } from "../components/atoms/Checkbox/Checkbox";
+import { Switch } from "../components/atoms/Switch/Switch";
+import { contrastRatio, mixSrgb } from "../lib/contrast";
 import { ThemeAClientExample } from "./BrandKit.stories";
 
 /**
@@ -89,5 +92,92 @@ export const ClientBrandKit: Story = {
     // Inside the inverse band, primary takes the client's dark value.
     expect(style(canvas.getByRole("button", { name: "Book a date" })).backgroundColor).toBe("rgb(232, 106, 62)");
     expect(canvas.queryAllByText("Fail")).toHaveLength(0);
+  },
+};
+
+/** A computed colour (`rgb()`, `rgba()` or `color(srgb …)`) as opaque hex. */
+function hex(computed: string) {
+  const srgb = computed.match(/color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)/);
+  const channels = srgb
+    ? srgb.slice(1, 4).map((value) => Math.round(Number(value) * 255))
+    : (computed.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
+  if (channels.length !== 3 || channels.some(Number.isNaN)) throw new Error(`Unreadable colour: ${computed}`);
+  return `#${channels.map((value) => value.toString(16).padStart(2, "0")).join("")}`;
+}
+
+/** Resolve a colour token in a scope: paint a probe with it and read the computed value back. */
+function token(scope: Element, name: string) {
+  const probe = scope.ownerDocument.createElement("span");
+  probe.style.backgroundColor = `var(${name})`;
+  scope.append(probe);
+  const value = hex(getComputedStyle(probe).backgroundColor);
+  probe.remove();
+  return value;
+}
+
+export const InversePrimary: Story = {
+  name: "on an inverse band the primary reads enabled: AA label, 3:1 fill, distinct states",
+  render: () => (
+    <Band tone="inverse" aria-label="inverse">
+      <div className="col-span-full flex flex-wrap items-center gap-3">
+        <Button role="primary">Book a table</Button>
+        <Button role="primary" disabled>
+          Sold out
+        </Button>
+        <Checkbox label="Remember me" defaultChecked />
+        <Switch label="Reminders" defaultChecked />
+      </div>
+    </Band>
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    const band = canvas.getByRole("region", { name: "inverse" });
+    const page = hex(style(band).backgroundColor);
+    const fill = token(band, "--color-primary");
+    const label = token(band, "--color-on-primary");
+    const hover = token(band, "--color-primary-hover");
+    const active = token(band, "--color-primary-active");
+    const ring = token(band, "--color-focus-ring");
+    const ratios = {
+      fillOnBand: contrastRatio(fill, page),
+      label: contrastRatio(label, fill),
+      labelOnHover: contrastRatio(label, hover),
+      labelOnActive: contrastRatio(label, active),
+      ringOnBand: contrastRatio(ring, page),
+    };
+    // Logged so a run records the measured values.
+    console.info("inverse primary", { page, fill, label, hover, active, ring, ratios });
+
+    // The button is the token pair it claims to be.
+    const button = canvas.getByRole("button", { name: "Book a table" });
+    expect(hex(style(button).backgroundColor)).toBe(fill);
+    expect(hex(style(button).color)).toBe(label);
+    // Enabled: a fill that stands off the band (3:1, a control's edge) and an AA label in every state.
+    expect(ratios.fillOnBand).toBeGreaterThanOrEqual(3);
+    expect(ratios.label).toBeGreaterThanOrEqual(4.5);
+    expect(ratios.labelOnHover).toBeGreaterThanOrEqual(4.5);
+    expect(ratios.labelOnActive).toBeGreaterThanOrEqual(4.5);
+    expect(ratios.ringOnBand).toBeGreaterThanOrEqual(3);
+    // Rest, hover and active are three different fills.
+    expect(new Set([fill, hover, active]).size).toBe(3);
+    // Synthetic pointer events don't set :hover, so check the Button paints those tokens.
+    expect(button.className).toContain("hover:bg-primary-hover");
+    expect(button.className).toContain("active:bg-primary-active");
+
+    // Disabled: drawn at the Button's opacity over the band, visibly dimmer, label still 3:1 (U6).
+    const disabled = canvas.getByRole("button", { name: "Sold out" });
+    const opacity = Number(style(disabled).opacity);
+    expect(opacity).toBeLessThan(1);
+    const dimFill = mixSrgb(fill, opacity, page);
+    const dimLabel = mixSrgb(label, opacity, page);
+    expect(contrastRatio(dimLabel, dimFill)).toBeGreaterThanOrEqual(3);
+    expect(contrastRatio(fill, dimFill)).toBeGreaterThan(1.2);
+
+    // Checked controls read the same primary: their fill stands off the band too.
+    for (const name of ["Remember me", "Reminders"]) {
+      const control = canvas.getByRole(name === "Reminders" ? "switch" : "checkbox", { name });
+      const filled = control.closest("label")?.querySelector('[class*="bg-primary"]') ?? canvasElement.querySelector('[class*="bg-primary"]');
+      expect(filled).not.toBeNull();
+      expect(contrastRatio(hex(style(filled!).backgroundColor), page)).toBeGreaterThanOrEqual(3);
+    }
   },
 };

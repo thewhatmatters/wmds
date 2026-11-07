@@ -26,7 +26,7 @@
  *                             password, address, organization…; Required and optional Q8): autofill paints
  *                             over the badge, so say "(optional)" in the label
  *   brand-contrast    error  a brand-kit pair in the app's CSS under WCAG AA 4.5:1: --color-on-X (and
- *                             --color-on-X-muted) on --color-X, for primary, brand-surface and field,
+ *                             --color-on-X-muted) on --color-X, for primary, brand-surface, brand-surface-primary and field,
  *                             when both are hex values in the same rule
  *
  * Silence one line with a trailing or preceding comment: `wmds-check-ignore raw-control <reason>`.
@@ -328,7 +328,7 @@ for (const file of files) {
 }
 
 // Brand-kit contrast. Innermost rule blocks only, so a pair inside @media is read as its own rule.
-const brandPairs = ["primary", "brand-surface", "field"];
+const brandPairs = ["primary", "brand-surface", "brand-surface-primary", "field"];
 const channel = (value) => {
   const c = value / 255;
   return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
