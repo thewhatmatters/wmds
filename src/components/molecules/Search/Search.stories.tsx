@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MapPin } from "lucide-react";
+import { useState, type FormEvent } from "react";
+import { Field } from "../Field/Field";
 import { Search, searchSizes } from "./Search";
 
 const meta = {
@@ -40,6 +42,7 @@ Hero location search — one **pill shell** with inset action button.
 
 - **Do** use for ZIP/city + "Use my location" / "GO" search rows.
 - **Do** pair with Example-level expand/collapse from a "Find" trigger.
+- **Do** use it for a one-field signup (newsletter, waitlist): \`type="email"\`, \`actionType="submit"\` inside a \`form\`, a visible label from **Field**, and \`status\` + \`message\` for what to fix.
 - **Don't** use solo bordered \`Input\` beside \`Button\` for this pattern — use \`Search\`.
         `.trim(),
       },
@@ -83,4 +86,67 @@ export const OnBeige: Story = {
       <Search {...args} />
     </div>
   ),
+};
+
+export const WithMessage: Story = {
+  name: "With validation message",
+  args: {
+    actionLabel: "Subscribe",
+    "aria-label": "Email address",
+    placeholder: undefined,
+    type: "email",
+    defaultValue: "randy@",
+    status: "error",
+    message: "Enter an email address, like name@example.com.",
+  },
+  render: (args) => (
+    <div className="w-full max-w-lg">
+      <Search {...args} />
+    </div>
+  ),
+};
+
+/** A one-field signup: the button sends the form; Enter does the same. */
+function NewsletterSignup() {
+  const [error, setError] = useState<string | undefined>();
+  const [sent, setSent] = useState<string | null>(null);
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const email = String(new FormData(event.currentTarget).get("email") ?? "").trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Enter an email address, like name@example.com.");
+      return;
+    }
+    setError(undefined);
+    setSent(email);
+  };
+  return (
+    <form className="w-full max-w-lg" onSubmit={submit} noValidate>
+      <Field label="Email address">
+        <Search
+          type="email"
+          name="email"
+          autoComplete="email"
+          actionLabel="Subscribe"
+          actionType="submit"
+          status={error ? "error" : undefined}
+          message={error}
+          onChange={() => setError(undefined)}
+        />
+      </Field>
+      {sent ? <p className="mt-3 type-body text-muted">Subscribed {sent}</p> : null}
+    </form>
+  );
+}
+
+export const NewsletterSignupPattern: Story = {
+  name: "Pattern — newsletter signup",
+  parameters: {
+    docs: {
+      description: {
+        story: "One email field with **Subscribe** inside it at the right end (`actionType=\"submit\"`). A wrong address opens the band under the pill and keeps what was typed.",
+      },
+    },
+  },
+  render: () => <NewsletterSignup />,
 };
