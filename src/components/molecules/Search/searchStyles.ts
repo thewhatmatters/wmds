@@ -5,7 +5,7 @@ export const searchSizes = ["sm", "md"] as const;
 export type SearchSize = (typeof searchSizes)[number];
 
 const searchShellBaseClasses =
-  "flex w-full items-center rounded-[var(--radius-control)] border border-border-control bg-surface " +
+  "relative z-10 flex w-full items-center rounded-[var(--radius-control)] border bg-surface " +
   // Labels and placeholders F10: the pill's ring is the field's; the inset button shows its own.
   "has-[input:focus-visible]:outline-none has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-focus-ring has-[input:focus-visible]:ring-offset-2 has-[input:focus-visible]:ring-offset-body " +
   focusRingTransitionClasses;
@@ -15,6 +15,17 @@ export const searchShellClasses: Record<SearchSize, string> = {
   sm: `${searchShellBaseClasses} h-10 gap-1.5 p-1 pl-2`,
   md: `${searchShellBaseClasses} h-11 gap-2 p-1 pl-2`,
 };
+
+/** The pill's border: the control line, or the status colour while a validation message shows. */
+export const searchShellBorderClasses = {
+  default: "border-border-control",
+  error: "border-error shadow-sm",
+  warning: "border-warning shadow-sm",
+  success: "border-success shadow-sm",
+} as const;
+
+/** The band under the pill tucks up under its lower half, as on Input. */
+export const searchBannerSizes: Record<SearchSize, "sm" | "md"> = { sm: "sm", md: "md" };
 
 /** Inline input track — shorter than solo Input md so the inset button can breathe. */
 export const searchInlineInputClasses: Record<SearchSize, string> = {

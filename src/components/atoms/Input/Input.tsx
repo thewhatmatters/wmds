@@ -230,7 +230,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         ref={ref}
         id={controlId}
         disabled={disabled}
-        aria-invalid={status === "error" || undefined}
+        // An inline field (inside Search) takes its invalid state from the parent pill.
+        aria-invalid={status === "error" || rest["aria-invalid"] || undefined}
         aria-busy={loading || undefined}
         aria-describedby={describedBy}
         className={cn(
