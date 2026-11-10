@@ -1,5 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm run build-storybook",
-  "outputDirectory": "storybook-static"
+  "buildCommand": "WMDS_SITE=1 npm run build-storybook",
+  "outputDirectory": "storybook-static",
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    }
+  ]
 }

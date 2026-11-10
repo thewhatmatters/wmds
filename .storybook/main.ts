@@ -17,19 +17,26 @@ copyFileSync(
   path.join(dirname, "../public/rive/rive.wasm"),
 );
 
+const site = process.env.WMDS_SITE === "1";
+
 const config: StorybookConfig = {
   staticDirs: ["../public"],
   "stories": [
     "../src/**/*.mdx",
     "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"
   ],
-  "addons": [
-    "@chromatic-com/storybook",
-    "@storybook/addon-vitest",
-    "@storybook/addon-a11y",
-    "@storybook/addon-docs",
-    "@storybook/addon-mcp"
-  ],
+  // The public site (WMDS_SITE=1, the Vercel build) ships only docs: the test, a11y, Chromatic and MCP
+  // addons are for working on WMDS, and axe alone adds ~160 kB to every story a visitor opens.
+  "addons": site
+    ? ["@storybook/addon-docs"]
+    : [
+        "@chromatic-com/storybook",
+        "@storybook/addon-vitest",
+        "@storybook/addon-a11y",
+        "@storybook/addon-docs",
+        "@storybook/addon-mcp"
+      ],
+  core: { disableWhatsNewNotifications: site },
   "framework": "@storybook/react-vite"
 };
 export default config;

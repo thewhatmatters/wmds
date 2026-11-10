@@ -1725,6 +1725,22 @@
       "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
     },
     {
+      "name": "components-progress--upload-pattern",
+      "type": "registry:block",
+      "title": "Progress — upload with a count",
+      "description": "Show code for Storybook Components/Progress → Pattern — upload with a count.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-progress--upload-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
       "name": "components-promptbar--pattern-prompt-bar",
       "type": "registry:block",
       "title": "PromptBar — prompt bar",
