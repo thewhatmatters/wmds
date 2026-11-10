@@ -48,6 +48,7 @@ import {
   carouselDriftControlOnFocusClasses,
   carouselCounterClasses,
   carouselCursorClasses,
+  carouselCursorLayerClasses,
   carouselProgressInControlsClasses,
   carouselDefaultItemWidth,
   carouselExtentClasses,
@@ -278,6 +279,7 @@ function CarouselRoot({
   /** Reasons the drift holds: a hover, focus inside the row, or the row off screen. */
   const hold = useRef({ hover: false, focus: false, offscreen: false });
   const cursorRef = useRef<HTMLDivElement>(null);
+  const cursorLayerRef = useRef<HTMLDivElement>(null);
   /** Last position and time, for `--carousel-velocity`. */
   const pace = useRef({ position: 0, time: 0, reset: undefined as number | undefined });
   /** The raw pace, and a Motion spring that smooths it so items lean without jitter. */
@@ -592,10 +594,10 @@ function CarouselRoot({
   /** The follow badge: placed at the pointer, over the row only, for a mouse on a device that can hover. */
   function handleCursorMove(event: PointerEvent<HTMLDivElement>) {
     const badge = cursorRef.current;
-    const root = rootRef.current;
-    if (!badge || !root) return;
+    const layer = cursorLayerRef.current;
+    if (!badge || !layer) return;
     if (event.pointerType !== "mouse" || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-    const rect = root.getBoundingClientRect();
+    const rect = layer.getBoundingClientRect();
     badge.style.transform = `translate3d(${event.clientX - rect.left}px, ${event.clientY - rect.top}px, 0) translate(-50%, -50%)`;
     badge.dataset.shown = "";
     if (drag.current?.active) badge.dataset.dragging = "";
@@ -780,7 +782,7 @@ function CarouselRoot({
   return (
     <div
       ref={rootRef}
-      className={cn(carouselRootClasses, cursor != null && "relative", className)}
+      className={cn(carouselRootClasses, className)}
       style={rootStyle}
       data-carousel=""
       data-autoplay={driftSpeed > 0 ? "" : undefined}
@@ -841,6 +843,14 @@ function CarouselRoot({
             </motion.div>
           </div>
         </div>
+        {cursor != null ? (
+          // The badge is cut off at the row's edges, so near the page edge it can't widen the page.
+          <div ref={cursorLayerRef} className={carouselCursorLayerClasses}>
+            <div ref={cursorRef} aria-hidden="true" className={carouselCursorClasses} data-carousel-cursor="">
+              {cursor}
+            </div>
+          </div>
+        ) : null}
       </div>
       {progressShown !== "none" || showDriftControl ? (
         <div
@@ -893,11 +903,6 @@ function CarouselRoot({
           />
         )
       ) : null}
-        </div>
-      ) : null}
-      {cursor != null ? (
-        <div ref={cursorRef} aria-hidden="true" className={carouselCursorClasses} data-carousel-cursor="">
-          {cursor}
         </div>
       ) : null}
       {counterShown ? (
