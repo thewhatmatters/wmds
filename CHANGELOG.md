@@ -7,6 +7,19 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): don't edit this file on a feature branch. Add a release note as `changes/<topic>.md` (format in `changes/README.md`). The release step, `npm run release:prepare` on its own **Release 0.x.y** branch, folds every note into one new entry here and bumps the version once. `npm run check:changelog` checks this file and the notes.
 
+## 0.4.49
+
+**Search: a one-field signup, with the button inside the field and a validation band.**
+
+- **Search** `actionType="submit"`: the inset action becomes the form's submit button, so a click and Enter both send the form (a newsletter or waitlist signup). Default `button`, as before.
+- **Search** `status` and `message`: the pill's border takes the status colour and the message opens in the band under it, as on **Input**. The field is marked invalid and described by the message, and keeps what was typed and its focus.
+- **Input**: an inline field keeps an `aria-invalid` passed to it (Search sets it from its own `status`).
+- New story: Search → Pattern — newsletter signup (wrap Search in **Field** for a visible label).
+
+### Consumer actions
+
+- None.
+
 ## 0.4.48
 
 **IndexList: rows on the page grid, with tags and arrows.**
