@@ -351,6 +351,7 @@ A client's brand on WMDS is a short `brand.css` (imported after `styles.css`, un
 | `--text-display-hero-size` | `clamp(3.5rem, 16vw, 16rem)` | `type-display-hero` (a condensed face carries more vw) |
 | `--color-brand-surface` / `--color-on-brand-surface` | the navy / white | **Band** `tone="inverse"` |
 | `--color-on-brand-surface-muted` | 72% of the ink on the surface | secondary text on `inverse` |
+| `--color-brand-surface-primary` / `--color-on-brand-surface-primary` | unset: the surface's ink as the fill, the surface as the label | primary controls (**Button** `primary`, checked **Checkbox** / **Radio** / **Switch**) on `inverse`. Set it when the brand's action colour stands out on its dark surface (3:1 against it, 4.5:1 for its label) |
 | `--color-field` / `--color-on-field` | the primary pair | **Band** `tone="field"` |
 | `--color-on-field-muted` | the ink itself | secondary text on `field` |
 

@@ -17,6 +17,9 @@ const brandCss = `
   --color-brand-surface: #120d08;
   --color-on-brand-surface: #f3e3c3;
   --color-on-brand-surface-muted: #a89a80;
+  /* The orange stands out on the near-black, so inverse bands keep it as their primary. */
+  --color-brand-surface-primary: #e86a3e;
+  --color-on-brand-surface-primary: #120d08;
   --color-field: #e2522b;
   --color-on-field: #120d08;
 }
@@ -36,6 +39,7 @@ export const brandKitClient = {
     { label: "on-primary on primary (dark)", ink: "#120d08", background: "#e86a3e" },
     { label: "on-brand-surface on brand-surface", ink: "#f3e3c3", background: "#120d08" },
     { label: "on-brand-surface-muted on brand-surface", ink: "#a89a80", background: "#120d08" },
+    { label: "on-brand-surface-primary on brand-surface-primary", ink: "#120d08", background: "#e86a3e" },
     { label: "on-field on field", ink: "#120d08", background: "#e2522b" },
   ],
 } as const;
