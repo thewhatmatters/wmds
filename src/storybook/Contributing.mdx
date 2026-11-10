@@ -1,6 +1,6 @@
 import { Meta } from "@storybook/addon-docs/blocks";
 
-<Meta title="Getting started" />
+<Meta title="Contributing" />
 
 export function DocTable({ rows }) {
   return (
@@ -46,7 +46,10 @@ export function TokenTable({ rows }) {
   );
 }
 
-# Getting started
+# Contributing
+
+For people working on WMDS itself: the repo layout, authoring rules and commands. Using WMDS in an app? Start at **[Start here](?path=/docs/start-here--docs)**.
+
 
 WMDS is the WhatMatters Tailwind v4 theme, component library, and Storybook catalog. **Storybook is canonical** — tokens, motion, components, and approved compositions are specified here first; Paper is for mockups only.
 
@@ -60,7 +63,7 @@ WMDS is the WhatMatters Tailwind v4 theme, component library, and Storybook cata
     ["src/theme/grid.css", "App grid spine — --grid-* , grid-page / band, overlay"],
     ["src/theme/sources.css", "Tailwind content manifest for Storybook + package CSS"],
     ["src/lib/motion.ts", "Motion adapter — reads Theme CSS vars"],
-    ["Storybook", "Source of truth: Getting started → Guides → Foundations → Components"],
+    ["Storybook", "Source of truth: Start here → Guides → Foundations → Components"],
   ]}
 />
 
@@ -209,7 +212,7 @@ src/
     molecules/            atom groups (exported)
     organisms/            UI sections (exported)
   guides/                 cross-component guidance (Storybook only)
-  storybook/              Storybook-only helpers: Getting started, Components → Overview, ExampleGridControls
+  storybook/              Storybook-only helpers: Start here, Contributing, Components → Overview, ExampleGridControls
   package.manifest.ts     export + atomic catalog
 ```
 

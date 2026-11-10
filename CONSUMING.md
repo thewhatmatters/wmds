@@ -172,7 +172,7 @@ Or theme only (if you configure Tailwind yourself):
 
 That entry brings the tokens, the fonts, the collapse utilities, and an `@source` for the package's built modules, so the app's Tailwind generates the utilities the components use.
 
-**Fonts ship in the package.** Geist Sans and Geist Mono are in `dist/files`, and both style entries reference them. Do not install `@fontsource-variable/*` or copy font files into `node_modules`.
+**Fonts ship in the package.** Geist Sans and Geist Mono are in `dist/files`, and both style entries reference them. Do not install `@fontsource-variable/*` or copy font files into `node_modules`. The fonts are under the SIL Open Font License 1.1; its text and the copyright notice sit beside them as `dist/files/LICENSE-geist.txt` and `dist/files/LICENSE-geist-mono.txt`.
 
 **Imports are per module.** The package builds one module per source file, so an app loads GSAP only when it imports **TextSequence** and Rive only when it imports **RiveHand**.
 
@@ -351,6 +351,7 @@ A client's brand on WMDS is a short `brand.css` (imported after `styles.css`, un
 | `--text-display-hero-size` | `clamp(3.5rem, 16vw, 16rem)` | `type-display-hero` (a condensed face carries more vw) |
 | `--color-brand-surface` / `--color-on-brand-surface` | the navy / white | **Band** `tone="inverse"` |
 | `--color-on-brand-surface-muted` | 72% of the ink on the surface | secondary text on `inverse` |
+| `--color-brand-surface-primary` / `--color-on-brand-surface-primary` | unset: the surface's ink as the fill, the surface as the label | primary controls (**Button** `primary`, checked **Checkbox** / **Radio** / **Switch**) on `inverse`. Set it when the brand's action colour stands out on its dark surface (3:1 against it, 4.5:1 for its label) |
 | `--color-field` / `--color-on-field` | the primary pair | **Band** `tone="field"` |
 | `--color-on-field-muted` | the ink itself | secondary text on `field` |
 
