@@ -58,6 +58,9 @@ const forbidden = [
 const problems = [];
 for (const file of required) if (!files.has(file)) problems.push(`missing ${file}`);
 if (![...files].some((file) => /^dist\/files\/.+\.woff2$/.test(file))) problems.push("missing fonts in dist/files");
+for (const name of ["geist", "geist-mono"]) {
+  if (!files.has(`dist/files/LICENSE-${name}.txt`)) problems.push(`missing dist/files/LICENSE-${name}.txt (the OFL must ship with the fonts)`);
+}
 const patternIndex = JSON.parse(readFileSync("docs/patterns/index.json", "utf8"));
 for (const { file } of patternIndex.patterns) if (!files.has(`docs/${file}`)) problems.push(`missing pattern docs/${file}`);
 for (const file of files) {
