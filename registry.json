@@ -1,0 +1,2672 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "wmds",
+  "homepage": "https://github.com/thewhatmatters/wmds#readme",
+  "items": [
+    {
+      "name": "components-accordion--flush",
+      "type": "registry:block",
+      "title": "Accordion — flush",
+      "description": "Show code for Storybook Components/Accordion → Pattern — flush.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-accordion--flush.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-appshell--portal-dashboard-pattern",
+      "type": "registry:block",
+      "title": "AppShell — portal dashboard",
+      "description": "Show code for Storybook Components/AppShell → Pattern — portal dashboard.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-appshell--portal-dashboard-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-avatar--dropdown-row",
+      "type": "registry:block",
+      "title": "Avatar — dropdown row",
+      "description": "Show code for Storybook Components/Avatar → Pattern — dropdown row.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-avatar--dropdown-row.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-badge--outline-tags",
+      "type": "registry:block",
+      "title": "Badge — outline tags",
+      "description": "Show code for Storybook Components/Badge → Pattern — outline tags.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-badge--outline-tags.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-badge--status-pill",
+      "type": "registry:block",
+      "title": "Badge — status pill",
+      "description": "Show code for Storybook Components/Badge → Pattern — status pill.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-badge--status-pill.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-badge--with-avatar",
+      "type": "registry:block",
+      "title": "Badge — with avatar",
+      "description": "Show code for Storybook Components/Badge → Pattern — with avatar.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-badge--with-avatar.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-band--page-in-bands",
+      "type": "registry:block",
+      "title": "Band — page in bands",
+      "description": "Show code for Storybook Components/Band → Pattern — page in bands.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-band--page-in-bands.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-breadcrumb--editorial",
+      "type": "registry:block",
+      "title": "Breadcrumb — editorial",
+      "description": "Show code for Storybook Components/Breadcrumb → Pattern — editorial.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-breadcrumb--editorial.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-breadcrumb--long-path",
+      "type": "registry:block",
+      "title": "Breadcrumb — long path",
+      "description": "Show code for Storybook Components/Breadcrumb → Pattern — long path.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-breadcrumb--long-path.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-breadcrumb--path",
+      "type": "registry:block",
+      "title": "Breadcrumb — path",
+      "description": "Show code for Storybook Components/Breadcrumb → Pattern — path.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-breadcrumb--path.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-breadcrumb--router-links",
+      "type": "registry:block",
+      "title": "Breadcrumb — router links",
+      "description": "Show code for Storybook Components/Breadcrumb → Pattern — router links.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-breadcrumb--router-links.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-button-button--copy-button",
+      "type": "registry:block",
+      "title": "Button — copy button",
+      "description": "Show code for Storybook Components/Button/Button → Pattern — copy button.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-button-button--copy-button.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-button-button--destructive-action",
+      "type": "registry:block",
+      "title": "Button — destructive action",
+      "description": "Show code for Storybook Components/Button/Button → Pattern — destructive action.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-button-button--destructive-action.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-button-button--external-link",
+      "type": "registry:block",
+      "title": "Button — external link",
+      "description": "Show code for Storybook Components/Button/Button → Pattern — external link.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-button-button--external-link.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-button-button--ghost-action",
+      "type": "registry:block",
+      "title": "Button — ghost action",
+      "description": "Show code for Storybook Components/Button/Button → Pattern — ghost action.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-button-button--ghost-action.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-button-button--inverse-action",
+      "type": "registry:block",
+      "title": "Button — inverse action",
+      "description": "Show code for Storybook Components/Button/Button → Pattern — inverse action.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-button-button--inverse-action.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-button-button--link-render",
+      "type": "registry:block",
+      "title": "Button — link",
+      "description": "Show code for Storybook Components/Button/Button → Pattern — link.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-button-button--link-render.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-button-button--multi-state-badge",
+      "type": "registry:block",
+      "title": "Button — submit / async",
+      "description": "Show code for Storybook Components/Button/Button → Pattern — submit / async.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-button-button--multi-state-badge.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-button-button--outline-mono",
+      "type": "registry:block",
+      "title": "Button — outline mono",
+      "description": "Show code for Storybook Components/Button/Button → Pattern — outline mono.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-button-button--outline-mono.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-button-button--primary-action",
+      "type": "registry:block",
+      "title": "Button — primary action",
+      "description": "Show code for Storybook Components/Button/Button → Pattern — primary action.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-button-button--primary-action.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-button-button--row-hug",
+      "type": "registry:block",
+      "title": "Button — row (hug)",
+      "description": "Show code for Storybook Components/Button/Button → Pattern — row (hug).",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-button-button--row-hug.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-button-button--row-layout",
+      "type": "registry:block",
+      "title": "Button — row",
+      "description": "Show code for Storybook Components/Button/Button → Pattern — row.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-button-button--row-layout.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-button-button--secondary-action",
+      "type": "registry:block",
+      "title": "Button — secondary action",
+      "description": "Show code for Storybook Components/Button/Button → Pattern — secondary action.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-button-button--secondary-action.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-button-button--suggestion-pills",
+      "type": "registry:block",
+      "title": "Button — suggestion pills",
+      "description": "Show code for Storybook Components/Button/Button → Pattern — suggestion pills.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-button-button--suggestion-pills.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-button-button--with-count",
+      "type": "registry:block",
+      "title": "Button — with count",
+      "description": "Show code for Storybook Components/Button/Button → Pattern — with count.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-button-button--with-count.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-button-button--with-icon",
+      "type": "registry:block",
+      "title": "Button — with icon",
+      "description": "Show code for Storybook Components/Button/Button → Pattern — with icon.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-button-button--with-icon.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-button-floatingactionbutton--vertical-actions",
+      "type": "registry:block",
+      "title": "FloatingActionButton — vertical actions",
+      "description": "Show code for Storybook Components/Button/FloatingActionButton → Pattern — vertical actions.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-button-floatingactionbutton--vertical-actions.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-calembed--pattern-skip-above",
+      "type": "registry:block",
+      "title": "CalEmbed — skip above the calendar",
+      "description": "Show code for Storybook Components/CalEmbed → Pattern — skip above the calendar.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-calembed--pattern-skip-above.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-card-card--body-slot-occupancy-history",
+      "type": "registry:block",
+      "title": "Card — Example — body slot (occupancy history)",
+      "description": "Show code for Storybook Components/Card/Card → Example — body slot (occupancy history).",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-card-card--body-slot-occupancy-history.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-card-card--headerless-media",
+      "type": "registry:block",
+      "title": "Card — headerless media",
+      "description": "Show code for Storybook Components/Card/Card → Pattern — headerless media.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-card-card--headerless-media.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-card-card--outlined-layout",
+      "type": "registry:block",
+      "title": "Card — outlined layout",
+      "description": "Show code for Storybook Components/Card/Card → Pattern — outlined layout.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-card-card--outlined-layout.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-card-card--pinned-height",
+      "type": "registry:block",
+      "title": "Card — pinned height",
+      "description": "Show code for Storybook Components/Card/Card → Pattern — pinned height.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-card-card--pinned-height.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-card-card--terminal-frame",
+      "type": "registry:block",
+      "title": "Card — terminal frame",
+      "description": "Show code for Storybook Components/Card/Card → Pattern — terminal frame.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-card-card--terminal-frame.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-card-selectablecard--selectable-cards-pattern",
+      "type": "registry:block",
+      "title": "SelectableCard — selectable cards",
+      "description": "Show code for Storybook Components/Card/SelectableCard → Pattern — selectable cards.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-card-selectablecard--selectable-cards-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-carousel--image-carousel",
+      "type": "registry:block",
+      "title": "Carousel — image carousel",
+      "description": "Show code for Storybook Components/Carousel → Pattern — image carousel.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-carousel--image-carousel.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-chart--audience-activity-heatmap",
+      "type": "registry:block",
+      "title": "Chart — matrix heatmap",
+      "description": "Show code for Storybook Components/Chart → Pattern — matrix heatmap.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-chart--audience-activity-heatmap.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-chart--cartesian-no-data-gaps",
+      "type": "registry:block",
+      "title": "Chart — Cartesian no-data gaps",
+      "description": "Show code for Storybook Components/Chart → Pattern — Cartesian no-data gaps.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-chart--cartesian-no-data-gaps.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-chart--occupancy-history-in-card",
+      "type": "registry:block",
+      "title": "Chart — occupancy history in Card",
+      "description": "Show code for Storybook Components/Chart → Pattern — occupancy history in Card.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-chart--occupancy-history-in-card.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-chart--occupancy-in-card",
+      "type": "registry:block",
+      "title": "Chart — occupancy KPI in Card",
+      "description": "Show code for Storybook Components/Chart → Pattern — occupancy KPI in Card.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-chart--occupancy-in-card.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-chart--post-reach-distribution",
+      "type": "registry:block",
+      "title": "Chart — distribution strip",
+      "description": "Show code for Storybook Components/Chart → Pattern — distribution strip.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-chart--post-reach-distribution.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-chart--ranked-audience-breakdown",
+      "type": "registry:block",
+      "title": "Chart — ranked audience breakdown",
+      "description": "Show code for Storybook Components/Chart → Pattern — ranked audience breakdown.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-chart--ranked-audience-breakdown.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-chart--revenue-by-line",
+      "type": "registry:block",
+      "title": "Chart — revenue by line",
+      "description": "Show code for Storybook Components/Chart → Pattern — revenue by line.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-chart--revenue-by-line.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-chart--segmented-ring-pattern",
+      "type": "registry:block",
+      "title": "Chart — segmented ring",
+      "description": "Show code for Storybook Components/Chart → Pattern — segmented ring.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-chart--segmented-ring-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-chart--unit-grid-composition",
+      "type": "registry:block",
+      "title": "Chart — 100-unit composition",
+      "description": "Show code for Storybook Components/Chart → Pattern — 100-unit composition.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-chart--unit-grid-composition.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-chatdock--pattern-chat-dock",
+      "type": "registry:block",
+      "title": "ChatDock — chat dock",
+      "description": "Show code for Storybook Components/ChatDock → Pattern — chat dock.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-chatdock--pattern-chat-dock.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-chatdock--pattern-start-project-gate",
+      "type": "registry:block",
+      "title": "ChatDock — start a project gate",
+      "description": "Show code for Storybook Components/ChatDock → Pattern — start a project gate.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-chatdock--pattern-start-project-gate.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-chatqa--pattern-qa-with-reply",
+      "type": "registry:block",
+      "title": "ChatQa — Q&A with reply",
+      "description": "Show code for Storybook Components/ChatQa → Pattern — Q&A with reply.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-chatqa--pattern-qa-with-reply.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-checkbox-checkbox--default",
+      "type": "registry:block",
+      "title": "Checkbox — default",
+      "description": "Show code for Storybook Components/Checkbox/Checkbox → Pattern — default.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-checkbox-checkbox--default.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-checkbox-checkbox--with-count",
+      "type": "registry:block",
+      "title": "Checkbox — with count",
+      "description": "Show code for Storybook Components/Checkbox/Checkbox → Pattern — with count.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-checkbox-checkbox--with-count.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-checkbox-checkbox--with-description",
+      "type": "registry:block",
+      "title": "Checkbox — with description",
+      "description": "Show code for Storybook Components/Checkbox/Checkbox → Pattern — with description.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-checkbox-checkbox--with-description.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-checkbox-checkboxgroup--default",
+      "type": "registry:block",
+      "title": "CheckboxGroup — default",
+      "description": "Show code for Storybook Components/Checkbox/CheckboxGroup → Pattern — default.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-checkbox-checkboxgroup--default.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-checkbox-checkboxgroup--option-counts",
+      "type": "registry:block",
+      "title": "CheckboxGroup — option counts",
+      "description": "Show code for Storybook Components/Checkbox/CheckboxGroup → Pattern — option counts.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-checkbox-checkboxgroup--option-counts.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-copyfield--clipboard-blocked",
+      "type": "registry:block",
+      "title": "CopyField — clipboard blocked",
+      "description": "Show code for Storybook Components/CopyField → Pattern — clipboard blocked.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-copyfield--clipboard-blocked.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-copyfield--copied",
+      "type": "registry:block",
+      "title": "CopyField — copied",
+      "description": "Show code for Storybook Components/CopyField → Pattern — copied.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-copyfield--copied.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-copyfield--copy-key",
+      "type": "registry:block",
+      "title": "CopyField — copy key",
+      "description": "Show code for Storybook Components/CopyField → Pattern — copy key.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-copyfield--copy-key.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-copyfield--on-navy",
+      "type": "registry:block",
+      "title": "CopyField — on a navy field",
+      "description": "Show code for Storybook Components/CopyField → Pattern — on a navy field.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-copyfield--on-navy.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-descriptionlist--details",
+      "type": "registry:block",
+      "title": "DescriptionList — details",
+      "description": "Show code for Storybook Components/DescriptionList → Pattern — details.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-descriptionlist--details.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-descriptionlist--post-metadata",
+      "type": "registry:block",
+      "title": "DescriptionList — post metadata",
+      "description": "Show code for Storybook Components/DescriptionList → Pattern — post metadata.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-descriptionlist--post-metadata.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-dialog--alert-dialog-destructive",
+      "type": "registry:block",
+      "title": "Dialog — alert dialog (destructive)",
+      "description": "Show code for Storybook Components/Dialog → Pattern — alert dialog (destructive).",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-dialog--alert-dialog-destructive.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-dialog--alert-dialog-typed-confirmation",
+      "type": "registry:block",
+      "title": "Dialog — alert dialog (typed confirmation delete)",
+      "description": "Show code for Storybook Components/Dialog → Pattern — alert dialog (typed confirmation delete).",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-dialog--alert-dialog-typed-confirmation.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-dialog--default-dialog",
+      "type": "registry:block",
+      "title": "Dialog — dialog",
+      "description": "Show code for Storybook Components/Dialog → Pattern — dialog.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-dialog--default-dialog.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-dialog--form-dialog",
+      "type": "registry:block",
+      "title": "Dialog — form dialog",
+      "description": "Show code for Storybook Components/Dialog → Pattern — form dialog.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-dialog--form-dialog.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-displaycontrols--page-utilities",
+      "type": "registry:block",
+      "title": "DisplayControls — page display controls",
+      "description": "Show code for Storybook Components/DisplayControls → Pattern — page display controls.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-displaycontrols--page-utilities.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-displaycontrols--theme-switch",
+      "type": "registry:block",
+      "title": "DisplayControls — theme switch",
+      "description": "Show code for Storybook Components/DisplayControls → Pattern — theme switch.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-displaycontrols--theme-switch.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-errorsummary--contact-form",
+      "type": "registry:block",
+      "title": "ErrorSummary — form with an error summary",
+      "description": "Show code for Storybook Components/ErrorSummary → Pattern — form with an error summary.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-errorsummary--contact-form.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-field--horizontal-input",
+      "type": "registry:block",
+      "title": "Field — horizontal input",
+      "description": "Show code for Storybook Components/Field → Pattern — horizontal input.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-field--horizontal-input.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-field--horizontal-text-area",
+      "type": "registry:block",
+      "title": "Field — horizontal textarea",
+      "description": "Show code for Storybook Components/Field → Pattern — horizontal textarea.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-field--horizontal-text-area.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-field--multi-control",
+      "type": "registry:block",
+      "title": "Field — multi-control",
+      "description": "Show code for Storybook Components/Field → Pattern — multi-control.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-field--multi-control.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-filterpanel--panel",
+      "type": "registry:block",
+      "title": "FilterPanel — filter panel",
+      "description": "Show code for Storybook Components/FilterPanel → Pattern — filter panel.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-filterpanel--panel.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-footerreveal--marketing-hero-pattern",
+      "type": "registry:block",
+      "title": "FooterReveal — marketing hero",
+      "description": "Show code for Storybook Components/FooterReveal → Pattern — marketing hero.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-footerreveal--marketing-hero-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-footerreveal--marketing-hero-ruled-pattern",
+      "type": "registry:block",
+      "title": "FooterReveal — marketing hero ruled grid",
+      "description": "Show code for Storybook Components/FooterReveal → Pattern — marketing hero ruled grid.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-footerreveal--marketing-hero-ruled-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-footerreveal--marketing-hero-with-gallery-intro",
+      "type": "registry:block",
+      "title": "FooterReveal — Marketing hero with gallery intro",
+      "description": "Show code for Storybook Components/FooterReveal → Marketing hero with gallery intro.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-footerreveal--marketing-hero-with-gallery-intro.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-footerreveal--marketing-page-pattern",
+      "type": "registry:block",
+      "title": "FooterReveal — marketing page",
+      "description": "Show code for Storybook Components/FooterReveal → Pattern — marketing page.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-footerreveal--marketing-page-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-footerreveal--ruled-grid-footer-pattern",
+      "type": "registry:block",
+      "title": "FooterReveal — ruled grid footer",
+      "description": "Show code for Storybook Components/FooterReveal → Pattern — ruled grid footer.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-footerreveal--ruled-grid-footer-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-footerreveal--sequenced-marketing-hero",
+      "type": "registry:block",
+      "title": "FooterReveal — marketing hero with sequenced gallery",
+      "description": "Show code for Storybook Components/FooterReveal → Pattern — marketing hero with sequenced gallery.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-footerreveal--sequenced-marketing-hero.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-herointro--two-line-intro",
+      "type": "registry:block",
+      "title": "HeroIntro — two-line intro",
+      "description": "Show code for Storybook Components/HeroIntro → Pattern — two-line intro.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-herointro--two-line-intro.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-herointro--with-actions",
+      "type": "registry:block",
+      "title": "HeroIntro — with description and actions",
+      "description": "Show code for Storybook Components/HeroIntro → Pattern — with description and actions.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-herointro--with-actions.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-herotilestack--marketing-hero-pattern",
+      "type": "registry:block",
+      "title": "HeroTileStack — marketing hero",
+      "description": "Show code for Storybook Components/HeroTileStack → Pattern — marketing hero.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-herotilestack--marketing-hero-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-herotilestack--marketing-hero-text-sequence",
+      "type": "registry:block",
+      "title": "HeroTileStack — marketing hero text sequence",
+      "description": "Show code for Storybook Components/HeroTileStack → Pattern — marketing hero text sequence.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-herotilestack--marketing-hero-text-sequence.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-herotilestack--marketing-hero-with-gallery-intro",
+      "type": "registry:block",
+      "title": "HeroTileStack — Marketing hero with gallery intro",
+      "description": "Show code for Storybook Components/HeroTileStack → Marketing hero with gallery intro.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-herotilestack--marketing-hero-with-gallery-intro.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-indexlist--post-index",
+      "type": "registry:block",
+      "title": "IndexList — post index",
+      "description": "Show code for Storybook Components/IndexList → Pattern — post index.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-indexlist--post-index.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-intakeconfirmation--booked-pattern",
+      "type": "registry:block",
+      "title": "IntakeConfirmation — booked",
+      "description": "Show code for Storybook Components/IntakeConfirmation → Pattern — booked.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-intakeconfirmation--booked-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-intakeconfirmation--emailed-pattern",
+      "type": "registry:block",
+      "title": "IntakeConfirmation — emailed",
+      "description": "Show code for Storybook Components/IntakeConfirmation → Pattern — emailed.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-intakeconfirmation--emailed-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-intakeform--about-you-pattern",
+      "type": "registry:block",
+      "title": "IntakeForm — about you",
+      "description": "Show code for Storybook Components/IntakeForm → Pattern — about you.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-intakeform--about-you-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-intakeform--short-form-pattern",
+      "type": "registry:block",
+      "title": "IntakeForm — short form",
+      "description": "Show code for Storybook Components/IntakeForm → Pattern — short form.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-intakeform--short-form-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-intakemodal--intake-modal-pattern",
+      "type": "registry:block",
+      "title": "IntakeModal — intake modal",
+      "description": "Show code for Storybook Components/IntakeModal → Pattern — intake modal.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-intakemodal--intake-modal-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-kbd--command-row",
+      "type": "registry:block",
+      "title": "Kbd — command row",
+      "description": "Show code for Storybook Components/Kbd → Pattern — command row.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-kbd--command-row.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-kbd--numbered-choices",
+      "type": "registry:block",
+      "title": "Kbd — numbered choice keys",
+      "description": "Show code for Storybook Components/Kbd → Pattern — numbered choice keys.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-kbd--numbered-choices.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-kbd--shortcut",
+      "type": "registry:block",
+      "title": "Kbd — keyboard shortcut",
+      "description": "Show code for Storybook Components/Kbd → Pattern — keyboard shortcut.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-kbd--shortcut.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-linktile--resource-tile",
+      "type": "registry:block",
+      "title": "LinkTile — resource tile",
+      "description": "Show code for Storybook Components/LinkTile → Pattern — resource tile.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-linktile--resource-tile.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-linktile--router-link",
+      "type": "registry:block",
+      "title": "LinkTile — router link",
+      "description": "Show code for Storybook Components/LinkTile → Pattern — router link.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-linktile--router-link.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-logview--detail-pane",
+      "type": "registry:block",
+      "title": "LogView — detail pane",
+      "description": "Show code for Storybook Components/LogView → Pattern — detail pane.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-logview--detail-pane.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-logview--log-viewer",
+      "type": "registry:block",
+      "title": "LogView — log viewer",
+      "description": "Show code for Storybook Components/LogView → Pattern — log viewer.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-logview--log-viewer.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-moremenu--action-menu",
+      "type": "registry:block",
+      "title": "MoreMenu — action menu",
+      "description": "Show code for Storybook Components/MoreMenu → Pattern — action menu.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-moremenu--action-menu.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-moremenu--in-card-header",
+      "type": "registry:block",
+      "title": "MoreMenu — Card header cluster",
+      "description": "Show code for Storybook Components/MoreMenu → Pattern — Card header cluster.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-moremenu--in-card-header.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-navlist--app-sidebar",
+      "type": "registry:block",
+      "title": "NavList — app sidebar",
+      "description": "Show code for Storybook Components/NavList → Pattern — app sidebar.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-navlist--app-sidebar.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-navlist--side-nav-settings",
+      "type": "registry:block",
+      "title": "NavList — side nav (settings)",
+      "description": "Show code for Storybook Components/NavList → Pattern — side nav (settings).",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-navlist--side-nav-settings.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-notice--account-not-connected",
+      "type": "registry:block",
+      "title": "Notice — account not connected",
+      "description": "Show code for Storybook Components/Notice → Pattern — account not connected.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-notice--account-not-connected.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-notice--holiday-closure",
+      "type": "registry:block",
+      "title": "Notice — holiday closure",
+      "description": "Show code for Storybook Components/Notice → Pattern — holiday closure.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-notice--holiday-closure.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-notice--private-buyout",
+      "type": "registry:block",
+      "title": "Notice — private buyout",
+      "description": "Show code for Storybook Components/Notice → Pattern — private buyout.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-notice--private-buyout.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-notice--sync-failed",
+      "type": "registry:block",
+      "title": "Notice — sync failed",
+      "description": "Show code for Storybook Components/Notice → Pattern — sync failed.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-notice--sync-failed.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-pageheader--app-header-pattern",
+      "type": "registry:block",
+      "title": "PageHeader — app header",
+      "description": "Show code for Storybook Components/PageHeader → Pattern — app header.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-pageheader--app-header-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-pageheader--page-section-header",
+      "type": "registry:block",
+      "title": "PageHeader — page header",
+      "description": "Show code for Storybook Components/PageHeader → Pattern — page header.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-pageheader--page-section-header.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-pageheader--toolbar-header",
+      "type": "registry:block",
+      "title": "PageHeader — toolbar header",
+      "description": "Show code for Storybook Components/PageHeader → Pattern — toolbar header.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-pageheader--toolbar-header.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-panel--end-detail-rail",
+      "type": "registry:block",
+      "title": "Panel — end detail rail",
+      "description": "Show code for Storybook Components/Panel → Pattern — end detail rail.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-panel--end-detail-rail.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-pillgroup--pill-group-pattern",
+      "type": "registry:block",
+      "title": "PillGroup — pill group",
+      "description": "Show code for Storybook Components/PillGroup → Pattern — pill group.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-pillgroup--pill-group-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-promptbar--pattern-prompt-bar",
+      "type": "registry:block",
+      "title": "PromptBar — prompt bar",
+      "description": "Show code for Storybook Components/PromptBar → Pattern — prompt bar.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-promptbar--pattern-prompt-bar.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-prose--article-body",
+      "type": "registry:block",
+      "title": "Prose — article body",
+      "description": "Show code for Storybook Components/Prose → Pattern — article body.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-prose--article-body.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-radio-radiogroup--default",
+      "type": "registry:block",
+      "title": "RadioGroup — vertical",
+      "description": "Show code for Storybook Components/Radio/RadioGroup → Pattern — vertical.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-radio-radiogroup--default.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-scrollhorizontal--project-gallery-pattern",
+      "type": "registry:block",
+      "title": "ScrollHorizontal — project gallery",
+      "description": "Show code for Storybook Components/ScrollHorizontal → Pattern — project gallery.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-scrollhorizontal--project-gallery-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-scrollhorizontal--with-intro",
+      "type": "registry:block",
+      "title": "ScrollHorizontal — gallery intro",
+      "description": "Show code for Storybook Components/ScrollHorizontal → Pattern — gallery intro.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-scrollhorizontal--with-intro.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-sectioncaption--column-caption",
+      "type": "registry:block",
+      "title": "SectionCaption — column caption",
+      "description": "Show code for Storybook Components/SectionCaption → Pattern — column caption.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-sectioncaption--column-caption.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-sectioncaption--with-action",
+      "type": "registry:block",
+      "title": "SectionCaption — caption with an action",
+      "description": "Show code for Storybook Components/SectionCaption → Pattern — caption with an action.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-sectioncaption--with-action.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-sheet--bottom-sheet",
+      "type": "registry:block",
+      "title": "Sheet — bottom sheet",
+      "description": "Show code for Storybook Components/Sheet → Pattern — bottom sheet.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-sheet--bottom-sheet.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-sheet--end-sheet",
+      "type": "registry:block",
+      "title": "Sheet — end sheet",
+      "description": "Show code for Storybook Components/Sheet → Pattern — end sheet.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-sheet--end-sheet.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-sheet--side-sheet",
+      "type": "registry:block",
+      "title": "Sheet — side sheet",
+      "description": "Show code for Storybook Components/Sheet → Pattern — side sheet.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-sheet--side-sheet.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-sheet--side-sheet-header-actions",
+      "type": "registry:block",
+      "title": "Sheet — side sheet header actions",
+      "description": "Show code for Storybook Components/Sheet → Pattern — side sheet header actions.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-sheet--side-sheet-header-actions.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-sheet--side-sheet-url-deep-link",
+      "type": "registry:block",
+      "title": "Sheet — side sheet URL deep link",
+      "description": "Show code for Storybook Components/Sheet → Pattern — side sheet URL deep link.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-sheet--side-sheet-url-deep-link.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-sitenav--brand-and-cta",
+      "type": "registry:block",
+      "title": "SiteNav — brand + CTA",
+      "description": "Show code for Storybook Components/SiteNav → Pattern — brand + CTA.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-sitenav--brand-and-cta.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-sitenav--centered-links",
+      "type": "registry:block",
+      "title": "SiteNav — centered links",
+      "description": "Show code for Storybook Components/SiteNav → Pattern — centered links.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-sitenav--centered-links.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-sitenav--compact",
+      "type": "registry:block",
+      "title": "SiteNav — compact (scrolled)",
+      "description": "Show code for Storybook Components/SiteNav → Pattern — compact (scrolled).",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-sitenav--compact.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-sitenav--marketing-header",
+      "type": "registry:block",
+      "title": "SiteNav — marketing header",
+      "description": "Show code for Storybook Components/SiteNav → Pattern — marketing header.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-sitenav--marketing-header.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-sitenav--mega-menu",
+      "type": "registry:block",
+      "title": "SiteNav — mega menu",
+      "description": "Show code for Storybook Components/SiteNav → Pattern — mega menu.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-sitenav--mega-menu.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-stat--hero-stat",
+      "type": "registry:block",
+      "title": "Stat — hero stat",
+      "description": "Show code for Storybook Components/Stat → Pattern — hero stat.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-stat--hero-stat.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-stat--insights-row",
+      "type": "registry:block",
+      "title": "Stat — insights row",
+      "description": "Show code for Storybook Components/Stat → Pattern — insights row.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-stat--insights-row.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-stepprogress--step-progress-pattern",
+      "type": "registry:block",
+      "title": "StepProgress — step progress",
+      "description": "Show code for Storybook Components/StepProgress → Pattern — step progress.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-stepprogress--step-progress-pattern.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-switch--default",
+      "type": "registry:block",
+      "title": "Switch — default",
+      "description": "Show code for Storybook Components/Switch → Pattern — default.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-switch--default.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-switch--settings-row",
+      "type": "registry:block",
+      "title": "Switch — settings row",
+      "description": "Show code for Storybook Components/Switch → Pattern — settings row.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-switch--settings-row.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-tab--settings-pages",
+      "type": "registry:block",
+      "title": "Tab — settings pages",
+      "description": "Show code for Storybook Components/Tab → Pattern — settings pages.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-tab--settings-pages.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-table--approvals",
+      "type": "registry:block",
+      "title": "Table — approvals queue",
+      "description": "Show code for Storybook Components/Table → Pattern — approvals queue.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-table--approvals.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-table--approvals-with-sheet",
+      "type": "registry:block",
+      "title": "Table — approvals with sheet",
+      "description": "Show code for Storybook Components/Table → Pattern — approvals with sheet.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-table--approvals-with-sheet.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-table--basic",
+      "type": "registry:block",
+      "title": "Table — basic table",
+      "description": "Show code for Storybook Components/Table → Pattern — basic table.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-table--basic.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-taskrows--action-details",
+      "type": "registry:block",
+      "title": "TaskRows — action details",
+      "description": "Show code for Storybook Components/TaskRows → Pattern — action details.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-taskrows--action-details.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-taskrows--capsules",
+      "type": "registry:block",
+      "title": "TaskRows — capsules",
+      "description": "Show code for Storybook Components/TaskRows → Pattern — capsules.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-taskrows--capsules.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-taskrows--card-with-status-rows",
+      "type": "registry:block",
+      "title": "TaskRows — card + status rows",
+      "description": "Show code for Storybook Components/TaskRows → Pattern — card + status rows.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-taskrows--card-with-status-rows.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-taskrows--controlled-expand",
+      "type": "registry:block",
+      "title": "TaskRows — controlled expand",
+      "description": "Show code for Storybook Components/TaskRows → Pattern — controlled expand.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-taskrows--controlled-expand.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-taskrows--custom-slots",
+      "type": "registry:block",
+      "title": "TaskRows — custom leading / trailing",
+      "description": "Show code for Storybook Components/TaskRows → Pattern — custom leading / trailing.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-taskrows--custom-slots.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-taskrows--needs-you-table",
+      "type": "registry:block",
+      "title": "TaskRows — needs you",
+      "description": "Show code for Storybook Components/TaskRows → Pattern — needs you.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-taskrows--needs-you-table.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-taskrows--status-list",
+      "type": "registry:block",
+      "title": "TaskRows — status rows",
+      "description": "Show code for Storybook Components/TaskRows → Pattern — status rows.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-taskrows--status-list.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-taskrows--tag-chips",
+      "type": "registry:block",
+      "title": "TaskRows — tag chips",
+      "description": "Show code for Storybook Components/TaskRows → Pattern — tag chips.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-taskrows--tag-chips.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-textarea--save-status",
+      "type": "registry:block",
+      "title": "TextArea — save status",
+      "description": "Show code for Storybook Components/TextArea → Pattern — save status.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-textarea--save-status.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-textlink--external-destination",
+      "type": "registry:block",
+      "title": "TextLink — external destination",
+      "description": "Show code for Storybook Components/TextLink → Pattern — external destination.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-textlink--external-destination.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-textlink--inline-prose",
+      "type": "registry:block",
+      "title": "TextLink — inline prose link",
+      "description": "Show code for Storybook Components/TextLink → Pattern — inline prose link.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-textlink--inline-prose.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-textlink--quiet-title",
+      "type": "registry:block",
+      "title": "TextLink — quiet title link",
+      "description": "Show code for Storybook Components/TextLink → Pattern — quiet title link.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-textlink--quiet-title.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-textlink--supporting-copy",
+      "type": "registry:block",
+      "title": "TextLink — supporting copy link",
+      "description": "Show code for Storybook Components/TextLink → Pattern — supporting copy link.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-textlink--supporting-copy.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-textsequence--default",
+      "type": "registry:block",
+      "title": "TextSequence — Default",
+      "description": "Show code for Storybook Components/TextSequence → Default.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-textsequence--default.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-textsequence--reduced-motion",
+      "type": "registry:block",
+      "title": "TextSequence — Reduced motion",
+      "description": "Show code for Storybook Components/TextSequence → Reduced motion.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-textsequence--reduced-motion.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-textsequence--shapes",
+      "type": "registry:block",
+      "title": "TextSequence — Shapes",
+      "description": "Show code for Storybook Components/TextSequence → Shapes.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-textsequence--shapes.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-tilegrid--masonry",
+      "type": "registry:block",
+      "title": "TileGrid — tile grid",
+      "description": "Show code for Storybook Components/TileGrid → Pattern — tile grid.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-tilegrid--masonry.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-toast--stacked-notifications",
+      "type": "registry:block",
+      "title": "Toast — stacked notifications",
+      "description": "Show code for Storybook Components/Toast → Pattern — stacked notifications.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-toast--stacked-notifications.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-tooltip--controlled",
+      "type": "registry:block",
+      "title": "Tooltip — controlled state",
+      "description": "Show code for Storybook Components/Tooltip → Pattern — controlled state.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-tooltip--controlled.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-tooltip--disabled-control",
+      "type": "registry:block",
+      "title": "Tooltip — disabled control",
+      "description": "Show code for Storybook Components/Tooltip → Pattern — disabled control.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-tooltip--disabled-control.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-tooltip--icon-action",
+      "type": "registry:block",
+      "title": "Tooltip — icon-only action",
+      "description": "Show code for Storybook Components/Tooltip → Pattern — icon-only action.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-tooltip--icon-action.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-tooltip--keyboard-shortcut",
+      "type": "registry:block",
+      "title": "Tooltip — keyboard shortcut",
+      "description": "Show code for Storybook Components/Tooltip → Pattern — keyboard shortcut.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-tooltip--keyboard-shortcut.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-tooltip--placement",
+      "type": "registry:block",
+      "title": "Tooltip — placement",
+      "description": "Show code for Storybook Components/Tooltip → Pattern — placement.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-tooltip--placement.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "foundations-scroll-fade--horizontal-rail",
+      "type": "registry:block",
+      "title": "Scroll fade — horizontal rail",
+      "description": "Show code for Storybook Foundations/Scroll fade → Pattern — horizontal rail.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/foundations-scroll-fade--horizontal-rail.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "foundations-scroll-fade--overflowing-list",
+      "type": "registry:block",
+      "title": "Scroll fade — overflowing list",
+      "description": "Show code for Storybook Foundations/Scroll fade → Pattern — overflowing list.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/foundations-scroll-fade--overflowing-list.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "guides-chart-explorations--comparison-gallery",
+      "type": "registry:block",
+      "title": "Chart explorations — chart comparison gallery",
+      "description": "Show code for Storybook Guides/Chart explorations → Pattern — chart comparison gallery.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/guides-chart-explorations--comparison-gallery.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "guides-filter-panel--filtered-grid",
+      "type": "registry:block",
+      "title": "Filter panel — filtered grid",
+      "description": "Show code for Storybook Guides/Filter panel → Pattern — filtered grid.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/guides-filter-panel--filtered-grid.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "guides-filter-panel--filtered-index",
+      "type": "registry:block",
+      "title": "Filter panel — filtered index",
+      "description": "Show code for Storybook Guides/Filter panel → Pattern — filtered index.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/guides-filter-panel--filtered-index.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "guides-overlay-flows--notification-preferences",
+      "type": "registry:block",
+      "title": "Overlay flows — notification preferences",
+      "description": "Show code for Storybook Guides/Overlay flows → Pattern — notification preferences.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/guides-overlay-flows--notification-preferences.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "guides-post-page--post-page",
+      "type": "registry:block",
+      "title": "Post page — post page",
+      "description": "Show code for Storybook Guides/Post page → Pattern — post page.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/guides-post-page--post-page.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "guides-profile-typography--editorial-profile",
+      "type": "registry:block",
+      "title": "Profile typography — editorial profile",
+      "description": "Show code for Storybook Guides/Profile typography → Pattern — editorial profile.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/guides-profile-typography--editorial-profile.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "guides-resource-detail--detail",
+      "type": "registry:block",
+      "title": "Resource detail — resource detail",
+      "description": "Show code for Storybook Guides/Resource detail → Pattern — resource detail.",
+      "dependencies": [
+        "@thewhatmatters/wmds",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/guides-resource-detail--detail.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    }
+  ]
+}

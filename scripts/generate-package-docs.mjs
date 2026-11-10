@@ -8,6 +8,10 @@
  *   category, summary, Storybook page, and patterns.
  * - docs/components.md — the consumer-facing component and token contracts from AGENTS.md → Storybook-first.
  *
+ * And, at the repository root (not shipped in the package):
+ *
+ * - registry.json — a shadcn-style registry: one `registry:block` per pattern, depending on the package.
+ *
  * `node scripts/generate-package-docs.mjs` writes the files.
  * `node scripts/generate-package-docs.mjs --check` writes nothing and fails when a committed file
  * differs from what Storybook would produce today (CI).
@@ -109,6 +113,31 @@ try {
     )}\n`,
   );
 
+  // ── shadcn-style registry ───────────────────────────────────────────────
+  // Each pattern is a block whose Show code imports only package exports, so an item is the pattern
+  // file plus its npm imports. React and Next.js come from the app.
+  const appProvided = new Set(["react", "react-dom", "next"]);
+  const npmPackage = (specifier) => specifier.split("/").slice(0, specifier.startsWith("@") ? 2 : 1).join("/");
+  const registry = {
+    $schema: "https://ui.shadcn.com/schema/registry.json",
+    name: "wmds",
+    homepage: pkg.homepage,
+    items: patterns.map((pattern) => {
+      const imports = [...pattern.code.matchAll(/^\s*(?:import|export)\b[^;]*?\bfrom\s+"([^"]+)"/gm)].map((match) => npmPackage(match[1]));
+      const dependencies = [...new Set([pkg.name, ...imports.filter((name) => !appProvided.has(name))])].sort();
+      return {
+        name: pattern.id,
+        type: "registry:block",
+        title: `${pattern.title.split("/").at(-1)} — ${pattern.name.replace(/^Pattern — /, "")}`,
+        description: `Show code for Storybook ${pattern.title} → ${pattern.name}.`,
+        dependencies,
+        files: [{ path: `docs/${pattern.file}`, type: "registry:component" }],
+        docs: `Import "${pkg.name}/styles.css" once in the app before using this block.`,
+      };
+    }),
+  };
+  outputs.set(path.join(root, "registry.json"), `${JSON.stringify(registry, null, 2)}\n`);
+
   // ── Export manifest ─────────────────────────────────────────────────────
   const tierOf = new Map(
     Object.entries(packageManifest.atomicExports).flatMap(([tier, names]) => names.map((name) => [name, tier.replace(/s$/, "")])),
@@ -202,5 +231,5 @@ if (check) {
   for (const file of stale) rmSync(file);
   mkdirSync(patternsDir, { recursive: true });
   for (const [file, content] of outputs) writeFileSync(file, content);
-  console.log(`package-docs: wrote ${outputs.size} files (${outputs.size - 3} patterns)`);
+  console.log(`package-docs: wrote ${outputs.size} files (${outputs.size - 4} patterns)`);
 }
