@@ -1,7 +1,7 @@
 {
   "name": "@thewhatmatters/wmds",
   "description": "WhatMatters Design System — React components and a Tailwind v4 theme for marketing sites and apps: 70+ accessible components, a brand kit, copy-ready patterns, dark mode and a CI check (wmds-check).",
-  "version": "0.4.50",
+  "version": "0.4.51",
   "type": "module",
   "license": "MIT",
   "keywords": [
