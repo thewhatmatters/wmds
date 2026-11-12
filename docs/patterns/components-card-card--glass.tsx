@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.50 · Pattern — glass over a picture
+// @thewhatmatters/wmds@0.4.51 · Pattern — glass over a picture
 // Storybook: Components/Card/Card → Pattern — glass over a picture (?path=/story/components-card-card--glass)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

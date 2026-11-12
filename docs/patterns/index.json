@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.50",
+  "version": "0.4.51",
   "patterns": [
     {
       "id": "components-accordion--flush",
