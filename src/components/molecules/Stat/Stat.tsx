@@ -1,5 +1,5 @@
 import { useDelayedLoading } from "../../../lib/useDelayedLoading";
-import type { ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 import { Badge } from "../../atoms/Badge/Badge";
 import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
 import { Skeleton } from "../../atoms/Skeleton/Skeleton";
@@ -19,6 +19,7 @@ import {
   statLoadingValueHeights,
   statShellClasses,
   statShellSizeClasses,
+  statShellVariantClasses,
   statLabelEndClasses,
   statLabelRowClasses,
   statLabelStartClasses,
@@ -32,18 +33,21 @@ import {
   type StatGroupColumns,
   type StatSize,
   type StatTrendDirection,
+  type StatVariant,
 } from "./statStyles";
 
 export type {
   StatGroupColumns,
   StatSize,
   StatTrendDirection,
+  StatVariant,
 } from "./statStyles";
 export {
   statGroupColumns,
   statGroupGridClasses,
   statSizes,
   statTrendDirections,
+  statVariants,
 } from "./statStyles";
 
 /** Layout-only — grid width, margin; not for re-theming the tile shell. */
@@ -66,7 +70,11 @@ export interface StatUnavailable {
   reason: string;
 }
 
-export interface StatProps {
+/**
+ * Other attributes (`id`, `data-*`, `aria-*`) land on the root, so a page can anchor, test or
+ * choreograph a figure without a wrapper.
+ */
+export interface StatProps extends Omit<HTMLAttributes<HTMLElement>, "children" | "className"> {
   /** Metric name — e.g. Followers, ER, Reach. */
   label: string;
   /** Headline figure — pre-formatted string or number. */
@@ -94,12 +102,19 @@ export interface StatProps {
   /** Trailing slot — inline with the label row, before `action`. */
   end?: ReactNode;
   size?: StatSize;
+  /**
+   * The frame. `tile` (default): the bordered metric tile. `plain`: the figure alone, when the
+   * surface around it is the frame (a card, a band, a picture). `ruled`: a hairline above, for
+   * editorial figure rows.
+   */
+  variant?: StatVariant;
   /** Skeleton label + value — sets `aria-busy` on the tile. */
   loading?: boolean;
   className?: StatLayoutClassName;
 }
 
-export interface StatGroupProps {
+/** Other attributes (`id`, `data-*`) land on the grid. */
+export interface StatGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className"> {
   children: ReactNode;
   /** Landmark label when the group summarizes a dashboard region — e.g. Insights metrics. */
   "aria-label"?: string;
@@ -154,17 +169,22 @@ function StatRoot({
   start,
   end,
   size = "sm",
+  variant = "tile",
   loading = false,
   className,
+  "aria-label": ariaLabel,
+  ...props
 }: StatProps) {
   const skeletonShown = useDelayedLoading(loading);
   const trail = end != null || action != null;
 
   return (
     <article
-      className={cn(statShellClasses, statShellSizeClasses[size], className)}
+      {...props}
+      className={cn(statShellClasses, statShellVariantClasses[variant], statShellSizeClasses[variant][size], className)}
+      data-variant={variant}
       aria-busy={loading || undefined}
-      aria-label={loading ? label : undefined}
+      aria-label={loading ? label : ariaLabel}
     >
       <div className={cn(statContentClasses, size === "lg" && statContentLgClasses)}>
         {loading ? (
@@ -218,9 +238,11 @@ function StatGroup({
   "aria-label": ariaLabel,
   columns = 4,
   className,
+  ...props
 }: StatGroupProps) {
   return (
     <div
+      {...props}
       className={cn(statGroupGridClasses(columns), className)}
       role={ariaLabel != null ? "group" : undefined}
       aria-label={ariaLabel}
@@ -231,7 +253,8 @@ function StatGroup({
 }
 
 /**
- * At-a-glance metric tile — label, headline value, optional muted trend badge.
+ * At-a-glance metric — label, headline value, optional muted trend badge. `variant` picks the
+ * frame: the bordered `tile` (default), `plain` (the figure alone) or `ruled` (a hairline above).
  * `size="lg"` is the hero figure (`type-display-3`, tabular). `context` is the visible
  * "vs" line. `detail` is one tabular line under the figure. Compose in **Stat.Group**
  * for insights rows; pair **Card** + **Chart** below for history.

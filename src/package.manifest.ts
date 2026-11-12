@@ -15,6 +15,7 @@ const atoms = [
   "InlinePill",
   "Input",
   "Kbd",
+  "Meter",
   "Prose",
   "Radio",
   "RiveHand",

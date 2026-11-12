@@ -83,6 +83,16 @@ export {
   type UseKbdChoiceKeysOptions,
 } from "./components/atoms/Kbd/useKbdChoiceKeys";
 export {
+  Meter,
+  meterPercent,
+  meterSizes,
+  meterTones,
+  type MeterLayoutClassName,
+  type MeterProps,
+  type MeterSize,
+  type MeterTone,
+} from "./components/atoms/Meter/Meter";
+export {
   Band,
   bandElements,
   bandSpacings,
@@ -517,6 +527,7 @@ export {
   statGroupGridClasses,
   statSizes,
   statTrendDirections,
+  statVariants,
   type StatGroupColumns,
   type StatGroupProps,
   type StatLayoutClassName,
@@ -525,6 +536,7 @@ export {
   type StatTrend,
   type StatTrendDirection,
   type StatUnavailable,
+  type StatVariant,
 } from "./components/molecules/Stat/Stat";
 export {
   StepProgress,

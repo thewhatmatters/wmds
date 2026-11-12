@@ -153,4 +153,67 @@ describe("Stat hero", () => {
     expect(view.textContent).not.toContain("vs $14,850");
     expect(view.querySelectorAll("[aria-hidden='true']").length).toBeGreaterThanOrEqual(3);
   });
+
+  it("frames the figure as a tile by default", () => {
+    const view = render(createElement(Stat, { label: "Followers", value: "12,480" }));
+    const article = view.querySelector("article");
+    expect(article?.getAttribute("data-variant")).toBe("tile");
+    expect(article?.className).toContain("border-border");
+    expect(article?.className).toContain("bg-surface");
+    expect(article?.className).toContain("p-4");
+  });
+
+  it("drops the frame for plain: no border, fill or padding", () => {
+    const view = render(createElement(Stat, { variant: "plain", size: "lg", label: "Hardness", value: "42" }));
+    const article = view.querySelector("article");
+    expect(article?.getAttribute("data-variant")).toBe("plain");
+    expect(article?.className).not.toContain("border");
+    expect(article?.className).not.toContain("bg-surface");
+    expect(article?.className).not.toMatch(/\bp[tx]?-\d/);
+  });
+
+  it("sets ruled under a hairline with room above the label", () => {
+    const view = render(createElement(Stat, { variant: "ruled", label: "Sodium", value: "4.1" }));
+    const article = view.querySelector("article");
+    expect(article?.className).toContain("border-t");
+    expect(article?.className).toContain("pt-4");
+    expect(article?.className).not.toContain("bg-surface");
+    expect(article?.className).not.toContain("rounded");
+  });
+
+  it("passes id, data-* and aria-* to the root, and keeps its own class and busy name", () => {
+    const view = render(
+      createElement(Stat, {
+        label: "Followers",
+        value: "12,480",
+        id: "followers",
+        "aria-label": "Followers this week",
+        "data-reveal": "rise",
+      } as Parameters<typeof Stat>[0]),
+    );
+    const article = view.querySelector("article");
+    expect(article?.id).toBe("followers");
+    expect(article?.getAttribute("data-reveal")).toBe("rise");
+    expect(article?.getAttribute("aria-label")).toBe("Followers this week");
+    expect(article?.className).toContain("flex");
+
+    const busy = render(
+      createElement(Stat, { label: "Followers", value: "12,480", loading: true, "aria-label": "Custom" }),
+    );
+    expect(busy.querySelector("article")?.getAttribute("aria-label")).toBe("Followers");
+  });
+
+  it("passes data-* to Stat.Group and keeps the group role with a label", () => {
+    const view = render(
+      createElement(Stat.Group, {
+        "aria-label": "Insights",
+        "data-reveal": "stagger",
+        children: createElement(Stat, { label: "Followers", value: "12,480" }),
+      } as Parameters<typeof Stat.Group>[0]),
+    );
+    const group = view.querySelector("[role='group']");
+    expect(group?.getAttribute("aria-label")).toBe("Insights");
+    expect(group?.getAttribute("data-reveal")).toBe("stagger");
+    expect(group?.className).toContain("grid");
+  });
 });
