@@ -173,3 +173,48 @@ describe("Card.Body terminal frame", () => {
     expect(container?.querySelector("iframe")).toBeNull();
   });
 });
+
+describe("Card glass", () => {
+  let root: Root | undefined;
+  let container: HTMLDivElement | undefined;
+
+  afterEach(() => {
+    act(() => {
+      root?.unmount();
+    });
+    container?.remove();
+    root = undefined;
+    container = undefined;
+  });
+
+  function renderCard(props: Partial<CardProps>) {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+    act(() => {
+      root?.render(createElement(Card, { variant: "glass", ...props } as CardProps, "Glass"));
+    });
+    return container.firstElementChild as HTMLElement;
+  }
+
+  it("tints with the surface token, blurs the backdrop and keeps a solid fallback", () => {
+    for (const padding of ["md", "none"] as const) {
+      const card = renderCard({ padding });
+      expect(card.getAttribute("data-variant")).toBe("glass");
+      expect(card.className).toContain("var(--color-surface)_var(--card-glass-tint,70%)");
+      expect(card.className).toContain("backdrop-blur-[var(--card-glass-blur,12px)]");
+      expect(card.className).toContain("[@supports_not_(backdrop-filter:blur(0))]:bg-surface");
+      expect(card.className).toContain("[@media(prefers-reduced-transparency:reduce)]:bg-surface");
+      expect(card.className).toContain("[@media(prefers-reduced-transparency:reduce)]:backdrop-filter-none");
+      act(() => root?.unmount());
+      container?.remove();
+    }
+  });
+
+  it("takes a tone, so the glass follows the card's own colour pair", () => {
+    const card = renderCard({ padding: "md", tone: "inverse" });
+    expect(card.getAttribute("data-tone")).toBe("inverse");
+    expect(card.getAttribute("data-theme")).toBe("dark");
+    expect(card.className).toContain("var(--color-surface)");
+  });
+});

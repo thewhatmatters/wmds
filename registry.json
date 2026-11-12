@@ -475,6 +475,22 @@
       "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
     },
     {
+      "name": "components-card-card--glass",
+      "type": "registry:block",
+      "title": "Card — glass over a picture",
+      "description": "Show code for Storybook Components/Card/Card → Pattern — glass over a picture.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-card-card--glass.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
       "name": "components-card-card--headerless-media",
       "type": "registry:block",
       "title": "Card — headerless media",
@@ -1509,6 +1525,38 @@
       "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
     },
     {
+      "name": "components-meter--named-levels",
+      "type": "registry:block",
+      "title": "Meter — named levels",
+      "description": "Show code for Storybook Components/Meter → Pattern — named levels.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-meter--named-levels.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-meter--table-column",
+      "type": "registry:block",
+      "title": "Meter — share column in a table",
+      "description": "Show code for Storybook Components/Meter → Pattern — share column in a table.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-meter--table-column.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
       "name": "components-moremenu--action-menu",
       "type": "registry:block",
       "title": "MoreMenu — action menu",
@@ -2046,6 +2094,22 @@
       "files": [
         {
           "path": "docs/patterns/components-stat--insights-row.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
+      "name": "components-stat--ruled-figures",
+      "type": "registry:block",
+      "title": "Stat — ruled figures",
+      "description": "Show code for Storybook Components/Stat → Pattern — ruled figures.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-stat--ruled-figures.tsx",
           "type": "registry:component"
         }
       ],

@@ -235,6 +235,14 @@
       "source": "src/components/molecules/Card/Card.stories.tsx"
     },
     {
+      "id": "components-card-card--glass",
+      "title": "Components/Card/Card",
+      "name": "Pattern — glass over a picture",
+      "file": "patterns/components-card-card--glass.tsx",
+      "storybook": "?path=/story/components-card-card--glass",
+      "source": "src/components/molecules/Card/Card.stories.tsx"
+    },
+    {
       "id": "components-card-card--headerless-media",
       "title": "Components/Card/Card",
       "name": "Pattern — headerless media",
@@ -747,6 +755,22 @@
       "source": "src/components/molecules/LogView/LogView.stories.tsx"
     },
     {
+      "id": "components-meter--named-levels",
+      "title": "Components/Meter",
+      "name": "Pattern — named levels",
+      "file": "patterns/components-meter--named-levels.tsx",
+      "storybook": "?path=/story/components-meter--named-levels",
+      "source": "src/components/atoms/Meter/Meter.stories.tsx"
+    },
+    {
+      "id": "components-meter--table-column",
+      "title": "Components/Meter",
+      "name": "Pattern — share column in a table",
+      "file": "patterns/components-meter--table-column.tsx",
+      "storybook": "?path=/story/components-meter--table-column",
+      "source": "src/components/atoms/Meter/Meter.stories.tsx"
+    },
+    {
       "id": "components-moremenu--action-menu",
       "title": "Components/MoreMenu",
       "name": "Pattern — action menu",
@@ -1008,6 +1032,14 @@
       "name": "Pattern — insights row",
       "file": "patterns/components-stat--insights-row.tsx",
       "storybook": "?path=/story/components-stat--insights-row",
+      "source": "src/components/molecules/Stat/Stat.stories.tsx"
+    },
+    {
+      "id": "components-stat--ruled-figures",
+      "title": "Components/Stat",
+      "name": "Pattern — ruled figures",
+      "file": "patterns/components-stat--ruled-figures.tsx",
+      "storybook": "?path=/story/components-stat--ruled-figures",
       "source": "src/components/molecules/Stat/Stat.stories.tsx"
     },
     {

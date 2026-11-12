@@ -161,6 +161,7 @@
       },
       "patterns": [
         "components-card-card--body-slot-occupancy-history",
+        "components-card-card--glass",
         "components-card-card--headerless-media",
         "components-card-card--outlined-layout",
         "components-card-card--pinned-height",
@@ -604,6 +605,20 @@
       ]
     },
     {
+      "name": "Meter",
+      "tier": "atom",
+      "category": "Data visualization",
+      "summary": "One thin bar for a static measure in a known range (a share, a score, a level), sized for table cells, rows and cards.",
+      "storybook": {
+        "title": "Components/Meter",
+        "docs": "?path=/docs/components-meter--docs"
+      },
+      "patterns": [
+        "components-meter--named-levels",
+        "components-meter--table-column"
+      ]
+    },
+    {
       "name": "MoreMenu",
       "tier": "organism",
       "category": "Action",
@@ -889,14 +904,15 @@
       "name": "Stat",
       "tier": "molecule",
       "category": "Data visualization",
-      "summary": "At-a-glance metric tile with label, value, optional trend, a hero size with a visible vs line, and an optional detail line.",
+      "summary": "At-a-glance metric with label, value, optional trend, a hero size with a visible vs line, an optional detail line, and a tile, plain or ruled frame.",
       "storybook": {
         "title": "Components/Stat",
         "docs": "?path=/docs/components-stat--docs"
       },
       "patterns": [
         "components-stat--hero-stat",
-        "components-stat--insights-row"
+        "components-stat--insights-row",
+        "components-stat--ruled-figures"
       ]
     },
     {
