@@ -7,6 +7,38 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): don't edit this file on a feature branch. Add a release note as `changes/<topic>.md` (format in `changes/README.md`). The release step, `npm run release:prepare` on its own **Release 0.x.y** branch, folds every note into one new entry here and bumps the version once. `npm run check:changelog` checks this file and the notes.
 
+## 0.4.50
+
+**Carousel: the follow cursor no longer widens the page.**
+
+- **Carousel** `cursor`: the follow badge now sits in a layer over the row (bleed included) that clips it sideways. Before, a mouse near the page's right edge pushed the badge, and with it the page, up to half a badge wider (a sideways scrollbar on a `bleed` row such as a looping testimonial strip), and the page stayed wider after the pointer left. Above and below the row the badge stays whole. The loop's copy of the items was never the cause: it scrolls inside the row.
+- The Carousel root no longer gets `position: relative` when `cursor` is set; the row's frame holds the badge now.
+- New interaction test **loop, bleed and follow cursor never widen the page** (fails on 0.4.45: page 1307px wide in a 1280px window).
+
+**Geist font licence ships with the fonts.**
+
+- **Fonts**: the package now includes the SIL Open Font License 1.1 and the Geist copyright notice beside the bundled font files, as `dist/files/LICENSE-geist.txt` and `dist/files/LICENSE-geist-mono.txt`, taken from the installed `@fontsource-variable` packages. `npm run check:pack` fails if either is missing.
+- **README**: a Licences section for the fonts, the Rive hand art and GSAP.
+
+**Inverse bands: the primary inverts, so it no longer reads as disabled (gap 4).**
+
+- **Band** `tone="inverse"`: the primary now inverts as it already did on `field`: the band's ink as the fill, the band colour as the label. Before, it kept the dark slate primary (#5a6d85), which sat at 2.98:1 on the navy and read as a disabled button. Measured on the default navy: fill #ffffff on the band 15.78:1, label #011272 on it 15.78:1, on hover (#e1e3ee) 12.34:1, on active (#ccd0e3) 10.29:1, focus ring 15.78:1; disabled (70%) #b3b8d5 with the label at 8.07:1. **Button** `primary`, and checked **Checkbox**, **Radio** and **Switch**, follow it.
+- Fixed: on inverse bands the primary's hover and active were overridden by the dark theme's lift toward white (an inverse band also carries `data-theme="dark"`), so a light primary's hover matched its rest state. They now step toward the band on both tones (`stateColors.css`).
+- **Brand kit** (new knobs): `--color-brand-surface-primary` / `--color-on-brand-surface-primary` keep a brand's own action colour on its inverse bands when it stands out there. `npx wmds-check` checks the pair (`brand-contrast`).
+- **Band** `tone="field"` was already inverted and is unchanged, measured on the default field (#39485c) in light and dark pages: fill #fafafa 8.92:1 against the band and for the label, hover (#e3e5e7) 7.37:1, active (#d3d6da) 6.38:1, disabled (#c0c5cb) 5.36:1.
+- New interaction tests **on an inverse band the primary reads enabled: AA label, 3:1 fill, distinct states**, plus the same check **on a field band** and **on a field band in a dark page**.
+
+**npm listing: description, keywords and a README that says what WMDS is.**
+
+- **package.json**: a plain description and npm keywords, so the package shows up in npm search.
+- **README.md**: a one-line pitch, install, a quickstart and what's included, ahead of the contributor notes. The component list now matches the package.
+
+### Consumer actions
+
+- None. Apps that added `overflow-x-clip` around a Carousel only to stop this sideways scroll can drop it.
+- None. Apps that copy the font files out of the package keep the matching licence file with them.
+- Look at any primary button or checked control on an inverse band: it is now light on the band colour. To keep your brand's action colour there instead, set `--color-brand-surface-primary` and `--color-on-brand-surface-primary` in `brand.css` (3:1 against the surface, 4.5:1 for the label).
+
 ## 0.4.49
 
 **Search: a one-field signup, with the button inside the field and a validation band.**
