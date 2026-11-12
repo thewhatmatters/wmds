@@ -26,14 +26,15 @@ export const cardShapeClasses: Record<CardShape, string> = {
 /**
  * Frosted glass: the surface colour at part strength over a blur of whatever sits behind the card
  * (a picture, a video, a canvas). It follows the theme and `tone`, because the tint is the surface
- * token. Knobs: `--card-glass-tint` (how much surface, default 70%) and `--card-glass-blur`
- * (default 12px). At 70% the card's own text keeps AA contrast over any backdrop, light or dark;
- * lower the tint only over a backdrop you know. Solid surface where the browser has no backdrop filter, and when the visitor
- * asks for reduced transparency.
+ * token. Knobs: `--card-glass-tint` (how much surface; default 70% in light themes and 88% in dark,
+ * from `--card-glass-tint-default`) and `--card-glass-blur` (default 12px). At the defaults the
+ * card's primary and muted text keep AA contrast over any backdrop, white to black; lower the tint
+ * only over a backdrop you know. Solid surface where the browser has no backdrop filter, and when
+ * the visitor asks for reduced transparency.
  */
 export const cardGlassClasses = [
   "border border-elevation-edge",
-  "bg-[color-mix(in_srgb,var(--color-surface)_var(--card-glass-tint,70%),transparent)]",
+  "bg-[color-mix(in_srgb,var(--color-background-surface)_var(--card-glass-tint,var(--card-glass-tint-default,70%)),transparent)]",
   "shadow-[var(--shadow-soft-card),var(--shadow-inset-highlight)]",
   "backdrop-blur-[var(--card-glass-blur,12px)] backdrop-saturate-150",
   "[@supports_not_(backdrop-filter:blur(0))]:bg-surface",

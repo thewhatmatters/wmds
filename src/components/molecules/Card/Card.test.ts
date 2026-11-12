@@ -201,7 +201,7 @@ describe("Card glass", () => {
     for (const padding of ["md", "none"] as const) {
       const card = renderCard({ padding });
       expect(card.getAttribute("data-variant")).toBe("glass");
-      expect(card.className).toContain("var(--color-surface)_var(--card-glass-tint,70%)");
+      expect(card.className).toContain("var(--color-background-surface)_var(--card-glass-tint,var(--card-glass-tint-default,70%))");
       expect(card.className).toContain("backdrop-blur-[var(--card-glass-blur,12px)]");
       expect(card.className).toContain("[@supports_not_(backdrop-filter:blur(0))]:bg-surface");
       expect(card.className).toContain("[@media(prefers-reduced-transparency:reduce)]:bg-surface");
@@ -215,6 +215,6 @@ describe("Card glass", () => {
     const card = renderCard({ padding: "md", tone: "inverse" });
     expect(card.getAttribute("data-tone")).toBe("inverse");
     expect(card.getAttribute("data-theme")).toBe("dark");
-    expect(card.className).toContain("var(--color-surface)");
+    expect(card.className).toContain("var(--color-background-surface)");
   });
 });
