@@ -20,6 +20,35 @@ function render(size?: "ui" | "reading") {
   return classes;
 }
 
+function labelClasses(props: { variant?: "list" | "plain"; size?: "ui" | "reading" }) {
+  const host = document.createElement("div");
+  document.body.append(host);
+  const root = createRoot(host);
+  act(() =>
+    root.render(createElement(Accordion, { ...props, children: createElement(Accordion.Item, { label: "A question", children: "An answer." }) })),
+  );
+  const label = [...host.querySelectorAll("button span")].find((span) => span.textContent === "A question")!;
+  const classes = label.className;
+  act(() => root.unmount());
+  host.remove();
+  return classes;
+}
+
+describe("Accordion plain labels", () => {
+  it("wrap instead of truncating", () => {
+    expect(labelClasses({ variant: "plain" })).not.toContain("truncate");
+    expect(labelClasses({ variant: "plain" })).toContain("type-body");
+  });
+  it("take the answer's 17px step with size=reading", () => {
+    const classes = labelClasses({ variant: "plain", size: "reading" });
+    expect(classes).toContain("type-large");
+    expect(classes).not.toContain("truncate");
+  });
+  it("stay one truncated line in list rows", () => {
+    expect(labelClasses({ variant: "list", size: "reading" })).toContain("truncate");
+  });
+});
+
 describe("Accordion size (Body rules B7, B9)", () => {
   it("keeps 14px muted UI text by default", () => {
     expect(render()).toContain("type-body text-muted");

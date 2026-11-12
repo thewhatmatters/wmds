@@ -37,6 +37,7 @@
         "docs": "?path=/docs/components-accordion--docs"
       },
       "patterns": [
+        "components-accordion--faq-reading",
         "components-accordion--flush"
       ]
     },

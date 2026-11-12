@@ -15,6 +15,7 @@ import {
   accordionChevronOpenClasses,
   accordionChevronRotateClasses,
   accordionChevronSlotClasses,
+  accordionChevronSlotPlainClasses,
   accordionItemCapsuleClasses,
   accordionItemCapsuleClosedClasses,
   accordionItemCapsuleOpenClasses,
@@ -22,8 +23,10 @@ import {
   accordionItemListClasses,
   accordionItemPlainClasses,
   accordionLabelPlainClasses,
+  accordionLabelPlainReadingClasses,
   accordionLabelRowClasses,
   accordionLeadingSlotClasses,
+  accordionLeadingSlotPlainClasses,
   accordionPanelContentCapsuleClasses,
   accordionPanelContentFlushClasses,
   accordionPanelContentListClasses,
@@ -35,10 +38,12 @@ import {
   accordionRootListInsetClasses,
   accordionRootPlainClasses,
   accordionTrailingClusterClasses,
+  accordionTrailingClusterPlainClasses,
   accordionTriggerCapsuleClasses,
   accordionTriggerFlushClasses,
   accordionTriggerInteractiveClasses,
   accordionTriggerListClasses,
+  accordionTriggerPlainClasses,
   type AccordionVariant,
 } from "./accordionStyles";
 
@@ -177,13 +182,20 @@ function AccordionItem({
     [isControlled, onOpenChange],
   );
 
-  const labelClasses = variant === "plain" ? accordionLabelPlainClasses : accordionLabelRowClasses;
+  const plain = variant === "plain";
+  const labelClasses = plain
+    ? size === "reading"
+      ? accordionLabelPlainReadingClasses
+      : accordionLabelPlainClasses
+    : accordionLabelRowClasses;
 
   const triggerClasses = flush
     ? accordionTriggerFlushClasses
     : variant === "capsule"
       ? accordionTriggerCapsuleClasses
-      : accordionTriggerListClasses;
+      : plain
+        ? accordionTriggerPlainClasses
+        : accordionTriggerListClasses;
 
   const panelContentClasses = flush
     ? accordionPanelContentFlushClasses
@@ -193,13 +205,17 @@ function AccordionItem({
 
   const trigger = (
     <>
-      {leading != null ? <span className={accordionLeadingSlotClasses}>{leading}</span> : null}
+      {leading != null ? (
+        <span className={plain ? accordionLeadingSlotPlainClasses : accordionLeadingSlotClasses}>{leading}</span>
+      ) : null}
       <span className={labelClasses}>{label}</span>
       {trailing != null ? (
-        <span className={accordionTrailingClusterClasses}>{trailing}</span>
+        <span className={plain ? accordionTrailingClusterPlainClasses : accordionTrailingClusterClasses}>
+          {trailing}
+        </span>
       ) : null}
       {expandable ? (
-        <span className={accordionChevronSlotClasses} aria-hidden>
+        <span className={plain ? accordionChevronSlotPlainClasses : accordionChevronSlotClasses} aria-hidden>
           <span className={cn(accordionChevronRotateClasses, open && accordionChevronOpenClasses)}>
             <ButtonIcon size="xs">
               <ChevronDown strokeWidth={2.2} />
