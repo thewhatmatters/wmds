@@ -27,6 +27,7 @@ import {
   tabItemSelectedClasses,
   tabItemSizeClasses,
   tabListClasses,
+  tabMeasureClipClasses,
   tabMeasureRailClasses,
   tabMoreIconClasses,
   tabRootClasses,
@@ -230,26 +231,28 @@ function TabGroup({
         </button>
       ) : null}
 
-      <div className={tabMeasureRailClasses} aria-hidden>
-        {items.map((item) => (
+      <div className={tabMeasureClipClasses} aria-hidden>
+        <div className={tabMeasureRailClasses}>
+          {items.map((item) => (
+            <span
+              key={item.props.value}
+              ref={overflow.measureRef(item.props.value)}
+              className={cn(tabItemClasses, tabItemSizeClasses[size])}
+            >
+              <span>{item.props.children}</span>
+              {item.props.count != null ? (
+                <span className={tabCountClasses}>{item.props.count.toLocaleString()}</span>
+              ) : null}
+            </span>
+          ))}
           <span
-            key={item.props.value}
-            ref={overflow.measureRef(item.props.value)}
+            ref={overflow.moreMeasureRef}
             className={cn(tabItemClasses, tabItemSizeClasses[size])}
           >
-            <span>{item.props.children}</span>
-            {item.props.count != null ? (
-              <span className={tabCountClasses}>{item.props.count.toLocaleString()}</span>
-            ) : null}
+            <span>More</span>
+            <ChevronDown className={tabMoreIconClasses} strokeWidth={2} />
           </span>
-        ))}
-        <span
-          ref={overflow.moreMeasureRef}
-          className={cn(tabItemClasses, tabItemSizeClasses[size])}
-        >
-          <span>More</span>
-          <ChevronDown className={tabMoreIconClasses} strokeWidth={2} />
-        </span>
+        </div>
       </div>
 
       {menu.open && menu.menuStyle != null ? (

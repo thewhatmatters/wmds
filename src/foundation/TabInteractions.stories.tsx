@@ -56,3 +56,29 @@ export const OverflowSelectionPromotion: Story = {
   },
 };
 
+export const OverflowKeepsItsWidth: Story = {
+  name: "Tab — tabs that don't fit never widen what holds them",
+  render: function OverflowKeepsItsWidthExample() {
+    const [value, setValue] = useState("essentials");
+
+    return (
+      <div className="w-[240px]" data-testid="holder">
+        <Tab.Group aria-label="Packages" value={value} onValueChange={setValue} size="lg">
+          <Tab value="essentials">Essentials</Tab>
+          <Tab value="studio">Studio</Tab>
+          <Tab value="partners">Partners</Tab>
+          <Tab value="enterprise">Enterprise</Tab>
+        </Tab.Group>
+      </div>
+    );
+  },
+  play: async ({ canvas }) => {
+    await waitFor(() => {
+      expect(canvas.getByRole("button", { name: /more/i })).toBeInTheDocument();
+    });
+    // The hidden measuring row is as wide as every tab side by side. It must not add to the
+    // holder's scrollable width, or a phone page scrolls sideways.
+    const holder = canvas.getByTestId("holder");
+    expect(holder.scrollWidth).toBe(holder.clientWidth);
+  },
+};
