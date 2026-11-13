@@ -20,9 +20,10 @@
   --color-background-popover: #ffffff;
   --color-background-muted: #f8f8f8;
 
-  /* Text — three-step ladder: primary → secondary (interactive idle + supporting) → disabled (placeholder only) */
+  /* Text — primary → secondary (interactive idle + supporting) → placeholder (a field's hint, 4.5:1 on every surface) → disabled (non-interactive only) */
   --color-text-primary: #171717;
   --color-text-secondary: #404040;
+  --color-text-placeholder: #6e6e6e;
   --color-text-disabled: #b3b3b3;
   --color-text-accent: #262626;
 
@@ -196,6 +197,7 @@
 
   --color-text-primary: #fafafa;
   --color-text-secondary: #b3b3b3;
+  --color-text-placeholder: #949494;
   --color-text-disabled: #737373;
   --color-text-accent: #ebebeb;
 
@@ -305,6 +307,7 @@
 
   --color-text-primary: #2a241c;
   --color-text-secondary: #5c5348;
+  --color-text-placeholder: #6b6155;
   --color-text-disabled: #a39888;
   --color-text-accent: #3d3429;
 
@@ -383,6 +386,8 @@
 
   --color-text-primary: var(--tone-fg);
   --color-text-secondary: var(--tone-muted);
+  /* A field's hint must stay readable: the band's muted ink, which the brand kit tunes. */
+  --color-text-placeholder: var(--tone-muted);
   --color-text-disabled: color-mix(in srgb, var(--tone-fg) 45%, var(--tone-bg));
   --color-text-accent: var(--tone-fg);
 

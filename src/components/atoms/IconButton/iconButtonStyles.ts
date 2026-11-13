@@ -3,6 +3,13 @@ import type { CSSProperties } from "react";
 /** Circular icon-only control — square hit target from {@link iconButtonSizeClasses}. */
 export const iconButtonShapeClass = "shrink-0 rounded-[var(--radius-control)]";
 
+/**
+ * A 36px (`sm`) button on a touch screen: an invisible layer brings the tap area to 44px without
+ * changing the circle (the same layer PromptBar's send button has).
+ */
+export const iconButtonCoarseTapAreaClasses =
+  "relative pointer-coarse:after:absolute pointer-coarse:after:-inset-1 pointer-coarse:after:content-['']";
+
 /** Expanded disclosure/menu trigger — retain the ghost hover surface while open. */
 export const iconButtonExpandedStyle = {
   backgroundColor: "color-mix(in srgb, currentColor 5%, transparent)",

@@ -11,6 +11,7 @@ const surfaceTokens = [
 const textTokens = [
   { name: "fg (primary)", className: "bg-surface text-fg" },
   { name: "muted (secondary)", className: "bg-surface text-muted" },
+  { name: "placeholder", className: "bg-surface text-placeholder" },
   { name: "disabled", className: "bg-surface text-disabled" },
   { name: "fg-accent", className: "bg-surface text-fg-accent" },
 ] as const;
@@ -95,11 +96,14 @@ export const TextRoles: Story = {
   render: () => (
     <div className="flex max-w-2xl flex-col gap-4">
       <p className="text-sm text-muted">
-        Three-step ladder — <strong className="font-medium text-fg">primary</strong> →{" "}
+        The ladder — <strong className="font-medium text-fg">primary</strong> →{" "}
         <strong className="font-medium text-fg">secondary</strong> (<code className="font-mono text-xs">text-muted</code>
-        ) → <strong className="font-medium text-fg">disabled</strong> (
+        ) → <strong className="font-medium text-fg">placeholder</strong> (
+        <code className="font-mono text-xs">text-placeholder</code>) →{" "}
+        <strong className="font-medium text-fg">disabled</strong> (
         <code className="font-mono text-xs">text-disabled</code>). Use secondary for supporting copy and{" "}
-        <em>clickable idle</em> controls; reserve disabled for placeholders and non-interactive states only.
+        <em>clickable idle</em> controls. Placeholder is a field&apos;s hint and stays readable (4.5:1). Reserve disabled
+        for non-interactive states only: it is too faint to read.
       </p>
       <SwatchGrid tokens={textTokens} />
       <p className="text-xs text-muted">

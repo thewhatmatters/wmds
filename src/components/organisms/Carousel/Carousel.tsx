@@ -17,17 +17,20 @@ import {
   type ReactNode,
 } from "react";
 import {
+  MotionConfigContext,
   animate,
   motion,
   useMotionValue,
   useMotionValueEvent,
-  useReducedMotionConfig,
+  useReducedMotion,
   useSpring,
   useTransform,
 } from "motion/react";
 import { Pause, Play } from "lucide-react";
 import { IconButton } from "../../atoms/IconButton/IconButton";
+import { iconButtonCoarseTapAreaClasses } from "../../atoms/IconButton/iconButtonStyles";
 import { cn } from "../../../lib/cn";
+import { resolveReducedMotion } from "../../../lib/reducedMotion";
 import { motionTransitionProp } from "../../../lib/motion";
 import {
   carouselActiveIndex,
@@ -248,8 +251,9 @@ function CarouselRoot({
   children,
   className,
 }: CarouselProps) {
-  // Follows the OS setting, or a MotionConfig `reducedMotion` around the row.
-  const reduce = useReducedMotionConfig() ?? false;
+  // The reader's OS setting wins, with or without a MotionConfig around the row; `reducedMotion="always"` also reduces.
+  const { reducedMotion: reducedMotionConfig } = useContext(MotionConfigContext);
+  const reduce = resolveReducedMotion(useReducedMotion(), reducedMotionConfig);
   const rootRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -886,6 +890,7 @@ function CarouselRoot({
             <IconButton
               role="ghost"
               size="sm"
+              className={iconButtonCoarseTapAreaClasses}
               aria-label={driftPaused ? "Play" : "Pause"}
               icon={driftPaused ? <Play strokeWidth={2} /> : <Pause strokeWidth={2} />}
               onClick={() => setDriftPaused((paused) => !paused)}
@@ -896,6 +901,7 @@ function CarouselRoot({
           <IconButton
             role="ghost"
             size="sm"
+            className={iconButtonCoarseTapAreaClasses}
             aria-label={driftPaused ? "Play" : "Pause"}
             icon={driftPaused ? <Play strokeWidth={2} /> : <Pause strokeWidth={2} />}
             onClick={() => setDriftPaused((paused) => !paused)}

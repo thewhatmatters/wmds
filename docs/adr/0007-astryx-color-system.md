@@ -34,7 +34,8 @@ Light: gray body → white surface/card. Dark: body darkest → surface lighter.
 |---------|-------|------|
 | `text-fg` | `--color-text-primary` | Active labels, body |
 | `text-muted` | `--color-text-secondary` | Supporting copy, **interactive idle** (Chip, SegmentedControl) |
-| `text-disabled` | `--color-text-disabled` | Placeholder, non-interactive disabled only |
+| `text-placeholder` | `--color-text-placeholder` | A field's placeholder (Input, TextArea, Search, PromptBar, Select's empty choice): 4.5:1 on body, surface and muted |
+| `text-disabled` | `--color-text-disabled` | Non-interactive disabled only (exempt from contrast, so never a placeholder) |
 | `border-border` | alpha hairline | |
 | `border-border-emphasized` | section dividers | |
 

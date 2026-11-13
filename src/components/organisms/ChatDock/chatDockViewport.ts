@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { resolveReducedMotion } from "../../../lib/reducedMotion";
 
 /** From this width the fixed window grows out of the composer; below it the window fills the screen. */
 export const chatDockWideQuery = "(min-width: 48rem)";
@@ -74,11 +75,12 @@ function readReducedMotion(): boolean {
 }
 
 /**
- * Reduced motion, from the reader's setting or `MotionConfig reducedMotion="always"`. The server and
+ * Reduced motion, from the reader's setting or `MotionConfig reducedMotion="always"` (the reader's
+ * setting wins even with no `MotionConfig`, whose default is `"never"`). The server and
  * the hydration render read the setting as off, so the closed window's inline style matches the
  * server's; it switches right after. Closed, the window is hidden, so the switch never shows.
  */
 export function useChatDockReducedMotion(config: string | undefined): boolean {
   const prefers = useSyncExternalStore(subscribeReducedMotion, readReducedMotion, () => false);
-  return config === "always" || (config !== "never" && prefers);
+  return resolveReducedMotion(prefers, config);
 }

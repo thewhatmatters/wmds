@@ -29,6 +29,7 @@
   /* Text */
   --color-fg: var(--color-text-primary);
   --color-muted: var(--color-text-secondary);
+  --color-placeholder: var(--color-text-placeholder);
   --color-disabled: var(--color-text-disabled);
   --color-fg-accent: var(--color-text-accent);
 
