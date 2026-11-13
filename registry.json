@@ -4,6 +4,22 @@
   "homepage": "https://github.com/thewhatmatters/wmds#readme",
   "items": [
     {
+      "name": "components-accordion--faq-reading",
+      "type": "registry:block",
+      "title": "Accordion — FAQ (reading, long questions)",
+      "description": "Show code for Storybook Components/Accordion → Pattern — FAQ (reading, long questions).",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-accordion--faq-reading.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
       "name": "components-accordion--flush",
       "type": "registry:block",
       "title": "Accordion — flush",

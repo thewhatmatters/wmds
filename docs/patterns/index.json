@@ -3,6 +3,14 @@
   "version": "0.4.51",
   "patterns": [
     {
+      "id": "components-accordion--faq-reading",
+      "title": "Components/Accordion",
+      "name": "Pattern — FAQ (reading, long questions)",
+      "file": "patterns/components-accordion--faq-reading.tsx",
+      "storybook": "?path=/story/components-accordion--faq-reading",
+      "source": "src/components/molecules/Accordion/Accordion.stories.tsx"
+    },
+    {
       "id": "components-accordion--flush",
       "title": "Components/Accordion",
       "name": "Pattern — flush",

@@ -53,6 +53,13 @@ export const accordionCapsuleInsetXClasses = "px-2.5";
 export const accordionTriggerListClasses =
   "flex h-11 w-full items-center gap-2.5 text-left " + accordionInsetXClasses;
 
+/**
+ * Plain rows grow with a label that wraps (a question is read in full, never cut off); a one-line
+ * row stays 44px.
+ */
+export const accordionTriggerPlainClasses =
+  "flex min-h-11 w-full items-center gap-2.5 text-left " + accordionInsetXClasses;
+
 export const accordionTriggerCapsuleClasses =
   "flex h-11 w-full items-center gap-2.5 text-left " + accordionCapsuleInsetXClasses;
 
@@ -61,7 +68,7 @@ export const accordionTriggerCapsuleClasses =
  * past each edge so its rounded hover band and inset focus ring clear the label.
  */
 export const accordionTriggerFlushClasses =
-  "-mx-2 flex h-11 w-[calc(100%+1rem)] items-center gap-2.5 rounded-lg px-2 text-left";
+  "-mx-2 flex min-h-11 w-[calc(100%+1rem)] items-center gap-2.5 rounded-lg px-2 text-left";
 
 /** @deprecated Use `accordionTriggerListClasses` or `accordionTriggerCapsuleClasses`. */
 export const accordionTriggerBaseClasses = accordionTriggerListClasses;
@@ -73,17 +80,36 @@ export const accordionTriggerInteractiveClasses =
 
 export const accordionLeadingSlotClasses = "flex size-6 shrink-0 items-center justify-center";
 
-/** FAQ / settings — regular body weight (hierarchy via chevron + indent, not medium labels). */
-export const accordionLabelPlainClasses = `${typographyClass("body")} min-w-0 flex-1 truncate`;
+/**
+ * In a plain row the leading slot stays beside the label's first line when the label wraps: its
+ * centre sits 22px down, the middle of a one-line row.
+ */
+export const accordionLeadingSlotPlainClasses = accordionLeadingSlotClasses + " mt-2.5 self-start";
+
+/**
+ * FAQ / settings — regular body weight (hierarchy via chevron + indent, not medium labels). The
+ * label wraps. Its padding (half of 44px less one line, less 1px so a label in another typeface
+ * can't push a one-line row past 44px) puts the first line's centre where a one-line row has it.
+ */
+export const accordionLabelPlainClasses = `${typographyClass("body")} min-w-0 flex-1 text-pretty break-words py-[calc((2.75rem-1lh)/2-1px)]`;
+
+/** Plain + `size="reading"` — the label takes the answer's 17px step, so a question never reads smaller than its answer. */
+export const accordionLabelPlainReadingClasses = "type-large min-w-0 flex-1 break-words py-[calc((2.75rem-1lh)/2-1px)]";
 
 /** List / capsule / **TaskRows** — compact primary line in h-11 row. */
 export const accordionLabelRowClasses = `${typographyClass("ui-label")} min-w-0 flex-1 truncate text-[0.8125rem]`;
 
 export const accordionTrailingClusterClasses = "flex shrink-0 items-center gap-2";
 
+/** Plain rows — the trailing content keeps the first line's 44px band when the label wraps. */
+export const accordionTrailingClusterPlainClasses = "flex h-11 shrink-0 items-center gap-2 self-start";
+
 /** Chevron column — decorative inside the disclosure button. */
 export const accordionChevronSlotClasses =
   "-ml-2 flex size-7 shrink-0 items-center justify-center rounded-[var(--radius-control)] text-muted";
+
+/** Plain rows — the chevron stays beside the label's first line (28px slot, centre 22px down). */
+export const accordionChevronSlotPlainClasses = accordionChevronSlotClasses + " mt-2 self-start";
 
 export const accordionChevronRotateClasses =
   "inline-flex " + motionTransition("medium") + " transition-transform";
