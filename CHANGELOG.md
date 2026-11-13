@@ -7,6 +7,33 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): don't edit this file on a feature branch. Add a release note as `changes/<topic>.md` (format in `changes/README.md`). The release step, `npm run release:prepare` on its own **Release 0.x.y** branch, folds every note into one new entry here and bumps the version once. `npm run check:changelog` checks this file and the notes.
 
+## 0.4.52
+
+**Accordion: a plain label wraps instead of being cut off, and `size="reading"` covers the label.**
+
+- **Accordion** `variant="plain"` (with or without `flush`): a label longer than its row now wraps and the row grows with it. Before, the label was one line in a fixed 44px row and the rest was cut with an ellipsis, so an FAQ question of more than about 34 characters lost its end on a 390px phone. A one-line row is still 44px. When a label wraps, its `leading` content, `trailing` content and chevron stay beside the first line.
+- **Accordion** `size="reading"` on a plain accordion now sets the label at the answer's 17px step (`type-large`) too. Before, the label stayed 14px over a 17px answer, so a question read smaller than its answer.
+- `list` and `capsule` rows are unchanged: one line, 44px, truncated.
+- New story **Pattern — FAQ (reading, long questions)** and interaction test **a long plain label wraps; one-line rows stay 44px**.
+
+**Placeholders you can read, a marquee that stops for reduced motion, and 44px close and pause targets on phones.**
+
+- **Input**, **TextArea**, **Search**, **PromptBar**, **ChatDock**, **Select** (fix): placeholder text was the disabled ink, 2.1:1 on white and 3.2:1 in dark. It now uses a new token, `--color-text-placeholder` (utility `text-placeholder`): 5.1:1 in light (`#6e6e6e`), 5.0:1 in dark (`#949494`), and the band's muted ink on an inverse or field band. It is still a step lighter than supporting copy, so a hint doesn't read as a typed value. `text-disabled` is now for disabled states only.
+- **Carousel** (fix): `autoplay` kept drifting for a reader who asked for reduced motion, unless the app had wrapped it in `<MotionConfig reducedMotion="user">`. The reader's setting now always wins, with or without a `MotionConfig`.
+- **ChatDock** (fix): the same for the window's open and close animation.
+- **Dialog**, **Panel**, **Sheet**, **ChatDock** (fix): the close button's tap area is 44px on touch screens (the circle stays 36px). **Carousel**'s Pause button too.
+
+**Tab and SiteNav: tabs or links that don't fit no longer widen the page.**
+
+- **Tab**, **SiteNav** (fix): the hidden row both use to measure their items is as wide as every item side by side. On a narrow screen it reached past the edge and the page scrolled sideways (a four-tab group at 360px made the page 377px wide). The row now sits in a zero-size clipped box. Measuring, the More menu and what is shown are unchanged.
+
+### Consumer actions
+
+- None needed. A plain accordion that relied on the ellipsis to hold every row at 44px now shows the whole label on more lines: shorten the label, or use `variant="list"`.
+- With `size="reading"`, a plain-text label grows from 14px to 17px. A label that sets its own type (`<span className="type-heading-3">`) looks the same.
+- A brand kit that sets its own `--color-text-disabled` to tune placeholders should set `--color-text-placeholder` instead (keep it at 4.5:1 or more on your field fill).
+- An app that wrapped a Carousel in `<MotionConfig reducedMotion="never">` to keep it moving under reduced motion: that no longer works, on purpose.
+
 ## 0.4.51
 
 **Meter, glass cards, and Stat without its tile.**

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.51 · Pattern — ruled figures
+// @thewhatmatters/wmds@0.4.52 · Pattern — ruled figures
 // Storybook: Components/Stat → Pattern — ruled figures (?path=/story/components-stat--ruled-figures)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
