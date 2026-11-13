@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.51 · Pattern — share column in a table
+// @thewhatmatters/wmds@0.4.52 · Pattern — share column in a table
 // Storybook: Components/Meter → Pattern — share column in a table (?path=/story/components-meter--table-column)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

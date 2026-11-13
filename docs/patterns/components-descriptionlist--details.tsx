@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.51 · Pattern — details
+// @thewhatmatters/wmds@0.4.52 · Pattern — details
 // Storybook: Components/DescriptionList → Pattern — details (?path=/story/components-descriptionlist--details)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

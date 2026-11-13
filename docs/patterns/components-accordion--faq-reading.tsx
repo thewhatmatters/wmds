@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.51 · Pattern — FAQ (reading, long questions)
+// @thewhatmatters/wmds@0.4.52 · Pattern — FAQ (reading, long questions)
 // Storybook: Components/Accordion → Pattern — FAQ (reading, long questions) (?path=/story/components-accordion--faq-reading)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

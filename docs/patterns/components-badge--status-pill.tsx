@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.51 · Pattern — status pill
+// @thewhatmatters/wmds@0.4.52 · Pattern — status pill
 // Storybook: Components/Badge → Pattern — status pill (?path=/story/components-badge--status-pill)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

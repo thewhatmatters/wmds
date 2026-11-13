@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.51 · Pattern — named levels
+// @thewhatmatters/wmds@0.4.52 · Pattern — named levels
 // Storybook: Components/Meter → Pattern — named levels (?path=/story/components-meter--named-levels)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
