@@ -69,8 +69,8 @@ export const selectTriggerInnerClasses: Record<SelectSize, string> = {
 
 export const selectTriggerLabelClasses = "min-w-0 flex-1 truncate";
 
-/** The empty choice ("Select…"): muted, but readable at 4.5:1. `text-disabled` failed contrast. */
-export const selectTriggerPlaceholderClasses = "text-muted";
+/** The empty choice ("Select…"): the same ink as an Input's placeholder, readable at 4.5:1. `text-disabled` failed contrast. */
+export const selectTriggerPlaceholderClasses = "text-placeholder";
 
 /** Trailing caret column — fixed square; chevron SVG fills the slot. */
 export const selectTriggerCaretSlotClasses: Record<SelectSize, string> = {

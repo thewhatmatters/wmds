@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { X } from "lucide-react";
 import { IconButton } from "../../atoms/IconButton/IconButton";
+import { iconButtonCoarseTapAreaClasses } from "../../atoms/IconButton/iconButtonStyles";
 import {
   Card,
   cardSubtitleClasses,
@@ -96,6 +97,7 @@ export function OverlayPanelHeader({
               <IconButton
                 size="sm"
                 role="ghost"
+                className={iconButtonCoarseTapAreaClasses}
                 icon={<X strokeWidth={2} />}
                 aria-label={closeLabel}
                 onClick={() => onClose?.()}

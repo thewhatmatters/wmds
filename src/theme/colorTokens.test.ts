@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { contrastRatio } from "../lib/contrast";
+import { contrastRatio, textContrastMinimum } from "../lib/contrast";
 
 /**
  * Colour fixes found by building every component in light and dark (Wonder import, 2026-10-29).
@@ -14,6 +14,7 @@ const token = (scope: string, name: string) =>
 
 const LIGHT = ':root,\n[data-theme="light"] {';
 const DARK = '[data-theme="dark"] {';
+const SOFT = '[data-theme="soft"] {';
 
 describe("colour tokens", () => {
   it("never mixes above 100% (the browser drops the whole declaration)", () => {
@@ -30,6 +31,25 @@ describe("colour tokens", () => {
       expect(contrastRatio(fill, token(scope, "background-surface"))).toBeGreaterThanOrEqual(1.1);
     });
   }
+
+  for (const [name, scope] of [["light", LIGHT], ["dark", DARK], ["soft", SOFT]] as const) {
+    it(`a field's placeholder reads at 4.5:1 on the body, the surface and the muted fill (${name})`, () => {
+      const ink = token(scope, "text-placeholder");
+      expect(ink).not.toBe("");
+      for (const ground of ["background-body", "background-surface", "background-muted"]) {
+        expect(contrastRatio(ink, token(scope, ground)), ground).toBeGreaterThanOrEqual(textContrastMinimum);
+      }
+      // Still a step lighter than supporting copy, so a hint never reads as a typed value.
+      expect(contrastRatio(ink, token(scope, "background-surface"))).toBeLessThan(
+        contrastRatio(token(scope, "text-secondary"), token(scope, "background-surface")),
+      );
+    });
+  }
+
+  it("a field's placeholder on a band is the band's muted ink, never the faint disabled mix", () => {
+    const tones = block(colors, '[data-tone="inverse"],\n[data-tone="field"] {');
+    expect(tones).toContain("--color-text-placeholder: var(--tone-muted);");
+  });
 
   it("dark brand reads on the dark body and surface, and white reads on it", () => {
     const brand = token(DARK, "brand");
