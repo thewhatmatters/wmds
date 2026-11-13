@@ -169,9 +169,12 @@ export const siteNavNavigationRootClasses = "flex min-w-0 max-w-full justify-cen
 export const siteNavLinkListClasses =
   "m-0 flex min-w-0 list-none flex-nowrap items-center gap-1 overflow-hidden p-0";
 
+/** A zero-size clipped box around the measuring rail, so the rail's full width never widens the page. */
+export const siteNavMeasureClipClasses =
+  "pointer-events-none invisible absolute left-0 top-0 -z-10 size-0 overflow-hidden";
+
 /** Invisible exact-size specimens for ResizeObserver overflow (same idea as Tab). */
-export const siteNavMeasureRailClasses =
-  "pointer-events-none invisible absolute left-0 top-0 -z-10 flex w-max gap-1";
+export const siteNavMeasureRailClasses = "flex w-max gap-1";
 
 export const siteNavMoreTriggerClasses = cn(
   "text-muted! hover:text-fg!",
