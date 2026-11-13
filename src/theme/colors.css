@@ -56,6 +56,11 @@
   --color-fill-selected: #eeeeee;
   --color-elevation-edge: rgb(255 255 253 / 90%);
   --color-elevation-surface: rgb(255 255 253 / 90%);
+  /*
+   * Card `variant="glass"`: how much of the surface colour the pane keeps when `--card-glass-tint`
+   * isn't set. Per theme, so primary and muted text stay at AA over any backdrop, white to black.
+   */
+  --card-glass-tint-default: 70%;
 
   /* Loading placeholders — skeleton screens (Astryx Skeleton) */
   --color-skeleton: color-mix(in srgb, var(--color-text-primary) 8%, var(--color-background-muted));
@@ -210,6 +215,8 @@
   --color-fill-selected: #303030;
   --color-elevation-edge: rgb(255 255 255 / 14%);
   --color-elevation-surface: rgb(38 38 38 / 94%);
+  /* Dark glass needs more surface: light text over a bright backdrop loses contrast sooner. */
+  --card-glass-tint-default: 88%;
 
   --color-skeleton: color-mix(in srgb, var(--color-text-primary) 12%, var(--color-background-muted));
 
@@ -316,6 +323,7 @@
   --color-fill-selected: #eee8e0;
   --color-elevation-edge: rgb(255 250 244 / 90%);
   --color-elevation-surface: rgb(255 250 244 / 90%);
+  --card-glass-tint-default: 70%;
 
   --color-skeleton: color-mix(in srgb, var(--color-text-primary) 8%, var(--color-background-muted));
 }

@@ -15,13 +15,28 @@ export const statGroupColumns = [2, 3, 4] as const;
 
 export type StatGroupColumns = (typeof statGroupColumns)[number];
 
-/** Bordered metric tile — insights row and hero KPI. */
-export const statShellClasses = "flex min-w-0 flex-col rounded-[var(--radius-surface-md)] border border-border bg-surface";
+export const statVariants = ["tile", "plain", "ruled"] as const;
 
-export const statShellSizeClasses: Record<StatSize, string> = {
-  sm: "gap-2 p-4",
-  md: "gap-3 p-5",
-  lg: "gap-3 p-5",
+export type StatVariant = (typeof statVariants)[number];
+
+/** Shell structure; the frame comes from the selected variant. */
+export const statShellClasses = "flex min-w-0 flex-col";
+
+/**
+ * `tile` is the bordered metric tile (insights row, hero KPI). `plain` is the figure alone, for a
+ * surface that already frames it (a card, a band, a picture). `ruled` sits under a hairline, for
+ * editorial figure rows.
+ */
+export const statShellVariantClasses: Record<StatVariant, string> = {
+  tile: "rounded-[var(--radius-surface-md)] border border-border bg-surface",
+  plain: "",
+  ruled: "border-t border-border",
+};
+
+export const statShellSizeClasses: Record<StatVariant, Record<StatSize, string>> = {
+  tile: { sm: "gap-2 p-4", md: "gap-3 p-5", lg: "gap-3 p-5" },
+  plain: { sm: "gap-2", md: "gap-3", lg: "gap-3" },
+  ruled: { sm: "gap-2 pt-4", md: "gap-3 pt-5", lg: "gap-3 pt-5" },
 };
 
 export const statLabelRowClasses = "flex flex-wrap items-center gap-2";

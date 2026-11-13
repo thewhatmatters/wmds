@@ -43,6 +43,12 @@ export const tabCountClasses =
 
 export const tabMoreIconClasses = "size-3.5 shrink-0 stroke-current";
 
+/**
+ * Holds the measuring rail in a zero-size clipped box: the rail is as wide as every tab side by
+ * side, and unclipped it would widen the page on a narrow screen.
+ */
+export const tabMeasureClipClasses =
+  "pointer-events-none invisible absolute left-0 top-0 -z-10 size-0 overflow-hidden";
+
 /** Invisible exact-size specimens used by ResizeObserver overflow calculation. */
-export const tabMeasureRailClasses =
-  "pointer-events-none invisible absolute left-0 top-0 -z-10 flex w-max";
+export const tabMeasureRailClasses = "flex w-max";

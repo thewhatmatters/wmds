@@ -41,6 +41,7 @@ import {
   siteNavLinkClasses,
   siteNavLinkListClasses,
   siteNavLinksRootClasses,
+  siteNavMeasureClipClasses,
   siteNavMeasureRailClasses,
   siteNavMenuBackdropClasses,
   siteNavMenuContentClasses,
@@ -712,32 +713,34 @@ function SiteNavLinks({
         </Button>
       ) : null}
 
-      <div className={siteNavMeasureRailClasses} aria-hidden>
-        {items.map((item) => {
-          const id = siteNavItemId(item);
-          const label = siteNavItemLabel(item);
-          const menu = siteNavItemIsMenu(item);
-          return (
-            <span
-              key={id}
-              ref={overflow.measureRef(id)}
-              className={cn(
-                siteNavMeasureItemClasses,
-                menu ? siteNavTriggerClasses : siteNavLinkClasses,
-              )}
-            >
-              {label}
-              {menu ? <ChevronDown className="ml-1 size-3.5" strokeWidth={2} /> : null}
-            </span>
-          );
-        })}
-        <span
-          ref={overflow.moreMeasureRef}
-          className={cn(siteNavMoreTriggerClasses, siteNavMeasureMoreClasses)}
-        >
-          More
-          <ChevronDown className="size-3.5" strokeWidth={2} />
-        </span>
+      <div className={siteNavMeasureClipClasses} aria-hidden>
+        <div className={siteNavMeasureRailClasses}>
+          {items.map((item) => {
+            const id = siteNavItemId(item);
+            const label = siteNavItemLabel(item);
+            const menu = siteNavItemIsMenu(item);
+            return (
+              <span
+                key={id}
+                ref={overflow.measureRef(id)}
+                className={cn(
+                  siteNavMeasureItemClasses,
+                  menu ? siteNavTriggerClasses : siteNavLinkClasses,
+                )}
+              >
+                {label}
+                {menu ? <ChevronDown className="ml-1 size-3.5" strokeWidth={2} /> : null}
+              </span>
+            );
+          })}
+          <span
+            ref={overflow.moreMeasureRef}
+            className={cn(siteNavMoreTriggerClasses, siteNavMeasureMoreClasses)}
+          >
+            More
+            <ChevronDown className="size-3.5" strokeWidth={2} />
+          </span>
+        </div>
       </div>
 
       {menu.open && menu.menuStyle != null

@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect } from "storybook/test";
 import { BarChart3, Receipt, Share2, Unplug, Wallet } from "lucide-react";
 import { Button } from "../../atoms/Button/Button";
 import { IconButton } from "../../atoms/IconButton/IconButton";
 import { PageHeader } from "../PageHeader/PageHeader";
-import { Stat, statSizes } from "./Stat";
+import { Stat, statSizes, statVariants } from "./Stat";
 import { storyCopySource, storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 
 const meta = {
@@ -13,6 +14,7 @@ const meta = {
   ...storyMetaDocsDefaults(),
   argTypes: {
     size: { control: "select", options: [...statSizes] },
+    variant: { control: "select", options: [...statVariants] },
     label: { control: "text" },
     value: { control: "text" },
     trend: { control: false },
@@ -28,6 +30,7 @@ const meta = {
     label: "Followers",
     value: "12,480",
     size: "sm",
+    variant: "tile",
     loading: false,
   },
   parameters: {
@@ -37,7 +40,7 @@ const meta = {
         component: `
 ## Usage
 
-**Scalar metric tiles** — label + headline value for dashboard at-a-glance stats. Not a chart; pair **Card** + **Chart** when history or capacity marks are needed.
+**Scalar metrics** — label + headline value for at-a-glance figures, on a dashboard or a marketing page. Not a chart; pair **Card** + **Chart** when history or capacity marks are needed.
 
 | Pattern | Props |
 |---------|--------|
@@ -47,6 +50,8 @@ const meta = {
 | **Hero stat** | \`size="lg"\` — \`type-display-3\` tabular figure, \`context\` ("vs $14,850"), \`icon\`, \`action\` |
 | **Not connected** | \`unavailable={{ reason }}\` — muted "Not connected" replaces the figure; \`trend\` stays hidden |
 | **Loading** | \`loading\` — **Skeleton** label + value (\`lg\` adds the context bar); \`aria-busy\` on the tile |
+| **On a framed surface** | \`variant="plain"\` — the figure alone, no border, fill or padding, when a **Card**, a band or a picture already frames it |
+| **Editorial row** | \`variant="ruled"\` — a hairline above each figure. Copy **Pattern — ruled figures** |
 | **Slots** | \`icon\` leading tile, \`action\` (**Button** \`size="sm"\`) trailing, \`start\` / \`end\` beside the label |
 
 Section chrome (**Insights** heading, **Share** action) — **PageHeader** \`variant="page"\`; not part of **Stat**.
@@ -62,6 +67,8 @@ Stat (article)
 
 **Stat.Group** — \`grid-cols-2\` mobile, \`columns\` at lg+ (default 4).
 
+\`variant\` picks the frame: \`tile\` (default, bordered tile), \`plain\` (none) or \`ruled\` (hairline above). \`id\`, \`data-*\` and \`aria-*\` pass through to the root of **Stat** and **Stat.Group**, so a page can anchor or animate a figure without a wrapper.
+
 ## Best practices
 
 - **Do** pre-format values in app code (\`12,480\`, \`4.2%\`, \`256K\`) — **Stat** does not locale-format.
@@ -71,6 +78,7 @@ Stat (article)
 - **Do** pass a Lucide glyph to \`icon\` and **Button** \`size="sm"\` to \`action\`.
 - **Do** use \`unavailable\` when the source is unwired — do not fake a zero.
 - **Do** use inline mono trend (\`chartKpiTrend*\`) when a KPI sits directly above **Chart** marks — not **Badge**.
+- **Do** use \`variant="plain"\` inside a **Card** or on a toned band instead of stripping the tile with \`className\`.
 - **Don't** put charts inside **Stat** — compose **Card** + **Chart** for plots.
 - **Don't** use **Stat** for table cells — future **Table** molecule.
 
@@ -336,4 +344,68 @@ export const Sizes: Story = {
       <Stat size="lg" label="Attributed revenue" value="$18,420" context="vs $14,850" trend={{ value: "+24.1%", direction: "up" }} />
     </div>
   ),
+};
+
+export const Variants: Story = {
+  name: "Reference — variants",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`tile` (default) frames the figure itself. `plain` leaves the frame to the surface it sits on. `ruled` sets a hairline above, for editorial rows.",
+      },
+    },
+  },
+  render: () => (
+    <div className="mx-auto grid w-full max-w-3xl gap-6 md:grid-cols-3">
+      {statVariants.map((variant) => (
+        <Stat key={variant} variant={variant} size="md" label={variant} value="12,480" detail="vs 11,900 last week" />
+      ))}
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const [tile, plain, ruled] = [...canvasElement.querySelectorAll<HTMLElement>("article")];
+    await expect(getComputedStyle(tile).borderTopWidth).toBe("1px");
+    await expect(getComputedStyle(tile).paddingLeft).not.toBe("0px");
+    await expect(getComputedStyle(plain).borderTopWidth).toBe("0px");
+    await expect(getComputedStyle(plain).paddingTop).toBe("0px");
+    await expect(getComputedStyle(plain).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+    await expect(getComputedStyle(ruled).borderTopWidth).toBe("1px");
+    await expect(getComputedStyle(ruled).borderLeftWidth).toBe("0px");
+    await expect(getComputedStyle(ruled).paddingTop).not.toBe("0px");
+    await expect(getComputedStyle(ruled).paddingLeft).toBe("0px");
+  },
+};
+
+export const RuledFigures: Story = {
+  name: "Pattern — ruled figures",
+  render: () => (
+    <div className="mx-auto w-full max-w-5xl">
+      <Stat.Group aria-label="The studio in numbers" columns={4} data-figures="studio">
+        <Stat variant="ruled" size="lg" label="Projects shipped" value="148" context="since 2016" />
+        <Stat variant="ruled" size="lg" label="Clients who return" value="72%" context="of all clients" />
+        <Stat variant="ruled" size="lg" label="Weeks to launch" value="6" context="median" />
+        <Stat variant="ruled" size="lg" label="People" value="14" context="in two cities" />
+      </Stat.Group>
+    </div>
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    const group = canvas.getByRole("group", { name: "The studio in numbers" });
+    await expect(group).toHaveAttribute("data-figures", "studio");
+    await expect(canvasElement.querySelectorAll("article[data-variant='ruled']")).toHaveLength(4);
+  },
+  parameters: storyCopySource(`
+import { Stat } from "@thewhatmatters/wmds";
+
+export function StudioInNumbers() {
+  return (
+    <Stat.Group aria-label="The studio in numbers" columns={4}>
+      <Stat variant="ruled" size="lg" label="Projects shipped" value="148" context="since 2016" />
+      <Stat variant="ruled" size="lg" label="Clients who return" value="72%" context="of all clients" />
+      <Stat variant="ruled" size="lg" label="Weeks to launch" value="6" context="median" />
+      <Stat variant="ruled" size="lg" label="People" value="14" context="in two cities" />
+    </Stat.Group>
+  );
+}
+`),
 };

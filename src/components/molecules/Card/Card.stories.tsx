@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect } from "storybook/test";
 import { Clock, Download, Globe, Share2 } from "lucide-react";
 import { Badge } from "../../atoms/Badge/Badge";
 import { Button } from "../../atoms/Button/Button";
@@ -12,6 +13,7 @@ import { buildOccupancyAreaSeries, occupancyAreaSeriesForSelectValue } from "../
 import { chartPeriodKindFromValue } from "../../../lib/chartTheme";
 import { chartSeriesConfigFromKeys } from "../../../lib/chartTheme";
 import { withStoryCopySource } from "../../../lib/storyCopySource";
+import { Stat } from "../Stat/Stat";
 import { TaskRows } from "../TaskRows/TaskRows";
 import { Select, type SelectOption } from "../Select/Select";
 import {
@@ -110,6 +112,7 @@ const meta = {
 | **Pinned height** | Layout \`className\` height on the root with **Header** + **Body** + **Footer** — Header/Footer stay put; **Card.Body** scrolls (2px gutter unchanged). No new variant. Copy **Pattern — pinned height** |
 | **Outlined layout** | \`Card variant="outlined"\` — \`shadow-soft-card\`, no stroke. Radius stays \`--radius-card-shell\` |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
+| **Glass** | \`Card variant="glass"\` — a frosted pane over a picture, a video or a canvas: the surface colour at part strength over a blur of what's behind. Knobs \`--card-glass-tint\` (default 70% in light themes, 88% in dark) and \`--card-glass-blur\` (default 12px). Copy **Pattern — glass over a picture** |
 
 Default \`variant="surface"\` and \`variant="outlined"\` both use **\`shadow-soft-card\`** on layout cards — elevation comes from the shadow, not a stroke. Default \`shape="rounded"\` uses \`--radius-card-shell\`; use \`shape="flush"\` only when a parent owns outer radius.
 
@@ -142,6 +145,9 @@ Card (bg-surface shell, gap-3)
 - **Do** use \`variant="outlined"\` for the same soft card elevation as layout \`surface\`, with no stroke.
 - **Do** use default \`shape="rounded"\` — detail overlays, dashboard widgets, map overlays.
 - **Do** use \`shape="flush"\` only when nested inside a parent that already owns radius and shadow.
+- **Do** use \`variant="glass"\` only where something sits behind the card (media, a canvas, a gradient). On a flat page it reads as a grey card; use \`surface\`.
+- **Do** keep the default tint over a backdrop you don't control (a client's photo, a video): it holds primary and muted text at AA over anything from white to black. Lower \`--card-glass-tint\` only over a backdrop you know, pair it with the \`tone\` that suits that backdrop, and check the text against its brightest and darkest spot.
+- **Do** give glass cards plain occupants (**Stat** \`variant="plain"\`, text). An opaque body well hides the glass.
 - **Don't** restrict the Body to TaskRows — that is one occupant, not the contract.
 - **Don't** put fill or surface styling on \`Card.Body\` itself — only the 2px gutter belongs on the slot.
 - **Don't** use \`rounded-lg\` (8px) on inset body wells — use \`cardLayoutBodyOccupantWellClasses\` so corners track the shell.
@@ -1013,5 +1019,104 @@ export const Tones: Story = {
           "`tone` gives a card its own colour pair, the same scopes **Band** uses: `inverse` (brand surface), `field` (flat, the saturated colour) and `light` (the light palette, e.g. a paper card on a dark section). Shown on an inverse section.",
       },
     },
+  },
+};
+
+/** A stand-in picture painted in CSS, so the stories ship no media. */
+const glassSunLayer = "radial-gradient(circle at 18% 28%, rgb(255 214 153) 0 14%, transparent 15%)";
+const glassDeepLayer = "radial-gradient(circle at 78% 70%, rgb(22 60 94) 0 22%, transparent 23%)";
+const glassStripesLayer = "repeating-linear-gradient(115deg, rgb(120 170 190) 0 28px, rgb(214 232 236) 28px 56px)";
+
+const glassBackdropStyle = { backgroundImage: [glassSunLayer, glassDeepLayer, glassStripesLayer].join(", ") };
+
+/** The same picture without its dark shape: a backdrop known to be light. */
+const glassLightBackdropStyle = { backgroundImage: [glassSunLayer, glassStripesLayer].join(", ") };
+
+export const Glass: Story = {
+  name: "Pattern — glass over a picture",
+  render: () => (
+    <section className="relative isolate overflow-hidden rounded-[var(--radius-surface-md)] p-6 md:p-10" style={glassBackdropStyle}>
+      <Card variant="glass" padding="lg" as="article" className="max-w-md gap-5" data-glass="figures">
+        <div className="flex flex-col gap-1">
+          <h2 className={cardTitleClasses}>This quarter</h2>
+          <p className={cardBodyTextClasses}>The picture shows through, blurred. The words stay readable.</p>
+        </div>
+        <Stat.Group columns={2}>
+          <Stat variant="plain" size="md" label="Bookings" value="1,284" />
+          <Stat variant="plain" size="md" label="Return rate" value="72%" />
+        </Stat.Group>
+      </Card>
+    </section>
+  ),
+  play: async ({ canvasElement }) => {
+    const card = canvasElement.querySelector<HTMLElement>("[data-glass='figures']")!;
+    const style = getComputedStyle(card);
+    await expect(card).toHaveAttribute("data-variant", "glass");
+    await expect(style.backdropFilter).toContain("blur(12px)");
+    // The surface colour at the theme's default strength: translucent, never fully clear.
+    const tint = Number.parseFloat(style.getPropertyValue("--card-glass-tint-default")) / 100;
+    await expect([0.7, 0.88]).toContain(tint);
+    await expect(style.backgroundColor).toMatch(new RegExp(`[/,] ?${tint}\\)$`));
+    await expect(style.borderTopWidth).toBe("1px");
+  },
+  parameters: withStoryCopySource(
+    { wmdsLayout: "padded" },
+    `
+import { Card, Stat, cardBodyTextClasses, cardTitleClasses } from "@thewhatmatters/wmds";
+
+export function QuarterOverPicture({ src }: { src: string }) {
+  return (
+    <section className="relative isolate overflow-hidden p-6 md:p-10">
+      <img src={src} alt="" className="absolute inset-0 -z-10 size-full object-cover" />
+      <Card variant="glass" padding="lg" as="article" className="max-w-md gap-5">
+        <div className="flex flex-col gap-1">
+          <h2 className={cardTitleClasses}>This quarter</h2>
+          <p className={cardBodyTextClasses}>The picture shows through, blurred. The words stay readable.</p>
+        </div>
+        <Stat.Group columns={2}>
+          <Stat variant="plain" size="md" label="Bookings" value="1,284" />
+          <Stat variant="plain" size="md" label="Return rate" value="72%" />
+        </Stat.Group>
+      </Card>
+    </section>
+  );
+}
+`,
+  ),
+};
+
+export const GlassKnobs: Story = {
+  name: "Reference — glass tint, blur and tone",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Default glass (70% surface in light themes, 88% in dark, 12px blur). A lighter pane for a backdrop you know: `--card-glass-tint` and `--card-glass-blur` set on the card's wrapper, with `tone=\"light\"` because this picture is light. And `tone=\"inverse\"`, where the tint follows the tone's surface.",
+      },
+    },
+  },
+  render: () => (
+    <section className="grid gap-4 rounded-[var(--radius-surface-md)] p-6 md:grid-cols-3" style={glassLightBackdropStyle}>
+      <Card variant="glass" padding="md">
+        <p className="type-body text-fg">Default</p>
+        <p className="type-supporting text-muted">The theme&apos;s tint, 12px blur.</p>
+      </Card>
+      <div style={{ ["--card-glass-tint" as string]: "40%", ["--card-glass-blur" as string]: "24px" }}>
+        <Card variant="glass" tone="light" padding="md" data-glass="knobs">
+          <p className="type-body text-fg">Knobs, tone=&quot;light&quot;</p>
+          <p className="type-supporting text-fg">40% surface, 24px blur.</p>
+        </Card>
+      </div>
+      <Card variant="glass" tone="inverse" padding="md">
+        <p className="type-body text-fg">tone=&quot;inverse&quot;</p>
+        <p className="type-supporting text-muted">The tint is the tone&apos;s surface.</p>
+      </Card>
+    </section>
+  ),
+  play: async ({ canvasElement }) => {
+    const card = canvasElement.querySelector<HTMLElement>("[data-glass='knobs']")!;
+    const style = getComputedStyle(card);
+    await expect(style.backdropFilter).toContain("blur(24px)");
+    await expect(style.backgroundColor).toMatch(/[/,] ?0\.4\)$/);
   },
 };

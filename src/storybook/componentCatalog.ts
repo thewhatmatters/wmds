@@ -65,7 +65,8 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
 
   // Data visualization
   { name: "Chart", category: "Data visualization", title: "Components/Chart", description: "visx-based charts: capacity bars, segmented rings, ranked bars, unit grids, heatmaps, time series, and a stat column." },
-  { name: "Stat", category: "Data visualization", title: "Components/Stat", description: "At-a-glance metric tile with label, value, optional trend, a hero size with a visible vs line, and an optional detail line." },
+  { name: "Meter", category: "Data visualization", title: "Components/Meter", description: "One thin bar for a static measure in a known range (a share, a score, a level), sized for table cells, rows and cards." },
+  { name: "Stat", category: "Data visualization", title: "Components/Stat", description: "At-a-glance metric with label, value, optional trend, a hero size with a visible vs line, an optional detail line, and a tile, plain or ruled frame." },
 
   // Feedback & status
   { name: "Badge", category: "Feedback & status", title: "Components/Badge", description: "Compact semantic label in solid or muted fill, with count, icon, avatar, and status-pill patterns." },
