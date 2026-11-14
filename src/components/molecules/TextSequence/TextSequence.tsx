@@ -13,6 +13,7 @@ import {
   type ReactNode,
 } from "react";
 import { cn } from "../../../lib/cn";
+import { InlinePill, type InlinePillProps } from "../../atoms/InlinePill/InlinePill";
 import { riveHandEnteredAttr, riveHandSequenceOrigin } from "../../atoms/RiveHand/riveHandUtils";
 import {
   TextSequenceShape,
@@ -37,6 +38,8 @@ export const textSequenceDefaultDelay = 0;
 
 const wordDuration = 0.72;
 const shapeDuration = 0.55;
+/** An InlinePill picture starts from the tilt of InlinePill's own pop-in. */
+const pillPictureRotation = -24;
 const asteriskIdleDuration = 8;
 const pillIdleDuration = 1.4;
 /** Word masks reach this far past the glyph box (top and sides). */
@@ -49,6 +52,9 @@ export interface TextSequenceProps {
   /**
    * Words and `TextSequence.Shape` marks. Text nodes are split on whitespace.
    * Shapes sit between words and do not take an emphasis turn.
+   * A word may sit in an **InlinePill**: its words take their beats and stay in the plain
+   * sentence, and its picture pops in with the first of them. Keep the picture static
+   * (an `img` or an `svg`): the split rewrites the markup.
    */
   children: ReactNode;
   /** Seconds between word reveals. Shapes pop halfway between their neighbors. */
@@ -102,6 +108,10 @@ function isNowrapSpan(child: ReactNode): child is ReactElement<{ children?: Reac
   return typeof className === "string" && className.split(/\s+/).includes("whitespace-nowrap");
 }
 
+function isInlinePillElement(child: ReactNode): child is ReactElement<InlinePillProps> {
+  return isValidElement(child) && child.type === InlinePill;
+}
+
 export function sequencePlainText(children: ReactNode): string {
   return buildSequence(children, "none").plain;
 }
@@ -110,6 +120,9 @@ function buildSequence(children: ReactNode, emphasis: TextSequenceEmphasis): Bui
   const nodes: ReactNode[] = [];
   const words: string[] = [];
   let wordIndex = 0;
+  let plain = "";
+  /** Whether a space or a non-text piece (a shape, a hand) has passed since the last word. */
+  let gap = false;
 
   const pushWord = (word: string) => {
     const weightClass =
@@ -124,6 +137,9 @@ function buildSequence(children: ReactNode, emphasis: TextSequenceEmphasis): Bui
       </span>,
     );
     words.push(word);
+    // The plain sentence keeps the text's own spacing: a full stop right after a pill stays on its word.
+    plain += plain !== "" && gap ? ` ${word}` : word;
+    gap = false;
     wordIndex += 1;
   };
 
@@ -133,8 +149,10 @@ function buildSequence(children: ReactNode, emphasis: TextSequenceEmphasis): Bui
       const parts = String(child).split(/(\s+)/);
       for (const part of parts) {
         if (!part) continue;
-        if (/^\s+$/.test(part)) nodes.push(part);
-        else pushWord(part);
+        if (/^\s+$/.test(part)) {
+          nodes.push(part);
+          gap = true;
+        } else pushWord(part);
       }
       return;
     }
@@ -161,18 +179,32 @@ function buildSequence(children: ReactNode, emphasis: TextSequenceEmphasis): Bui
       );
       return;
     }
+    // An InlinePill keeps its pill and picture; the words inside are sequence words like any other.
+    if (isInlinePillElement(child)) {
+      const start = nodes.length;
+      walk(child.props.children);
+      const wrapped = nodes.splice(start);
+      nodes.push(
+        <InlinePill key={`pill-${wordIndex}`} media={child.props.media} className={child.props.className}>
+          {wrapped}
+        </InlinePill>,
+      );
+      return;
+    }
     if (isShapeElement(child)) {
       nodes.push(child.key != null ? child : <TextSequenceShape key={`s-${nodes.length}`} {...child.props} />);
+      gap = true;
       return;
     }
     nodes.push(child);
+    gap = true;
   };
 
   Children.forEach(children, walk);
 
   return {
     nodes,
-    plain: words.join(" "),
+    plain,
     signature: `${emphasis}:${words.join("\u0001")}:${nodes.length}`,
   };
 }
@@ -320,6 +352,22 @@ function playSequence(root: HTMLElement, config: SequenceMotionConfig) {
             immediateRender: true,
           },
           shapeStart(before, stagger),
+        );
+      });
+      // InlinePill pictures pop as their word arrives. The picture
+      // itself moves, not its holder, which carries the hover tilt's CSS transition.
+      root.querySelectorAll<HTMLElement>("[data-inline-pill-media] > *").forEach((picture) => {
+        timeline.from(
+          picture,
+          {
+            scale: 0,
+            rotation: pillPictureRotation,
+            duration: shapeDuration,
+            ease: "back.out(1.8)",
+            transformOrigin: "50% 50%",
+            immediateRender: true,
+          },
+          wordsBefore(picture, self.words) * stagger,
         );
       });
       // Pop the inner layer. Transforming the slot itself makes GSAP reparent it

@@ -197,10 +197,13 @@ export const scrollHorizontalIntroCopyClasses = "flex w-full min-w-0 flex-col it
  * four or five lines in the left columns. Weight is `--font-weight-normal`
  * (display tokens bake in semibold/bold). Leading is the display-2 token, the
  * same line-height as **HeroIntro**. `text-pretty` keeps the last word off a
- * line by itself.
+ * line by itself. Only while the statement holds **InlinePill**s does the leading
+ * open to 1.35, so pills on neighbouring lines don't touch (the same exception
+ * as Statement — Inline Pills).
  */
 export const scrollHorizontalIntroStatementClasses = [
   "type-display-2 m-0 max-w-full min-w-0 text-left text-fg break-words text-pretty",
+  "has-[[data-inline-pill]]:leading-[1.35]",
   "!font-normal",
   "!tracking-[var(--text-display-1-tracking)]",
 ].join(" ");
