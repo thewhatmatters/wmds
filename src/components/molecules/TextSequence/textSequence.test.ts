@@ -53,6 +53,13 @@ describe("sequencePlainText", () => {
     expect(html).toMatch(/data-inline-pill=""[^>]*><span aria-hidden="true"[^>]*data-inline-pill-media=""><img[^>]*\/><\/span><span data-text-sequence-word="">first<\/span> <span data-text-sequence-word="">impression<\/span><\/span>/);
   });
 
+  it("keeps a full stop on the word before it when that word is in a pill", () => {
+    const children = ["the one they ", createElement(InlinePill, { key: "p", children: "remember" }), "."];
+    expect(sequencePlainText(children)).toBe("the one they remember.");
+    // A shape between two words still reads as a space.
+    expect(sequencePlainText(["Design", createElement(TextSequence.Shape, { key: "s", variant: "diamond" }), "built"])).toBe("Design built");
+  });
+
   it("joins words and skips shapes", () => {
     const plain = sequencePlainText([
       "Your brand ",

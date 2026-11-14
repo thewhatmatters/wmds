@@ -120,6 +120,9 @@ function buildSequence(children: ReactNode, emphasis: TextSequenceEmphasis): Bui
   const nodes: ReactNode[] = [];
   const words: string[] = [];
   let wordIndex = 0;
+  let plain = "";
+  /** Whether a space or a non-text piece (a shape, a hand) has passed since the last word. */
+  let gap = false;
 
   const pushWord = (word: string) => {
     const weightClass =
@@ -134,6 +137,9 @@ function buildSequence(children: ReactNode, emphasis: TextSequenceEmphasis): Bui
       </span>,
     );
     words.push(word);
+    // The plain sentence keeps the text's own spacing: a full stop right after a pill stays on its word.
+    plain += plain !== "" && gap ? ` ${word}` : word;
+    gap = false;
     wordIndex += 1;
   };
 
@@ -143,8 +149,10 @@ function buildSequence(children: ReactNode, emphasis: TextSequenceEmphasis): Bui
       const parts = String(child).split(/(\s+)/);
       for (const part of parts) {
         if (!part) continue;
-        if (/^\s+$/.test(part)) nodes.push(part);
-        else pushWord(part);
+        if (/^\s+$/.test(part)) {
+          nodes.push(part);
+          gap = true;
+        } else pushWord(part);
       }
       return;
     }
@@ -185,16 +193,18 @@ function buildSequence(children: ReactNode, emphasis: TextSequenceEmphasis): Bui
     }
     if (isShapeElement(child)) {
       nodes.push(child.key != null ? child : <TextSequenceShape key={`s-${nodes.length}`} {...child.props} />);
+      gap = true;
       return;
     }
     nodes.push(child);
+    gap = true;
   };
 
   Children.forEach(children, walk);
 
   return {
     nodes,
-    plain: words.join(" "),
+    plain,
     signature: `${emphasis}:${words.join("\u0001")}:${nodes.length}`,
   };
 }
