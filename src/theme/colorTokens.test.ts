@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { contrastRatio, textContrastMinimum } from "../lib/contrast";
+import { contrastRatio, mixSrgb, textContrastMinimum } from "../lib/contrast";
 
 /**
  * Colour fixes found by building every component in light and dark (Wonder import, 2026-10-29).
@@ -75,6 +75,20 @@ describe("colour tokens", () => {
     expect(states.lastIndexOf('[data-tone="inverse"]')).toBeGreaterThan(states.lastIndexOf('[data-theme="dark"]'));
     expect(toneStates).toMatch(/--color-primary-hover: color-mix\([^;]*var\(--tone-action\)/);
     expect(toneStates).toMatch(/--color-primary-active: color-mix\([^;]*var\(--tone-action\)/);
+  });
+
+  it("dark hover steps toward the primary's ink, so a light brand primary still shows a hover", () => {
+    const dark = block(state, DARK);
+    expect(dark).toContain("--color-primary-hover: color-mix(in srgb, var(--color-primary) 88%, var(--color-on-primary));");
+    // The default slate lifts, as it did toward white.
+    const slate = token(DARK, "primary");
+    const slateHover = mixSrgb(slate, 0.88, token(DARK, "on-primary"));
+    expect(contrastRatio(slateHover, slate)).toBeGreaterThan(1.1);
+    expect(contrastRatio(token(DARK, "on-primary"), slateHover)).toBeGreaterThanOrEqual(3);
+    // A white primary with dark ink darkens (mixed with white it stayed white), and keeps its label at AA.
+    const whiteHover = mixSrgb("#ffffff", 0.88, "#090909");
+    expect(contrastRatio(whiteHover, "#ffffff")).toBeGreaterThan(1.2);
+    expect(contrastRatio("#090909", whiteHover)).toBeGreaterThanOrEqual(textContrastMinimum);
   });
 
   it("inverts the primary on an inverse band too, unless the brand kit sets its own (gap 4)", () => {

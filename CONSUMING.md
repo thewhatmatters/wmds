@@ -392,7 +392,7 @@ The **only** per-app color hook is the primary brand color. The WhatMatters defa
 
 Everything else is derived, so you set two values and every primary control follows:
 
-- `--color-primary-hover` / `--color-primary-active` — `color-mix` of `--color-primary` (light darkens toward black; dark lifts toward white on hover).
+- `--color-primary-hover` / `--color-primary-active` — `color-mix` of `--color-primary` (light darkens toward black; dark steps toward `--color-on-primary` on hover, so a dark primary lifts and a light one darkens).
 - `--color-focus-ring` — `--color-primary` at 45% alpha (light); lifted toward white then 40% alpha (dark) so the ring stays visible on dark surfaces.
 
 **Snippet — `brand.css`, imported after `styles.css`**
