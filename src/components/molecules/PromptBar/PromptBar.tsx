@@ -11,6 +11,7 @@ import { IconButton } from "../../atoms/IconButton/IconButton";
 import { TextArea } from "../../atoms/TextArea/TextArea";
 import {
   promptBarFieldClasses,
+  promptBarFieldVariantClasses,
   promptBarSendClasses,
   promptBarSendMutedClasses,
   promptBarSendReadyClasses,
@@ -63,6 +64,7 @@ export interface PromptBarProps
    * The pill's fill. `glass` is a frosted pane for a bar that floats over a picture, a video or a
    * canvas: Card's glass, with the same `--card-glass-tint` and `--card-glass-blur` knobs. It is
    * solid where the browser has no backdrop filter and when the visitor asks for less transparency.
+   * The placeholder steps up to the text colour at 80%, so it stays readable over a bright backdrop.
    * Default: `surface`.
    */
   variant?: PromptBarVariant;
@@ -146,7 +148,7 @@ export const PromptBar = forwardRef<HTMLTextAreaElement, PromptBarProps>(functio
         placeholder={placeholder}
         aria-label={ariaLabel}
         disabled={disabled}
-        className={promptBarFieldClasses}
+        className={cn(promptBarFieldClasses, promptBarFieldVariantClasses[variant])}
         onChange={(event) => {
           setDraft(event.target.value);
         }}

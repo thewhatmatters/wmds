@@ -32,6 +32,17 @@ export const promptBarShellVariantClasses: Record<PromptBarVariant, string> = {
   glass: `${glassSurfaceFillClasses} shadow-[var(--shadow-inset-highlight)]`,
 };
 
+/**
+ * On glass the placeholder steps up from the placeholder grey to the text colour at 80%: what
+ * shows through the pane can be bright, and the grey would sink into it. At the default tints
+ * it holds AA over any backdrop, white to black (promptBar.test.ts).
+ */
+export const promptBarGlassPlaceholderStrength = 0.8;
+export const promptBarFieldVariantClasses: Record<PromptBarVariant, string> = {
+  surface: "",
+  glass: "placeholder:!text-[color-mix(in_srgb,var(--color-text-primary)_80%,transparent)]",
+};
+
 /** The solid shell. CopyField uses it as is. */
 export const promptBarShellClasses = `${promptBarShellBaseClasses} ${promptBarShellVariantClasses.surface}`;
 
