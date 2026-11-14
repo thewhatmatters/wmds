@@ -182,6 +182,27 @@ describe("ChatDock", () => {
     expect(view.querySelector<HTMLElement>("[data-chat-dock-window]")?.hidden).toBe(false);
   });
 
+  it("is solid unless asked for glass, which frosts the bar and makes the window a dense pane", () => {
+    const solid = mount();
+    expect(solid.querySelector("textarea")?.parentElement?.getAttribute("data-variant")).toBe("surface");
+    expect(solid.querySelector<HTMLElement>("[data-chat-dock-window]")?.className).toContain("bg-surface");
+    act(() => {
+      root?.unmount();
+    });
+    container?.remove();
+
+    const view = mount({ variant: "glass", defaultOpen: true });
+    const bar = view.querySelector("textarea")?.parentElement;
+    expect(bar?.getAttribute("data-variant")).toBe("glass");
+    expect(bar?.className).toContain("backdrop-blur-[var(--card-glass-blur,12px)]");
+    const windowSurface = view.querySelector<HTMLElement>("[data-chat-dock-window]");
+    expect(windowSurface?.className).toContain("var(--chat-dock-glass-fill,var(--color-background-surface))_var(--chat-dock-glass-tint,88%)");
+    expect(windowSurface?.className).toContain("backdrop-blur-[var(--chat-dock-glass-blur,24px)]");
+    expect(windowSurface?.className).not.toContain("bg-surface ");
+    // Solid again without a backdrop filter, or when the visitor asks for less transparency.
+    expect(windowSurface?.className).toContain("[@media(prefers-reduced-transparency:reduce)]:backdrop-filter-none");
+  });
+
   it("closes with Escape and keeps focus in the composer without reopening", () => {
     const onOpenChange = vi.fn();
     const view = mount({ defaultOpen: true, onOpenChange });

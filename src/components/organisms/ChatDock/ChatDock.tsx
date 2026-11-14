@@ -31,6 +31,7 @@ import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
 import { IconButton } from "../../atoms/IconButton/IconButton";
 import { Status } from "../../atoms/Status/Status";
 import { PromptBar } from "../../molecules/PromptBar/PromptBar";
+import type { PromptBarVariant } from "../../molecules/PromptBar/promptBarStyles";
 import { OverlayPanelHeader } from "../Dialog/OverlayPanelHeader";
 import { ChatDockGate } from "./ChatDockGate";
 import { ChatDockGateContext, type ChatDockGateContextValue } from "./chatDockGateContext";
@@ -239,6 +240,12 @@ export interface ChatDockProps {
   labels?: Partial<ChatDockLabels>;
   /** `fixed` (default) pins the dock to the viewport; `inline` keeps it in flow for specimens. */
   placement?: ChatDockPlacement;
+  /**
+   * The dock's fill. `glass` is for a dock that floats over a picture, a video or a canvas: the bar
+   * is frosted (**PromptBar** `variant="glass"`) and the window is a dense pane over a wide blur,
+   * so the conversation keeps its contrast. Default: `surface`.
+   */
+  variant?: PromptBarVariant;
   className?: ChatDockLayoutClassName;
 }
 
@@ -389,6 +396,7 @@ function ChatDockRoot({
   disclaimer,
   labels: labelsProp,
   placement = "fixed",
+  variant = "surface",
   className,
 }: ChatDockProps) {
   const labels = { ...chatDockDefaultLabels, ...labelsProp };
@@ -885,7 +893,7 @@ function ChatDockRoot({
               // Phones and wider screens move the window differently; switching starts it fresh.
               key={windowMotion}
               ref={windowRef}
-              className={chatDockWindowClasses[placement]}
+              className={chatDockWindowClasses(placement, variant)}
               data-chat-dock-window={state}
               hidden={windowHidden}
               initial={false}
@@ -1124,6 +1132,7 @@ function ChatDockRoot({
                   placeholder={showGate ? labels.gatePlaceholder : placeholder}
                   aria-label={labels.field}
                   sendLabel={labels.send}
+                  variant={variant}
                 />
               </div>
               <motion.div

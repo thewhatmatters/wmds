@@ -11,13 +11,15 @@ import { IconButton } from "../../atoms/IconButton/IconButton";
 import { TextArea } from "../../atoms/TextArea/TextArea";
 import {
   promptBarFieldClasses,
+  promptBarFieldVariantClasses,
   promptBarSendClasses,
   promptBarSendMutedClasses,
   promptBarSendReadyClasses,
   promptBarEndSlotClasses,
-  promptBarShellClasses,
+  promptBarShellClassesFor,
   promptBarShellStartPadClasses,
   promptBarStartSlotClasses,
+  type PromptBarVariant,
 } from "./promptBarStyles";
 
 /** Layout-only — width, margin, flex placement. Not for colors. */
@@ -58,6 +60,14 @@ export interface PromptBarProps
    * The caller owns the handler and accessible name.
    */
   end?: ReactNode;
+  /**
+   * The pill's fill. `glass` is a frosted pane for a bar that floats over a picture, a video or a
+   * canvas: Card's glass, with the same `--card-glass-tint` and `--card-glass-blur` knobs. It is
+   * solid where the browser has no backdrop filter and when the visitor asks for less transparency.
+   * The placeholder steps up to the text colour at 80%, so it stays readable over a bright backdrop.
+   * Default: `surface`.
+   */
+  variant?: PromptBarVariant;
   className?: PromptBarLayoutClassName;
 }
 
@@ -83,6 +93,7 @@ export const PromptBar = forwardRef<HTMLTextAreaElement, PromptBarProps>(functio
     disabled = false,
     start,
     end,
+    variant = "surface",
     className,
     onKeyDown,
     ...fieldProps
@@ -119,8 +130,9 @@ export const PromptBar = forwardRef<HTMLTextAreaElement, PromptBarProps>(functio
 
   return (
     <div
+      data-variant={variant}
       className={cn(
-        promptBarShellClasses,
+        promptBarShellClassesFor(variant),
         start != null ? promptBarShellStartPadClasses.slot : promptBarShellStartPadClasses.field,
         className,
       )}
@@ -136,7 +148,7 @@ export const PromptBar = forwardRef<HTMLTextAreaElement, PromptBarProps>(functio
         placeholder={placeholder}
         aria-label={ariaLabel}
         disabled={disabled}
-        className={promptBarFieldClasses}
+        className={cn(promptBarFieldClasses, promptBarFieldVariantClasses[variant])}
         onChange={(event) => {
           setDraft(event.target.value);
         }}

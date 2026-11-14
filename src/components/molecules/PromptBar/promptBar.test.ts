@@ -135,4 +135,40 @@ describe("PromptBar", () => {
 
     expect(view.container.firstElementChild?.className).toContain("pl-5");
   });
+
+  it("is the solid pill unless asked for glass", () => {
+    const view = mount({ value: "", onValueChange: () => {} });
+    root = view.root;
+    container = view.container;
+
+    const shell = view.container.firstElementChild;
+    expect(shell?.getAttribute("data-variant")).toBe("surface");
+    expect(shell?.className).toContain("bg-surface");
+    expect(shell?.className).toContain("border-border-control");
+    expect(shell?.className).not.toContain("backdrop-blur");
+  });
+
+  it("frosts the pill with Card's glass knobs, under a hairline edge", () => {
+    const view = mount({ value: "", onValueChange: () => {}, variant: "glass" });
+    root = view.root;
+    container = view.container;
+
+    const shell = view.container.firstElementChild;
+    expect(shell?.getAttribute("data-variant")).toBe("glass");
+    expect(shell?.className).toContain("var(--color-background-surface)_var(--card-glass-tint,var(--card-glass-tint-default,70%))");
+    expect(shell?.className).toContain("backdrop-blur-[var(--card-glass-blur,12px)]");
+    expect(shell?.className).toContain("border-elevation-edge");
+    expect(shell?.className).not.toContain("border-border-control");
+    expect(shell?.className).not.toContain("shadow-");
+    // Solid again without a backdrop filter, or when the visitor asks for less transparency.
+    expect(shell?.className).toContain("[@supports_not_(backdrop-filter:blur(0))]:bg-surface");
+    expect(shell?.className).toContain("[@media(prefers-reduced-transparency:reduce)]:bg-surface");
+  });
+
+  it("steps the glass placeholder up to the text colour at part strength", () => {
+    const view = mount({ value: "", onValueChange: () => {}, variant: "glass" });
+    root = view.root;
+    container = view.container;
+    expect(view.field.className).toContain("placeholder:!text-[color-mix(in_srgb,var(--color-text-primary)_80%,transparent)]");
+  });
 });

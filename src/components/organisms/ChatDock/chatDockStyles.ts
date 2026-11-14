@@ -2,6 +2,7 @@ import { cn } from "../../../lib/cn";
 import { motionTransition } from "../../../lib/motion";
 import { typographyClass } from "../../../lib/typography";
 import { cardLayoutSectionInsetXClasses } from "../../molecules/Card/cardStyles";
+import type { PromptBarVariant } from "../../molecules/PromptBar/promptBarStyles";
 
 export const chatDockPlacements = ["fixed", "inline"] as const;
 
@@ -64,22 +65,46 @@ export const chatDockPillClasses = cn(
   motionTransition("fast"),
 );
 
-const chatDockWindowSurfaceClasses = "overflow-hidden bg-surface font-sans text-fg shadow-soft-card";
+const chatDockWindowBaseClasses = "overflow-hidden font-sans text-fg";
+
+export const chatDockGlassWindowTintDefault = 0.88;
 
 /**
- * Chat window — an opaque card behind the composer. From `md` (and inline) it sits on the
+ * The window's fill. `glass` is a dense pane: the surface colour at 88% over a wide blur, so the
+ * conversation holds AA over any page, white to black (chatDockGlassContrast.test.ts). Knobs, set
+ * on the dock's wrapper: `--chat-dock-glass-fill` (the pane's colour; default the surface),
+ * `--chat-dock-glass-tint` and `--chat-dock-glass-blur`. Solid where the browser has no backdrop
+ * filter, and when the visitor asks for less transparency.
+ */
+const chatDockWindowFillClasses: Record<PromptBarVariant, string> = {
+  surface: "bg-surface shadow-soft-card",
+  glass: [
+    "bg-[color-mix(in_srgb,var(--chat-dock-glass-fill,var(--color-background-surface))_var(--chat-dock-glass-tint,88%),transparent)]",
+    "backdrop-blur-[var(--chat-dock-glass-blur,24px)] backdrop-saturate-150",
+    "shadow-[var(--shadow-soft-card),var(--shadow-inset-highlight)]",
+    "[@supports_not_(backdrop-filter:blur(0))]:bg-[var(--chat-dock-glass-fill,var(--color-background-surface))]",
+    "[@media(prefers-reduced-transparency:reduce)]:bg-[var(--chat-dock-glass-fill,var(--color-background-surface))]",
+    "[@media(prefers-reduced-transparency:reduce)]:backdrop-filter-none",
+  ].join(" "),
+};
+
+/**
+ * Chat window — a card behind the composer, opaque unless the dock is `glass`. From `md` (and inline) it sits on the
  * composer's bottom edge and grows up and out of it: ChatDock animates its height, side insets, and
  * radius. On phones it fills the screen — the part a keyboard leaves visible
  * (`--chat-dock-vv-top` / `--chat-dock-vv-bottom`) — and rises from the bottom edge.
  */
-export const chatDockWindowClasses: Record<ChatDockPlacement, string> = {
+const chatDockWindowPlacementClasses: Record<ChatDockPlacement, string> = {
   fixed: cn(
-    chatDockWindowSurfaceClasses,
     "fixed inset-x-0 top-[var(--chat-dock-vv-top,0px)] bottom-[var(--chat-dock-vv-bottom,0px)] rounded-none",
     "md:absolute md:top-auto md:bottom-0",
   ),
-  inline: cn(chatDockWindowSurfaceClasses, "absolute inset-x-0 bottom-0"),
+  inline: "absolute inset-x-0 bottom-0",
 };
+
+export function chatDockWindowClasses(placement: ChatDockPlacement, variant: PromptBarVariant = "surface"): string {
+  return cn(chatDockWindowBaseClasses, chatDockWindowFillClasses[variant], chatDockWindowPlacementClasses[placement]);
+}
 
 /**
  * Window content — the Card layout shell rhythm. The bottom padding leaves room for the composer

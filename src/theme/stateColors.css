@@ -44,8 +44,12 @@
 [data-theme="dark"] {
   --color-ghost-foreground: var(--color-text-primary);
 
-  /* Dark lifts toward white on hover (12%). color-mix percentages must stay within 0–100%. */
-  --color-primary-hover: color-mix(in oklch, var(--color-primary) 88%, white);
+  /*
+   * Dark steps 12% toward the primary's own ink on hover: the default slate lifts toward near-white
+   * as before, and a light brand primary (white with dark ink) darkens instead of staying put.
+   * color-mix percentages must stay within 0–100%.
+   */
+  --color-primary-hover: color-mix(in srgb, var(--color-primary) 88%, var(--color-on-primary));
   --color-primary-active: color-mix(in oklch, var(--color-primary) 92%, black);
 
   --color-secondary-hover: var(--color-overlay-hover);

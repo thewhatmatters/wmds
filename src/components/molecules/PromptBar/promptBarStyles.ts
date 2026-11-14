@@ -1,4 +1,13 @@
+import { glassSurfaceFillClasses } from "../../../lib/glassSurface";
 import { focusRingTransitionClasses } from "../../../lib/motion";
+
+export const promptBarVariants = ["surface", "glass"] as const;
+
+/**
+ * `surface` — the solid pill (default).
+ * `glass` — a frosted pane, for a bar that floats over a picture, a video or a canvas.
+ */
+export type PromptBarVariant = (typeof promptBarVariants)[number];
 
 /**
  * One-line shell is a pill. IconButton `sm` is 2.25rem and the inset is 0.5rem,
@@ -6,13 +15,42 @@ import { focusRingTransitionClasses } from "../../../lib/motion";
  * The radius stays put when the field grows, and the circle keeps the same inset.
  * The shell owns the single focus ring (inset, so it does not stack a second edge).
  */
-export const promptBarShellClasses =
-  "flex w-full items-end gap-2 rounded-[1.625rem] border border-border-control bg-surface p-2 " +
+const promptBarShellBaseClasses =
+  "flex w-full items-end gap-2 rounded-[1.625rem] border p-2 " +
   // Labels and placeholders F10: the pill's ring is the field's; the send button shows its own.
   // CopyField shares this shell with an <input>, so both field kinds light it.
   "has-[textarea:focus-visible]:outline-none has-[textarea:focus-visible]:ring-2 has-[textarea:focus-visible]:ring-inset has-[textarea:focus-visible]:ring-focus-ring " +
   "has-[input:focus-visible]:outline-none has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-inset has-[input:focus-visible]:ring-focus-ring " +
   focusRingTransitionClasses;
+
+/**
+ * The pill's fill and edge. Glass is Card's glass (the same `--card-glass-tint` and
+ * `--card-glass-blur` knobs) with Card's hairline edge: the 3:1 control border reads as a heavy
+ * ring on a pane, and the bar is told apart by its fill, its placeholder and the send button.
+ */
+export const promptBarShellVariantClasses: Record<PromptBarVariant, string> = {
+  surface: "border-border-control bg-surface",
+  glass: `border-elevation-edge ${glassSurfaceFillClasses}`,
+};
+
+/**
+ * On glass the placeholder steps up from the placeholder grey to the text colour at 80%: what
+ * shows through the pane can be bright, and the grey would sink into it. At the default tints
+ * it holds AA over any backdrop, white to black (promptBar.test.ts).
+ */
+export const promptBarGlassPlaceholderStrength = 0.8;
+export const promptBarFieldVariantClasses: Record<PromptBarVariant, string> = {
+  surface: "",
+  glass: "placeholder:!text-[color-mix(in_srgb,var(--color-text-primary)_80%,transparent)]",
+};
+
+/** The solid shell. CopyField uses it as is. */
+export const promptBarShellClasses = `${promptBarShellBaseClasses} ${promptBarShellVariantClasses.surface}`;
+
+/** The shell for a variant. */
+export function promptBarShellClassesFor(variant: PromptBarVariant): string {
+  return `${promptBarShellBaseClasses} ${promptBarShellVariantClasses[variant]}`;
+}
 
 /**
  * Leading inset. The text starts 1.25rem in; with a `start` slot the slot takes the same

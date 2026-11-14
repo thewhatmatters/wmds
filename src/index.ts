@@ -473,6 +473,7 @@ export {
   type PromptBarLayoutClassName,
   type PromptBarProps,
 } from "./components/molecules/PromptBar/PromptBar";
+export { promptBarVariants, type PromptBarVariant } from "./components/molecules/PromptBar/promptBarStyles";
 export {
   RadioGroup,
   radioGroupOrientations,

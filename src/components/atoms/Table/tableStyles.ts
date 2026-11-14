@@ -21,11 +21,12 @@ export const tableGridRulesClasses =
 
 export const tableHeaderClasses = "[&_tr]:border-b [&_tr]:border-border";
 
-export const tableBodyClasses = "[&_tr:last-child]:border-b-0";
+/** Only body rows fill on hover: header and footer rows aren't things to pick out, so they stay still. */
+export const tableBodyClasses = "[&_tr:last-child]:border-b-0 [@media(hover:hover)]:[&>tr:hover]:bg-ghost-hover";
 
 export const tableFooterClasses = "border-t border-border-emphasized [&>tr]:border-b-0";
 
-export const tableRowClasses = "border-b border-border transition-colors hover:bg-ghost-hover";
+export const tableRowClasses = "border-b border-border transition-colors";
 
 export const tableHeadClasses = `h-11 px-3 text-start align-middle font-normal whitespace-nowrap ${typographyClass("ui-label")}`;
 
