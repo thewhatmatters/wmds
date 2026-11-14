@@ -1,4 +1,5 @@
 import { backgroundPatternDotGridClasses } from "../../../lib/backgroundPatterns";
+import { glassSurfaceFillClasses } from "../../../lib/glassSurface";
 import { typographyClass } from "../../../lib/typography";
 
 export const cardShapes = ["flush", "rounded"] as const;
@@ -34,12 +35,8 @@ export const cardShapeClasses: Record<CardShape, string> = {
  */
 export const cardGlassClasses = [
   "border border-elevation-edge",
-  "bg-[color-mix(in_srgb,var(--color-background-surface)_var(--card-glass-tint,var(--card-glass-tint-default,70%)),transparent)]",
   "shadow-[var(--shadow-soft-card),var(--shadow-inset-highlight)]",
-  "backdrop-blur-[var(--card-glass-blur,12px)] backdrop-saturate-150",
-  "[@supports_not_(backdrop-filter:blur(0))]:bg-surface",
-  "[@media(prefers-reduced-transparency:reduce)]:bg-surface",
-  "[@media(prefers-reduced-transparency:reduce)]:backdrop-filter-none",
+  glassSurfaceFillClasses,
 ].join(" ");
 
 export const cardVariantClasses: Record<CardVariant, string> = {

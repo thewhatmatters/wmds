@@ -31,6 +31,7 @@ import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
 import { IconButton } from "../../atoms/IconButton/IconButton";
 import { Status } from "../../atoms/Status/Status";
 import { PromptBar } from "../../molecules/PromptBar/PromptBar";
+import type { PromptBarVariant } from "../../molecules/PromptBar/promptBarStyles";
 import { OverlayPanelHeader } from "../Dialog/OverlayPanelHeader";
 import { ChatDockGate } from "./ChatDockGate";
 import { ChatDockGateContext, type ChatDockGateContextValue } from "./chatDockGateContext";
@@ -239,6 +240,12 @@ export interface ChatDockProps {
   labels?: Partial<ChatDockLabels>;
   /** `fixed` (default) pins the dock to the viewport; `inline` keeps it in flow for specimens. */
   placement?: ChatDockPlacement;
+  /**
+   * The composer's fill. `glass` frosts the resting bar, for a dock that floats over a picture, a
+   * video or a canvas (**PromptBar** `variant="glass"`). The window stays solid, so the conversation
+   * keeps its contrast. Default: `surface`.
+   */
+  composer?: PromptBarVariant;
   className?: ChatDockLayoutClassName;
 }
 
@@ -389,6 +396,7 @@ function ChatDockRoot({
   disclaimer,
   labels: labelsProp,
   placement = "fixed",
+  composer = "surface",
   className,
 }: ChatDockProps) {
   const labels = { ...chatDockDefaultLabels, ...labelsProp };
@@ -1124,6 +1132,7 @@ function ChatDockRoot({
                   placeholder={showGate ? labels.gatePlaceholder : placeholder}
                   aria-label={labels.field}
                   sendLabel={labels.send}
+                  variant={composer}
                 />
               </div>
               <motion.div

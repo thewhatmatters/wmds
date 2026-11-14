@@ -1,4 +1,13 @@
+import { glassSurfaceFillClasses } from "../../../lib/glassSurface";
 import { focusRingTransitionClasses } from "../../../lib/motion";
+
+export const promptBarVariants = ["surface", "glass"] as const;
+
+/**
+ * `surface` — the solid pill (default).
+ * `glass` — a frosted pane, for a bar that floats over a picture, a video or a canvas.
+ */
+export type PromptBarVariant = (typeof promptBarVariants)[number];
 
 /**
  * One-line shell is a pill. IconButton `sm` is 2.25rem and the inset is 0.5rem,
@@ -6,13 +15,30 @@ import { focusRingTransitionClasses } from "../../../lib/motion";
  * The radius stays put when the field grows, and the circle keeps the same inset.
  * The shell owns the single focus ring (inset, so it does not stack a second edge).
  */
-export const promptBarShellClasses =
-  "flex w-full items-end gap-2 rounded-[1.625rem] border border-border-control bg-surface p-2 " +
+const promptBarShellBaseClasses =
+  "flex w-full items-end gap-2 rounded-[1.625rem] border border-border-control p-2 " +
   // Labels and placeholders F10: the pill's ring is the field's; the send button shows its own.
   // CopyField shares this shell with an <input>, so both field kinds light it.
   "has-[textarea:focus-visible]:outline-none has-[textarea:focus-visible]:ring-2 has-[textarea:focus-visible]:ring-inset has-[textarea:focus-visible]:ring-focus-ring " +
   "has-[input:focus-visible]:outline-none has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-inset has-[input:focus-visible]:ring-focus-ring " +
   focusRingTransitionClasses;
+
+/**
+ * The pill's fill. Glass is Card's glass (the same `--card-glass-tint` and `--card-glass-blur`
+ * knobs) with a lit top edge; the control border stays, so the field keeps its outline.
+ */
+export const promptBarShellVariantClasses: Record<PromptBarVariant, string> = {
+  surface: "bg-surface",
+  glass: `${glassSurfaceFillClasses} shadow-[var(--shadow-inset-highlight)]`,
+};
+
+/** The solid shell. CopyField uses it as is. */
+export const promptBarShellClasses = `${promptBarShellBaseClasses} ${promptBarShellVariantClasses.surface}`;
+
+/** The shell for a variant. */
+export function promptBarShellClassesFor(variant: PromptBarVariant): string {
+  return `${promptBarShellBaseClasses} ${promptBarShellVariantClasses[variant]}`;
+}
 
 /**
  * Leading inset. The text starts 1.25rem in; with a `start` slot the slot takes the same
