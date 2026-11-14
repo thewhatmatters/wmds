@@ -25,13 +25,15 @@ const meta = {
         component: `
 ## Usage
 
-Marketing gallery that sits under the hero. Pass \`items\` (\`id\`, \`label\`, optional \`color\`), an optional \`heading\`, and an optional \`intro\` (**ScrollHorizontal.Intro**). \`className\` is layout only, on the root.
+Marketing gallery that sits under the hero. Pass \`items\` (\`id\`, \`label\`, optional \`color\`, optional \`media\`), an optional \`heading\`, and an optional \`intro\` (**ScrollHorizontal.Intro**). \`className\` is layout only, on the root.
 
 Vertical scroll drives the row. The track is \`300svh\`. A sticky \`h-svh\` window, one card wide and centered, shows the first card at the start and the last card at the end. The travel is \`(items.length - 1) * (item width + gap)\`, measured from the row.
 
 \`expandLast\` (default false) lengthens the track to \`400svh\`. The horizontal travel keeps that same scroll distance. The window stays pinned for one more viewport while the last tile grows, via \`clip-path\`, until it fills the \`h-svh\` window edge to edge and the radius reaches 0. Earlier tiles fade out. The window then releases and that full-bleed tile scrolls away. The section box ends on that tile. Pass \`expanded\` for content in that section. A padded block after the section, including default \`grid-page\` block padding, paints the page background between the tile and a following footer.
 
 From \`sm\` each card is **400×500** with \`gap-8\` (32px). Below \`sm\` each card is **280×350** with \`gap-4\` (16px). Radius is \`rounded-xl\` (\`--radius-xl\`, 12px). Each card is a solid fill from \`color\`. The label is the accessible name (\`sr-only\`).
+
+An item's \`media\` (one node: a cover image, a video, a canvas) fills its tile in place of the color. The node takes the tile's size and radius and clips its own content. A tile with media does not clip, so the node may lean or lift on hover. The label stays the accessible name: give an image \`alt=\"\"\`. With \`expandLast\`, the last tile is the color layer that grows, and media on it is not shown.
 
 Omit \`color\` to cycle \`--color-brand\`, \`--color-brand-soft\`, \`--color-primary\`, \`--color-info-muted\`, and \`--color-accent\`. Pass a token (\`var(--color-*)\`) when you set \`color\`.
 
@@ -50,7 +52,7 @@ ScrollHorizontal — 300svh track, or 400svh with expandLast (auto when reduced)
     ├── intro (optional) — first panel; badge names the section; above the row when reduced
     ├── window — 400px, centered (280px below sm; full-width scroller when reduced)
     │   └── row — translateX, or no transform when reduced
-    │       └── card — solid token color; label is sr-only
+    │       └── card — solid token color, or media (optional); label is sr-only
     ├── expand layer — full window, clip-path from the last card to inset 0 (expandLast, motion)
     └── expanded slot (optional; on the full-bleed tile)
 └── reduced section — last tile, h-svh, radius 0 (expandLast, reduced motion only)
@@ -61,6 +63,7 @@ ScrollHorizontal — 300svh track, or 400svh with expandLast (auto when reduced)
 - Place **ScrollHorizontal** directly under the marketing hero, full width. Do not nest it in a clipping page column.
 - Give every item an \`id\` and a \`label\`. The label is the accessible name, not visible copy.
 - Pass \`color\` as a semantic token to override the default cycle. The marketing placeholders set all five.
+- Pass \`media\` when a tile is a project cover. Keep it decorative (the label names the tile) and keep any hover effect off for reduced motion.
 - Leave \`expandLast\` off when the track should release on the last centered card.
 - Turn \`expandLast\` on when the last tile should fill the viewport and scroll away as its own section. Pass \`expanded\` for content there. The slot is mounted twice; the motion layer and the reduced-motion section each hide the other. The section ends on the tile, including the reduced-motion \`h-svh\` section. Do not follow it with block padding when the next region is a footer. **FooterReveal → Pattern — marketing hero** sets \`!py-0\` on the guide \`grid-page\`.
 - Pass a real heading element. It names the section. It is \`sr-only\` while the window is pinned, and visible above the scroller when motion is reduced.
@@ -240,6 +243,100 @@ export const ExpandLastContract: Story = {
       expect(getComputedStyle(reducedHeading as Element).position).toBe("static");
     });
     expect(reducedHeading?.getBoundingClientRect().width ?? 0).toBeGreaterThan(40);
+  },
+};
+
+/** Stand-in covers: a token gradient each. An app passes an image, a video, or a canvas. */
+const mediaCovers = [
+  "bg-[linear-gradient(160deg,var(--color-brand),var(--color-info-muted))]",
+  "bg-[linear-gradient(200deg,var(--color-brand-soft),var(--color-primary))]",
+  "bg-[linear-gradient(140deg,var(--color-primary),var(--color-brand))]",
+];
+
+const scrollHorizontalMediaItems = scrollHorizontalMarketingItems.map((item, index) => {
+  const cover = mediaCovers[index];
+  return cover ? { ...item, media: <div data-cover="" className={cover} /> } : item;
+});
+
+export const WithMedia: Story = {
+  name: "With media",
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: {
+      description: {
+        story:
+          "An item's media fills its tile in place of the solid color: a cover image, a video, or a canvas. The node takes the tile's size and 12px radius and clips its own content. The tile does not clip, so a cover may lean or lift on hover. The label stays the accessible name, so an image takes alt=\"\". Items without media keep their color. With expandLast, the last tile is the color layer that grows, and media on it is not shown.",
+      },
+    },
+  },
+  render: () => (
+    <div className="bg-body">
+      <div className="flex h-[40svh] items-end justify-center px-[var(--grid-margin)] pb-8">
+        <p className="type-heading-2 text-fg">Scroll into the gallery</p>
+      </div>
+      <ScrollHorizontal
+        items={scrollHorizontalMediaItems}
+        heading={<h2 className="type-heading-2 text-fg">Selected work</h2>}
+      />
+      <div className="flex h-svh items-center justify-center px-[var(--grid-margin)]">
+        <p className="type-heading-2 text-fg">After the gallery</p>
+      </div>
+    </div>
+  ),
+};
+
+export const MediaContract: Story = {
+  tags: ["test", "!dev", "!autodocs"],
+  parameters: {
+    docs: { disable: true },
+  },
+  render: () => (
+    <div>
+      <ScrollHorizontal
+        items={scrollHorizontalMediaItems}
+        heading={<h2 className="type-heading-2 text-fg">Selected work</h2>}
+      />
+      <ScrollHorizontal
+        items={scrollHorizontalMarketingItems.map((item) => ({ ...item, media: <div data-cover="" /> }))}
+        expandLast
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const sections = [...canvasElement.querySelectorAll("[data-scroll-horizontal]")];
+    const tiles = [...(sections[0]?.querySelectorAll("li") ?? [])];
+    expect(tiles).toHaveLength(5);
+
+    // A tile with media: the cover fills it, rounded and clipped; the tile has no fill and does not clip.
+    const tile = tiles[0] as HTMLElement;
+    const cover = tile.querySelector("[data-scroll-horizontal-media] > [data-cover]") as HTMLElement;
+    expect(cover).toBeTruthy();
+    const tileBox = tile.getBoundingClientRect();
+    const coverBox = cover.getBoundingClientRect();
+    expect(Math.abs(coverBox.width - tileBox.width)).toBeLessThan(1);
+    expect(Math.abs(coverBox.height - tileBox.height)).toBeLessThan(1);
+    expect(Math.abs(coverBox.left - tileBox.left)).toBeLessThan(1);
+    expect(Math.abs(coverBox.top - tileBox.top)).toBeLessThan(1);
+    expect(getComputedStyle(cover).borderTopLeftRadius).toBe(getComputedStyle(tile).borderTopLeftRadius);
+    expect(getComputedStyle(cover).borderTopLeftRadius).not.toBe("0px");
+    expect(getComputedStyle(cover).overflow).toBe("hidden");
+    expect(getComputedStyle(tile).overflow).toBe("visible");
+    expect(getComputedStyle(tile).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+    // The label is still the tile's name.
+    expect(tile.textContent).toBe("Project One");
+
+    // A tile without media keeps its color and its clip.
+    const plain = tiles[4] as HTMLElement;
+    expect(plain.querySelector("[data-scroll-horizontal-media]")).toBeNull();
+    expect(getComputedStyle(plain).backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
+    expect(getComputedStyle(plain).overflow).toBe("hidden");
+
+    // expandLast: the last tile is the color layer that grows, so its media is left out.
+    const expandTiles = [...(sections[1]?.querySelectorAll("li") ?? [])];
+    expect(expandTiles).toHaveLength(5);
+    expect(expandTiles[3]?.querySelector("[data-scroll-horizontal-media]")).toBeTruthy();
+    expect(expandTiles[4]?.querySelector("[data-scroll-horizontal-media]")).toBeNull();
+    expect(getComputedStyle(expandTiles[4] as Element).backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
   },
 };
 
