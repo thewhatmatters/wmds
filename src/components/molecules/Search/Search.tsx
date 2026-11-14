@@ -7,15 +7,19 @@ import { InputStatusBanner, warnStatusWithoutMessage } from "../../atoms/inputSh
 import {
   searchBannerSizes,
   searchButtonSizeClasses,
-  searchShellBorderClasses,
   searchInlineInputClasses,
+  searchInlineInputVariantClasses,
   searchInsetButtonClasses,
   searchShellClasses,
+  searchShellFillClasses,
+  searchShellRestBorderClasses,
+  searchShellStatusBorderClasses,
   type SearchSize,
+  type SearchVariant,
 } from "./searchStyles";
 
-export type { SearchSize } from "./searchStyles";
-export { searchSizes } from "./searchStyles";
+export type { SearchSize, SearchVariant } from "./searchStyles";
+export { searchSizes, searchVariants } from "./searchStyles";
 
 /** Layout-only — width, margin, flex placement. */
 export type SearchLayoutClassName = string;
@@ -23,6 +27,11 @@ export type SearchLayoutClassName = string;
 export interface SearchProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "width"> {
   size?: SearchSize;
+  /**
+   * `glass` frosts the pill over whatever sits behind it (a picture, a scene), with a hairline edge:
+   * the same glass as Card and PromptBar (`--card-glass-tint`, `--card-glass-blur`). Default `surface`.
+   */
+  variant?: SearchVariant;
   /**
    * The field's name, read by screen readers (Labels and placeholders F7, F10). It may stay visually
    * hidden: a search field alone with its button is the one place a hidden label is allowed.
@@ -54,6 +63,7 @@ export interface SearchProps
 export const Search = forwardRef<HTMLInputElement, SearchProps>(function Search(
   {
     size = "md",
+    variant = "surface",
     label,
     actionLabel,
     onAction,
@@ -82,7 +92,14 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(function Search(
   // survive the band opening (Errors and validation V4).
   return (
     <div className={cn("relative flex w-full flex-col", className)}>
-      <div className={cn(searchShellClasses[size], searchShellBorderClasses[status ?? "default"])}>
+      <div
+        data-variant={variant}
+        className={cn(
+          searchShellClasses[size],
+          searchShellFillClasses[variant],
+          status != null ? searchShellStatusBorderClasses[status] : searchShellRestBorderClasses[variant],
+        )}
+      >
         <Input
           {...inputProps}
           aria-label={inputProps["aria-label"] ?? label}
@@ -93,14 +110,14 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(function Search(
           size="sm"
           disabled={disabled}
           icon={icon}
-          className={searchInlineInputClasses[size]}
+          className={cn(searchInlineInputClasses[size], searchInlineInputVariantClasses[variant])}
         />
         <Button
           type={actionType}
           role={actionRole}
           size={buttonSize}
           disabled={disabled || actionDisabled}
-          className={searchInsetButtonClasses}
+          className={searchInsetButtonClasses[size]}
           onClick={onAction}
         >
           {actionLabel}
