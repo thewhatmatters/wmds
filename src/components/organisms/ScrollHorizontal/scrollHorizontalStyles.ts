@@ -13,7 +13,8 @@
  * `sr-only` while the window is pinned, and visible above that scroller.
  *
  * Card pitch: 400×500 and gap-8 from `sm`; 280×350 and gap-4 below `sm`.
- * Radius is `rounded-xl` (`--radius-xl`, 12px).
+ * Radius is `rounded-xl` (`--radius-xl`, 12px). A tile with `media` keeps that
+ * box and radius and shows the media in place of the fill.
  */
 
 export const scrollHorizontalRootClasses = [
@@ -111,7 +112,25 @@ export const scrollHorizontalItemClasses = [
   "max-sm:h-[350px] max-sm:w-[280px]",
 ].join(" ");
 
-/** Accessible name for a placeholder tile. Not painted. */
+/**
+ * A tile with `media`: the same box and radius, with no fill and no clip.
+ * The media is the tile's face, so it may lean or lift past the edge on hover.
+ */
+export const scrollHorizontalMediaItemClasses = [
+  "relative h-[500px] w-[400px] shrink-0 rounded-xl",
+  "max-sm:h-[350px] max-sm:w-[280px]",
+].join(" ");
+
+/**
+ * Host for a tile's `media`. Fills the tile (edge longhands, as the expand fill).
+ * The node passed in takes the tile's size and radius and clips its own content to them.
+ */
+export const scrollHorizontalMediaClasses = [
+  "absolute top-0 right-0 bottom-0 left-0 rounded-[inherit]",
+  "*:size-full *:overflow-hidden *:rounded-[inherit]",
+].join(" ");
+
+/** Accessible name for a tile. Not painted. */
 export const scrollHorizontalLabelClasses = "sr-only";
 
 /**

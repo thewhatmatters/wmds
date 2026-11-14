@@ -44,6 +44,8 @@ import {
   scrollHorizontalIntroWindowClasses,
   scrollHorizontalItemClasses,
   scrollHorizontalLabelClasses,
+  scrollHorizontalMediaClasses,
+  scrollHorizontalMediaItemClasses,
   scrollHorizontalRootClasses,
   scrollHorizontalRootExpandClasses,
   scrollHorizontalRowClasses,
@@ -63,6 +65,15 @@ export interface ScrollHorizontalItem {
    * `var(--color-brand)`. Omit to cycle the placeholder palette.
    */
   color?: string;
+  /**
+   * Fills the tile in place of the solid color: a cover image, a video, a
+   * canvas. One node. It takes the tile's size and radius and clips its own
+   * content, and the tile itself does not clip, so the node may lean or lift on
+   * hover. Decorative: `label` stays the accessible name, so give an image
+   * `alt=""`. Not shown on the last tile when `expandLast` is on (that tile is
+   * the color layer that grows).
+   */
+  media?: ReactNode;
 }
 
 export interface ScrollHorizontalProps {
@@ -265,20 +276,29 @@ function ScrollHorizontalRoot({
   const cards = items.map((item, index) => {
     const color = scrollHorizontalItemColor(item.color, index);
     const isPeer = fadePeers && index !== lastIndex;
+    // The last tile under expandLast is the color layer that grows: media would sit hidden beneath it.
+    const hasMedia = item.media != null && item.media !== false && !(expandLast && index === lastIndex);
+    const tileClasses = hasMedia ? scrollHorizontalMediaItemClasses : scrollHorizontalItemClasses;
+    const tileColor = hasMedia ? undefined : { "--scroll-horizontal-color": color };
+    const content = (
+      <>
+        {hasMedia ? (
+          <div data-scroll-horizontal-media="" className={scrollHorizontalMediaClasses}>
+            {item.media}
+          </div>
+        ) : null}
+        <span className={scrollHorizontalLabelClasses}>{item.label}</span>
+      </>
+    );
     if (isPeer) {
       return (
         <motion.li
           key={item.id}
           ref={index === 0 ? itemRef : undefined}
-          className={scrollHorizontalItemClasses}
-          style={
-            {
-              "--scroll-horizontal-color": color,
-              opacity: peerOpacity,
-            } as unknown as CSSProperties
-          }
+          className={tileClasses}
+          style={{ ...tileColor, opacity: peerOpacity } as unknown as CSSProperties}
         >
-          <span className={scrollHorizontalLabelClasses}>{item.label}</span>
+          {content}
         </motion.li>
       );
     }
@@ -286,14 +306,10 @@ function ScrollHorizontalRoot({
       <li
         key={item.id}
         ref={index === 0 ? itemRef : undefined}
-        className={scrollHorizontalItemClasses}
-        style={
-          {
-            "--scroll-horizontal-color": color,
-          } as CSSProperties
-        }
+        className={tileClasses}
+        style={tileColor as CSSProperties | undefined}
       >
-        <span className={scrollHorizontalLabelClasses}>{item.label}</span>
+        {content}
       </li>
     );
   });
