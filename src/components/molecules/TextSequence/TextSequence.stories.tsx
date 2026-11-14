@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useEffect, useRef, type ReactNode } from "react";
 import { expect, waitFor } from "storybook/test";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
+import { InlinePill } from "../../atoms/InlinePill/InlinePill";
 import { TextSequence, textSequenceShapeVariants } from "./TextSequence";
 
 const samplePlain = "We design brands people cannot ignore";
@@ -208,6 +209,7 @@ TextSequence — block, width of the parent
 
 - Put the type step on the parent. Do not recolor words with utilities at the call site.
 - Keep shapes few. They read as extra words, not as icons on every token.
+- A key word may sit in an **InlinePill** (see **With inline pills**). Its words take their beats and stay in the plain sentence; its picture pops as the first of them arrives. Keep the picture static (an \`img\` or an \`svg\`), and open the parent's leading to about 1.35 so pills on neighbouring lines don't touch.
 - Leave the headline's letter spans alone when those letters anchor **RiveHand**. Sequence the intro instead (**HeroTileStack → Pattern — marketing hero text sequence**).
 - \`idle\` defaults off. Turn it on for a hero that should keep moving after the entrance.
 - Do not set a reduced-motion prop. The OS query is the switch.
@@ -250,6 +252,76 @@ export const Default: Story = {
     expect(words.map((word) => word.textContent)).toEqual(["We", "design", "brands", "people", "cannot", "ignore"]);
     expect(words[0]?.className).toContain("font-normal");
     expect(words[1]?.className).toContain("font-bold");
+  },
+};
+
+const pillsPlain = "Every screen is a first impression";
+
+/** A flat stand-in picture, so the story needs no image file. */
+function PillPicture({ fill }: { fill: string }) {
+  return (
+    <svg viewBox="0 0 48 48">
+      <rect x="6" y="6" width="36" height="36" rx="10" fill={fill} />
+    </svg>
+  );
+}
+
+const pillsCopySource = `
+<h2 className="type-display-2 font-normal text-fg leading-[1.35]">
+  <TextSequence trigger="mount" emphasis="none">
+    Every <InlinePill media={<img src="/screen.png" alt="" />}>screen</InlinePill> is a{" "}
+    <InlinePill media={<img src="/first.png" alt="" />}>first impression</InlinePill>
+  </TextSequence>
+</h2>
+`.trim();
+
+export const InlinePills: Story = {
+  name: "With inline pills",
+  tags: ["test"],
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "Key words in **InlinePill**. The words inside a pill slide up on their own beats, like every other word, and stay in the plain sentence screen readers get. Each pill's picture pops in as its first word arrives. The parent opens its leading to 1.35, so pills on neighbouring lines don't touch.",
+        },
+      },
+    },
+    pillsCopySource,
+  ),
+  render: () => (
+    <h2 className="type-display-2 max-w-[12em] font-normal text-fg leading-[1.35]">
+      <TextSequence trigger="mount" emphasis="none">
+        Every <InlinePill media={<PillPicture fill="var(--color-chart-categorical-1)" />}>screen</InlinePill> is a{" "}
+        <InlinePill media={<PillPicture fill="var(--color-chart-categorical-2)" />}>first impression</InlinePill>
+      </TextSequence>
+    </h2>
+  ),
+  play: async ({ canvasElement }) => {
+    await waitFor(() => {
+      expect(canvasElement.querySelector("[data-text-sequence]")?.getAttribute("data-text-sequence-state")).toBe("playing");
+    });
+    const heading = canvasElement.querySelector("h2");
+    // The heading is named by the whole sentence, pill words included.
+    expect(heading?.getAttribute("aria-label")).toBe(pillsPlain);
+    const pills = [...canvasElement.querySelectorAll<HTMLElement>("[data-inline-pill]")];
+    expect(pills).toHaveLength(2);
+    expect(pills.map((pill) => [...pill.querySelectorAll("[data-text-sequence-word]")].map((word) => word.textContent))).toEqual([
+      ["screen"],
+      ["first", "impression"],
+    ]);
+    // Each picture ends its pop at full size, inside its pill.
+    await waitFor(
+      () => {
+        for (const picture of canvasElement.querySelectorAll<SVGElement>("[data-inline-pill-media] > svg")) {
+          const box = picture.getBoundingClientRect();
+          const holder = picture.parentElement!.getBoundingClientRect();
+          expect(Math.abs(box.width - holder.width)).toBeLessThan(1);
+        }
+      },
+      { timeout: 3000 },
+    );
+    expect(canvasElement.querySelectorAll("[data-inline-pill-media] > svg")).toHaveLength(2);
   },
 };
 

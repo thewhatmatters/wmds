@@ -1219,6 +1219,14 @@
       "source": "src/components/molecules/TextSequence/TextSequence.stories.tsx"
     },
     {
+      "id": "components-textsequence--inline-pills",
+      "title": "Components/TextSequence",
+      "name": "With inline pills",
+      "file": "patterns/components-textsequence--inline-pills.tsx",
+      "storybook": "?path=/story/components-textsequence--inline-pills",
+      "source": "src/components/molecules/TextSequence/TextSequence.stories.tsx"
+    },
+    {
       "id": "components-textsequence--reduced-motion",
       "title": "Components/TextSequence",
       "name": "Reduced motion",

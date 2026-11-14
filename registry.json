@@ -2470,6 +2470,22 @@
       "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
     },
     {
+      "name": "components-textsequence--inline-pills",
+      "type": "registry:block",
+      "title": "TextSequence — With inline pills",
+      "description": "Show code for Storybook Components/TextSequence → With inline pills.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-textsequence--inline-pills.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
       "name": "components-textsequence--reduced-motion",
       "type": "registry:block",
       "title": "TextSequence — Reduced motion",

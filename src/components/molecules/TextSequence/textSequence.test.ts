@@ -7,6 +7,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import gsap from "gsap";
 import { describe, expect, it, vi } from "vitest";
+import { InlinePill } from "../../atoms/InlinePill/InlinePill";
 import { riveHandEnteredAttr, riveHandSequenceOrigin } from "../../atoms/RiveHand/riveHandUtils";
 import { TextSequence, sequencePlainText, textSequenceDefaultStagger, type TextSequenceProps } from "./TextSequence";
 import { textSequenceWordBoldClasses, textSequenceWordRegularClasses } from "./textSequenceStyles";
@@ -39,6 +40,19 @@ function reducedMatchMedia(query: string): MediaQueryList {
 }
 
 describe("sequencePlainText", () => {
+  it("counts the words inside an InlinePill and keeps the pill and its picture", () => {
+    const children = [
+      "Every ",
+      createElement(InlinePill, { key: "p", media: createElement("img", { src: "/cover.png", alt: "" }), children: "first impression" }),
+      " counts",
+    ];
+    expect(sequencePlainText(children)).toBe("Every first impression counts");
+    const html = renderToStaticMarkup(createElement(TextSequence, { emphasis: "none", idle: false } as TextSequenceProps, ...children));
+    expect(html).toContain('data-plain="Every first impression counts"');
+    // The pill wraps its two words, each a sequence word, after its picture.
+    expect(html).toMatch(/data-inline-pill=""[^>]*><span aria-hidden="true"[^>]*data-inline-pill-media=""><img[^>]*\/><\/span><span data-text-sequence-word="">first<\/span> <span data-text-sequence-word="">impression<\/span><\/span>/);
+  });
+
   it("joins words and skips shapes", () => {
     const plain = sequencePlainText([
       "Your brand ",
