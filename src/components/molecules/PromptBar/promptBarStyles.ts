@@ -16,7 +16,7 @@ export type PromptBarVariant = (typeof promptBarVariants)[number];
  * The shell owns the single focus ring (inset, so it does not stack a second edge).
  */
 const promptBarShellBaseClasses =
-  "flex w-full items-end gap-2 rounded-[1.625rem] border border-border-control p-2 " +
+  "flex w-full items-end gap-2 rounded-[1.625rem] border p-2 " +
   // Labels and placeholders F10: the pill's ring is the field's; the send button shows its own.
   // CopyField shares this shell with an <input>, so both field kinds light it.
   "has-[textarea:focus-visible]:outline-none has-[textarea:focus-visible]:ring-2 has-[textarea:focus-visible]:ring-inset has-[textarea:focus-visible]:ring-focus-ring " +
@@ -24,12 +24,13 @@ const promptBarShellBaseClasses =
   focusRingTransitionClasses;
 
 /**
- * The pill's fill. Glass is Card's glass (the same `--card-glass-tint` and `--card-glass-blur`
- * knobs) with a lit top edge; the control border stays, so the field keeps its outline.
+ * The pill's fill and edge. Glass is Card's glass (the same `--card-glass-tint` and
+ * `--card-glass-blur` knobs) with Card's hairline edge: the 3:1 control border reads as a heavy
+ * ring on a pane, and the bar is told apart by its fill, its placeholder and the send button.
  */
 export const promptBarShellVariantClasses: Record<PromptBarVariant, string> = {
-  surface: "bg-surface",
-  glass: `${glassSurfaceFillClasses} shadow-[var(--shadow-inset-highlight)]`,
+  surface: "border-border-control bg-surface",
+  glass: `border-elevation-edge ${glassSurfaceFillClasses}`,
 };
 
 /**

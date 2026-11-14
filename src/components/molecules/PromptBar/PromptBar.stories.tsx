@@ -87,7 +87,7 @@ Voice and attachments are not part of this version.
 | **Fill** | \`--color-brand\` / \`--color-on-brand\` (\`#011272\`) when there is text |
 | **\`start\`** | Optional leading slot — a brand mark, **Avatar** \`size="md"\` (2.25rem, the send circle's size) |
 | **\`end\`** | Optional slot before send for another inset **IconButton** \`sm\`. The caller owns its handler and name |
-| **\`variant\`** | \`surface\` (default) is the solid pill. \`glass\` is a frosted pane for a bar over a picture, a video or a canvas: **Card**'s glass, with the same \`--card-glass-tint\` and \`--card-glass-blur\` knobs |
+| **\`variant\`** | \`surface\` (default) is the solid pill. \`glass\` is a frosted pane for a bar over a picture, a video or a canvas: **Card**'s glass, with the same \`--card-glass-tint\` and \`--card-glass-blur\` knobs, under a hairline edge instead of the control border |
 
 Enter sends. Shift+Enter inserts a newline. Placeholder is **Ask anything…**.
 
@@ -221,7 +221,7 @@ export const Glass: Story = {
     docs: {
       description: {
         story:
-          "`variant=\"glass\"` frosts the pill: the surface colour at part strength over a blur of what's behind (**Card**'s glass and its knobs), with the control border and a lit top edge. The placeholder steps up to the text colour at 80%, so a bright backdrop can't swallow it. Solid where the browser has no backdrop filter, and when the visitor asks for less transparency. **ChatDock** takes it as `composer=\"glass\"`.",
+          "`variant=\"glass\"` frosts the pill: the surface colour at part strength over a blur of what's behind (**Card**'s glass and its knobs), under Card's hairline edge: the bar is told apart by its fill, its placeholder and the send button, not by a ring. The placeholder steps up to the text colour at 80%, so a bright backdrop can't swallow it. Solid where the browser has no backdrop filter, and when the visitor asks for less transparency. **ChatDock** takes it as `variant=\"glass\"`.",
       },
     },
   },
@@ -240,7 +240,8 @@ export const Glass: Story = {
     await expect([0.7, 0.88]).toContain(tint);
     await expect(style.backgroundColor).toMatch(new RegExp(`[/,] ?${tint}\\)$`));
     await expect(style.backdropFilter).toContain("blur(12px)");
-    // The field keeps its outline.
+    // A hairline edge, lighter than the solid bar's control border.
     await expect(style.borderTopWidth).toBe("1px");
+    await expect(style.boxShadow).toBe("none");
   },
 };

@@ -959,7 +959,7 @@ A \`gate\` puts a multi-step form — **ChatDock.Gate**, for Start a project —
 | \`gate\` | A form in the conversation — **ChatDock.Gate** with its steps, under the latest message. Setting it opens the window and moves focus in; the composer stays in place but is off (its placeholder says why), and the suggestion rows and follow-ups step aside. The window grows to fit the form, up to the viewport less 7rem; past that the conversation scrolls, and each step is brought into view. The window's close and Escape fold it and keep the gate, with its progress, for when it reopens; the gate's Cancel clears it and the composer comes back with focus. The window stays non-modal |
 | \`open\` / \`onOpenChange\` | Optional control of the window |
 | \`placement\` | \`fixed\` (default) pins it to the viewport; \`inline\` keeps it in flow for previews |
-| \`composer\` | \`surface\` (default) is the solid bar. \`glass\` frosts the resting bar for a dock over a picture, a video or a canvas (**PromptBar** \`variant="glass"\`, **Card**'s glass knobs). The window stays solid |
+| \`variant\` | \`surface\` (default) is the solid dock. \`glass\` is for a dock over a picture, a video or a canvas: the bar is frosted (**PromptBar** \`variant="glass"\`, **Card**'s glass knobs) and the window is a dense pane, the surface colour at 88% over a 24px blur, which holds AA over any page. Knobs on the dock's wrapper: \`--chat-dock-glass-fill\` (the pane's colour), \`--chat-dock-glass-tint\`, \`--chat-dock-glass-blur\`. Solid without a backdrop filter and under reduced transparency |
 
 ## Anatomy
 \`\`\`
