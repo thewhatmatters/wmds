@@ -161,4 +161,11 @@ describe("PromptBar", () => {
     expect(shell?.className).toContain("[@supports_not_(backdrop-filter:blur(0))]:bg-surface");
     expect(shell?.className).toContain("[@media(prefers-reduced-transparency:reduce)]:bg-surface");
   });
+
+  it("steps the glass placeholder up to the text colour at part strength", () => {
+    const view = mount({ value: "", onValueChange: () => {}, variant: "glass" });
+    root = view.root;
+    container = view.container;
+    expect(view.field.className).toContain("placeholder:!text-[color-mix(in_srgb,var(--color-text-primary)_80%,transparent)]");
+  });
 });

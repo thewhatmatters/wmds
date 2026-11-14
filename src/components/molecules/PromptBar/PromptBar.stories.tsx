@@ -221,7 +221,7 @@ export const Glass: Story = {
     docs: {
       description: {
         story:
-          "`variant=\"glass\"` frosts the pill: the surface colour at part strength over a blur of what's behind (**Card**'s glass and its knobs), with the control border and a lit top edge. Solid where the browser has no backdrop filter, and when the visitor asks for less transparency. **ChatDock** takes it as `composer=\"glass\"`.",
+          "`variant=\"glass\"` frosts the pill: the surface colour at part strength over a blur of what's behind (**Card**'s glass and its knobs), with the control border and a lit top edge. The placeholder steps up to the text colour at 80%, so a bright backdrop can't swallow it. Solid where the browser has no backdrop filter, and when the visitor asks for less transparency. **ChatDock** takes it as `composer=\"glass\"`.",
       },
     },
   },
