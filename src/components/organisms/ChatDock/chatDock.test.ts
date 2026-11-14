@@ -182,6 +182,22 @@ describe("ChatDock", () => {
     expect(view.querySelector<HTMLElement>("[data-chat-dock-window]")?.hidden).toBe(false);
   });
 
+  it("keeps a solid composer unless asked for glass; the window stays solid either way", () => {
+    expect(mount().querySelector("textarea")?.parentElement?.getAttribute("data-variant")).toBe("surface");
+    act(() => {
+      root?.unmount();
+    });
+    container?.remove();
+
+    const view = mount({ composer: "glass", defaultOpen: true });
+    const bar = view.querySelector("textarea")?.parentElement;
+    expect(bar?.getAttribute("data-variant")).toBe("glass");
+    expect(bar?.className).toContain("backdrop-blur-[var(--card-glass-blur,12px)]");
+    const windowSurface = view.querySelector<HTMLElement>("[data-chat-dock-window]");
+    expect(windowSurface?.className).toContain("bg-surface");
+    expect(windowSurface?.className).not.toContain("backdrop-blur");
+  });
+
   it("closes with Escape and keeps focus in the composer without reopening", () => {
     const onOpenChange = vi.fn();
     const view = mount({ defaultOpen: true, onOpenChange });
