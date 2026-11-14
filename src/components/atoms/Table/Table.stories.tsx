@@ -464,7 +464,7 @@ Semantic table in a horizontal-scroll box. Use it for rows that share columns �
 | **Table** | \`div\` (focusable \`region\`, scrolls sideways) around a \`table\` |
 | **TableCaption** | \`caption\` — what the table is, or a count |
 | **TableHeader** / **TableBody** / **TableFooter** | \`thead\` / \`tbody\` / \`tfoot\` |
-| **TableRow** | \`tr\` — hairline rule, ghost hover fill |
+| **TableRow** | \`tr\` — hairline rule; rows in **TableBody** get the ghost hover fill, header and footer rows do not |
 | **TableHead** | \`th\` (\`scope="col"\`; pass \`scope="row"\` for a row header) — \`sticky\` pins the column to the start edge |
 | **TableCell** | \`td\` — \`align\` \`start\` (default) / \`center\` / \`end\` (tabular figures); \`sticky\` as on TableHead |
 
@@ -616,6 +616,14 @@ export function RecentPosts({ posts, total }: { posts: PostRow[]; total: string 
 }
 `,
   ),
+  play: async ({ canvasElement }) => {
+    // The hover fill belongs to the body's rows alone: header and footer rows carry no hover style.
+    const body = canvasElement.querySelector("tbody") as HTMLElement;
+    await expect(body.className).toContain("[&>tr:hover]:bg-ghost-hover");
+    for (const row of canvasElement.querySelectorAll("tr")) {
+      await expect(row.className).not.toContain("hover");
+    }
+  },
 };
 
 export const GridRules: Story = {
