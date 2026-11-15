@@ -886,6 +886,7 @@
         "components-sitenav--brand-and-cta",
         "components-sitenav--centered-links",
         "components-sitenav--compact",
+        "components-sitenav--glass",
         "components-sitenav--marketing-header",
         "components-sitenav--mega-menu"
       ]

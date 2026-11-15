@@ -5,7 +5,7 @@ import { expect } from "storybook/test";
 import { Button } from "../../atoms/Button/Button";
 import { storyCopySource, storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
 import { typographyClass } from "../../../lib/typography";
-import { SiteNav, siteNavCompactLayouts, siteNavStates, type SiteNavState } from "./SiteNav";
+import { SiteNav, siteNavCompactLayouts, siteNavStates, siteNavVariants, type SiteNavState } from "./SiteNav";
 import {
   SiteNavResourcesMenu,
   indentSiteNavResourcesMenuCopySource,
@@ -19,6 +19,7 @@ const meta = {
   argTypes: {
     state: { control: "select", options: [undefined, ...siteNavStates] },
     compactLayout: { control: "select", options: [...siteNavCompactLayouts] },
+    variant: { control: "select", options: [...siteNavVariants] },
     collapseAt: { control: { type: "number", min: 0, step: 8 } },
     start: { control: false },
     middle: { control: false },
@@ -574,6 +575,78 @@ export const OverMedia: Story = {
     const link = header.querySelector<HTMLElement>("a[href='#menu']")!;
     const [r, g, b] = getComputedStyle(link).color.match(/\d+/g)!.map(Number);
     expect(Math.min(r, g, b)).toBeGreaterThan(160);
+  },
+};
+
+export const Glass: Story = {
+  name: "Variant — glass",
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "fullscreen",
+      docs: {
+        description: {
+          story:
+            "`variant=\"glass\"`: on a page of pictures, video or a canvas, the compact pill is frosted instead of near-solid, so the page shows through it softly. It is Card's glass, tuned with the same `--card-glass-tint` and `--card-glass-blur` knobs, and it is solid when the visitor asks for reduced transparency. Raise the tint over bright pictures so the links stay readable.",
+        },
+      },
+    },
+    `
+import { Button, SiteNav } from "@thewhatmatters/wmds";
+
+export function GlassNav() {
+  return (
+    <SiteNav
+      variant="glass"
+      overMedia
+      start={<SiteNav.Brand href="/">Cinder &amp; Sotol</SiteNav.Brand>}
+      middle={
+        <SiteNav.Links>
+          <SiteNav.Link href="/menu">Menu</SiteNav.Link>
+          <SiteNav.Link href="/visit">Visit</SiteNav.Link>
+        </SiteNav.Links>
+      }
+      end={
+        <Button role="primary" size="sm" render={<a href="/book" />}>
+          Book a table
+        </Button>
+      }
+    />
+  );
+}
+`.trim(),
+  ),
+  render: () => (
+    <div data-theme="dark" className="relative h-80 bg-[linear-gradient(115deg,var(--color-brand),var(--color-info-muted)_45%,var(--color-background-body))]">
+      <p aria-hidden="true" className="type-display-2 absolute inset-x-0 top-2 text-center text-fg">Cinder &amp; Sotol</p>
+      <SiteNav
+        placement="inline"
+        state="compact"
+        variant="glass"
+        start={<SiteNav.Brand href="#home">Cinder &amp; Sotol</SiteNav.Brand>}
+        middle={
+          <SiteNav.Links>
+            <SiteNav.Link href="#menu">Menu</SiteNav.Link>
+            <SiteNav.Link href="#visit">Visit</SiteNav.Link>
+          </SiteNav.Links>
+        }
+        end={
+          <Button role="primary" size="sm" render={<a href="#book" />}>
+            Book a table
+          </Button>
+        }
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const pill = canvasElement.querySelector<HTMLElement>("[data-state='compact'][data-variant='glass']")!;
+    expect(pill).not.toBeNull();
+    const style = getComputedStyle(pill);
+    // Frosted: a part-clear fill over a blur of the page behind.
+    expect(style.backdropFilter).toContain("blur");
+    const fill = style.backgroundColor;
+    const alpha = fill.startsWith("color(") ? Number(fill.split("/")[1]?.replace(")", "") ?? 1) : Number(fill.match(/[\d.]+/g)?.[3] ?? 1);
+    expect(alpha).toBeGreaterThan(0.4);
+    expect(alpha).toBeLessThan(0.95);
   },
 };
 

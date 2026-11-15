@@ -1,10 +1,15 @@
 import { cn } from "../../../lib/cn";
+import { glassSurfaceFillClasses } from "../../../lib/glassSurface";
 import { motionTransition } from "../../../lib/motion";
 import { typographyClass } from "../../../lib/typography";
 
 /** Scroll-driven shell state — `expanded` (page top) or `compact` (scrolled). */
 export const siteNavStates = ["expanded", "compact"] as const;
 export type SiteNavState = (typeof siteNavStates)[number];
+
+/** The compact pill's fill: `surface` (the near-solid elevation surface) or `glass` (frosted, for a page of pictures or video). */
+export const siteNavVariants = ["surface", "glass"] as const;
+export type SiteNavVariant = (typeof siteNavVariants)[number];
 
 /** `fixed` — page chrome (in-flow expanded → pinned compact). `inline` — static specimen; pair with `scrollContainer` for scroll demos. */
 export const siteNavPlacements = ["fixed", "inline"] as const;
@@ -82,6 +87,17 @@ export const siteNavBarStateClasses: Record<SiteNavState, string> = {
     "supports-[backdrop-filter]:bg-elevation-surface",
   ),
 };
+
+/**
+ * The compact pill as glass, for a page whose sections are pictures, video or a canvas: the same
+ * shell with Card's frosted fill (`--card-glass-tint`, `--card-glass-blur`) in place of the
+ * near-solid elevation surface. Solid where the browser has no backdrop filter, and when the
+ * visitor asks for reduced transparency.
+ */
+export const siteNavBarCompactGlassClasses = cn(
+  "box-border rounded-[var(--radius-control)] border border-elevation-edge p-1.5 shadow-soft-sm",
+  glassSurfaceFillClasses,
+);
 
 /** Compact width — hugging the items (default) or grid-contained. */
 export const siteNavBarCompactLayoutClasses: Record<SiteNavCompactLayout, string> = {
