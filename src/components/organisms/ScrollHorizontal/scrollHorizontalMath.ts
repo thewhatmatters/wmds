@@ -67,16 +67,35 @@ export const scrollHorizontalExpandViewports = 1;
 /** Painted corner radius at rest. `--radius-xl` is 0.75rem (12px) at the default root size. */
 export const scrollHorizontalRadius = 12;
 
+/** Most viewports the full-bleed tile may stay pinned (`expandHold`). */
+export const scrollHorizontalHoldViewportsMax = 4;
+
+/** `expandHold` as a usable number of viewports: 0 without `expandLast`, else clamped to 0–4. */
+export function scrollHorizontalHoldViewports(expandLast: boolean, expandHold: number | undefined): number {
+  if (!expandLast || expandHold == null || !Number.isFinite(expandHold)) return 0;
+  return Math.min(scrollHorizontalHoldViewportsMax, Math.max(0, expandHold));
+}
+
 /** Progress where horizontal travel finishes. `1` when `expandLast` is off. */
-export function scrollHorizontalHorizontalEnd(expandLast: boolean): number {
+export function scrollHorizontalHorizontalEnd(expandLast: boolean, hold = 0): number {
   if (!expandLast) return 1;
-  const total = scrollHorizontalHorizontalViewports + scrollHorizontalExpandViewports;
+  const total = scrollHorizontalHorizontalViewports + scrollHorizontalExpandViewports + hold;
   return scrollHorizontalHorizontalViewports / total;
 }
 
-/** Track length. `400svh` is the 300svh gallery plus one viewport of grow. */
-export function scrollHorizontalTrack(expandLast: boolean): "300svh" | "400svh" {
-  return expandLast ? "400svh" : "300svh";
+/** Progress where the last tile has filled the viewport. `1` unless the tile is held after it. */
+export function scrollHorizontalExpandEnd(expandLast: boolean, hold = 0): number {
+  if (!expandLast) return 1;
+  const grown = scrollHorizontalHorizontalViewports + scrollHorizontalExpandViewports;
+  return grown / (grown + hold);
+}
+
+/** Track length. `400svh` is the 300svh gallery plus one viewport of grow, then 100svh per held viewport. */
+export function scrollHorizontalTrack(expandLast: boolean): "300svh" | "400svh";
+export function scrollHorizontalTrack(expandLast: boolean, hold: number): string;
+export function scrollHorizontalTrack(expandLast: boolean, hold = 0): string {
+  if (!expandLast) return "300svh";
+  return `${400 + Math.round(hold * 100)}svh`;
 }
 
 export function scrollHorizontalItemColor(color: string | undefined, index: number): string {
@@ -273,10 +292,17 @@ export function scrollHorizontalPhaseProgress(progress: number, horizontalEnd: n
   return scrollHorizontalClamp01(progress / horizontalEnd);
 }
 
-/** 0 through the horizontal phase, then 0 → 1 across the grow. */
-export function scrollHorizontalExpandAmount(progress: number, horizontalEnd: number): number {
+/** 0 through the horizontal phase, then 0 → 1 across the grow. It stays 1 while the tile is held. */
+export function scrollHorizontalExpandAmount(progress: number, horizontalEnd: number, expandEnd = 1): number {
   if (!Number.isFinite(progress) || !Number.isFinite(horizontalEnd) || horizontalEnd >= 1) return 0;
-  return scrollHorizontalClamp01((progress - horizontalEnd) / (1 - horizontalEnd));
+  const end = Number.isFinite(expandEnd) && expandEnd > horizontalEnd ? Math.min(1, expandEnd) : 1;
+  return scrollHorizontalClamp01((progress - horizontalEnd) / (end - horizontalEnd));
+}
+
+/** 0 until the last tile fills the viewport, then 0 → 1 across the hold. 0 when nothing is held. */
+export function scrollHorizontalHoldAmount(progress: number, expandEnd: number): number {
+  if (!Number.isFinite(progress) || !Number.isFinite(expandEnd) || expandEnd >= 1) return 0;
+  return scrollHorizontalClamp01((progress - expandEnd) / (1 - expandEnd));
 }
 
 /** Earlier tiles fade across the first part of the grow. */
