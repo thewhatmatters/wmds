@@ -485,9 +485,11 @@ export {
 export {
   Search,
   searchSizes,
+  searchVariants,
   type SearchLayoutClassName,
   type SearchProps,
   type SearchSize,
+  type SearchVariant,
 } from "./components/molecules/Search/Search";
 export {
   Combobox,
