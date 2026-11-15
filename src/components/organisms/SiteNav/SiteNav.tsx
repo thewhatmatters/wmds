@@ -30,6 +30,7 @@ import { Dropdown } from "../../molecules/Dropdown/Dropdown";
 import { textOf, useOverflowMenu } from "../../molecules/Dropdown/useOverflowMenu";
 import {
   siteNavBarBaseClasses,
+  siteNavBarCompactGlassClasses,
   siteNavBarCompactLayoutClasses,
   siteNavBarStateClasses,
   siteNavOverMediaClasses,
@@ -83,11 +84,12 @@ import {
   type SiteNavCompactLayout,
   type SiteNavPlacement,
   type SiteNavState,
+  type SiteNavVariant,
 } from "./siteNavStyles";
 import { useSiteNavCollapse } from "./useSiteNavCollapse";
 import { useSiteNavMobileMenu } from "./useSiteNavMobileMenu";
 
-export type { SiteNavCompactLayout, SiteNavPlacement, SiteNavState } from "./siteNavStyles";
+export type { SiteNavCompactLayout, SiteNavPlacement, SiteNavState, SiteNavVariant } from "./siteNavStyles";
 export {
   siteNavCompactLayouts,
   siteNavDefaultCollapseAt,
@@ -97,6 +99,7 @@ export {
   siteNavMenuReadThumbClasses,
   siteNavPlacements,
   siteNavStates,
+  siteNavVariants,
 } from "./siteNavStyles";
 
 /** Layout-only — placement or z-index adjustments; not for re-theming the bar. */
@@ -144,6 +147,13 @@ export interface SiteNavProps {
    * The hero carries a top scrim so the links stay readable on bright frames.
    */
   overMedia?: boolean;
+  /**
+   * The compact pill's fill. `glass` is for a page whose sections are pictures, video or a canvas:
+   * the pill is frosted (Card's glass, with the same `--card-glass-tint` and `--card-glass-blur`
+   * knobs), so the page shows through it softly, like **PromptBar** `variant="glass"`. Whatever
+   * passes behind must keep the links readable: raise the tint over bright pictures. Default: `"surface"`.
+   */
+  variant?: SiteNavVariant;
   /** Accessible name for the `<header>`. Default: `"Site"`. */
   "aria-label"?: string;
   className?: SiteNavLayoutClassName;
@@ -266,6 +276,7 @@ function SiteNavRoot({
   compactLayout = "hug",
   placement = "fixed",
   overMedia = false,
+  variant = "surface",
   scrollContainer,
   "aria-label": ariaLabel = "Site",
   className,
@@ -370,7 +381,7 @@ function SiteNavRoot({
 
   const compactBarClassName = cn(
     siteNavBarBaseClasses,
-    siteNavBarStateClasses.compact,
+    variant === "glass" ? siteNavBarCompactGlassClasses : siteNavBarStateClasses.compact,
     siteNavBarCompactLayoutClasses[compactLayout],
   );
 
@@ -388,7 +399,7 @@ function SiteNavRoot({
       ref={containerRef}
       className={cn(siteNavContainerClasses, "px-[var(--grid-margin)]")}
     >
-      <div data-state="compact" className={compactBarClassName}>
+      <div data-state="compact" data-variant={variant} className={compactBarClassName}>
         {renderSlots(hugCluster)}
       </div>
     </div>
@@ -430,7 +441,8 @@ function SiteNavRoot({
             ) : null}
           </AnimatePresence>
 
-          {compact ? (
+          {/* Holds the expanded band's place in the flow. Over media the band never had one. */}
+          {compact && !overMedia ? (
             <div className={cn(siteNavExpandedHeightClasses, "w-full")} aria-hidden />
           ) : null}
 
@@ -473,6 +485,7 @@ function SiteNavRoot({
                   exit={shouldReduceMotion ? compactVisible : compactHidden}
                   transition={barTransition}
                   data-state="compact"
+                  data-variant={variant}
                   className={compactBarClassName}
                 >
                   {renderSlots(true)}
