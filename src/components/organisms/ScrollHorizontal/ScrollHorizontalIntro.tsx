@@ -33,7 +33,8 @@ export interface ScrollHorizontalIntroProps {
   eyebrow: string;
   /**
    * Display statement. Rendered as the section `h2` through **TextSequence**
-   * (`emphasis="none"`, `trigger="inView"`). Mix text with **TextSequence.Shape**.
+   * (`emphasis="none"`, `trigger="inView"`). Mix text with **TextSequence.Shape**,
+   * or set key words in **InlinePill** (the leading opens so stacked pills don't touch).
    * The heading keeps the plain sentence as its accessible name.
    */
   statement: ReactNode;

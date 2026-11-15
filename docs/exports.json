@@ -1042,6 +1042,7 @@
       },
       "patterns": [
         "components-textsequence--default",
+        "components-textsequence--inline-pills",
         "components-textsequence--reduced-motion",
         "components-textsequence--shapes"
       ]
