@@ -29,7 +29,7 @@ Marketing gallery that sits under the hero. Pass \`items\` (\`id\`, \`label\`, o
 
 Vertical scroll drives the row. The track is \`300svh\`. A sticky \`h-svh\` window, one card wide and centered, shows the first card at the start and the last card at the end. The travel is \`(items.length - 1) * (item width + gap)\`, measured from the row.
 
-\`expandLast\` (default false) lengthens the track to \`400svh\`. The horizontal travel keeps that same scroll distance. The window stays pinned for one more viewport while the last tile grows, via \`clip-path\`, until it fills the \`h-svh\` window edge to edge and the radius reaches 0. Earlier tiles fade out. The window then releases and that full-bleed tile scrolls away. The section box ends on that tile. Pass \`expanded\` for content in that section. A padded block after the section, including default \`grid-page\` block padding, paints the page background between the tile and a following footer.
+\`expandLast\` (default false) lengthens the track to \`400svh\`. The horizontal travel keeps that same scroll distance. The window stays pinned for one more viewport while the last tile grows, via \`clip-path\`, until it fills the \`h-svh\` window edge to edge and the radius reaches 0. Earlier tiles fade out. The window then releases and that full-bleed tile scrolls away. The section box ends on that tile. Pass \`expanded\` for content in that section. \`expandHold\` (0 to 4, default 0) keeps that full tile pinned for that many more viewports of scroll before it releases, so a reel in \`expanded\` has time to play; \`--scroll-horizontal-hold\` on the slot runs from 0 to 1 through the hold, for a \"keep scrolling\" cue. A padded block after the section, including default \`grid-page\` block padding, paints the page background between the tile and a following footer.
 
 From \`sm\` each card is **400×500** with \`gap-8\` (32px). Below \`sm\` each card is **280×350** with \`gap-4\` (16px). Radius is \`rounded-xl\` (\`--radius-xl\`, 12px). Each card is a solid fill from \`color\`. The label is the accessible name (\`sr-only\`).
 
@@ -173,6 +173,74 @@ export const ExpandLast: Story = {
       </div>
     </div>
   ),
+};
+
+export const ExpandHold: Story = {
+  name: "Expand last, held",
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: {
+      description: {
+        story:
+          "expandHold keeps the full-bleed tile pinned for that many more viewports of scroll after it has filled the screen, so a reel in the expanded slot has time to play before the page moves on. The track grows by 100svh per held viewport, and the travel and the grow keep their scroll distance. While the tile is held, --scroll-horizontal-hold on the expanded slot runs from 0 to 1: the line under the cue here follows it. Reduced motion ignores the hold and shows the tile as a static section.",
+      },
+    },
+  },
+  render: () => (
+    <div className="bg-body">
+      <div className="flex h-[40svh] items-end justify-center px-[var(--grid-margin)] pb-8">
+        <p className="type-heading-2 text-fg">Scroll into the gallery</p>
+      </div>
+      <ScrollHorizontal
+        items={scrollHorizontalMarketingItems}
+        heading={<h2 className="type-heading-2 text-fg">Selected work</h2>}
+        expandLast
+        expandHold={1}
+        expanded={
+          <div className="absolute end-[var(--grid-margin)] bottom-8 rounded-full bg-body px-4 py-2 text-fg motion-reduce:hidden">
+            <p className="type-eyebrow">Keep scrolling</p>
+            <div className="mt-1 h-px origin-left scale-x-[var(--scroll-horizontal-hold)] bg-current" />
+          </div>
+        }
+      />
+      <div className="flex h-svh items-center justify-center px-[var(--grid-margin)]">
+        <p className="type-heading-2 text-fg">After the gallery</p>
+      </div>
+    </div>
+  ),
+};
+
+export const ExpandHoldContract: Story = {
+  tags: ["test", "!dev", "!autodocs"],
+  parameters: {
+    docs: { disable: true },
+  },
+  render: () => (
+    <div>
+      <ScrollHorizontal items={scrollHorizontalMarketingItems} heading={<h2>Held</h2>} expandLast expandHold={1} expanded={<p>Held slot</p>} />
+      <ScrollHorizontal items={scrollHorizontalMarketingItems} heading={<h2>No hold</h2>} expandLast expandHold={0} />
+      <ScrollHorizontal items={scrollHorizontalMarketingItems.slice(0, 3)} heading={<h2>No expand</h2>} expandHold={2} />
+      <MotionConfig reducedMotion="always">
+        <ScrollHorizontal items={scrollHorizontalMarketingItems} heading={<h2>Reduced</h2>} expandLast expandHold={1} />
+      </MotionConfig>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const sections = [...canvasElement.querySelectorAll<HTMLElement>("[data-scroll-horizontal]")];
+    expect(sections).toHaveLength(4);
+    const viewport = window.innerHeight;
+    // Held: five viewports of track, and the slot carries the hold's progress.
+    expect(sections[0]?.dataset.expandHold).toBe("1");
+    expect(sections[0]?.getBoundingClientRect().height).toBeCloseTo(viewport * 5, 0);
+    expect(sections[0]?.querySelector<HTMLElement>("[data-scroll-horizontal-slot]")?.style.getPropertyValue("--scroll-horizontal-hold")).toBe("0");
+    // No hold, and no expandLast: the track is what it was.
+    expect(sections[1]?.dataset.expandHold).toBeUndefined();
+    expect(sections[1]?.getBoundingClientRect().height).toBeCloseTo(viewport * 4, 0);
+    expect(sections[2]?.dataset.expandHold).toBeUndefined();
+    expect(sections[2]?.getBoundingClientRect().height).toBeCloseTo(viewport * 3, 0);
+    // Reduced motion: no pinned track at all, so nothing to hold.
+    expect(sections[3]?.getBoundingClientRect().height).toBeLessThan(viewport * 3);
+  },
 };
 
 export const ExpandLastContract: Story = {

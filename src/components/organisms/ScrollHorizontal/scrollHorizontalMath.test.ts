@@ -21,6 +21,9 @@ import {
   scrollHorizontalDistance,
   scrollHorizontalExpandAmount,
   scrollHorizontalExpandClip,
+  scrollHorizontalExpandEnd,
+  scrollHorizontalHoldAmount,
+  scrollHorizontalHoldViewports,
   scrollHorizontalExpandClipRect,
   scrollHorizontalExpandViewports,
   scrollHorizontalExpandedOpacity,
@@ -364,6 +367,37 @@ describe("scrollHorizontal expandLast", () => {
     expect(scrollHorizontalPeerOpacity(0.45)).toBe(0);
     expect(scrollHorizontalExpandedOpacity(0)).toBe(0);
     expect(scrollHorizontalExpandedOpacity(1)).toBe(1);
+  });
+
+  it("holds the full tile for expandHold viewports without speeding up the travel or the grow", () => {
+    expect(scrollHorizontalHoldViewports(true, undefined)).toBe(0);
+    expect(scrollHorizontalHoldViewports(false, 2)).toBe(0);
+    expect(scrollHorizontalHoldViewports(true, 1.5)).toBe(1.5);
+    expect(scrollHorizontalHoldViewports(true, -1)).toBe(0);
+    expect(scrollHorizontalHoldViewports(true, 9)).toBe(4);
+    expect(scrollHorizontalHoldViewports(true, Number.NaN)).toBe(0);
+
+    // No hold: nothing changes.
+    expect(scrollHorizontalExpandEnd(true)).toBe(1);
+    expect(scrollHorizontalExpandEnd(false, 2)).toBe(1);
+    expect(scrollHorizontalTrack(true)).toBe("400svh");
+    expect(scrollHorizontalTrack(false, 2)).toBe("300svh");
+    expect(scrollHorizontalHoldAmount(1, 1)).toBe(0);
+
+    // One held viewport: 500svh pins for four viewports. Two of travel, one of grow, one of hold.
+    const end = scrollHorizontalHorizontalEnd(true, 1);
+    const grown = scrollHorizontalExpandEnd(true, 1);
+    expect(scrollHorizontalTrack(true, 1)).toBe("500svh");
+    expect(scrollHorizontalTrack(true, 1.5)).toBe("550svh");
+    expect(end).toBeCloseTo(2 / 4);
+    expect(grown).toBeCloseTo(3 / 4);
+    expect(scrollHorizontalExpandAmount(end, end, grown)).toBe(0);
+    expect(scrollHorizontalExpandAmount((end + grown) / 2, end, grown)).toBeCloseTo(0.5);
+    expect(scrollHorizontalExpandAmount(grown, end, grown)).toBe(1);
+    expect(scrollHorizontalExpandAmount(1, end, grown)).toBe(1);
+    expect(scrollHorizontalHoldAmount(grown, grown)).toBe(0);
+    expect(scrollHorizontalHoldAmount((grown + 1) / 2, grown)).toBeCloseTo(0.5);
+    expect(scrollHorizontalHoldAmount(1, grown)).toBe(1);
   });
 
   it("parks the last card on the centered rect, then clips exactly to the viewport", () => {
