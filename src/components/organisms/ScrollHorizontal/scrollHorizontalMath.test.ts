@@ -41,6 +41,7 @@ import {
   scrollHorizontalItemWidthCompact,
   scrollHorizontalNominalExpandMetrics,
   scrollHorizontalNominalMetrics,
+  scrollHorizontalTileSize,
   scrollHorizontalParseGap,
   scrollHorizontalPeerOpacity,
   scrollHorizontalPhaseProgress,
@@ -60,6 +61,9 @@ import {
   scrollHorizontalIntroTrackClasses,
   scrollHorizontalHeadingClasses,
   scrollHorizontalItemClasses,
+  scrollHorizontalLandscapeItemClasses,
+  scrollHorizontalLandscapeMediaItemClasses,
+  scrollHorizontalLandscapeWindowClasses,
   scrollHorizontalRootClasses,
   scrollHorizontalRootExpandClasses,
   scrollHorizontalRowClasses,
@@ -238,6 +242,42 @@ describe("scrollHorizontalShell", () => {
     expect(scrollHorizontalItemClasses).toContain("max-sm:h-[350px]");
     expect(scrollHorizontalItemClasses).toContain("max-sm:w-[280px]");
     expect(scrollHorizontalItemClasses).toContain("rounded-xl");
+  });
+});
+
+describe("landscape tiles", () => {
+  it("are 16:9 at every step and keep the portrait card as the default", () => {
+    for (const width of [320, 390, 639, 640, 768, 1023, 1024, 1440, 1920]) {
+      const size = scrollHorizontalTileSize(width, "landscape");
+      expect(size.width / size.height).toBeCloseTo(16 / 9, 5);
+      expect(size.width).toBeLessThanOrEqual(width);
+    }
+    expect(scrollHorizontalTileSize(390, "landscape")).toEqual({ width: 288, height: 162 });
+    expect(scrollHorizontalTileSize(768, "landscape")).toEqual({ width: 560, height: 315 });
+    expect(scrollHorizontalTileSize(1440, "landscape")).toEqual({ width: 720, height: 405 });
+    expect(scrollHorizontalTileSize(1440)).toEqual({ width: 400, height: 500 });
+    expect(scrollHorizontalTileSize(390)).toEqual({ width: 280, height: 350 });
+  });
+
+  it("carry their size into the nominal pitch and the resting frame", () => {
+    expect(scrollHorizontalNominalMetrics(1440, "landscape")).toEqual({ itemWidth: 720, gap: 32 });
+    expect(scrollHorizontalNominalMetrics(390, "landscape")).toEqual({ itemWidth: 288, gap: 16 });
+    const frame = scrollHorizontalNominalExpandMetrics(1440, 900, "landscape");
+    expect(frame.cardWidth).toBe(720);
+    expect(frame.cardHeight).toBe(405);
+    expect(frame.cardLeft).toBe(360);
+    expect(frame.pitch).toBe(752);
+  });
+
+  it("size the tile, the media tile and the window with the same classes", () => {
+    for (const classes of [scrollHorizontalLandscapeItemClasses, scrollHorizontalLandscapeMediaItemClasses]) {
+      expect(classes).toContain("h-[315px] w-[560px]");
+      expect(classes).toContain("max-sm:h-[162px] max-sm:w-[288px]");
+      expect(classes).toContain("lg:h-[405px] lg:w-[720px]");
+      expect(classes).not.toContain("500px");
+    }
+    expect(scrollHorizontalLandscapeWindowClasses).toContain("w-[560px] max-sm:w-[288px] lg:w-[720px]");
+    expect(scrollHorizontalLandscapeWindowClasses).toContain("motion-reduce:overflow-x-auto");
   });
 });
 

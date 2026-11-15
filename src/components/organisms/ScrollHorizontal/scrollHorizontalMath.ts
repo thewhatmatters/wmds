@@ -17,6 +17,37 @@ export const scrollHorizontalItemHeightCompact = 350;
 /** Tailwind `sm` min-width. Compact geometry applies below this. */
 export const scrollHorizontalCompactBreakpoint = 640;
 
+/** Tile shape. `portrait` is the 4:5 card; `landscape` is 16:9, for screens and film. */
+export type ScrollHorizontalTile = "portrait" | "landscape";
+
+/** Tailwind `lg` min-width. The landscape tile takes its full size from here. */
+export const scrollHorizontalLandscapeWideBreakpoint = 1024;
+
+/** Landscape tile, 16:9 at every step: below `sm`, from `sm`, from `lg`. */
+export const scrollHorizontalLandscapeSizes = {
+  compact: { width: 288, height: 162 },
+  medium: { width: 560, height: 315 },
+  wide: { width: 720, height: 405 },
+} as const;
+
+/** The tile's box at a viewport width, before the DOM measurement lands. */
+export function scrollHorizontalTileSize(
+  viewportWidth: number,
+  tile: ScrollHorizontalTile = "portrait",
+): { width: number; height: number } {
+  const compact =
+    !Number.isFinite(viewportWidth) || viewportWidth < scrollHorizontalCompactBreakpoint;
+  if (tile === "landscape") {
+    if (compact) return scrollHorizontalLandscapeSizes.compact;
+    return viewportWidth < scrollHorizontalLandscapeWideBreakpoint
+      ? scrollHorizontalLandscapeSizes.medium
+      : scrollHorizontalLandscapeSizes.wide;
+  }
+  return compact
+    ? { width: scrollHorizontalItemWidthCompact, height: scrollHorizontalItemHeightCompact }
+    : { width: scrollHorizontalItemWidth, height: scrollHorizontalItemHeight };
+}
+
 /**
  * `gap-8` — 32px. 30px is equidistant from `gap-7` (28px) and `gap-8`;
  * 32px sits on the 8px baseline.
@@ -107,20 +138,18 @@ export function scrollHorizontalItemColor(color: string | undefined, index: numb
 }
 
 /** Nominal card pitch before the DOM measurement lands. */
-export function scrollHorizontalNominalMetrics(viewportWidth: number): {
+export function scrollHorizontalNominalMetrics(
+  viewportWidth: number,
+  tile: ScrollHorizontalTile = "portrait",
+): {
   itemWidth: number;
   gap: number;
 } {
+  const itemWidth = scrollHorizontalTileSize(viewportWidth, tile).width;
   if (!Number.isFinite(viewportWidth) || viewportWidth < scrollHorizontalCompactBreakpoint) {
-    return {
-      itemWidth: scrollHorizontalItemWidthCompact,
-      gap: scrollHorizontalGapCompact,
-    };
+    return { itemWidth, gap: scrollHorizontalGapCompact };
   }
-  return {
-    itemWidth: scrollHorizontalItemWidth,
-    gap: scrollHorizontalGap,
-  };
+  return { itemWidth, gap: scrollHorizontalGap };
 }
 
 export function scrollHorizontalParseGap(raw: string): number {
@@ -353,12 +382,11 @@ export interface ScrollHorizontalClipRect {
 export function scrollHorizontalNominalExpandMetrics(
   viewportWidth: number,
   viewportHeight: number,
+  tile: ScrollHorizontalTile = "portrait",
 ): ScrollHorizontalExpandMetrics {
-  const nominal = scrollHorizontalNominalMetrics(viewportWidth);
-  const compact =
-    !Number.isFinite(viewportWidth) || viewportWidth < scrollHorizontalCompactBreakpoint;
+  const nominal = scrollHorizontalNominalMetrics(viewportWidth, tile);
   const cardWidth = nominal.itemWidth;
-  const cardHeight = compact ? scrollHorizontalItemHeightCompact : scrollHorizontalItemHeight;
+  const cardHeight = scrollHorizontalTileSize(viewportWidth, tile).height;
   const vw = Number.isFinite(viewportWidth) && viewportWidth > 0 ? viewportWidth : cardWidth;
   const vh = Number.isFinite(viewportHeight) && viewportHeight > 0 ? viewportHeight : cardHeight;
   return {
@@ -405,8 +433,9 @@ export function scrollHorizontalReadFrame(
   row: HTMLElement,
   viewportWidth: number,
   viewportHeight: number,
+  tile: ScrollHorizontalTile = "portrait",
 ): ScrollHorizontalExpandMetrics {
-  const nominal = scrollHorizontalNominalExpandMetrics(viewportWidth, viewportHeight);
+  const nominal = scrollHorizontalNominalExpandMetrics(viewportWidth, viewportHeight, tile);
   const stickyRect = sticky.getBoundingClientRect();
   const itemRect = item.getBoundingClientRect();
   const shift =

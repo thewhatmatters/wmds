@@ -64,6 +64,7 @@ ScrollHorizontal — 300svh track, or 400svh with expandLast (auto when reduced)
 - Give every item an \`id\` and a \`label\`. The label is the accessible name, not visible copy.
 - Pass \`color\` as a semantic token to override the default cycle. The marketing placeholders set all five.
 - Pass \`media\` when a tile is a project cover. Keep it decorative (the label names the tile) and keep any hover effect off for reduced motion.
+- Set \`tile="landscape"\` when the tiles show website screens or film: 16:9, 720×405 from \`lg\`, 560×315 from \`sm\`, 288×162 below. The default \`portrait\` is the 4:5 card.
 - Leave \`expandLast\` off when the track should release on the last centered card.
 - Turn \`expandLast\` on when the last tile should fill the viewport and scroll away as its own section. Pass \`expanded\` for content there. The slot is mounted twice; the motion layer and the reduced-motion section each hide the other. The section ends on the tile, including the reduced-motion \`h-svh\` section. Do not follow it with block padding when the next region is a footer. **FooterReveal → Pattern — marketing hero** sets \`!py-0\` on the guide \`grid-page\`.
 - Pass a real heading element. It names the section. It is \`sr-only\` while the window is pinned, and visible above the scroller when motion is reduced.
@@ -351,6 +352,75 @@ export const WithMedia: Story = {
       </div>
     </div>
   ),
+};
+
+export const Landscape: Story = {
+  name: "Landscape tiles",
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: {
+      description: {
+        story:
+          "tile=\"landscape\" makes every tile 16:9, for website screens and film: 720×405 from lg, 560×315 from sm, 288×162 below. The window, the travel and the expandLast grow all follow the tile's measured box. Media fills the tile as before.",
+      },
+    },
+  },
+  render: () => (
+    <div className="bg-body">
+      <div className="flex h-[40svh] items-end justify-center px-[var(--grid-margin)] pb-8">
+        <p className="type-heading-2 text-fg">Scroll into the gallery</p>
+      </div>
+      <ScrollHorizontal
+        tile="landscape"
+        items={scrollHorizontalMediaItems}
+        heading={<h2 className="type-heading-2 text-fg">Selected work</h2>}
+      />
+      <div className="flex h-svh items-center justify-center px-[var(--grid-margin)]">
+        <p className="type-heading-2 text-fg">After the gallery</p>
+      </div>
+    </div>
+  ),
+};
+
+export const LandscapeContract: Story = {
+  tags: ["test", "!dev", "!autodocs"],
+  parameters: {
+    docs: { disable: true },
+  },
+  render: () => (
+    <div>
+      <ScrollHorizontal
+        tile="landscape"
+        items={scrollHorizontalMediaItems}
+        heading={<h2 className="type-heading-2 text-fg">Landscape work</h2>}
+      />
+      <ScrollHorizontal
+        items={scrollHorizontalMarketingItems}
+        heading={<h2 className="type-heading-2 text-fg">Portrait work</h2>}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const [landscape, portrait] = [
+      ...canvasElement.querySelectorAll<HTMLElement>("[data-scroll-horizontal]"),
+    ];
+    await expect(landscape?.dataset.tile).toBe("landscape");
+    await expect(portrait?.dataset.tile).toBe("portrait");
+    const shape = (root: HTMLElement | undefined) =>
+      [...(root?.querySelectorAll<HTMLElement>("li") ?? [])].map(
+        (tile) => tile.offsetWidth / tile.offsetHeight,
+      );
+    await waitFor(() => {
+      const ratios = shape(landscape);
+      expect(ratios.length).toBe(scrollHorizontalMediaItems.length);
+      for (const ratio of ratios) expect(ratio).toBeCloseTo(16 / 9, 2);
+    });
+    for (const ratio of shape(portrait)) await expect(ratio).toBeCloseTo(4 / 5, 2);
+    // The centered window is one tile wide, so the first tile starts in the middle.
+    const first = landscape?.querySelector<HTMLElement>("li");
+    const windowBox = first?.closest("ul")?.parentElement;
+    await expect(windowBox?.offsetWidth).toBe(first?.offsetWidth);
+  },
 };
 
 export const MediaContract: Story = {

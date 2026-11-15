@@ -13,6 +13,8 @@
  * `sr-only` while the window is pinned, and visible above that scroller.
  *
  * Card pitch: 400×500 and gap-8 from `sm`; 280×350 and gap-4 below `sm`.
+ * `tile="landscape"` is 16:9 for screens and film: 720×405 from `lg`, 560×315
+ * from `sm`, 288×162 below. The gaps stay the same.
  * Radius is `rounded-xl` (`--radius-xl`, 12px). A tile with `media` keeps that
  * box and radius and shows the media in place of the fill.
  */
@@ -76,14 +78,30 @@ export const scrollHorizontalStickyClasses = [
   "group-data-[reduce=true]/scroll-horizontal:py-12",
 ].join(" ");
 
-export const scrollHorizontalWindowClasses = [
-  "mx-auto flex w-[400px] max-w-full shrink-0 items-center overflow-visible max-sm:w-[280px]",
+/** The centered window is one card wide, so it follows the tile shape. */
+export const scrollHorizontalWindowWidthClasses = {
+  portrait: "w-[400px] max-sm:w-[280px]",
+  landscape: "w-[560px] max-sm:w-[288px] lg:w-[720px]",
+} as const;
+
+export const scrollHorizontalWindowBaseClasses = [
+  "mx-auto flex max-w-full shrink-0 items-center overflow-visible",
   "motion-reduce:!mx-0 motion-reduce:!w-full motion-reduce:max-w-none motion-reduce:overflow-x-auto motion-reduce:scroll-fade-x",
   "group-data-[reduce=true]/scroll-horizontal:!mx-0",
   "group-data-[reduce=true]/scroll-horizontal:!w-full",
   "group-data-[reduce=true]/scroll-horizontal:max-w-none",
   "group-data-[reduce=true]/scroll-horizontal:overflow-x-auto",
   "group-data-[reduce=true]/scroll-horizontal:scroll-fade-x",
+].join(" ");
+
+export const scrollHorizontalWindowClasses = [
+  scrollHorizontalWindowBaseClasses,
+  scrollHorizontalWindowWidthClasses.portrait,
+].join(" ");
+
+export const scrollHorizontalLandscapeWindowClasses = [
+  scrollHorizontalWindowBaseClasses,
+  scrollHorizontalWindowWidthClasses.landscape,
 ].join(" ");
 
 export const scrollHorizontalRowClasses = [
@@ -107,9 +125,23 @@ export const scrollHorizontalHeadingClasses = [
   "group-data-[reduce=true]/scroll-horizontal:text-center",
 ].join(" ");
 
+/** Tile box by shape. Portrait is 4:5; landscape is 16:9 at every step. */
+export const scrollHorizontalItemSizeClasses = {
+  portrait: "h-[500px] w-[400px] max-sm:h-[350px] max-sm:w-[280px]",
+  landscape: "h-[315px] w-[560px] max-sm:h-[162px] max-sm:w-[288px] lg:h-[405px] lg:w-[720px]",
+} as const;
+
+const scrollHorizontalItemBaseClasses =
+  "relative shrink-0 overflow-hidden rounded-xl bg-[var(--scroll-horizontal-color)]";
+
 export const scrollHorizontalItemClasses = [
-  "relative h-[500px] w-[400px] shrink-0 overflow-hidden rounded-xl bg-[var(--scroll-horizontal-color)]",
-  "max-sm:h-[350px] max-sm:w-[280px]",
+  scrollHorizontalItemBaseClasses,
+  scrollHorizontalItemSizeClasses.portrait,
+].join(" ");
+
+export const scrollHorizontalLandscapeItemClasses = [
+  scrollHorizontalItemBaseClasses,
+  scrollHorizontalItemSizeClasses.landscape,
 ].join(" ");
 
 /**
@@ -117,8 +149,13 @@ export const scrollHorizontalItemClasses = [
  * The media is the tile's face, so it may lean or lift past the edge on hover.
  */
 export const scrollHorizontalMediaItemClasses = [
-  "relative h-[500px] w-[400px] shrink-0 rounded-xl",
-  "max-sm:h-[350px] max-sm:w-[280px]",
+  "relative shrink-0 rounded-xl",
+  scrollHorizontalItemSizeClasses.portrait,
+].join(" ");
+
+export const scrollHorizontalLandscapeMediaItemClasses = [
+  "relative shrink-0 rounded-xl",
+  scrollHorizontalItemSizeClasses.landscape,
 ].join(" ");
 
 /**
