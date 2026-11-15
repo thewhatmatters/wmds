@@ -868,6 +868,7 @@ export {
   type ScrollHorizontalItem,
   type ScrollHorizontalLayoutClassName,
   type ScrollHorizontalProps,
+  type ScrollHorizontalTile,
 } from "./components/organisms/ScrollHorizontal/ScrollHorizontal";
 export {
   Tab,

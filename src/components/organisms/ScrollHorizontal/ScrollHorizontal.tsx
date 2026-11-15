@@ -25,6 +25,7 @@ import {
   scrollHorizontalLeadFrame,
   scrollHorizontalNominalExpandMetrics,
   scrollHorizontalNominalMetrics,
+  type ScrollHorizontalTile,
   scrollHorizontalParseGap,
   scrollHorizontalPeerOpacity,
   scrollHorizontalPhaseProgress,
@@ -48,6 +49,9 @@ import {
   scrollHorizontalIntroTrackClasses,
   scrollHorizontalIntroWindowClasses,
   scrollHorizontalItemClasses,
+  scrollHorizontalLandscapeItemClasses,
+  scrollHorizontalLandscapeMediaItemClasses,
+  scrollHorizontalLandscapeWindowClasses,
   scrollHorizontalLabelClasses,
   scrollHorizontalMediaClasses,
   scrollHorizontalMediaItemClasses,
@@ -81,6 +85,8 @@ export interface ScrollHorizontalItem {
   media?: ReactNode;
 }
 
+export type { ScrollHorizontalTile };
+
 export interface ScrollHorizontalProps {
   items: ScrollHorizontalItem[];
   /**
@@ -113,6 +119,11 @@ export interface ScrollHorizontalProps {
    * from 0 to 1, for a "keep scrolling" cue. Ignored when motion is reduced.
    */
   expandHold?: number;
+  /**
+   * Tile shape. `portrait` (default) is the 4:5 card. `landscape` is 16:9, for
+   * website screens and film: 720×405 from `lg`, 560×315 from `sm`, 288×162 below.
+   */
+  tile?: ScrollHorizontalTile;
   className?: ScrollHorizontalLayoutClassName;
 }
 
@@ -153,6 +164,7 @@ function ScrollHorizontalRoot({
   expandLast = false,
   expanded,
   expandHold,
+  tile = "portrait",
   className,
 }: ScrollHorizontalProps) {
   const headingId = useId();
@@ -164,7 +176,7 @@ function ScrollHorizontalRoot({
   const trackRef = useRef<HTMLDivElement>(null);
   const itemRef = useRef<HTMLLIElement>(null);
   const distance = useMotionValue(0);
-  const frame = useMotionValue(scrollHorizontalNominalExpandMetrics(1440, 900));
+  const frame = useMotionValue(scrollHorizontalNominalExpandMetrics(1440, 900, tile));
   // Server and the hydration render both allow motion. Reading matchMedia
   // during render would disagree with a reduced-motion client.
   const [prefersReduced, setPrefersReduced] = useState(false);
@@ -248,6 +260,7 @@ function ScrollHorizontalRoot({
           row,
           window.innerWidth,
           window.innerHeight,
+          tile,
         );
         const shift = scrollHorizontalReadTranslateX(getComputedStyle(track).transform);
         const stickyRect = sticky.getBoundingClientRect();
@@ -269,13 +282,13 @@ function ScrollHorizontalRoot({
       }
 
       const measured = scrollHorizontalReadMetrics(item, row);
-      const nominal = scrollHorizontalNominalMetrics(window.innerWidth);
+      const nominal = scrollHorizontalNominalMetrics(window.innerWidth, tile);
       const itemWidth = measured.itemWidth > 0 ? measured.itemWidth : nominal.itemWidth;
       const gap = measured.itemWidth > 0 ? measured.gap : nominal.gap;
       distance.set(scrollHorizontalDistance(items.length, itemWidth, gap));
       if (sticky) {
         frame.set(
-          scrollHorizontalReadFrame(sticky, item, row, window.innerWidth, window.innerHeight),
+          scrollHorizontalReadFrame(sticky, item, row, window.innerWidth, window.innerHeight, tile),
         );
       }
     };
@@ -288,17 +301,24 @@ function ScrollHorizontalRoot({
     if (sticky) observer.observe(sticky);
     if (trackRef.current) observer.observe(trackRef.current);
     return () => observer.disconnect();
-  }, [distance, frame, hasIntro, items.length]);
+  }, [distance, frame, hasIntro, items.length, tile]);
 
   const fadePeers = expandLast && !reduceMotion;
   const labelledBy = hasIntro ? introLabelId : heading ? headingId : undefined;
 
+  const landscape = tile === "landscape";
   const cards = items.map((item, index) => {
     const color = scrollHorizontalItemColor(item.color, index);
     const isPeer = fadePeers && index !== lastIndex;
     // The last tile under expandLast is the color layer that grows: media would sit hidden beneath it.
     const hasMedia = item.media != null && item.media !== false && !(expandLast && index === lastIndex);
-    const tileClasses = hasMedia ? scrollHorizontalMediaItemClasses : scrollHorizontalItemClasses;
+    const tileClasses = landscape
+      ? hasMedia
+        ? scrollHorizontalLandscapeMediaItemClasses
+        : scrollHorizontalLandscapeItemClasses
+      : hasMedia
+        ? scrollHorizontalMediaItemClasses
+        : scrollHorizontalItemClasses;
     const tileColor = hasMedia ? undefined : { "--scroll-horizontal-color": color };
     const content = (
       <>
@@ -342,6 +362,7 @@ function ScrollHorizontalRoot({
       data-reduce={reduceMotion ? "true" : "false"}
       data-has-intro={hasIntro ? "true" : "false"}
       data-expand-hold={hold > 0 ? hold : undefined}
+      data-tile={tile}
       aria-labelledby={labelledBy}
       aria-label={labelledBy ? undefined : "Projects"}
       className={cn(
@@ -383,7 +404,7 @@ function ScrollHorizontalRoot({
             </div>
           </motion.div>
         ) : (
-          <div className={scrollHorizontalWindowClasses}>
+          <div className={landscape ? scrollHorizontalLandscapeWindowClasses : scrollHorizontalWindowClasses}>
             <motion.ul
               ref={rowRef}
               className={scrollHorizontalRowClasses}
