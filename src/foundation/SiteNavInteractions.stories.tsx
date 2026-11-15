@@ -1,6 +1,7 @@
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Sparkles } from "lucide-react";
+import { useState } from "react";
 import { Button } from "../components/atoms/Button/Button";
 import { SiteNav } from "../components/organisms/SiteNav/SiteNav";
 
@@ -102,6 +103,46 @@ export const PinnedScrollPadding: Story = {
     const canvas = within(canvasElement.ownerDocument.body);
     await waitFor(() => expect(canvas.getByRole("banner", { name: "Site" })).toHaveAttribute("data-state", "compact"));
     expect(document.documentElement.style.scrollPaddingTop).toContain("--site-nav-height");
+  },
+};
+
+function OverMediaPage() {
+  const [state, setState] = useState<"expanded" | "compact">("expanded");
+  return (
+    <div className="relative">
+      <SiteNav
+        placement="fixed"
+        state={state}
+        overMedia
+        start={<SiteNav.Brand href="#home" aria-label="WhatMatters" icon={<Sparkles />} />}
+        end={<Button role="primary" size="sm" render={<a href="#start" />}>Start</Button>}
+      />
+      <div data-theme="dark" data-testid="picture" className="flex h-80 items-end bg-body p-6">
+        <Button role="secondary" size="sm" onClick={() => setState(state === "expanded" ? "compact" : "expanded")}>
+          Scroll
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export const OverMediaKeepsThePageStill: Story = {
+  name: "over media: the page does not move when the bar goes compact",
+  parameters: { wmdsLayout: "fullscreen" },
+  render: () => <OverMediaPage />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const picture = canvas.getByTestId("picture");
+    const top = () => Math.round(picture.getBoundingClientRect().top);
+    const expanded = top();
+    // The expanded bar lies over the picture, so the picture starts where the bar does.
+    expect(expanded).toBe(Math.round(canvas.getByRole("banner", { name: "Site" }).getBoundingClientRect().top));
+    await userEvent.click(canvas.getByRole("button", { name: "Scroll" }));
+    await waitFor(() => expect(canvas.getByRole("banner", { name: "Site" })).toHaveAttribute("data-state", "compact"));
+    expect(top()).toBe(expanded);
+    await userEvent.click(canvas.getByRole("button", { name: "Scroll" }));
+    await waitFor(() => expect(canvas.getByRole("banner", { name: "Site" })).toHaveAttribute("data-state", "expanded"));
+    expect(top()).toBe(expanded);
   },
 };
 

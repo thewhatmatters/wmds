@@ -21,6 +21,9 @@ import {
   scrollHorizontalDistance,
   scrollHorizontalExpandAmount,
   scrollHorizontalExpandClip,
+  scrollHorizontalExpandEnd,
+  scrollHorizontalHoldAmount,
+  scrollHorizontalHoldViewports,
   scrollHorizontalExpandClipRect,
   scrollHorizontalExpandViewports,
   scrollHorizontalExpandedOpacity,
@@ -38,6 +41,7 @@ import {
   scrollHorizontalItemWidthCompact,
   scrollHorizontalNominalExpandMetrics,
   scrollHorizontalNominalMetrics,
+  scrollHorizontalTileSize,
   scrollHorizontalParseGap,
   scrollHorizontalPeerOpacity,
   scrollHorizontalPhaseProgress,
@@ -57,6 +61,9 @@ import {
   scrollHorizontalIntroTrackClasses,
   scrollHorizontalHeadingClasses,
   scrollHorizontalItemClasses,
+  scrollHorizontalLandscapeItemClasses,
+  scrollHorizontalLandscapeMediaItemClasses,
+  scrollHorizontalLandscapeWindowClasses,
   scrollHorizontalRootClasses,
   scrollHorizontalRootExpandClasses,
   scrollHorizontalRowClasses,
@@ -238,6 +245,42 @@ describe("scrollHorizontalShell", () => {
   });
 });
 
+describe("landscape tiles", () => {
+  it("are 16:9 at every step and keep the portrait card as the default", () => {
+    for (const width of [320, 390, 639, 640, 768, 1023, 1024, 1440, 1920]) {
+      const size = scrollHorizontalTileSize(width, "landscape");
+      expect(size.width / size.height).toBeCloseTo(16 / 9, 5);
+      expect(size.width).toBeLessThanOrEqual(width);
+    }
+    expect(scrollHorizontalTileSize(390, "landscape")).toEqual({ width: 288, height: 162 });
+    expect(scrollHorizontalTileSize(768, "landscape")).toEqual({ width: 560, height: 315 });
+    expect(scrollHorizontalTileSize(1440, "landscape")).toEqual({ width: 720, height: 405 });
+    expect(scrollHorizontalTileSize(1440)).toEqual({ width: 400, height: 500 });
+    expect(scrollHorizontalTileSize(390)).toEqual({ width: 280, height: 350 });
+  });
+
+  it("carry their size into the nominal pitch and the resting frame", () => {
+    expect(scrollHorizontalNominalMetrics(1440, "landscape")).toEqual({ itemWidth: 720, gap: 32 });
+    expect(scrollHorizontalNominalMetrics(390, "landscape")).toEqual({ itemWidth: 288, gap: 16 });
+    const frame = scrollHorizontalNominalExpandMetrics(1440, 900, "landscape");
+    expect(frame.cardWidth).toBe(720);
+    expect(frame.cardHeight).toBe(405);
+    expect(frame.cardLeft).toBe(360);
+    expect(frame.pitch).toBe(752);
+  });
+
+  it("size the tile, the media tile and the window with the same classes", () => {
+    for (const classes of [scrollHorizontalLandscapeItemClasses, scrollHorizontalLandscapeMediaItemClasses]) {
+      expect(classes).toContain("h-[315px] w-[560px]");
+      expect(classes).toContain("max-sm:h-[162px] max-sm:w-[288px]");
+      expect(classes).toContain("lg:h-[405px] lg:w-[720px]");
+      expect(classes).not.toContain("500px");
+    }
+    expect(scrollHorizontalLandscapeWindowClasses).toContain("w-[560px] max-sm:w-[288px] lg:w-[720px]");
+    expect(scrollHorizontalLandscapeWindowClasses).toContain("motion-reduce:overflow-x-auto");
+  });
+});
+
 describe("scrollHorizontalNominalMetrics", () => {
   it("uses the compact pitch below sm and the desktop pitch from sm", () => {
     expect(scrollHorizontalNominalMetrics(390)).toEqual({ itemWidth: 280, gap: 16 });
@@ -364,6 +407,37 @@ describe("scrollHorizontal expandLast", () => {
     expect(scrollHorizontalPeerOpacity(0.45)).toBe(0);
     expect(scrollHorizontalExpandedOpacity(0)).toBe(0);
     expect(scrollHorizontalExpandedOpacity(1)).toBe(1);
+  });
+
+  it("holds the full tile for expandHold viewports without speeding up the travel or the grow", () => {
+    expect(scrollHorizontalHoldViewports(true, undefined)).toBe(0);
+    expect(scrollHorizontalHoldViewports(false, 2)).toBe(0);
+    expect(scrollHorizontalHoldViewports(true, 1.5)).toBe(1.5);
+    expect(scrollHorizontalHoldViewports(true, -1)).toBe(0);
+    expect(scrollHorizontalHoldViewports(true, 9)).toBe(4);
+    expect(scrollHorizontalHoldViewports(true, Number.NaN)).toBe(0);
+
+    // No hold: nothing changes.
+    expect(scrollHorizontalExpandEnd(true)).toBe(1);
+    expect(scrollHorizontalExpandEnd(false, 2)).toBe(1);
+    expect(scrollHorizontalTrack(true)).toBe("400svh");
+    expect(scrollHorizontalTrack(false, 2)).toBe("300svh");
+    expect(scrollHorizontalHoldAmount(1, 1)).toBe(0);
+
+    // One held viewport: 500svh pins for four viewports. Two of travel, one of grow, one of hold.
+    const end = scrollHorizontalHorizontalEnd(true, 1);
+    const grown = scrollHorizontalExpandEnd(true, 1);
+    expect(scrollHorizontalTrack(true, 1)).toBe("500svh");
+    expect(scrollHorizontalTrack(true, 1.5)).toBe("550svh");
+    expect(end).toBeCloseTo(2 / 4);
+    expect(grown).toBeCloseTo(3 / 4);
+    expect(scrollHorizontalExpandAmount(end, end, grown)).toBe(0);
+    expect(scrollHorizontalExpandAmount((end + grown) / 2, end, grown)).toBeCloseTo(0.5);
+    expect(scrollHorizontalExpandAmount(grown, end, grown)).toBe(1);
+    expect(scrollHorizontalExpandAmount(1, end, grown)).toBe(1);
+    expect(scrollHorizontalHoldAmount(grown, grown)).toBe(0);
+    expect(scrollHorizontalHoldAmount((grown + 1) / 2, grown)).toBeCloseTo(0.5);
+    expect(scrollHorizontalHoldAmount(1, grown)).toBe(1);
   });
 
   it("parks the last card on the centered rect, then clips exactly to the viewport", () => {

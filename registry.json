@@ -2048,6 +2048,22 @@
       "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
     },
     {
+      "name": "components-sitenav--glass",
+      "type": "registry:block",
+      "title": "SiteNav — Variant — glass",
+      "description": "Show code for Storybook Components/SiteNav → Variant — glass.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-sitenav--glass.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
       "name": "components-sitenav--marketing-header",
       "type": "registry:block",
       "title": "SiteNav — marketing header",

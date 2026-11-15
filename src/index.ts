@@ -772,6 +772,7 @@ export {
   siteNavMenuReadThumbClasses,
   siteNavPlacements,
   siteNavStates,
+  siteNavVariants,
   type SiteNavBrandProps,
   type SiteNavCompactLayout,
   type SiteNavFeaturedProps,
@@ -786,6 +787,7 @@ export {
   type SiteNavProps,
   type SiteNavReadRowProps,
   type SiteNavState,
+  type SiteNavVariant,
 } from "./components/organisms/SiteNav/SiteNav";
 export {
   FilterPanel,
@@ -868,6 +870,7 @@ export {
   type ScrollHorizontalItem,
   type ScrollHorizontalLayoutClassName,
   type ScrollHorizontalProps,
+  type ScrollHorizontalTile,
 } from "./components/organisms/ScrollHorizontal/ScrollHorizontal";
 export {
   Tab,

@@ -1,6 +1,7 @@
 "use client";
 
 import { MotionConfigContext, motion, useMotionValue, useScroll, useTransform } from "motion/react";
+import type { MotionStyle } from "motion/react";
 import {
   useContext,
   useId,
@@ -15,12 +16,16 @@ import {
   scrollHorizontalDistance,
   scrollHorizontalExpandAmount,
   scrollHorizontalExpandClip,
+  scrollHorizontalExpandEnd,
   scrollHorizontalExpandedOpacity,
+  scrollHorizontalHoldAmount,
+  scrollHorizontalHoldViewports,
   scrollHorizontalHorizontalEnd,
   scrollHorizontalItemColor,
   scrollHorizontalLeadFrame,
   scrollHorizontalNominalExpandMetrics,
   scrollHorizontalNominalMetrics,
+  type ScrollHorizontalTile,
   scrollHorizontalParseGap,
   scrollHorizontalPeerOpacity,
   scrollHorizontalPhaseProgress,
@@ -28,6 +33,7 @@ import {
   scrollHorizontalReadMetrics,
   scrollHorizontalReadTranslateX,
   scrollHorizontalRestLeft,
+  scrollHorizontalTrack,
   scrollHorizontalTranslateX,
 } from "./scrollHorizontalMath";
 import { ScrollHorizontalIntro } from "./ScrollHorizontalIntro";
@@ -43,6 +49,9 @@ import {
   scrollHorizontalIntroTrackClasses,
   scrollHorizontalIntroWindowClasses,
   scrollHorizontalItemClasses,
+  scrollHorizontalLandscapeItemClasses,
+  scrollHorizontalLandscapeMediaItemClasses,
+  scrollHorizontalLandscapeWindowClasses,
   scrollHorizontalLabelClasses,
   scrollHorizontalMediaClasses,
   scrollHorizontalMediaItemClasses,
@@ -76,6 +85,8 @@ export interface ScrollHorizontalItem {
   media?: ReactNode;
 }
 
+export type { ScrollHorizontalTile };
+
 export interface ScrollHorizontalProps {
   items: ScrollHorizontalItem[];
   /**
@@ -100,6 +111,19 @@ export interface ScrollHorizontalProps {
    * reduced motion, in the static section. One of those hosts is hidden.
    */
   expanded?: ReactNode;
+  /**
+   * With `expandLast`: how many more viewports of scroll the full-bleed tile
+   * stays pinned after it has filled the screen, so a reel in `expanded` has
+   * time to play. 0 to 4. Default 0 — the tile scrolls away as soon as it is full.
+   * While it is held, `--scroll-horizontal-hold` on the `expanded` slot runs
+   * from 0 to 1, for a "keep scrolling" cue. Ignored when motion is reduced.
+   */
+  expandHold?: number;
+  /**
+   * Tile shape. `portrait` (default) is the 4:5 card. `landscape` is 16:9, for
+   * website screens and film: 720×405 from `lg`, 560×315 from `sm`, 288×162 below.
+   */
+  tile?: ScrollHorizontalTile;
   className?: ScrollHorizontalLayoutClassName;
 }
 
@@ -112,6 +136,8 @@ export interface ScrollHorizontalProps {
  * the first two pinned viewports. The third grows the last tile with a
  * clip-path on a full-viewport layer, from the centered card to inset 0, and
  * takes the radius to 0. The window then releases, so that tile scrolls away.
+ * `expandHold` adds 100svh to the track per viewport and keeps the full tile
+ * pinned through it before the release.
  * The section box ends on that tile. Block padding after the section paints
  * the page background between the tile and a following footer.
  *
@@ -137,6 +163,8 @@ function ScrollHorizontalRoot({
   intro,
   expandLast = false,
   expanded,
+  expandHold,
+  tile = "portrait",
   className,
 }: ScrollHorizontalProps) {
   const headingId = useId();
@@ -148,13 +176,15 @@ function ScrollHorizontalRoot({
   const trackRef = useRef<HTMLDivElement>(null);
   const itemRef = useRef<HTMLLIElement>(null);
   const distance = useMotionValue(0);
-  const frame = useMotionValue(scrollHorizontalNominalExpandMetrics(1440, 900));
+  const frame = useMotionValue(scrollHorizontalNominalExpandMetrics(1440, 900, tile));
   // Server and the hydration render both allow motion. Reading matchMedia
   // during render would disagree with a reduced-motion client.
   const [prefersReduced, setPrefersReduced] = useState(false);
   const { reducedMotion: reducedMotionConfig } = useContext(MotionConfigContext);
   const reduceMotion = prefersReduced || reducedMotionConfig === "always";
-  const horizontalEnd = scrollHorizontalHorizontalEnd(expandLast);
+  const hold = scrollHorizontalHoldViewports(expandLast, expandHold);
+  const horizontalEnd = scrollHorizontalHorizontalEnd(expandLast, hold);
+  const expandEnd = scrollHorizontalExpandEnd(expandLast, hold);
   const lastIndex = Math.max(0, items.length - 1);
   const lastItem = items[lastIndex];
   const lastColor = lastItem ? scrollHorizontalItemColor(lastItem.color, lastIndex) : "transparent";
@@ -177,7 +207,7 @@ function ScrollHorizontalRoot({
     const progress = scrollYProgress.get();
     return scrollHorizontalExpandClip(
       scrollHorizontalPhaseProgress(progress, horizontalEnd),
-      scrollHorizontalExpandAmount(progress, horizontalEnd),
+      scrollHorizontalExpandAmount(progress, horizontalEnd, expandEnd),
       frame.get(),
       items.length,
     );
@@ -185,19 +215,21 @@ function ScrollHorizontalRoot({
 
   const peerOpacity = useTransform(() =>
     scrollHorizontalPeerOpacity(
-      expandLast ? scrollHorizontalExpandAmount(scrollYProgress.get(), horizontalEnd) : 0,
+      expandLast ? scrollHorizontalExpandAmount(scrollYProgress.get(), horizontalEnd, expandEnd) : 0,
     ),
   );
 
   const expandedOpacity = useTransform(() =>
     scrollHorizontalExpandedOpacity(
-      expandLast ? scrollHorizontalExpandAmount(scrollYProgress.get(), horizontalEnd) : 0,
+      expandLast ? scrollHorizontalExpandAmount(scrollYProgress.get(), horizontalEnd, expandEnd) : 0,
     ),
   );
 
   const slotPointerEvents = useTransform(expandedOpacity, (opacity) =>
     opacity > 0.9 ? "auto" : "none",
   );
+
+  const holdAmount = useTransform(() => scrollHorizontalHoldAmount(scrollYProgress.get(), expandEnd));
 
   useLayoutEffect(() => {
     if (typeof window.matchMedia !== "function") return;
@@ -228,6 +260,7 @@ function ScrollHorizontalRoot({
           row,
           window.innerWidth,
           window.innerHeight,
+          tile,
         );
         const shift = scrollHorizontalReadTranslateX(getComputedStyle(track).transform);
         const stickyRect = sticky.getBoundingClientRect();
@@ -249,13 +282,13 @@ function ScrollHorizontalRoot({
       }
 
       const measured = scrollHorizontalReadMetrics(item, row);
-      const nominal = scrollHorizontalNominalMetrics(window.innerWidth);
+      const nominal = scrollHorizontalNominalMetrics(window.innerWidth, tile);
       const itemWidth = measured.itemWidth > 0 ? measured.itemWidth : nominal.itemWidth;
       const gap = measured.itemWidth > 0 ? measured.gap : nominal.gap;
       distance.set(scrollHorizontalDistance(items.length, itemWidth, gap));
       if (sticky) {
         frame.set(
-          scrollHorizontalReadFrame(sticky, item, row, window.innerWidth, window.innerHeight),
+          scrollHorizontalReadFrame(sticky, item, row, window.innerWidth, window.innerHeight, tile),
         );
       }
     };
@@ -268,17 +301,24 @@ function ScrollHorizontalRoot({
     if (sticky) observer.observe(sticky);
     if (trackRef.current) observer.observe(trackRef.current);
     return () => observer.disconnect();
-  }, [distance, frame, hasIntro, items.length]);
+  }, [distance, frame, hasIntro, items.length, tile]);
 
   const fadePeers = expandLast && !reduceMotion;
   const labelledBy = hasIntro ? introLabelId : heading ? headingId : undefined;
 
+  const landscape = tile === "landscape";
   const cards = items.map((item, index) => {
     const color = scrollHorizontalItemColor(item.color, index);
     const isPeer = fadePeers && index !== lastIndex;
     // The last tile under expandLast is the color layer that grows: media would sit hidden beneath it.
     const hasMedia = item.media != null && item.media !== false && !(expandLast && index === lastIndex);
-    const tileClasses = hasMedia ? scrollHorizontalMediaItemClasses : scrollHorizontalItemClasses;
+    const tileClasses = landscape
+      ? hasMedia
+        ? scrollHorizontalLandscapeMediaItemClasses
+        : scrollHorizontalLandscapeItemClasses
+      : hasMedia
+        ? scrollHorizontalMediaItemClasses
+        : scrollHorizontalItemClasses;
     const tileColor = hasMedia ? undefined : { "--scroll-horizontal-color": color };
     const content = (
       <>
@@ -321,12 +361,16 @@ function ScrollHorizontalRoot({
       data-expand-last={expandLast ? "true" : "false"}
       data-reduce={reduceMotion ? "true" : "false"}
       data-has-intro={hasIntro ? "true" : "false"}
+      data-expand-hold={hold > 0 ? hold : undefined}
+      data-tile={tile}
       aria-labelledby={labelledBy}
       aria-label={labelledBy ? undefined : "Projects"}
       className={cn(
         expandLast ? scrollHorizontalRootExpandClasses : scrollHorizontalRootClasses,
         className,
       )}
+      // The reduced-motion classes set height with !important, so they still win over this.
+      style={hold > 0 ? { height: scrollHorizontalTrack(expandLast, hold) } : undefined}
     >
       <div
         ref={stickyRef}
@@ -360,7 +404,7 @@ function ScrollHorizontalRoot({
             </div>
           </motion.div>
         ) : (
-          <div className={scrollHorizontalWindowClasses}>
+          <div className={landscape ? scrollHorizontalLandscapeWindowClasses : scrollHorizontalWindowClasses}>
             <motion.ul
               ref={rowRef}
               className={scrollHorizontalRowClasses}
@@ -385,7 +429,15 @@ function ScrollHorizontalRoot({
           <motion.div
             data-scroll-horizontal-slot=""
             className={scrollHorizontalExpandedSlotClasses}
-            style={reduceMotion ? undefined : { opacity: expandedOpacity, pointerEvents: slotPointerEvents }}
+            style={
+              reduceMotion
+                ? undefined
+                : ({
+                    opacity: expandedOpacity,
+                    pointerEvents: slotPointerEvents,
+                    "--scroll-horizontal-hold": holdAmount,
+                  } as unknown as MotionStyle)
+            }
           >
             {expanded}
           </motion.div>

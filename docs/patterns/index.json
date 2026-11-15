@@ -1011,6 +1011,14 @@
       "source": "src/components/organisms/SiteNav/SiteNav.stories.tsx"
     },
     {
+      "id": "components-sitenav--glass",
+      "title": "Components/SiteNav",
+      "name": "Variant — glass",
+      "file": "patterns/components-sitenav--glass.tsx",
+      "storybook": "?path=/story/components-sitenav--glass",
+      "source": "src/components/organisms/SiteNav/SiteNav.stories.tsx"
+    },
+    {
       "id": "components-sitenav--marketing-header",
       "title": "Components/SiteNav",
       "name": "Pattern — marketing header",
