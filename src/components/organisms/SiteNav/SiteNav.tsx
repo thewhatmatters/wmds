@@ -430,7 +430,8 @@ function SiteNavRoot({
             ) : null}
           </AnimatePresence>
 
-          {compact ? (
+          {/* Holds the expanded band's place in the flow. Over media the band never had one. */}
+          {compact && !overMedia ? (
             <div className={cn(siteNavExpandedHeightClasses, "w-full")} aria-hidden />
           ) : null}
 
