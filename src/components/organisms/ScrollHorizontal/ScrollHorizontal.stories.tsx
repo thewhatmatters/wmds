@@ -29,7 +29,7 @@ Marketing gallery that sits under the hero. Pass \`items\` (\`id\`, \`label\`, o
 
 Vertical scroll drives the row. The track is \`300svh\`. A sticky \`h-svh\` window, one card wide and centered, shows the first card at the start and the last card at the end. The travel is \`(items.length - 1) * (item width + gap)\`, measured from the row.
 
-\`expandLast\` (default false) lengthens the track to \`400svh\`. The horizontal travel keeps that same scroll distance. The window stays pinned for one more viewport while the last tile grows, via \`clip-path\`, until it fills the \`h-svh\` window edge to edge and the radius reaches 0. Earlier tiles fade out. The window then releases and that full-bleed tile scrolls away. The section box ends on that tile. Pass \`expanded\` for content in that section. \`expandHold\` (0 to 4, default 0) keeps that full tile pinned for that many more viewports of scroll before it releases, so a reel in \`expanded\` has time to play; \`--scroll-horizontal-hold\` on the slot runs from 0 to 1 through the hold, for a \"keep scrolling\" cue. A padded block after the section, including default \`grid-page\` block padding, paints the page background between the tile and a following footer.
+\`expandLast\` (default false) lengthens the track to \`400svh\`. The horizontal travel keeps that same scroll distance. The window stays pinned for one more viewport while the last tile grows, via \`clip-path\`, until it fills the \`h-svh\` window edge to edge and the radius reaches 0. Earlier tiles fade out. The window then releases and that full-bleed tile scrolls away. The section box ends on that tile. Pass \`expanded\` for content in that section. \`expandHold\` (0 to 4, default 0) keeps that full tile pinned for that many more viewports of scroll before it releases, so a reel in \`expanded\` has time to play; \`--scroll-horizontal-hold\` on the slot runs from 0 to 1 through the hold, for a \"keep scrolling\" cue. \`expandedReveal\` (\`fade\` by default) sets how that content arrives: \`fade\` keeps it clear until the tile is mostly grown, then fades it in on the full screen; \`grow\` makes it the last tile's face from the start, so its box rides in the row on that tile and grows with it, and a film can already be playing in the small tile. A padded block after the section, including default \`grid-page\` block padding, paints the page background between the tile and a following footer.
 
 From \`sm\` each card is **400×500** with \`gap-8\` (32px). Below \`sm\` each card is **280×350** with \`gap-4\` (16px). Radius is \`rounded-xl\` (\`--radius-xl\`, 12px). Each card is a solid fill from \`color\`. The label is the accessible name (\`sr-only\`).
 
@@ -209,6 +209,83 @@ export const ExpandHold: Story = {
       </div>
     </div>
   ),
+};
+
+/** Stand-in for a film: a token gradient that fills the tile, with a caption pinned to its corner. */
+const growFace = (
+  <div className="relative size-full bg-[linear-gradient(160deg,var(--color-brand),var(--color-info-muted))]">
+    <p className="type-eyebrow absolute start-4 bottom-4 text-on-brand">Reel</p>
+  </div>
+);
+
+export const ExpandedGrow: Story = {
+  name: "Expand last, content on the tile",
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: {
+      description: {
+        story:
+          'expandedReveal="grow" makes the expanded content the last tile\'s face from the start: it rides in the row on that tile and grows with it to the full screen, clipped to the tile\'s box and radius. Use it when a film should already be playing in the small tile. Give the content size-full. The default, fade, keeps the content clear until the tile is mostly grown. Reduced motion shows the content in the static section after the row.',
+      },
+    },
+  },
+  render: () => (
+    <div className="bg-body">
+      <div className="flex h-[40svh] items-end justify-center px-[var(--grid-margin)] pb-8">
+        <p className="type-heading-2 text-fg">Scroll into the gallery</p>
+      </div>
+      <ScrollHorizontal
+        items={scrollHorizontalMarketingItems}
+        heading={<h2 className="type-heading-2 text-fg">Selected work</h2>}
+        tile="landscape"
+        expandLast
+        expandHold={1}
+        expandedReveal="grow"
+        expanded={growFace}
+      />
+      <div className="flex h-svh items-center justify-center px-[var(--grid-margin)]">
+        <p className="type-heading-2 text-fg">After the gallery</p>
+      </div>
+    </div>
+  ),
+};
+
+export const ExpandedGrowContract: Story = {
+  tags: ["test", "!dev", "!autodocs"],
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+  },
+  render: () => (
+    <div>
+      <ScrollHorizontal items={scrollHorizontalMarketingItems} heading={<h2>Grow</h2>} tile="landscape" expandLast expandedReveal="grow" expanded={growFace} />
+      <ScrollHorizontal items={scrollHorizontalMarketingItems} heading={<h2>Fade</h2>} expandLast expanded={<p>Fade slot</p>} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const sections = [...canvasElement.querySelectorAll<HTMLElement>("[data-scroll-horizontal]")];
+    const slot = sections[0]?.querySelector<HTMLElement>("[data-scroll-horizontal-slot]");
+    const last = sections[0]?.querySelector<HTMLElement>("li:last-child");
+    expect(slot?.dataset.reveal).toBe("grow");
+    // On the tile from the start: opaque, and its box is the last tile's box, corners and all.
+    await waitFor(() => {
+      const a = slot?.getBoundingClientRect();
+      const b = last?.getBoundingClientRect();
+      expect(Math.abs((a?.left ?? 0) - (b?.left ?? 1e6))).toBeLessThan(1);
+      expect(Math.abs((a?.top ?? 0) - (b?.top ?? 1e6))).toBeLessThan(1);
+      expect(Math.abs((a?.width ?? 0) - (b?.width ?? 1e6))).toBeLessThan(1);
+      expect(Math.abs((a?.height ?? 0) - (b?.height ?? 1e6))).toBeLessThan(1);
+    });
+    expect(getComputedStyle(slot as Element).opacity).toBe("1");
+    expect(getComputedStyle(slot as Element).overflow).toBe("hidden");
+    expect(getComputedStyle(slot as Element).borderTopLeftRadius).toBe(getComputedStyle(last as Element).borderTopLeftRadius);
+    // Off to the side, it does not widen the page.
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
+    // The default still fades: clear at the start.
+    const fade = sections[1]?.querySelector<HTMLElement>("[data-scroll-horizontal-slot]");
+    expect(fade?.dataset.reveal).toBe("fade");
+    expect(getComputedStyle(fade as Element).opacity).toBe("0");
+  },
 };
 
 export const ExpandHoldContract: Story = {

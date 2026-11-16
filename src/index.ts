@@ -866,6 +866,7 @@ export { useIntakeUrlState } from "./components/organisms/IntakeModal/useIntakeU
 export {
   ScrollHorizontal,
   type ScrollHorizontalIntroAction,
+  type ScrollHorizontalExpandedReveal,
   type ScrollHorizontalIntroProps,
   type ScrollHorizontalItem,
   type ScrollHorizontalLayoutClassName,
