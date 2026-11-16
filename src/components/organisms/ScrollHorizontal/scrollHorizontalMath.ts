@@ -505,6 +505,24 @@ export function scrollHorizontalExpandClip(
   return `inset(${rect.top}px ${rect.right}px ${rect.bottom}px ${rect.left}px round ${rect.radius}px)`;
 }
 
+/**
+ * The same rect as edge offsets, for a box that sits on the tile instead of a clip on the full layer
+ * (`expandedReveal="grow"`): `inset` and `border-radius` values. Off to the side during the travel,
+ * `right` is negative, so the box keeps the card's width.
+ */
+export function scrollHorizontalExpandBox(
+  horizontalProgress: number,
+  expandAmount: number,
+  metrics: ScrollHorizontalExpandMetrics,
+  count: number,
+): { inset: string; borderRadius: string } {
+  const rect = scrollHorizontalExpandClipRect(horizontalProgress, expandAmount, metrics, count);
+  return {
+    inset: `${rect.top}px ${rect.right}px ${rect.bottom}px ${rect.left}px`,
+    borderRadius: `${rect.radius}px`,
+  };
+}
+
 /** True when the clip no longer insets the viewport and the radius is 0. */
 export function scrollHorizontalClipFillsViewport(
   rect: ScrollHorizontalClipRect,

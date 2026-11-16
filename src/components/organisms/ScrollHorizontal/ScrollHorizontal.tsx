@@ -15,6 +15,7 @@ import { cn } from "../../../lib/cn";
 import {
   scrollHorizontalDistance,
   scrollHorizontalExpandAmount,
+  scrollHorizontalExpandBox,
   scrollHorizontalExpandClip,
   scrollHorizontalExpandEnd,
   scrollHorizontalExpandedOpacity,
@@ -43,6 +44,7 @@ import {
   scrollHorizontalExpandLayerClasses,
   scrollHorizontalExpandedSectionClasses,
   scrollHorizontalExpandedSlotClasses,
+  scrollHorizontalExpandedSlotGrowClasses,
   scrollHorizontalHeadingClasses,
   scrollHorizontalIntroPanelClasses,
   scrollHorizontalIntroStickyClasses,
@@ -87,6 +89,8 @@ export interface ScrollHorizontalItem {
 
 export type { ScrollHorizontalTile };
 
+export type ScrollHorizontalExpandedReveal = "fade" | "grow";
+
 export interface ScrollHorizontalProps {
   items: ScrollHorizontalItem[];
   /**
@@ -111,6 +115,15 @@ export interface ScrollHorizontalProps {
    * reduced motion, in the static section. One of those hosts is hidden.
    */
   expanded?: ReactNode;
+  /**
+   * How `expanded` arrives. `fade` (default): it stays clear until the tile is
+   * mostly grown, then fades in on the full screen. `grow`: it is the last
+   * tile's face from the start. Its box rides in the row on that tile and grows
+   * with it to the full screen, so a film can already be playing in the small
+   * tile. Give the content `size-full`; it is clipped to the tile's box and
+   * radius. Ignored when motion is reduced (the content shows in the static section).
+   */
+  expandedReveal?: ScrollHorizontalExpandedReveal;
   /**
    * With `expandLast`: how many more viewports of scroll the full-bleed tile
    * stays pinned after it has filled the screen, so a reel in `expanded` has
@@ -138,6 +151,8 @@ export interface ScrollHorizontalProps {
  * takes the radius to 0. The window then releases, so that tile scrolls away.
  * `expandHold` adds 100svh to the track per viewport and keeps the full tile
  * pinned through it before the release.
+ * `expanded` content fades in late on the full tile. `expandedReveal="grow"`
+ * puts it on the tile from the start: its box follows the clip rect.
  * The section box ends on that tile. Block padding after the section paints
  * the page background between the tile and a following footer.
  *
@@ -163,6 +178,7 @@ function ScrollHorizontalRoot({
   intro,
   expandLast = false,
   expanded,
+  expandedReveal = "fade",
   expandHold,
   tile = "portrait",
   className,
@@ -228,6 +244,20 @@ function ScrollHorizontalRoot({
   const slotPointerEvents = useTransform(expandedOpacity, (opacity) =>
     opacity > 0.9 ? "auto" : "none",
   );
+
+  // `expandedReveal="grow"`: the slot's box is the tile, the same rect the color layer is clipped to.
+  const growSlot = expandLast && expandedReveal === "grow";
+  const slotBox = useTransform(() => {
+    const progress = scrollYProgress.get();
+    return scrollHorizontalExpandBox(
+      scrollHorizontalPhaseProgress(progress, horizontalEnd),
+      scrollHorizontalExpandAmount(progress, horizontalEnd, expandEnd),
+      frame.get(),
+      items.length,
+    );
+  });
+  const slotInset = useTransform(slotBox, (box) => box.inset);
+  const slotRadius = useTransform(slotBox, (box) => box.borderRadius);
 
   const holdAmount = useTransform(() => scrollHorizontalHoldAmount(scrollYProgress.get(), expandEnd));
 
@@ -428,15 +458,22 @@ function ScrollHorizontalRoot({
         {expandLast && expanded ? (
           <motion.div
             data-scroll-horizontal-slot=""
-            className={scrollHorizontalExpandedSlotClasses}
+            data-reveal={expandedReveal}
+            className={growSlot ? scrollHorizontalExpandedSlotGrowClasses : scrollHorizontalExpandedSlotClasses}
             style={
               reduceMotion
                 ? undefined
-                : ({
-                    opacity: expandedOpacity,
-                    pointerEvents: slotPointerEvents,
-                    "--scroll-horizontal-hold": holdAmount,
-                  } as unknown as MotionStyle)
+                : growSlot
+                  ? ({
+                      inset: slotInset,
+                      borderRadius: slotRadius,
+                      "--scroll-horizontal-hold": holdAmount,
+                    } as unknown as MotionStyle)
+                  : ({
+                      opacity: expandedOpacity,
+                      pointerEvents: slotPointerEvents,
+                      "--scroll-horizontal-hold": holdAmount,
+                    } as unknown as MotionStyle)
             }
           >
             {expanded}

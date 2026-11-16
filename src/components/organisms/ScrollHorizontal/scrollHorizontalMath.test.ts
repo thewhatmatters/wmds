@@ -20,6 +20,7 @@ import {
   scrollHorizontalDefaultColors,
   scrollHorizontalDistance,
   scrollHorizontalExpandAmount,
+  scrollHorizontalExpandBox,
   scrollHorizontalExpandClip,
   scrollHorizontalExpandEnd,
   scrollHorizontalHoldAmount,
@@ -465,6 +466,22 @@ describe("scrollHorizontal expandLast", () => {
         "inset(0px 0px 0px 0px round 0px)",
       );
     }
+  });
+
+  it("gives the grow slot the tile's box: the card in the row, the centered card, then the viewport", () => {
+    const metrics = centered(1440, 900, scrollHorizontalItemWidth, scrollHorizontalItemHeight);
+    // Before the travel the last card is four pitches to the right: the box keeps the card's width off screen.
+    const away = scrollHorizontalExpandClipRect(0, 0, metrics, 5);
+    expect(away.left).toBeCloseTo(metrics.cardLeft + 4 * metrics.pitch);
+    expect(1440 - away.left - away.right).toBeCloseTo(metrics.cardWidth);
+    expect(scrollHorizontalExpandBox(0, 0, metrics, 5)).toEqual({
+      inset: `${away.top}px ${away.right}px ${away.bottom}px ${away.left}px`,
+      borderRadius: "12px",
+    });
+    // Parked, it is the centered card. Grown, it is the window with square corners.
+    const parked = scrollHorizontalExpandBox(1, 0, metrics, 5);
+    expect(parked.inset).toBe(`${metrics.cardTop}px ${metrics.cardLeft}px ${metrics.cardTop}px ${metrics.cardLeft}px`);
+    expect(scrollHorizontalExpandBox(1, 1, metrics, 5)).toEqual({ inset: "0px 0px 0px 0px", borderRadius: "0px" });
   });
 
   it("fills the viewport from an off-center card without a leftover inset", () => {

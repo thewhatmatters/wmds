@@ -58,6 +58,15 @@ export const scrollHorizontalExpandedSlotClasses = [
 ].join(" ");
 
 /**
+ * `expandedReveal="grow"`: the slot is the last tile's face. Motion sets its
+ * `inset` and radius to the tile's rect, so it clips its content as the tile does.
+ */
+export const scrollHorizontalExpandedSlotGrowClasses = [
+  scrollHorizontalExpandedSlotClasses,
+  "overflow-hidden will-change-[inset]",
+].join(" ");
+
+/**
  * Reduced motion: the last tile as its own `h-svh` section after the scroller.
  * `hidden` until `motion-reduce` or `data-reduce="true"`. Radius is 0.
  */
