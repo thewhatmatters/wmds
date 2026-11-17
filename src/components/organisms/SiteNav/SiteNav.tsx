@@ -28,6 +28,7 @@ import {
 } from "../../molecules/Card/Card";
 import { Dropdown } from "../../molecules/Dropdown/Dropdown";
 import { textOf, useOverflowMenu } from "../../molecules/Dropdown/useOverflowMenu";
+import { uniqueSiteNavItemIds } from "./siteNavItemIds";
 import {
   siteNavBarBaseClasses,
   siteNavBarCompactGlassClasses,
@@ -584,7 +585,7 @@ function toSiteNavChildren(children: ReactNode): SiteNavChild[] {
   return Children.toArray(children).filter(isValidElement) as SiteNavChild[];
 }
 
-function siteNavItemId(item: SiteNavChild): string {
+function siteNavItemBaseId(item: SiteNavChild): string {
   const props = item.props as SiteNavLinkProps & SiteNavMenuProps;
   if (typeof props.value === "string" && props.value.length > 0) return props.value;
   if (typeof props.href === "string") return props.href;
@@ -601,12 +602,9 @@ function siteNavItemIsMenu(item: SiteNavChild): boolean {
   return "label" in item.props && !("href" in item.props);
 }
 
-function siteNavCurrentId(items: SiteNavChild[]): string {
-  for (const item of items) {
-    const props = item.props as SiteNavLinkProps;
-    if (props.current) return siteNavItemId(item);
-  }
-  return items[0] != null ? siteNavItemId(items[0]) : "";
+function siteNavCurrentId(items: SiteNavChild[], ids: readonly string[]): string {
+  const current = items.findIndex((item) => (item.props as SiteNavLinkProps).current);
+  return ids[current === -1 ? 0 : current] ?? "";
 }
 
 /**
@@ -623,20 +621,26 @@ function SiteNavLinks({
   const context = useContext(SiteNavContext);
 
   const items = useMemo(() => toSiteNavChildren(children), [children]);
-  const itemsById = new Map(items.map((item) => [siteNavItemId(item), item]));
+  // Two links to one page share an href, so ids are made unique here, once, for every lookup below.
+  const itemIds = useMemo(() => uniqueSiteNavItemIds(items.map(siteNavItemBaseId)), [items]);
+  const itemsById = new Map(items.map((item, index) => [itemIds[index], item]));
   const pick = (ids: readonly string[]) => ids.flatMap((id) => itemsById.get(id) ?? []);
-  const rowsFor = (ids: readonly string[]) => pick(ids).flatMap(overflowRows);
+  const rowsFor = (ids: readonly string[]) =>
+    ids.flatMap((id) => {
+      const item = itemsById.get(id);
+      return item != null ? overflowRows(item, id) : [];
+    });
 
   const overflow = useOverflowMenu({
-    ids: items.map(siteNavItemId),
-    activeId: siteNavCurrentId(items),
+    ids: itemIds,
+    activeId: siteNavCurrentId(items, itemIds),
     toMenuRows: (ids) => rowsFor(ids).map((row) => ({ label: textOf(row.label), disabled: row.href == null })),
   });
   const { menu } = overflow;
   const visibleItems = pick(overflow.visibleIds);
   const menuRows = rowsFor(overflow.overflowIds);
 
-  function overflowRows(item: SiteNavChild): Array<{
+  function overflowRows(item: SiteNavChild, itemId: string): Array<{
     id: string;
     label: ReactNode;
     href?: string;
@@ -646,7 +650,7 @@ function SiteNavLinks({
       const props = item.props as SiteNavLinkProps;
       return [
         {
-          id: siteNavItemId(item),
+          id: itemId,
           label: props.children,
           href: props.href,
           current: props.current,
@@ -672,7 +676,7 @@ function SiteNavLinks({
     }
     walk((item.props as SiteNavMenuProps).children);
     if (rows.length === 0) {
-      rows.push({ id: siteNavItemId(item), label: siteNavItemLabel(item) });
+      rows.push({ id: itemId, label: siteNavItemLabel(item) });
     }
     return rows;
   }
@@ -728,8 +732,8 @@ function SiteNavLinks({
 
       <div className={siteNavMeasureClipClasses} aria-hidden>
         <div className={siteNavMeasureRailClasses}>
-          {items.map((item) => {
-            const id = siteNavItemId(item);
+          {items.map((item, index) => {
+            const id = itemIds[index];
             const label = siteNavItemLabel(item);
             const menu = siteNavItemIsMenu(item);
             return (
@@ -760,7 +764,7 @@ function SiteNavLinks({
         ? createPortal(
             <Dropdown.Menu {...menu.menuProps} role="menu" aria-label={`${ariaLabel} overflow`}>
               {menuRows.map((row, index) => (
-                <li key={row.id} role="presentation">
+                <li key={`${index}:${row.id}`} role="presentation">
                   {/* Real links: Cmd-click and middle-click open a new tab, as in the bar. */}
                   <Dropdown.Item
                     {...menu.rowProps(index)}
@@ -788,7 +792,7 @@ export interface SiteNavLinkProps {
   children: ReactNode;
   /** Marks the current page — selected fill pill + `aria-current="page"`. */
   current?: boolean;
-  /** Stable id for overflow measurement. Defaults to `href`. */
+  /** Stable id for overflow measurement. Defaults to `href`; links that share an `href` still get their own id. */
   value?: string;
 }
 

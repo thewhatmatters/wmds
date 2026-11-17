@@ -340,3 +340,38 @@ export const PhoneBarEdges: Story = {
     await userEvent.click(within(canvasElement).getByRole("button", { name: "Close" }));
   },
 };
+
+export const LinksToTheSamePage: Story = {
+  name: "two links to one page keep their own labels",
+  render: () => (
+    <SiteNav
+      placement="inline"
+      start={<SiteNav.Brand href="#home" aria-label="WhatMatters" icon={<Sparkles />} />}
+      middle={
+        <SiteNav.Links>
+          <SiteNav.Link href="#menu" current>
+            Menu
+          </SiteNav.Link>
+          <SiteNav.Link href="#visit">Hours</SiteNav.Link>
+          <SiteNav.Link href="#menu">Slices</SiteNav.Link>
+          <SiteNav.Link href="#visit">Contact</SiteNav.Link>
+        </SiteNav.Links>
+      }
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const links = () =>
+      Array.from(canvasElement.querySelectorAll<HTMLAnchorElement>('nav[aria-label="Primary"] a'));
+    await waitFor(() =>
+      expect(links().map((link) => link.textContent)).toEqual(["Menu", "Hours", "Slices", "Contact"]),
+    );
+    await expect(links().map((link) => link.getAttribute("href"))).toEqual([
+      "#menu",
+      "#visit",
+      "#menu",
+      "#visit",
+    ]);
+    // Only the link marked current is the current page, not the other link to the same page.
+    await expect(links().map((link) => link.getAttribute("aria-current"))).toEqual(["page", null, null, null]);
+  },
+};
