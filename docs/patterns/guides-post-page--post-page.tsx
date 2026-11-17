@@ -94,10 +94,25 @@ const articleColumnClasses: Record<PostMetadataColumns, string> = {
   4: "lg:col-span-8",
 };
 
+/**
+ * The hero's frame: the article column's full width, the picture at its own shape. The hairline is
+ * drawn over the picture, inside its edge, so a light picture keeps an edge on a light page.
+ */
+const heroFrameClasses =
+  "relative m-0 mt-6 overflow-hidden rounded-[var(--radius-card-body)] bg-muted-surface " +
+  "after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:border after:border-border after:content-[''] " +
+  "[&_img]:block [&_img]:h-auto [&_img]:w-full";
+
 export interface PostPageProps {
   post: PostPageData;
   /** The post's rendered markdown. */
   children: ReactNode;
+  /**
+   * The post's lead picture: one image with its width and height (an img, or the app's image
+   * component), so its space is held before it loads. It sits under the "/ Article" rule, above the
+   * text, at the article column's full width — also with articleMeasure="reading".
+   */
+  hero?: ReactNode;
   /** Where the panel sits from lg, beside the article. Default: "start". */
   metadataSide?: PostMetadataSide;
   /** The panel's width from lg, in columns. Default: 4. */
@@ -126,6 +141,7 @@ export interface PostPageProps {
 export function PostPage({
   post,
   children,
+  hero,
   metadataSide = "start",
   metadataColumns = 4,
   metadataStack = "after",
@@ -236,6 +252,7 @@ export function PostPage({
           }
         >
           <SectionCaption as="p">Article</SectionCaption>
+          {hero != null ? <figure className={heroFrameClasses}>{hero}</figure> : null}
           <Prose className="mt-6" measure={articleMeasure} tone="muted">
             {children}
           </Prose>

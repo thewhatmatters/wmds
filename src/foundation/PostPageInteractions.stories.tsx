@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, spyOn, userEvent, waitFor, within } from "storybook/test";
 import { buttonStatusHoldMs } from "../components/atoms/Button/Button";
-import { PostPage, SamplePostBody, samplePost } from "../guides/PostPage/PostPageExample";
+import { PostPage, SamplePostBody, SamplePostHero, samplePost } from "../guides/PostPage/PostPageExample";
 
 /**
  * Browser interaction tests for **Guides/Post page → Pattern — post page**, **DescriptionList**,
@@ -81,6 +81,9 @@ export const MetadataPanel: Story = {
     // The article is set by Prose from plain elements.
     const prose = canvasElement.querySelector<HTMLElement>("[data-prose]");
     if (prose == null) throw new Error("Prose is missing");
+    // Without a hero there is no frame: the text follows the caption.
+    expect(canvasElement.querySelector("figure")).toBeNull();
+    expect(prose.previousElementSibling).toHaveTextContent("/ Article");
     // It fills the article's column: no measure caps it.
     expect(getComputedStyle(prose).maxWidth).toBe("none");
     const column = prose.parentElement;
@@ -159,6 +162,64 @@ export const ArticleAtReadingMeasure: Story = {
     if (prose == null) throw new Error("Prose is missing");
     expect(Number.parseFloat(getComputedStyle(prose).maxWidth)).toBe(640);
     expect(prose.getBoundingClientRect().width).toBeLessThanOrEqual(640);
+  },
+};
+
+export const HeroInArticleColumn: Story = {
+  name: "hero sits under the Article caption at the column's full width, also at the reading measure",
+  render: () => (
+    <PostPage
+      post={samplePost}
+      hero={<SamplePostHero />}
+      metadataSide="end"
+      metadataColumns={3}
+      articleMeasure="reading"
+    >
+      <SamplePostBody />
+    </PostPage>
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    const picture = canvas.getByRole("img", { name: /sprint board/ });
+    const frame = picture.closest("figure");
+    if (frame == null) throw new Error("Hero frame is missing");
+    const prose = canvasElement.querySelector<HTMLElement>("[data-prose]");
+    if (prose == null) throw new Error("Prose is missing");
+    const column = frame.parentElement;
+    if (column == null) throw new Error("Article column is missing");
+
+    // Caption, hero, text — in that order, in the article's column.
+    expect(frame.previousElementSibling).toHaveTextContent("/ Article");
+    expect(frame.nextElementSibling).toBe(prose);
+    // One picture in the page: the hero is not repeated inside the article.
+    expect(canvas.getAllByRole("img")).toHaveLength(1);
+
+    // The frame and the picture fill the column; the text below is capped at 40rem.
+    const columnWidth = Math.round(column.getBoundingClientRect().width);
+    expect(Math.round(frame.getBoundingClientRect().width)).toBe(columnWidth);
+    expect(Math.round(picture.getBoundingClientRect().width)).toBe(columnWidth);
+    expect(prose.getBoundingClientRect().width).toBeLessThanOrEqual(640);
+    if (window.matchMedia("(min-width: 1024px)").matches) {
+      expect(frame.getBoundingClientRect().width).toBeGreaterThan(prose.getBoundingClientRect().width);
+    }
+
+    // The picture keeps its own shape (16:9), and its space is held by its width and height.
+    await waitFor(() => {
+      const box = picture.getBoundingClientRect();
+      expect(Math.abs(box.height - (box.width * 9) / 16)).toBeLessThan(1.5);
+    });
+    expect(Math.round(frame.getBoundingClientRect().height)).toBe(Math.round(picture.getBoundingClientRect().height));
+
+    // Rounded corners, clipped to the frame, with a hairline drawn over the picture's edge.
+    const frameStyle = getComputedStyle(frame);
+    expect(Number.parseFloat(frameStyle.borderTopLeftRadius)).toBeGreaterThan(0);
+    expect(frameStyle.overflow).toBe("hidden");
+    const hairline = getComputedStyle(frame, "::after");
+    expect(hairline.borderTopWidth).toBe("1px");
+    expect(hairline.borderTopStyle).toBe("solid");
+    expect(hairline.pointerEvents).toBe("none");
+
+    // Nothing runs past the page.
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(document.documentElement.clientWidth);
   },
 };
 
