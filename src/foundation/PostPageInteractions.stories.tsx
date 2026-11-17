@@ -81,7 +81,11 @@ export const MetadataPanel: Story = {
     // The article is set by Prose from plain elements.
     const prose = canvasElement.querySelector<HTMLElement>("[data-prose]");
     if (prose == null) throw new Error("Prose is missing");
-    expect(Number.parseFloat(getComputedStyle(prose).maxWidth)).toBe(640);
+    // It fills the article's column: no measure caps it.
+    expect(getComputedStyle(prose).maxWidth).toBe("none");
+    const column = prose.parentElement;
+    if (column == null) throw new Error("Article column is missing");
+    expect(Math.round(prose.getBoundingClientRect().width)).toBe(Math.round(column.getBoundingClientRect().width));
     const paragraph = prose.querySelector("p");
     if (paragraph == null) throw new Error("Article paragraph is missing");
     expect(getComputedStyle(paragraph).fontSize).toBe("17px");
@@ -124,6 +128,21 @@ export const PanelAfterArticle: Story = {
     expect(summary?.querySelector("time")).toHaveAttribute("datetime", "2026-09-14");
     // It hides from lg, where the panel is beside the article.
     expect(summary?.className).toContain("lg:hidden");
+  },
+};
+
+export const ArticleAtReadingMeasure: Story = {
+  name: "articleMeasure reading caps the article at 40rem inside its column",
+  render: () => (
+    <PostPage post={samplePost} metadataSide="end" metadataColumns={3} articleMeasure="reading">
+      <SamplePostBody />
+    </PostPage>
+  ),
+  play: async ({ canvasElement }) => {
+    const prose = canvasElement.querySelector<HTMLElement>("[data-prose]");
+    if (prose == null) throw new Error("Prose is missing");
+    expect(Number.parseFloat(getComputedStyle(prose).maxWidth)).toBe(640);
+    expect(prose.getBoundingClientRect().width).toBeLessThanOrEqual(640);
   },
 };
 

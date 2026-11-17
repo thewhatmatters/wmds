@@ -14,6 +14,7 @@ import {
   buttonStatusHoldMs,
   type BreadcrumbItemDef,
   type ButtonStatus,
+  type ProseMeasure,
 } from "@thewhatmatters/wmds";
 
 export interface PostCategory {
@@ -108,6 +109,11 @@ export interface PostPageProps {
    */
   metadataStack?: PostMetadataStack;
   /**
+   * How wide the article runs. "none" (default) fills the article's column, pictures and text
+   * alike. "reading" caps it at 40rem.
+   */
+  articleMeasure?: ProseMeasure;
+  /**
    * The router's link for the breadcrumb and the category tags, in place of a plain anchor —
    * (link) => <Link href={link.href} />.
    */
@@ -123,6 +129,7 @@ export function PostPage({
   metadataSide = "start",
   metadataColumns = 4,
   metadataStack = "after",
+  articleMeasure = "none",
   renderLink,
   overlay,
 }: PostPageProps) {
@@ -229,7 +236,9 @@ export function PostPage({
           }
         >
           <SectionCaption as="p">Article</SectionCaption>
-          <Prose className="mt-6">{children}</Prose>
+          <Prose className="mt-6" measure={articleMeasure}>
+            {children}
+          </Prose>
         </div>
 
         {stackedAfter ? panel : null}

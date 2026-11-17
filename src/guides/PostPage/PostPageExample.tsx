@@ -7,6 +7,7 @@ import { Copy, FileText } from "lucide-react";
 import { Badge } from "../../components/atoms/Badge/Badge";
 import { Button, buttonStatusHoldMs, type ButtonStatus } from "../../components/atoms/Button/Button";
 import { Prose } from "../../components/atoms/Prose/Prose";
+import type { ProseMeasure } from "../../components/atoms/Prose/proseStyles";
 import { SectionCaption } from "../../components/atoms/SectionCaption/SectionCaption";
 import { Breadcrumb, type BreadcrumbItemDef } from "../../components/molecules/Breadcrumb/Breadcrumb";
 import { DescriptionList } from "../../components/molecules/DescriptionList/DescriptionList";
@@ -108,6 +109,11 @@ export interface PostPageProps {
    */
   metadataStack?: PostMetadataStack;
   /**
+   * How wide the article runs. "none" (default) fills the article's column, pictures and text
+   * alike. "reading" caps it at 40rem.
+   */
+  articleMeasure?: ProseMeasure;
+  /**
    * The router's link for the breadcrumb and the category tags, in place of a plain anchor —
    * (link) => <Link href={link.href} />.
    */
@@ -123,6 +129,7 @@ export function PostPage({
   metadataSide = "start",
   metadataColumns = 4,
   metadataStack = "after",
+  articleMeasure = "none",
   renderLink,
   overlay,
 }: PostPageProps) {
@@ -230,7 +237,9 @@ export function PostPage({
           }
         >
           <SectionCaption as="p">Article</SectionCaption>
-          <Prose className="mt-6">{children}</Prose>
+          <Prose className="mt-6" measure={articleMeasure}>
+            {children}
+          </Prose>
         </div>
 
         {stackedAfter ? panel : null}
@@ -338,7 +347,13 @@ export function PostPageGuide({
   metadataSide,
   metadataColumns,
   metadataStack,
-}: { metadataSide?: PostMetadataSide; metadataColumns?: PostMetadataColumns; metadataStack?: PostMetadataStack } = {}) {
+  articleMeasure,
+}: {
+  metadataSide?: PostMetadataSide;
+  metadataColumns?: PostMetadataColumns;
+  metadataStack?: PostMetadataStack;
+  articleMeasure?: ProseMeasure;
+} = {}) {
   const [gridVisible, setGridVisible] = useState(false);
   const [theme, setTheme] = useState<DisplayControlThemeMode>("auto");
   const [gridMax, setGridMax] = useState(defaultGridMax);
@@ -370,6 +385,7 @@ export function PostPageGuide({
         metadataSide={metadataSide}
         metadataColumns={metadataColumns}
         metadataStack={metadataStack}
+        articleMeasure={articleMeasure}
         overlay={<GridOverlay visible={gridVisible} onVisibleChange={setGridVisible} keyboardShortcut={false} />}
       >
         <SamplePostBody />
