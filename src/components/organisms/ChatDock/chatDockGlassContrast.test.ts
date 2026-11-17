@@ -9,7 +9,9 @@ describe("ChatDock glass window contrast", () => {
     const colors = readFileSync(new URL("../../../theme/colors.css", import.meta.url), "utf8");
     for (const selector of [':root,\n[data-theme="light"] {', '[data-theme="dark"] {']) {
       const block = colors.slice(colors.indexOf(selector)).split("}")[0]!;
-      const read = (name: string) => block.match(new RegExp(`--${name}:\\s*(#[0-9a-f]{6})\\b`, "i"))?.[1] ?? "";
+      // The value, or the fallback of a brand-kit knob: `var(--color-on-paper, #171717)` reads as #171717.
+      const read = (name: string) =>
+        block.match(new RegExp(`--${name}:\\s*(?:var\\([^#;]*)?(#[0-9a-f]{6})\\b`, "i"))?.[1] ?? "";
       const surface = read("color-background-surface");
       const texts = [read("color-text-primary"), read("color-text-secondary")];
       expect(surface && texts.every(Boolean)).toBeTruthy();

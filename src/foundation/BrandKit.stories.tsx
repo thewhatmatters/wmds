@@ -2,9 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Band } from "../components/atoms/Band/Band";
 import { Button } from "../components/atoms/Button/Button";
 import { Badge } from "../components/atoms/Badge/Badge";
+import { Input } from "../components/atoms/Input/Input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/atoms/Table/Table";
+import { DescriptionList } from "../components/molecules/DescriptionList/DescriptionList";
 import { contrastRatio, textContrastMinimum } from "../lib/contrast";
-import { brandKitClient, scopedBrandCss } from "./brandKitClient";
+import { brandKitClient, brandKitPaper, scopedBrandCss, scopedPaperCss } from "./brandKitClient";
 
 const meta = {
   title: "Foundations/Brand kit",
@@ -26,6 +28,9 @@ A **brand kit** is the small set of allow-listed variables an app sets in \`bran
 | \`--color-primary\` / \`--color-on-primary\` | slate | primary controls, focus ring |
 | \`--color-brand-surface\` / \`--color-on-brand-surface\` (+ \`-muted\`) | navy / white | **Band** \`tone="inverse"\` |
 | \`--color-field\` / \`--color-on-field\` (+ \`-muted\`) | the primary pair | **Band** \`tone="field"\` |
+| \`--color-paper\` / \`--color-on-paper\` | the WMDS page (#f8f8f8) / the WMDS ink | the light page (\`bg-body\`) and the text on it |
+| \`--color-on-paper-muted\` | 72% of the ink on the paper | secondary text and field hints on the page |
+| \`--color-paper-rule\` | the WMDS hairline; stronger rules 16% of the ink on the paper | rules and hairlines (\`border-border\`) |
 | \`--radius-control\` / \`--radius-surface\` | pill / 16px | **Foundations/Shape** |
 
 **Display steps:** \`type-display-hero\` (the one oversized moment: fluid to 16vw, 0.92 leading) and \`type-display-xl\` (statement rows: 44px → 136px, 0.9 leading) sit above \`type-display-1\`. Every display step breaks a long word instead of overflowing a phone.
@@ -139,6 +144,66 @@ export function ThemeAClientExample() {
     </div>
   );
 }
+
+const paperScope = "wmds-brand-kit-paper";
+
+/** A client's cream page: its ink, muted text and rules, with a field, a white surface and an inverse band on it. */
+export function PageColourExample() {
+  return (
+    // An app sets the knobs on :root; a scope also takes data-theme="light", which derives the roles again.
+    <div className={`${paperScope} bg-body text-fg`} data-theme="light" data-testid="paper-page">
+      <style>{scopedPaperCss(`.${paperScope}`)}</style>
+      <main className="grid-page !py-0">
+        <Band aria-labelledby="paper-hours">
+          <h2 id="paper-hours" className="type-display-2 col-span-full text-fg">
+            Open late, most nights
+          </h2>
+          <p className="type-body col-span-full text-muted md:col-span-5">
+            Muted text is the ink mixed into the paper, so it stays warm and reads at 4.5:1 or better.
+          </p>
+          <div className="col-span-full md:col-span-5">
+            <DescriptionList aria-label="Hours">
+              <DescriptionList.Item name="Monday to Thursday">11am to 10pm</DescriptionList.Item>
+              <DescriptionList.Item name="Friday and Saturday">11am to midnight</DescriptionList.Item>
+              <DescriptionList.Item name="Sunday">Noon to 9pm</DescriptionList.Item>
+            </DescriptionList>
+          </div>
+          <div className="col-span-full flex flex-col items-start gap-4 md:col-span-3">
+            <Input label="Name for the table" placeholder="Your name" />
+            <div className="flex flex-wrap gap-2">
+              <Button role="primary">Book a table</Button>
+              <Button role="secondary">See the menu</Button>
+            </div>
+          </div>
+        </Band>
+        <Band tone="inverse" aria-labelledby="paper-band">
+          <h2 id="paper-band" className="type-heading-2 col-span-full text-fg">
+            A dark section stays a Band
+          </h2>
+          <p className="type-body col-span-full text-muted md:col-span-5">
+            The paper is the light page. Bands, the dark theme and the soft theme keep their own colours.
+          </p>
+        </Band>
+      </main>
+    </div>
+  );
+}
+
+export const PageColour: Story = {
+  name: "Page colour",
+  render: () => <PageColourExample />,
+  parameters: {
+    docs: {
+      description: {
+        story: `The page itself in a client's colour: \`--color-paper\` sets the light page, \`--color-on-paper\` the text, \`--color-on-paper-muted\` the secondary text and \`--color-paper-rule\` the rules. Set only the paper and the rest follow from it: muted text is ${Math.round(0.72 * 100)}% of the ink on the paper, and control edges and quiet fills are mixed the same way. Surfaces (cards, fields, menus) stay white, so the ink has to read on white too: the paper is a light colour, and a dark section is a **Band** \`tone="inverse"\`. This paper: ink ${contrastRatio(brandKitPaper.ink, brandKitPaper.paper).toFixed(1)}:1, muted ${contrastRatio(brandKitPaper.muted, brandKitPaper.paper).toFixed(1)}:1. Add \`className="bg-body text-fg"\` to \`<body>\`: WMDS doesn't style it.
+
+\`\`\`css
+${brandKitPaper.brandCss}
+\`\`\``,
+      },
+    },
+  },
+};
 
 export const ThemeAClient: Story = {
   name: "Theme a client",

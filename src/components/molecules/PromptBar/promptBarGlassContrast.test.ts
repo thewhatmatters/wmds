@@ -10,7 +10,9 @@ describe("PromptBar glass contrast", () => {
     const themes = { light: ':root,\n[data-theme="light"] {', dark: '[data-theme="dark"] {' };
     for (const selector of Object.values(themes)) {
       const block = colors.slice(colors.indexOf(selector)).split("}")[0]!;
-      const read = (name: string) => block.match(new RegExp(`--${name}:\\s*(#[0-9a-f]{6})\\b`, "i"))?.[1] ?? "";
+      // The value, or the fallback of a brand-kit knob: `var(--color-on-paper, #171717)` reads as #171717.
+      const read = (name: string) =>
+        block.match(new RegExp(`--${name}:\\s*(?:var\\([^#;]*)?(#[0-9a-f]{6})\\b`, "i"))?.[1] ?? "";
       const surface = read("color-background-surface");
       const text = read("color-text-primary");
       const tint = Number.parseFloat(block.match(/--card-glass-tint-default:\s*([\d.]+)%/)?.[1] ?? "") / 100;

@@ -28,6 +28,8 @@
  *   brand-contrast    error  a brand-kit pair in the app's CSS under WCAG AA 4.5:1: --color-on-X (and
  *                             --color-on-X-muted) on --color-X, for primary, brand-surface, brand-surface-primary and field,
  *                             when both are hex values in the same rule
+ *                             Also the page colour: --color-on-paper and --color-on-paper-muted (or the steps
+ *                             WMDS derives when they're unset) on --color-paper, and the ink on a white card
  *
  * Silence one line with a trailing or preceding comment: `wmds-check-ignore raw-control <reason>`.
  * The checks are line-based heuristics, not a parser: they favor few false negatives, and every
@@ -345,6 +347,17 @@ const contrast = (a, b) => {
   if (la === null || lb === null) return null;
   return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
 };
+// color-mix(in srgb, a weight, b) for opaque hex colours; null when either is translucent.
+const mix = (a, weight, b) => {
+  if (luminance(a) === null || luminance(b) === null) return null;
+  const rgb = (hex) => {
+    let digits = hex.slice(1, 7);
+    if (hex.length <= 5) digits = [...hex.slice(1, 4)].map((d) => d + d).join("");
+    return [0, 2, 4].map((i) => parseInt(digits.slice(i, i + 2), 16));
+  };
+  const [ca, cb] = [rgb(a), rgb(b)];
+  return `#${ca.map((value, i) => Math.round(value * weight + cb[i] * (1 - weight)).toString(16).padStart(2, "0")).join("")}`;
+};
 for (const file of cssFiles) {
   const source = readFileSync(file, "utf8");
   const lines = source.split("\n");
@@ -362,6 +375,32 @@ for (const file of cssFiles) {
         const ratio = on && contrast(on.hex, background.hex);
         if (ratio && ratio < 4.5 && !ignored(lines, on.line - 1, "brand-contrast")) {
           report(file, on.line, "brand-contrast", "error", `${ink} ${on.hex} on --color-${name} ${background.hex} is ${ratio.toFixed(2)}:1 — text needs 4.5:1`);
+        }
+      }
+    }
+    // The page colour. Unset steps are the ones colors.css derives, so a paper alone is checked too.
+    const paper = values.get("--color-paper");
+    const declared = (name) => new RegExp(`${name}\\s*:`).test(block[1]);
+    if (paper && luminance(paper.hex) !== null) {
+      const on = values.get("--color-on-paper");
+      const muted = values.get("--color-on-paper-muted");
+      // A var() or a mix can't be resolved here: skip that step rather than guess.
+      const ink = on?.hex ?? (declared("--color-on-paper") ? null : "#171717");
+      const steps = [];
+      if (ink) {
+        steps.push({ label: on ? `--color-on-paper ${ink}` : `the WMDS ink ${ink}`, hex: ink, line: on?.line ?? paper.line });
+        steps.push({ label: `${on ? "--color-on-paper" : "the WMDS ink"} ${ink} on a white card`, hex: ink, ground: "#ffffff", line: on?.line ?? paper.line });
+      }
+      if (muted) steps.push({ label: `--color-on-paper-muted ${muted.hex}`, hex: muted.hex, line: muted.line });
+      else if (ink && !declared("--color-on-paper-muted")) {
+        const derived = mix(ink, 0.72, paper.hex);
+        if (derived) steps.push({ label: `muted text ${derived} (72% of the ink; set --color-on-paper-muted)`, hex: derived, line: on?.line ?? paper.line });
+      }
+      for (const step of steps) {
+        const ratio = contrast(step.hex, step.ground ?? paper.hex);
+        if (ratio && ratio < 4.5 && !ignored(lines, step.line - 1, "brand-contrast")) {
+          const ground = step.ground ? "" : ` on --color-paper ${paper.hex}`;
+          report(file, step.line, "brand-contrast", "error", `${step.label}${ground} is ${ratio.toFixed(2)}:1 — text needs 4.5:1`);
         }
       }
     }

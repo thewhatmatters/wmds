@@ -1,11 +1,14 @@
+import type { CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, within } from "storybook/test";
 import { Band } from "../components/atoms/Band/Band";
 import { Button } from "../components/atoms/Button/Button";
 import { Checkbox } from "../components/atoms/Checkbox/Checkbox";
+import { Input } from "../components/atoms/Input/Input";
 import { Switch } from "../components/atoms/Switch/Switch";
 import { contrastRatio, mixSrgb } from "../lib/contrast";
-import { ThemeAClientExample } from "./BrandKit.stories";
+import { PageColourExample, ThemeAClientExample } from "./BrandKit.stories";
+import { brandKitPaper } from "./brandKitClient";
 
 /**
  * Browser interaction tests for Band tones and the brand kit — run via `npm run test:interactions`.
@@ -204,4 +207,111 @@ export const FieldPrimaryDark: Story = {
     </div>
   ),
   play: async ({ canvas, canvasElement }) => expectEnabledPrimary(canvas, canvasElement, "field"),
+};
+
+const paperOnly = { "--color-paper": brandKitPaper.paper } as CSSProperties;
+const paperKit = {
+  "--color-paper": brandKitPaper.paper,
+  "--color-on-paper": brandKitPaper.ink,
+  "--color-on-paper-muted": brandKitPaper.muted,
+  "--color-paper-rule": brandKitPaper.rule,
+} as CSSProperties;
+
+/** One page in a theme, with the roles the page-colour knobs feed. */
+function PaperSpecimen({ name, theme, knobs }: { name: string; theme: "light" | "dark" | "soft"; knobs?: CSSProperties }) {
+  return (
+    <div data-theme={theme} data-testid={name} style={knobs} className="bg-body p-4">
+      <p className="text-fg" data-testid={`${name}-ink`}>
+        Ink
+      </p>
+      <p className="text-muted" data-testid={`${name}-muted`}>
+        Muted
+      </p>
+      <div className="border-b border-border" data-testid={`${name}-rule`} />
+      <div className="border-b border-border-emphasized" data-testid={`${name}-strong-rule`} />
+      <div className="bg-surface p-2" data-testid={`${name}-surface`}>
+        <Input aria-label={`${name} name`} placeholder="Your name" />
+      </div>
+    </div>
+  );
+}
+
+export const PageColourKnobs: Story = {
+  name: "the page-colour knobs set the light page, its text and rules; unset, the WMDS greys stay",
+  render: () => (
+    <div>
+      <PaperSpecimen name="plain" theme="light" />
+      <PaperSpecimen name="paper" theme="light" knobs={paperOnly} />
+      <PaperSpecimen name="kit" theme="light" knobs={paperKit} />
+      <PaperSpecimen name="dark" theme="dark" knobs={paperKit} />
+      <PaperSpecimen name="soft" theme="soft" knobs={paperKit} />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const read = (name: string) => ({
+      page: hex(style(canvas.getByTestId(name)).backgroundColor),
+      ink: hex(style(canvas.getByTestId(`${name}-ink`)).color),
+      muted: hex(style(canvas.getByTestId(`${name}-muted`)).color),
+      strongRule: hex(style(canvas.getByTestId(`${name}-strong-rule`)).borderBottomColor),
+      surface: hex(style(canvas.getByTestId(`${name}-surface`)).backgroundColor),
+      control: token(canvas.getByTestId(name), "--color-border-control"),
+      placeholder: token(canvas.getByTestId(name), "--color-text-placeholder"),
+    });
+
+    // No knob set: every derived step is invalid, so each role is the WMDS grey it always was.
+    const plain = read("plain");
+    expect(plain).toEqual({
+      page: "#f8f8f8",
+      ink: "#171717",
+      muted: "#404040",
+      strongRule: "#d9d9d9",
+      surface: "#ffffff",
+      control: "#8c8c8c",
+      placeholder: "#6e6e6e",
+    });
+    expect(style(canvas.getByTestId("plain-rule")).borderBottomColor).toBe("rgba(42, 36, 28, 0.06)");
+
+    // The paper alone: the WMDS ink stays, and the muted text, rules and control edges mix it into the paper.
+    const paper = read("paper");
+    expect(paper.page).toBe(brandKitPaper.paper);
+    expect(paper.ink).toBe("#171717");
+    expect(paper.muted).toBe(mixSrgb("#171717", 0.72, brandKitPaper.paper));
+    expect(paper.strongRule).toBe(mixSrgb("#171717", 0.16, brandKitPaper.paper));
+    expect(paper.surface).toBe("#ffffff");
+    expect(contrastRatio(paper.muted, paper.page)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(paper.placeholder, paper.page)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(paper.control, paper.page)).toBeGreaterThanOrEqual(3);
+    // The hairline keeps its own value until the brand sets a rule.
+    expect(style(canvas.getByTestId("paper-rule")).borderBottomColor).toBe("rgba(42, 36, 28, 0.06)");
+
+    // The whole kit: each knob lands on its role.
+    const kit = read("kit");
+    expect(kit.page).toBe(brandKitPaper.paper);
+    expect(kit.ink).toBe(brandKitPaper.ink);
+    expect(kit.muted).toBe(brandKitPaper.muted);
+    expect(kit.strongRule).toBe(brandKitPaper.rule);
+    expect(hex(style(canvas.getByTestId("kit-rule")).borderBottomColor)).toBe(brandKitPaper.rule);
+    expect(contrastRatio(kit.control, kit.page)).toBeGreaterThanOrEqual(3);
+
+    // Dark and soft keep their own page and ink, whatever the knobs say.
+    expect(read("dark").page).toBe("#1b1b1b");
+    expect(read("dark").ink).not.toBe(brandKitPaper.ink);
+    expect(read("soft").page).toBe("#f3eee6");
+    expect(read("soft").muted).not.toBe(brandKitPaper.muted);
+  },
+};
+
+export const PageColourSpecimen: Story = {
+  name: "on a client's paper a band keeps its tone, and nothing scrolls sideways",
+  render: () => <PageColourExample />,
+  play: async ({ canvas }) => {
+    const page = canvas.getByTestId("paper-page");
+    expect(hex(style(page).backgroundColor)).toBe(brandKitPaper.paper);
+    expect(hex(style(canvas.getByRole("heading", { name: "Open late, most nights" })).color)).toBe(brandKitPaper.ink);
+    // The inverse band inside is still the navy with white ink.
+    const band = canvas.getByRole("region", { name: "A dark section stays a Band" });
+    expect(style(band).backgroundColor).toBe("rgb(1, 18, 114)");
+    expect(style(canvas.getByRole("heading", { name: "A dark section stays a Band" })).color).toBe("rgb(255, 255, 255)");
+    expect(page.scrollWidth).toBeLessThanOrEqual(page.clientWidth);
+  },
 };

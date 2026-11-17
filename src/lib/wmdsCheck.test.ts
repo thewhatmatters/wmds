@@ -227,6 +227,41 @@ export function ServicesCard({ onPick }: { onPick: (value: string) => void }) {
       expect(result.findings[0]).toMatchObject({ line: 2 });
     });
 
+    it("passes a light paper with its own ink, muted step and rule", () => {
+      const result = check({
+        "brand.css": `:root {\n  --color-paper: #f4ecd8;\n  --color-on-paper: #2a1a12;\n  --color-on-paper-muted: #5e4c3e;\n  --color-paper-rule: #d9c9a6;\n}`,
+      });
+      expect(result.findings).toEqual([]);
+    });
+
+    it("checks a paper set alone against the WMDS ink and the muted step derived from it", () => {
+      expect(check({ "brand.css": `:root { --color-paper: #f4ecd8; }` }).findings).toEqual([]);
+      // A mid-tone page: the ink still reads, the derived muted step (72% of it) doesn't.
+      const result = check({ "brand.css": `:root {\n  --color-paper: #9a8f7c;\n}` });
+      expect(result.rules).toEqual(["brand-contrast"]);
+      expect(result.findings[0]).toMatchObject({ line: 2, severity: "error" });
+    });
+
+    it("fails paper text under 4.5:1 on its own line, and light ink that would vanish on a white card", () => {
+      const muted = check({
+        "brand.css": `:root {\n  --color-paper: #f4ecd8;\n  --color-on-paper: #2a1a12;\n  --color-on-paper-muted: #a8977f;\n}`,
+      });
+      expect(muted.rules).toEqual(["brand-contrast"]);
+      expect(muted.findings[0]).toMatchObject({ line: 4 });
+      // A dark page with light ink belongs on Band tone="inverse": cards stay white in the light theme.
+      const dark = check({ "brand.css": `:root {\n  --color-paper: #1a1410;\n  --color-on-paper: #f4ecd8;\n}` });
+      expect(dark.rules).toEqual(["brand-contrast"]);
+      expect(dark.findings[0]).toMatchObject({ line: 3 });
+    });
+
+    it("skips paper steps it cannot resolve", () => {
+      const result = check({
+        "brand.css": `:root { --color-paper: #9a8f7c; --color-on-paper: var(--ink); --color-on-paper-muted: color-mix(in srgb, black 50%, white); }
+.x { --color-on-paper: #ffffff; }`,
+      });
+      expect(result.findings).toEqual([]);
+    });
+
     it("skips pairs it cannot resolve: a var(), a mix, or one side in another rule", () => {
       const result = check({
         "brand.css": `:root { --color-field: var(--color-primary); --color-on-field: #ffffff; }

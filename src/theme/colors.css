@@ -13,28 +13,49 @@
   /* Native UI (scrollbars, form controls, autofill) follows the theme. */
   color-scheme: light;
 
+  /*
+   * Brand kit page colour (apps may set these on :root; CONSUMING.md → Brand kit). The light theme only:
+   * dark and soft keep their own page.
+   * - `--color-paper`: the page (`bg-body`), a client's cream or drafting paper.
+   * - `--color-on-paper`: text on it. Unset: the WMDS ink.
+   * - `--color-on-paper-muted`: secondary text. Unset: 72% of the ink on the paper.
+   * - `--color-paper-rule`: rules and hairlines. Unset: the hairline stays; stronger rules are 16% of the ink on the paper.
+   * The four steps below are derived from the paper. With no paper set, each mix is invalid, so the
+   * role that reads it falls back to the WMDS grey: nothing changes for an app that sets none of them.
+   * `npx wmds-check` fails a paper whose text is under 4.5:1 (`brand-contrast`).
+   */
+  --paper-muted: var(
+    --color-on-paper-muted,
+    color-mix(in srgb, var(--color-on-paper, #171717) 72%, var(--color-paper))
+  );
+  --paper-rule: color-mix(in srgb, var(--color-on-paper, #171717) 16%, var(--color-paper));
+  --paper-fill: color-mix(in srgb, var(--color-on-paper, #171717) 6%, var(--color-paper));
+  /* Control edges need 3:1 on the page: 52% of the ink on the paper (the WMDS grey is 2.8:1 on cream). */
+  --paper-control: color-mix(in srgb, var(--color-on-paper, #171717) 52%, var(--color-paper));
+
   /* Surface hierarchy — body/muted lightened for softer inset wells (test) */
-  --color-background-body: #f8f8f8;
+  --color-background-body: var(--color-paper, #f8f8f8);
   --color-background-surface: #ffffff;
   --color-background-card: #ffffff;
   --color-background-popover: #ffffff;
-  --color-background-muted: #f8f8f8;
+  --color-background-muted: var(--color-paper, #f8f8f8);
 
   /* Text — primary → secondary (interactive idle + supporting) → placeholder (a field's hint, 4.5:1 on every surface) → disabled (non-interactive only) */
-  --color-text-primary: #171717;
-  --color-text-secondary: #404040;
-  --color-text-placeholder: #6e6e6e;
+  --color-text-primary: var(--color-on-paper, #171717);
+  --color-text-secondary: var(--paper-muted, #404040);
+  /* On a client's paper the hint is the muted ink, as on a Band: the grey falls under 4.5:1 on cream. */
+  --color-text-placeholder: var(--paper-muted, #6e6e6e);
   --color-text-disabled: #b3b3b3;
-  --color-text-accent: #262626;
+  --color-text-accent: var(--color-on-paper, #262626);
 
   /* Accent (neutral UI chrome — not brand) */
   --color-accent: #262626;
   /*
    * `--color-secondary` (selected pills, empty progress segments, secondary badges, item hover).
    * It must differ from both the body (#f8f8f8) and the surface (#fff), or those fills vanish:
-   * #ebebeb is 1.12:1 on the body and 1.19:1 on the surface.
+   * #ebebeb is 1.12:1 on the body and 1.19:1 on the surface. On a client's paper it's 6% of the ink.
    */
-  --color-accent-muted: #ebebeb;
+  --color-accent-muted: var(--paper-fill, #ebebeb);
   --color-on-accent: #ffffff;
 
   /* Overlays & neutral fills */
@@ -51,10 +72,10 @@
    * `--color-border-control` stays at WCAG 3:1 for input, select, and search.
    * `--color-fill-selected` is the current-nav pill (#eee).
    */
-  --color-border: rgb(42 36 28 / 6%);
-  --color-border-emphasized: #d9d9d9;
-  --color-border-control: #8c8c8c;
-  --color-fill-selected: #eeeeee;
+  --color-border: var(--color-paper-rule, rgb(42 36 28 / 6%));
+  --color-border-emphasized: var(--color-paper-rule, var(--paper-rule, #d9d9d9));
+  --color-border-control: var(--paper-control, #8c8c8c);
+  --color-fill-selected: var(--paper-fill, #eeeeee);
   --color-elevation-edge: rgb(255 255 253 / 90%);
   --color-elevation-surface: rgb(255 255 253 / 90%);
   /*
