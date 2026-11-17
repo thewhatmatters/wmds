@@ -7,6 +7,89 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): don't edit this file on a feature branch. Add a release note as `changes/<topic>.md` (format in `changes/README.md`). The release step, `npm run release:prepare` on its own **Release 0.x.y** branch, folds every note into one new entry here and bumps the version once. `npm run check:changelog` checks this file and the notes.
 
+## 0.4.53
+
+**Dark theme: a light primary now shows its hover.**
+
+- **Theme**: in dark themes `--color-primary-hover` steps 12% toward `--color-on-primary` instead of toward white. The default slate primary looks the same (its ink is near-white). A brand that sets a light primary with dark ink (a white button on a dark page) now darkens on hover; before, white mixed with white and nothing changed.
+
+**Brand kit: a page colour.**
+
+- **Brand kit**: four new knobs colour the page itself in the light theme: `--color-paper` (the page, `bg-body`), `--color-on-paper` (text), `--color-on-paper-muted` (secondary text and field hints) and `--color-paper-rule` (rules and hairlines). Set the paper alone and the muted text, stronger rules, quiet fills and control edges are mixed from it, so they stay warm on a cream page and keep their contrast (muted text 4.5:1, control edges 3:1). With none set, every colour is what it was. Dark, soft and **Band** tones keep their own page. See **Foundations → Brand kit → Page colour** and **CONSUMING.md → Brand kit**.
+- **`npx wmds-check`**: `brand-contrast` now also fails a `--color-paper` whose ink or muted text is under 4.5:1 on it, or whose ink is under 4.5:1 on a white card.
+
+**Post page: the article fills its column.**
+
+- **Guides/Post page → Pattern — post page**: the article (pictures and text) now runs the width of its 8 or 9 columns. It was capped at Prose's 40rem reading measure, which left a third of the column empty at 1440 and held a post's picture to 640px. New prop `articleMeasure`: `"none"` (default) fills the column, `"reading"` keeps the 40rem cap for long text-only posts. **Prose** itself is unchanged: its default measure is still `reading`.
+
+**PriceList: priced rows for a menu or a rate card.**
+
+- **PriceList** (new): a list of priced rows. **PriceList.Item** takes a `name`, an optional `note` and a `price`, under one rule. Prices line up in one end-aligned column in tabular figures. From `md` the name, note and price share one line; on a phone the note drops under the name and the price stays at the row's end, so the list never scrolls sideways (a long price wraps in its own track). `layout` `inline` / `stacked`, `rule` `solid` / `dotted` / `none`, `size` `md` (rate card) / `lg` (menu). See **Components → PriceList → Pattern — menu section**.
+
+**PromptBar and ChatDock: glass.**
+
+- **PromptBar**: `variant="glass"` frosts the pill for a bar that floats over a picture, a video or a canvas. It is Card's glass (the same `--card-glass-tint` and `--card-glass-blur` knobs) under Card's hairline edge instead of the control border; solid where the browser has no backdrop filter, and when the visitor asks for less transparency. On glass the placeholder steps up to the text colour at 80%, so it holds AA over any backdrop at the default tints. Default stays `surface`. New exports: `promptBarVariants`, `PromptBarVariant`.
+- **ChatDock**: `variant="glass"` frosts the bar and makes the open window a dense pane: the surface colour at 88% over a 24px blur, which keeps primary and secondary text at AA over any page. Knobs on the dock's wrapper: `--chat-dock-glass-fill` (the pane's colour, for example the page's black), `--chat-dock-glass-tint` and `--chat-dock-glass-blur`.
+
+**Prose: `tone="muted"` sets body text in the secondary ink.**
+
+- **Prose**: new prop `tone`. `"primary"` (default) is unchanged. `"muted"` sets paragraphs, lists, quotes, and table cells in `text-muted`; headings, links, strong text, inline code, code blocks, and table heads keep `text-fg`.
+- **Guides/Post page → Pattern — post page**: the article uses `tone="muted"`, and the lead under the title is `text-muted` in the live example too (the copied code already had it). The title and the article's headings stay in the primary ink.
+
+**ScrollHorizontal: the expanded content can ride on the last tile.**
+
+- **ScrollHorizontal**: new `expandedReveal` (`fade` by default, or `grow`). With `expandLast`, `grow` makes the `expanded` content the last tile's face from the start: its box rides in the row on that tile and grows with it to the full screen, clipped to the tile's box and radius, so a film can already be playing in the small tile. Give the content `size-full`. `fade` is what it did before (clear until the tile is mostly grown, then fades in on the full screen). Reduced motion shows the content in the static section either way.
+
+**ScrollHorizontal: the full-bleed last tile can stay pinned.**
+
+- **ScrollHorizontal**: new `expandHold` (0 to 4 viewports, default 0). With `expandLast`, the last tile stays pinned for that many more viewports of scroll after it has filled the screen, so a reel in `expanded` has time to play before the page moves on. The track grows by 100svh per held viewport; the sideways travel and the grow keep their scroll distance. While the tile is held, `--scroll-horizontal-hold` on the `expanded` slot runs from 0 to 1, for a "keep scrolling" cue. Reduced motion ignores it. Without `expandHold` nothing changes.
+
+**ScrollHorizontal: 16:9 tiles.**
+
+- **ScrollHorizontal**: new `tile` prop. `"landscape"` makes every tile 16:9, for website screens and film: 720×405 from `lg`, 560×315 from `sm`, 288×162 below `sm`. The centered window, the travel, the `expandLast` grow and `media` all follow the new box. The default `"portrait"` is the 4:5 card as before. The root carries `data-tile`.
+
+**ScrollHorizontal: tiles take media.**
+
+- **ScrollHorizontal**: an item's new `media` (one node: a cover image, a video, a canvas) fills its tile in place of the solid color. The node takes the tile's size and 12px radius and clips its own content; a tile with media does not clip, so the node may lean or lift on hover. `label` stays the accessible name. With `expandLast`, the last tile is still the color layer that grows, and media on it is not shown. Items without `media` are unchanged.
+
+**Search: glass, and a large size.**
+
+- **Search**: `variant="glass"` frosts the pill over whatever sits behind it (a picture, a scene), with the hairline edge PromptBar's glass bar has and the placeholder at 80% of the text colour. It uses Card's glass knobs (`--card-glass-tint`, `--card-glass-blur`); a validation status still colours the border. Default `surface`, unchanged.
+- **Search**: `size="lg"` is a 56px pill with a 40px inset action: a signup that closes a page, or a field beside a PromptBar.
+- New exports: `searchVariants`, `SearchVariant`.
+
+**SiteNav: two links to the same page keep their own labels.**
+
+- **SiteNav.Links**: each link's id defaulted to its `href`, so a nav with two links to one page (Menu and Slices both to `/menu`) drew the later link's label twice, with no warning. Ids are now unique per item, so every link keeps its own label, its order, and its place in the More menu.
+- **SiteNav.Link** `value` still sets the id; it is no longer needed to tell apart links that share an `href`.
+
+**SiteNav: `variant="glass"` frosts the compact pill.**
+
+- **SiteNav**: for a page whose sections are pictures, video or a canvas, `variant="glass"` gives the scrolled pill Card's glass fill (the `--card-glass-tint` and `--card-glass-blur` knobs) instead of the near-solid elevation surface, like PromptBar and ChatDock `variant="glass"`. It is solid where the browser has no backdrop filter and when the visitor asks for reduced transparency. The default stays `"surface"`.
+
+**SiteNav: an `overMedia` page no longer jumps when the bar goes compact.**
+
+- **SiteNav**: with `overMedia`, the expanded bar lies over the picture and takes no room in the page. When the compact pill appeared, the nav still put in the placeholder that holds the expanded bar's room, so everything below moved down by `--site-nav-height` (64px by default), and an in-page link landed that far short. The placeholder is now left out over media. Without `overMedia` nothing changes.
+
+**Table: only body rows fill on hover.**
+
+- **Table**: the ghost hover fill now applies to rows in `TableBody` only. Rows in `TableHeader` and `TableFooter` no longer change on hover: they aren't rows to pick out, and in a pricing grid the package headers lit up like controls.
+
+**TextSequence and ScrollHorizontal.Intro: key words in InlinePills.**
+
+- **TextSequence**: an `InlinePill` among its children now belongs to the sequence. The words inside the pill slide up on their own beats and stay in the plain sentence that names the block (before, a pill's words were left out of the accessible name), and the pill's picture pops in as its first word arrives. Keep the picture static (an `img` or an `svg`). The plain sentence also keeps the text's own spacing now: a full stop or comma right after a pill stays on its word ("remember.", not "remember .").
+- **ScrollHorizontal.Intro**: `statement` takes `InlinePill`s. While it holds one, the statement's leading opens to 1.35, so pills on neighbouring lines don't touch.
+
+### Consumer actions
+
+- None, unless you want a page colour: set `--color-paper` (and the steps you need) on `:root` in `brand.css`, and make sure `<body>` has `className="bg-body text-fg"`. Drop any local override of `--color-background-body`, `--color-text-secondary` or `--color-border` that stood in for it.
+- Apps that pasted **Pattern — post page**: re-copy it to get the full-width article, or pass `measure="none"` to its `Prose`. Check a post's picture `sizes` if it assumed 40rem.
+- None. If you set a menu or a rate card in a **Table** or hand-built rows, switch to **PriceList** to drop the sideways scroll on phones.
+- None. To use glass over a backdrop you know, lower `--card-glass-tint` (bar) or `--chat-dock-glass-tint` (window) on the dock's wrapper and check the text against the brightest spot behind it.
+- Apps that pasted **Pattern — post page**: re-copy it, or add `tone="muted"` to its `Prose`, to get the grey body text. Nothing changes for other uses of **Prose**.
+- None. A `value` passed only to work around this can stay or go.
+None. Opt in with `variant="glass"`; raise `--card-glass-tint` over bright pictures so the links keep their contrast.
+
 ## 0.4.52
 
 **Accordion: a plain label wraps instead of being cut off, and `size="reading"` covers the label.**
