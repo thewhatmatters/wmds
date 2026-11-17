@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { storyMetaDocsDefaults, withStoryCopySource } from "../../../lib/storyCopySource";
-import { Prose, proseMeasures, proseSizes } from "./Prose";
+import { Prose, proseMeasures, proseSizes, proseTones } from "./Prose";
 
 /** What a markdown renderer outputs: plain elements, no classes. */
 function SampleArticle() {
@@ -85,11 +85,13 @@ const meta = {
   argTypes: {
     size: { control: "inline-radio", options: [...proseSizes] },
     measure: { control: "inline-radio", options: [...proseMeasures] },
+    tone: { control: "inline-radio", options: [...proseTones] },
     children: { control: false },
   },
   args: {
     size: "lg",
     measure: "reading",
+    tone: "primary",
     children: null,
   },
   parameters: {
@@ -106,6 +108,7 @@ Long-form content — an article, a resource page's notes. **Prose** sets the pl
 | **Article** | \`size="lg"\` (default) — \`type-reading\`: 17px at a 28px line, headings a step up |
 | **Notes** | \`size="md"\` — \`type-body\` (14px) for denser copy |
 | **Reading measure** | \`measure="reading"\` (default) — lines stop at 40rem, about 70 characters at \`lg\` |
+| **Muted body** | \`tone="muted"\` — paragraphs, lists, quotes, and table cells in the secondary ink; headings, links, strong text, and code keep the primary ink |
 | **Element** | \`as\` — \`div\` (default), \`article\`, or \`section\` |
 
 **Body size:** long-form text is \`type-reading\` (17px). At 14px the 40rem measure runs past 90 characters a line; 17px keeps it near 70. UI copy around an article — captions, metadata, buttons — stays on its own type.
@@ -165,6 +168,30 @@ export function ArticleBody({ children }: { children: ReactNode }) {
 }
 `,
   ),
+};
+
+export const Tones: Story = {
+  name: "Reference — tones",
+  render: () => (
+    <div className="grid gap-12 lg:grid-cols-2">
+      {proseTones.map((tone) => (
+        <section key={tone} className="flex flex-col gap-4">
+          <h2 className="type-eyebrow text-muted">tone=&quot;{tone}&quot;</h2>
+          <Prose tone={tone}>
+            <SampleArticle />
+          </Prose>
+        </section>
+      ))}
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`muted` sets the body in the secondary ink, so a long article sits quieter than its headings. Headings, links, strong text, inline code, code blocks, and table heads keep the primary ink. Both inks pass AA on the page in every theme.",
+      },
+    },
+  },
 };
 
 export const Sizes: Story = {

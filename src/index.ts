@@ -117,11 +117,13 @@ export {
   proseElements,
   proseMeasures,
   proseSizes,
+  proseTones,
   type ProseElement,
   type ProseLayoutClassName,
   type ProseMeasure,
   type ProseProps,
   type ProseSize,
+  type ProseTone,
 } from "./components/atoms/Prose/Prose";
 export {
   Radio,

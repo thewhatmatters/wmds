@@ -218,7 +218,7 @@ export function PostPage({
           />
           <h1 className="type-display-2 text-balance text-fg">{post.title}</h1>
           {/* The lead summarises the post, so it sits in ink, about 2 lines at 390 (Lead L8, Body B9). */}
-          <p className="type-reading max-w-[40rem] text-fg">{post.description}</p>
+          <p className="type-reading max-w-[40rem] text-muted">{post.description}</p>
           {stackedAfter ? (
             <p className="type-eyebrow text-muted lg:hidden">
               <time dateTime={post.date}>{post.dateLabel}</time>
@@ -237,7 +237,7 @@ export function PostPage({
           }
         >
           <SectionCaption as="p">Article</SectionCaption>
-          <Prose className="mt-6" measure={articleMeasure}>
+          <Prose className="mt-6" measure={articleMeasure} tone="muted">
             {children}
           </Prose>
         </div>

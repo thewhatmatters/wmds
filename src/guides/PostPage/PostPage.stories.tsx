@@ -26,7 +26,7 @@ A blog post page — a display title, a metadata panel, and the article. Copy **
 | Copy for LLM | **Button** \`icon\` + \`status\` (**Pattern — copy button**) | The Copy glyph turns into the check; the result is announced |
 | View as Markdown | **Button** \`render={<a href />}\` | Same-site link |
 | Share | **Button** \`external\` | External icon, same tab (Links K9) |
-| Article | **Prose** \`measure="none"\` | Plain elements from the markdown, at \`type-reading\`, filling the article's column |
+| Article | **Prose** \`measure="none"\` \`tone="muted"\` | Plain elements from the markdown, at \`type-reading\`, filling the article's column; body in the secondary ink, headings in the primary |
 
 ## Anatomy
 
@@ -47,6 +47,8 @@ main.grid-page
 **Stacked, below \`lg\`.** \`metadataStack="after"\` (default) puts the article first and the panel under it, so a reader on a phone meets the article, not a table. A line under the title then carries what a reader wants first — the date and the reading time — and hides from \`lg\`, where the panel is beside the article and has both. \`metadataStack="before"\` stacks the panel above the article, with no line under the title.
 
 **Reading and tab order.** \`metadataStack\` is also where the panel sits in the markup, at every width. \`"after"\` with \`metadataSide="end"\`, and \`"before"\` with \`"start"\`, match what is on screen at every width. The other two pairings move the panel to its side from \`lg\` with an order utility, so there its place on screen and its place in the tab order differ.
+
+**Body text is the secondary ink.** The lead under the title and the article's paragraphs, lists, and quotes are \`text-muted\`; the title, the article's headings, links, strong text, and code are \`text-fg\`. A long page of body text then sits quieter than what a reader scans for.
 
 **The article fills its column.** Pictures and text run the width of the article's 8 or 9 columns, so the page reads as two full columns under their captions. \`articleMeasure="reading"\` caps the article at 40rem (about 80 characters a line) for long, text-only posts; the column then has empty space beside the text.
 
@@ -318,7 +320,7 @@ export function PostPage({
           }
         >
           <SectionCaption as="p">Article</SectionCaption>
-          <Prose className="mt-6" measure={articleMeasure}>
+          <Prose className="mt-6" measure={articleMeasure} tone="muted">
             {children}
           </Prose>
         </div>

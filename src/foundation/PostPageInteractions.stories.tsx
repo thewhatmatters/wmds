@@ -92,6 +92,22 @@ export const MetadataPanel: Story = {
     const heading = prose.querySelector("h2");
     if (heading == null) throw new Error("Article heading is missing");
     expect(Number.parseFloat(getComputedStyle(heading).fontSize)).toBeGreaterThan(17);
+    // Body text is the secondary ink; headings, strong text, links, and code keep the primary ink.
+    const title = canvas.getByRole("heading", { level: 1 });
+    const primaryInk = getComputedStyle(title).color;
+    const bodyInk = getComputedStyle(paragraph).color;
+    expect(bodyInk).not.toBe(primaryInk);
+    expect(getComputedStyle(heading).color).toBe(primaryInk);
+    for (const selector of ["li", "blockquote p"]) {
+      const element = prose.querySelector(selector);
+      if (element == null) throw new Error(`Article ${selector} is missing`);
+      expect(getComputedStyle(element).color).toBe(bodyInk);
+    }
+    for (const selector of ["strong", "a", "code", "pre"]) {
+      const element = prose.querySelector(selector);
+      if (element == null) throw new Error(`Article ${selector} is missing`);
+      expect(getComputedStyle(element).color).toBe(primaryInk);
+    }
     expect(Number.parseFloat(getComputedStyle(heading).marginTop)).toBeGreaterThan(
       Number.parseFloat(getComputedStyle(paragraph.nextElementSibling ?? paragraph).marginBottom),
     );

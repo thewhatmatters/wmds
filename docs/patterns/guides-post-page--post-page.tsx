@@ -236,7 +236,7 @@ export function PostPage({
           }
         >
           <SectionCaption as="p">Article</SectionCaption>
-          <Prose className="mt-6" measure={articleMeasure}>
+          <Prose className="mt-6" measure={articleMeasure} tone="muted">
             {children}
           </Prose>
         </div>
