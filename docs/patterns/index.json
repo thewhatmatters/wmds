@@ -883,6 +883,14 @@
       "source": "src/components/molecules/PillGroup/PillGroup.stories.tsx"
     },
     {
+      "id": "components-pricelist--menu",
+      "title": "Components/PriceList",
+      "name": "Pattern — menu section",
+      "file": "patterns/components-pricelist--menu.tsx",
+      "storybook": "?path=/story/components-pricelist--menu",
+      "source": "src/components/molecules/PriceList/PriceList.stories.tsx"
+    },
+    {
       "id": "components-progress--upload-pattern",
       "title": "Components/Progress",
       "name": "Pattern — upload with a count",

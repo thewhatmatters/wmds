@@ -705,6 +705,19 @@
       ]
     },
     {
+      "name": "PriceList",
+      "tier": "molecule",
+      "category": "Table & list",
+      "summary": "Priced rows for a menu or a rate card: a name, an optional note and an end-aligned price under one rule; wraps on phones.",
+      "storybook": {
+        "title": "Components/PriceList",
+        "docs": "?path=/docs/components-pricelist--docs"
+      },
+      "patterns": [
+        "components-pricelist--menu"
+      ]
+    },
+    {
       "name": "Progress",
       "tier": "molecule",
       "category": "Feedback & status",

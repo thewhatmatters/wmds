@@ -463,6 +463,18 @@ export {
   type PillGroupProps,
 } from "./components/molecules/PillGroup/PillGroup";
 export {
+  PriceList,
+  priceListLayouts,
+  priceListRules,
+  priceListSizes,
+  type PriceListItemProps,
+  type PriceListLayout,
+  type PriceListLayoutClassName,
+  type PriceListProps,
+  type PriceListRule,
+  type PriceListSize,
+} from "./components/molecules/PriceList/PriceList";
+export {
   Progress,
   progressSizes,
   type ProgressLayoutClassName,
