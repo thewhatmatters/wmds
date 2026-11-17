@@ -46,6 +46,8 @@ Connected **segmented control** — one track, sliding inset thumb, mutually exc
 
 **Sizes:** \`sm\` | \`md\` (default) | \`lg\` — **cluster tiers** (**Foundations → Cluster**): 28 / 36 / 44px outer track, same as **Chip**. Prop names match cluster directly (\`sm\` = cluster sm) — unlike **Button** (\`xs\` / \`sm\` / \`md\`). **Badge** \`sm\` / \`md\` is a smaller inline label scale — not header-cluster pairing.
 
+**Touch:** on a touch screen each segment's tap area is 44px tall at every size. The track keeps its height; the extra room is an invisible layer that reaches up to 8px above and below the track, so don't stack another control closer than that.
+
 **Not this pattern:** filter rails with gaps → **ChipFilterGroup**; primary actions → **Button**; many options or search → **Select**.
 
 ## Anatomy

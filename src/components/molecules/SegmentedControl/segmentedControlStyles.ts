@@ -35,9 +35,18 @@ export const segmentedControlItemSizeClasses: Record<SegmentedControlSize, strin
   lg: "px-4 text-sm leading-none",
 };
 
+/**
+ * A segment is 24 / 32 / 40px tall inside its track. On a touch screen an invisible layer, centred on
+ * the segment, brings its tap area to 44px tall without changing the track (as **IconButton** does).
+ * It adds no width: segments sit edge to edge, so a wider layer would cover the next one.
+ */
+export const segmentedControlItemCoarseTapAreaClasses =
+  "pointer-coarse:after:absolute pointer-coarse:after:inset-x-0 pointer-coarse:after:top-1/2 pointer-coarse:after:h-11 pointer-coarse:after:-translate-y-1/2 pointer-coarse:after:content-['']";
+
 export const segmentedControlItemClasses = cn(
   "relative inline-flex shrink-0 cursor-pointer items-center justify-center rounded-[var(--radius-control-inner)] font-sans font-medium tracking-normal",
   "transition-[color] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-inset",
+  segmentedControlItemCoarseTapAreaClasses,
   motionTransition("fast"),
 );
 
