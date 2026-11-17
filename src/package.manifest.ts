@@ -55,6 +55,7 @@ const molecules = [
   "Notice",
   "PageHeader",
   "PillGroup",
+  "PriceList",
   "Progress",
   "PromptBar",
   "RadioGroup",
