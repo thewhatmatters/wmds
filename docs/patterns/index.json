@@ -1195,6 +1195,14 @@
       "source": "src/components/atoms/TextArea/TextArea.stories.tsx"
     },
     {
+      "id": "components-textlink--brand-nav",
+      "title": "Components/TextLink",
+      "name": "Pattern — brand nav links",
+      "file": "patterns/components-textlink--brand-nav.tsx",
+      "storybook": "?path=/story/components-textlink--brand-nav",
+      "source": "src/components/atoms/TextLink/TextLink.stories.tsx"
+    },
+    {
       "id": "components-textlink--external-destination",
       "title": "Components/TextLink",
       "name": "Pattern — external destination",

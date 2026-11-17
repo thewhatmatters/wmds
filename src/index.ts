@@ -187,9 +187,11 @@ export {
 } from "./components/atoms/TextArea/TextArea";
 export {
   TextLink,
+  textLinkTones,
   textLinkVariants,
   type TextLinkLayoutClassName,
   type TextLinkProps,
+  type TextLinkTone,
   type TextLinkVariant,
 } from "./components/atoms/TextLink/TextLink";
 export {

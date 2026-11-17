@@ -19,7 +19,8 @@
  *   pattern-stale     warn   a pasted pattern's header names an older package version
  *   pattern-removed   error  a pasted pattern's id no longer ships
  *   status-without-message error  a WMDS field with status="error" or "warning" and no message
- *                             (Errors and validation V10; a status-only success tick is fine)
+ *                             (Errors and validation V10; a status-only success tick is fine; a Badge
+ *                             or Button status says it in its own label, so those are skipped)
  *   missing-label     error  a WMDS Input, TextArea, Select or Search with no label, aria-label or
  *                             aria-labelledby (Labels and placeholders F7; a spread {...props} is trusted)
  *   badge-on-autofill error  an Input with endBadge on an autofill field (autoComplete name, email, tel,
@@ -290,10 +291,11 @@ for (const file of files) {
     report(file, line, "badge-on-autofill", "error", `endBadge on autoComplete="${value}" — autofill covers it; put "(optional)" in the label`);
   }
 
-  // V10: an error or warning status always says what's wrong.
+  // V10: an error or warning status always says what's wrong. A status pill (Badge) and a Button's
+  // send state carry their own words, so only fields are held to a message.
   for (const match of source.matchAll(/\bstatus=(?:"(error|warning)"|\{\s*["'](error|warning)["']\s*\})/g)) {
     const element = elementFrom(source.lastIndexOf("<", match.index));
-    if (!/^<[A-Z]/.test(element) || /\bmessage=/.test(element)) continue;
+    if (!/^<[A-Z]/.test(element) || /^<(Badge|Button)(?=[\s/>])/.test(element) || /\bmessage=/.test(element)) continue;
     const line = source.slice(0, match.index).split("\n").length;
     if (ignored(lines, line - 1, "status-without-message")) continue;
     report(file, line, "status-without-message", "error", `status="${match[1] ?? match[2]}" with no message — say what's wrong and how to fix it`);
