@@ -13,9 +13,22 @@ export const proseMeasures = ["reading", "none"] as const;
 /** `reading` (default) caps the line at 40rem — about 70 characters at `lg`. `none` fills the column. */
 export type ProseMeasure = (typeof proseMeasures)[number];
 
+export const proseTones = ["primary", "muted"] as const;
+
+/**
+ * `primary` (default) — body text in the primary ink. `muted` — paragraphs, lists, quotes, and table
+ * cells in the secondary ink, so headings, links, strong text, and code stand out in the primary ink.
+ */
+export type ProseTone = (typeof proseTones)[number];
+
 export const proseElements = ["div", "article", "section"] as const;
 
 export type ProseElement = (typeof proseElements)[number];
+
+export const proseToneClasses: Record<ProseTone, string> = {
+  primary: "text-fg",
+  muted: "text-muted",
+};
 
 export const proseMeasureClasses: Record<ProseMeasure, string> = {
   reading: "max-w-[40rem]",
@@ -42,9 +55,9 @@ export const proseSizeClasses: Record<ProseSize, string> = {
   ),
 };
 
-/** Plain HTML elements inside — the markdown a renderer outputs. */
+/** Plain HTML elements inside — the markdown a renderer outputs. Body ink comes from `proseToneClasses`. */
 export const proseElementClasses = cn(
-  "min-w-0 text-fg",
+  "min-w-0",
   // Headings
   "[&_:is(h2,h3,h4,h5,h6)]:text-fg [&_:is(h2,h3,h4,h5,h6)]:text-balance [&_:is(h2,h3,h4,h5,h6)]:scroll-mt-24",
   // Links — the TextLink prose treatment, for links the renderer does not map to TextLink
@@ -58,7 +71,7 @@ export const proseElementClasses = cn(
   // Quotes
   "[&_blockquote]:border-l-2 [&_blockquote]:border-border-emphasized [&_blockquote]:pl-5 [&_blockquote>*+*]:mt-4",
   // Inline code
-  "[&_:not(pre)>code]:rounded-sm [&_:not(pre)>code]:bg-ghost-hover [&_:not(pre)>code]:px-1 [&_:not(pre)>code]:py-0.5 [&_:not(pre)>code]:font-mono [&_:not(pre)>code]:text-[0.875em]",
+  "[&_:not(pre)>code]:rounded-sm [&_:not(pre)>code]:bg-ghost-hover [&_:not(pre)>code]:px-1 [&_:not(pre)>code]:py-0.5 [&_:not(pre)>code]:font-mono [&_:not(pre)>code]:text-[0.875em] [&_:not(pre)>code]:text-fg",
   // Code blocks
   "[&_pre]:overflow-x-auto [&_pre]:rounded-[var(--radius-card-body)] [&_pre]:border [&_pre]:border-border [&_pre]:bg-surface [&_pre]:p-4 [&_pre]:type-code [&_pre]:text-fg",
   // Rules
@@ -68,6 +81,6 @@ export const proseElementClasses = cn(
   "[&_figcaption]:mt-2 [&_figcaption]:type-supporting [&_figcaption]:text-muted",
   // Tables — a wide table scrolls inside its own box
   "[&_table]:block [&_table]:w-max [&_table]:max-w-full [&_table]:overflow-x-auto [&_table]:border-collapse [&_table]:type-body",
-  "[&_th]:border-b [&_th]:border-border-emphasized [&_th]:py-2 [&_th]:pr-6 [&_th]:text-left [&_th]:align-bottom [&_th]:type-label",
+  "[&_th]:border-b [&_th]:border-border-emphasized [&_th]:py-2 [&_th]:pr-6 [&_th]:text-left [&_th]:align-bottom [&_th]:type-label [&_th]:text-fg",
   "[&_td]:border-b [&_td]:border-border [&_td]:py-2 [&_td]:pr-6 [&_td]:align-top",
 );
