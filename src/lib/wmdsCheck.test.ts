@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
@@ -31,7 +31,7 @@ function check(files: Record<string, string>, extra: string[] = []) {
     stdout = failed.stdout;
     status = failed.status;
   }
-  const report = JSON.parse(stdout) as { findings: Finding[]; errors: number; warnings: number };
+  const report = JSON.parse(stdout) as { findings: Finding[]; errors: number; warnings: number; scanned: number };
   return { ...report, status, rules: report.findings.map((finding) => finding.rule) };
 }
 
@@ -39,6 +39,53 @@ afterAll(() => rmSync(app, { recursive: true, force: true }));
 writeFileSync(path.join(app, "package.json"), '{ "name": "app", "private": true }');
 
 describe("wmds-check", () => {
+  describe("shipped patterns", () => {
+    const folder = path.resolve(__dirname, "../../docs/patterns");
+    const names = readdirSync(folder).filter((name) => name.endsWith(".tsx"));
+    const shipped = Object.fromEntries(names.map((name) => [name, readFileSync(path.join(folder, name), "utf8")]));
+    const describeFinding = (finding: Finding & { message?: string }) =>
+      `${path.basename(finding.file)}:${finding.line} ${finding.rule} ${finding.message ?? ""}`.trim();
+
+    /**
+     * Warnings a shipped pattern is known to carry, by file. Each entry is a debt to pay in the
+     * system (a missing type step, a missing prop), then delete here. Never add an error.
+     */
+    const knownWarnings: Record<string, string[]> = {
+      // The FAQ's 12px mono item numbers: WMDS has no small mono figure step yet.
+      "components-accordion--faq-reading.tsx": ["raw-type", "raw-type", "raw-type"],
+    };
+
+    it("pass wmds-check: what we tell people to copy must pass the check that guards it", () => {
+      expect(names.length).toBeGreaterThan(100);
+      const result = check(shipped);
+      expect(result.scanned).toBe(names.length);
+      expect(result.findings.filter((finding) => finding.severity === "error").map(describeFinding)).toEqual([]);
+      expect(result.status).toBe(0);
+    });
+
+    it("carry no warning beyond the known list, and the list holds nothing already fixed", () => {
+      const warnings: Record<string, string[]> = {};
+      for (const finding of check(shipped).findings) {
+        if (finding.severity !== "warn") continue;
+        (warnings[path.basename(finding.file)] ??= []).push(finding.rule);
+      }
+      expect(warnings).toEqual(knownWarnings);
+    });
+
+    it("fails a pattern that overrides a component's ink or sets a raw size", () => {
+      // The ruled footer as it shipped up to 0.4.52: the check must catch it again.
+      const name = "components-footerreveal--ruled-grid-footer-pattern.tsx";
+      const before = shipped[name]
+        .replaceAll('tone="brand"', 'className="!text-brand"')
+        .replace("md:text-[length:var(--font-size-7xl)]", "md:text-[4rem]");
+      expect(before).not.toBe(shipped[name]);
+      const result = check({ [name]: before });
+      expect(result.rules.filter((rule) => rule === "important-override")).toHaveLength(3);
+      expect(result.rules).toContain("raw-type");
+      expect(result.status).toBe(1);
+    });
+  });
+
   it("passes WMDS components with layout-only className", () => {
     const result = check({
       "page.tsx": `import { Button } from "@thewhatmatters/wmds";
@@ -369,6 +416,23 @@ export function Form() {
       });
       expect(result.rules).toEqual(["status-without-message"]);
       expect(result.findings[0]).toMatchObject({ line: 6, severity: "error" });
+    });
+
+    it("leaves a Badge or Button status alone: its label is the message", () => {
+      const result = check({
+        "status.tsx": `import { Badge, Button } from "@thewhatmatters/wmds";
+export function Status() {
+  return (
+    <>
+      <Badge status="warning" dot>
+        Needs a look
+      </Badge>
+      <Button status="error" statusLabels={{ error: "Couldn't copy" }}>Copy</Button>
+    </>
+  );
+}`,
+      });
+      expect(result.findings).toEqual([]);
     });
 
     it("passes a status with a message, and a status-only success tick", () => {

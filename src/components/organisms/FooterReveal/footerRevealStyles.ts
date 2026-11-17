@@ -155,19 +155,12 @@ export const footerRevealRuledLinksClasses =
 /**
  * Parent of the three **TextLink**s. Geist sans is inherited. Below `sm` the
  * size is `--font-size-4xl` (2.1875rem) so the stack does not fill a phone.
- * From `sm` it is 4rem. No type token is 4rem. **TextLink** keeps its own
- * solid underline, medium weight, and focus ring.
+ * From `md` it is `--font-size-7xl` (4rem). **TextLink** keeps its own
+ * solid underline, medium weight, and focus ring; `tone="brand"` sets its ink.
  */
 export const footerRevealRuledLinkListClasses =
   "m-0 flex list-none flex-col items-center gap-3 whitespace-nowrap p-0 font-sans " +
-  "text-[length:var(--font-size-4xl)] leading-none md:text-[4rem]";
-
-/**
- * Brand ink on these three footer links. **TextLink** sets `text-fg` on the
- * anchor, which wins over a parent `text-brand`. `!` keeps `--color-brand`
- * (`#011272`) on the words only. The solid underline stays TextLink's.
- */
-export const footerRevealRuledNavLinkClasses = "!text-brand";
+  "text-[length:var(--font-size-4xl)] leading-none md:text-[length:var(--font-size-7xl)]";
 
 /**
  * Quiet meta row. One centered stack below `md`. From `md`, seal and copyright

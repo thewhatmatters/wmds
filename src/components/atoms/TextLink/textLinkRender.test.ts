@@ -33,4 +33,24 @@ describe("TextLink", () => {
     expect(html).toContain("decoration-transparent");
     expect(html).toContain("A post");
   });
+
+  it("sets brand ink with tone, in place of the text colour and with no ! override", () => {
+    const brand = renderToString(createElement(TextLink, { href: "/about", tone: "brand", children: "About" }));
+    expect(brand).toContain("text-brand");
+    expect(brand).toContain("hover:decoration-brand");
+    expect(brand).not.toMatch(/\btext-fg\b/);
+    expect(brand).not.toContain("decoration-fg");
+    expect(brand).not.toContain("!");
+    const quiet = renderToString(createElement(TextLink, { href: "/about", variant: "quiet", tone: "brand", children: "About" }));
+    expect(quiet).toContain("text-brand");
+    expect(quiet).toContain("decoration-transparent");
+    expect(quiet).not.toMatch(/\btext-fg\b/);
+  });
+
+  it("keeps the default tone's classes as they were", () => {
+    const plain = renderToString(createElement(TextLink, { href: "/about", children: "About" }));
+    expect(plain).toMatch(/\btext-fg\b/);
+    expect(plain).toContain("hover:decoration-fg");
+    expect(plain).not.toContain("text-brand");
+  });
 });

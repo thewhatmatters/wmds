@@ -18,6 +18,8 @@ Use **TextLink** for inline navigation inside prose. Its solid underline keeps l
 
 Set \`variant="quiet"\` for headline-size text and list titles: no underline at rest, an underline scaled to the text on hover and keyboard focus, and the same focus ring. A quiet link inherits the surrounding size and weight, so the heading around it owns the type step.
 
+Set \`tone="brand"\` for a large link in the brand ink, such as a footer's nav: the underline, weight and focus ring stay the variant's. Keep it to text of 24px and up. In the dark theme the brand ink is 3.58:1 on the page, which is enough for large text and too little for body copy.
+
 Set \`external\` when the destination is another site. WMDS appends Lucide **SquareArrowOutUpRight**, and the link opens in the same tab (Links K9). Add \`newTab\` only when leaving would lose the reader's work: it opens a new tab with a safe \`rel\` and adds spoken new-tab context.
 
 ## Anatomy
@@ -35,6 +37,7 @@ TextLink (\`a\`)
 - **Do** use \`external\` for another site, and \`newTab\` only when a new tab is genuinely useful.
 - **Do** pass \`render={<Link href="/blog/post" />}\` in place of \`href\` for a link the app's router should handle; the treatment and the focus ring stay the same.
 - **Don't** use it for actions—use **Button**.
+- **Do** use \`tone="brand"\` when a large link takes the brand ink.
 - **Don't** override its color or underline treatment with \`className\`.
         `.trim(),
       },
@@ -42,11 +45,13 @@ TextLink (\`a\`)
   },
   argTypes: {
     variant: { control: "inline-radio", options: ["prose", "quiet"] },
+    tone: { control: "inline-radio", options: ["default", "brand"] },
   },
   args: {
     href: "#writing",
     children: "writing",
     variant: "prose",
+    tone: "default",
     external: false,
   },
 } satisfies Meta<typeof TextLink>;
@@ -165,6 +170,62 @@ export function PostTitle({ title, href }: { title: string; href: string }) {
         {title}
       </TextLink>
     </h2>
+  );
+}
+`,
+  ),
+};
+
+export const BrandNav: Story = {
+  name: "Pattern — brand nav links",
+  render: () => (
+    <nav aria-label="Footer">
+      <ul className="type-display-3 m-0 flex list-none flex-col gap-2 p-0">
+        <li>
+          <TextLink href="#services" tone="brand">
+            Services
+          </TextLink>
+        </li>
+        <li>
+          <TextLink href="#resources" tone="brand">
+            Resources
+          </TextLink>
+        </li>
+        <li>
+          <TextLink href="#about" tone="brand">
+            About
+          </TextLink>
+        </li>
+      </ul>
+    </nav>
+  ),
+  parameters: withStoryCopySource(
+    {
+      docs: {
+        description: {
+          story:
+            "`tone=\"brand\"` sets the link's ink to `--color-brand`; the underline, the weight and the focus ring stay the variant's, and the hover underline takes the same ink. For large links only (24px and up), such as a footer's nav: in the dark theme the brand ink is 3.58:1 on the page. Never reach for `className=\"!text-brand\"`; `wmds-check` fails it.",
+        },
+      },
+    },
+    `
+import { TextLink } from "@thewhatmatters/wmds";
+
+export function FooterNav() {
+  return (
+    <nav aria-label="Footer">
+      <ul className="type-display-3 m-0 flex list-none flex-col gap-2 p-0">
+        <li>
+          <TextLink href="/services" tone="brand">Services</TextLink>
+        </li>
+        <li>
+          <TextLink href="/resources" tone="brand">Resources</TextLink>
+        </li>
+        <li>
+          <TextLink href="/about" tone="brand">About</TextLink>
+        </li>
+      </ul>
+    </nav>
   );
 }
 `,

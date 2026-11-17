@@ -103,6 +103,7 @@ export const geometricScale: GeometricScaleStep[] = [
   { token: "--font-size-4xl", value: "2.1875rem", sample: "35px step" },
   { token: "--font-size-5xl", value: "2.625rem", sample: "42px step" },
   { token: "--font-size-6xl", value: "3.15rem", sample: "50.4px step" },
+  { token: "--font-size-7xl", value: "4rem", sample: "64px — large nav and footer links" },
 ];
 
 export const fontWeights = [
