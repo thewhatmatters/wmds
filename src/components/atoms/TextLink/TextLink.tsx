@@ -3,12 +3,13 @@ import type { AnchorHTMLAttributes, ReactElement, ReactNode } from "react";
 import { SquareArrowOutUpRight } from "lucide-react";
 import { cn } from "../../../lib/cn";
 import {
+  textLinkClassesFor,
   textLinkExternalIconClasses,
-  textLinkVariantClasses,
+  type TextLinkTone,
   type TextLinkVariant,
 } from "./textLinkStyles";
 
-export { textLinkVariants, type TextLinkVariant } from "./textLinkStyles";
+export { textLinkTones, textLinkVariants, type TextLinkTone, type TextLinkVariant } from "./textLinkStyles";
 
 /** Layout-only — margin or placement; not for changing the link treatment. */
 export type TextLinkLayoutClassName = string;
@@ -33,6 +34,11 @@ export interface TextLinkProps
    */
   variant?: TextLinkVariant;
   /**
+   * The link's ink: `default` (the text colour) or `brand` (`--color-brand`, for example a footer's
+   * nav links). The underline and the focus ring stay the variant's.
+   */
+  tone?: TextLinkTone;
+  /**
    * Marks a link that leaves the site: appends the external-destination icon. Opens in the same tab unless
    * `newTab` is set (Links rule K9).
    */
@@ -52,6 +58,7 @@ export function TextLink({
   render,
   children,
   variant = "prose",
+  tone = "default",
   external = false,
   newTab = false,
   className,
@@ -72,7 +79,7 @@ export function TextLink({
       ...(href != null ? { href } : null),
       ...(newTab ? { target: "_blank" } : null),
       ...(safeRel != null ? { rel: safeRel } : null),
-      className: cn(textLinkVariantClasses[variant], className),
+      className: cn(textLinkClassesFor(variant, tone), className),
       children: (
         <>
           {children}

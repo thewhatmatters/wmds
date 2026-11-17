@@ -25,6 +25,8 @@
   --font-size-4xl: 2.1875rem;
   --font-size-5xl: 2.625rem;
   --font-size-6xl: 3.15rem;
+  /* 64px. The ratio gives 3.78rem; the step is set to the whole 4rem that big nav and footer links use. */
+  --font-size-7xl: 4rem;
 
   /* Semantic weights */
   --font-weight-normal: 400;

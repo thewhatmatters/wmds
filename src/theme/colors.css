@@ -271,8 +271,12 @@
   --color-on-brand: #ffffff;
   --color-brand-outline: color-mix(in srgb, var(--color-brand) 45%, white);
   --color-brand-soft: color-mix(in srgb, var(--color-on-brand) 40%, var(--color-brand));
-  /* The navy disappears on dark surfaces, so the tint lifts it: 28% of the outline mix (about #3d3f49 on #1b1b1b). */
-  --color-brand-tint: color-mix(in srgb, var(--color-brand-outline) 28%, transparent);
+  /*
+   * The navy disappears on dark surfaces, so the tint lifts it: 20% of the outline mix (about #393b46 on
+   * #1b1b1b, #42444f on #262626). At 28% the outline ink on it fell to 4.29:1 on the surface (Badge
+   * `status="active"` on a Card); at 20% it is 5.95:1 on the body and 5.19:1 on the surface.
+   */
+  --color-brand-tint: color-mix(in srgb, var(--color-brand-outline) 20%, transparent);
 
   /*
    * Derived from --color-primary: lift the brand toward white so the ring stays

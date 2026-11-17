@@ -57,7 +57,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
         │   ├── social links (underlined, same tab)
         │   └── wordmark (aria-hidden, spans the footer width, cropped at the bottom edge)
         └── FooterReveal.Ruled — min-height 100vh; the block is vertically centered when it fits
-            ├── nav (TextLink: Services, Resources, About; parent is sans, 4xl below sm, 4rem from sm, text-brand)
+            ├── nav (TextLink: Services, Resources, About; parent is sans, 4xl below md, 7xl (4rem) from md, tone="brand")
             ├── wordmark (aria-hidden, fitted to the footer width, fully visible)
             └── quiet row (WM + copyright, randy@whatmatters.so, credit)
 \`\`\`
@@ -72,7 +72,7 @@ FooterReveal — isolation: isolate (overflow visible, so grid guides can leave 
 - Do not hide the scrollbar. The page grid already reserves a stable gutter. The root does not clip — that would trap **GridOverlay** guides inside \`main\`. The brand panel clips its wordmark. **FooterReveal.Ruled** fits its wordmark inside the footer width so the letters stay visible.
 - Do not put \`overflow-hidden\` on **FooterReveal** — it breaks \`position: sticky\`. The brand panel clips its own wordmark.
 - When **ScrollHorizontal** \`expandLast\` is the last section in the cover, the guide \`grid-page\` after it uses \`!py-0\`. Default \`grid-page\` block padding is \`--grid-pad\` (24px top and bottom). On a guide-only host that padding is a page-background strip between the full-bleed tile and the footer. The reduced-motion \`h-svh\` section meets the footer the same way.
-- **FooterReveal.Ruled** is the cream marketing footer. Pass **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) on **Footer**. The field and the ruled shell are at least \`100vh\`; taller content grows them. The nav, wordmark, and quiet row are one block, vertically centered in the field when that block fits. Top padding still clears the pinned site nav. The nav is one centered stack of **TextLink**: Services, Resources, About. The list sets Geist sans at \`--font-size-4xl\` below \`sm\` and 4rem from \`sm\`, and the links are \`text-brand\`. **TextLink** keeps its solid underline, medium weight, and focus ring. The wordmark is \`WhatMatters\`, fitted to the footer width (\`100cqi\` / measured em) so it stays inside the viewport and is not cropped. Under it, a quiet row: the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below \`md\` that row stacks and stays centered. Dark theme keeps the field on \`--color-on-brand\`. **FooterReveal.Brand** stays the navy field.
+- **FooterReveal.Ruled** is the cream marketing footer. Pass **\`footerRevealRuledFieldClasses\`** (\`bg-body\` / \`text-brand\`) on **Footer**. The field and the ruled shell are at least \`100vh\`; taller content grows them. The nav, wordmark, and quiet row are one block, vertically centered in the field when that block fits. Top padding still clears the pinned site nav. The nav is one centered stack of **TextLink**: Services, Resources, About. The list sets Geist sans at \`--font-size-4xl\` below \`md\` and \`--font-size-7xl\` (4rem) from \`md\`, and the links are \`tone="brand"\`. **TextLink** keeps its solid underline, medium weight, and focus ring. The wordmark is \`WhatMatters\`, fitted to the footer width (\`100cqi\` / measured em) so it stays inside the viewport and is not cropped. Under it, a quiet row: the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below \`md\` that row stacks and stays centered. Dark theme keeps the field on \`--color-on-brand\`. **FooterReveal.Brand** stays the navy field.
         `.trim(),
       },
     },
@@ -640,15 +640,15 @@ export function RuledGridFooter() {
 export function FooterRevealRuledNav() {
   return (
     <nav aria-label="Footer">
-      <ul className="m-0 flex list-none flex-col items-center gap-3 whitespace-nowrap p-0 font-sans text-[length:var(--font-size-4xl)] leading-none md:text-[4rem]">
+      <ul className="m-0 flex list-none flex-col items-center gap-3 whitespace-nowrap p-0 font-sans text-[length:var(--font-size-4xl)] leading-none md:text-[length:var(--font-size-7xl)]">
         <li>
-          <TextLink href="/services" className="!text-brand">Services</TextLink>
+          <TextLink href="/services" tone="brand">Services</TextLink>
         </li>
         <li>
-          <TextLink href="/resources" className="!text-brand">Resources</TextLink>
+          <TextLink href="/resources" tone="brand">Resources</TextLink>
         </li>
         <li>
-          <TextLink href="/about" className="!text-brand">About</TextLink>
+          <TextLink href="/about" tone="brand">About</TextLink>
         </li>
       </ul>
     </nav>
@@ -911,7 +911,7 @@ export const RuledGridFooterPattern: Story = {
       docs: {
         description: {
           story:
-            "Cream marketing footer. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`, at least 100vh) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. The field grows when the content is taller than the viewport. The nav, wordmark, and quiet row are one block, vertically centered in the field when that block fits. Top padding still clears the pinned site nav. The nav is one centered stack of **TextLink**: Services, Resources, About. The list sets Geist sans at `--font-size-4xl` below `sm` and 4rem from `sm`, and the links are `text-brand`. **TextLink** keeps its solid underline, medium weight, and focus ring. The WhatMatters wordmark is fitted to the footer width and stays fully visible. The quiet row is the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below `md` that row stacks. There is no cropped wordmark, no two-column nav, and no social row. Dark theme keeps the field on `--color-on-brand`.",
+            "Cream marketing footer. Put **footerRevealRuledFieldClasses** (`bg-body` / `text-brand`, at least 100vh) on **FooterReveal.Footer** and render **FooterReveal.Ruled** inside it. The field grows when the content is taller than the viewport. The nav, wordmark, and quiet row are one block, vertically centered in the field when that block fits. Top padding still clears the pinned site nav. The nav is one centered stack of **TextLink**: Services, Resources, About. The list sets Geist sans at `--font-size-4xl` below `md` and `--font-size-7xl` (4rem) from `md`, and the links are `tone=\"brand\"`. **TextLink** keeps its solid underline, medium weight, and focus ring. The WhatMatters wordmark is fitted to the footer width and stays fully visible. The quiet row is the WM mark with WhatMatters © 2026, randy@whatmatters.so, and Created by WhatMatters 2024–2026. Below `md` that row stacks. There is no cropped wordmark, no two-column nav, and no social row. Dark theme keeps the field on `--color-on-brand`.",
         },
       },
     },

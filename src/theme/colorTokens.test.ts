@@ -63,6 +63,32 @@ describe("colour tokens", () => {
     expect(block(colors, DARK)).not.toContain("--color-brand-surface:");
   });
 
+  it("brand outline ink reads at 4.5:1 on the brand tint, over the body and the surface (Badge active)", () => {
+    const percent = (scope: string, name: string, of: string) =>
+      Number(
+        block(colors, scope).match(new RegExp(`--color-${name}: color-mix\\(in srgb, var\\(--color-${of}\\) (\\d+)%`))?.[1],
+      ) / 100;
+
+    // Light: the navy itself on 10% of it.
+    const navy = token(LIGHT, "brand");
+    expect(block(colors, LIGHT)).toContain("--color-brand-outline: var(--color-brand);");
+    // Dark: the navy lifted toward white, on a share of that lifted ink.
+    const lifted = mixSrgb(token(DARK, "brand"), percent(DARK, "brand-outline", "brand"), "#ffffff");
+
+    for (const [name, scope, ink, share] of [
+      ["light", LIGHT, navy, percent(LIGHT, "brand-tint", "brand")],
+      ["dark", DARK, lifted, percent(DARK, "brand-tint", "brand-outline")],
+    ] as const) {
+      expect(share, name).toBeGreaterThan(0);
+      for (const ground of ["background-body", "background-surface"]) {
+        const fill = mixSrgb(ink, share, token(scope, ground));
+        expect(contrastRatio(ink, fill), `${name} ${ground}`).toBeGreaterThanOrEqual(textContrastMinimum);
+        // Still a tint: the pill stays visible against what it sits on.
+        expect(contrastRatio(fill, token(scope, ground)), `${name} ${ground} fill`).toBeGreaterThanOrEqual(1.1);
+      }
+    }
+  });
+
   it("inverts the primary on a field band, so a primary Button never matches the band", () => {
     const field = block(colors, '[data-tone="field"] {');
     expect(field).toContain("--tone-action: var(--tone-fg);");
