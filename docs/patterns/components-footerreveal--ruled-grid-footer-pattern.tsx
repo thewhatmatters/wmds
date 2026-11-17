@@ -26,15 +26,15 @@ export function RuledGridFooter() {
 export function FooterRevealRuledNav() {
   return (
     <nav aria-label="Footer">
-      <ul className="m-0 flex list-none flex-col items-center gap-3 whitespace-nowrap p-0 font-sans text-[length:var(--font-size-4xl)] leading-none md:text-[4rem]">
+      <ul className="m-0 flex list-none flex-col items-center gap-3 whitespace-nowrap p-0 font-sans text-[length:var(--font-size-4xl)] leading-none md:text-[length:var(--font-size-7xl)]">
         <li>
-          <TextLink href="/services" className="!text-brand">Services</TextLink>
+          <TextLink href="/services" tone="brand">Services</TextLink>
         </li>
         <li>
-          <TextLink href="/resources" className="!text-brand">Resources</TextLink>
+          <TextLink href="/resources" tone="brand">Resources</TextLink>
         </li>
         <li>
-          <TextLink href="/about" className="!text-brand">About</TextLink>
+          <TextLink href="/about" tone="brand">About</TextLink>
         </li>
       </ul>
     </nav>

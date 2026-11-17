@@ -2422,6 +2422,22 @@
       "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
     },
     {
+      "name": "components-textlink--brand-nav",
+      "type": "registry:block",
+      "title": "TextLink — brand nav links",
+      "description": "Show code for Storybook Components/TextLink → Pattern — brand nav links.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-textlink--brand-nav.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
       "name": "components-textlink--external-destination",
       "type": "registry:block",
       "title": "TextLink — external destination",

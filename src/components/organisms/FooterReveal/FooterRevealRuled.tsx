@@ -12,7 +12,6 @@ import {
   footerRevealRuledEmailClasses,
   footerRevealRuledIdentityClasses,
   footerRevealRuledLinkListClasses,
-  footerRevealRuledNavLinkClasses,
   footerRevealRuledLinksClasses,
   footerRevealRuledMarkClasses,
   footerRevealRuledMetaClasses,
@@ -168,7 +167,7 @@ export function FooterRevealRuled({
                 <TextLink
                   href={link.href}
                   external={/^https?:\/\//i.test(link.href)}
-                  className={footerRevealRuledNavLinkClasses}
+                  tone="brand"
                 >
                   {link.label}
                 </TextLink>

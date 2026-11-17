@@ -1039,6 +1039,7 @@
         "docs": "?path=/docs/components-textlink--docs"
       },
       "patterns": [
+        "components-textlink--brand-nav",
         "components-textlink--external-destination",
         "components-textlink--inline-prose",
         "components-textlink--quiet-title",

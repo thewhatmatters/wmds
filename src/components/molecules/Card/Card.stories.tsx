@@ -891,7 +891,7 @@ export const RoundedStandalone: Story = {
 };
 
 const terminalPreview =
-  '<!doctype html><html><body style="margin:0;background:#262626;color:#fafafa;font:14px ui-monospace,monospace;padding:16px">$ scan --target etheris<br>12 findings</body></html>';
+  '<!doctype html><html><body style="margin:0;background:#262626;color:#fafafa;font:14px ui-monospace,monospace;padding:16px">$ scan --target etheris<br>12 findings</body></html>'; // wmds-check-ignore raw-color a sample document inside the frame, not the app's styling
 
 function TerminalFrames() {
   return (
@@ -949,7 +949,7 @@ import {
 } from "@thewhatmatters/wmds";
 
 const terminalPreview =
-  '<!doctype html><html><body style="margin:0;background:#262626;color:#fafafa;font:14px ui-monospace,monospace;padding:16px">$ scan --target etheris<br>12 findings</body></html>';
+  '<!doctype html><html><body style="margin:0;background:#262626;color:#fafafa;font:14px ui-monospace,monospace;padding:16px">$ scan --target etheris<br>12 findings</body></html>'; // wmds-check-ignore raw-color a sample document inside the frame, not the app's styling
 
 export function TerminalFrames() {
   return (
