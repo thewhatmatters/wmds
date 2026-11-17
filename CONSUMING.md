@@ -354,12 +354,27 @@ A client's brand on WMDS is a short `brand.css` (imported after `styles.css`, un
 | `--color-brand-surface-primary` / `--color-on-brand-surface-primary` | unset: the surface's ink as the fill, the surface as the label | primary controls (**Button** `primary`, checked **Checkbox** / **Radio** / **Switch**) on `inverse`. Set it when the brand's action colour stands out on its dark surface (3:1 against it, 4.5:1 for its label) |
 | `--color-field` / `--color-on-field` | the primary pair | **Band** `tone="field"` |
 | `--color-on-field-muted` | the ink itself | secondary text on `field` |
+| `--color-paper` | the WMDS page (`#f8f8f8`) | the light page: `bg-body` and `bg-muted`. A light colour (a cream, a drafting paper) |
+| `--color-on-paper` | the WMDS ink (`#171717`) | text on the page and on white surfaces (`text-fg`) |
+| `--color-on-paper-muted` | 72% of the ink on the paper | secondary text and field hints (`text-muted`) |
+| `--color-paper-rule` | the WMDS hairline; stronger rules are 16% of the ink on the paper | rules and hairlines (`border-border`, `border-border-emphasized`) |
 
 The font knobs also work on a section wrapper (`[--font-display:…]`); set the colour pairs on `:root` (and `[data-theme="dark"]` if they differ there). Load the face yourself (`next/font` or `@fontsource/*`).
 
 **Display steps:** `type-display-hero` (fluid to 16vw, 0.92 leading) and `type-display-xl` (44px → 136px, 0.9 leading) sit above `type-display-1`; every display step breaks a long word rather than overflow a phone (`overflow-wrap: anywhere`, also inside flex and grid). **TextSequence** word masks keep 0.08em headroom above and to the sides, so tall caps and outline strokes aren't clipped.
 
-**Contrast:** every on-colour and muted step needs **4.5:1** on its colour. `npx wmds-check` reads the app's CSS and fails a hex pair under that (`brand-contrast`, an error). Pairs it can't resolve (a `var()` or `color-mix`) aren't checked, so check those yourself.
+**Page colour:** `--color-paper` and its three steps colour the page itself in the light theme; dark, soft and **Band** tones keep their own. Set the paper alone and the muted text, stronger rules, quiet fills and control edges are mixed from it; with none set, nothing changes. Surfaces (cards, fields, menus) stay white, so the ink must read on white too: a dark section is **Band** `tone="inverse"`, not a dark paper. WMDS doesn't style `<body>`, so add `className="bg-body text-fg"` to it. To colour one section or one page of a site, set the knobs on a wrapper that also has `data-theme="light"` (it derives the roles again). See **Foundations → Brand kit → Page colour**.
+
+```css
+:root {
+  --color-paper: #f4ecd8;
+  --color-on-paper: #2a1a12;
+  --color-on-paper-muted: #5e4c3e;
+  --color-paper-rule: #d9c9a6;
+}
+```
+
+**Contrast:** every on-colour and muted step needs **4.5:1** on its colour. `npx wmds-check` reads the app's CSS and fails a hex pair under that (`brand-contrast`, an error). For the page colour it checks the ink and the muted text on the paper (the WMDS ink and the derived 72% step when you set the paper alone), and the ink on a white card. Pairs it can't resolve (a `var()` or `color-mix`) aren't checked, so check those yourself.
 
 ```css
 /* brand.css — the reference client (Foundations → Brand kit → Theme a client) */

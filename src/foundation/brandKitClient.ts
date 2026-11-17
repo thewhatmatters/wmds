@@ -58,3 +58,32 @@ export function scopedBrandCss(scope: string) {
     )
     .replace('[data-theme="dark"] {', `${scope} [data-theme="dark"], ${scope}[data-theme="dark"] {`);
 }
+
+const paperCss = `
+/* brand.css — a client's page colour, with its ink, muted text and rules */
+:root {
+  --color-paper: #f4ecd8;
+  --color-on-paper: #2a1a12;
+  --color-on-paper-muted: #5e4c3e;
+  --color-paper-rule: #d9c9a6;
+}
+`.trim();
+
+/**
+ * The reference page colour: a restaurant's cream paper (outreach sketches, 2026-11-17).
+ * Shared by **Foundations/Brand kit → Page colour** and `src/theme/brandKit.test.ts`.
+ */
+export const brandKitPaper = {
+  name: "Cream paper",
+  /** What the app ships in `brand.css`. */
+  brandCss: paperCss,
+  paper: "#f4ecd8",
+  ink: "#2a1a12",
+  muted: "#5e4c3e",
+  rule: "#d9c9a6",
+} as const;
+
+/** The page colour scoped to one specimen. The scope also needs `data-theme="light"`, which derives the roles again. */
+export function scopedPaperCss(scope: string) {
+  return paperCss.replace(/^\/\*.*\*\/\n/, "").replace(":root {", `${scope} {`);
+}

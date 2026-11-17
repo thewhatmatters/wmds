@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { contrastRatio, mixSrgb, textContrastMinimum } from "../lib/contrast";
-import { brandKitClient } from "../foundation/brandKitClient";
+import { brandKitClient, brandKitPaper } from "../foundation/brandKitClient";
 
 const css = (name: string) => readFileSync(path.resolve(__dirname, name), "utf8");
 
@@ -32,6 +32,59 @@ describe("brand kit", () => {
     for (const pair of brandKitClient.pairs) {
       expect(contrastRatio(pair.ink, pair.background), `${pair.label}`).toBeGreaterThanOrEqual(textContrastMinimum);
     }
+  });
+
+  it("the page-colour knobs feed the light roles, with the WMDS greys as the fallbacks", () => {
+    const colors = css("colors.css");
+    const light = colors.slice(0, colors.indexOf('[data-theme="dark"] {'));
+    for (const role of [
+      "--color-background-body: var(--color-paper, #f8f8f8);",
+      "--color-background-muted: var(--color-paper, #f8f8f8);",
+      "--color-text-primary: var(--color-on-paper, #171717);",
+      "--color-text-secondary: var(--paper-muted, #404040);",
+      "--color-text-placeholder: var(--paper-muted, #6e6e6e);",
+      "--color-border: var(--color-paper-rule, rgb(42 36 28 / 6%));",
+      "--color-border-emphasized: var(--color-paper-rule, var(--paper-rule, #d9d9d9));",
+      "--color-border-control: var(--paper-control, #8c8c8c);",
+    ]) {
+      expect(light, role).toContain(role);
+    }
+    // The derived steps mix with a bare var(--color-paper): unset, the mix is invalid and the grey fallback wins.
+    for (const step of ["--paper-rule", "--paper-fill", "--paper-control"]) {
+      expect(light).toMatch(new RegExp(`${step}: color-mix\\(in srgb, var\\(--color-on-paper, #171717\\) \\d+%, var\\(--color-paper\\)\\);`));
+    }
+    expect(light.replace(/\s+/g, " ")).toContain(
+      "--paper-muted: var( --color-on-paper-muted, color-mix(in srgb, var(--color-on-paper, #171717) 72%, var(--color-paper)) );",
+    );
+    // Dark, soft and the tones keep their own page.
+    expect(colors.slice(colors.indexOf('[data-theme="dark"] {'))).not.toMatch(/--color-(on-)?paper\b|--paper-/);
+  });
+
+  it("the steps derived from a paper clear contrast: muted text 4.5:1, control edges 3:1", () => {
+    const papers = [
+      { paper: brandKitPaper.paper, ink: brandKitPaper.ink },
+      // A paper alone keeps the WMDS ink.
+      { paper: brandKitPaper.paper, ink: "#171717" },
+      { paper: "#eeede6", ink: "#171717" },
+      { paper: "#fbf3e4", ink: "#3a1d14" },
+    ];
+    for (const { paper, ink } of papers) {
+      const muted = mixSrgb(ink, 0.72, paper);
+      expect(contrastRatio(muted, paper), `muted on ${paper}`).toBeGreaterThanOrEqual(textContrastMinimum);
+      expect(contrastRatio(muted, "#ffffff"), `muted on a card`).toBeGreaterThanOrEqual(textContrastMinimum);
+      expect(contrastRatio(mixSrgb(ink, 0.52, paper), paper), `control edge on ${paper}`).toBeGreaterThanOrEqual(3);
+      // The rule and the fill stay quiet: seen, never a second ink.
+      expect(contrastRatio(mixSrgb(ink, 0.16, paper), paper)).toBeGreaterThan(1.2);
+      expect(contrastRatio(mixSrgb(ink, 0.06, paper), paper)).toBeGreaterThan(1.05);
+    }
+  });
+
+  it("the reference paper clears 4.5:1 for its ink and muted text, on the page and on a card", () => {
+    for (const ink of [brandKitPaper.ink, brandKitPaper.muted]) {
+      expect(contrastRatio(ink, brandKitPaper.paper), ink).toBeGreaterThanOrEqual(textContrastMinimum);
+      expect(contrastRatio(ink, "#ffffff"), ink).toBeGreaterThanOrEqual(textContrastMinimum);
+    }
+    expect(contrastRatio(brandKitPaper.rule, brandKitPaper.paper)).toBeGreaterThan(1.2);
   });
 
   it("tones remap the roles components read, including the ones stateColors derives on :root", () => {

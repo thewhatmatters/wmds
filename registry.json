@@ -1789,6 +1789,22 @@
       "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
     },
     {
+      "name": "components-pricelist--menu",
+      "type": "registry:block",
+      "title": "PriceList — menu section",
+      "description": "Show code for Storybook Components/PriceList → Pattern — menu section.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-pricelist--menu.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
       "name": "components-progress--upload-pattern",
       "type": "registry:block",
       "title": "Progress — upload with a count",

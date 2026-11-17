@@ -10,7 +10,8 @@ const colors = readFileSync(new URL("./colors.css", import.meta.url), "utf8");
 const state = readFileSync(new URL("./stateColors.css", import.meta.url), "utf8");
 const block = (css: string, selector: string) => css.slice(css.indexOf(selector)).split("}")[0]!;
 const token = (scope: string, name: string) =>
-  block(colors, scope).match(new RegExp(`--color-${name}:\\s*(#[0-9a-f]{6})\\b`, "i"))?.[1] ?? "";
+  // The value, or the fallback of a brand-kit knob: `var(--color-paper, #f8f8f8)` reads as #f8f8f8.
+  block(colors, scope).match(new RegExp(`--color-${name}:\\s*(?:var\\([^#;]*)?(#[0-9a-f]{6})\\b`, "i"))?.[1] ?? "";
 
 const LIGHT = ':root,\n[data-theme="light"] {';
 const DARK = '[data-theme="dark"] {';
