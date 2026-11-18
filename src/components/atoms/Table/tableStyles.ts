@@ -19,6 +19,13 @@ export const tableGridRulesClasses =
   // Roomier cells, the same inset in every cell, so a column's content lines up from its header down.
   "[&_th]:px-6 [&_td]:px-6 [&_td]:py-4 lg:[&_th]:px-8 lg:[&_td]:px-8";
 
+/**
+ * `fit`: the table takes its box's width instead of its content's, so its cells (header cells too) wrap and a
+ * narrow box (a bento cell, a card on a phone) never scrolls sideways. For a few short columns, not a data table.
+ */
+// Figures (`align="end"`) stay on one line: a date or an amount never breaks.
+export const tableFitClasses = "!min-w-0 [&_th]:!whitespace-normal [&_td]:break-words [&_td.tabular-nums]:whitespace-nowrap";
+
 export const tableHeaderClasses = "[&_tr]:border-b [&_tr]:border-border";
 
 /** Only body rows fill on hover: header and footer rows aren't things to pick out, so they stay still. */

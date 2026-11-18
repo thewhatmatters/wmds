@@ -6,6 +6,7 @@ import {
   tableCaptionClasses,
   tableCellClasses,
   tableClasses,
+  tableFitClasses,
   tableFooterClasses,
   tableGridRulesClasses,
   tableHeadWrapClasses,
@@ -42,6 +43,12 @@ export interface TableProps {
    * `--table-sticky-top` on a parent.
    */
   stickyHeader?: boolean;
+  /**
+   * Fit the box: the table is as wide as its box, not its content, and its cells wrap, so it never scrolls
+   * sideways inside a narrow box (a bento cell, a card on a phone). Keep it to a few short columns; a wide data
+   * table should scroll instead. `rules="grid"` already fits its box.
+   */
+  fit?: boolean;
   /** Layout-only — applies to the scroll box. */
   className?: TableLayoutClassName;
 }
@@ -81,9 +88,9 @@ export interface TableCaptionProps {
 
 /**
  * Semantic table in a horizontal-scroll box. The box is a focusable `region` named by the table's
- * label, so a keyboard can scroll it; the table never squeezes its columns below their content.
+ * label, so a keyboard can scroll it; the table never squeezes its columns below their content, unless `fit`.
  */
-function Table({ children, "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, rules = "rows", stickyHeader, className }: TableProps) {
+function Table({ children, "aria-label": ariaLabel, "aria-labelledby": ariaLabelledBy, rules = "rows", stickyHeader, fit, className }: TableProps) {
   const pinHeader = stickyHeader === true && rules === "grid";
   return (
     <div
@@ -93,7 +100,7 @@ function Table({ children, "aria-label": ariaLabel, "aria-labelledby": ariaLabel
       aria-labelledby={ariaLabelledBy}
       className={cn(tableScrollClasses, pinHeader && tableStickyHeaderScrollClasses, className)}
     >
-      <table className={cn(tableClasses, rules === "grid" && tableGridRulesClasses, pinHeader && tableStickyHeaderClasses)} data-rules={rules}>
+      <table className={cn(tableClasses, rules === "grid" && tableGridRulesClasses, fit && tableFitClasses, pinHeader && tableStickyHeaderClasses)} data-rules={rules} data-fit={fit ? "" : undefined}>
         {children}
       </table>
     </div>
