@@ -235,6 +235,14 @@
       "source": "src/components/molecules/CalEmbed/CalEmbed.stories.tsx"
     },
     {
+      "id": "components-card-card--bare",
+      "title": "Components/Card/Card",
+      "name": "Pattern — bare (a bento cell)",
+      "file": "patterns/components-card-card--bare.tsx",
+      "storybook": "?path=/story/components-card-card--bare",
+      "source": "src/components/molecules/Card/Card.stories.tsx"
+    },
+    {
       "id": "components-card-card--body-slot-occupancy-history",
       "title": "Components/Card/Card",
       "name": "Example — body slot (occupancy history)",
@@ -256,6 +264,22 @@
       "name": "Pattern — headerless media",
       "file": "patterns/components-card-card--headerless-media.tsx",
       "storybook": "?path=/story/components-card-card--headerless-media",
+      "source": "src/components/molecules/Card/Card.stories.tsx"
+    },
+    {
+      "id": "components-card-card--media",
+      "title": "Components/Card/Card",
+      "name": "Pattern — media to the edges",
+      "file": "patterns/components-card-card--media.tsx",
+      "storybook": "?path=/story/components-card-card--media",
+      "source": "src/components/molecules/Card/Card.stories.tsx"
+    },
+    {
+      "id": "components-card-card--muted",
+      "title": "Components/Card/Card",
+      "name": "Pattern — muted (a quiet cell)",
+      "file": "patterns/components-card-card--muted.tsx",
+      "storybook": "?path=/story/components-card-card--muted",
       "source": "src/components/molecules/Card/Card.stories.tsx"
     },
     {
