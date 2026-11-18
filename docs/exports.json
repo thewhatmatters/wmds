@@ -166,6 +166,7 @@
         "components-card-card--glass",
         "components-card-card--headerless-media",
         "components-card-card--media",
+        "components-card-card--muted",
         "components-card-card--outlined-layout",
         "components-card-card--pinned-height",
         "components-card-card--terminal-frame"

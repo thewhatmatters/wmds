@@ -113,6 +113,7 @@ const meta = {
 | **Outlined layout** | \`Card variant="outlined"\` — \`shadow-soft-card\`, no stroke. Radius stays \`--radius-card-shell\` |
 | **Bare** | \`Card padding="bare"\` — the layout card's surface, shape and shadow with no section room; content lays itself out. Copy **Pattern — bare (a bento cell)** |
 | **Media** | \`Card.Media\` — a picture, a video or a product screen cut at the card's edges (top as the first child, bottom as the last); \`bleed="end"\` starts at the text inset and runs off the end edge; \`fade\` fades its bottom. Copy **Pattern — media to the edges** |
+| **Muted** | \`Card variant="muted"\` — a quiet fill: the page's muted background, a hairline edge, no shadow; a \`surface\` panel inside stands out. Copy **Pattern — muted (a quiet cell)** |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
 | **Glass** | \`Card variant="glass"\` — a frosted pane over a picture, a video or a canvas: the surface colour at part strength over a blur of what's behind. Knobs \`--card-glass-tint\` (default 70% in light themes, 88% in dark) and \`--card-glass-blur\` (default 12px). Copy **Pattern — glass over a picture** |
 
@@ -1223,6 +1224,57 @@ export function MediaCards() {
     const media = endCard.querySelector<HTMLElement>("[data-slot='card-media']")!;
     await expect(getComputedStyle(media).paddingInlineStart).toBe("24px");
     await expect(getComputedStyle(media).maskImage).toContain("linear-gradient");
+  },
+};
+
+export const Muted: Story = {
+  name: "Pattern — muted (a quiet cell)",
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "padded",
+      docs: {
+        description: {
+          story:
+            "`variant=\"muted\"` is a quiet fill: the page's muted background, a hairline edge and no shadow. A `surface` card set inside it (a product screen in a bento cell) stands out from the cell, where `surface` in `surface` reads only by its shadow.",
+        },
+      },
+    },
+    `
+import { Card } from "@thewhatmatters/wmds";
+
+export function QuietCell() {
+  return (
+    <Card variant="muted" padding="lg" className="max-w-sm gap-4">
+      <div className="flex flex-col gap-1">
+        <h3 className="type-heading-3">Sign-off in one place</h3>
+        <p className="type-body text-muted">Every approval, with who gave it and when.</p>
+      </div>
+      <Card padding="md">
+        <p className="type-body">Homepage copy: approved by Sam, 12 Dec</p>
+      </Card>
+    </Card>
+  );
+}
+    `,
+  ),
+  render: () => (
+    <Card variant="muted" padding="lg" className="max-w-sm gap-4" data-testid="muted">
+      <div className="flex flex-col gap-1">
+        <h3 className="type-heading-3">Sign-off in one place</h3>
+        <p className="type-body text-muted">Every approval, with who gave it and when.</p>
+      </div>
+      <Card padding="md" data-testid="muted-panel">
+        <p className="type-body">Homepage copy: approved by Sam, 12 Dec</p>
+      </Card>
+    </Card>
+  ),
+  play: async ({ canvasElement }) => {
+    const cell = getComputedStyle(canvasElement.querySelector<HTMLElement>("[data-testid='muted']")!);
+    const panel = getComputedStyle(canvasElement.querySelector<HTMLElement>("[data-testid='muted-panel']")!);
+    await expect(cell.boxShadow).toBe("none");
+    await expect(cell.borderTopWidth).toBe("1px");
+    // The panel inside reads against the cell by its fill, not only a shadow.
+    await expect(cell.backgroundColor).not.toBe(panel.backgroundColor);
   },
 };
 

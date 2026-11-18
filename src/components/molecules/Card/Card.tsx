@@ -85,6 +85,8 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
   shape?: CardShape;
   /**
    * Surface treatment: layout cards use soft card elevation. `outlined` is that elevation with no stroke.
+   * `muted` is a quiet fill: the page's muted background, a hairline edge and no shadow, so a `surface` panel
+   * inside it (a product screen in a bento cell) stands out.
    * `glass` is a frosted pane for a card over a picture, a video or a canvas: the surface colour at part
    * strength over a blur of what's behind it (knobs `--card-glass-tint`, default 70% light / 88% dark, and
    * `--card-glass-blur`), and a solid

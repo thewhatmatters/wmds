@@ -275,6 +275,14 @@
       "source": "src/components/molecules/Card/Card.stories.tsx"
     },
     {
+      "id": "components-card-card--muted",
+      "title": "Components/Card/Card",
+      "name": "Pattern — muted (a quiet cell)",
+      "file": "patterns/components-card-card--muted.tsx",
+      "storybook": "?path=/story/components-card-card--muted",
+      "source": "src/components/molecules/Card/Card.stories.tsx"
+    },
+    {
       "id": "components-card-card--outlined-layout",
       "title": "Components/Card/Card",
       "name": "Pattern — outlined layout",

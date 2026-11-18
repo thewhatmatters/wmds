@@ -291,3 +291,24 @@ describe("Card.Media", () => {
     done();
   });
 });
+
+describe('Card variant="muted"', () => {
+  it("draws the muted fill with a hairline edge and no shadow, in both padding modes", () => {
+    for (const padding of ["md", "none"] as const) {
+      const container = document.createElement("div");
+      document.body.appendChild(container);
+      const root = createRoot(container);
+      act(() => {
+        root.render(createElement(Card, { variant: "muted", padding } as CardProps, "Quiet"));
+      });
+      const card = container.firstElementChild as HTMLElement;
+      expect(card.getAttribute("data-variant")).toBe("muted");
+      expect(card.className).toContain("bg-muted-surface");
+      expect(card.className).toContain("border-border");
+      expect(card.className).not.toContain("shadow");
+      expect(card.className).not.toMatch(/(^|\s)bg-surface(\s|$)/);
+      act(() => root.unmount());
+      container.remove();
+    }
+  });
+});

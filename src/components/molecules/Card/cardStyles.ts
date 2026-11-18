@@ -6,7 +6,7 @@ export const cardShapes = ["flush", "rounded"] as const;
 
 export type CardShape = (typeof cardShapes)[number];
 
-export const cardVariants = ["surface", "outlined", "ghost", "glass"] as const;
+export const cardVariants = ["surface", "outlined", "muted", "ghost", "glass"] as const;
 
 export type CardVariant = (typeof cardVariants)[number];
 
@@ -43,9 +43,17 @@ export const cardGlassClasses = [
   glassSurfaceFillClasses,
 ].join(" ");
 
+/**
+ * Quiet fill: the page's muted background with a hairline edge and no shadow, so a `surface` panel set inside it
+ * (a product screen in a bento cell) stands out from the cell. The edge keeps the card visible on a page whose
+ * background is the same colour.
+ */
+export const cardMutedClasses = "bg-muted-surface border border-border";
+
 export const cardVariantClasses: Record<CardVariant, string> = {
   surface: "bg-surface",
   outlined: "bg-card shadow-soft-card",
+  muted: cardMutedClasses,
   ghost: "bg-transparent",
   glass: cardGlassClasses,
 };
@@ -53,6 +61,7 @@ export const cardVariantClasses: Record<CardVariant, string> = {
 export const cardLayoutVariantClasses: Record<CardVariant, string> = {
   surface: "bg-surface shadow-soft-card",
   outlined: "bg-surface shadow-soft-card",
+  muted: cardMutedClasses,
   ghost: "bg-transparent",
   glass: cardGlassClasses,
 };
