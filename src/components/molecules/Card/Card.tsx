@@ -11,6 +11,7 @@ import { Skeleton } from "../../atoms/Skeleton/Skeleton";
 import { cn } from "../../../lib/cn";
 import {
   cardAddressClasses,
+  cardBareShellClasses,
   cardBaseClasses,
   cardBodyTextClasses,
   cardBodyWellClasses,
@@ -83,7 +84,11 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
    * surface where blur isn't available or the visitor asks for reduced transparency.
    */
   variant?: CardVariant;
-  /** Root padding. Use `none` with `Card.Header` / `Card.Body` / `Card.Footer`. */
+  /**
+   * Root padding. Use `none` with `Card.Header` / `Card.Body` / `Card.Footer` (it keeps 16px above and below and
+   * 12px between them). `bare`: the same card with no room at all, for content that lays itself out (a bento
+   * cell's own grid, a picture to the card's edge).
+   */
   padding?: CardPadding;
   /** Overrides automatic terminal-Body detection. Normally omitted: Body without Footer gets a 2px bottom inset. */
   bodyTerminal?: boolean;
@@ -164,6 +169,7 @@ function CardRoot({
   children,
   ...props
 }: CardProps) {
+  const bare = padding === "bare";
   const isLayout = padding === "none";
   const childList = Children.toArray(children);
   const hasHeader = childList.some(
@@ -195,7 +201,9 @@ function CardRoot({
         <Component
           className={cn(
             cardBaseClasses,
-            isLayout
+            bare
+              ? cn(cardBareShellClasses, cardLayoutShellShapeClasses[shape], cardLayoutVariantClasses[variant])
+              : isLayout
               ? cn(
                   cardLayoutShellClasses,
                   cardLayoutShellTopClasses(!omitHeader),
@@ -214,7 +222,7 @@ function CardRoot({
           data-shape={shape}
           data-variant={variant}
           data-padding={padding}
-          data-layout={isLayout ? "shell" : undefined}
+          data-layout={isLayout ? "shell" : bare ? "bare" : undefined}
           {...cardToneAttributes(tone)}
           {...props}
         >

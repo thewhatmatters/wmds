@@ -218,3 +218,33 @@ describe("Card glass", () => {
     expect(card.className).toContain("var(--color-background-surface)");
   });
 });
+
+describe('Card padding="bare"', () => {
+  let root: Root | undefined;
+  let container: HTMLDivElement | undefined;
+
+  afterEach(() => {
+    act(() => root?.unmount());
+    container?.remove();
+    root = undefined;
+    container = undefined;
+  });
+
+  it("keeps the layout card's surface and shape but no section room", () => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+    act(() => {
+      root?.render(
+        createElement(Card, { padding: "bare", as: "article" } as CardProps, createElement("div", null, "Own layout")),
+      );
+    });
+    const card = container.firstElementChild as HTMLElement;
+    expect(card.getAttribute("data-layout")).toBe("bare");
+    expect(card.className).toContain("bg-surface");
+    expect(card.className).toContain("shadow-soft-card");
+    expect(card.className).toContain("rounded-[var(--radius-card-shell)]");
+    expect(card.className).toContain("overflow-hidden");
+    expect(card.className).not.toMatch(/(^|\s)(p[tby]?|gap)-/);
+  });
+});

@@ -111,6 +111,7 @@ const meta = {
 | **Inset well** | \`cardLayoutBodyOccupantWellClasses\` on the occupant — \`bg-body\` + concentric **14px** radius (\`--radius-card-body\`); radius-only occupants → \`cardLayoutBodyOccupantRadiusClasses\`; dot-grid → \`cardLayoutBodyOccupantDotGridWellClasses\` |
 | **Pinned height** | Layout \`className\` height on the root with **Header** + **Body** + **Footer** — Header/Footer stay put; **Card.Body** scrolls (2px gutter unchanged). No new variant. Copy **Pattern — pinned height** |
 | **Outlined layout** | \`Card variant="outlined"\` — \`shadow-soft-card\`, no stroke. Radius stays \`--radius-card-shell\` |
+| **Bare** | \`Card padding="bare"\` — the layout card's surface, shape and shadow with no section room; content lays itself out. Copy **Pattern — bare (a bento cell)** |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
 | **Glass** | \`Card variant="glass"\` — a frosted pane over a picture, a video or a canvas: the surface colour at part strength over a blur of what's behind. Knobs \`--card-glass-tint\` (default 70% in light themes, 88% in dark) and \`--card-glass-blur\` (default 12px). Copy **Pattern — glass over a picture** |
 
@@ -134,6 +135,7 @@ Card (bg-surface shell, gap-3)
 ## Best practices
 
 - **Do** set \`padding="none"\` when using Header/Body/Footer.
+- **Do** set \`padding="bare"\` for content that lays itself out (a bento cell, a picture to the card's edges) instead of taking the room back with \`!py-0 !gap-0\`.
 - **Do** put leading copy in \`start\` and trailing actions in \`end\` — do not hand-roll the header row.
 - **Do** put overflow / **MoreMenu** triggers in **Card.Header** \`end\` (right). \`end\` stays trailing even when \`start\` is omitted — never left-align kebab or flow-over actions.
 - **Do** pin a layout height on the Card root (\`className="h-[…]"\`) when Header/Body/Footer should share one size — Body scrolls; Header and Footer stay put. No new variant.
@@ -1083,6 +1085,58 @@ export function QuarterOverPicture({ src }: { src: string }) {
 }
 `,
   ),
+};
+
+export const Bare: Story = {
+  name: "Pattern — bare (a bento cell)",
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "padded",
+      docs: {
+        description: {
+          story:
+            "`padding=\"bare\"` is a layout card with no section room: the surface, shape and soft shadow and nothing else, so content that lays itself out (a bento cell's words over a picture that runs to the card's edges) needs no `!py-0 !gap-0`. `padding=\"none\"` keeps 16px above and below and 12px between **Header**, **Body** and **Footer**.",
+        },
+      },
+    },
+    `
+import { Card } from "@thewhatmatters/wmds";
+
+export function BentoCell() {
+  return (
+    <Card as="article" padding="bare" className="max-w-sm">
+      <div className="flex flex-col gap-2 p-6">
+        <h3 className="type-heading-3">Every project on one board</h3>
+        <p className="type-body text-muted">Stage, owner and next date for each job.</p>
+      </div>
+      <div className="aspect-[4/3] bg-body" aria-hidden="true" />
+    </Card>
+  );
+}
+    `,
+  ),
+  render: () => (
+    <Card as="article" padding="bare" className="max-w-sm" data-testid="bare">
+      <div className="flex flex-col gap-2 p-6">
+        <h3 className="type-heading-3">Every project on one board</h3>
+        <p className="type-body text-muted">Stage, owner and next date for each job.</p>
+      </div>
+      <div className="aspect-[4/3] bg-body" aria-hidden="true" data-testid="bare-visual" />
+    </Card>
+  ),
+  play: async ({ canvasElement }) => {
+    const card = canvasElement.querySelector<HTMLElement>("[data-testid='bare']")!;
+    const visual = canvasElement.querySelector<HTMLElement>("[data-testid='bare-visual']")!;
+    const style = getComputedStyle(card);
+    await expect(style.paddingTop).toBe("0px");
+    await expect(style.paddingBottom).toBe("0px");
+    await expect(style.rowGap).toBe("normal");
+    // The visual runs to the card's bottom and side edges.
+    const box = card.getBoundingClientRect();
+    const media = visual.getBoundingClientRect();
+    await expect(Math.round(box.bottom - media.bottom)).toBe(0);
+    await expect(Math.round(media.left - box.left)).toBe(0);
+  },
 };
 
 export const GlassKnobs: Story = {

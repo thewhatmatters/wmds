@@ -475,6 +475,22 @@
       "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
     },
     {
+      "name": "components-card-card--bare",
+      "type": "registry:block",
+      "title": "Card — bare (a bento cell)",
+      "description": "Show code for Storybook Components/Card/Card → Pattern — bare (a bento cell).",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-card-card--bare.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
       "name": "components-card-card--body-slot-occupancy-history",
       "type": "registry:block",
       "title": "Card — Example — body slot (occupancy history)",

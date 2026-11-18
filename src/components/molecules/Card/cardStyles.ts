@@ -10,7 +10,11 @@ export const cardVariants = ["surface", "outlined", "ghost", "glass"] as const;
 
 export type CardVariant = (typeof cardVariants)[number];
 
-export const cardPaddings = ["none", "md", "lg"] as const;
+/**
+ * `none` is the layout shell for `Card.Header` / `Card.Body` / `Card.Footer` (it keeps their 16px / 12px room).
+ * `bare` is the same card with no room at all: for content that lays itself out (a bento cell, a picture to the edge).
+ */
+export const cardPaddings = ["none", "bare", "md", "lg"] as const;
 
 export type CardPadding = (typeof cardPaddings)[number];
 
@@ -55,6 +59,7 @@ export const cardLayoutVariantClasses: Record<CardVariant, string> = {
 
 export const cardRootPaddingClasses: Record<CardPadding, string> = {
   none: "",
+  bare: "",
   md: "p-4",
   lg: "p-6",
 };
@@ -66,6 +71,9 @@ export const cardRootPaddingClasses: Record<CardPadding, string> = {
  * their children (`height: auto`); overflow clips only overflowing descendants.
  */
 export const cardLayoutShellClasses = "min-h-0 gap-3 overflow-hidden";
+
+/** `padding="bare"`: the layout card's surface and shape with no section room (no pad, no gap between parts). */
+export const cardBareShellClasses = "min-h-0 overflow-hidden";
 
 /** Layout shell top pad — 16px beside Header; 2px when Header is omitted. */
 export function cardLayoutShellTopClasses(hasHeader = true): string {
@@ -167,6 +175,11 @@ export const cardSectionPaddingClasses: Record<
   none: {
     header: cardLayoutHeaderClasses,
     body: cardLayoutBodyWellClasses,
+    footer: cardLayoutFooterClasses,
+  },
+  bare: {
+    header: cardLayoutHeaderClasses,
+    body: "flex min-h-0 w-full flex-col",
     footer: cardLayoutFooterClasses,
   },
   md: {

@@ -161,6 +161,7 @@
         "docs": "?path=/docs/components-card-card--docs"
       },
       "patterns": [
+        "components-card-card--bare",
         "components-card-card--body-slot-occupancy-history",
         "components-card-card--glass",
         "components-card-card--headerless-media",
