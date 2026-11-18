@@ -55,6 +55,8 @@ export function SegmentedControlItem({
       type="button"
       role="radio"
       aria-checked={isSelected}
+      // One tab stop for the group: the selected segment (every segment while none is selected); arrows move between them.
+      tabIndex={isSelected || !group.hasSelection ? 0 : -1}
       disabled={disabled}
       onClick={() => {
         if (disabled || isSelected) {

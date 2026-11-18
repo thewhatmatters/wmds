@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
+import { expect, userEvent, within } from "storybook/test";
 import { BarChart3, LayoutGrid, List } from "lucide-react";
 import { storyCopySource, storyMetaDocsDefaults } from "../../../lib/storyCopySource";
 import { ButtonIcon } from "../../atoms/Button/ButtonIcon";
@@ -160,6 +161,24 @@ function ReportViewSwitcher() {
         <SegmentedControl.Item value="chart">Chart</SegmentedControl.Item>
       </SegmentedControl>
     );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const [list, grid, chart] = canvas.getAllByRole("radio");
+    // One tab stop: Tab lands on the selected segment.
+    await userEvent.tab();
+    await expect(chart).toHaveFocus();
+    // Arrows move and select, wrapping at the ends.
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(list).toHaveFocus();
+    await expect(list).toHaveAttribute("aria-checked", "true");
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect(chart).toHaveAttribute("aria-checked", "true");
+    await userEvent.keyboard("{Home}");
+    await expect(list).toHaveFocus();
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(grid).toHaveAttribute("aria-checked", "true");
+    await expect([list.tabIndex, grid.tabIndex, chart.tabIndex]).toEqual([-1, 0, -1]);
   },
 };
 

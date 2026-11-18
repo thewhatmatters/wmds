@@ -9,6 +9,8 @@ export type SegmentedControlContextValue = {
   value: string;
   onValueChange: (value: string) => void;
   disabled?: boolean;
+  /** True when a direct segment holds `value`: only that segment is in the tab order (roving tabindex). */
+  hasSelection: boolean;
 };
 
 const SegmentedControlContext = createContext<SegmentedControlContextValue | null>(null);
