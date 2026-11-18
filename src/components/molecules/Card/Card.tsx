@@ -30,6 +30,10 @@ import {
   cardLayoutShellShapeClasses,
   cardLayoutTerminalBodyClasses,
   cardLayoutVariantClasses,
+  cardMediaBleedClasses,
+  cardMediaClasses,
+  cardMediaFadeClasses,
+  cardMediaPaddingClasses,
   cardOverflowClasses,
   cardRootPaddingClasses,
   cardSectionPaddingClasses,
@@ -45,6 +49,7 @@ import {
   cardTitleClasses,
   cardVariantClasses,
   type CardBodyVariant,
+  type CardMediaBleed,
   type CardPadding,
   type CardShape,
   type CardTerminalHeight,
@@ -54,6 +59,7 @@ import {
 
 export type {
   CardBodyVariant,
+  CardMediaBleed,
   CardPadding,
   CardShape,
   CardTerminalHeight,
@@ -62,6 +68,7 @@ export type {
 } from "./cardStyles";
 export {
   cardBodyVariants,
+  cardMediaBleeds,
   cardPaddings,
   cardShapes,
   cardTerminalHeights,
@@ -338,6 +345,38 @@ function CardFooter({ className, children, ...props }: CardSectionProps) {
   );
 }
 
+export interface CardMediaProps extends CardSectionProps {
+  /** `edges` (default): fills the card's width. `end`: starts at the card's text inset and runs off the end edge (a product screen cut by the card). */
+  bleed?: CardMediaBleed;
+  /** Fade the media's bottom into the card's fill, so a tall screen ends softly instead of at a hard cut. */
+  fade?: boolean;
+}
+
+/**
+ * A picture, a video or a product screen cut at the card's edges. As the card's first child it meets the top
+ * edge, as the last the bottom edge; size it with `className` (an `aspect-*` or a height). Images and videos
+ * directly inside cover the box. It adds no role: give a picture its `alt`, or `alt=""` when it is decoration.
+ */
+function CardMedia({ bleed = "edges", fade = false, className, children, ...props }: CardMediaProps) {
+  const padding = useCardPadding();
+  return (
+    <div
+      className={cn(
+        cardMediaClasses,
+        cardMediaPaddingClasses[padding],
+        cardMediaBleedClasses[bleed],
+        fade && cardMediaFadeClasses,
+        className,
+      )}
+      data-slot="card-media"
+      data-bleed={bleed}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
+
 function CardDivider({ className, ...props }: HTMLAttributes<HTMLHRElement>) {
   return <hr className={cn(cardDividerClasses, className)} {...props} />;
 }
@@ -355,6 +394,7 @@ export const Card = Object.assign(CardRoot, {
   Header: CardHeader,
   Body: CardBody,
   Footer: CardFooter,
+  Media: CardMedia,
   Divider: CardDivider,
 });
 

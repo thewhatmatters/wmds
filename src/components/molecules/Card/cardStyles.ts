@@ -194,6 +194,34 @@ export const cardSectionPaddingClasses: Record<
   },
 };
 
+export const cardMediaBleeds = ["edges", "end"] as const;
+
+/** `edges`: the media fills the card's width. `end`: it starts at the card's text inset and runs off the end edge. */
+export type CardMediaBleed = (typeof cardMediaBleeds)[number];
+
+/**
+ * **Card.Media** reaches the card's edges through the card's own padding (first child: the top edge too; last
+ * child: the bottom edge), and the card's rounded, clipped shell cuts it. `--card-media-inset` is the card's text
+ * inset, where `bleed="end"` starts.
+ */
+export const cardMediaPaddingClasses: Record<CardPadding, string> = {
+  none: "first:-mt-4 last:-mb-4 [--card-media-inset:1rem]",
+  bare: "[--card-media-inset:var(--card-inset,1.5rem)]",
+  md: "-mx-4 first:-mt-4 last:-mb-4 [--card-media-inset:1rem]",
+  lg: "-mx-6 first:-mt-6 last:-mb-6 [--card-media-inset:1.5rem]",
+};
+
+/** As the last child of a card stretched in a row, it sinks to the bottom edge, so a row of cards ends level. */
+export const cardMediaClasses = "[&:last-child:not(:first-child)]:mt-auto relative min-w-0 shrink-0 overflow-hidden [&>img]:block [&>img]:size-full [&>img]:object-cover [&>video]:block [&>video]:size-full [&>video]:object-cover";
+
+export const cardMediaBleedClasses: Record<CardMediaBleed, string> = {
+  edges: "",
+  end: "ps-[var(--card-media-inset)]",
+};
+
+/** Fades the media's bottom into the card's own fill (a mask, so it works on any fill and in any theme). */
+export const cardMediaFadeClasses = "[mask-image:linear-gradient(to_bottom,black_55%,transparent)]";
+
 export const cardTitleClasses = `${typographyClass("subheading")} leading-snug`;
 
 export const cardSubtitleClasses = `${typographyClass("caption")} leading-snug text-muted`;

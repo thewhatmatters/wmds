@@ -267,6 +267,14 @@
       "source": "src/components/molecules/Card/Card.stories.tsx"
     },
     {
+      "id": "components-card-card--media",
+      "title": "Components/Card/Card",
+      "name": "Pattern — media to the edges",
+      "file": "patterns/components-card-card--media.tsx",
+      "storybook": "?path=/story/components-card-card--media",
+      "source": "src/components/molecules/Card/Card.stories.tsx"
+    },
+    {
       "id": "components-card-card--outlined-layout",
       "title": "Components/Card/Card",
       "name": "Pattern — outlined layout",

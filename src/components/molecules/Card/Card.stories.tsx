@@ -112,6 +112,7 @@ const meta = {
 | **Pinned height** | Layout \`className\` height on the root with **Header** + **Body** + **Footer** — Header/Footer stay put; **Card.Body** scrolls (2px gutter unchanged). No new variant. Copy **Pattern — pinned height** |
 | **Outlined layout** | \`Card variant="outlined"\` — \`shadow-soft-card\`, no stroke. Radius stays \`--radius-card-shell\` |
 | **Bare** | \`Card padding="bare"\` — the layout card's surface, shape and shadow with no section room; content lays itself out. Copy **Pattern — bare (a bento cell)** |
+| **Media** | \`Card.Media\` — a picture, a video or a product screen cut at the card's edges (top as the first child, bottom as the last); \`bleed="end"\` starts at the text inset and runs off the end edge; \`fade\` fades its bottom. Copy **Pattern — media to the edges** |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
 | **Glass** | \`Card variant="glass"\` — a frosted pane over a picture, a video or a canvas: the surface colour at part strength over a blur of what's behind. Knobs \`--card-glass-tint\` (default 70% in light themes, 88% in dark) and \`--card-glass-blur\` (default 12px). Copy **Pattern — glass over a picture** |
 
@@ -1136,6 +1137,92 @@ export function BentoCell() {
     const media = visual.getBoundingClientRect();
     await expect(Math.round(box.bottom - media.bottom)).toBe(0);
     await expect(Math.round(media.left - box.left)).toBe(0);
+  },
+};
+
+export const Media: Story = {
+  name: "Pattern — media to the edges",
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "padded",
+      docs: {
+        description: {
+          story:
+            "**Card.Media** holds a picture, a video or a product screen cut at the card's edges, through the card's own padding: as the first child it meets the top edge, as the last the bottom edge. `bleed=\"end\"` starts it at the card's text inset and lets it run off the end edge; `fade` fades its bottom into the card's fill. Size it with `className`. A picture keeps its own `alt` (`alt=\"\"` for decoration).",
+        },
+      },
+    },
+    `
+import { Card } from "@thewhatmatters/wmds";
+
+export function MediaCards() {
+  return (
+    <div className="grid max-w-3xl gap-4 md:grid-cols-2">
+      <Card as="article" padding="lg" className="gap-4">
+        <Card.Media className="aspect-[4/3]">
+          <img
+            src="https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=900&q=80"
+            alt="Bright kitchen with a coastal dining table"
+          />
+        </Card.Media>
+        <h3 className="type-heading-3">Harbour Street kitchen</h3>
+      </Card>
+      <Card as="article" padding="lg" className="gap-4">
+        <h3 className="type-heading-3">Every project on one board</h3>
+        <p className="type-body text-muted">Stage, owner and next date for each job.</p>
+        <Card.Media bleed="end" fade className="h-48">
+          <div className="h-full rounded-ss-[var(--radius-card-body)] border-s border-t border-border bg-body p-4">
+            <p className="type-body">Harbour Street bakery site</p>
+            <p className="type-body text-muted">Building · 12 Dec</p>
+          </div>
+        </Card.Media>
+      </Card>
+    </div>
+  );
+}
+    `,
+  ),
+  render: () => (
+    <div className="grid max-w-3xl gap-4 md:grid-cols-2">
+      <Card as="article" padding="lg" className="gap-4" data-testid="media-top">
+        <Card.Media className="aspect-[4/3]">
+          <img
+            src="https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=900&q=80"
+            alt="Bright kitchen with a coastal dining table"
+          />
+        </Card.Media>
+        <h3 className="type-heading-3">Harbour Street kitchen</h3>
+      </Card>
+      <Card as="article" padding="lg" className="gap-4" data-testid="media-end">
+        <h3 className="type-heading-3">Every project on one board</h3>
+        <p className="type-body text-muted">Stage, owner and next date for each job.</p>
+        <Card.Media bleed="end" fade className="h-48">
+          <div className="h-full rounded-ss-[var(--radius-card-body)] border-s border-t border-border bg-body p-4">
+            <p className="type-body">Harbour Street bakery site</p>
+            <p className="type-body text-muted">Building · 12 Dec</p>
+          </div>
+        </Card.Media>
+      </Card>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const edgeGap = (card: HTMLElement) => {
+      const box = card.getBoundingClientRect();
+      const media = card.querySelector<HTMLElement>("[data-slot='card-media']")!.getBoundingClientRect();
+      return { top: media.top - box.top, bottom: box.bottom - media.bottom, left: media.left - box.left, right: box.right - media.right };
+    };
+    const top = edgeGap(canvasElement.querySelector<HTMLElement>("[data-testid='media-top']")!);
+    await expect(Math.round(top.top)).toBe(0);
+    await expect(Math.round(top.left)).toBe(0);
+    await expect(Math.round(top.right)).toBe(0);
+    const endCard = canvasElement.querySelector<HTMLElement>("[data-testid='media-end']")!;
+    const end = edgeGap(endCard);
+    await expect(Math.round(end.bottom)).toBe(0);
+    await expect(Math.round(end.right)).toBe(0);
+    // bleed="end": the screen starts at the card's text inset (24px with padding="lg").
+    const media = endCard.querySelector<HTMLElement>("[data-slot='card-media']")!;
+    await expect(getComputedStyle(media).paddingInlineStart).toBe("24px");
+    await expect(getComputedStyle(media).maskImage).toContain("linear-gradient");
   },
 };
 

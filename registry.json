@@ -539,6 +539,22 @@
       "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
     },
     {
+      "name": "components-card-card--media",
+      "type": "registry:block",
+      "title": "Card — media to the edges",
+      "description": "Show code for Storybook Components/Card/Card → Pattern — media to the edges.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-card-card--media.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
       "name": "components-card-card--outlined-layout",
       "type": "registry:block",
       "title": "Card — outlined layout",
