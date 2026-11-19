@@ -6,11 +6,15 @@ export const cardShapes = ["flush", "rounded"] as const;
 
 export type CardShape = (typeof cardShapes)[number];
 
-export const cardVariants = ["surface", "outlined", "ghost", "glass"] as const;
+export const cardVariants = ["surface", "outlined", "muted", "ghost", "glass"] as const;
 
 export type CardVariant = (typeof cardVariants)[number];
 
-export const cardPaddings = ["none", "md", "lg"] as const;
+/**
+ * `none` is the layout shell for `Card.Header` / `Card.Body` / `Card.Footer` (it keeps their 16px / 12px room).
+ * `bare` is the same card with no room at all: for content that lays itself out (a bento cell, a picture to the edge).
+ */
+export const cardPaddings = ["none", "bare", "md", "lg"] as const;
 
 export type CardPadding = (typeof cardPaddings)[number];
 
@@ -39,9 +43,17 @@ export const cardGlassClasses = [
   glassSurfaceFillClasses,
 ].join(" ");
 
+/**
+ * Quiet fill: the page's muted background with a hairline edge and no shadow, so a `surface` panel set inside it
+ * (a product screen in a bento cell) stands out from the cell. The edge keeps the card visible on a page whose
+ * background is the same colour.
+ */
+export const cardMutedClasses = "bg-muted-surface border border-border";
+
 export const cardVariantClasses: Record<CardVariant, string> = {
   surface: "bg-surface",
   outlined: "bg-card shadow-soft-card",
+  muted: cardMutedClasses,
   ghost: "bg-transparent",
   glass: cardGlassClasses,
 };
@@ -49,12 +61,14 @@ export const cardVariantClasses: Record<CardVariant, string> = {
 export const cardLayoutVariantClasses: Record<CardVariant, string> = {
   surface: "bg-surface shadow-soft-card",
   outlined: "bg-surface shadow-soft-card",
+  muted: cardMutedClasses,
   ghost: "bg-transparent",
   glass: cardGlassClasses,
 };
 
 export const cardRootPaddingClasses: Record<CardPadding, string> = {
   none: "",
+  bare: "",
   md: "p-4",
   lg: "p-6",
 };
@@ -66,6 +80,9 @@ export const cardRootPaddingClasses: Record<CardPadding, string> = {
  * their children (`height: auto`); overflow clips only overflowing descendants.
  */
 export const cardLayoutShellClasses = "min-h-0 gap-3 overflow-hidden";
+
+/** `padding="bare"`: the layout card's surface and shape with no section room (no pad, no gap between parts). */
+export const cardBareShellClasses = "min-h-0 overflow-hidden";
 
 /** Layout shell top pad — 16px beside Header; 2px when Header is omitted. */
 export function cardLayoutShellTopClasses(hasHeader = true): string {
@@ -169,6 +186,11 @@ export const cardSectionPaddingClasses: Record<
     body: cardLayoutBodyWellClasses,
     footer: cardLayoutFooterClasses,
   },
+  bare: {
+    header: cardLayoutHeaderClasses,
+    body: "flex min-h-0 w-full flex-col",
+    footer: cardLayoutFooterClasses,
+  },
   md: {
     header: `${cardLayoutHeaderRowClasses} border-b border-border px-4 pb-3 pt-4`,
     body: "px-4 py-3",
@@ -180,6 +202,34 @@ export const cardSectionPaddingClasses: Record<
     footer: "flex items-center justify-between gap-4 border-t border-border px-6 py-4",
   },
 };
+
+export const cardMediaBleeds = ["edges", "end"] as const;
+
+/** `edges`: the media fills the card's width. `end`: it starts at the card's text inset and runs off the end edge. */
+export type CardMediaBleed = (typeof cardMediaBleeds)[number];
+
+/**
+ * **Card.Media** reaches the card's edges through the card's own padding (first child: the top edge too; last
+ * child: the bottom edge), and the card's rounded, clipped shell cuts it. `--card-media-inset` is the card's text
+ * inset, where `bleed="end"` starts.
+ */
+export const cardMediaPaddingClasses: Record<CardPadding, string> = {
+  none: "first:-mt-4 last:-mb-4 [--card-media-inset:1rem]",
+  bare: "[--card-media-inset:var(--card-inset,1.5rem)]",
+  md: "-mx-4 first:-mt-4 last:-mb-4 [--card-media-inset:1rem]",
+  lg: "-mx-6 first:-mt-6 last:-mb-6 [--card-media-inset:1.5rem]",
+};
+
+/** As the last child of a card stretched in a row, it sinks to the bottom edge, so a row of cards ends level. */
+export const cardMediaClasses = "[&:last-child:not(:first-child)]:mt-auto relative min-w-0 shrink-0 overflow-hidden [&>img]:block [&>img]:size-full [&>img]:object-cover [&>video]:block [&>video]:size-full [&>video]:object-cover";
+
+export const cardMediaBleedClasses: Record<CardMediaBleed, string> = {
+  edges: "",
+  end: "ps-[var(--card-media-inset)]",
+};
+
+/** Fades the media's bottom into the card's own fill (a mask, so it works on any fill and in any theme). */
+export const cardMediaFadeClasses = "[mask-image:linear-gradient(to_bottom,black_55%,transparent)]";
 
 export const cardTitleClasses = `${typographyClass("subheading")} leading-snug`;
 

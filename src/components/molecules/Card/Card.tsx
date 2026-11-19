@@ -11,6 +11,7 @@ import { Skeleton } from "../../atoms/Skeleton/Skeleton";
 import { cn } from "../../../lib/cn";
 import {
   cardAddressClasses,
+  cardBareShellClasses,
   cardBaseClasses,
   cardBodyTextClasses,
   cardBodyWellClasses,
@@ -29,6 +30,10 @@ import {
   cardLayoutShellShapeClasses,
   cardLayoutTerminalBodyClasses,
   cardLayoutVariantClasses,
+  cardMediaBleedClasses,
+  cardMediaClasses,
+  cardMediaFadeClasses,
+  cardMediaPaddingClasses,
   cardOverflowClasses,
   cardRootPaddingClasses,
   cardSectionPaddingClasses,
@@ -44,6 +49,7 @@ import {
   cardTitleClasses,
   cardVariantClasses,
   type CardBodyVariant,
+  type CardMediaBleed,
   type CardPadding,
   type CardShape,
   type CardTerminalHeight,
@@ -53,6 +59,7 @@ import {
 
 export type {
   CardBodyVariant,
+  CardMediaBleed,
   CardPadding,
   CardShape,
   CardTerminalHeight,
@@ -61,6 +68,7 @@ export type {
 } from "./cardStyles";
 export {
   cardBodyVariants,
+  cardMediaBleeds,
   cardPaddings,
   cardShapes,
   cardTerminalHeights,
@@ -77,13 +85,19 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
   shape?: CardShape;
   /**
    * Surface treatment: layout cards use soft card elevation. `outlined` is that elevation with no stroke.
+   * `muted` is a quiet fill: the page's muted background, a hairline edge and no shadow, so a `surface` panel
+   * inside it (a product screen in a bento cell) stands out.
    * `glass` is a frosted pane for a card over a picture, a video or a canvas: the surface colour at part
    * strength over a blur of what's behind it (knobs `--card-glass-tint`, default 70% light / 88% dark, and
    * `--card-glass-blur`), and a solid
    * surface where blur isn't available or the visitor asks for reduced transparency.
    */
   variant?: CardVariant;
-  /** Root padding. Use `none` with `Card.Header` / `Card.Body` / `Card.Footer`. */
+  /**
+   * Root padding. Use `none` with `Card.Header` / `Card.Body` / `Card.Footer` (it keeps 16px above and below and
+   * 12px between them). `bare`: the same card with no room at all, for content that lays itself out (a bento
+   * cell's own grid, a picture to the card's edge).
+   */
   padding?: CardPadding;
   /** Overrides automatic terminal-Body detection. Normally omitted: Body without Footer gets a 2px bottom inset. */
   bodyTerminal?: boolean;
@@ -164,6 +178,7 @@ function CardRoot({
   children,
   ...props
 }: CardProps) {
+  const bare = padding === "bare";
   const isLayout = padding === "none";
   const childList = Children.toArray(children);
   const hasHeader = childList.some(
@@ -195,7 +210,9 @@ function CardRoot({
         <Component
           className={cn(
             cardBaseClasses,
-            isLayout
+            bare
+              ? cn(cardBareShellClasses, cardLayoutShellShapeClasses[shape], cardLayoutVariantClasses[variant])
+              : isLayout
               ? cn(
                   cardLayoutShellClasses,
                   cardLayoutShellTopClasses(!omitHeader),
@@ -214,7 +231,7 @@ function CardRoot({
           data-shape={shape}
           data-variant={variant}
           data-padding={padding}
-          data-layout={isLayout ? "shell" : undefined}
+          data-layout={isLayout ? "shell" : bare ? "bare" : undefined}
           {...cardToneAttributes(tone)}
           {...props}
         >
@@ -330,6 +347,38 @@ function CardFooter({ className, children, ...props }: CardSectionProps) {
   );
 }
 
+export interface CardMediaProps extends CardSectionProps {
+  /** `edges` (default): fills the card's width. `end`: starts at the card's text inset and runs off the end edge (a product screen cut by the card). */
+  bleed?: CardMediaBleed;
+  /** Fade the media's bottom into the card's fill, so a tall screen ends softly instead of at a hard cut. */
+  fade?: boolean;
+}
+
+/**
+ * A picture, a video or a product screen cut at the card's edges. As the card's first child it meets the top
+ * edge, as the last the bottom edge; size it with `className` (an `aspect-*` or a height). Images and videos
+ * directly inside cover the box. It adds no role: give a picture its `alt`, or `alt=""` when it is decoration.
+ */
+function CardMedia({ bleed = "edges", fade = false, className, children, ...props }: CardMediaProps) {
+  const padding = useCardPadding();
+  return (
+    <div
+      className={cn(
+        cardMediaClasses,
+        cardMediaPaddingClasses[padding],
+        cardMediaBleedClasses[bleed],
+        fade && cardMediaFadeClasses,
+        className,
+      )}
+      data-slot="card-media"
+      data-bleed={bleed}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
+
 function CardDivider({ className, ...props }: HTMLAttributes<HTMLHRElement>) {
   return <hr className={cn(cardDividerClasses, className)} {...props} />;
 }
@@ -347,6 +396,7 @@ export const Card = Object.assign(CardRoot, {
   Header: CardHeader,
   Body: CardBody,
   Footer: CardFooter,
+  Media: CardMedia,
   Divider: CardDivider,
 });
 
