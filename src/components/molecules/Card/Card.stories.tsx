@@ -111,6 +111,9 @@ const meta = {
 | **Inset well** | \`cardLayoutBodyOccupantWellClasses\` on the occupant — \`bg-body\` + concentric **14px** radius (\`--radius-card-body\`); radius-only occupants → \`cardLayoutBodyOccupantRadiusClasses\`; dot-grid → \`cardLayoutBodyOccupantDotGridWellClasses\` |
 | **Pinned height** | Layout \`className\` height on the root with **Header** + **Body** + **Footer** — Header/Footer stay put; **Card.Body** scrolls (2px gutter unchanged). No new variant. Copy **Pattern — pinned height** |
 | **Outlined layout** | \`Card variant="outlined"\` — \`shadow-soft-card\`, no stroke. Radius stays \`--radius-card-shell\` |
+| **Bare** | \`Card padding="bare"\` — the layout card's surface, shape and shadow with no section room; content lays itself out. Copy **Pattern — bare (a bento cell)** |
+| **Media** | \`Card.Media\` — a picture, a video or a product screen cut at the card's edges (top as the first child, bottom as the last); \`bleed="end"\` starts at the text inset and runs off the end edge; \`fade\` fades its bottom. Copy **Pattern — media to the edges** |
+| **Muted** | \`Card variant="muted"\` — a quiet fill: the page's muted background, a hairline edge, no shadow; a \`surface\` panel inside stands out. Copy **Pattern — muted (a quiet cell)** |
 | **Simple** | \`Card padding="md"\` — flat padded block (no sections) |
 | **Glass** | \`Card variant="glass"\` — a frosted pane over a picture, a video or a canvas: the surface colour at part strength over a blur of what's behind. Knobs \`--card-glass-tint\` (default 70% in light themes, 88% in dark) and \`--card-glass-blur\` (default 12px). Copy **Pattern — glass over a picture** |
 
@@ -134,6 +137,7 @@ Card (bg-surface shell, gap-3)
 ## Best practices
 
 - **Do** set \`padding="none"\` when using Header/Body/Footer.
+- **Do** set \`padding="bare"\` for content that lays itself out (a bento cell, a picture to the card's edges) instead of taking the room back with \`!py-0 !gap-0\`.
 - **Do** put leading copy in \`start\` and trailing actions in \`end\` — do not hand-roll the header row.
 - **Do** put overflow / **MoreMenu** triggers in **Card.Header** \`end\` (right). \`end\` stays trailing even when \`start\` is omitted — never left-align kebab or flow-over actions.
 - **Do** pin a layout height on the Card root (\`className="h-[…]"\`) when Header/Body/Footer should share one size — Body scrolls; Header and Footer stay put. No new variant.
@@ -1083,6 +1087,195 @@ export function QuarterOverPicture({ src }: { src: string }) {
 }
 `,
   ),
+};
+
+export const Bare: Story = {
+  name: "Pattern — bare (a bento cell)",
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "padded",
+      docs: {
+        description: {
+          story:
+            "`padding=\"bare\"` is a layout card with no section room: the surface, shape and soft shadow and nothing else, so content that lays itself out (a bento cell's words over a picture that runs to the card's edges) needs no `!py-0 !gap-0`. `padding=\"none\"` keeps 16px above and below and 12px between **Header**, **Body** and **Footer**.",
+        },
+      },
+    },
+    `
+import { Card } from "@thewhatmatters/wmds";
+
+export function BentoCell() {
+  return (
+    <Card as="article" padding="bare" className="max-w-sm">
+      <div className="flex flex-col gap-2 p-6">
+        <h3 className="type-heading-3">Every project on one board</h3>
+        <p className="type-body text-muted">Stage, owner and next date for each job.</p>
+      </div>
+      <div className="aspect-[4/3] bg-body" aria-hidden="true" />
+    </Card>
+  );
+}
+    `,
+  ),
+  render: () => (
+    <Card as="article" padding="bare" className="max-w-sm" data-testid="bare">
+      <div className="flex flex-col gap-2 p-6">
+        <h3 className="type-heading-3">Every project on one board</h3>
+        <p className="type-body text-muted">Stage, owner and next date for each job.</p>
+      </div>
+      <div className="aspect-[4/3] bg-body" aria-hidden="true" data-testid="bare-visual" />
+    </Card>
+  ),
+  play: async ({ canvasElement }) => {
+    const card = canvasElement.querySelector<HTMLElement>("[data-testid='bare']")!;
+    const visual = canvasElement.querySelector<HTMLElement>("[data-testid='bare-visual']")!;
+    const style = getComputedStyle(card);
+    await expect(style.paddingTop).toBe("0px");
+    await expect(style.paddingBottom).toBe("0px");
+    await expect(style.rowGap).toBe("normal");
+    // The visual runs to the card's bottom and side edges.
+    const box = card.getBoundingClientRect();
+    const media = visual.getBoundingClientRect();
+    await expect(Math.round(box.bottom - media.bottom)).toBe(0);
+    await expect(Math.round(media.left - box.left)).toBe(0);
+  },
+};
+
+export const Media: Story = {
+  name: "Pattern — media to the edges",
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "padded",
+      docs: {
+        description: {
+          story:
+            "**Card.Media** holds a picture, a video or a product screen cut at the card's edges, through the card's own padding: as the first child it meets the top edge, as the last the bottom edge. `bleed=\"end\"` starts it at the card's text inset and lets it run off the end edge; `fade` fades its bottom into the card's fill. Size it with `className`. A picture keeps its own `alt` (`alt=\"\"` for decoration).",
+        },
+      },
+    },
+    `
+import { Card } from "@thewhatmatters/wmds";
+
+export function MediaCards() {
+  return (
+    <div className="grid max-w-3xl gap-4 md:grid-cols-2">
+      <Card as="article" padding="lg" className="gap-4">
+        <Card.Media className="aspect-[4/3]">
+          <img
+            src="https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=900&q=80"
+            alt="Bright kitchen with a coastal dining table"
+          />
+        </Card.Media>
+        <h3 className="type-heading-3">Harbour Street kitchen</h3>
+      </Card>
+      <Card as="article" padding="lg" className="gap-4">
+        <h3 className="type-heading-3">Every project on one board</h3>
+        <p className="type-body text-muted">Stage, owner and next date for each job.</p>
+        <Card.Media bleed="end" fade className="h-48">
+          <div className="h-full rounded-ss-[var(--radius-card-body)] border-s border-t border-border bg-body p-4">
+            <p className="type-body">Harbour Street bakery site</p>
+            <p className="type-body text-muted">Building · 12 Dec</p>
+          </div>
+        </Card.Media>
+      </Card>
+    </div>
+  );
+}
+    `,
+  ),
+  render: () => (
+    <div className="grid max-w-3xl gap-4 md:grid-cols-2">
+      <Card as="article" padding="lg" className="gap-4" data-testid="media-top">
+        <Card.Media className="aspect-[4/3]">
+          <img
+            src="https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=900&q=80"
+            alt="Bright kitchen with a coastal dining table"
+          />
+        </Card.Media>
+        <h3 className="type-heading-3">Harbour Street kitchen</h3>
+      </Card>
+      <Card as="article" padding="lg" className="gap-4" data-testid="media-end">
+        <h3 className="type-heading-3">Every project on one board</h3>
+        <p className="type-body text-muted">Stage, owner and next date for each job.</p>
+        <Card.Media bleed="end" fade className="h-48">
+          <div className="h-full rounded-ss-[var(--radius-card-body)] border-s border-t border-border bg-body p-4">
+            <p className="type-body">Harbour Street bakery site</p>
+            <p className="type-body text-muted">Building · 12 Dec</p>
+          </div>
+        </Card.Media>
+      </Card>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const edgeGap = (card: HTMLElement) => {
+      const box = card.getBoundingClientRect();
+      const media = card.querySelector<HTMLElement>("[data-slot='card-media']")!.getBoundingClientRect();
+      return { top: media.top - box.top, bottom: box.bottom - media.bottom, left: media.left - box.left, right: box.right - media.right };
+    };
+    const top = edgeGap(canvasElement.querySelector<HTMLElement>("[data-testid='media-top']")!);
+    await expect(Math.round(top.top)).toBe(0);
+    await expect(Math.round(top.left)).toBe(0);
+    await expect(Math.round(top.right)).toBe(0);
+    const endCard = canvasElement.querySelector<HTMLElement>("[data-testid='media-end']")!;
+    const end = edgeGap(endCard);
+    await expect(Math.round(end.bottom)).toBe(0);
+    await expect(Math.round(end.right)).toBe(0);
+    // bleed="end": the screen starts at the card's text inset (24px with padding="lg").
+    const media = endCard.querySelector<HTMLElement>("[data-slot='card-media']")!;
+    await expect(getComputedStyle(media).paddingInlineStart).toBe("24px");
+    await expect(getComputedStyle(media).maskImage).toContain("linear-gradient");
+  },
+};
+
+export const Muted: Story = {
+  name: "Pattern — muted (a quiet cell)",
+  parameters: withStoryCopySource(
+    {
+      wmdsLayout: "padded",
+      docs: {
+        description: {
+          story:
+            "`variant=\"muted\"` is a quiet fill: the page's muted background, a hairline edge and no shadow. A `surface` card set inside it (a product screen in a bento cell) stands out from the cell, where `surface` in `surface` reads only by its shadow.",
+        },
+      },
+    },
+    `
+import { Card } from "@thewhatmatters/wmds";
+
+export function QuietCell() {
+  return (
+    <Card variant="muted" padding="lg" className="max-w-sm gap-4">
+      <div className="flex flex-col gap-1">
+        <h3 className="type-heading-3">Sign-off in one place</h3>
+        <p className="type-body text-muted">Every approval, with who gave it and when.</p>
+      </div>
+      <Card padding="md">
+        <p className="type-body">Homepage copy: approved by Sam, 12 Dec</p>
+      </Card>
+    </Card>
+  );
+}
+    `,
+  ),
+  render: () => (
+    <Card variant="muted" padding="lg" className="max-w-sm gap-4" data-testid="muted">
+      <div className="flex flex-col gap-1">
+        <h3 className="type-heading-3">Sign-off in one place</h3>
+        <p className="type-body text-muted">Every approval, with who gave it and when.</p>
+      </div>
+      <Card padding="md" data-testid="muted-panel">
+        <p className="type-body">Homepage copy: approved by Sam, 12 Dec</p>
+      </Card>
+    </Card>
+  ),
+  play: async ({ canvasElement }) => {
+    const cell = getComputedStyle(canvasElement.querySelector<HTMLElement>("[data-testid='muted']")!);
+    const panel = getComputedStyle(canvasElement.querySelector<HTMLElement>("[data-testid='muted-panel']")!);
+    await expect(cell.boxShadow).toBe("none");
+    await expect(cell.borderTopWidth).toBe("1px");
+    // The panel inside reads against the cell by its fill, not only a shadow.
+    await expect(cell.backgroundColor).not.toBe(panel.backgroundColor);
+  },
 };
 
 export const GlassKnobs: Story = {

@@ -218,3 +218,97 @@ describe("Card glass", () => {
     expect(card.className).toContain("var(--color-background-surface)");
   });
 });
+
+describe('Card padding="bare"', () => {
+  let root: Root | undefined;
+  let container: HTMLDivElement | undefined;
+
+  afterEach(() => {
+    act(() => root?.unmount());
+    container?.remove();
+    root = undefined;
+    container = undefined;
+  });
+
+  it("keeps the layout card's surface and shape but no section room", () => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+    act(() => {
+      root?.render(
+        createElement(Card, { padding: "bare", as: "article" } as CardProps, createElement("div", null, "Own layout")),
+      );
+    });
+    const card = container.firstElementChild as HTMLElement;
+    expect(card.getAttribute("data-layout")).toBe("bare");
+    expect(card.className).toContain("bg-surface");
+    expect(card.className).toContain("shadow-soft-card");
+    expect(card.className).toContain("rounded-[var(--radius-card-shell)]");
+    expect(card.className).toContain("overflow-hidden");
+    expect(card.className).not.toMatch(/(^|\s)(p[tby]?|gap)-/);
+  });
+});
+
+describe("Card.Media", () => {
+  function renderMedia(padding: CardProps["padding"], mediaProps: Record<string, unknown> = {}) {
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+    const root = createRoot(container);
+    act(() => {
+      root.render(
+        createElement(
+          Card,
+          { padding } as CardProps,
+          createElement(Card.Media, mediaProps, createElement("img", { src: "x.jpg", alt: "" })),
+          createElement("h3", null, "Title"),
+        ),
+      );
+    });
+    const media = container.querySelector<HTMLElement>("[data-slot='card-media']")!;
+    return { media, done: () => { act(() => root.unmount()); container.remove(); } };
+  }
+
+  it("reaches the card's edges through each padding", () => {
+    const expected = { md: "-mx-4", lg: "-mx-6" } as const;
+    for (const padding of ["md", "lg"] as const) {
+      const { media, done } = renderMedia(padding);
+      expect(media.className).toContain(expected[padding]);
+      expect(media.className).toContain("overflow-hidden");
+      expect(media.getAttribute("data-bleed")).toBe("edges");
+      done();
+    }
+    const bare = renderMedia("bare");
+    expect(bare.media.className).not.toMatch(/-m[xtb]-/);
+    bare.done();
+  });
+
+  it("starts at the text inset with bleed=end and fades with fade", () => {
+    const { media, done } = renderMedia("lg", { bleed: "end", fade: true });
+    expect(media.getAttribute("data-bleed")).toBe("end");
+    expect(media.className).toContain("ps-[var(--card-media-inset)]");
+    expect(media.className).toContain("[--card-media-inset:1.5rem]");
+    expect(media.className).toContain("mask-image");
+    done();
+  });
+});
+
+describe('Card variant="muted"', () => {
+  it("draws the muted fill with a hairline edge and no shadow, in both padding modes", () => {
+    for (const padding of ["md", "none"] as const) {
+      const container = document.createElement("div");
+      document.body.appendChild(container);
+      const root = createRoot(container);
+      act(() => {
+        root.render(createElement(Card, { variant: "muted", padding } as CardProps, "Quiet"));
+      });
+      const card = container.firstElementChild as HTMLElement;
+      expect(card.getAttribute("data-variant")).toBe("muted");
+      expect(card.className).toContain("bg-muted-surface");
+      expect(card.className).toContain("border-border");
+      expect(card.className).not.toContain("shadow");
+      expect(card.className).not.toMatch(/(^|\s)bg-surface(\s|$)/);
+      act(() => root.unmount());
+      container.remove();
+    }
+  });
+});

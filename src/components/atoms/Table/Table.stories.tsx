@@ -484,6 +484,7 @@ Table (div region → table)
 - **Do** put status in a **Badge** \`status\` pill and actions in **Button**; the cell adds no style of its own.
 - **Do** right-align figures with \`align="end"\`.
 - **Do** put a \`colgroup\` of \`col\` widths after the caption when the table can be empty or its cells change — the table then lays out from those widths, so the empty and filled states match.
+- **Do** set \`fit\` for a small table of a few short columns inside a narrow box (a bento cell, a card): it takes the box's width and its cells wrap, so it never scrolls sideways.
 - **Do** set \`sticky\` on every cell of the first column of a wide table so it stays in view on a phone.
 - **Do** show an empty row ("Nothing waiting on you") rather than a bare header.
 - **Don't** pass colors, borders, or type classes through \`className\` — it is layout only.
@@ -751,6 +752,66 @@ export const GridStickyHeader: Story = {
     await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
     await expect(Math.round(head.getBoundingClientRect().top)).toBe(0);
     scroller.scrollTop = 0;
+  },
+};
+
+export const FitNarrowBox: Story = {
+  name: "Fit — in a narrow box",
+  args: { children: null },
+  render: () => (
+    <div className="w-[272px]" data-testid="narrow-box">
+      <Table aria-label="Project board" fit>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Project</TableHead>
+            <TableHead>Stage</TableHead>
+            <TableHead align="end">Next date</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCell>Harbour Street bakery site</TableCell>
+            <TableCell>
+              <Badge status="active">Building</Badge>
+            </TableCell>
+            <TableCell align="end">12 Dec</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Spring menu photography</TableCell>
+            <TableCell>
+              <Badge status="warning">Review</Badge>
+            </TableCell>
+            <TableCell align="end">18 Dec</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`fit` makes the table as wide as its box and lets its cells wrap, so in a narrow box (a 272px bento cell on a 320px phone) it never scrolls sideways. Without it the table keeps its content's width and the region scrolls. Keep `fit` to a few short columns.",
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const region = canvas.getByRole("region", { name: "Project board" });
+    const table = canvas.getByRole("table");
+    await expect(table.hasAttribute("data-fit")).toBe(true);
+    // No sideways scroll: the table is the box's width, and the long project names wrap.
+    await expect(region.scrollWidth).toBeLessThanOrEqual(region.clientWidth);
+    await expect(table.offsetWidth).toBeLessThanOrEqual(272);
+    const firstCell = table.querySelector("tbody td") as HTMLElement;
+    const lineHeight = Number.parseFloat(getComputedStyle(firstCell).lineHeight);
+    await expect(firstCell.getBoundingClientRect().height).toBeGreaterThan(lineHeight * 1.5);
+    // Header cells wrap too.
+    const head = table.querySelector("thead th") as HTMLElement;
+    await expect(getComputedStyle(head).whiteSpace).toBe("normal");
+    // Figures stay on one line.
+    const date = table.querySelector("tbody td:last-child") as HTMLElement;
+    await expect(getComputedStyle(date).whiteSpace).toBe("nowrap");
   },
 };
 
