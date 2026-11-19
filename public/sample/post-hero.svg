@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" fill="none">
+  <rect width="1600" height="900" fill="#011272"/>
+  <text x="80" y="124" fill="#b9c2ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="24" letter-spacing="2.4">/ BRAND SPRINT</text>
+  <text x="1520" y="124" text-anchor="end" fill="#b9c2ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="24" letter-spacing="2.4">10 DAYS / 10 DECISIONS</text>
+  <rect x="80" y="196" width="272" height="280" rx="20" fill="#ffffff" fill-opacity="0.06"/>
+  <rect x="80.5" y="196.5" width="271" height="279" rx="19.5" stroke="#ffffff" stroke-opacity="0.2"/>
+  <text x="108" y="248" fill="#b9c2ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="22" letter-spacing="2.2">DAY 01</text>
+  <text x="108" y="440" fill="#ffffff" font-family="ui-sans-serif, system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="34" font-weight="500">Audience</text>
+  <rect x="372" y="196" width="272" height="280" rx="20" fill="#ffffff" fill-opacity="0.06"/>
+  <rect x="372.5" y="196.5" width="271" height="279" rx="19.5" stroke="#ffffff" stroke-opacity="0.2"/>
+  <text x="400" y="248" fill="#b9c2ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="22" letter-spacing="2.2">DAY 02</text>
+  <text x="400" y="440" fill="#ffffff" font-family="ui-sans-serif, system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="34" font-weight="500">Positioning</text>
+  <rect x="664" y="196" width="272" height="280" rx="20" fill="#d6ef4a"/>
+  <text x="692" y="248" fill="#011272" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="22" letter-spacing="2.2">DAY 03</text>
+  <text x="692" y="440" fill="#011272" font-family="ui-sans-serif, system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="34" font-weight="500">Name</text>
+  <rect x="956" y="196" width="272" height="280" rx="20" fill="#ffffff" fill-opacity="0.06"/>
+  <rect x="956.5" y="196.5" width="271" height="279" rx="19.5" stroke="#ffffff" stroke-opacity="0.2"/>
+  <text x="984" y="248" fill="#b9c2ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="22" letter-spacing="2.2">DAY 04</text>
+  <text x="984" y="440" fill="#ffffff" font-family="ui-sans-serif, system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="34" font-weight="500">Voice</text>
+  <rect x="1248" y="196" width="272" height="280" rx="20" fill="#ffffff" fill-opacity="0.06"/>
+  <rect x="1248.5" y="196.5" width="271" height="279" rx="19.5" stroke="#ffffff" stroke-opacity="0.2"/>
+  <text x="1276" y="248" fill="#b9c2ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="22" letter-spacing="2.2">DAY 05</text>
+  <text x="1276" y="440" fill="#ffffff" font-family="ui-sans-serif, system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="34" font-weight="500">Palette</text>
+  <rect x="80" y="496" width="272" height="280" rx="20" fill="#ffffff" fill-opacity="0.06"/>
+  <rect x="80.5" y="496.5" width="271" height="279" rx="19.5" stroke="#ffffff" stroke-opacity="0.2"/>
+  <text x="108" y="548" fill="#b9c2ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="22" letter-spacing="2.2">DAY 06</text>
+  <text x="108" y="740" fill="#ffffff" font-family="ui-sans-serif, system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="34" font-weight="500">Type</text>
+  <rect x="372" y="496" width="272" height="280" rx="20" fill="#ffffff" fill-opacity="0.06"/>
+  <rect x="372.5" y="496.5" width="271" height="279" rx="19.5" stroke="#ffffff" stroke-opacity="0.2"/>
+  <text x="400" y="548" fill="#b9c2ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="22" letter-spacing="2.2">DAY 07</text>
+  <text x="400" y="740" fill="#ffffff" font-family="ui-sans-serif, system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="34" font-weight="500">Logo</text>
+  <rect x="664" y="496" width="272" height="280" rx="20" fill="#ffffff" fill-opacity="0.06"/>
+  <rect x="664.5" y="496.5" width="271" height="279" rx="19.5" stroke="#ffffff" stroke-opacity="0.2"/>
+  <text x="692" y="548" fill="#b9c2ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="22" letter-spacing="2.2">DAY 08</text>
+  <text x="692" y="740" fill="#ffffff" font-family="ui-sans-serif, system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="34" font-weight="500">Site</text>
+  <rect x="956" y="496" width="272" height="280" rx="20" fill="#ffffff" fill-opacity="0.06"/>
+  <rect x="956.5" y="496.5" width="271" height="279" rx="19.5" stroke="#ffffff" stroke-opacity="0.2"/>
+  <text x="984" y="548" fill="#b9c2ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="22" letter-spacing="2.2">DAY 09</text>
+  <text x="984" y="740" fill="#ffffff" font-family="ui-sans-serif, system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="34" font-weight="500">Deck</text>
+  <rect x="1248" y="496" width="272" height="280" rx="20" fill="#ffffff" fill-opacity="0.06"/>
+  <rect x="1248.5" y="496.5" width="271" height="279" rx="19.5" stroke="#ffffff" stroke-opacity="0.2"/>
+  <text x="1276" y="548" fill="#b9c2ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="22" letter-spacing="2.2">DAY 10</text>
+  <text x="1276" y="740" fill="#ffffff" font-family="ui-sans-serif, system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="34" font-weight="500">Handover</text>
+  <text x="80" y="840" fill="#b9c2ff" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="24" letter-spacing="2.4">ONE DECISION A DAY</text>
+</svg>

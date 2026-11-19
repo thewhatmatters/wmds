@@ -14,7 +14,7 @@ const meta = {
         component: `
 ## Usage
 
-A blog post page — a display title, a metadata panel, and the article. Copy **Pattern — post page**: pass the post's fields and its rendered markdown as children.
+A blog post page — a display title, a metadata panel, and the article. Copy **Pattern — post page**: pass the post's fields, its rendered markdown as children, and its lead picture as \`hero\`.
 
 | Part | Component | Why |
 |------|-----------|-----|
@@ -26,6 +26,7 @@ A blog post page — a display title, a metadata panel, and the article. Copy **
 | Copy for LLM | **Button** \`icon\` + \`status\` (**Pattern — copy button**) | The Copy glyph turns into the check; the result is announced |
 | View as Markdown | **Button** \`render={<a href />}\` | Same-site link |
 | Share | **Button** \`external\` | External icon, same tab (Links K9) |
+| Hero | \`hero\` — one image, in the pattern's frame | The post's lead picture at the article column's full width, under the "/ Article" rule; the frame rounds it and draws a hairline over its edge |
 | Article | **Prose** \`measure="none"\` \`tone="muted"\` | Plain elements from the markdown, at \`type-reading\`, filling the article's column; body in the secondary ink, headings in the primary |
 
 ## Anatomy
@@ -36,7 +37,7 @@ main.grid-page
 └── article.band
     ├── header (col-span-full, lg:col-span-10) — Breadcrumb · h1 · lead · date / reading time (below lg, when the panel stacks after)
     ├── aside — here with metadataStack="before"
-    ├── div (col-span-full, lg:col-span-8 or 9) — SectionCaption "Article" (p) · Prose (fills the column)
+    ├── div (col-span-full, lg:col-span-8 or 9) — SectionCaption "Article" (p) · figure (hero, when passed) · Prose (fills the column)
     └── aside — here with metadataStack="after" (default)
         (col-span-full, lg:col-span-4 or 3, lg:sticky) — SectionCaption "Metadata" · DescriptionList
         └── Date · Author · Reading time · Categories · Agents (stacked) · Share (stacked)
@@ -52,11 +53,15 @@ main.grid-page
 
 **The article fills its column.** Pictures and text run the width of the article's 8 or 9 columns, so the page reads as two full columns under their captions. \`articleMeasure="reading"\` caps the article at 40rem (about 80 characters a line) for long, text-only posts; the column then has empty space beside the text.
 
+**The hero is the column's width.** \`hero\` takes the post's lead picture — one \`<img>\` or the app's image component, with its \`width\` and \`height\` so the page does not move as it loads, and an \`alt\` that says what it shows. The pattern frames it under the "/ Article" rule, above the text: the article column's full width at every size (918px at 1440 beside a 3-column panel and 813px beside a 4-column one, with the base page margins, the page's width less its margins on a phone), the picture's own shape, rounded corners, and a hairline over its edge. It stays that wide with \`articleMeasure="reading"\`, where the text below it is capped at 40rem. For a responsive image, \`sizes\` is \`(min-width: 1024px) 75vw, 100vw\` beside a 3-column panel and \`(min-width: 1024px) 66vw, 100vw\` beside a 4-column one. Without \`hero\` the text starts under the rule.
+
 **The panel sticks from \`lg\`.** Beside the article it stays in view under the pinned **SiteNav** (\`top: calc(var(--site-nav-height) + 1rem)\`), so the share and copy actions are there wherever the reader stops. It is short enough never to need its own scroll. Below \`lg\` it scrolls with the page.
 
 ## Best practices
 
 - **Do** pair \`metadataSide="end"\` with the default \`metadataStack="after"\` (or \`"start"\` with \`"before"\`) so the tab order matches the layout at every width.
+- **Do** pass the lead picture as \`hero\`, not as the first image in the markdown — in the article it is held to \`articleMeasure\` and has no hairline.
+- **Don't** put a caption, a video, or a second picture in \`hero\`, or add a frame, a radius, or a border of your own; pictures inside the post stay in the markdown.
 - **Do** render the markdown with \`#\` mapped to \`h2\` — the title is the page's \`h1\`.
 - **Do** map markdown links to **TextLink** with \`external\` for other sites.
 - **Do** keep the panel to facts and actions about this post; related posts belong under the article.
@@ -81,7 +86,7 @@ export const PostPage: Story = {
       docs: {
         description: {
           story:
-            "Scroll the article: from lg the metadata panel stays in view. Below lg it stacks above the article. Open Layout to change the grid width or column gap live; Show code omits the Storybook-only inspector.",
+            "The hero fills the article's column under the \"/ Article\" rule. Scroll the article: from lg the metadata panel stays in view. Below lg it stacks under the article. Open Layout to change the grid width or column gap live; Show code omits the Storybook-only inspector.",
         },
       },
     },
@@ -178,10 +183,25 @@ const articleColumnClasses: Record<PostMetadataColumns, string> = {
   4: "lg:col-span-8",
 };
 
+/**
+ * The hero's frame: the article column's full width, the picture at its own shape. The hairline is
+ * drawn over the picture, inside its edge, so a light picture keeps an edge on a light page.
+ */
+const heroFrameClasses =
+  "relative m-0 mt-6 overflow-hidden rounded-[var(--radius-card-body)] bg-muted-surface " +
+  "after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:border after:border-border after:content-[''] " +
+  "[&_img]:block [&_img]:h-auto [&_img]:w-full";
+
 export interface PostPageProps {
   post: PostPageData;
   /** The post's rendered markdown. */
   children: ReactNode;
+  /**
+   * The post's lead picture: one image with its width and height (an img, or the app's image
+   * component), so its space is held before it loads. It sits under the "/ Article" rule, above the
+   * text, at the article column's full width — also with articleMeasure="reading".
+   */
+  hero?: ReactNode;
   /** Where the panel sits from lg, beside the article. Default: "start". */
   metadataSide?: PostMetadataSide;
   /** The panel's width from lg, in columns. Default: 4. */
@@ -210,6 +230,7 @@ export interface PostPageProps {
 export function PostPage({
   post,
   children,
+  hero,
   metadataSide = "start",
   metadataColumns = 4,
   metadataStack = "after",
@@ -320,6 +341,7 @@ export function PostPage({
           }
         >
           <SectionCaption as="p">Article</SectionCaption>
+          {hero != null ? <figure className={heroFrameClasses}>{hero}</figure> : null}
           <Prose className="mt-6" measure={articleMeasure} tone="muted">
             {children}
           </Prose>
@@ -341,7 +363,7 @@ export const MetadataEnd: Story = {
     docs: {
       description: {
         story:
-          "`metadataSide=\"end\"` with `metadataColumns={3}`: from lg the panel takes the last 3 columns, after the article, and the article takes 9. Below lg it stacks above the article, as in the default.",
+          "`metadataSide=\"end\"` with `metadataColumns={3}`: from lg the panel takes the last 3 columns, after the article, and the article takes 9. Below lg it stacks under the article, as in the default.",
       },
     },
   },
@@ -354,7 +376,19 @@ export const ReadingMeasure: Story = {
     docs: {
       description: {
         story:
-          "`articleMeasure=\"reading\"` caps the article at 40rem inside its column, for long posts that are all text. The default fills the column.",
+          "`articleMeasure=\"reading\"` caps the article's text at 40rem inside its column, for long posts that are mostly text. The hero keeps the column's full width. The default fills the column.",
+      },
+    },
+  },
+};
+
+export const NoHero: Story = {
+  name: "Without a hero",
+  render: () => <PostPageGuide metadataSide="end" metadataColumns={3} hero={false} />,
+  parameters: {
+    docs: {
+      description: {
+        story: "Without `hero` there is no frame: the text starts under the \"/ Article\" rule.",
       },
     },
   },
