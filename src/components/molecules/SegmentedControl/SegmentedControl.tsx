@@ -1,4 +1,4 @@
-import { useId, type ReactNode } from "react";
+import { Children, isValidElement, useId, type KeyboardEvent, type ReactNode } from "react";
 import { cn } from "../../../lib/cn";
 import { SegmentedControlProvider } from "./SegmentedControlContext";
 import { SegmentedControlItem, SegmentedControlItemGroup } from "./SegmentedControlItem";
@@ -41,6 +41,13 @@ function SegmentedControlRoot({
   className,
 }: SegmentedControlProps) {
   const layoutId = useId();
+  const hasSelection = Children.toArray(children).some(
+    (child) =>
+      isValidElement<{ value?: string; disabled?: boolean }>(child) &&
+      child.type === SegmentedControlItem &&
+      child.props.value === value &&
+      !child.props.disabled,
+  );
 
   return (
     <SegmentedControlProvider
@@ -51,6 +58,7 @@ function SegmentedControlRoot({
         value,
         onValueChange,
         disabled,
+        hasSelection: hasSelection && !disabled,
       }}
     >
       <div
@@ -66,11 +74,42 @@ function SegmentedControlRoot({
         )}
         data-size={size}
         data-layout={layout}
+        onKeyDown={(event) => moveSelection(event, onValueChange)}
       >
         <SegmentedControlItemGroup layoutId={layoutId}>{children}</SegmentedControlItemGroup>
       </div>
     </SegmentedControlProvider>
   );
+}
+
+const nextKeys = new Set(["ArrowRight", "ArrowDown"]);
+const previousKeys = new Set(["ArrowLeft", "ArrowUp"]);
+
+/**
+ * Radio-group keys: arrows move to the next or previous enabled segment (wrapping, and following the reading
+ * direction for left and right), Home and End to the first and last. The segment moved to is selected and focused.
+ */
+function moveSelection(event: KeyboardEvent<HTMLDivElement>, onValueChange: (value: string) => void) {
+  const { key } = event;
+  if (!nextKeys.has(key) && !previousKeys.has(key) && key !== "Home" && key !== "End") return;
+  const segments = [...event.currentTarget.querySelectorAll<HTMLButtonElement>("[role='radio']:not(:disabled)")];
+  if (segments.length === 0) return;
+  const current = segments.indexOf(event.target as HTMLButtonElement);
+  const rtl = getComputedStyle(event.currentTarget).direction === "rtl";
+  const horizontal = key === "ArrowLeft" || key === "ArrowRight";
+  let step = nextKeys.has(key) ? 1 : -1;
+  if (rtl && horizontal) step = -step;
+  const index =
+    key === "Home"
+      ? 0
+      : key === "End"
+        ? segments.length - 1
+        : (Math.max(current, step > 0 ? -1 : 0) + step + segments.length) % segments.length;
+  const target = segments[index];
+  event.preventDefault();
+  target.focus();
+  const value = target.dataset.value;
+  if (value != null && target.getAttribute("aria-checked") !== "true") onValueChange(value);
 }
 
 export const SegmentedControl = Object.assign(SegmentedControlRoot, {

@@ -90,4 +90,52 @@ describe("SegmentedControl", () => {
     });
     expect(picked).toEqual(["grid"]);
   });
+
+  function renderThree(value: string, picked: string[], extra: { disabledGrid?: boolean } = {}) {
+    return render(
+      createElement(SegmentedControl, {
+        "aria-label": "View",
+        value,
+        onValueChange: (next: string) => picked.push(next),
+        children: [
+          createElement(SegmentedControl.Item, { key: "list", value: "list", children: "List" }),
+          createElement(SegmentedControl.Item, { key: "grid", value: "grid", disabled: extra.disabledGrid, children: "Grid" }),
+          createElement(SegmentedControl.Item, { key: "board", value: "board", children: "Board" }),
+        ],
+      }),
+    );
+  }
+
+  function press(target: Element, key: string) {
+    act(() => {
+      target.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }));
+    });
+  }
+
+  it("keeps one tab stop: the selected segment", () => {
+    const view = renderThree("grid", []);
+    const tabIndexes = [...view.querySelectorAll<HTMLButtonElement>("[role='radio']")].map((el) => el.tabIndex);
+    expect(tabIndexes).toEqual([-1, 0, -1]);
+  });
+
+  it("leaves every segment tabbable while none is selected", () => {
+    const view = renderThree("none", []);
+    const tabIndexes = [...view.querySelectorAll<HTMLButtonElement>("[role='radio']")].map((el) => el.tabIndex);
+    expect(tabIndexes).toEqual([0, 0, 0]);
+  });
+
+  it("moves and selects with the arrow keys, wrapping, and skips disabled segments", () => {
+    const picked: string[] = [];
+    const view = renderThree("list", picked, { disabledGrid: true });
+    const [list, , board] = [...view.querySelectorAll<HTMLButtonElement>("[role='radio']")];
+    list?.focus();
+    press(list!, "ArrowRight");
+    expect(document.activeElement).toBe(board);
+    press(list!, "ArrowLeft");
+    press(list!, "ArrowDown");
+    press(list!, "End");
+    press(list!, "Home");
+    expect(picked).toEqual(["board", "board", "board", "board"]);
+    expect(document.activeElement).toBe(list);
+  });
 });
