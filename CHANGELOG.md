@@ -7,6 +7,61 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): don't edit this file on a feature branch. Add a release note as `changes/<topic>.md` (format in `changes/README.md`). The release step, `npm run release:prepare` on its own **Release 0.x.y** branch, folds every note into one new entry here and bumps the version once. `npm run check:changelog` checks this file and the notes.
 
+## 0.4.54
+
+**Dark theme: the active status pill reads at AA on a card.**
+
+- **Theme**: in the dark theme `--color-brand-tint` is 20% of the lifted navy, down from 28%. **Badge** `status="active"` (lifted navy text on that tint) measured 4.29:1 on a card surface, under the 4.5:1 that text needs; it is now 5.95:1 on the page and 5.19:1 on a card. The same tint sits behind the visitor's turns in **ChatDock** and the **Stat** icon tile, which are a shade quieter in dark and still stand off the surface. The light theme is unchanged.
+
+**Card: `Card.Media` cuts a picture or a product screen at the card's edges.**
+
+- **Card.Media** (new): a picture, a video or a product screen that reaches the card's edges through the card's own padding (as the first child it meets the top edge, as the last the bottom edge, sinking to it when the card is stretched in a row), cut by the card's rounded shell. Images and videos directly inside cover the box; size it with `className`. `bleed="end"` starts it at the card's text inset and lets it run off the end edge; `fade` fades its bottom into the card's fill with a mask. Works with every `padding`; with `padding="bare"`, `--card-inset` on the card sets where `bleed="end"` starts (default 1.5rem).
+- New exports: `cardMediaBleeds`, `CardMediaBleed`, `CardMediaProps`.
+
+**Card: `variant="muted"`, a quiet fill.**
+
+- **Card** `variant="muted"` (new): the page's muted background (`bg-muted-surface`), a hairline edge and no shadow. A `surface` card set inside it, such as a product screen in a bento cell, now stands out from the cell by its fill; before, `surface` and `outlined` both drew the surface colour and a panel inside read only by its shadow. The edge keeps the card visible on a page whose background is the same colour.
+
+**Card: `padding="bare"` for content that lays itself out.**
+
+- **Card** `padding="bare"` (new): the layout card's surface, shape and soft shadow with no section room: no 16px above and below, no 12px gap between parts. For a bento cell's own grid or a picture that runs to the card's edges. `padding="none"` is unchanged: it keeps the room `Card.Header`, `Card.Body` and `Card.Footer` need.
+
+**Shipped patterns pass `wmds-check`: TextLink `tone="brand"`, a 4rem type step, and a test over every pattern.**
+
+- **TextLink**: new prop `tone`. `"default"` is unchanged. `"brand"` sets the link in the brand ink (`--color-brand`) in either variant, with the same underline and focus ring; a prose link's underline takes the brand ink on hover. For large links (24px and up): the dark theme's brand ink is 3.58:1 on the page. New exports `textLinkTones` and `TextLinkTone`.
+- **Type scale**: new step `--font-size-7xl` (4rem, 64px) for large nav and footer links. Use it as `text-[length:var(--font-size-7xl)]`.
+- **Components/FooterReveal → Pattern — ruled grid footer**: the nav links use `tone="brand"` and the new step, in place of `!text-brand` and `md:text-[4rem]`. They look the same, except the hover underline is now the brand ink. In the dark theme it was near-white on the footer's white surface, so it didn't show.
+- **Components/TextLink → Pattern — brand nav links** (new).
+- **wmds-check**: `status-without-message` no longer flags `Badge` or `Button`, whose `status` carries its own label. A sample document in **Card → Pattern — terminal frame** is marked with `wmds-check-ignore`.
+- A unit test now runs `wmds-check` over every file in `docs/patterns`, so a pattern that breaks a rule fails CI. Three `raw-type` warnings in **Accordion → Pattern — FAQ reading** are listed as known; any new warning fails the test.
+
+**Post page pattern: a `hero` slot at the article column's width.**
+
+- **Guides/Post page → Pattern — post page** takes `hero`: the post's lead picture (one `<img>` or the app's image component, with its `width` and `height`). The pattern frames it under the "/ Article" rule, above the text, at the article column's full width — 918px at 1440 beside a 3-column panel with the base page margins, the page's width less its margins on a phone — at the picture's own shape, with rounded corners and a hairline over its edge. It keeps that width with `articleMeasure="reading"`, where a picture inside the markdown is held to 40rem. Without `hero` the page is unchanged.
+
+**SegmentedControl: arrow keys and one tab stop, as a radio group.**
+
+- **SegmentedControl**: the group is one tab stop (the selected segment; every segment while none is selected), and the arrow keys move to the next or previous enabled segment and select it, wrapping at the ends; left and right follow the reading direction. Home and End go to the first and last segment. It was announced as a radio group but every segment was its own tab stop and arrows did nothing.
+
+**SegmentedControl: a 44px tap area on touch screens.**
+
+- **SegmentedControl**: on a touch screen (`pointer: coarse`) each segment's tap area is now 44px tall at every size. Segments are 24 / 32 / 40px tall inside the 28 / 36 / 44px track, and had no larger tap layer. The track and the segments look the same: the extra room is an invisible layer centred on the segment, reaching up to 8px above and below the track (`sm`). It adds no width, so a tap never lands on the next segment. With a mouse nothing changes.
+
+**Table: `fit` lets a small table wrap inside a narrow box.**
+
+- **Table** `fit` (new): the table takes its box's width instead of its content's, and its cells, header cells included, wrap (figures, `align="end"`, stay on one line). A small table in a narrow box (a bento cell, a card on a 320px phone) no longer scrolls sideways inside its region. Off by default: a data table still keeps its columns at their content's width and scrolls. `rules="grid"` already fit its box and is unchanged.
+
+### Consumer actions
+
+- None. Where a pattern built its own visual box inside a card (a `div` with negative margins or `!py-0`), switch to `Card.Media`.
+- None. Where a pattern took the room back with `!py-0 !gap-0` on a `padding="none"` card, switch to `padding="bare"` and drop the overrides.
+- Apps that pasted **Pattern — ruled grid footer**: re-copy it, or replace `className="!text-brand"` on its links with `tone="brand"` and `md:text-[4rem]` with `md:text-[length:var(--font-size-7xl)]`. Nothing changes for other uses of **TextLink**.
+- Re-copy **Pattern — post page** if the app has a lead picture on its posts: pass it as `hero` and take it out of the markdown (or out of the children), along with any frame, radius, or border the app drew around it. Set a responsive image's `sizes` to `(min-width: 1024px) 75vw, 100vw` beside a 3-column panel, or `66vw` beside a 4-column one.
+- Apps without a lead picture: None.
+- None. Tests that tab through each segment in turn now reach only the selected one; use the arrow keys to move between segments.
+- None. If a control sits closer than 8px above or below a segmented control, check on a phone that taps land on the one you mean.
+- None. Where a pattern took the scroll away with its own overrides, drop them and set `fit`.
+
 ## 0.4.53
 
 **Dark theme: a light primary now shows its hover.**
