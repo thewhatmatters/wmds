@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.53 · Pattern — media to the edges
+// @thewhatmatters/wmds@0.4.54 · Pattern — media to the edges
 // Storybook: Components/Card/Card → Pattern — media to the edges (?path=/story/components-card-card--media)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
