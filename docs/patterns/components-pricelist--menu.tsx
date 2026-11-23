@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.54 · Pattern — menu section
+// @thewhatmatters/wmds@0.4.55 · Pattern — menu section
 // Storybook: Components/PriceList → Pattern — menu section (?path=/story/components-pricelist--menu)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

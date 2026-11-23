@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.54 · Pattern — photo with a source tag
+// @thewhatmatters/wmds@0.4.55 · Pattern — photo with a source tag
 // Storybook: Components/Media → Pattern — photo with a source tag (?path=/story/components-media--photo)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

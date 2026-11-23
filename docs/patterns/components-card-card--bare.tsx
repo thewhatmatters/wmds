@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.54 · Pattern — bare (a bento cell)
+// @thewhatmatters/wmds@0.4.55 · Pattern — bare (a bento cell)
 // Storybook: Components/Card/Card → Pattern — bare (a bento cell) (?path=/story/components-card-card--bare)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

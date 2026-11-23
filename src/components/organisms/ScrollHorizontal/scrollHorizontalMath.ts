@@ -285,6 +285,59 @@ export function scrollHorizontalTranslateX(
   return -distance * clamped;
 }
 
+/** Clear space kept between a focused control and the window's edge, so its focus ring shows whole. */
+export const scrollHorizontalFocusPad = 8;
+
+/** Where a control in the row is on screen, in progress (0 to 1). `rest` is the place to bring it to. */
+export interface ScrollHorizontalFocusRange {
+  min: number;
+  max: number;
+  rest: number;
+}
+
+/**
+ * Horizontal progress at which a box in the moving row sits whole inside the window.
+ * `restLeft` is the box's left with the row's translate removed. `rest` centers the box,
+ * or comes as near to that as the travel allows: the intro's action rests at the start,
+ * a tile's control with its tile centered. A box wider than the window keeps its start
+ * edge in view. With no travel, every progress shows it.
+ */
+export function scrollHorizontalFocusRange(
+  restLeft: number,
+  width: number,
+  viewportWidth: number,
+  distance: number,
+  pad = scrollHorizontalFocusPad,
+): ScrollHorizontalFocusRange {
+  if (!Number.isFinite(distance) || distance <= 0) return { min: 0, max: 1, rest: 0 };
+  if (!Number.isFinite(restLeft) || !Number.isFinite(width) || !Number.isFinite(viewportWidth)) {
+    return { min: 0, max: 1, rest: 0 };
+  }
+  const box = Math.max(0, width);
+  const max = scrollHorizontalClamp01((restLeft - pad) / distance);
+  const min = Math.min(max, scrollHorizontalClamp01((restLeft + box - viewportWidth + pad) / distance));
+  const centered = (restLeft + box / 2 - viewportWidth / 2) / distance;
+  return { min, max, rest: Math.min(max, Math.max(min, centered)) };
+}
+
+/**
+ * Page scroll offset, from the section's top, that shows a focused control.
+ * `range` is in track progress. The page stays where it is when the control
+ * already shows. Otherwise it goes to the control's rest.
+ */
+export function scrollHorizontalFocusOffset(
+  progress: number,
+  range: ScrollHorizontalFocusRange,
+  pinnedScroll: number,
+): number {
+  if (!Number.isFinite(pinnedScroll) || pinnedScroll <= 0) return 0;
+  const min = scrollHorizontalClamp01(range.min);
+  const max = Math.max(min, scrollHorizontalClamp01(range.max));
+  const shown = Number.isFinite(progress) && progress >= min && progress <= max;
+  const target = shown ? progress : Math.min(max, Math.max(min, range.rest));
+  return target * pinnedScroll;
+}
+
 export function scrollHorizontalShell(
   reduceMotion: boolean,
   expandLast = false,
