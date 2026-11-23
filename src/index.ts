@@ -610,6 +610,20 @@ export {
   type TaskRowsVariant,
 } from "./components/molecules/TaskRows/TaskRows";
 export {
+  Testimonial,
+  testimonialLongQuoteLength,
+  testimonialQuoteSize,
+  testimonialRatingMax,
+  testimonialSizes,
+  testimonialStars,
+  testimonialVariants,
+  type TestimonialLayoutClassName,
+  type TestimonialProps,
+  type TestimonialQuoteSize,
+  type TestimonialSize,
+  type TestimonialVariant,
+} from "./components/molecules/Testimonial/Testimonial";
+export {
   TextSequence,
   sequencePlainText,
   textSequenceDefaultDelay,
