@@ -28,6 +28,9 @@ import {
   scrollHorizontalExpandClipRect,
   scrollHorizontalExpandViewports,
   scrollHorizontalExpandedOpacity,
+  scrollHorizontalFocusOffset,
+  scrollHorizontalFocusPad,
+  scrollHorizontalFocusRange,
   scrollHorizontalGap,
   scrollHorizontalGapCompact,
   scrollHorizontalHorizontalEnd,
@@ -158,6 +161,61 @@ describe("scrollHorizontalTranslateX", () => {
     expect(scrollHorizontalTranslateX(0, 1728, true)).toBe(0);
     expect(scrollHorizontalTranslateX(0.5, 1728, true)).toBe(0);
     expect(scrollHorizontalTranslateX(1, 1728, true)).toBe(0);
+  });
+});
+
+describe("scrollHorizontalFocusRange", () => {
+  it("shows the intro's action only at the start of the travel, and rests it there", () => {
+    // 1280 wide, action at the grid margin, 2,400px of travel.
+    const range = scrollHorizontalFocusRange(40, 150, 1280, 2400);
+    expect(range.min).toBe(0);
+    expect(range.max).toBeCloseTo((40 - scrollHorizontalFocusPad) / 2400, 6);
+    expect(range.rest).toBe(0);
+  });
+
+  it("shows a later tile's control once the travel has brought it in, and rests it centered", () => {
+    const range = scrollHorizontalFocusRange(2000, 400, 1280, 2400);
+    expect(range.min).toBeCloseTo((2000 + 400 - 1280 + scrollHorizontalFocusPad) / 2400, 6);
+    expect(range.max).toBeCloseTo((2000 - scrollHorizontalFocusPad) / 2400, 6);
+    // At either end of the range the box is whole inside the window, a pad from the edge.
+    expect(2000 - range.max * 2400).toBeCloseTo(scrollHorizontalFocusPad, 6);
+    expect(2000 + 400 - range.min * 2400).toBeCloseTo(1280 - scrollHorizontalFocusPad, 6);
+    expect(2000 + 200 - range.rest * 2400).toBeCloseTo(640, 6);
+  });
+
+  it("rests the last tile's control at the end of the travel when it cannot center", () => {
+    const range = scrollHorizontalFocusRange(3400, 400, 1280, 2400);
+    expect(range.rest).toBe(1);
+    expect(range.max).toBe(1);
+  });
+
+  it("keeps the start edge of a box wider than the window in view", () => {
+    const range = scrollHorizontalFocusRange(900, 720, 390, 1800);
+    expect(range.min).toBe(range.max);
+    expect(range.rest).toBe(range.max);
+    expect(900 - range.max * 1800).toBeCloseTo(scrollHorizontalFocusPad, 6);
+  });
+
+  it("accepts any progress when there is no travel or nothing to measure", () => {
+    expect(scrollHorizontalFocusRange(40, 150, 1280, 0)).toEqual({ min: 0, max: 1, rest: 0 });
+    expect(scrollHorizontalFocusRange(Number.NaN, 150, 1280, 2400)).toEqual({ min: 0, max: 1, rest: 0 });
+  });
+});
+
+describe("scrollHorizontalFocusOffset", () => {
+  it("leaves the page where it is when the control already shows", () => {
+    expect(scrollHorizontalFocusOffset(0.4, { min: 0.3, max: 0.6, rest: 0.5 }, 2700)).toBeCloseTo(0.4 * 2700, 6);
+  });
+
+  it("goes to the control's rest when it is off screen", () => {
+    expect(scrollHorizontalFocusOffset(0.2, { min: 0, max: 0.01, rest: 0 }, 2700)).toBe(0);
+    expect(scrollHorizontalFocusOffset(0, { min: 0.3, max: 0.6, rest: 0.5 }, 2700)).toBeCloseTo(1350, 6);
+  });
+
+  it("treats a page above or below the section as off screen", () => {
+    expect(scrollHorizontalFocusOffset(-0.5, { min: 0, max: 0.01, rest: 0 }, 2700)).toBe(0);
+    expect(scrollHorizontalFocusOffset(1.4, { min: 0.75, max: 1, rest: 0.75 }, 2700)).toBe(2025);
+    expect(scrollHorizontalFocusOffset(0.5, { min: 0, max: 1, rest: 0 }, 0)).toBe(0);
   });
 });
 
