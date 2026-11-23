@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.54 · Pattern — review card
+// @thewhatmatters/wmds@0.4.55 · Pattern — review card
 // Storybook: Components/Testimonial → Pattern — review card (?path=/story/components-testimonial--review)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.54 · Pattern — brand nav links
+// @thewhatmatters/wmds@0.4.55 · Pattern — brand nav links
 // Storybook: Components/TextLink → Pattern — brand nav links (?path=/story/components-textlink--brand-nav)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.54",
+  "version": "0.4.55",
   "import": "import { Button } from \"@thewhatmatters/wmds\";",
   "styles": [
     "@thewhatmatters/wmds/styles.css",
@@ -943,6 +943,19 @@
         "docs": "?path=/docs/components-skeleton--docs"
       },
       "patterns": []
+    },
+    {
+      "name": "SkipLink",
+      "tier": "atom",
+      "category": "Navigation",
+      "summary": "\"Skip to content\": the first Tab stop on a page, hidden until focused, that moves the focus into main.",
+      "storybook": {
+        "title": "Components/SkipLink",
+        "docs": "?path=/docs/components-skiplink--docs"
+      },
+      "patterns": [
+        "components-skiplink--page-frame"
+      ]
     },
     {
       "name": "Stat",

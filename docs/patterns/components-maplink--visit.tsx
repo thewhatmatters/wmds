@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.54 · Pattern — visit us
+// @thewhatmatters/wmds@0.4.55 · Pattern — visit us
 // Storybook: Components/MapLink → Pattern — visit us (?path=/story/components-maplink--visit)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

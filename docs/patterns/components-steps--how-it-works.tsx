@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.54 · Pattern — how it works
+// @thewhatmatters/wmds@0.4.55 · Pattern — how it works
 // Storybook: Components/Steps → Pattern — how it works (?path=/story/components-steps--how-it-works)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

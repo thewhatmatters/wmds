@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.54",
+  "version": "0.4.55",
   "patterns": [
     {
       "id": "components-accordion--faq-reading",
@@ -1081,6 +1081,14 @@
       "file": "patterns/components-sitenav--mega-menu.tsx",
       "storybook": "?path=/story/components-sitenav--mega-menu",
       "source": "src/components/organisms/SiteNav/SiteNav.stories.tsx"
+    },
+    {
+      "id": "components-skiplink--page-frame",
+      "title": "Components/SkipLink",
+      "name": "Pattern — page frame",
+      "file": "patterns/components-skiplink--page-frame.tsx",
+      "storybook": "?path=/story/components-skiplink--page-frame",
+      "source": "src/components/atoms/SkipLink/SkipLink.stories.tsx"
     },
     {
       "id": "components-stat--hero-stat",
