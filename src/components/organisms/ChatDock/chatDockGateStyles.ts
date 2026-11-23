@@ -29,6 +29,18 @@ export const chatDockGateProgressClasses = cn(typographyClass("caption"), "px-1 
 /** The footer block: the hairline, then the pending or error line, then the actions. */
 export const chatDockGateFooterBlockClasses = "flex w-full flex-col";
 
+/**
+ * The footer block inside **ChatDock**'s conversation, in place of the plain one. When a step is
+ * taller than the conversation, the footer stays pinned to the conversation's bottom edge, on the
+ * gate's floor, so Cancel and the way forward are always on screen. It reaches the gate's inner
+ * edges (the gate's padding), so the step scrolls out of sight under it, and sits over the
+ * conversation's own 8px of bottom padding (`chatDockThreadClasses`), so nothing shows below it.
+ */
+export const chatDockGateFooterPinnedClasses = cn(
+  "sticky -bottom-2 z-[1] -mx-4 -mb-3 flex flex-col bg-body px-4 pb-3",
+  "rounded-b-[var(--radius-card-body)]",
+);
+
 /** Hairline over the footer. */
 export const chatDockGateFooterRuleClasses = "m-0 w-full border-0 border-t border-border p-0";
 

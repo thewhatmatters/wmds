@@ -7,6 +7,11 @@ export interface ChatDockGateContextValue {
    * The gate asks on mount and on each step.
    */
   revealGate: () => void;
+  /**
+   * The height of the gate's pinned footer, in px (0 when the gate goes). The conversation keeps that
+   * much scroll padding at its end, so a control that takes focus never sits under the footer.
+   */
+  setFooterInset: (px: number) => void;
 }
 
 export const ChatDockGateContext = createContext<ChatDockGateContextValue | null>(null);

@@ -10,6 +10,7 @@ import {
   chatDockReplyRow,
   chatDockShowsFollowUps,
   chatDockShowsSuggestionRows,
+  chatDockSpaceBelow,
   type ChatDockMessage,
   type ChatDockSuggestion,
 } from "./ChatDock";
@@ -96,6 +97,21 @@ describe("chatDockReplyRow", () => {
     const votable = { ...reply, feedback: null };
     expect(chatDockReplyRow({ message: votable, isLatest: true, thinking: true, takesVotes: true })?.ready).toBe(false);
     expect(chatDockReplyRow({ message: votable, isLatest: false, thinking: true, takesVotes: true })?.ready).toBe(true);
+  });
+});
+
+describe("chatDockSpaceBelow", () => {
+  it("is the gap between the dock and its root's bottom edge", () => {
+    expect(chatDockSpaceBelow({ rootBottom: 844, dockBottom: 804 })).toBe(40);
+  });
+
+  it("holds while a wrapper is still sliding the dock in from under the edge", () => {
+    // Both edges are 112px lower mid-slide; measured against the viewport this read 0.
+    expect(chatDockSpaceBelow({ rootBottom: 844 + 112, dockBottom: 804 + 112 })).toBe(40);
+  });
+
+  it("is never negative", () => {
+    expect(chatDockSpaceBelow({ rootBottom: 800, dockBottom: 812 })).toBe(0);
   });
 });
 
