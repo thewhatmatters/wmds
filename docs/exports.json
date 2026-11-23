@@ -945,6 +945,19 @@
       "patterns": []
     },
     {
+      "name": "SkipLink",
+      "tier": "atom",
+      "category": "Navigation",
+      "summary": "\"Skip to content\": the first Tab stop on a page, hidden until focused, that moves the focus into main.",
+      "storybook": {
+        "title": "Components/SkipLink",
+        "docs": "?path=/docs/components-skiplink--docs"
+      },
+      "patterns": [
+        "components-skiplink--page-frame"
+      ]
+    },
+    {
       "name": "Stat",
       "tier": "molecule",
       "category": "Data visualization",

@@ -2194,6 +2194,22 @@
       "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
     },
     {
+      "name": "components-skiplink--page-frame",
+      "type": "registry:block",
+      "title": "SkipLink — page frame",
+      "description": "Show code for Storybook Components/SkipLink → Pattern — page frame.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-skiplink--page-frame.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
       "name": "components-stat--hero-stat",
       "type": "registry:block",
       "title": "Stat — hero stat",
