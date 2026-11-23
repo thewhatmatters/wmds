@@ -793,10 +793,13 @@ export const FocusContract: Story = {
     const reel = section.querySelector<HTMLElement>("[data-scroll-horizontal-slot] button");
     if (!action || !link || !reel) throw new Error("controls missing");
     const sectionTop = () => window.scrollY + section.getBoundingClientRect().top;
+    // The visible width without a classic scrollbar (Linux CI draws one; macOS overlays it). The gallery
+    // centres a tile on this width, so innerWidth would put the expected centre half a scrollbar off.
+    const viewWidth = () => document.documentElement.clientWidth;
     const onScreen = (node: HTMLElement) => {
       const box = node.getBoundingClientRect();
       expect(box.left).toBeGreaterThanOrEqual(0);
-      expect(box.right).toBeLessThanOrEqual(window.innerWidth);
+      expect(box.right).toBeLessThanOrEqual(viewWidth());
       expect(box.top).toBeGreaterThanOrEqual(0);
       expect(box.bottom).toBeLessThanOrEqual(window.innerHeight);
     };
@@ -817,7 +820,7 @@ export const FocusContract: Story = {
     await settled(() => window.scrollY);
     onScreen(link);
     const tile = link.getBoundingClientRect();
-    expect(Math.abs(tile.left + tile.width / 2 - window.innerWidth / 2)).toBeLessThan(2);
+    expect(Math.abs(tile.left + tile.width / 2 - viewWidth() / 2)).toBeLessThan(2);
     // Already on screen: focusing it again does not move the page.
     const held = window.scrollY - 40;
     window.scrollTo({ top: held, behavior: "instant" });
