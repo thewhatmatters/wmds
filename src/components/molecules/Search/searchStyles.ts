@@ -77,6 +77,12 @@ export const searchInsetButtonClasses: Record<SearchSize, string> = {
   lg: `${searchInsetButtonBaseClasses} h-10 !min-h-10 max-h-10 pointer-coarse:after:-inset-0.5`,
 };
 
+/**
+ * With `actionStatus` the action is Button's status pill, which clips its own box. Here the box stays open,
+ * or the touch layer above is cut back to the button's own height. The label and glyph clip themselves.
+ */
+export const searchInsetButtonStatusClasses = "!overflow-visible";
+
 export const searchButtonSizeClasses: Record<SearchSize, "xs" | "sm" | "md"> = {
   sm: "xs",
   md: "sm",

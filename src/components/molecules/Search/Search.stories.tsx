@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MapPin } from "lucide-react";
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { expect } from "storybook/test";
+import { type ButtonStatus } from "../../atoms/Button/buttonStatusStyles";
 import { Field } from "../Field/Field";
 import { Search, searchSizes, searchVariants } from "./Search";
 
@@ -44,12 +45,14 @@ Hero location search — one **pill shell** with inset action button.
 |------|--------|-----|
 | \`size\` | \`sm\` 40px, \`md\` 44px (default), \`lg\` 56px | \`lg\` for a signup that closes a page, or beside a **PromptBar** (the same height) |
 | \`variant\` | \`surface\` (default), \`glass\` | \`glass\` over a picture or a scene: **Card**'s frosted fill under a hairline edge |
+| \`actionStatus\` | \`idle\`, \`loading\`, \`success\`, \`error\` | The action's send state, with \`actionStatusLabels\` for its words. While \`loading\` a second press or Enter does nothing; the button keeps its width, height and focus |
 
 ## Best practices
 
 - **Do** use for ZIP/city + "Use my location" / "GO" search rows.
 - **Do** pair with Example-level expand/collapse from a "Find" trigger.
 - **Do** use it for a one-field signup (newsletter, waitlist): \`type="email"\`, \`actionType="submit"\` inside a \`form\`, a visible label from **Field**, and \`status\` + \`message\` for what to fix.
+- **Do** show a send that takes time on the action itself: \`actionStatus="loading"\` with a short \`actionStatusLabels.loading\` ("Sending…"). Pass \`"idle"\` at rest, so the button is the same element before and during the send.
 - **Don't** use solo bordered \`Input\` beside \`Button\` for this pattern — use \`Search\`.
         `.trim(),
       },
@@ -113,10 +116,12 @@ export const WithMessage: Story = {
   ),
 };
 
-/** A one-field signup: the button sends the form; Enter does the same. */
+/** A one-field signup: the button sends the form; Enter does the same. The button shows the send. */
 function NewsletterSignup() {
   const [error, setError] = useState<string | undefined>();
-  const [sent, setSent] = useState<string | null>(null);
+  const [send, setSend] = useState<ButtonStatus>("idle");
+  const timers = useRef<number[]>([]);
+  useEffect(() => () => timers.current.forEach((timer) => window.clearTimeout(timer)), []);
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const email = String(new FormData(event.currentTarget).get("email") ?? "").trim();
@@ -125,7 +130,10 @@ function NewsletterSignup() {
       return;
     }
     setError(undefined);
-    setSent(email);
+    setSend("loading");
+    // Stands in for the request: your own code sets "success" or "error" when it answers.
+    timers.current.push(window.setTimeout(() => setSend("success"), 1400));
+    timers.current.push(window.setTimeout(() => setSend("idle"), 3400));
   };
   return (
     <form className="w-full max-w-lg" onSubmit={submit} noValidate>
@@ -136,12 +144,13 @@ function NewsletterSignup() {
           autoComplete="email"
           actionLabel="Subscribe"
           actionType="submit"
+          actionStatus={send}
+          actionStatusLabels={{ loading: "Sending…", success: "Subscribed", error: "Try again" }}
           status={error ? "error" : undefined}
           message={error}
           onChange={() => setError(undefined)}
         />
       </Field>
-      {sent ? <p className="mt-3 type-body text-muted">Subscribed {sent}</p> : null}
     </form>
   );
 }
@@ -151,7 +160,7 @@ export const NewsletterSignupPattern: Story = {
   parameters: {
     docs: {
       description: {
-        story: "One email field with **Subscribe** inside it at the right end (`actionType=\"submit\"`). A wrong address opens the band under the pill and keeps what was typed.",
+        story: "One email field with **Subscribe** inside it at the right end (`actionType=\"submit\"`). A wrong address opens the band under the pill and keeps what was typed. A good one shows the send on the button (`actionStatus`): **Sending…** with a spinner, then **Subscribed**. While it sends, a second press or Enter does nothing, and the button keeps its width and the keyboard focus.",
       },
     },
   },

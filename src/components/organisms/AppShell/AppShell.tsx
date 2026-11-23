@@ -16,6 +16,7 @@ import { ChevronDown, PanelLeft } from "lucide-react";
 import { Button } from "../../atoms/Button/Button";
 import { IconButton } from "../../atoms/IconButton/IconButton";
 import { Kbd } from "../../atoms/Kbd/Kbd";
+import { SkipLink } from "../../atoms/SkipLink/SkipLink";
 import { Tooltip } from "../../atoms/Tooltip/Tooltip";
 import { PageHeader } from "../../molecules/PageHeader/PageHeader";
 import { pageHeaderTitleClasses } from "../../molecules/PageHeader/pageHeaderStyles";
@@ -39,7 +40,6 @@ import {
   appShellBrandClasses,
   appShellCanvasClasses,
   appShellMainClasses,
-  appShellSkipLinkClasses,
   appShellRootClasses,
   appShellSheetBodyClasses,
   appShellSidebarBodyClasses,
@@ -504,17 +504,7 @@ function AppShellRoot({
   return (
     <AppShellContext.Provider value={context}>
       <div className={cn(appShellRootClasses, className)}>
-        <a
-          href={`#${mainId}`}
-          className={appShellSkipLinkClasses}
-          onClick={(event) => {
-            // Focus <main> without writing a hash into the URL, which an app's router may own.
-            event.preventDefault();
-            document.getElementById(mainId)?.focus();
-          }}
-        >
-          {labels.skipToContent}
-        </a>
+        <SkipLink target={mainId}>{labels.skipToContent}</SkipLink>
         {hasSidebar ? (
           <div
             ref={sidebarRef}
