@@ -733,6 +733,113 @@ export const IntroContract: Story = {
   },
 };
 
+/** Tile media that holds a link, as a project cover that opens its case study would. */
+const focusLinkItems = scrollHorizontalMarketingItems.map((item, index) =>
+  index === 3
+    ? {
+        ...item,
+        media: (
+          <a href="#case-study" className="flex items-center justify-center bg-brand text-on-brand">
+            Read the case study
+          </a>
+        ),
+      }
+    : item,
+);
+
+/** The page may scroll smoothly: wait until the value stops changing. */
+async function settled(read: () => number) {
+  let last = read();
+  for (let checks = 0; checks < 40; checks += 1) {
+    await new Promise((resolve) => setTimeout(resolve, 120));
+    const now = read();
+    if (checks > 0 && Math.abs(now - last) < 0.5) return;
+    last = now;
+  }
+  throw new Error("the page kept scrolling");
+}
+
+export const FocusContract: Story = {
+  tags: ["test", "!dev", "!autodocs"],
+  parameters: {
+    wmdsLayout: "fullscreen",
+    docs: { disable: true },
+  },
+  render: () => (
+    <div>
+      <div className="h-[60svh]" />
+      <ScrollHorizontal
+        items={focusLinkItems}
+        expandLast
+        expanded={<button type="button">Play the reel</button>}
+        intro={
+          <ScrollHorizontal.Intro
+            eyebrow="SELECTED WORK"
+            statement="Every screen is a first impression."
+            action={{ label: "Start a project", onClick: openProjectModal }}
+          />
+        }
+      />
+      <div className="h-svh" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const section = canvasElement.querySelector<HTMLElement>("[data-scroll-horizontal]");
+    const track = section?.querySelector<HTMLElement>("[data-scroll-horizontal-track]");
+    if (!section || !track) throw new Error("gallery missing");
+    if (section.dataset.reduce === "true") return;
+    const action = [...section.querySelectorAll("button")].find((node) => node.textContent?.includes("Start a project"));
+    const link = section.querySelector<HTMLElement>("li a");
+    const reel = section.querySelector<HTMLElement>("[data-scroll-horizontal-slot] button");
+    if (!action || !link || !reel) throw new Error("controls missing");
+    const sectionTop = () => window.scrollY + section.getBoundingClientRect().top;
+    const onScreen = (node: HTMLElement) => {
+      const box = node.getBoundingClientRect();
+      expect(box.left).toBeGreaterThanOrEqual(0);
+      expect(box.right).toBeLessThanOrEqual(window.innerWidth);
+      expect(box.top).toBeGreaterThanOrEqual(0);
+      expect(box.bottom).toBeLessThanOrEqual(window.innerHeight);
+    };
+
+    // Partway into the travel the intro's action has left the screen. Keyboard focus brings it back.
+    window.scrollTo({ top: sectionTop() + window.innerHeight * 1.2, behavior: "instant" });
+    await waitFor(() => expect(action.getBoundingClientRect().right).toBeLessThan(0));
+    action.focus();
+    if (!action.matches(":focus-visible")) return;
+    await settled(() => window.scrollY);
+    onScreen(action);
+    // It rests at the start of the travel, where the intro is laid out.
+    expect(Math.abs(window.scrollY - sectionTop())).toBeLessThan(1);
+    expect(track.getBoundingClientRect().left).toBeCloseTo(section.getBoundingClientRect().left, 0);
+
+    // A link in a later tile is off to the right from here. Focus scrolls the travel to it.
+    link.focus();
+    await settled(() => window.scrollY);
+    onScreen(link);
+    const tile = link.getBoundingClientRect();
+    expect(Math.abs(tile.left + tile.width / 2 - window.innerWidth / 2)).toBeLessThan(2);
+    // Already on screen: focusing it again does not move the page.
+    const held = window.scrollY - 40;
+    window.scrollTo({ top: held, behavior: "instant" });
+    link.blur();
+    link.focus();
+    await settled(() => window.scrollY);
+    expect(Math.abs(window.scrollY - held)).toBeLessThan(1);
+
+    // A control in `expanded` belongs to the full tile.
+    reel.focus();
+    await settled(() => window.scrollY);
+    onScreen(reel);
+    expect(getComputedStyle(reel.closest("[data-scroll-horizontal-slot]") as Element).opacity).toBe("1");
+
+    // Back to the action from the far end.
+    action.focus();
+    await settled(() => window.scrollY);
+    onScreen(action);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  },
+};
+
 const review1440Viewport = {
   review1440: {
     name: "Review 1440",
