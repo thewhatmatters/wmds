@@ -1589,6 +1589,22 @@
       "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
     },
     {
+      "name": "components-maplink--visit",
+      "type": "registry:block",
+      "title": "MapLink — visit us",
+      "description": "Show code for Storybook Components/MapLink → Pattern — visit us.",
+      "dependencies": [
+        "@thewhatmatters/wmds"
+      ],
+      "files": [
+        {
+          "path": "docs/patterns/components-maplink--visit.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "docs": "Import \"@thewhatmatters/wmds/styles.css\" once in the app before using this block."
+    },
+    {
       "name": "components-media--photo",
       "type": "registry:block",
       "title": "Media — photo with a source tag",

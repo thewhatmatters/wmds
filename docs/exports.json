@@ -609,6 +609,19 @@
       ]
     },
     {
+      "name": "MapLink",
+      "tier": "molecule",
+      "category": "Navigation",
+      "summary": "An address with a link that opens the maps site with directions, and the towns a business serves; no embedded map.",
+      "storybook": {
+        "title": "Components/MapLink",
+        "docs": "?path=/docs/components-maplink--docs"
+      },
+      "patterns": [
+        "components-maplink--visit"
+      ]
+    },
+    {
       "name": "Media",
       "tier": "atom",
       "category": "Content",

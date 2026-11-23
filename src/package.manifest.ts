@@ -52,6 +52,7 @@ const molecules = [
   "IntakeForm",
   "LinkTile",
   "LogView",
+  "MapLink",
   "NavList",
   "Notice",
   "PageHeader",
