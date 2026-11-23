@@ -984,6 +984,19 @@
       ]
     },
     {
+      "name": "Steps",
+      "tier": "molecule",
+      "category": "Marketing",
+      "summary": "What happens, in order: a short numbered list, each step a title and one line, ruled between steps, numbers in mono.",
+      "storybook": {
+        "title": "Components/Steps",
+        "docs": "?path=/docs/components-steps--docs"
+      },
+      "patterns": [
+        "components-steps--how-it-works"
+      ]
+    },
+    {
       "name": "Switch",
       "tier": "atom",
       "category": "Form controls",

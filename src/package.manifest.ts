@@ -67,6 +67,7 @@ const molecules = [
   "SelectableCard",
   "Stat",
   "StepProgress",
+  "Steps",
   "TaskRows",
   "Testimonial",
   "TextSequence",

@@ -588,6 +588,17 @@ export {
   type StatVariant,
 } from "./components/molecules/Stat/Stat";
 export {
+  Steps,
+  stepsLayouts,
+  stepsNumber,
+  stepsTitleTags,
+  type StepsItemProps,
+  type StepsLayout,
+  type StepsLayoutClassName,
+  type StepsProps,
+  type StepsTitleTag,
+} from "./components/molecules/Steps/Steps";
+export {
   StepProgress,
   isStepProgressSegmentFilled,
   stepProgressLabel,
