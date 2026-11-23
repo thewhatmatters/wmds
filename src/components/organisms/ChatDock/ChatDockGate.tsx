@@ -22,6 +22,7 @@ import {
   chatDockGateErrorClasses,
   chatDockGateFooterActionsClasses,
   chatDockGateFooterBlockClasses,
+  chatDockGateFooterPinnedClasses,
   chatDockGateFooterRowClasses,
   chatDockGateFooterRuleClasses,
   chatDockGateHeaderClasses,
@@ -101,7 +102,7 @@ export interface ChatDockGateProps {
  * not raised): the step's title and subtitle with previous,
  * progress, and next; the step; Cancel and the primary action under a second hairline. It has no close
  * of its own and never scrolls on its own — the window grows to fit it, and past that the conversation
- * scrolls.
+ * scrolls, with the footer pinned to its bottom edge so Cancel and the way forward stay on screen.
  */
 export const ChatDockGate = forwardRef<HTMLDivElement, ChatDockGateProps>(function ChatDockGate(
   {
@@ -144,6 +145,23 @@ export const ChatDockGate = forwardRef<HTMLDivElement, ChatDockGateProps>(functi
   useLayoutEffect(() => {
     dockWindow?.revealGate();
   }, [dockWindow, step]);
+
+  // Inside ChatDock the footer stays pinned to the conversation's bottom edge; the conversation keeps
+  // that much scroll padding, so Tab never lands on a control hidden under it.
+  const footerRef = useRef<HTMLDivElement | null>(null);
+  useLayoutEffect(() => {
+    const footer = footerRef.current;
+    if (dockWindow == null || footer == null) return;
+    const measure = () => dockWindow.setFooterInset(footer.offsetHeight);
+    measure();
+    if (typeof ResizeObserver === "undefined") return () => dockWindow.setFooterInset(0);
+    const observer = new ResizeObserver(measure);
+    observer.observe(footer);
+    return () => {
+      observer.disconnect();
+      dockWindow.setFooterInset(0);
+    };
+  }, [dockWindow]);
 
   const fast = motionTransitionProp("fast");
   const shift = reduceMotion ? 0 : 16;
@@ -236,7 +254,11 @@ export const ChatDockGate = forwardRef<HTMLDivElement, ChatDockGateProps>(functi
         </motion.div>
       </AnimatePresence>
 
-      <div className={chatDockGateFooterBlockClasses}>
+      <div
+        ref={footerRef}
+        className={dockWindow != null ? chatDockGateFooterPinnedClasses : chatDockGateFooterBlockClasses}
+        data-chat-dock-gate-footer=""
+      >
         <hr className={chatDockGateFooterRuleClasses} aria-hidden="true" />
         {/* Mounted throughout, so "Sending…" is announced when it appears. */}
         <div role="status">{pending ? <p className={chatDockGatePendingClasses}>{labels.pending}</p> : null}</div>

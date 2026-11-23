@@ -346,6 +346,15 @@ export function chatDockGateWindowHeight({ normal, needed, max }: { normal: numb
   return Math.round(Math.max(normal, Math.min(max, needed)));
 }
 
+/**
+ * The space between the dock and the bottom of a window that fills the screen, in px. It is read from
+ * the dock's own root, not the viewport: the two move together when a wrapper slides the dock in, so
+ * the measure holds while the dock is still on its way.
+ */
+export function chatDockSpaceBelow({ rootBottom, dockBottom }: { rootBottom: number; dockBottom: number }): number {
+  return Math.max(0, rootBottom - dockBottom);
+}
+
 /** How long a request to bring the gate into view keeps applying while the window settles. */
 const gateRevealMs = 900;
 
@@ -428,6 +437,7 @@ function ChatDockRoot({
   // Phones: keep the window and composer inside the part of the screen a keyboard leaves visible.
   const visible = useChatDockVisibleArea(placement === "fixed" && !growLayout && !windowHidden);
 
+  const rootRef = useRef<HTMLDivElement>(null);
   const dockRef = useRef<HTMLDivElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
@@ -555,6 +565,12 @@ function ChatDockRoot({
       revealUntilRef.current = performance.now() + gateRevealMs;
       chatDockRevealGate(threadRef.current, gateSlotRef.current);
     },
+    setFooterInset: (px) => {
+      const thread = threadRef.current;
+      if (thread == null) return;
+      if (px > 0) thread.style.setProperty("scroll-padding-bottom", `${px}px`);
+      else thread.style.removeProperty("scroll-padding-bottom");
+    },
   }));
 
   // Opening the window onto a gate brings the gate into view.
@@ -582,15 +598,19 @@ function ChatDockRoot({
   const hasDisclaimer = disclaimer != null;
   const windowMotion: ChatDockWindowMotion = placement === "fixed" && !growLayout ? "rise" : "grow";
   useLayoutEffect(() => {
+    const root = rootRef.current;
     const dock = dockRef.current;
     const bar = barRef.current;
     const foot = footRef.current;
-    if (dock == null || bar == null || foot == null) return;
+    if (root == null || dock == null || bar == null || foot == null) return;
     const measure = () => {
-      // Where the window fills the screen, its bottom is the bottom of the visible area.
+      // Where the window fills the screen, its bottom is the root's: the bottom of the visible area.
       const below =
         windowMotion === "rise"
-          ? Math.max(0, window.innerHeight - visible.bottom - dock.getBoundingClientRect().bottom)
+          ? chatDockSpaceBelow({
+              rootBottom: root.getBoundingClientRect().bottom,
+              dockBottom: dock.getBoundingClientRect().bottom,
+            })
           : 0;
       windowRef.current?.style.setProperty("--chat-dock-composer", `${bar.offsetHeight + foot.offsetHeight + below}px`);
     };
@@ -832,6 +852,7 @@ function ChatDockRoot({
 
   return (
     <div
+      ref={rootRef}
       className={cn(
         chatDockRootClasses[placement],
         placement === "fixed" && !windowHidden ? chatDockRootRaisedClasses : undefined,
