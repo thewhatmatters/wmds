@@ -60,6 +60,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "Avatar", category: "Content", title: "Components/Avatar", description: "Circular identity with initials fallback and an optional presence dot." },
   { name: "Kbd", category: "Content", title: "Components/Kbd", description: "One physical keycap; compose several for a shortcut." },
   { name: "LogView", category: "Content", title: "Components/LogView", description: "Scrolling log with a line count, copy, and follow." },
+  { name: "Media", category: "Content", title: "Components/Media", description: "A picture in a fixed-ratio frame with a crop point, an optional caption and source tag, and a tinted fallback." },
   { name: "Prose", category: "Content", title: "Components/Prose", description: "Long-form article text set from plain HTML, with a reading measure." },
   { name: "SectionCaption", category: "Content", title: "Components/SectionCaption", description: "Small uppercase mono caption over a page column, on a rule, with an optional action." },
 
