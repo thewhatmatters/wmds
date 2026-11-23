@@ -1,6 +1,7 @@
 import { forwardRef, useId, type InputHTMLAttributes, type ReactElement } from "react";
 import { cn } from "../../../lib/cn";
 import { Button, type ButtonRole } from "../../atoms/Button/Button";
+import { type ButtonStatus } from "../../atoms/Button/buttonStatusStyles";
 import { Input } from "../../atoms/Input/Input";
 import { type InputStatus } from "../../atoms/Input/inputShellStyles";
 import { InputStatusBanner, warnStatusWithoutMessage } from "../../atoms/inputShared/InputStatusBanner";
@@ -10,6 +11,7 @@ import {
   searchInlineInputClasses,
   searchInlineInputVariantClasses,
   searchInsetButtonClasses,
+  searchInsetButtonStatusClasses,
   searchShellClasses,
   searchShellFillClasses,
   searchShellRestBorderClasses,
@@ -47,6 +49,15 @@ export interface SearchProps
    * newsletter or waitlist signup). Default `button`: it calls `onAction` only.
    */
   actionType?: "button" | "submit";
+  /**
+   * The inset action's send state: `loading` shows a spinner beside `actionStatusLabels.loading`, marks the
+   * button busy and blocks a second press or Enter; `success` and `error` confirm. The button keeps its
+   * width, its height and the keyboard focus through all four. Pass `"idle"` at rest (not `undefined`), so
+   * the button stays the same element when a send starts.
+   */
+  actionStatus?: ButtonStatus;
+  /** The action's words per state, kept short ("Sending…", "Sent", "Retry"). `idle` defaults to `actionLabel`. */
+  actionStatusLabels?: Partial<Record<ButtonStatus, string>>;
   /** Leading Lucide icon on the input. */
   icon?: ReactElement;
   /** Validation status: the pill's border takes the colour and, with `message`, the band opens under it. */
@@ -70,6 +81,8 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(function Search(
     actionRole = "primary",
     actionDisabled,
     actionType = "button",
+    actionStatus,
+    actionStatusLabels,
     icon,
     status,
     message,
@@ -117,7 +130,9 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(function Search(
           role={actionRole}
           size={buttonSize}
           disabled={disabled || actionDisabled}
-          className={searchInsetButtonClasses[size]}
+          status={actionStatus}
+          statusLabels={actionStatus != null ? actionStatusLabels : undefined}
+          className={cn(searchInsetButtonClasses[size], actionStatus != null && searchInsetButtonStatusClasses)}
           onClick={onAction}
         >
           {actionLabel}
