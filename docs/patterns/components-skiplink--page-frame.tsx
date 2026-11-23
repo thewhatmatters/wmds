@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.54 · Pattern — page frame
+// @thewhatmatters/wmds@0.4.55 · Pattern — page frame
 // Storybook: Components/SkipLink → Pattern — page frame (?path=/story/components-skiplink--page-frame)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
