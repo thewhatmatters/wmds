@@ -22,6 +22,7 @@ const atoms = [
   "RiveHand",
   "SectionCaption",
   "Skeleton",
+  "SkipLink",
   "Status",
   "Switch",
   "Table",
