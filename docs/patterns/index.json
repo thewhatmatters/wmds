@@ -787,6 +787,14 @@
       "source": "src/components/molecules/LogView/LogView.stories.tsx"
     },
     {
+      "id": "components-maplink--visit",
+      "title": "Components/MapLink",
+      "name": "Pattern — visit us",
+      "file": "patterns/components-maplink--visit.tsx",
+      "storybook": "?path=/story/components-maplink--visit",
+      "source": "src/components/molecules/MapLink/MapLink.stories.tsx"
+    },
+    {
       "id": "components-media--photo",
       "title": "Components/Media",
       "name": "Pattern — photo with a source tag",
