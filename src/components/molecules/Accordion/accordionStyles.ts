@@ -73,6 +73,12 @@ export const accordionTriggerFlushClasses =
 /** @deprecated Use `accordionTriggerListClasses` or `accordionTriggerCapsuleClasses`. */
 export const accordionTriggerBaseClasses = accordionTriggerListClasses;
 
+/**
+ * `headingLevel` — the heading around a row's button. It carries no look of its own: the label's own type classes
+ * set the text, exactly as without a heading.
+ */
+export const accordionHeadingClasses = "m-0 [font:inherit]";
+
 /** Expandable header — pointer + hover fill on the full trigger band. */
 export const accordionTriggerInteractiveClasses =
   "cursor-pointer hover:bg-ghost-hover active:bg-ghost-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-inset " +
