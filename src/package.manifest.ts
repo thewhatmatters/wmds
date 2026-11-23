@@ -67,6 +67,7 @@ const molecules = [
   "Stat",
   "StepProgress",
   "TaskRows",
+  "Testimonial",
   "TextSequence",
   "TileGrid",
 ] as const;

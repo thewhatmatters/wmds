@@ -1033,6 +1033,19 @@
       ]
     },
     {
+      "name": "Testimonial",
+      "tier": "molecule",
+      "category": "Marketing",
+      "summary": "One person's words on a card: the quote, their name and place, optional stars and source; a long quote is set smaller.",
+      "storybook": {
+        "title": "Components/Testimonial",
+        "docs": "?path=/docs/components-testimonial--docs"
+      },
+      "patterns": [
+        "components-testimonial--review"
+      ]
+    },
+    {
       "name": "TextArea",
       "tier": "atom",
       "category": "Form controls",

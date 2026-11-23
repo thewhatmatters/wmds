@@ -131,6 +131,11 @@ export const compositionShellExceptions: CompositionShellException[] = [
     reason: "LinkTile owns the external mark after its title (Lucide SquareArrowOutUpRight, as TextLink external).",
   },
   {
+    file: "components/molecules/Testimonial/Testimonial.tsx",
+    ruleId: "lucide-import",
+    reason: "Testimonial owns the star glyph of its rating (Lucide Star, five in one named picture).",
+  },
+  {
     file: "components/molecules/PromptBar/PromptBar.tsx",
     ruleId: "lucide-import",
     reason: "PromptBar owns the send glyph (Lucide ArrowRight) passed to IconButton.",
