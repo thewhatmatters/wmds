@@ -115,6 +115,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "HeroTileStack", category: "Marketing", title: "Components/HeroTileStack", description: "Hero image fan that scatters away from the pointer." },
   { name: "RiveHand", category: "Marketing", title: "Components/HeroTileStack", description: "Decorative animated hand for the marketing headline. Shown in the HeroTileStack patterns." },
   { name: "ScrollHorizontal", category: "Marketing", title: "Components/ScrollHorizontal", description: "Sticky horizontal project gallery driven by vertical scroll." },
+  { name: "Steps", category: "Marketing", title: "Components/Steps", description: "What happens, in order: a short numbered list, each step a title and one line, ruled between steps, numbers in mono." },
   { name: "Testimonial", category: "Marketing", title: "Components/Testimonial", description: "One person's words on a card: the quote, their name and place, optional stars and source; a long quote is set smaller." },
   { name: "TextSequence", category: "Marketing", title: "Components/TextSequence", description: "Masked word-by-word reveal for headlines." },
 

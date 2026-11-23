@@ -1115,6 +1115,14 @@
       "source": "src/components/molecules/StepProgress/StepProgress.stories.tsx"
     },
     {
+      "id": "components-steps--how-it-works",
+      "title": "Components/Steps",
+      "name": "Pattern — how it works",
+      "file": "patterns/components-steps--how-it-works.tsx",
+      "storybook": "?path=/story/components-steps--how-it-works",
+      "source": "src/components/molecules/Steps/Steps.stories.tsx"
+    },
+    {
       "id": "components-switch--default",
       "title": "Components/Switch",
       "name": "Pattern — default",
