@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.54 · With inline pills
+// @thewhatmatters/wmds@0.4.55 · With inline pills
 // Storybook: Components/TextSequence → With inline pills (?path=/story/components-textsequence--inline-pills)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

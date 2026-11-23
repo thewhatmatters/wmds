@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.54 · Pattern — keyboard shortcut
+// @thewhatmatters/wmds@0.4.55 · Pattern — keyboard shortcut
 // Storybook: Components/Kbd → Pattern — keyboard shortcut (?path=/story/components-kbd--shortcut)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

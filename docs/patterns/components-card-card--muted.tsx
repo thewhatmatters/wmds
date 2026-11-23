@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.54 · Pattern — muted (a quiet cell)
+// @thewhatmatters/wmds@0.4.55 · Pattern — muted (a quiet cell)
 // Storybook: Components/Card/Card → Pattern — muted (a quiet cell) (?path=/story/components-card-card--muted)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 
