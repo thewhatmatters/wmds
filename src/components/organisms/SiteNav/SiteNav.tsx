@@ -406,8 +406,13 @@ function SiteNavRoot({
     </div>
   );
 
+  /**
+   * `initial` is the same with reduced motion on or off: the server can't know the setting, so branching here made the
+   * first client render disagree with the server's markup (a hydration mismatch). Reduced motion still gets no slide,
+   * because `barTransition` is instant.
+   */
   const compactMotionProps = {
-    initial: shouldReduceMotion ? false : compactHidden,
+    initial: compactHidden,
     animate: compactVisible,
     exit: shouldReduceMotion ? compactVisible : compactHidden,
     transition: barTransition,

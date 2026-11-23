@@ -15,6 +15,7 @@ const meta = {
   tags: ["autodocs"],
   argTypes: {
     variant: { control: "select", options: [...accordionVariants] },
+    headingLevel: { control: "select", options: [undefined, 2, 3, 4, 5, 6] },
     children: { control: false },
   },
   args: {
@@ -36,6 +37,7 @@ Generic expand/collapse rows — **leading**, **label**, **trailing**, built-in 
 | **Capsules** | \`variant="capsule"\` — separated rounded rows |
 | **Controlled** | \`open\` + \`onOpenChange\` on **Accordion.Item** |
 | **Flush** | \`variant="plain"\` + \`flush\` — no inset; labels line up with surrounding text (filter side panel) |
+| **Page content (FAQ)** | \`headingLevel={3}\` — each row's button sits in a heading, one level below the section's own |
 
 ## Anatomy
 
@@ -51,9 +53,12 @@ Accordion
 
 A closed panel turns \`visibility: hidden\` once its fold ends, so Tab skips its controls and screen readers skip its content.
 
+\`headingLevel\` wraps each expandable row's button in a heading (\`<h3><button aria-expanded>…</button></h3>\`), so screen-reader users can move from question to question by heading. Nothing changes to the eye. Panels take no \`region\` role: with more than about six rows that would flood the page's landmark list.
+
 ## Best practices
 
 - **Do** omit \`children\` for static header rows — no chevron, no disclosure button.
+- **Do** set \`headingLevel\` when the rows are a page's content (an FAQ, a services list) — one level below the section heading. Leave it out in app UI (filters, task rows).
 - **Do** use \`flush\` where the rows sit under a heading or caption in a column — the hover band reaches 8px past each edge.
 - **Do** use \`leading\` / \`trailing\` for atoms — not hand-rolled affordances.
 - **Do** compose **TaskRows** when you need status rings, meta, and detail rails — not raw Accordion.
@@ -89,7 +94,7 @@ export const FaqPlain: Story = {
 export const FaqReading: Story = {
   name: "Pattern — FAQ (reading, long questions)",
   render: () => (
-    <Accordion variant="plain" flush size="reading" className="max-w-sm">
+    <Accordion variant="plain" flush size="reading" headingLevel={3} className="max-w-sm">
       <Accordion.Item leading={<span className="font-mono text-xs tabular-nums text-muted">01</span>} label="How long does a project take?" defaultOpen>
         Most sites take six weeks from the first call to launch.
       </Accordion.Item>
@@ -107,10 +112,13 @@ export const FaqReading: Story = {
   parameters: storyCopySource(`
 import { Accordion } from "@thewhatmatters/wmds";
 
-/** A question wraps and is read in full; its number and chevron stay beside the first line. */
+/**
+ * A question wraps and is read in full; its number and chevron stay beside the first line.
+ * headingLevel={3} puts each question in an h3: use one level below the section's own heading.
+ */
 export function Faq() {
   return (
-    <Accordion variant="plain" flush size="reading" className="max-w-sm">
+    <Accordion variant="plain" flush size="reading" headingLevel={3} className="max-w-sm">
       <Accordion.Item leading={<span className="font-mono text-xs tabular-nums text-muted">01</span>} label="How long does a project take?" defaultOpen>
         Most sites take six weeks from the first call to launch.
       </Accordion.Item>

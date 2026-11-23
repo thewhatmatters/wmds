@@ -257,6 +257,7 @@ export {
 } from "./components/molecules/Chip/Chip";
 export {
   Accordion,
+  type AccordionHeadingLevel,
   accordionSizes,
   accordionVariants,
   type AccordionItemProps,

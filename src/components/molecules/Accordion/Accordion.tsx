@@ -16,6 +16,7 @@ import {
   accordionChevronRotateClasses,
   accordionChevronSlotClasses,
   accordionChevronSlotPlainClasses,
+  accordionHeadingClasses,
   accordionItemCapsuleClasses,
   accordionItemCapsuleClosedClasses,
   accordionItemCapsuleOpenClasses,
@@ -53,10 +54,14 @@ export { accordionSizes, accordionVariants } from "./accordionStyles";
 /** Layout-only — not for row colors or panel styling overrides. */
 export type AccordionLayoutClassName = string;
 
+/** Heading level for each expandable row's header. */
+export type AccordionHeadingLevel = 2 | 3 | 4 | 5 | 6;
+
 interface AccordionContextValue {
   variant: AccordionVariant;
   flush: boolean;
   size: AccordionSize;
+  headingLevel?: AccordionHeadingLevel;
 }
 
 const AccordionContext = createContext<AccordionContextValue>({
@@ -81,6 +86,12 @@ export interface AccordionProps extends HTMLAttributes<HTMLDivElement> {
    * such as an FAQ or a services list (Body rules B7, B9).
    */
   size?: AccordionSize;
+  /**
+   * Wraps each expandable row's button in a heading of this level (`3` gives `<h3><button>…</button></h3>`), so
+   * screen-reader users can jump between rows by heading. Set it when the rows are a page's content, such as an FAQ:
+   * one level below the section's own heading. Leave it out for app UI (filters, task rows). Looks the same.
+   */
+  headingLevel?: AccordionHeadingLevel;
   className?: AccordionLayoutClassName;
 }
 
@@ -106,12 +117,16 @@ function AccordionRoot({
   inset = false,
   flush: flushProp = false,
   size = "ui",
+  headingLevel,
   className,
   children,
   ...props
 }: AccordionProps) {
   const flush = flushProp && variant === "plain";
-  const contextValue = useMemo(() => ({ variant, flush, size }), [variant, flush, size]);
+  const contextValue = useMemo(
+    () => ({ variant, flush, size, headingLevel }),
+    [variant, flush, size, headingLevel],
+  );
 
   const rootClasses = (() => {
     if (variant === "list") {
@@ -165,7 +180,7 @@ function AccordionItem({
   onOpenChange,
   className,
 }: AccordionItemProps) {
-  const { variant, flush, size } = useContext(AccordionContext);
+  const { variant, flush, size, headingLevel } = useContext(AccordionContext);
   const panelId = useId();
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const isControlled = openProp !== undefined;
@@ -226,18 +241,27 @@ function AccordionItem({
     </>
   );
 
+  const Heading = headingLevel ? (`h${headingLevel}` as const) : null;
+  const button = (
+    <button
+      type="button"
+      className={cn(triggerClasses, accordionTriggerInteractiveClasses)}
+      aria-expanded={open}
+      aria-controls={panelId}
+      onClick={() => setOpen(!open)}
+    >
+      {trigger}
+    </button>
+  );
+
   return (
     <div className={cn(accordionItemShellClasses(variant, open, flush), className)}>
       {expandable ? (
-        <button
-          type="button"
-          className={cn(triggerClasses, accordionTriggerInteractiveClasses)}
-          aria-expanded={open}
-          aria-controls={panelId}
-          onClick={() => setOpen(!open)}
-        >
-          {trigger}
-        </button>
+        Heading ? (
+          <Heading className={accordionHeadingClasses}>{button}</Heading>
+        ) : (
+          button
+        )
       ) : (
         <div className={triggerClasses}>{trigger}</div>
       )}

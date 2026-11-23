@@ -4,10 +4,13 @@
 
 import { Accordion } from "@thewhatmatters/wmds";
 
-/** A question wraps and is read in full; its number and chevron stay beside the first line. */
+/**
+ * A question wraps and is read in full; its number and chevron stay beside the first line.
+ * headingLevel={3} puts each question in an h3: use one level below the section's own heading.
+ */
 export function Faq() {
   return (
-    <Accordion variant="plain" flush size="reading" className="max-w-sm">
+    <Accordion variant="plain" flush size="reading" headingLevel={3} className="max-w-sm">
       <Accordion.Item leading={<span className="font-mono text-xs tabular-nums text-muted">01</span>} label="How long does a project take?" defaultOpen>
         Most sites take six weeks from the first call to launch.
       </Accordion.Item>
