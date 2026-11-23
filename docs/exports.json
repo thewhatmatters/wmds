@@ -609,6 +609,19 @@
       ]
     },
     {
+      "name": "Media",
+      "tier": "atom",
+      "category": "Content",
+      "summary": "A picture in a fixed-ratio frame with a crop point, an optional caption and source tag, and a tinted fallback.",
+      "storybook": {
+        "title": "Components/Media",
+        "docs": "?path=/docs/components-media--docs"
+      },
+      "patterns": [
+        "components-media--photo"
+      ]
+    },
+    {
       "name": "Meter",
       "tier": "atom",
       "category": "Data visualization",
