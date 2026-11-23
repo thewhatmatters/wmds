@@ -7,6 +7,41 @@ Every release of `@thewhatmatters/wmds` is listed here, newest first.
 - **Pasted patterns:** when a release changes a **Pattern — …** story's Show code, it is named under Consumer actions so apps re-copy it.
 - **How to add an entry** (contributors): don't edit this file on a feature branch. Add a release note as `changes/<topic>.md` (format in `changes/README.md`). The release step, `npm run release:prepare` on its own **Release 0.x.y** branch, folds every note into one new entry here and bumps the version once. `npm run check:changelog` checks this file and the notes.
 
+## 0.4.55
+
+**SiteNav hydrates cleanly under reduced motion; Accordion rows can be headings**
+
+- **SiteNav**: a compact bar on the first render (`state="compact"`) no longer causes a hydration mismatch for readers with reduced motion on. Its starting style is now the same on the server and in the browser; reduced motion still gets no slide.
+- **Accordion** `headingLevel` (`2`–`6`): wraps each expandable row's button in a heading (`<h3><button aria-expanded>…</button></h3>`), so screen-reader users can move between rows by heading. Nothing changes to the eye. Off by default.
+
+**MapLink: an address, and a link to directions.**
+
+- **MapLink** (new): shows an `address` as text with a "Get directions" link that opens the maps site, or the maps app on a phone. `place` sets what the map is asked for (the business's name with its address, or a home town), `areas` lists the towns a business serves, `mode="search"` shows the place instead of a route, and `provider="apple"` asks Apple Maps. `actions` takes more buttons beside the link, such as "Call". There is no embedded map. `mapLinkHref()` gives the same link address for your own markup. See **Components → MapLink → Pattern — visit us**.
+
+**Media: a picture in a frame that holds its shape.**
+
+- **Media** (new): a picture at a set `ratio` (`4/3`, `16/9`, `1/1` and four more). The frame keeps its box before the picture loads, so the page doesn't jump. `focus` sets the crop point, by name (`top`, `bottom-left`) or as `{ x, y }` percentages of the picture. `radius` follows the surface radius knob. `caption` and `tag` (the visible source label, "Stock photo") sit under the frame. A missing or failed picture becomes a tinted box named by `alt`. `render` passes the picture through `next/image`. See **Components → Media → Pattern — photo with a source tag**.
+
+**ScrollHorizontal: keyboard focus never lands on a control the scroll has moved off screen.**
+
+- **ScrollHorizontal** (fix): tabbing to a link or button inside the gallery (the intro's action, a tile's `media`, the `expanded` slot) could leave focus on something out of sight, because the browser scrolled the page into the pinned range and the travel then carried the control past the window's edge. On keyboard focus the page now scrolls to where that control shows: the start of the travel for the intro, its tile centered for a tile, the full tile for `expanded`. A control already whole on screen leaves the page where it is. Pointer focus and reduced motion are unchanged.
+
+**Steps: a numbered "How it works" list.**
+
+- **Steps** (new): an ordered list of **Steps.Item**, each a `title` and one line, with a rule above each step and a mono number ("01") counted for you. `layout="rows"` (default) keeps the number beside the words at every width; `layout="columns"` sets the steps side by side from `md` and stacks them on a phone. `titleAs` sets the titles' element and `start` the first number. See **Components → Steps → Pattern — how it works**.
+
+**Testimonial: one person's words on a card.**
+
+- **Testimonial** (new): a `quote`, the person's `name` and `detail` (their role or place), on a **Card**. `rating` shows five stars, read as "Rated 4 out of 5", and `source` names where the words were published ("Google review"). A quote over 200 characters is set a step smaller; `size` fixes it for a row at one size. In a row the cards share a height and the people line up along the bottom. See **Components → Testimonial → Pattern — review card**.
+
+### Consumer actions
+
+- For an FAQ or any accordion that is page content, set `headingLevel` one level below the section's heading: `<Accordion headingLevel={3}>`. Leave it out in app UI (filters, task rows).
+- None. If you built the address and a hand-written maps link from **Button**, switch to **MapLink**.
+- None. If you hold photos in a hand-built `figure` with an aspect class, switch to **Media**.
+- None. If you hand-built a numbered list from an `ol`, a mono number and a rule, switch to **Steps**.
+- None. If you built testimonial cards by hand from **Card** and a `figure`, switch to **Testimonial**.
+
 ## 0.4.54
 
 **Dark theme: the active status pill reads at AA on a card.**

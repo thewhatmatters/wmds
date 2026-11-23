@@ -1,4 +1,4 @@
-// @thewhatmatters/wmds@0.4.54 · Variant — glass
+// @thewhatmatters/wmds@0.4.55 · Variant — glass
 // Storybook: Components/SiteNav → Variant — glass (?path=/story/components-sitenav--glass)
 // Show code — copy verbatim and keep this header; upgrades find pasted patterns by it.
 

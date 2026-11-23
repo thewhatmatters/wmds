@@ -1,6 +1,6 @@
 {
   "package": "@thewhatmatters/wmds",
-  "version": "0.4.54",
+  "version": "0.4.55",
   "patterns": [
     {
       "id": "components-accordion--faq-reading",

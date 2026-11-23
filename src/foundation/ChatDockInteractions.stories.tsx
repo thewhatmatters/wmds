@@ -769,6 +769,51 @@ export const GateInTheConversation: Story = {
   },
 };
 
+export const GateFooterPinned: Story = {
+  name: "gate: a step taller than the conversation keeps Cancel and Next on screen, and focus clear of them",
+  render: () => <GateDock />,
+  play: async ({ canvas, canvasElement }) => {
+    const gate = await openGate(canvas, canvasElement);
+    await waitForWindowSettled(canvasElement);
+    const dialog = canvas.getByRole("dialog", { name: "WhatMatters" });
+    const log = within(dialog).getByRole("log", { name: "Conversation" });
+    // The step runs past the conversation's bottom edge (the case a site visitor hit at 1280×800).
+    expect(log.scrollHeight).toBeGreaterThan(log.clientHeight + 40);
+
+    const footer = gate.querySelector<HTMLElement>("[data-chat-dock-gate-footer]") as HTMLElement;
+    const next = within(gate).getByRole("button", { name: "Next" });
+    const cancel = within(gate).getByRole("button", { name: "Cancel" });
+    const onScreen = (element: HTMLElement) => {
+      const box = element.getBoundingClientRect();
+      const frame = log.getBoundingClientRect();
+      expect(box.top).toBeGreaterThanOrEqual(frame.top - 1);
+      expect(box.bottom).toBeLessThanOrEqual(frame.bottom + 1);
+      const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+      // A disabled Next takes no pointer, so the hit lands on its row: still the footer, not the composer.
+      expect(footer.contains(hit)).toBe(true);
+    };
+
+    // At the top of the step, and wherever the visitor scrolls to, the footer row is on screen.
+    for (const scrollTop of [0, Math.round(log.scrollHeight / 3), log.scrollHeight]) {
+      log.scrollTop = scrollTop;
+      await waitFor(() => {
+        onScreen(next);
+        onScreen(cancel);
+      });
+    }
+
+    // An option that takes focus scrolls clear of the pinned footer, not under it.
+    log.scrollTop = 0;
+    const options = within(gate).getAllByRole("checkbox");
+    const hidden = options.find((option) => option.getBoundingClientRect().top >= footer.getBoundingClientRect().top - 8);
+    expect(hidden).toBeDefined();
+    (hidden as HTMLElement).focus();
+    await waitFor(() => {
+      expect((hidden as HTMLElement).getBoundingClientRect().bottom).toBeLessThanOrEqual(footer.getBoundingClientRect().top + 1);
+    });
+  },
+};
+
 export const GateKeysAndSteps: Story = {
   name: "gate: number keys while focus is in it, and the step controls",
   render: () => <GateDock />,

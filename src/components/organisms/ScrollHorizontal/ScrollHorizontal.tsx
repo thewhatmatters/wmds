@@ -4,11 +4,13 @@ import { MotionConfigContext, motion, useMotionValue, useScroll, useTransform } 
 import type { MotionStyle } from "motion/react";
 import {
   useContext,
+  useEffect,
   useId,
   useLayoutEffect,
   useRef,
   useState,
   type CSSProperties,
+  type FocusEvent,
   type ReactNode,
 } from "react";
 import { cn } from "../../../lib/cn";
@@ -19,6 +21,8 @@ import {
   scrollHorizontalExpandClip,
   scrollHorizontalExpandEnd,
   scrollHorizontalExpandedOpacity,
+  scrollHorizontalFocusOffset,
+  scrollHorizontalFocusRange,
   scrollHorizontalHoldAmount,
   scrollHorizontalHoldViewports,
   scrollHorizontalHorizontalEnd,
@@ -26,6 +30,7 @@ import {
   scrollHorizontalLeadFrame,
   scrollHorizontalNominalExpandMetrics,
   scrollHorizontalNominalMetrics,
+  type ScrollHorizontalFocusRange,
   type ScrollHorizontalTile,
   scrollHorizontalParseGap,
   scrollHorizontalPeerOpacity,
@@ -167,6 +172,12 @@ export interface ScrollHorizontalProps {
  * nav, with the tiles to its right. Vertical scroll carries that panel off the
  * left edge with the tiles. The badge names the section. Reduced motion
  * stacks the same panel above the native row and keeps the inset.
+ *
+ * Keyboard focus: a control in the row (the intro's action, a link in a tile's
+ * `media`, a control in `expanded`) can take focus while the travel has it off
+ * screen. On keyboard focus the page scrolls to where it shows: the start for
+ * the intro, its tile centered for a tile, the full tile for `expanded`. A
+ * control that already shows whole leaves the page where it is.
  *
  * The server render and the hydration render both use the motion shell
  * (`data-reduce="false"`). The OS query is read in `useLayoutEffect`, before
@@ -333,6 +344,48 @@ function ScrollHorizontalRoot({
     return () => observer.disconnect();
   }, [distance, frame, hasIntro, items.length, tile]);
 
+  // The browser's own scroll-into-view aims at where a control sat before the row moved,
+  // which can leave it off to the side. Wait a frame for that, then go where it shows.
+  const focusFrame = useRef(0);
+  useEffect(() => () => cancelAnimationFrame(focusFrame.current), []);
+  const showFocused = (event: FocusEvent<HTMLElement>) => {
+    const target = event.target;
+    if (reduceMotion || !(target instanceof HTMLElement)) return;
+    // Keyboard focus only: a pointer press is already on what it pressed.
+    if (!target.matches(":focus-visible")) return;
+    cancelAnimationFrame(focusFrame.current);
+    focusFrame.current = requestAnimationFrame(() => {
+      const root = rootRef.current;
+      const pinned = stickyRef.current;
+      if (!root || !pinned || !pinned.contains(target)) return;
+      const pinnedScroll = root.offsetHeight - window.innerHeight;
+      if (pinnedScroll <= 0) return;
+      let range: ScrollHorizontalFocusRange;
+      if (target.closest("[data-scroll-horizontal-slot]")) {
+        // The expanded content belongs to the full tile.
+        range = { min: expandEnd, max: 1, rest: expandEnd };
+      } else {
+        const moving = trackRef.current ?? rowRef.current;
+        if (!moving || !moving.contains(target)) return;
+        const shown = scrollHorizontalFocusRange(
+          scrollHorizontalRestLeft(target, pinned, moving),
+          target.getBoundingClientRect().width,
+          pinned.clientWidth,
+          distance.get(),
+        );
+        range = {
+          min: shown.min * horizontalEnd,
+          max: shown.max * horizontalEnd,
+          rest: shown.rest * horizontalEnd,
+        };
+      }
+      const top = root.getBoundingClientRect().top;
+      window.scrollTo({
+        top: window.scrollY + top + scrollHorizontalFocusOffset(-top / pinnedScroll, range, pinnedScroll),
+      });
+    });
+  };
+
   const fadePeers = expandLast && !reduceMotion;
   const labelledBy = hasIntro ? introLabelId : heading ? headingId : undefined;
 
@@ -405,6 +458,7 @@ function ScrollHorizontalRoot({
       <div
         ref={stickyRef}
         className={cn(scrollHorizontalStickyClasses, hasIntro && scrollHorizontalIntroStickyClasses)}
+        onFocus={showFocused}
       >
         {heading && !hasIntro ? (
           <div id={headingId} className={scrollHorizontalHeadingClasses}>
