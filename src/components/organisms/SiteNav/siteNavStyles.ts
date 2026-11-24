@@ -183,7 +183,7 @@ export const siteNavNavigationRootClasses = "flex min-w-0 max-w-full justify-cen
 
 /** Link list — Base UI NavigationMenu list. */
 export const siteNavLinkListClasses =
-  "m-0 flex min-w-0 list-none flex-nowrap items-center gap-1 overflow-hidden p-0";
+  "m-0 flex min-w-0 list-none flex-nowrap items-center gap-1 overflow-hidden p-0 pointer-coarse:-my-1 pointer-coarse:py-1";
 
 /** A zero-size clipped box around the measuring rail, so the rail's full width never widens the page. */
 export const siteNavMeasureClipClasses =
@@ -209,8 +209,16 @@ export const siteNavMeasureItemClasses =
 export const siteNavMeasureMoreClasses =
   "inline-flex h-9 items-center gap-1 px-4 text-sm leading-none";
 
+/**
+ * Touch screens wide enough for the desktop bar (a tablet): the 36px links and menu triggers get an
+ * invisible layer 4px above and below, so each answers a 44px tap without the bar growing.
+ */
+export const siteNavCoarseTapAreaClasses =
+  "relative pointer-coarse:after:absolute pointer-coarse:after:inset-x-0 pointer-coarse:after:-inset-y-1 pointer-coarse:after:content-['']";
+
 /** Nav link — ghost pill; quiet ink until hover. Current page is the selected fill token. */
 export const siteNavLinkClasses = cn(
+  siteNavCoarseTapAreaClasses,
   "text-muted! hover:text-fg!",
   "data-[active]:bg-fill-selected! data-[active]:text-fg!",
   "aria-[current=page]:bg-fill-selected! aria-[current=page]:text-fg!",
@@ -218,6 +226,7 @@ export const siteNavLinkClasses = cn(
 
 /** Mega-menu trigger — keeps the hover surface while its panel is open. */
 export const siteNavTriggerClasses = cn(
+  siteNavCoarseTapAreaClasses,
   "text-muted! hover:text-fg!",
   "data-[popup-open]:bg-ghost-hover data-[popup-open]:text-fg!",
 );

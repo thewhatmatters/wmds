@@ -8,8 +8,28 @@ import {
   siteNavBarStateClasses,
   siteNavMiddleHugResponsiveClasses,
   siteNavMiddleResponsiveClasses,
+  siteNavLinkClasses,
+  siteNavLinkListClasses,
   siteNavMobileTriggerClasses,
+  siteNavTriggerClasses,
 } from "./siteNavStyles";
+
+describe("desktop links on touch screens", () => {
+  it("gives links and menu triggers a 44px tap layer on coarse pointers, without growing the 36px pill", () => {
+    for (const classes of [siteNavLinkClasses, siteNavTriggerClasses]) {
+      expect(classes).toContain("relative");
+      expect(classes).toContain("pointer-coarse:after:-inset-y-1");
+      expect(classes).toContain("pointer-coarse:after:inset-x-0");
+      expect(classes).toContain("pointer-coarse:after:content-['']");
+      expect(classes).not.toMatch(/(^|\s)min-h-11(\s|$)/);
+    }
+  });
+
+  it("lets the link list show that layer: 4px of padding above and below, pulled back by a margin", () => {
+    expect(siteNavLinkListClasses).toContain("pointer-coarse:py-1");
+    expect(siteNavLinkListClasses).toContain("pointer-coarse:-my-1");
+  });
+});
 
 describe("compact pill fill", () => {
   it("is the elevation surface unless asked for glass, which frosts it with Card's glass knobs", () => {
