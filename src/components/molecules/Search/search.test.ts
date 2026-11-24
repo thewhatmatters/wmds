@@ -70,4 +70,78 @@ describe("Search", () => {
   it("actionType submit makes the inset action the form's submit button", () => {
     expect(mount({ actionType: "submit" }).action.getAttribute("type")).toBe("submit");
   });
+
+  it("without actionStatus the action is the plain button", () => {
+    const { action } = mount({});
+    expect(action.dataset.status).toBeUndefined();
+    expect(action.className).not.toContain("!overflow-visible");
+  });
+
+  it("actionStatus idle: the status button, its box left open for the touch layer", () => {
+    const { action } = mount({ actionStatus: "idle", actionStatusLabels: { loading: "Sending…" } });
+    expect(action.dataset.status).toBe("idle");
+    expect(action.textContent).toBe("Subscribe");
+    expect(action.getAttribute("aria-busy")).toBeNull();
+    const classes = action.className.split(/\s+/);
+    expect(classes).toContain("!overflow-visible");
+    expect(classes).toContain("pointer-coarse:after:-inset-1.5");
+  });
+
+  it("actionStatus loading: busy, still focusable, and a press does nothing", () => {
+    let presses = 0;
+    const { action } = mount({
+      actionStatus: "loading",
+      actionStatusLabels: { loading: "Sending…" },
+      onAction: () => {
+        presses += 1;
+      },
+    });
+    expect(action.getAttribute("aria-busy")).toBe("true");
+    expect(action.getAttribute("aria-disabled")).toBe("true");
+    expect(action.hasAttribute("disabled")).toBe(false);
+    expect(action.textContent).toBe("Sending…");
+    act(() => {
+      action.click();
+    });
+    expect(presses).toBe(0);
+  });
+
+  it("actionStatus loading on a submit action: the form isn't sent again", () => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+    let sends = 0;
+    act(() => {
+      root?.render(
+        createElement(
+          "form",
+          {
+            onSubmit: (event: { preventDefault: () => void }) => {
+              event.preventDefault();
+              sends += 1;
+            },
+          },
+          createElement(Search, {
+            label: "Email address",
+            actionLabel: "Subscribe",
+            actionType: "submit",
+            actionStatus: "loading",
+            actionStatusLabels: { loading: "Sending…" },
+          }),
+        ),
+      );
+    });
+    act(() => {
+      container?.querySelector("button")?.click();
+    });
+    expect(sends).toBe(0);
+  });
+
+  it("actionStatus in lg keeps the 40px track height", () => {
+    const { action } = mount({ size: "lg", actionStatus: "success", actionStatusLabels: { success: "Sent" } });
+    const classes = action.className.split(/\s+/);
+    expect(action.textContent).toBe("Sent");
+    expect(classes).toContain("!min-h-10");
+    expect(classes).toContain("!overflow-visible");
+  });
 });

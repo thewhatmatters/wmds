@@ -126,6 +126,7 @@ export const componentCatalog: readonly ComponentCatalogEntry[] = [
   { name: "NavList", category: "Navigation", title: "Components/NavList", description: "Sectioned secondary navigation with inset pill rows, link items, and a trailing mark." },
   { name: "Pagination", category: "Navigation", planned: true, description: "Not built yet." },
   { name: "SiteNav", category: "Navigation", title: "Components/SiteNav", description: "Marketing site header that collapses to a pinned pill, with mega menus." },
+  { name: "SkipLink", category: "Navigation", title: "Components/SkipLink", description: "\"Skip to content\": the first Tab stop on a page, hidden until focused, that moves the focus into main." },
   { name: "Tab", category: "Navigation", title: "Components/Tab", description: "Peer page and view tabs with a More overflow menu." },
   { name: "TextLink", category: "Navigation", title: "Components/TextLink", description: "Inline link inside prose, with an external variant." },
 
