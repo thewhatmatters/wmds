@@ -317,13 +317,22 @@ async function expectLastTileFillsViewport(canvasElement: HTMLElement) {
  * Scrolling to the last tile collapses SiteNav into its compact bar, which slides and fades in
  * (medium tier). The collapse follows a scroll listener, so the bar can mount after the scroll
  * assertions pass, and the accessibility check runs as soon as play ends. Wait until the compact
- * bar exists and has stayed fully opaque — a bar caught mid-fade fails color contrast.
+ * bar exists and has stayed fully opaque — a bar caught mid-fade fails color contrast. The fade runs
+ * on a Motion wrapper around the bar, so check the opacity of every ancestor, not the bar's own.
  */
+function effectiveOpacity(node: HTMLElement): number {
+  let opacity = 1;
+  for (let at: HTMLElement | null = node; at; at = at.parentElement) {
+    opacity *= Number.parseFloat(getComputedStyle(at).opacity);
+  }
+  return opacity;
+}
+
 async function waitForSiteNavSettled(canvasElement: HTMLElement) {
   const settled = () => {
     const bars = [...canvasElement.querySelectorAll<HTMLElement>("[data-state='compact']")];
     expect(bars.length).toBeGreaterThan(0);
-    for (const bar of bars) expect(getComputedStyle(bar).opacity).toBe("1");
+    for (const bar of bars) expect(effectiveOpacity(bar)).toBe(1);
   };
   await waitFor(settled, { timeout: 3000 });
   await new Promise((resolve) => setTimeout(resolve, 150));
